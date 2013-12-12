@@ -1,0 +1,10 @@
+<% content_for :scripts do %>
+	<%= javascript_include_tag *js_dependencies %>
+
+	<script type="text/javascript" charset="utf-8">
+
+		<%=raw generate_map(options) %>
+	
+	</script>
+<% end %>
+<div id="<%= options[:mapid] %>" class="<%= options[:class] unless options[:class].nil? %>" style="<%= options[:style] unless options[:style].nil? %>"></div>
