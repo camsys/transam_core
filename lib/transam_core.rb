@@ -1,5 +1,4 @@
-require "transam_core/version"
+require "transam_core/engine"
 
 module TransamCore
-  # Your code goes here...
 end

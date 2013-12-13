@@ -1,28 +1,25 @@
-# coding: utf-8
-lib = File.expand_path('../lib', __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'transam_core/version'
+$:.push File.expand_path("../lib", __FILE__)
 
-Gem::Specification.new do |spec|
-  spec.name          = "transam_core"
-  spec.version       = TransamCore::VERSION
-  spec.authors       = ["Julian Ray"]
-  spec.email         = ["jray@camsys.com"]
-  spec.description   = %q{Base TransAM platform}
-  spec.summary       = %q{Base TransAM platform}
-  spec.homepage      = ""
-  spec.license       = "MIT"
+# Maintain your gem's version:
+require "transam_core/version"
 
-  spec.files         = `git ls-files`.split($/)
-  spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
-  spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
-  spec.require_paths = ["lib"]
+# Describe your gem and declare its dependencies:
+Gem::Specification.new do |s|
+  s.name        = "transam_core"
+  s.version     = TransamCore::VERSION
+  s.authors     = ["Julian Ray"]
+  s.email       = ["jray@camsys.com"]
+  s.homepage    = "http://www.camsys.com"
+  s.summary     = "TransAM Asset Management Platform."
+  s.description = "TransAM Asset Management Platform."
 
-  spec.add_development_dependency "devise"
-  spec.add_development_dependency "paper_trail"
-  spec.add_development_dependency "rolify"
-  spec.add_development_dependency "georuby"
-  spec.add_development_dependency "ruby-units"
-  spec.add_development_dependency "bundler", "~> 1.3"
-  spec.add_development_dependency "rake"
+  s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
+  s.test_files = Dir["test/**/*"]
+
+  s.add_dependency "rails"
+  s.add_dependency "devise"
+  s.add_dependency "rolify"
+  s.add_dependency "georuby"
+  s.add_dependency "paper_trail"
+  
 end
