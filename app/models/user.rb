@@ -11,8 +11,8 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
 
   # Updatable attributes
-  attr_accessible :email, :password, :password_confirmation, :remember_me
-  attr_accessible :organization_id, :first_name, :last_name, :primary_phone, :secondary_phone, :timezone
+  #attr_accessible :email, :password, :password_confirmation, :remember_me
+  #attr_accessible :organization_id, :first_name, :last_name, :primary_phone, :secondary_phone, :timezone
 
   # Callbacks
   after_initialize :set_defaults

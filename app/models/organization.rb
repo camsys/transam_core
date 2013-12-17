@@ -51,7 +51,7 @@ class Organization < ActiveRecord::Base
   #has_many :user_organization_maps
     
   # Accessors for associations
-  attr_accessible :customer_id, :organization_type_id
+  #attr_accessible :customer_id, :organization_type_id
   
   validates :customer_id,           :presence => true
   validates :organization_type_id,  :presence => true
@@ -60,17 +60,17 @@ class Organization < ActiveRecord::Base
   # Attributes common to all organization types
   #------------------------------------------------------------------------------
   # true if this organization holds the license for TransAM
-  attr_accessible :license_holder
+  #attr_accessible :license_holder
   # names for the org. The short name must be unique
-  attr_accessible :name, :short_name
+  #attr_accessible :name, :short_name
   # address and contact info
-  attr_accessible :address1, :address2, :city, :state, :zip, 
-                  :phone, :fax, :url 
+  #attr_accessible :address1, :address2, :city, :state, :zip, 
+  #                :phone, :fax, :url 
   # other derived attributes                
-  attr_accessible :active
+  #attr_accessible :active
   
   # geocoded location for the organization
-  attr_accessible :latitude, :longitude  
+  #attr_accessible :latitude, :longitude  
 
   validates :name,                  :presence => true
   validates :address1,              :presence => true
