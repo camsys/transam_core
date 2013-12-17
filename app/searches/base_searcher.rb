@@ -8,7 +8,7 @@ class BaseSearcher
     mass_assign(attributes)
   end    
   
-protected
+  protected
 
   # requires each attribute in the hash to be names the same as the class property
   def mass_assign(attributes)

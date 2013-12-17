@@ -68,9 +68,9 @@ class Policy < ActiveRecord::Base
   default_scope { where(:active => true) }
 
   # set named scopes 
-  scope :current, where(:current => true)
+  scope :current, -> { where(:current => true) }
   
-protected 
+  protected 
 
   # Set resonable defaults for a new policy
   def set_defaults
