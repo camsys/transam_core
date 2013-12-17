@@ -3,14 +3,14 @@
 # for any concrete controllers that are based on an organization
 # which is just about all of them
 #
-class OrganizationAwareController < ApplicationController
+class OrganizationAwareController < TransamController
   # set the @organization variable before any actions are invoked
   before_filter :get_organization
          
   # always use typed organizations for this controller
   RENDER_TYPED_ORGANIZATIONS = true
           
-protected
+  protected
 
   def render_typed_organizations
     RENDER_TYPED_ORGANIZATIONS
@@ -27,7 +27,7 @@ protected
         @organization = org
       end
     else
-        redirect_to(organization_index_url, :flash => { :alert => 'Record not found!'})
+        redirect_to(organizations_url, :flash => { :alert => 'Record not found!'})
         return
     end
     
