@@ -1,0 +1,44 @@
+<%= render 'policy_subnav' %>
+
+<div class="row-fluid">
+	<div class="span12">
+		<ul class="thumbnails">
+			<%= panel_tag('Details', {:icon => 'fa fa-book', :class => "span6 header_part"}) do %>
+				<%= format_field("Policy Owner", @policy.organization.name ) %>
+				<%= format_field("Effective Year", @policy.year ) %>
+				<%= format_field("Description", @policy.description ) %>
+				<%= format_field("Current", @policy.current ) %>
+			<% end %>
+			<%= panel_tag('Calculations', {:icon => 'fa fa-usd', :class => "span6 header_part"}) do %>
+				<%= format_field("Interest rate", @policy.interest_rate ) %>
+				<%= format_field("Replacement Cost Calculation", @policy.cost_calculation_type.name, @policy.cost_calculation_type.description ) %>
+				<%= format_field("Service Life Calculation", @policy.service_life_calculation_type.name, @policy.service_life_calculation_type.description ) %>
+				<%= format_field("Condition Estimation Calculation", @policy.condition_estimation_type.name, @policy.condition_estimation_type.description ) %>
+			<% end %>
+		</ul>
+	</div>
+</div>
+<div class="row-fluid">
+	<div class="span12">
+		<% if @policy.policy_items.empty? %>
+		<div class="alert alert-info">
+			This policy does not have any content.
+		</div>
+		<% else %>
+		<%= render(:partial => 'policy_items_table', :locals => {:render_links => false}) %>
+		<% end %>
+	</div>
+</div>
+
+<script type="text/javascript">
+
+	fix_thumbnail_margins(6);
+
+	//enable_date_pickers();
+
+	//make_same_height('.form_part');
+
+	make_same_height('.header_part');
+
+</script>
+

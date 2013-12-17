@@ -1,0 +1,19 @@
+<div class="row-fluid">
+	<div class="span12">
+		<ul class="thumbnails">
+			<% @policies.each do |policy| %>
+				<li class="span3 thumbnail div_thumbnail">
+					<%= action_thumbnail_tag({:icon => "fa fa-book", :title => policy.name, :path => policy_path(policy)}) do %>
+						<p><%= policy.description %></p>			
+					<% end %>
+				</li>
+			<% end %>
+		</ul>
+	</div>
+</div>
+
+<script type="text/javascript">
+	
+	fix_thumbnail_margins(3);
+	
+</script>

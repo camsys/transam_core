@@ -1,0 +1,36 @@
+<% if @policy.errors.count > 0 %>
+	<%= render(:partial => 'shared/form_errors', :locals => {:obj => @policy}) %>	
+<% end%>
+<div class="row-fluid">
+	<%= simple_form_for(@policy, :html => {:class => 'form-horizontal span12' }) do |f| %>
+	<div class="row-fluid">
+		<ul class="thumbnails">
+			<%= panel_tag('Policy', {:icon => 'fa fa-book', :class => "span6 form_part"}) do %>
+				<%= f.input :name, :input_html => { :class => "span12" }, :placeholder => "Enter a name for this policy..." %>
+				<%= f.input :year, :label => 'Effective Fiscal Year', :collection => @year_list, :prompt => "Select an effective year..." %>
+				<%= f.input :description, :input_html => { :class => "span12", :rows => 6 }, :placeholder => "Enter a description for the policy..." %>
+			<% end %>
+			<%= panel_tag('Replacement Rules', {:icon => 'fa fa-usd', :class => "span6 form_part"}) do %>
+				<%= f.input :interest_rate %>
+				<%= f.association :service_life_calculation_type, :label => "Service life calculation", :prompt => "Select..." %>
+				<%= f.association :cost_calculation_type, :label => "Cost calculation model", :prompt => "Select..." %>
+				<%= f.association :condition_estimation_type, :label => "Condition estimation model", :prompt => "Select..." %>
+				<%= f.input :estimated_condition_threshold %>
+			<% end %>
+		</ul>
+	</div>
+	<% if ! @disabled %>
+	<div class="form-actions">
+		<%= f.button :submit %>
+		<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn" %>
+	</div>
+	<% end %>
+	<% end %>
+</div>
+<script type="text/javascript">
+
+	fix_thumbnail_margins(6);
+	enable_date_pickers();
+	make_same_height('.form_part');
+
+</script>
