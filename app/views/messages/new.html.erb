@@ -1,0 +1,7 @@
+<%= render 'message_subnav' %>
+
+<% if @message.errors.count > 0 %>
+	<%= render(:partial => 'shared/form_errors', :locals => {:obj => @message}) %>	
+<% end%>
+
+<%= render 'form' %>

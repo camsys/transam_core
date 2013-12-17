@@ -6,7 +6,6 @@ class TransamController < ApplicationController
   # include the TransAM helper into the controller and view
   helper TransamHelper
 
-  
   # determine which layout to use based on the current user state
   layout :layout_by_resource
   
@@ -30,7 +29,7 @@ class TransamController < ApplicationController
     end
   end       
     
-protected
+  protected
 
   # Cache an array of objects
   def cache_objects(key, objects, expires_in = OBJECT_CACHE_EXPIRE_SECONDS)

@@ -1,0 +1,18 @@
+<div class="row-fluid">
+	<div class="span6 offset3">
+		<ul class="thumbnails">
+		<%= panel_tag('Message', {:icon => 'icon-envelope', :class => "span12 form_part"}) do %>
+			<%= simple_form_for([current_user, @message], :html => {:class => 'form-horizontal' }) do |f| %>
+				<%= f.association :to_user, :collection => @organization.users %>
+				<%= f.input :subject, :input_html => { :class => "span8" }, :placeholder => "Subject..." %>
+				<%= f.association :priority_type, :include_blank => false %>
+				<%= f.input :body, :input_html => { :class => "span8", :rows => 6 }, :placeholder => "Enter your message..."%>
+				<div class="form-actions panel-form-actions">
+					<%= f.button :submit %>
+					<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn" %>
+				</div>
+			<% end %>
+		<% end %>
+		</ul>
+	</div>
+</div>	

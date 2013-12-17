@@ -1,0 +1,25 @@
+<div class="row-fluid">
+	<div class="span12">
+		<div class="navbar">
+			<div class="navbar-inner">
+				<ul class="nav">
+					<li class="<%= get_nav_link_class('messages', MessagesController::SESSION_VIEW_TYPE_VAR, MessagesController::VIEW_TYPE_LIST) %>">
+						<%= link_to user_messages_path(current_user, :view_type => MessagesController::VIEW_TYPE_LIST) do %>
+						<i class="icon-th-large"></i> List View
+						<% end %>
+					</li>
+					<li class="<%= get_nav_link_class('messages', MessagesController::SESSION_VIEW_TYPE_VAR, MessagesController::VIEW_TYPE_TABLE) %>">
+						<%= link_to user_messages_path(current_user, :view_type => MessagesController::VIEW_TYPE_TABLE) do %>
+						<i class="icon-list-alt"></i> Table View
+						<% end %>
+					</li>
+					<li>
+						<%= link_to new_user_message_path(current_user) do %>
+						<i class="icon-edit"></i> New Message
+						<% end %>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>

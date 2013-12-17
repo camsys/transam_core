@@ -1,0 +1,24 @@
+<div class="row-fluid">
+	<div class="span12">
+		<table class="table table-condensed table-striped table-hover table-bordered">
+			<thead>
+				<th class="left">Priority</th>
+				<th class="left">Subject</th>
+				<th class="left">From</th>
+				<th class="left">Sent</th>
+				<th class="left">Responses</th>
+			</thead>
+			<tbody>
+				<% @messages.each do |m| %>
+					<%= content_tag "tr", :data => {:action_path => user_message_path(current_user, m) } do %>
+						<td class="left"><%= m.priority_type.name %></td>
+						<td class="left"><%= m.subject %></td>
+						<td class="left"><%= m.user.name %></td>
+						<td class="left"><%= format_date_time(m.created_at) %></td>
+						<td class="center"><%= m.response_count %></td>
+					<% end %>
+				<% end %>
+			</tbody>
+		</table>
+	</div>
+</div>
