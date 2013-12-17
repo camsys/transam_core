@@ -5,18 +5,18 @@
 				<ul class="nav">
 					<li>
 						<%= link_to user_tasks_path(current_user) do %> 
-							<i class="icon-calendar"></i> All tasks
+							<i class="fa fa-calendar"></i> All tasks
 						<% end %>
 					</li>
 					<li>
 						<%= link_to new_user_task_path(current_user) do %> 
-							<i class="icon-plus"></i> New Task
+							<i class="fa fa-plus"></i> New Task
 						<% end %>
 					</li>
 				  	<% if @task && ! @task.new_record? %>
 						<li>
 							<%= link_to edit_user_task_path(current_user, @task) do %> 
-								<i class="icon-edit"></i> Update
+								<i class="fa fa-edit"></i> Update
 							<% end %>
 						</li>
 					<% end %>

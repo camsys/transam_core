@@ -179,7 +179,7 @@ module TransamHelper
     html << "<div class='span4'>"
     html << "<i class='"
     html << options[:icon]
-    html << " icon-4x' style='margin-top:5px;'></i>"
+    html << " fa-4x' style='margin-top:5px;'></i>"
     html << "</div>"
     html << "<div class='span8'>"
     html << "<h4>"

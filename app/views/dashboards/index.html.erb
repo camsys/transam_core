@@ -2,13 +2,13 @@
 	<div class="span6">
 		<ul class="thumbnails">
 			
-			<%= dialog_tag("Inventory Summary", "icon-bar-chart") do %>
+			<%= dialog_tag("Inventory Summary", "fa fa-bar-chart-o") do %>
 				<%= link_to dashboard_path(:id => 1) do %>
 					<div id="dashboard_count_by_asset_type" style="width: 300; height: 200px;"></div>
 				<% end %>
 			<% end %>
 
-			<%= dialog_tag("Asset Condition Summary", "icon-bar-chart") do %>
+			<%= dialog_tag("Asset Condition Summary", "fa fa-bar-chart-o") do %>
 				<%= link_to dashboard_path(:id => 2) do %>
 					<div id="dashboard_vehicle_condition" style="width: 300; height: 200px;"></div>
 				<% end %>
@@ -23,16 +23,16 @@
 			<%= dialog_tag("Quick Links", "icon-bookmark") do %>
 				<div class="span12">
 					<ul class="thumbnails">
-						<%= render(:partial => 'quick_link', :locals => {:action_title => 'New Asset', :action_path => new_asset_inventory_index_path, :action_icon => 'icon-plus'})%>
-						<%= render(:partial => 'quick_link', :locals => {:action_title => 'Search', :action_path => new_search_path, :action_icon => 'icon-search'})%>
-						<%= render(:partial => 'quick_link', :locals => {:action_title => 'Upload File', :action_path => new_upload_path, :action_icon => 'icon-upload'})%>
-						<%= render(:partial => 'quick_link', :locals => {:action_title => 'Activity', :action_path => uploads_path, :action_icon => 'icon-rotate-right'})%>
-						<%= render(:partial => 'quick_link', :locals => {:action_title => 'Templates', :action_path => templates_uploads_path, :action_icon => 'icon-table'})%>
+						<%= render(:partial => 'quick_link', :locals => {:action_title => 'New Asset', :action_path => new_asset_inventory_index_path, :action_icon => 'fa fa-plus'})%>
+						<%= render(:partial => 'quick_link', :locals => {:action_title => 'Search', :action_path => new_search_path, :action_icon => 'fa fa-search'})%>
+						<%= render(:partial => 'quick_link', :locals => {:action_title => 'Upload File', :action_path => new_upload_path, :action_icon => 'fa fa-upload'})%>
+						<%= render(:partial => 'quick_link', :locals => {:action_title => 'Activity', :action_path => uploads_path, :action_icon => 'fa fa-rotate-right'})%>
+						<%= render(:partial => 'quick_link', :locals => {:action_title => 'Templates', :action_path => templates_uploads_path, :action_icon => 'fa fa-table'})%>
 					</ul>
 				</div>
 			<% end %>
 
-			<%= dialog_tag("Tasks", "icon-calendar", "New Task", new_user_task_path(current_user)) do %>
+			<%= dialog_tag("Tasks", "fa fa-calendar", "New Task", new_user_task_path(current_user)) do %>
 				<% if @tasks.empty? %>
 					<%= render 'tasks/empty_list' %>
 				<% else %>
@@ -40,7 +40,7 @@
 				<% end %>
 			<% end %>
 
-			<%= dialog_tag("Messages", "icon-envelope", "New Message", new_user_message_path(current_user)) do %>
+			<%= dialog_tag("Messages", "fa fa-envelope", "New Message", new_user_message_path(current_user)) do %>
 				<% if @messages.empty? %>
 					<%= render 'messages/empty_list' %>
 				<% else %>

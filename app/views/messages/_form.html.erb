@@ -1,7 +1,7 @@
 <div class="row-fluid">
 	<div class="span6 offset3">
 		<ul class="thumbnails">
-		<%= panel_tag('Message', {:icon => 'icon-envelope', :class => "span12 form_part"}) do %>
+		<%= panel_tag('Message', {:icon => 'fa fa-envelope', :class => "span12 form_part"}) do %>
 			<%= simple_form_for([current_user, @message], :html => {:class => 'form-horizontal' }) do |f| %>
 				<%= f.association :to_user, :collection => @organization.users %>
 				<%= f.input :subject, :input_html => { :class => "span8" }, :placeholder => "Subject..." %>

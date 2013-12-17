@@ -3,7 +3,7 @@
 <div class="row-fluid">
 	<div class="span6 offset3">
 		<ul class="thumbnails">
-		<%= panel_tag(@task.subject, {:icon => 'icon-calendar', :class => "span12 form_part"}) do %>
+		<%= panel_tag(@task.subject, {:icon => 'fa fa-calendar', :class => "span12 form_part"}) do %>
 			<%= format_field("Due", format_date(@task.complete_by)) %>
 			<%= format_field("From", @task.from_user.name ) %>
 			<%= format_field("Description", @task.body ) %>

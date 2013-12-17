@@ -2,13 +2,13 @@
 	
   	<li class="nav-item <%= get_nav_link_class('dashboards') %>">
   		<%= link_to dashboards_path do %>
-  			<i class="icon-dashboard icon-2x"></i><br/><span>Dashboard</span>
+  			<i class="fa fa-dashboard fa-2x"></i><br/><span>Dashboard</span>
   		<% end %>
   	</li>
   	
   	<li class="nav-item dropdown <%= get_nav_link_class('inventory') %>">
   		<%= link_to inventory_index_path, :class => "dropdown-toggle", :data => {"toggle" => "dropdown"} do %>
-  			<i class="icon-road icon-2x"></i><br/><span>Inventory</span>
+  			<i class="fa fa-road fa-2x"></i><br/><span>Inventory</span>
   			<b class="caret"></b>
   		<% end %>
 		<ul class="dropdown-menu">
@@ -24,13 +24,13 @@
 			<li class="divider"></li>			
 			<li class="text-left">												
 				<%= link_to new_search_path do %>
-					<i class="icon icon-search"></i> Search
+					<i class="fa fa-search"></i> Search
 				<% end %>
 			</li>		
 			<li class="divider"></li>			
 			<li class="text-left">												
 				<%= link_to new_asset_inventory_index_path do %>
-				<i class="icon-plus"></i> Add Asset
+				<i class="fa fa-plus"></i> Add Asset
 				<% end %>
 			</li>
 		</ul>
@@ -38,38 +38,38 @@
 
   	<li class="nav-item <%= get_nav_link_class('inventory') %>">
   		<%= link_to inventory_index_path(:view_type => AssetsController::VIEW_TYPE_MAP) do %>
-  			<i class="icon-globe icon-2x"></i><br/><span>Map View</span>
+  			<i class="fa fa-globe fa-2x"></i><br/><span>Map View</span>
   		<% end %>
   	</li>
 
   	<li class="nav-item <%= get_nav_link_class('policies') %>">
   		<%= link_to policies_path do %>
-  			<i class="icon-money icon-2x"></i><br/><span>Policies</span>
+  			<i class="fa fa-money fa-2x"></i><br/><span>Policies</span>
   		<% end %>
   	</li>
 
   	<li class="nav-item <%= get_nav_link_class('messages') %>">
   		<%= link_to user_messages_path(current_user) do %>
-  			<i class="icon-envelope icon-2x"></i><br/><span>Messages</span>
+  			<i class="fa fa-envelope fa-2x"></i><br/><span>Messages</span>
   		<% end %>
   	</li>
 
   	<li class="nav-item dropdown <%= get_nav_link_class('reports') %>">
   		<%= link_to reports_path, :class => "dropdown-toggle", :data => {"toggle" => "dropdown"} do %>
-  			<i class="icon-bar-chart icon-2x"></i><br/><span>Reports</span>
+  			<i class="fa fa-bar-chart fa-2x"></i><br/><span>Reports</span>
   			<b class="caret"></b>
   		<% end %>
 		<ul class="dropdown-menu">
 			<li class="text-left">												
 				<%= link_to reports_path  do %>
-					<i class="icon icon-bar-chart"></i> All			
+					<i class="fa fa-bar-chart"></i> All			
 				<% end %>
 			</li>
 			<li class="divider"></li>			
 			<% Report.show_in_nav.each do |report| %>
 				<li  class="text-left">												
 					<%= link_to report_path(report)  do %>
-						<i class="icon icon-bar-chart"></i> <%= report.name %>								
+						<i class="fa fa-bar-chart"></i> <%= report.name %>								
 					<% end %>
 				</li>
 			<% end %>
