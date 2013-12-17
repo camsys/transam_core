@@ -16,9 +16,9 @@ class AssetEvent < ActiveRecord::Base
   # User who performed the inspection
   belongs_to  :inspector, :class_name => "User", :foreign_key => :inspector_id
   # Date on which the event was observed. This would be the day of inspection
-  attr_accessible :event_date
+  #attr_accessible :event_date
   # Comments added by the inspector
-  attr_accessible :comments
+  #attr_accessible :comments
    
   # Other accessors    
   #attr_accessible :asset_id, :asset_event_type_id, :condition_type_id, :inspector_id  
