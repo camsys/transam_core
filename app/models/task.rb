@@ -23,6 +23,6 @@ class Task < ActiveRecord::Base
   validates :body, :presence => true
   validates :complete_by, :presence => true
    
-  default_scope order('complete_by')
+  default_scope { order('complete_by') }
       
 end

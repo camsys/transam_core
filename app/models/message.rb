@@ -17,7 +17,7 @@ class Message < ActiveRecord::Base
   validates :subject, :presence => true
   validates :body, :presence => true
    
-   default_scope order('created_at DESC')
+   default_scope { order('created_at DESC') }
       
    # Recursively determine how many total responses there are to this thread
    def response_count

@@ -65,7 +65,7 @@ class Policy < ActiveRecord::Base
   #------------------------------------------------------------------------------
   
   # default scope
-  default_scope where(:active => true)
+  default_scope { where(:active => true) }
 
   # set named scopes 
   scope :current, where(:current => true)

@@ -13,20 +13,10 @@ class ConditionUpdateEvent < AssetEvent
   belongs_to  :condition_type
 
   # assessed condition rating
-  attr_accessible :assessed_rating
-
-  # time (day/night) that the inspection was performed
-  belongs_to  :time_of_day_type
-
-  # retro reflectivity measure
-  attr_accessible :reteroreflectivity
+  #attr_accessible :assessed_rating
       
-  # general accessors
-  attr_accessible :condition_type_id, :time_of_day_type_id  
   
   validates :condition_type_id, :presence => true
-  validates :time_of_day_type_id, :presence => true
-  validates :reteroreflectivity, :presence => true
   before_validation do
     self.assessed_rating ||= ConditionType.find(condition_type_id).rating
   end
@@ -40,12 +30,11 @@ class ConditionUpdateEvent < AssetEvent
     condition_type.name unless condition_type.nil?
   end
   
-protected
+  protected
 
   # Set resonable defaults for a new condition update event
   def set_defaults
     super
-    self.reteroreflectivity ||= 0.0
     self.asset_event_type ||= AssetEventType.find_by_class_name(self.name)
   end    
   

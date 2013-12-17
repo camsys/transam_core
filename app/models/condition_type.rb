@@ -6,7 +6,7 @@ class ConditionType < ActiveRecord::Base
   #attr_accessible :name, :description, :active, :rating
         
   # default scope
-  default_scope where(:active => true)
+  default_scope { where(:active => true) }
  
   def self.max_rating 
     order("rating DESC").first.rating

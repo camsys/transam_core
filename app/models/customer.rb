@@ -9,7 +9,7 @@ class Customer < ActiveRecord::Base
   #attr_accessible :license_type_id, :active
     
   # default scope
-  default_scope where(:active => true)
+  default_scope { where(:active => true) }
   
 end
       

@@ -8,7 +8,7 @@ class AssetSubtype < ActiveRecord::Base
   #attr_accessible :avg_cost, :avg_life_years 
         
   # default scope
-  default_scope where(:active => true)
+  default_scope { where(:active => true) }
 
   def full_name
     "#{name} - #{description}"

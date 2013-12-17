@@ -8,7 +8,7 @@ class AssetType < ActiveRecord::Base
   #attr_accessible :map_icon_name, :display_icon_name
   
   # default scope
-  default_scope where(:active => true)
+  default_scope { where(:active => true) }
   
   def full_name
     "#{name} - #{description}"

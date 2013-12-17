@@ -9,7 +9,7 @@ class Report < ActiveRecord::Base
   #attr_accessible :active, :report_type_id, :name, :class_name, :view_name, :description, :show_in_nav
         
   # default scope
-  default_scope where(:active => true)
+  default_scope { where(:active => true) }
       
   scope :show_in_nav, where(:show_in_nav => true)
 

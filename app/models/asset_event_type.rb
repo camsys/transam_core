@@ -4,6 +4,6 @@ class AssetEventType < ActiveRecord::Base
   #attr_accessible :class_name, :form_name
   
   # default scope
-  default_scope where(:active => true)
+  default_scope { where(:active => true) }
        
 end
