@@ -12,7 +12,7 @@ class Task < ActiveRecord::Base
   belongs_to :to_user
   belongs_to :priority_type
   
-  attr_accessible :from_user_id, :from_organization_id, :priority_type_id, :for_organization_id, :assigned_to_user_id, :subject, :body, :complete_by
+  #attr_accessible :from_user_id, :from_organization_id, :priority_type_id, :for_organization_id, :assigned_to_user_id, :subject, :body, :complete_by
 
   validates :from_user_id, :presence => true
   validates :from_organization_id, :presence => true
