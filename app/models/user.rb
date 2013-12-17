@@ -31,7 +31,7 @@ class User < ActiveRecord::Base
   validates :primary_phone, :presence => true
   validates :timezone, :presence => true
 
-  validates :email, :format => { :with => /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i, :message => "email address is not valid" }
+  validates :email
 
   
   # search scope
