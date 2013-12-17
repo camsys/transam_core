@@ -18,15 +18,15 @@ class GeolocatableAsset < Asset
   # ----------------------------------------------------  
   # Type of location reference used to geocode the asset
   belongs_to :location_reference_type
-  attr_accessible :location_reference_type_id
+  #attr_accessible :location_reference_type_id
   
   # Actual location reference stored in native format
-  attr_accessible :location_reference
+  #attr_accessible :location_reference
   # spatial field
-  attr_accessible :geometry
+  #attr_accessible :geometry
   
   # Comments regarding the location of the asset
-  attr_accessible :location_comments
+  #attr_accessible :location_comments
 
   # ----------------------------------------------------  
   # Validations
