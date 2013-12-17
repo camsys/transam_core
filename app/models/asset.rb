@@ -47,10 +47,10 @@ class Asset < ActiveRecord::Base
   has_many   :asset_events        
 
   # each asset has zero or more condition updates
-  has_many   :condition_updates, :class_name => "ConditionUpdateEvent", :conditions => {:asset_event_type_id => ConditionUpdateEvent.asset_event_type.id }
+  has_many   :condition_updates, -> {where :asset_event_type_id => ConditionUpdateEvent.asset_event_type.id }, :class_name => "ConditionUpdateEvent" 
 
   # each asset has zero or more disposition updates
-  has_many   :disposition_updates, :class_name => "DispositionUpdateEvent", :conditions => {:asset_event_type_id => DispositionUpdateEvent.asset_event_type.id }
+  has_many   :disposition_updates, -> {where :asset_event_type_id => DispositionUpdateEvent.asset_event_type.id }, :class_name => "DispositionUpdateEvent"
   
   # Each asset has zero or more attachments 
   has_many   :attachments
