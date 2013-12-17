@@ -56,20 +56,20 @@
 
   	<li class="nav-item dropdown <%= get_nav_link_class('reports') %>">
   		<%= link_to reports_path, :class => "dropdown-toggle", :data => {"toggle" => "dropdown"} do %>
-  			<i class="fa fa-bar-chart fa-2x"></i><br/><span>Reports</span>
+  			<i class="fa fa-bar-chart-o fa-2x"></i><br/><span>Reports</span>
   			<b class="caret"></b>
   		<% end %>
 		<ul class="dropdown-menu">
 			<li class="text-left">												
 				<%= link_to reports_path  do %>
-					<i class="fa fa-bar-chart"></i> All			
+					<i class="fa fa-bar-chart-o"></i> All			
 				<% end %>
 			</li>
 			<li class="divider"></li>			
 			<% Report.show_in_nav.each do |report| %>
 				<li  class="text-left">												
 					<%= link_to report_path(report)  do %>
-						<i class="fa fa-bar-chart"></i> <%= report.name %>								
+						<i class="fa fa-bar-chart-o"></i> <%= report.name %>								
 					<% end %>
 				</li>
 			<% end %>
