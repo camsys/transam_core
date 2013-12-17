@@ -1,0 +1,8 @@
+
+<%= render 'index_subnav' %>
+
+<% if @tasks.empty? %>
+	<%= render 'empty_list' %>
+<% else %>
+	<%= render 'index_list' %>
+<% end %>

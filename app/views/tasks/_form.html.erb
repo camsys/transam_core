@@ -1,0 +1,29 @@
+<div class="row-fluid">
+	<div class="span6 offset3">
+		<ul class="thumbnails">
+		<%= panel_tag('New Task', {:icon => 'icon-calendar', :class => "span12 form_part"}) do %>
+			<%= simple_form_for([current_user, @task], :html => {:class => 'form-horizontal' }) do |f| %>
+				<%= f.input :subject, :label => 'Description', :input_html => { :class => "span8" }, :placeholder => "Task..." %>
+				<%= f.association :assigned_to, :collection => @organization.users %>
+				<%= f.input :complete_by, :wrapper => :append, :class => "inline"  do %>
+					<%= f.input_field :complete_by, :as => :string, :class => 'span4 datepicker', :style => "margin-top:0" %>
+					<%= content_tag :span, :class => "add-on" do %><i class="icon-calendar"></i><% end %>
+				<% end %>
+				<%= f.association :priority_type, :include_blank => false %>
+				<%= f.input :body, :label => 'Details', :input_html => { :class => "span8", :rows => 6 }, :placeholder => "Enter any details about this task..."%>
+				<div class="form-actions panel-form-actions">
+					<%= f.button :submit %>
+					<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn" %>
+				</div>
+			<% end %>
+		<% end %>
+		</ul>
+	</div>
+</div>	
+<script type="text/javascript">
+	
+	enable_date_pickers();
+			
+</script>
+
+

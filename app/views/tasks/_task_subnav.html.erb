@@ -1,0 +1,27 @@
+<div class="row-fluid">
+	<div class="span12">
+		<div class="navbar">
+			<div class="navbar-inner">
+				<ul class="nav">
+					<li>
+						<%= link_to user_tasks_path(current_user) do %> 
+							<i class="icon-calendar"></i> All tasks
+						<% end %>
+					</li>
+					<li>
+						<%= link_to new_user_task_path(current_user) do %> 
+							<i class="icon-plus"></i> New Task
+						<% end %>
+					</li>
+				  	<% if @task && ! @task.new_record? %>
+						<li>
+							<%= link_to edit_user_task_path(current_user, @task) do %> 
+								<i class="icon-edit"></i> Update
+							<% end %>
+						</li>
+					<% end %>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
