@@ -1,0 +1,18 @@
+<%= dialog_tag("Forgot your password?", "icon-signin") do %>
+	<div class="row-fluid">
+		<div class="span12">
+			
+			<%= render 'shared/messages' %>
+			
+			<%= simple_form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => {:method => :post, :class => 'form-vertical' }) do |f| %>
+  			  <%= f.error_notification %>
+			  <%= f.input :email, :required => true, :autofocus => true %>
+			  <%= f.button :submit, "Send me reset password instructions", :class => 'btn-primary' %>
+			<% end %>						
+			
+		  	<%= link_to "Sign in", new_session_path(resource_name) %>
+
+		</div>
+	</div>
+<% end %>
+

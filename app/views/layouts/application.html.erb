@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>TransAM - Asset Manager</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<%= stylesheet_link_tag    "application", :media => "all" %>
+		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4/leaflet.css" />
+		<!--[if lte IE 8]>
+		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4/leaflet.ie.css" />
+		<![endif]-->
+
+      	<%= javascript_include_tag "http://cdn.leafletjs.com/leaflet-0.4/leaflet.js" %>
+      	<%= javascript_include_tag "http://maps.google.com/maps/api/js?v=3.2&sensor=false" %>
+      	<%= javascript_include_tag "https://www.google.com/jsapi" %>
+		<%= javascript_include_tag "application" %>
+
+		<%= csrf_meta_tags %>
+	</head>
+	<body>
+
+		<!-- Wrap all page content here -->
+		<div id="wrap">
+
+			<!-- Header -->
+			<div class="navbar navbar-fixed-top navbar-inverse">
+				<div class="navbar-inner">
+					<div class="container-fluid">
+						<div class="row-fluid">
+							<div class="span6">
+								<%= link_to "TransAM - Asset Manager", "/", :class => "brand" %>
+							</div>
+							<div class="span6">
+								<ul class="nav pull-right">
+									<li class="dropdown">
+										<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+											<i class="icon-user"></i> <%= current_user.name %>
+											<b class="caret"></b>
+										</a>
+										<ul class="dropdown-menu">
+											<li class="text-left">												
+												<%= link_to user_tasks_path(current_user)  do %>
+													<i class="icon icon-calendar"></i> My tasks
+												<% end %>
+											</li>
+											<li class="text-left">												
+												<%= link_to organization_path(current_user.organization)  do %>
+													<i class="icon icon-building"></i> My organization
+												<% end %>
+											</li>
+											<li class="divider text-left"></li>
+											<li class="text-left">												
+												<%= link_to user_path(current_user)  do %>
+													<i class="icon icon-cog"></i> My settings
+												<% end %>
+											</li>
+											<% if current_user.has_role? :admin %>
+												<li class="divider text-left"></li>
+												<li class="text-left">												
+													<%= link_to admin_path do %>
+														<i class="icon icon-wrench"></i> Admin
+													<% end %>
+												</li>
+											<% end %>
+											<li class="divider text-left"></li>
+											<li class="text-left">												
+												<%= link_to destroy_user_session_path, :method=>'delete' do %>
+													<i class="icon icon-signout"></i> Logout
+												<% end %>
+											</li>
+										</ul>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Main Nav -->
+			<div class="navbar center main-nav">
+				<div class="navbar-inner">
+					<div class="container-fluid">
+						<div class="row-fluid">
+							<div class="span12">
+								<%= render 'shared/nav' %>							
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Begin page content -->
+			<div class="container-fluid">
+				<div>
+					<!-- Main Page Content -->
+					<%= render 'shared/page_header' %>
+					<%= render 'shared/messages' %>
+					<div class="row-fluid">
+						<div class="span12">
+							<%= yield %>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div id="push"></div>
+		</div>
+
+		<%= render 'shared/footer' %>
+		<!-- push the java script to the bottom so the page loads faster -->
+		<%= render 'shared/javascript' %>
+	</body>
+</html>

@@ -1,0 +1,21 @@
+<div style="width:200px;">
+	<div class="row-fluid" style="border-top:1px solid #CCCCCC;">
+		<div class="span3">
+			<i class="icon icon-3x <%= asset.asset_type.display_icon_name %>"></i>			
+		</div>
+		<div class="span9">
+			<h4><%= asset.asset_type.name %></h4>
+		</div>	
+	</div>
+	<div class="row-fluid"  style="border-top:1px solid #CCCCCC;border-bottom:1px solid #CCCCCC;">
+		<div class="span12">
+			<div class="popup-content">
+				<%= format_list_field("Type", asset.name ) %>
+				<%= format_list_field("Asset Tag", asset.asset_tag ) %>
+				<%= format_list_field("Installed", format_date(asset.in_service_date) ) %>
+				<%= format_list_field("Installer", asset.installer) unless asset.installer.nil? %>
+				<%= format_list_field("Condition", asset.last_reported_condition_type.name) unless asset.last_reported_condition_type.nil? %>		
+			</dl>
+		</div>
+	</div>
+</div>

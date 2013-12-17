@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+	<title>TransAM - Asset Manager</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+	<%= stylesheet_link_tag    "application", :media => "all" %>
+	<%= javascript_include_tag "application" %>
+	<%= csrf_meta_tags %>
+
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../assets/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+<!-- Wrap all page content here -->
+<div id="wrap">
+
+	<!-- Header -->
+	<div class="navbar navbar-fixed-top center">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<div class="row-fluid">
+					<div class="span5">
+						<%= link_to "TransAM - Asset Manager", "/", :class => "brand" %>
+	    			</div>
+	  			</div>
+			</div>
+		</div>
+	</div>	
+	<!-- Begin page content -->
+	<div class="container-fluid">
+		<div>
+			<!-- Main Page Content -->
+			<div class="row-fluid">
+				<div class="span12">
+					
+					<div class="row-fluid" style="margin-top:80px;">
+						<div class="header-part span9">
+							<div class="hero-unit shadow" style = "height:280px">
+								<%= image_tag "logo.svg", :class => "image pull-left", :style => "height:300px"%>
+								<h1 style="margin-left:200px;">TransAM<br/>Sign Manager</h1>
+							</div>
+						</div>
+						<div class="span3">
+							<ul class="thumbnails">
+								<%= yield %>
+							</ul>
+						</div>
+					</div>		
+				</div>
+			</div>
+		</div>
+	</div>
+
+     <div id="push"></div>
+</div>
+
+<script type="text/javascript">
+
+	$(window).load(function() {
+		make_same_height('.header-part');		
+	});
+
+</script>
+
+<%= render 'shared/footer' %>
+<!-- push the java script to the bottom so the page loads faster -->
+<%= render 'shared/javascript' %>
+
+</body>
+</html>
