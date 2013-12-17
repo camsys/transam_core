@@ -2,6 +2,10 @@ class TransamController < ApplicationController
   
   before_filter :authenticate_user!
   before_filter :set_timezone 
+ 
+  # include the TransAM helper into the controller and view
+  helper TransamHelper
+
   
   # determine which layout to use based on the current user state
   layout :layout_by_resource
