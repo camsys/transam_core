@@ -15,8 +15,8 @@ class ConditionUpdateEvent < AssetEvent
   # assessed condition rating
   #attr_accessible :assessed_rating
       
-  
   validates :condition_type_id, :presence => true
+  
   before_validation do
     self.assessed_rating ||= ConditionType.find(condition_type_id).rating
   end
