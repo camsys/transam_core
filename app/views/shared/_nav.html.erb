@@ -69,7 +69,7 @@
 			<% Report.show_in_nav.each do |report| %>
 				<li  class="text-left">												
 					<%= link_to report_path(report)  do %>
-						<i class="fa fa-bar-chart-o"></i> <%= report.name %>								
+						<i class="<%= report.report_type.display_icon_name %>"></i> <%= report.name %>								
 					<% end %>
 				</li>
 			<% end %>
