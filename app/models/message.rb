@@ -24,6 +24,7 @@ class Message < ActiveRecord::Base
     :organization_id,
     :user_id,
     :to_user_id,
+    :thread_message_id,
     :priority_type_id,
     :subject,
     :body
