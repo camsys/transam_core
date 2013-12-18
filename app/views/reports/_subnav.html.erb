@@ -1,0 +1,38 @@
+<div class="row-fluid">
+	<div class="span12">
+		<div class="navbar">
+			<div class="navbar-inner">
+				<ul class="nav">
+					<li>
+						<%= link_to :back do %> 
+						<i class="fa fa-angle-left"></i> Back
+						<% end %>
+					</li>
+					<li class="divider-vertical"></li>
+					<li>
+						<%= form_tag report_url(@report), :id => 'asset_filter_form', :method => "get", :class => 'navbar-form form-inline' do %>
+						<div class="input-prepend">
+							<span class="add-on">Filter</span>
+							<%= select_tag(:report_filter_type, options_for_select(AssetType.all.collect{|a| [a.name, a.id]}, :selected => @report_filter_type), :style => 'margin-top:0px', :prompt => 'All', :id => 'asset_filter') %>
+						</div>
+						<% end %>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" charset="utf-8">
+
+	$(document).ready(function() {
+		
+		// Add a listener on the asset type filter that submits the form when changed
+		$('#asset_filter').change(function() {
+			$('#asset_filter_form').submit();
+		});
+		
+	)};
+
+
+</script>

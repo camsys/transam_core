@@ -1,0 +1,19 @@
+<div class="row-fluid">
+	<div class="span12">
+		<table class="table table-condensed table-striped table-hover table-bordered">
+			<thead>
+				<th>Report</th>
+				<th>Description</th>
+			</thead>
+			<tbody>
+				<% @reports.each do |report| %>
+				<tr data-action-path = '<%= report_path(report[:report_id]) %>'>
+					<td><%= report[:name] %></td>
+					<td><%= report[:description] %></td>
+				</tr>
+				<% end %>
+			</tbody>
+		</table>
+	</div>
+</div>
+
