@@ -6,7 +6,7 @@ class PriorityType < ActiveRecord::Base
   default_scope { where(:active => true) }
   
   def self.default
-    where(:default => true).first
+    where(:is_default => true).first
   end      
 
 end
