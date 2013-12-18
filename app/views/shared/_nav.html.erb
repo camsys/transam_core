@@ -16,7 +16,7 @@
 				<% if @organization.asset_count(at) > 0 %>
 					<li  class="text-left">												
 						<%= link_to inventory_index_path(:asset_type => at.id)  do %>
-							<i class="<%= at.display_icon_name %>"></i> <%= at.name %>								
+							<i class="<%= at.display_icon_name %> fa-fw"></i> <%= at.name %>								
 						<% end %>
 					</li>
 				<% end %>
@@ -62,14 +62,14 @@
 		<ul class="dropdown-menu">
 			<li class="text-left">												
 				<%= link_to reports_path  do %>
-					<i class="fa fa-bar-chart-o"></i> All			
+					<i class="fa fa-bar-chart-o fa-fw"></i> All			
 				<% end %>
 			</li>
 			<li class="divider"></li>			
 			<% Report.show_in_nav.each do |report| %>
 				<li  class="text-left">												
 					<%= link_to report_path(report)  do %>
-						<i class="<%= report.report_type.display_icon_name %>"></i> <%= report.name %>								
+						<i class="<%= report.report_type.display_icon_name %> fa-fw"></i> <%= report.name %>								
 					<% end %>
 				</li>
 			<% end %>
