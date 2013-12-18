@@ -19,6 +19,20 @@ class Message < ActiveRecord::Base
    
    default_scope { order('created_at DESC') }
       
+  # List of allowable form param hash keys  
+  FORM_PARAMS = [
+    :organization_id,
+    :user_id,
+    :to_user_id,
+    :priority_type_id,
+    :subject,
+    :body
+  ]
+  
+  def self.allowable_params
+    FORM_PARAMS
+  end
+      
    # Recursively determine how many total responses there are to this thread
    def response_count
      sum = 0

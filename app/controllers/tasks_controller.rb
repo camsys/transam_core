@@ -1,5 +1,5 @@
 class TasksController < OrganizationAwareController
-  #before_filter :authorize_admin
+  before_action :set_task, :only => [:show, :edit, :update, :destroy]  
   before_filter :check_for_cancel, :only => [:create, :update] 
 
   SESSION_VIEW_TYPE_VAR = 'tasks_subnav_view_type'
@@ -21,8 +21,6 @@ class TasksController < OrganizationAwareController
 
   def show
 
-    @task = find_task(params[:id])
-    
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
     if @task.nil?
@@ -56,8 +54,6 @@ class TasksController < OrganizationAwareController
 
   def edit
 
-    @task = find_task(params[:id])
-    
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
     if @task.nil?
@@ -68,7 +64,7 @@ class TasksController < OrganizationAwareController
 
   def create
 
-    @task = Task.new(params[:task])
+    @task = Task.new(task_params)
     # Simple form doesn't process mapped assoacitions very well
     @task.assigned_to = User.find(params[:task][:assigned_to_user_id]) unless params[:task][:assigned_to_user_id].blank?
     @task.for_organization = @task.assigned_to.organization unless @task.assigned_to.nil?
@@ -90,8 +86,6 @@ class TasksController < OrganizationAwareController
 
   def update
 
-    @task = find_task(params[:id])
-    
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
     if @task.nil?
@@ -100,7 +94,7 @@ class TasksController < OrganizationAwareController
     end
 
     respond_to do |format|
-      if @task.update_attributes(params[:task])
+      if @task.update_attributes(task_params)
         format.html { redirect_to user_tasks_url(current_user), :notice => "Task was successfully updated." }
         format.json { head :no_content }
       else
@@ -117,8 +111,27 @@ class TasksController < OrganizationAwareController
     end
   end 
   
+  #------------------------------------------------------------------------------
+  #
+  # Private Methods
+  #
+  #------------------------------------------------------------------------------
+  private
+  
+  # Callbacks to share common setup or constraints between actions.
+  def set_task
+    @task = find_task(params[:id])
+  end
+
   # make sure that only tasks for this user or unassigned tasks for this agency are viewed or edited
   def find_task(task_id)
     Task.where("id = ? AND for_organization_id = ? AND (assigned_to_user_id IS NULL OR assigned_to_user_id = ?)", task_id, @organization.id, current_user.id).first
   end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def task_params
+    allowable_params = Task.allowable_params
+    params.require(:task).permit(allowable_params)
+  end
+  
 end

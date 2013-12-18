@@ -368,8 +368,8 @@ class Asset < ActiveRecord::Base
   
   
   #------------------------------------------------------------------------------
-protected
-    
+  protected
+  
   # nils out all fields identified to be cleansed
   def cleanse
     cleansable_fields.each do |field|

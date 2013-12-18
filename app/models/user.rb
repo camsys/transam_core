@@ -1,3 +1,10 @@
+#------------------------------------------------------------------------------
+#
+# User
+#
+# Base class for all users. This class represents a generic user.
+#
+#------------------------------------------------------------------------------
 class User < ActiveRecord::Base
 
   # Enable auditing of this model type
@@ -10,9 +17,6 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
 
-  # Updatable attributes
-  #attr_accessible :email, :password, :password_confirmation, :remember_me
-  #attr_accessible :organization_id, :first_name, :last_name, :primary_phone, :secondary_phone, :timezone
 
   # Callbacks
   after_initialize :set_defaults
@@ -25,11 +29,11 @@ class User < ActiveRecord::Base
   has_many   :messages
   has_many   :uploads
 
-  validates :first_name, :presence => true
-  validates :last_name, :presence => true
-  validates :email, :presence => true, :uniqueness => true
-  validates :primary_phone, :presence => true
-  validates :timezone, :presence => true
+  validates :first_name,    :presence => true
+  validates :last_name,     :presence => true
+  validates :email,         :presence => true, :uniqueness => true
+  validates :phone,         :presence => true
+  validates :timezone,      :presence => true
 
   validates :email, :format => { :with => /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/, :message => "email address is not valid" }
 
@@ -41,9 +45,37 @@ class User < ActiveRecord::Base
     :first_name,
     :last_name,
     :email,
-    :primary_phone,
-    :secondary_phone
+    :phone,
   ] 
+         
+  # List of allowable form param hash keys  
+  FORM_PARAMS = [
+    :organization_id,
+    :first_name,
+    :last_name,
+    :phone,
+    :timezone,
+    :email,
+    :password,
+    :password_confirmation,
+    :remember_me
+  ]
+  
+  #------------------------------------------------------------------------------
+  #
+  # Class Methods
+  #
+  #------------------------------------------------------------------------------
+  
+  def self.allowable_params
+    FORM_PARAMS
+  end
+          
+  #------------------------------------------------------------------------------
+  #
+  # Instance Methods
+  #
+  #------------------------------------------------------------------------------
           
   # Returns true if the user is in a specified role, false otherwise
   def is_in_role(role_id)
@@ -54,14 +86,24 @@ class User < ActiveRecord::Base
     return first_name + " " + last_name unless new_record?
   end
 
-protected
+  #------------------------------------------------------------------------------
+  #
+  # Protected Methods
+  #
+  #------------------------------------------------------------------------------
+  protected
 
   # Set resonable defaults for a new user
   def set_defaults
     self.timezone ||= 'Eastern Time (US & Canada)'
   end    
 
-private
+  #------------------------------------------------------------------------------
+  #
+  # Private Methods
+  #
+  #------------------------------------------------------------------------------
+  private
 
   # constructs a query string for a search
   def self.get_search_query_string(searchable_fields)

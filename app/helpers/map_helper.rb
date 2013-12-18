@@ -2,6 +2,19 @@ module MapHelper
 
   ALPHABET = ('A'..'Z').to_a
 
+  # create an agency-specific map marker
+  def get_organization_marker(organization)
+    {
+      "id" => organization.id,
+      "lat" => organization.latitude, 
+      "lng" => organization.longitude, 
+      "name" => organization.name, 
+      "iconClass" => organization.organization_type.display_icon_name,
+      "title" => organization.name,
+      "description" => render_to_string(:partial => "/organizations/organization_popup", :locals => { :organization => organization })        
+    }
+  end
+
   # Returns a formatted string for displaying a map marker image that includes a A,B,C, etc. designator.
   #
   # index is a positive integer x, x >= 0 that corresponds to the index of the object in

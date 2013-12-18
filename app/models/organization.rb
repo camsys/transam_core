@@ -73,6 +73,7 @@ class Organization < ActiveRecord::Base
   #attr_accessible :latitude, :longitude  
 
   validates :name,                  :presence => true
+  validates :short_name,            :presence => true, :uniqueness => true
   validates :address1,              :presence => true
   validates :city,                  :presence => true
   validates :state,                 :presence => true
@@ -80,12 +81,35 @@ class Organization < ActiveRecord::Base
   #validates :license_holder, :presence => true
   validates :phone,                 :presence => true
 
+  # List of allowable form param hash keys  
+  FORM_PARAMS = [
+    :customer_id,
+    :organization_type_id,
+    :license_holder,
+    :name,
+    :short_name,
+    :address1,
+    :address2,
+    :city,
+    :state,
+    :zip,
+    :phone,
+    :fax,
+    :url,
+    :active,
+    :latitude,
+    :longitude
+  ]
 
   #------------------------------------------------------------------------------
   #
   # Class Methods
   #
   #------------------------------------------------------------------------------
+      
+  def self.allowable_params
+    FORM_PARAMS
+  end
       
   # returns a typed value of the organization if one exists
   def self.get_typed_organization(org)
@@ -102,12 +126,7 @@ class Organization < ActiveRecord::Base
   # Instance Methods
   #
   #------------------------------------------------------------------------------
-      
-  # This base class is not aware of any workorders  
-  def workorder_aware?
-    false
-  end
-  
+        
   # returns the count of assets of the given type
   def asset_count(asset_type) 
     return assets.where('asset_type_id = ?', asset_type.id).count

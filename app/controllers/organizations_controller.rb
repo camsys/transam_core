@@ -1,0 +1,124 @@
+class OrganizationsController < OrganizationAwareController
+  before_filter :check_for_cancel, :only => [:create, :update]
+  
+  # include the Leaflet helper into the controller and view
+  helper LeafletHelper
+  # include the Map helper into the controller and view
+  helper MapHelper
+  
+  SESSION_VIEW_TYPE_VAR = 'organization_subnav_view_type'
+    
+  # GET /asset
+  # GET /asset.json
+  def index
+    @organizations = current_user.organizations
+
+    # remember the view type
+    @view_type = get_view_type(SESSION_VIEW_TYPE_VAR)
+    
+    # If we are building a map, make sure we get the map artifacts
+    if @view_type == VIEW_TYPE_MAP
+      @markers = generate_map_markers(@organizations)
+    end
+    respond_to do |format|
+      format.html # index.html.erb
+      format.json { render :json => @organizations }
+    end
+  end
+  
+  def show
+    
+    @page_title = @organization.name
+
+    respond_to do |format|
+      format.html # show.html.erb
+      format.json { render :json => @organization }
+    end
+    
+  end
+
+  def map
+    
+    @page_title = @organization.name
+    @organizations = []
+    @organizations << @organization
+    @markers = generate_map_markers(@organizations)
+                  
+    respond_to do |format|
+      format.html # map.html.erb
+      format.json { render @markers }
+    end
+    
+  end
+  
+  # Edit simply returns the selected organization
+  def edit
+    @page_title = "Update"    
+  end
+
+  def update
+
+    respond_to do |format|
+      if @organization.update_attributes(organization_params)
+        format.html { redirect_to organization_url(@organization), :notice => "#{@organization.name} was successfully updated." }
+        format.json { head :no_content }
+      else
+        format.html { render :action => "edit" }
+        format.json { render :json => @organization.errors, :status => :unprocessable_entity }
+      end
+    end
+  end
+
+  #------------------------------------------------------------------------------
+  #
+  # Protected Methods
+  #
+  #------------------------------------------------------------------------------
+  protected
+  #
+  # generate an array of map markers for use with the leaflet plugin
+  #
+  def generate_map_markers(organizations_array)
+    objs = []
+    organizations_array.each do |org|
+      objs << get_organization_marker(org) unless org.latitude.nil?
+    end
+    return objs.to_json    
+  end
+
+  #------------------------------------------------------------------------------
+  #
+  # Private Methods
+  #
+  #------------------------------------------------------------------------------
+  private
+      
+  # Returns the agency that has been selected by the user. The agency must
+  # be user's agency or one of its member agencies. 
+  def get_organization
+    if params[:id].nil?
+      org = current_user.organization
+    else
+      org = current_user.organizations.find(params[:id])
+    end
+    if org
+      @organization = get_typed_organization(org)
+    end
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def organization_params
+    
+    allowable_params = Organization.allowable_params
+    params.require(:organization).permit(allowable_params)
+    
+  end
+  
+  def check_for_cancel
+    unless params[:cancel].blank?
+      @organization = get_organization
+      redirect_to organization_url(@organization)
+    end
+  end
+  
+end

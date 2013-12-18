@@ -1,4 +1,5 @@
 class MessagesController < OrganizationAwareController
+  before_action :set_message, :only => [:show, :edit, :update, :destroy]  
   before_filter :check_for_cancel, :only => [:create] 
 
   SESSION_VIEW_TYPE_VAR = 'messages_subnav_view_type'
@@ -27,8 +28,6 @@ class MessagesController < OrganizationAwareController
 
   def show
 
-    @message = @organization.messages.find(params[:id])
-    
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
     if @message.nil?
@@ -66,7 +65,7 @@ class MessagesController < OrganizationAwareController
 
   def create
 
-    @message = Message.new(params[:message])
+    @message = Message.new(message_params)
     @message.organization = @organization
     @message.user = current_user
     
@@ -98,4 +97,25 @@ class MessagesController < OrganizationAwareController
       redirect_to(user_messages_url(current_user))
     end
   end
+  
+  #------------------------------------------------------------------------------
+  #
+  # Private Methods
+  #
+  #------------------------------------------------------------------------------
+  private
+  
+  # Callbacks to share common setup or constraints between actions.
+  def set_message
+    @message = @organization.messages.find(params[:id])
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def message_params
+    
+    allowable_params = Message.allowable_params
+    params.require(:message).permit(allowable_params)
+    
+  end
+  
 end
