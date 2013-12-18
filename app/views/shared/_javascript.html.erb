@@ -1,26 +1,16 @@
 <!-- Add any globally applicable javascript here -->
 <script type="text/javascript">
-	
-	// Finds all elements marked as info icons and turns them into popups
-	function enable_info_popups(class_name) {
-		$(class_name).popover({
-			trigger: 'hover'
-		});
-	};
-	
-	function install_quick_link_handlers() {
-		// Enable the quick links
-		$('[data-action-path]').click(function() {
-			var url = $(this).data('action-path');
-			document.location.href = url;
-		});		
-	};
-	
+		
 	$(document).ready(function() {
-		install_quick_link_handlers();
+		
+		// install click handlers for navigable objects
+		transam.install_quick_link_handlers();
 		
 		// Render any info icons as popovers
-		enable_info_popups('.info_icon');
+		transam.enable_info_popups('.info_icon');
+
+		// Enable any date pickers etc
+		transam.enable_date_pickers();
 	
 		// Check for any message divs and fade them out
 		elem = $('#message');
@@ -28,6 +18,5 @@
 			elem.fadeOut(5000);
 		}	
 	});
-	
-	  		
+		  		
 </script>
