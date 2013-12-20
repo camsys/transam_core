@@ -38,14 +38,13 @@
 		<div>
 			<!-- Main Page Content -->
 			<div class="row-fluid">
-				<div class="span12">
-					
+				<div class="span12">					
 					<div class="row-fluid" style="margin-top:40px;">
-						<div class="header-part span9">
+						<div class="first-in-row span9">
 							<div class="hero-unit shadow" style = "height:300px">
 								<%= image_tag "logo.svg", :class => "image pull-left", :style => "height:300px"%>
 								<h1 style="margin-left:320px;"><%= app_title %></h1>
-								<h2 style="margin-left:320px;"><%= app_title %></h1>
+								<div class="muted" style="margin-left:320px;padding-top:20px;"><%= credits %></div>								
 							</div>
 						</div>
 						<div class="span3">
@@ -65,7 +64,7 @@
 <script type="text/javascript">
 
 	$(window).load(function() {
-		make_same_height('.header-part');		
+		make_same_height('.first-in-row');		
 	});
 
 </script>
