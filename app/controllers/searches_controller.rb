@@ -1,4 +1,4 @@
-class SearchController < OrganizationAwareController
+class SearchesController < OrganizationAwareController
                 
   def create
 
