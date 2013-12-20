@@ -1,0 +1,8 @@
+<div class="thumbnail well well-small">
+	<dl class="dl-horizontal">
+	  <dt>Type</dt>
+	  <dd><%= @asset_subtype.nil? ? "" : @asset_subtype.asset_type.name %></dd>
+	  <dt>Description</dt>
+	  <dd><%= @asset_subtype.nil? ? "" : @asset_subtype.description %></dd>
+	</dl>	
+</div>

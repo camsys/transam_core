@@ -1,0 +1,107 @@
+<div class="row-fluid">
+	<div class="span12">
+		<%= form_tag new_inventory_path, :id => 'asset_subtype_form', :method => "get", :class => 'form-horizontal' do %>
+			<%= hidden_field_tag :asset_subtype, @asset_subtype  %>
+			<ul class="thumbnails">
+				<%= panel_tag('New Asset', {:icon => 'icon-plus', :class => 'form_part span8 offset2'}) do %>
+					<div class="row-fluid">
+						<div class="span6">							
+							<div class="control-group string required">
+								<label class="string required control-label" for="filter">
+									<abbr title="required">*</abbr>
+									Sign Type
+								</label>
+								<div class="controls">
+									<%= text_field_tag :filter, @filter, :autocomplete => "off", :class => "ajax-typeahead string required", :data => {:link => filter_inventory_index_path, :provide => "typeahead"} %>
+								</div>
+							</div>
+						</div>
+						<div class="span6" id="subtype_details">
+							<%= render 'subtype_details' %>							
+						</div>
+					</div>
+					<div class="form-actions">
+						<%= submit_tag 'Create New Asset', :class => "btn" %>						
+					</div>					
+				<% end %>
+			</ul>
+		<% end %>
+	</div>
+</div>	
+
+<script type="text/javascript" charset="utf-8">
+
+  	// Configure UI behaviors
+  	var typeahead_delay = <%= Rails.application.config.ui_typeahead_delay %>
+  	var typeahead_min_chars = <%= Rails.application.config.ui_typeahead_min_chars %>
+  	var typeahead_list_length = <%= Rails.application.config.ui_typeahead_list_length %>
+  	var timeout;
+
+	  // Enable typeahead for the filter
+	  $('#filter').typeahead({
+	      items: typeahead_list_length,
+	      minLength: typeahead_min_chars,
+	      source: function(query, process) {
+	          if (timeout) {
+	            clearTimeout(timeout);
+	          }
+	          timeout = setTimeout(function() {
+	            return $.ajax({
+	                url: $('#filter').data('link'),
+	                type: 'get',
+	                data: {
+	                  query: query
+	                },
+	                dataType: 'json',
+	                success: function(result) {
+	  
+	                  var resultList = result.map(function (item) {
+	                      var aItem = { id: item.id, name: item.name };
+	                      return JSON.stringify(aItem);
+	                  });
+	  
+	                  return process(resultList);
+	                }
+	            });
+	          }, typeahead_delay);
+	      },
+	    matcher: function (obj) {
+	        var item = JSON.parse(obj);
+	        return ~item.name.toLowerCase().indexOf(this.query.toLowerCase())
+	    },
+	
+	    sorter: function (items) {          
+	       var beginswith = [], caseSensitive = [], caseInsensitive = [], item;
+	        while (aItem = items.shift()) {
+	            var item = JSON.parse(aItem);
+	            if (!item.name.toLowerCase().indexOf(this.query.toLowerCase())) beginswith.push(JSON.stringify(item));
+	            else if (~item.name.indexOf(this.query)) caseSensitive.push(JSON.stringify(item));
+	            else caseInsensitive.push(JSON.stringify(item));
+	        }
+	
+	        return beginswith.concat(caseSensitive, caseInsensitive)
+	
+	    },
+	
+	
+	    highlighter: function (obj) {
+	        var item = JSON.parse(obj);
+	        var query = this.query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
+	        return item.name.replace(new RegExp('(' + query + ')', 'ig'), function ($1, match) {
+	            return '<strong>' + match + '</strong>'
+	        })
+	    },
+	
+	    updater: function (obj) {
+	        var item = JSON.parse(obj);
+	        	        
+	        // Update the UI
+	        $('#filter').attr('value', item.name);
+	        $('#asset_subtype').attr('value', item.id);
+	        var url = '/inventory/details/?asset_subtype=' + item.id
+	        ajax_render_action(url, 'get');
+	        return item.name;
+	    }  
+	  });  
+
+</script>
