@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-	<title>TransAM - Asset Manager</title>
+	<title><%= app_title %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -27,7 +27,7 @@
 			<div class="container-fluid">
 				<div class="row-fluid">
 					<div class="span5">
-						<%= link_to "TransAM - Asset Manager", "/", :class => "brand" %>
+						<%= link_to app_title, "/", :class => "brand" %>
 	    			</div>
 	  			</div>
 			</div>
@@ -44,7 +44,7 @@
 						<div class="header-part span9">
 							<div class="hero-unit shadow" style = "height:280px">
 								<%= image_tag "logo.svg", :class => "image pull-left", :style => "height:300px"%>
-								<h1 style="margin-left:200px;">TransAM<br/>Sign Manager</h1>
+								<h1 style="margin-left:200px;"><%= app_title %></h1>
 							</div>
 						</div>
 						<div class="span3">

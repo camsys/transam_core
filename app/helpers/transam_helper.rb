@@ -6,6 +6,10 @@ module TransamHelper
   ACTIVE_CLASS      = 'active'
   INACTIVE_CLASS    = 'inactive'
   
+  def app_title
+    ENV["APPLICATION_TITLE"] ? ENV["APPLICATION_TITLE"] : 'TransAM Core'
+  end
+    
   def bootstrap_class_for flash_type
     case flash_type
       when :success

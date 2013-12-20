@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>TransAM - Asset Manager</title>
+		<title><%= app_title %></title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<%= stylesheet_link_tag    "application", :media => "all" %>
 		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4/leaflet.css" />
@@ -27,7 +27,7 @@
 					<div class="container-fluid">
 						<div class="row-fluid">
 							<div class="span6">
-								<%= link_to "TransAM - Asset Manager", "/", :class => "brand" %>
+								<%= link_to app_title, "/", :class => "brand" %>
 							</div>
 							<div class="span6">
 								<ul class="nav pull-right">
