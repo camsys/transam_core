@@ -1,0 +1,24 @@
+<div class="row-fluid">
+	<div class="span12">
+		<ul class="thumbnails">
+			<%= panel_tag('Identification', {:icon => 'icon-refresh', :class => "header_part span4"}) do %>
+				<%= format_field("Asset Tag", @asset.asset_tag ) %>
+				<%= format_field("Class", @asset.asset_type.name ) %>
+				<%= format_field("Type", @asset.asset_subtype.name ) %>
+				<%= format_field("Asset Key", @asset.asset_key ) %>
+			<% end %>
+			<%= panel_tag('Condition', {:icon => 'icon-refresh', :class => "header_part span4"}) do %>
+				<%= format_field("Last reported condition", @asset.last_reported_condition_type.name ) %>
+				<%= format_field("Reported on", @asset.calculate_last_reported_condition_date.nil? ? '' : format_date(@asset.calculate_last_reported_condition_date) ) %>
+				<%= format_field("Est. condition", number_with_precision(@asset.estimated_condition_rating, :precision => 2)) %>
+				<%= format_field("Est. rating", @asset.estimated_condition_type.nil? ? 'Unknown' : @asset.estimated_condition_type.name ) %>
+			<% end %>
+			<%= panel_tag('Replacement', {:icon => 'icon-refresh', :class => "header_part span4"}) do %>
+				<%= format_field("Age", @asset.age.to_s + " years") %>
+				<%= format_field("Policy year", @asset.replacement_year ) %>
+				<%= format_field("Est. Year", @asset.estimated_replacement_year ) %>
+				<%= format_field("Est. cost", format_as_currency(@asset.replacement_cost)) %>
+			<% end %>
+		</ul>
+	</div>
+</div>

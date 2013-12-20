@@ -1,0 +1,7 @@
+<%= render 'form_subnav' %>
+
+<%= render(:partial => 'shared/form_errors', :locals => {:obj => @asset}) unless @asset.errors.empty? %>	
+
+<%= render @asset.asset_type.form_name %>
+
+<%= render 'scripts' %>

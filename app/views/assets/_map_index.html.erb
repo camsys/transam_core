@@ -1,0 +1,58 @@
+<div class="row-fluid">
+	<div class="span6">
+		<table id="datatable" class="table table-condensed table-striped table-hover table-bordered">
+			<thead>
+				<tr>
+					<th class="center" colspan="3">Asset</th>
+					<th class="center" colspan="1">Sign</th>
+					<th class="center" colspan="3">Post</th>
+				</tr>
+				
+				<tr>
+					<th class="center">Class</th>
+					<th class="center">Type</th>
+					<th class="center">Disposition</th>
+					
+					<th class="center">Message</th>
+					
+					<th class="center">Type</th>
+					<th class="center">Size</th>
+					<th class="center">Count</th>
+					
+				</tr>
+			</thead>
+			<tbody>
+				<% @assets.each do |a| %>
+					<tr class = "place-select" data-id = <%= a.asset_key %> data-action-path = '<%= inventory_path(a) %>' >
+						<td class="left"><%= a.asset_type.name %></td>
+						<td class="left"><%= a.asset_subtype.name %></td>
+						<td class="center"><%= a.last_reported_disposition_type.code %></td>
+						
+						<td class="left"><%= a.sign_message %></td>
+						
+						<td class="left"><%= a.post_type.name %></td>
+						<td class="left"><%= a.post_size_type.name %></td>
+						<td class="right"><%= a.post_count %></td>
+
+					</tr>
+				<% end %>
+			</tbody>
+		</table>	
+	</div>
+	<div class="span6">
+		<%= LeafletMap({ :mapid => 'lmap', :markers => @markers, :tile_provider => 'CLOUDMADE', :min_zoom => 10, :max_zoom => 18, :class => "map", :style => "height:600px;" }) %>
+	</div>
+</div>
+
+<%= render '/shared/datatable_javascript' %>
+<%= yield :scripts %>
+
+<script type="text/javascript" charset="utf-8">
+  // Install a hover event handler for my places. When hovering,
+  // the map icon is panned to and the popup shown
+  $('.place-select').hover(function() {
+    var id = $(this).data('id');
+    selectMarkerById(id);
+  });
+
+</script>
