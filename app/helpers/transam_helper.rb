@@ -253,7 +253,7 @@ module TransamHelper
     html = "<li class='thumbnail shadow "
     html << options[:class] unless options[:class].blank?
     html << "'>"
-    html << "<div class='dialog-title-bar panel-header corner-top'>"
+    html << "<div class='dialog-title-bar navbar-inner panel-header corner-top'>"
     html << "<div class='row-fluid'>"
     html << "<h4 class='span12 dialog-title'>"
     if options[:icon]

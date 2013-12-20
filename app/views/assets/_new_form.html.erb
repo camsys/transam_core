@@ -99,7 +99,7 @@
 	        $('#filter').attr('value', item.name);
 	        $('#asset_subtype').attr('value', item.id);
 	        var url = '/inventory/details/?asset_subtype=' + item.id
-	        ajax_render_action(url, 'get');
+	        transam.ajax_render_action(url, 'get');
 	        return item.name;
 	    }  
 	  });  
