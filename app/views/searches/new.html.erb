@@ -1,0 +1,7 @@
+<%= render 'search_subnav' %>
+
+<%= render 'search_form' %>
+
+<% if @assets.count > 0 %>
+	<%= render '/assets/table_index' %>
+<% end %>
