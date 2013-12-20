@@ -3,13 +3,13 @@
 		<%= form_tag new_inventory_path, :id => 'asset_subtype_form', :method => "get", :class => 'form-horizontal' do %>
 			<%= hidden_field_tag :asset_subtype, @asset_subtype  %>
 			<ul class="thumbnails">
-				<%= panel_tag('New Asset', {:icon => 'icon-plus', :class => 'form_part span8 offset2'}) do %>
+				<%= panel_tag('New Asset', {:icon => 'fa fa-plus', :class => 'form_part span8 offset2'}) do %>
 					<div class="row-fluid">
 						<div class="span6">							
 							<div class="control-group string required">
 								<label class="string required control-label" for="filter">
 									<abbr title="required">*</abbr>
-									Sign Type
+									Asset Type
 								</label>
 								<div class="controls">
 									<%= text_field_tag :filter, @filter, :autocomplete => "off", :class => "ajax-typeahead string required", :data => {:link => filter_inventory_index_path, :provide => "typeahead"} %>
