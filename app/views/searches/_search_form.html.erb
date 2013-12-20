@@ -1,6 +1,6 @@
 <div class="row-fluid">
 	<div class="span12">
-	<%= simple_form_for(:searcher, :url => search_index_url, :html => {:class => '' }) do |f| %>
+	<%= simple_form_for(:searcher, :url => searches_path, :html => {:class => '' }) do |f| %>
 	<ul class="thumbnails">
 		<%= panel_tag('Asset Characteristics', {:icon => 'fa fa-refresh', :class => "form_part span3"}) do %>
 			<%= f.input :asset_type_id, :collection => AssetType.all, :include_blank => "Any...", :multiple => true %>
