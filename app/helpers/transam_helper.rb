@@ -7,7 +7,12 @@ module TransamHelper
   INACTIVE_CLASS    = 'inactive'
   
   def app_title
-    ENV["APPLICATION_TITLE"] ? ENV["APPLICATION_TITLE"] : 'TransAM Core'
+    title = ENV["APPLICATION_TITLE"] ? ENV["APPLICATION_TITLE"] : 'TransAM Core'
+    return title.html_safe
+  end
+  def credits
+    credit = ENV["APPLICATION_CREDITS"] ? ENV["APPLICATION_CREDITS"] : 'TransAM Core Asset Management Platform<br/>Configure me in Application.yml'
+    return credit.html_safe
   end
     
   def bootstrap_class_for flash_type
