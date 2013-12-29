@@ -43,6 +43,10 @@ class Asset < ActiveRecord::Base
   # each asset has a single asset subtype
   belongs_to :asset_subtype       
   
+  # each asset belongs to a single manufacturer and has a single model 
+  belongs_to :manufacturer
+  belongs_to :manufacturer_model
+  
   # Each asset has zero or more asset events. These are all events regardless of event type
   has_many   :asset_events        
 
