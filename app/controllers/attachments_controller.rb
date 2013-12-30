@@ -73,7 +73,6 @@ class AttachmentsController < AssetAwareController
     @page_title = "Upload Attachment"
 
     @attachment = Attachment.new(form_params)
-    @attachment.user = current_user
     @attachment.asset = @asset
     
     respond_to do |format|
