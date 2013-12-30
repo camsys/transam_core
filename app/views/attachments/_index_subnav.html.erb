@@ -1,0 +1,53 @@
+<div row-fluid>
+	<div class="span12">
+		<div class="navbar">
+			<div class="navbar-inner">
+				<ul class="nav">
+				    <li>
+						<%= link_to inventory_path(@asset) do %> 
+						<i class="icon-angle-left"></i> Back
+						<% end %>
+				  	</li>
+				  	
+				  	<li class="divider-vertical" />
+
+					<li>
+					<%= form_tag inventory_attachments_path(@asset), :id => 'attachment_filter_form', :method => "get", :class => 'navbar-form form-inline' do %>
+						<div class="input-prepend">
+							<span class="add-on">Filter</span>
+			    			<%= select_tag(:filter_type, options_for_select(AttachmentType.all.collect{|a| [a.name, a.id]}, :selected => @filter_type), :style => "margin-top:0;", :prompt => 'All attachment types...', :id => 'attachment_filter') %>	  
+			    		</div>  
+					<% end %>		
+					</li>
+
+				  	<li class="divider-vertical" />
+
+					<li class="<%= get_nav_link_class('attachments', AttachmentsController::SESSION_VIEW_TYPE_VAR, AttachmentsController::VIEW_TYPE_LIST) %>">
+						<%= link_to inventory_attachments_path(:view_type => AttachmentsController::VIEW_TYPE_LIST) do %>
+						<i class="icon-th-large"></i> List View
+						<% end %>
+					</li>
+					<li class="<%= get_nav_link_class('attachments', AttachmentsController::SESSION_VIEW_TYPE_VAR, AttachmentsController::VIEW_TYPE_TABLE) %>">
+						<%= link_to inventory_attachments_path(:view_type => AttachmentsController::VIEW_TYPE_TABLE) do %>
+						<i class="icon-list-alt"></i> Table View
+						<% end %>
+					</li>
+				  	<li class="divider-vertical" />
+					<li>
+						<%= link_to new_inventory_attachment_path(@asset) do %>
+						<i class="icon-plus"></i> New Attachment
+						<% end %>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" charset="utf-8">
+
+	// Add a listener on the event type filter that submits the form when changed
+	$('#attachment_filter').change(function() {
+		$('#attachment_filter_form').submit();  
+	});
+
+</script>

@@ -1,0 +1,36 @@
+<div class="row-fluid">
+	<div class="span12">
+		<table id="datatable" class="table table-condensed table-striped table-hover table-bordered">
+			<thead>
+				<tr>
+					<th class="center">Type</th>
+					<th class="center">Name</th>
+					<th class="center">Filename</th>
+					<th class="center">File size</th>
+					<th class="center">Uploaded By</th>
+					<th class="center">Uploaded On</th>
+					<th class="center">Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<% @attachments.each do |a| %>
+					<tr data-action-path='<%= inventory_attachment_path(@asset, a) %>' >
+						<td class="left"><%= a.attachment_type.name %></td>
+						<td class="left"><%= a.name %></td>
+						<td class="left"><%= a.original_filename %></td>
+						<td class="right"><%= number_to_human_size(a.file_size) %></td>						
+						<td class="right"><%= a.user.name %></td>
+						<td class="right"><%= format_date_time(a.created_at) %></td>
+						<td class="center">
+							<%= link_to download_inventory_attachment_path(@asset, a), :class => 'btn btn-small', :confirm => 'Download this file?', :target => '_blank' do %>
+								<i class="icon-download"></i> Download
+							<% end %>
+						</td>
+					</tr>
+				<% end %>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<%= render 'shared/datatable_javascript' %>

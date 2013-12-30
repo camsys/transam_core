@@ -1,0 +1,17 @@
+<div class="row-fluid">
+	<div class="span12">
+		<ul class="thumbnails">
+		<%= panel_tag('Attachment', {:icon => 'icon-file', :class => "span8 offset2"}) do %>
+			<%= simple_form_for([@asset, @attachment], :url => @attachment.new_record? ? inventory_attachments_path(@asset) : inventory_attachment_path(@asset, @attachment), :method => @attachment.new_record? ? "post" : "put", :html => {:multipart => true, :class => 'form-horizontal' }) do |f| %>
+				<%= f.input :file, :label => 'Select the file to upload' %>
+				<%= f.association :attachment_type, :label => 'File type' %>
+				<%= f.input :name, :as => :string, :placeholder => "Enter a name for the document...", :required => true %>
+				<div class="form-actions panel-form-actions">
+					<%= f.button :submit, 'Save attachment' %>
+					<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn" %>
+				</div>
+			<% end %>
+		<% end %>
+		</ul>
+	</div>
+</div>	

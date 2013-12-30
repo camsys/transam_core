@@ -1,0 +1,19 @@
+<%= render 'subnav' %>
+
+<div class="row-fluid">
+	<div class="span8">
+		<%= panel_tag('Photo', {:icon => 'icon-file', :class => "span12"}) do %>
+			<%= image_tag @attachment.file_url, :class => "img-polaroid" %>
+		<% end %>
+	</div>
+	<div class="span4">
+		<%= panel_tag('Details', {:icon => 'icon-file', :class => "span12"}) do %>
+			<%= format_field("Name", @attachment.name ) %>
+			<%= format_field("File Name", @attachment.original_filename ) %>
+			<%= format_field("Content", @attachment.attachment_type.name ) %>
+			<%= format_field("Notes", @attachment.notes ) %>
+			<%= format_field("Upload time", format_date_time(@attachment.created_at) ) %>
+			<%= format_field("Uploaded by", link_to(@attachment.user.name, user_path(@attachment.user))) %>
+		<% end %>
+	</div>
+</div>

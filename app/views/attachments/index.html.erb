@@ -1,0 +1,9 @@
+<%= render 'index_subnav' %>
+
+<% if @attachments.empty? %>
+	<%= render 'empty_list' %>
+<% elsif @view_type == AttachmentsController::VIEW_TYPE_TABLE %>
+	<%= render 'index_table' %>
+<% else %>
+	<%= render 'index_thumbnails' %>
+<% end %>

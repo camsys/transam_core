@@ -17,6 +17,10 @@ module TransamAttributes
     AssetEvent.allowable_params + ConditionUpdateEvent.allowable_params + DispositionUpdateEvent.allowable_params
   end
 
+  def attachment_allowable_params
+    Attachment.allowable_params
+  end
+
   def message_allowable_params
     Message.allowable_params
   end
