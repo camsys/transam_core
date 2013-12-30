@@ -56,10 +56,9 @@ class AssetEvent < ActiveRecord::Base
   def self.get_new_typed_event(asset_event_type)
     
     class_name = asset_event_type.class_name
-    asset_event = class_name.constantize.new
-    asset_event.asset_event_type = asset_event_type
+    asset_event = class_name.constantize.new({:asset_event_type_id => asset_event_type.id})
     return asset_event
-
+   
   end
   
   # Returns a typed version of itself. Every asset has a type and this will
