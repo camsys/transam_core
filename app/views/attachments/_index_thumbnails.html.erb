@@ -5,7 +5,7 @@
 			<% @attachments.each do |attachment| %>
 				<% if attachment.attachment_type.name == "Photo" %>
 					<li class="span2 thumbnail div_thumbnail">
-						<%= image_thumbnail_tag({:icon => "icon-file", :title => attachment.name, :path => inventory_attachment_path(@asset, attachment)}) do %>
+						<%= image_thumbnail_tag({:icon => "fa fa-file", :title => attachment.name, :path => inventory_attachment_path(@asset, attachment)}) do %>
 							<%= image_tag attachment.file.url(:thumb), :class => "img-polaroid" if attachment.file  %>
 						<% end %>
 					</li>
@@ -21,7 +21,7 @@
 			<% @attachments.each do |attachment| %>
 				<% if attachment.attachment_type_id  != 1 %>
 					<li class="span3 thumbnail div_thumbnail">
-						<%= action_thumbnail_tag({:icon => "icon-file", :title => attachment.name, :path => inventory_attachment_path(@asset, attachment)}) do %>
+						<%= action_thumbnail_tag({:icon => "fa fa-file", :title => attachment.name, :path => inventory_attachment_path(@asset, attachment)}) do %>
 							<%= image_tag attachment.file if attachment.file  %>
 						<% end %>
 					</li>
