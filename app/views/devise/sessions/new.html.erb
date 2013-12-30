@@ -8,7 +8,7 @@
   			  <%= f.error_notification %>
 			  <%= f.input :email, :autofocus => true %>
 			  <%= f.input :password %>
-			  <%= f.input :remember_me, :as => :boolean, :label => false, :inline_label => true if devise_mapping.rememberable? %>
+			  <%= f.input :remember_me, :as => :boolean, :label => false, :inline_label => :true if devise_mapping.rememberable? %>
 			  <div class="form-actions">
 				  <%= f.button :submit, "Sign in", :class => 'btn-primary' %>
 			  </div>
