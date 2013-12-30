@@ -1,0 +1,44 @@
+<table id="datatable" class="table table-condensed table-striped table-hover table-bordered">
+	<thead>
+		<tr>
+			<th class="center" colspan="4">Asset</th>
+			<th class="center" colspan="4">Condition</th>
+			<th class="center" colspan="2">Replacement</th>
+		</tr>
+
+		<tr>
+			<th class="center">Type</th>
+			<th class="center">Tag</th>					
+			<th class="center">Manu.</th>
+			<th class="center">Model</th>
+			
+			<th class="center">Age</th>
+			<th class="center">Backlog</th>
+			<th class="center">Reported</th>
+			<th class="center">Estimated</th>
+
+			<th class="center">Cost</th>
+			<th class="center">Year</th>
+			
+		</tr>
+	</thead>
+	<tbody>
+		<% @assets.each do |a| %>
+			<tr data-action-path = '<%= inventory_path(a) %>'>
+				<td class="left"><%= a.asset_subtype.name %></td>
+				<td class="left"><%= a.asset_tag %></td>
+				<td class="left"><%= a.manufacturer.code %></td>
+				<td class="left"><%= a.manufacturer_model.name %></td>
+
+				<td class="right"><%= a.age %></td>
+				<td class="center"><%= a.in_backlog %></td>
+				<td class="center"><%= a.last_reported_condition_type.name unless a.last_reported_condition_type.nil? %>
+				<td class="center"><%= a.estimated_condition_type.name unless a.estimated_condition_type.nil? %>
+				
+				<td class="left"><%= a.replacement_cost %></td>
+				<td class="left"><%= a.replacement_year %></td>
+				
+			</tr>
+		<% end %>
+	</tbody>
+</table>	
