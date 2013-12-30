@@ -80,7 +80,9 @@ class Policy < ActiveRecord::Base
     :name,
     :description,
     :interest_rate,
-    :condition_threshold    
+    :condition_threshold,
+    :current,
+    :active    
   ]
   
   #------------------------------------------------------------------------------

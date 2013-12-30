@@ -15,7 +15,7 @@
 				<%= f.association :service_life_calculation_type, :label => "Service life calculation", :prompt => "Select..." %>
 				<%= f.association :cost_calculation_type, :label => "Cost calculation model", :prompt => "Select..." %>
 				<%= f.association :condition_estimation_type, :label => "Condition estimation model", :prompt => "Select..." %>
-				<%= f.input :estimated_condition_threshold %>
+				<%= f.input :condition_threshold %>
 			<% end %>
 		</ul>
 	</div>
@@ -27,10 +27,3 @@
 	<% end %>
 	<% end %>
 </div>
-<script type="text/javascript">
-
-	fix_thumbnail_margins(6);
-	enable_date_pickers();
-	make_same_height('.form_part');
-
-</script>

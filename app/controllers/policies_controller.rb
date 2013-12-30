@@ -73,7 +73,7 @@ class PoliciesController < OrganizationAwareController
     new_policy.save
 
     # now attempt to load the newly created record
-    @policy = current_user.organization.policies.find(new_policy.policy_id)
+    @policy = current_user.organization.policies.find(new_policy.id)
     respond_to do |format|
       if @policy
         format.html { redirect_to edit_policy_url(@policy), :notice => "Policy #{old_policy_name} was successfully copied." }
@@ -89,7 +89,7 @@ class PoliciesController < OrganizationAwareController
   def create
 
     @policy = Policy.new(form_params)
-    @policy.agency = @organization
+    @policy.organization = @organization
 
     respond_to do |format|
       if @policy.save
