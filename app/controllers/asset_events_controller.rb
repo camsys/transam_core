@@ -111,12 +111,9 @@ class AssetEventsController < AssetAwareController
 
     # get the typed version of this asset_event
     @asset_event = AssetEvent.as_typed_event(asset_event)    
-    # get the class name for this asset event type
-    class_name = asset_event.asset_event_type.class_name
-    form_hash = class_name.underscore
 
     respond_to do |format|
-      if @asset_event.update_attributes(params[form_hash])
+      if @asset_event.update_attributes(form_params)
         # The event was updated so we need to update the asset condition
         Rails.logger.info "Updating condition for asset with key = #{@asset.asset_key}"
         @asset.update_condition_and_disposition
@@ -135,9 +132,8 @@ class AssetEventsController < AssetAwareController
     asset_event_type = AssetEventType.find(params[:event_type])
     # get the class name for this asset event type
     class_name = asset_event_type.class_name
-    form_hash = class_name.underscore
     klass = Object.const_get class_name    
-    @asset_event = klass.new(params[form_hash])
+    @asset_event = klass.new(form_params)
     @asset_event.asset = @asset
     
     Rails.logger.debug @asset_event.inspect
@@ -177,7 +173,17 @@ class AssetEventsController < AssetAwareController
     end
   end
 
-private
+  #------------------------------------------------------------------------------
+  #
+  # Private Methods
+  #
+  #------------------------------------------------------------------------------
+  private
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def form_params
+    params.require(:asset_event).permit(asset_event_allowable_params)
+  end
   
   def check_for_cancel
     # go back to the asset view

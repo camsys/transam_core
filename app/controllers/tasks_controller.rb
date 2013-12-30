@@ -64,7 +64,7 @@ class TasksController < OrganizationAwareController
 
   def create
 
-    @task = Task.new(task_params)
+    @task = Task.new(form_params)
     # Simple form doesn't process mapped assoacitions very well
     @task.assigned_to = User.find(params[:task][:assigned_to_user_id]) unless params[:task][:assigned_to_user_id].blank?
     @task.for_organization = @task.assigned_to.organization unless @task.assigned_to.nil?
@@ -94,7 +94,7 @@ class TasksController < OrganizationAwareController
     end
 
     respond_to do |format|
-      if @task.update_attributes(task_params)
+      if @task.update_attributes(form_params)
         format.html { redirect_to user_tasks_url(current_user), :notice => "Task was successfully updated." }
         format.json { head :no_content }
       else
@@ -129,9 +129,8 @@ class TasksController < OrganizationAwareController
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
-  def task_params
-    allowable_params = Task.allowable_params
-    params.require(:task).permit(allowable_params)
+  def form_params
+    params.require(:task).permit(task_allowable_params)
   end
   
 end

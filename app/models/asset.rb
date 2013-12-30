@@ -155,12 +155,41 @@ class Asset < ActiveRecord::Base
     'estimated_condition_rating',
     'in_backlog'
   ]
+  # List of hash parameters allowed by the controller
+  FORM_PARAMS = [
+    :asset_key,
+    :organization_id, 
+    :asset_type_id, 
+    :asset_subtype_id, 
+    :asset_tag,
+    :manufacturer_id,
+    :manufacturer_model_id,
+    :replacement_cost,
+    :replacement_year,
+    :last_reported_condition_type_id,
+    :last_reported_disposition_type_id,
+    :last_reported_condition_rating,
+    :estimated_replacement_year,
+    :estimated_condition_type_id,
+    :estimated_condition_rating,
+    :in_backlog,
+    :location_reference_type_id,
+    :location_reference,
+    :geometry,
+    :location_comments,
+    :created_by_id, 
+    :updated_by_id
+  ]
   
   #------------------------------------------------------------------------------
   #
   # Class Methods
   #
   #------------------------------------------------------------------------------
+    
+  def self.allowable_params
+    FORM_PARAMS
+  end
     
   # Factory method to return a strongly typed subclass of a new asset
   # based on the asset subtype
@@ -372,6 +401,10 @@ class Asset < ActiveRecord::Base
   
   
   #------------------------------------------------------------------------------
+  #
+  # Protected Methods
+  #
+  #------------------------------------------------------------------------------
   protected
   
   # nils out all fields identified to be cleansed
@@ -455,7 +488,12 @@ class Asset < ActiveRecord::Base
 
   end    
 
-private
+  #------------------------------------------------------------------------------
+  #
+  # Private Methods
+  #
+  #------------------------------------------------------------------------------
+  private
 
   # Calls a calculate method on a Calculator class to perform a condition or cost calculation
   # for the asset. The method name defaults to x.calculate(asset) but other methods

@@ -32,6 +32,24 @@ class AssetEvent < ActiveRecord::Base
   default_scope { order("event_date DESC") }
   # named scopes
   
+  # List of hash parameters allowed by the controller
+  FORM_PARAMS = [
+    :asset_id,
+    :asset_event_type_id, 
+    :asset_type_id, 
+    :event_date, 
+    :comments
+  ]
+  
+  #------------------------------------------------------------------------------
+  #
+  # Class Methods
+  #
+  #------------------------------------------------------------------------------
+    
+  def self.allowable_params
+    FORM_PARAMS
+  end
   
   # Factory method to return a strongly typed subclass of a new asset event
   # based on the asset event type
@@ -43,6 +61,7 @@ class AssetEvent < ActiveRecord::Base
     return asset_event
 
   end
+  
   # Returns a typed version of itself. Every asset has a type and this will
   # return a specific asset type based on the AssetType attribute
   def self.as_typed_event(asset_event)
@@ -53,6 +72,12 @@ class AssetEvent < ActiveRecord::Base
       return o
     end
   end
+  
+  #------------------------------------------------------------------------------
+  #
+  # Instance Methods
+  #
+  #------------------------------------------------------------------------------
       
   # Return the update by coercing as a typed class and returning the appropriate
   # update from it
@@ -61,7 +86,12 @@ class AssetEvent < ActiveRecord::Base
     evt.get_update
   end
   
-protected
+  #------------------------------------------------------------------------------
+  #
+  # Protected Methods
+  #
+  #------------------------------------------------------------------------------
+  protected
 
   # Set resonable defaults for a new asset event
   def set_defaults

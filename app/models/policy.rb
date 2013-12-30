@@ -69,7 +69,35 @@ class Policy < ActiveRecord::Base
 
   # set named scopes 
   scope :current, -> { where(:current => true) }
+
+  # List of hash parameters allowed by the controller
+  FORM_PARAMS = [
+    :organization_id,
+    :service_life_calculation_type_id, 
+    :cost_calculation_type_id, 
+    :condition_estimation_type_id, 
+    :year,
+    :name,
+    :description,
+    :interest_rate,
+    :condition_threshold    
+  ]
   
+  #------------------------------------------------------------------------------
+  #
+  # Class Methods
+  #
+  #------------------------------------------------------------------------------
+    
+  def self.allowable_params
+    FORM_PARAMS
+  end
+  
+  #------------------------------------------------------------------------------
+  #
+  # Protected Methods
+  #
+  #------------------------------------------------------------------------------
   protected 
 
   # Set resonable defaults for a new policy

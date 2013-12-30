@@ -21,6 +21,22 @@ class ConditionUpdateEvent < AssetEvent
     self.assessed_rating ||= ConditionType.find(condition_type_id).rating
   end
     
+  # List of hash parameters allowed by the controller
+  FORM_PARAMS = [
+    :condition_type_id,
+    :assessed_rating
+  ]
+  
+  #------------------------------------------------------------------------------
+  #
+  # Class Methods
+  #
+  #------------------------------------------------------------------------------
+    
+  def self.allowable_params
+    FORM_PARAMS
+  end
+    
   #returns the asset event type for this type of event
   def self.asset_event_type
     AssetEventType.find_by_class_name(self.name)

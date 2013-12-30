@@ -24,5 +24,27 @@ class Task < ActiveRecord::Base
   validates :complete_by, :presence => true
    
   default_scope { order('complete_by') }
+
+  # List of hash parameters allowed by the controller
+  FORM_PARAMS = [
+    :from_user_id,
+    :from_organization_id, 
+    :priority_type_id, 
+    :assigned_to_user_id, 
+    :for_organization_id,
+    :subject,
+    :body,
+    :complete_by
+  ]
+  
+  #------------------------------------------------------------------------------
+  #
+  # Class Methods
+  #
+  #------------------------------------------------------------------------------
+    
+  def self.allowable_params
+    FORM_PARAMS
+  end
       
 end

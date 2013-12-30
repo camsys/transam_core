@@ -6,6 +6,9 @@ class TransamController < ApplicationController
   # include the TransAM helper into the controller and view
   helper TransamHelper
 
+  # Include the rails4 style form parameters mixin
+  include TransamAttributes
+
   # determine which layout to use based on the current user state
   layout :layout_by_resource
   

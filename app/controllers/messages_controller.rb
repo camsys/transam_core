@@ -1,4 +1,5 @@
 class MessagesController < OrganizationAwareController
+  
   before_action :set_message, :only => [:show, :edit, :update, :destroy]  
   before_filter :check_for_cancel, :only => [:create] 
 
@@ -65,7 +66,7 @@ class MessagesController < OrganizationAwareController
 
   def create
 
-    @message = Message.new(message_params)
+    @message = Message.new(form_params)
     @message.organization = @organization
     @message.user = current_user
     
@@ -104,18 +105,15 @@ class MessagesController < OrganizationAwareController
   #
   #------------------------------------------------------------------------------
   private
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def form_params
+    params.require(:message).permit(message_allowable_params)
+  end
   
   # Callbacks to share common setup or constraints between actions.
   def set_message
     @message = @organization.messages.find(params[:id])
-  end
-
-  # Never trust parameters from the scary internet, only allow the white list through.
-  def message_params
-    
-    allowable_params = Message.allowable_params
-    params.require(:message).permit(allowable_params)
-    
   end
   
 end

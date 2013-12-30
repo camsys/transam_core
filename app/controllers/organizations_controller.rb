@@ -59,7 +59,7 @@ class OrganizationsController < OrganizationAwareController
   def update
 
     respond_to do |format|
-      if @organization.update_attributes(organization_params)
+      if @organization.update_attributes(form_params)
         format.html { redirect_to organization_url(@organization), :notice => "#{@organization.name} was successfully updated." }
         format.json { head :no_content }
       else
@@ -107,11 +107,8 @@ class OrganizationsController < OrganizationAwareController
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
-  def organization_params
-    
-    allowable_params = Organization.allowable_params
-    params.require(:organization).permit(allowable_params)
-    
+  def form_params
+    params.require(:organization).permit(organization_allowable_params)
   end
   
   def check_for_cancel

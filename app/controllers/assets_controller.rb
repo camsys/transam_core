@@ -1,5 +1,5 @@
 class AssetsController < AssetAwareController
-  
+    
   # Include map helpers into this class
   include MapHelper
   
@@ -126,7 +126,7 @@ class AssetsController < AssetAwareController
     end
 
     respond_to do |format|
-      if @asset.update_attributes(params[:asset])
+      if @asset.update_attributes(form_params)
         format.html { redirect_to inventory_url(@asset), :notice => "Asset #{@asset.name} was successfully updated." }
         format.json { head :no_content }
       else
@@ -172,7 +172,7 @@ class AssetsController < AssetAwareController
     # get the class name for this asset event type
     class_name = asset_type.class_name
     klass = Object.const_get class_name    
-    @asset = klass.new(params[:asset])
+    @asset = klass.new(form_params)
     @asset.asset_type = asset_type
     @asset.asset_subtype = asset_subtype
     @asset.organization = @organization
@@ -217,7 +217,12 @@ class AssetsController < AssetAwareController
     
   end
       
-protected
+  #------------------------------------------------------------------------------
+  #
+  # Protected Methods
+  #
+  #------------------------------------------------------------------------------
+  protected
     
   # returns a list of assets for an index view (index, map) based on user selections
   def get_assets
@@ -324,10 +329,18 @@ protected
     #puts @next_asset_id
   end
     
-private
-  
-  # Returns a set of leaflet location markers for an asset
-  
+  #------------------------------------------------------------------------------
+  #
+  # Private Methods
+  #
+  #------------------------------------------------------------------------------
+  private
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def form_params
+    params.require(:asset).permit(asset_allowable_params)
+  end
+    
   #
   # Overrides the utility method in the base class
   #
