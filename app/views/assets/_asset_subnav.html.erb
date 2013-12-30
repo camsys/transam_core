@@ -4,50 +4,50 @@
 			<div class="navbar-inner">
 				<ul class="nav">
 					<li>
-						<%= link_to back_inventory_index_path do %> <i class="icon-angle-left"></i> Back
+						<%= link_to back_inventory_index_path do %> <i class="fa fa-angle-left"></i> Back
 						<% end %>
 					</li>
 					<li>
-						<%= link_to  inventory_asset_events_path(@asset) do %> <i class="icon-calendar"></i> History (<%= @asset.asset_events.length %>)
+						<%= link_to  inventory_asset_events_path(@asset) do %> <i class="fa fa-calendar"></i> History (<%= @asset.asset_events.length %>)
 						<% end %>
 					</li>
 					<li>
-						<%= link_to  inventory_attachments_path(@asset) do %> <i class="icon-file"></i> Attachments (<%= @asset.attachments.length %>)
+						<%= link_to  inventory_attachments_path(@asset) do %> <i class="fa fa-file"></i> Attachments (<%= @asset.attachments.length %>)
 						<% end %>
 					</li>
 					<li>
-						<%= link_to edit_inventory_path(@asset) do %> <i class="icon-edit"></i> Update
+						<%= link_to edit_inventory_path(@asset) do %> <i class="fa fa-edit"></i> Update
 						<% end %>
 					</li>
 					<li>
-						<%= link_to copy_inventory_path(@asset) do %> <i class="icon-copy"></i> Copy
+						<%= link_to copy_inventory_path(@asset) do %> <i class="fa fa-copy"></i> Copy
 						<% end %>
 					</li>
 					<li>
 						<%= link_to inventory_path(@asset), :title => "Delete the asset?", :method => :delete, :confirm => "Are you sure you want to delete this asset?" do %> 
-							<i class="icon-remove"></i> Delete
+							<i class="fa fa-remove"></i> Delete
 						<% end %>
 					</li>
 
 					<li>
 						<% if @prev_asset_id %>
 							<%= link_to inventory_path(@prev_asset_id) do %>
-								<i class="icon-angle-left"></i> Prev
+								<i class="fa fa-angle-left"></i> Prev
 							<% end %>
 						<% else %>
 							<%= link_to '#', :disabled => true do %>
-								<i class="icon-angle-left"></i> Prev
+								<i class="fa fa-angle-left"></i> Prev
 							<% end %>
 						<% end %>
 					</li>
 					<li>
 						<% if @next_asset_id %>
 							<%= link_to inventory_path(@next_asset_id) do %>
-								<i class="icon-angle-right"></i> Next
+								<i class="fa fa-angle-right"></i> Next
 							<% end %>
 						<% else %>
 							<%= link_to '#', :disabled => true do %>
-								<i class="icon-angle-right"></i> Next
+								<i class="fa fa-angle-right"></i> Next
 							<% end %>
 						<% end %>
 					</li>
