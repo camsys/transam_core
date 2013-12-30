@@ -33,18 +33,7 @@ class PoliciesController < OrganizationAwareController
 
   def show
 
-    # Check to see if we got an asset subtype to sub select on
-    @asset_subtype = params[:asset_subtype]
-
-    if @asset_subtype
-      @policy_items = PolicyItem.where('policy_id = ? AND asset_subtype_id = ? AND active = ?', @policy.id, @asset_subtype, true)
-    else
-      @policy_items = PolicyItem.where('policy_id = ? AND active = ?', @policy.id, true)
-    end   
     @page_title = @policy.name
-
-    # Get the asset types for the filter dropdown
-    @asset_types = AssetType.all
 
     respond_to do |format|
       format.html # show.html.erb
@@ -52,81 +41,6 @@ class PoliciesController < OrganizationAwareController
     end
   end
 
-  def rules
-
-    @policy_items = PolicyItem.where('policy_id = ? and active = ?', @policy.id, true)
-     
-    # See if we got a policy item id to edit
-    unless params[:policy_item].nil?
-      @policy_item = @policy.policy_items.find(params[:policy_item])
-      @url = update_rule_policy_url(@policy, :policy_item_id => @policy_item)
-    else
-      @policy_item = PolicyItem.new
-      @url = create_rule_policy_url(@policy)
-    end
-    @page_title = @policy.name
-    
-    respond_to do |format|
-      format.html # rules.html.erb
-      format.json { render :json => @policy }
-    end
-  end
-
-  # called when the user creates a new rule or updates an existing one
-  def update_rule
-
-    # See if we got a policy item id to edit
-    if params[:policy_item_id]
-      @policy_item = @policy.policy_items.find(params[:policy_item_id])
-    end
-  
-    respond_to do |format|
-      if @policy_item.update_attributes(params[:policy_item])
-        format.html { redirect_to rules_policy_url(@policy), :notice => "Policy #{@policy.name} was successfully updated." }
-        format.json { head :no_content }
-      else
-        format.html { render :action => "rules" }
-        format.json { render :json => @policy_item.errors, :status => :unprocessable_entity }
-      end
-    end
-      
-  end
-  
-  def destroy_rule
-
-    # See if we got a policy item id to remove
-    if params[:policy_item_id]
-      @policy_item = @policy.policy_items.find(params[:policy_item_id])
-    end
-
-    respond_to do |format|
-      if @policy_item.destroy
-        format.html { redirect_to rules_policy_url(@policy), :notice => "Policy #{@policy.name} was successfully updated." }
-        format.json { head :no_content }
-      else
-        format.html { redirect_to rules_policy_url(@policy), :warning => "Policy #{@policy.name} could not be updated." }
-        format.json { head :no_content }
-      end
-    end
-  end
-
-  # called when the user creates a new rule or updates an existing one
-  def create_rule
-
-    @policy_item = PolicyItem.new(params[:policy_item])
-    @policy_item.policy = @policy
-  
-    respond_to do |format|
-      if @policy_item.save
-        format.html { redirect_to rules_policy_url(@policy), :notice => "Policy #{@policy.name} was successfully updated." }
-        format.json { head :no_content }
-      else
-        format.html { render :action => "rules" }
-        format.json { render :json => @policy_item.errors, :status => :unprocessable_entity }
-      end
-    end
-      
-  end
   
   def new
 
@@ -156,14 +70,7 @@ class PoliciesController < OrganizationAwareController
     new_policy.name = "Copy of " + @policy.name
     new_policy.description = "Copy of " + @policy.description
 
-    Policy.transaction do
-      new_policy.save
-      @policy.policy_items.each do |item|
-        new_item = item.dup
-        new_item.policy = new_policy
-        new_item.save
-      end        
-    end
+    new_policy.save
 
     # now attempt to load the newly created record
     @policy = current_user.organization.policies.find(new_policy.policy_id)
@@ -181,7 +88,7 @@ class PoliciesController < OrganizationAwareController
   
   def create
 
-    @policy = Policy.new(params[:policy])
+    @policy = Policy.new(form_params)
     @policy.agency = @organization
 
     respond_to do |format|
@@ -198,7 +105,7 @@ class PoliciesController < OrganizationAwareController
   def update
 
     respond_to do |format|
-      if @policy.update_attributes(params[:policy])
+      if @policy.update_attributes(form_params)
         format.html { redirect_to policy_url(@policy), :notice => "Policy #{@policy.name} was successfully updated." }
         format.json { head :no_content }
       else
@@ -210,12 +117,7 @@ class PoliciesController < OrganizationAwareController
 
   def destroy
 
-    Policy.transaction do
-      @policy.policy_items.each do |item|
-        item.destroy
-      end        
-      @policy.destroy
-    end
+    @policy.destroy
 
     respond_to do |format|
       format.html { redirect_to policies_url, :notice => "Policy #{@policy.name} was successfully removed." }
