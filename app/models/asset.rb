@@ -30,8 +30,10 @@ class Asset < ActiveRecord::Base
   after_initialize  :set_defaults
 
   # Always generate a unique asset key before saving to the database
-  before_create { generate_unique_key(:asset_key) }  
-     
+  before_validation(:on => :create) do
+    generate_unique_key(:asset_key)
+  end
+       
   #------------------------------------------------------------------------------
   # Associations common to all asset types
   #------------------------------------------------------------------------------
