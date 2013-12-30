@@ -13,7 +13,6 @@
 				<tr>
 					<th>Event</th>
 					<th>Date</th>
-					<th>Inspector</th>
 					<th>Update</th>
 					<th>Notes</th>
 				</tr>
@@ -25,7 +24,6 @@
 				<tr data-action-path = '<%= inventory_asset_event_path(@asset, e) %>'>
 					<td><%= e.asset_event_type.name %></td>
 					<td><%= format_date(e.event_date) %></td>
-					<td><%= e.inspector.name %></td>
 					<td><%= e.get_update %></td>					
 					<td><%= e.comments %></td>
 				</tr>
