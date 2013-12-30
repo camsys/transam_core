@@ -128,7 +128,7 @@ class AssetEventsController < AssetAwareController
 
   def create
 
-    # we need to know what the action type was for this event
+    # we need to know what the event type was for this event
     asset_event_type = AssetEventType.find(params[:event_type])
     # get the class name for this asset event type
     class_name = asset_event_type.class_name
