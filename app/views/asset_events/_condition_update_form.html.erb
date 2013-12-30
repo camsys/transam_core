@@ -10,14 +10,11 @@
 						<%= f.input_field :event_date, :as => :string, :class => 'span4 datepicker', :style => "margin-top:0", :disabled => @disabled %>
 						<%= content_tag :span, :class => "add-on" do %><i class="icon-calendar"></i><% end %>
 					<% end %>
-					<%= f.association :time_of_day_type, :prompt => 'Select the time of day...' %>
-					<%= f.association :inspector, :prompt => 'Select the inspector...' %>
 	
 				<% end %>
 				<%= panel_tag('Condition', {:icon => 'fa fa-refresh', :class => "span6 form_part"}) do %>
 						
 						<%= f.association :condition_type, :prompt => 'Select the assessed condition...' %>
-						<%= f.input :reteroreflectivity %>
 						<%= f.input :comments, :input_html => { :class => "span12", :rows => 6 }, :placeholder => "Enter any additional comments..." %>
 				<% end %>
 			</ul>
