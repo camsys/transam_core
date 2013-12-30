@@ -21,6 +21,12 @@ class ConditionUpdateEvent < AssetEvent
     self.assessed_rating ||= ConditionType.find(condition_type_id).rating
   end
     
+  #------------------------------------------------------------------------------
+  # Scopes
+  #------------------------------------------------------------------------------
+  # set the default scope
+  default_scope { where(:asset_event_type_id => AssetEventType.find_by_class_name(self.name).id) }
+    
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
     :condition_type_id,
@@ -50,8 +56,8 @@ class ConditionUpdateEvent < AssetEvent
 
   # Set resonable defaults for a new condition update event
   def set_defaults
-    self.asset_event_type ||= AssetEventType.find_by_class_name(self.name)
     super
+    self.asset_event_type ||= AssetEventType.find_by_class_name(self.name)
   end    
   
 end

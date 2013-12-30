@@ -17,6 +17,12 @@ class DispositionUpdateEvent < AssetEvent
   
   validates :disposition_type_id, :presence => true
     
+  #------------------------------------------------------------------------------
+  # Scopes
+  #------------------------------------------------------------------------------
+  # set the default scope
+  default_scope { where(:asset_event_type_id => AssetEventType.find_by_class_name(self.name).id) }
+    
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
     :disposition_type_id
@@ -56,8 +62,8 @@ class DispositionUpdateEvent < AssetEvent
 
   # Set resonable defaults for a new condition update event
   def set_defaults
-    self.asset_event_type ||= AssetEventType.find_by_class_name(self.name)
     super
+    self.asset_event_type ||= AssetEventType.find_by_class_name(self.name)
   end    
   
 end

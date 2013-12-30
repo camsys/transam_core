@@ -13,8 +13,7 @@ class AssetEvent < ActiveRecord::Base
   belongs_to  :asset
   # Every event is of a type
   belongs_to  :asset_event_type
-  # User who performed the inspection
-  belongs_to  :inspector, :class_name => "User", :foreign_key => :inspector_id
+
   # Date on which the event was observed. This would be the day of inspection
   #attr_accessible :event_date
   # Comments added by the inspector
@@ -26,7 +25,6 @@ class AssetEvent < ActiveRecord::Base
   validates :asset_id, :presence => true
   validates :asset_event_type_id, :presence => true
   validates :event_date, :presence => true
-  validates :inspector_id, :presence => true
     
   # default scope
   default_scope { order("event_date DESC") }
