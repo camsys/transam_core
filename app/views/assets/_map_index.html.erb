@@ -1,6 +1,6 @@
 <div class="row-fluid">
 	<div class="span6">
-		<%= render 'asset_table' %>
+		<%= render @view %>
 	</div>
 	<div class="span6">
 		<%= LeafletMap({ :mapid => 'lmap', :markers => @markers, :tile_provider => 'CLOUDMADE', :min_zoom => 10, :max_zoom => 18, :class => "map", :style => "height:600px;" }) %>
