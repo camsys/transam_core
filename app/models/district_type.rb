@@ -1,5 +1,7 @@
 class DistrictType < ActiveRecord::Base
 
+  has_many :districts
+  
   #attr_accessible :name, :description, :active
         
   # default scope

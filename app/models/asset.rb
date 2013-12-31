@@ -62,8 +62,7 @@ class Asset < ActiveRecord::Base
   has_many   :attachments
     
   # Each asset can be associated with 0 or more districts
-  has_many   :asset_district_maps
-  has_many   :districts, :through => :asset_district_maps
+  has_and_belongs_to_many :districts
 
   # Each asset was created and updated by a user
   belongs_to :creator, :class_name => "User", :foreign_key => "created_by_id"
