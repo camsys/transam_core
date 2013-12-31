@@ -47,7 +47,7 @@ module TransamHelper
     
   def format_as_boolean(val)
     if val
-      return "<i class='fa fa-ok'></i>".html_safe
+      return "<i class='fa fa-check fa-fw'></i>".html_safe
     end
   end
   
