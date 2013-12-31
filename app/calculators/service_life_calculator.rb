@@ -2,6 +2,8 @@ class ServiceLifeCalculator < Calculator
   
   protected
   
+  # calculate the service life based on the in_service_date plue
+  # the avberage asset lie based on the policy
   def by_age(asset)
     asset.in_service_date.year + asset.asset_subtype.avg_life_years
   end
