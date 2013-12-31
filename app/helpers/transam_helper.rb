@@ -45,11 +45,10 @@ module TransamHelper
     number_to_currency(val.to_i, :precision => 0)
   end
     
-  def get_boolean(val)
+  def format_as_boolean(val)
     if val
-      return "<i class='icon-ok'></i>".html_safe
+      return "<i class='fa fa-ok'></i>".html_safe
     end
-    #return val.nil? ? 'N' : val == true ? 'Y' : 'N'
   end
   
   # returns a date as an array of elements suitable for creating a new date in javascript
@@ -142,7 +141,7 @@ module TransamHelper
     html << value.to_s unless value.nil?
     unless popover_text.nil?
       html << '&nbsp;'
-      html << "<a href='#' class='info_icon' data-toggle='popover' title='Information' data-placement='top' data-content='" + popover_text + "'><i class='icon icon-info-sign'></i></a>"
+      html << "<a href='#' class='info_icon' data-toggle='popover' title='Information' data-placement='top' data-content='" + popover_text + "'><i class='fa fa-info-sign'></i></a>"
     end
     html << "</div>"
     html << "</div>"

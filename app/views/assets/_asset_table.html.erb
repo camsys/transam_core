@@ -1,7 +1,7 @@
 <table id="datatable" class="table table-condensed table-striped table-hover table-bordered">
 	<thead>
 		<tr>
-			<th class="center" colspan="4">Asset</th>
+			<th class="center" colspan="6">Asset</th>
 			<th class="center" colspan="4">Condition</th>
 			<th class="center" colspan="2">Replacement</th>
 		</tr>
@@ -11,6 +11,8 @@
 			<th class="center">Tag</th>					
 			<th class="center">Manu.</th>
 			<th class="center">Model</th>
+			<th class="center">Disp</th>
+			<th class="center">Cost</th>
 			
 			<th class="center">Age</th>
 			<th class="center">Backlog</th>
@@ -29,14 +31,16 @@
 				<td class="left"><%= a.asset_tag %></td>
 				<td class="left"><%= a.manufacturer.code %></td>
 				<td class="left"><%= a.manufacturer_model.name %></td>
+				<td class="center"><%= a.last_reported_disposition_type.code unless a.last_reported_disposition_type.nil? %></td>
+				<td class="right"><%= format_as_currency(a.cost) %></td>
 
 				<td class="right"><%= a.age %></td>
-				<td class="center"><%= a.in_backlog %></td>
+				<td class="center"><%= format_as_boolean(a.in_backlog) %></td>
 				<td class="center"><%= a.last_reported_condition_type.name unless a.last_reported_condition_type.nil? %>
 				<td class="center"><%= a.estimated_condition_type.name unless a.estimated_condition_type.nil? %>
 				
-				<td class="left"><%= a.replacement_cost %></td>
-				<td class="left"><%= a.replacement_year %></td>
+				<td class="right"><%= format_as_currency(a.replacement_cost) %></td>
+				<td class="right"><%= a.replacement_year %></td>
 				
 			</tr>
 		<% end %>

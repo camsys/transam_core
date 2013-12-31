@@ -66,7 +66,7 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
       
   end  
 
-protected
+  protected
 
   # Calculates the linear deterioration in asset quality per year
   def rate_of_deterioration_per_year(max_rating, min_rating, years)
