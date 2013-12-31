@@ -9,6 +9,7 @@ class AssetsController < AssetAwareController
 
   # From the application config    
   ASSET_BASE_CLASS_NAME     = Rails.application.config.asset_base_class_name   
+  ASSET_BASE_CLASS_VIEW     = Rails.application.config.asset_base_class_view   
   MAX_ROWS_RETURNED         = Rails.application.config.max_rows_returned
   DEFAULT_SEARCH_RADIUS     = Rails.application.config.default_search_radius
   DEFAULT_SEARCH_UNITS      = Unit.new(Rails.application.config.default_search_units)
@@ -31,6 +32,7 @@ class AssetsController < AssetAwareController
     # remember the view type
     @view_type = get_view_type(SESSION_VIEW_TYPE_VAR)
 
+    # this call sets up @asset_type, @asset_subtype, @assets and @view
     @assets = get_assets
     
     # If we are viewing as a map we need to generate the markers
@@ -48,9 +50,9 @@ class AssetsController < AssetAwareController
     cache_assets(@assets)
    
     if @assets.count > 0
-      @page_title = "#{@assets.first.asset_type.name} Signs"
+      @page_title = "#{@assets.first.asset_type.name}"
     else
-      @page_title = "Signs"
+      @page_title = "Assets"
     end    
     
     respond_to do |format|
@@ -70,7 +72,7 @@ class AssetsController < AssetAwareController
     Rails.logger.debug @asset.inspect
     if @asset.geo_locatable? and @asset.mappable?
       markers = []
-      markers << get_map_marker(@asset, 'sign', true) # make the marker draggable
+      markers << get_map_marker(@asset, 'asset', true) # make the marker draggable
       @markers = markers.to_json
     end
     
@@ -92,7 +94,7 @@ class AssetsController < AssetAwareController
         markers << get_map_marker(a, a.asset_key, false, 0, 'purpleIcon')
       end
       # Add the current marker with a high Z index so it shows on top
-      markers << get_map_marker(@asset, 'sign', false, 100) # not draggable
+      markers << get_map_marker(@asset, 'asset', false, 100) # not draggable
     end
     @markers = markers.to_json
         
@@ -110,7 +112,7 @@ class AssetsController < AssetAwareController
     @page_title = "Update " + @asset.name
     if @asset.geo_locatable? and @asset.mappable?
       markers = []
-      markers << get_map_marker(@asset, 'sign', true) # make the marker draggable
+      markers << get_map_marker(@asset, 'asset', true) # make the marker draggable
       @markers = markers.to_json
     end
     
@@ -121,7 +123,7 @@ class AssetsController < AssetAwareController
     @asset.updator = current_user
     if @asset.geo_locatable? and @asset.mappable?
       markers = []
-      markers << get_map_marker(@asset, 'sign', true) # make the marker draggable
+      markers << get_map_marker(@asset, 'asset', true) # make the marker draggable
       @markers = markers.to_json
     end
 
@@ -223,8 +225,9 @@ class AssetsController < AssetAwareController
   #
   #------------------------------------------------------------------------------
   protected
-    
+        
   # returns a list of assets for an index view (index, map) based on user selections
+  # this call sets up @asset_type, @asset_subtype, @assets, @id_filter_list and @view
   def get_assets
 
     # Check to see if we got an asset type to sub select on. This occurs when the user
@@ -264,14 +267,18 @@ class AssetsController < AssetAwareController
     # If the asset type and subtypes are not set we default to the asset base class
     if @id_filter_list or (@asset_type == 0 and @asset_subtype == 0)
       class_name = ASSET_BASE_CLASS_NAME
+      @view = ASSET_BASE_CLASS_VIEW
     elsif @asset_subtype > 0
       # we have an asset subtype so get it and get the asset type from it. We also set the filter form
       # to the name of the selected subtype
       subtype = AssetSubtype.find(@asset_subtype)
       class_name = subtype.asset_type.class_name
       @filter = subtype.full_name
+      @view = subtype.asset_type.index_name
     else
-      class_name = AssetType.find(@asset_type).class_name
+      asset_type = AssetType.find(@asset_type)
+      class_name = asset_type.class_name
+      @view = asset_type.index_name
     end
     # Create a class instance of the asset type which can be used to perform
     # active record queries
