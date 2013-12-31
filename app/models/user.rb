@@ -17,17 +17,18 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
 
-
   # Callbacks
   after_initialize :set_defaults
   
   # Associations
+  
+  # every user belongs to a single organizations
   belongs_to :organization
-  has_many   :user_organization_maps
-  #has_many   :roles, :through => :user_role_maps
-  has_many   :organizations, :through => :user_organization_maps
+  
+  # every user has access to 0 or more organizations for reporting
+  has_and_belongs_to_many :organizations
+  
   has_many   :messages
-  has_many   :uploads
 
   validates :first_name,    :presence => true
   validates :last_name,     :presence => true
