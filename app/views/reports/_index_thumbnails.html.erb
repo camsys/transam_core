@@ -2,13 +2,11 @@
 	<div class="span12">
 		<ul class="thumbnails">	
 			<% @reports.each do |report| %>
-				<li class="span3 thumbnail div_thumbnail">
-					<%= action_thumbnail_tag({:icon => report.report_type.display_icon_name, :title => report.name, :path => report_path(report) }) do %>
-						<%= content_tag "p" do %>
-							<%= report.description %>
-						<% end %>
+				<%= action_thumbnail_tag({:class => 'span3', ':icon => report.report_type.display_icon_name, :title => report.name, :path => report_path(report) }) do %>
+					<%= content_tag "p" do %>
+						<%= report.description %>
 					<% end %>
-				</li>
+				<% end %>
 			<% end %>
 		</ul>
 	</div>

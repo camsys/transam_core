@@ -8,15 +8,19 @@ module TransamTagHelper
       content = "<p>&nbsp;</p>"
     end
 
-    html = "<div data-action-path='"
+    html = "<li class='shadow "
+    html << options[:class] unless options[:class].blank?
+    html << "'>"
+    html << "<a class='thumbnail' href='"
     html << options[:path]
     html << "'>"
-    html << "<div class='well well-small' style='margin-bottom:0px;height:150px;'>"
+    #html << "<div class='well well-small' style='margin-bottom:0px;height:150px;'>"
 
     html << content
 
-    html << "</div>"
-    html << "</div>"
+    #html << "</div>"
+    html << "</a>"
+    html << "</li>"
     
     return html.html_safe     
   end
@@ -29,7 +33,10 @@ module TransamTagHelper
       content = "<p>&nbsp;</p>"
     end
 
-    html = "<div data-action-path='"
+    html = "<li class='thumbnail shadow "
+    html << options[:class] unless options[:class].blank?
+    html << "'>"
+    html << "<div data-action-path='"
     html << options[:path]
     html << "'>"
     html << "<div class='well well-small' style='margin-bottom:0px;height:150px;'>"
@@ -53,6 +60,7 @@ module TransamTagHelper
     html << "</div>"
     html << "</div>"
     html << "</div>"
+    html << "</li>"
     
     return html.html_safe     
   end
@@ -103,9 +111,8 @@ module TransamTagHelper
     html = "<li class='thumbnail shadow "
     html << options[:class] unless options[:class].blank?
     html << "'>"
-    html << "<div class='dialog-title-bar panel-header corner-top'>"
-    html << "<div class='row-fluid'>"
-    html << "<h4 class='span12 dialog-title'>"
+    html << "<div class='panel-header navbar-inner'>"
+    html << "<h4 class='panel-title'>"
     if options[:icon]
       html << "<i class='"
       html << options[:icon]
@@ -115,8 +122,7 @@ module TransamTagHelper
     html << "</h4>"
 
     html << "</div>"
-    html << "</div>"
-    html << "<div class='dialog-content'>"    
+    html << "<div class='panel-content'>"    
     html << content
     html << "</div>"
     html << "</li>"
@@ -132,10 +138,9 @@ module TransamTagHelper
     end
     
     html = "<li class='span12 thumbnail first-in-row shadow'>"
-    html << "<div class='dialog-title-bar corner-top'>"
-    html << "<div class='row-fluid'>"
+    html << "<div class='dialog-header navbar-inner'>"
     if link_path.nil?
-      html << "<h4 class='span12 dialog-title'>"
+      html << "<h4 class='dialog-title'>"
       if icon
         html << "<i class='"
         html << icon
@@ -156,7 +161,6 @@ module TransamTagHelper
       html << link_to(link_text, link_path, :class => "btn btn-small pull-right")
       html << "</div>"
     end
-    html << "</div>"
     html << "</div>"
     html << "<div class='dialog-content'>"    
     html << content
