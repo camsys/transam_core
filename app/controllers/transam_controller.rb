@@ -3,26 +3,24 @@ class TransamController < ApplicationController
   before_filter :authenticate_user!
   before_filter :set_timezone 
  
-  # include the TransAM helper into the controller and view
+  # include the TransAM helpers into the controller and view
   helper TransamHelper
+  helper TransamTagHelper
+  helper TransamFormatHelper
 
   # Include the rails4 style form parameters mixin
   include TransamAttributes
 
   # determine which layout to use based on the current user state
   layout :layout_by_resource
-  
-  # Prevent CSRF attacks by raising an exception.
-  protect_from_forgery :with => :exception
-    
+      
   OBJECT_CACHE_EXPIRE_SECONDS = Rails.application.config.object_cache_expire_seconds
            
   # Enumerables for view types for index views
-  VIEW_TYPE_LIST = 1    # thumbnails
+  VIEW_TYPE_LIST  = 1   # thumbnails
   VIEW_TYPE_TABLE = 2   # table
-  VIEW_TYPE_MAP = 3     # map
+  VIEW_TYPE_MAP   = 3   # map
        
-
   # Determine which layout to use based on the authorized state
   def layout_by_resource
     if user_signed_in?
