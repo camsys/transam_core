@@ -1,0 +1,28 @@
+<%= render 'show_subnav' %>
+
+<div class="row-fluid">
+	<div class="span12">
+		<ul class="thumbnails">
+			<%= panel_tag('User', {:icon => 'fa fa-user', :class => "span4 form_part"}) do %>
+				<%= format_field("Name", @user.name ) %>
+				<%= format_field("e-mail", @user.email ) %>
+				<%= format_field("Primary phone", number_to_phone(@user.phone, :area_code => true) ) %>
+				<%= format_field("Timezone", @user.timezone ) %>
+			<% end %>
+			<%= panel_tag('Organization', {:icon => 'fa fa-building-o', :class => "span4 form_part"}) do %>
+				<%= format_field("Company", link_to(@organization.name, organization_path(@organization)) ) %>						
+				<%= format_field("Address", format_address(@user.organization) ) %>
+				<%= format_field("Phone", number_to_phone(@user.organization.phone, :area_code => true) ) %>
+				<%= format_field("Fax", number_to_phone(@user.organization.fax, :area_code => true) ) %>
+			<% end %>
+			<%= panel_tag('Activity', {:icon => 'fa fa-clock-o', :class => "span4 form_part"}) do %>
+				<%= format_field("Created", format_date_time(@user.created_at) ) %>
+				<%= format_field("Last updated", format_date_time(@user.updated_at) ) %>
+				<%= format_field("Last login", format_date_time(@user.last_sign_in_at) ) %>
+				<%= format_field("Last login IP", @user.last_sign_in_ip ) %>
+			<% end %>
+		</ul>
+	</div>
+</div>
+
+<%= render 'scripts' %>

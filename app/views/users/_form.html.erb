@@ -1,0 +1,30 @@
+<% if @user.errors.count > 0 %>
+	<%= render(:partial => 'shared/form_errors', :locals => {:obj => @user}) %>
+<% end%>
+<div class="row-fluid">
+	<div class="span12">
+		<%= simple_form_for(@user, :html => {:class => 'form-vertical' }) do |f| %>
+		<ul class="thumbnails">
+			<%= panel_tag('User', {:icon => 'fa fa-user', :class => "span4 form_part"}) do %>
+				<%= f.input :first_name, :placeholder => "Users first name..." %>
+				<%= f.input :last_name, :placeholder => "Users last name..." %>
+				<%= f.input :email, :as => :email, :placeholder => "Users business email address..." %>
+			<% end %>
+			<%= panel_tag('Contact Information', {:icon => 'fa fa-book', :class => "span4 form_part"}) do %>
+				<%= f.input :phone, :as => :tel, :placeholder => "Users primary phone number..." %>
+			<% end %>
+			<%= panel_tag('Settings', {:icon => 'fa fa-cog', :class => "span4 form_part"}) do %>
+				<%= f.input :timezone, :as => :time_zone, priority: /US/, :prompt => "Select timezone..." %>
+			<% end %>
+		</ul>
+		<% if ! @disabled %>
+		<div class="form-actions">
+			<%= f.button :submit %>
+			<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn" %>
+		</div>
+		<% end %>
+		<% end %>
+	</div>
+</div>
+
+<%= render 'scripts' %>
