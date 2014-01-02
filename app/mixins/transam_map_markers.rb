@@ -3,14 +3,16 @@ module TransamMapMarkers
   ALPHABET = ('A'..'Z').to_a
 
   # create an agency-specific map marker
-  def get_organization_marker(organization)
+  def get_organization_marker(organization, render_open = false, draggable = false)
     {
       "id" => organization.id,
       "lat" => organization.latitude, 
       "lng" => organization.longitude, 
-      "name" => organization.name, 
-      "iconClass" => organization.organization_type.display_icon_name,
+      "iconClass" => organization.organization_type.map_icon_name,
       "title" => organization.name,
+      "zindex" => 1,
+      "open" => render_open,
+      "draggable" => false,
       "description" => render_to_string(:partial => "/organizations/organization_popup", :locals => { :organization => organization })        
     }
   end

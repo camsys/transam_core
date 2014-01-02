@@ -40,7 +40,7 @@ class OrganizationsController < OrganizationAwareController
     @page_title = @organization.name
     @organizations = []
     @organizations << @organization
-    @markers = generate_map_markers(@organizations)
+    @markers = generate_map_markers(@organizations, true)
                   
     respond_to do |format|
       format.html # map.html.erb
@@ -76,10 +76,10 @@ class OrganizationsController < OrganizationAwareController
   #
   # generate an array of map markers for use with the leaflet plugin
   #
-  def generate_map_markers(organizations_array)
+  def generate_map_markers(organizations_array, render_open = false)
     objs = []
     organizations_array.each do |org|
-      objs << get_organization_marker(org) unless org.latitude.nil?
+      objs << get_organization_marker(org, render_open) unless org.latitude.nil?
     end
     return objs.to_json    
   end
