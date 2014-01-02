@@ -34,6 +34,21 @@ module TransamFormatHelper
     return time.strftime("%I:%M") unless time.nil?
   end
   
+  # formats an address
+  def format_address(m)
+    html = m.address1
+    html << "<br/>"
+    html << m.address2 unless m.address2.blank?
+    html << "<br/>" unless m.address2.blank?
+    html << m.city
+    html << ", "
+    html << m.state
+    html << ", "
+    html << m.zip
+    html << "<br/>"    
+    return html.html_safe
+  end
+  
   # formats for list
   def format_list_field(label,  value)
     html = "<div class='popup-row'>"
