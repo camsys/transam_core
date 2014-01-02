@@ -17,8 +17,28 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable
 
+  # Include the unique key mixin
+  include UniqueKey
+
+  #------------------------------------------------------------------------------
+  # Overrides
+  #------------------------------------------------------------------------------
+  
+  #require rails to use the key as the restful parameter. All URLS will be of the form
+  # /user/{user_key}/...
+  def to_param
+    user_key
+  end
+  
+  #------------------------------------------------------------------------------
   # Callbacks
-  after_initialize :set_defaults
+  #------------------------------------------------------------------------------
+  after_initialize  :set_defaults
+
+  # Always generate a unique asset key before saving to the database
+  before_validation(:on => :create) do
+    generate_unique_key(:user_key)
+  end
   
   # Associations
   
@@ -29,6 +49,9 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :organizations
   
   has_many   :messages
+
+  # Validations on core attributes
+  validates :user_key,      :presence => true
 
   validates :first_name,    :presence => true
   validates :last_name,     :presence => true
@@ -51,6 +74,7 @@ class User < ActiveRecord::Base
          
   # List of allowable form param hash keys  
   FORM_PARAMS = [
+    :user_key,
     :organization_id,
     :first_name,
     :last_name,

@@ -36,5 +36,9 @@ module TransamAttributes
   def task_allowable_params
     Task.allowable_params
   end
+
+  def user_allowable_params
+    User.allowable_params
+  end
   
 end
