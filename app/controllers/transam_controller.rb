@@ -3,11 +3,6 @@ class TransamController < ApplicationController
   before_filter :authenticate_user!
   before_filter :set_timezone 
  
-  # include the TransAM helpers into the controller and view
-  helper TransamHelper
-  helper TransamTagHelper
-  helper TransamFormatHelper
-
   # Include the rails4 style form parameters mixin
   include TransamAttributes
 

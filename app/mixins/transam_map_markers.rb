@@ -1,4 +1,4 @@
-module MapHelper
+module TransamMapMarkers
 
   ALPHABET = ('A'..'Z').to_a
 
@@ -13,25 +13,6 @@ module MapHelper
       "title" => organization.name,
       "description" => render_to_string(:partial => "/organizations/organization_popup", :locals => { :organization => organization })        
     }
-  end
-
-  # Returns a formatted string for displaying a map marker image that includes a A,B,C, etc. designator.
-  #
-  # index is a positive integer x, x >= 0 that corresponds to the index of the object in
-  # an abitarily ordered list
-  #
-  # type is an enumeration
-  #   0 = a start candidate location
-  #   1 = a stop candidate location
-  #   2 = a place candidate
-  def get_candidate_list_item_image(index, type)
-    if type == "0"
-      return 'http://maps.google.com/mapfiles/marker_green' + ALPHABET[index] + ".png"
-    elsif type == "1"
-      return 'http://maps.google.com/mapfiles/marker' + ALPHABET[index] + ".png"
-    else
-      return 'http://maps.google.com/mapfiles/marker_yellow' + ALPHABET[index] + ".png"
-    end
   end
   
   # create a map marker for a GeolocatableAsset instance
@@ -75,13 +56,4 @@ module MapHelper
     }
   end
 
-  # create an array of map markers for a collection of Place objects
-  def create_place_markers(places)
-    markers = []    
-    places.each do |place|
-      markers << get_map_marker(place, place.id, 'startIcon')
-    end
-    return markers
-  end
-  
 end

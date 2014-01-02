@@ -1,7 +1,7 @@
 class AssetsController < AssetAwareController
     
   # Include map helpers into this class
-  include MapHelper
+  include TransamMapMarkers
   
   before_filter :check_for_cancel, :only => [:create, :update]
   # set the @asset variable before any actions are invoked

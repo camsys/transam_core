@@ -1,10 +1,8 @@
 class OrganizationsController < OrganizationAwareController
   before_filter :check_for_cancel, :only => [:create, :update]
   
-  # include the Leaflet helper into the controller and view
-  helper LeafletHelper
-  # include the Map helper into the controller and view
-  helper MapHelper
+  # include the transam markers mixin
+  include TransamMapMarkers
   
   SESSION_VIEW_TYPE_VAR = 'organization_subnav_view_type'
     

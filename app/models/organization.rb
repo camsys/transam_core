@@ -135,7 +135,7 @@ class Organization < ActiveRecord::Base
     org = Organization.get_typed_organization(self)
     return org.get_policy unless org.nil?
   end
-  
+    
   def full_address
     elems = []
     elems << address1 unless address1.blank?
