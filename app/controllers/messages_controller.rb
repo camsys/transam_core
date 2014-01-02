@@ -113,7 +113,7 @@ class MessagesController < OrganizationAwareController
   
   # Callbacks to share common setup or constraints between actions.
   def set_message
-    @message = @organization.messages.find(params[:id])
+    @message = params[:id].nil? ? nil : Message.find_by_message_key(params[:id])
   end
   
 end

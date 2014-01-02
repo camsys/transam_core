@@ -1,7 +1,6 @@
 # 
 # Abstract controller that is used as the base class
 # for any concrete controllers that are based on an organization
-# which is just about all of them
 #
 class OrganizationAwareController < TransamController
   # set the @organization variable before any actions are invoked
