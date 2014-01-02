@@ -99,7 +99,7 @@ class OrganizationsController < OrganizationAwareController
     if params[:id].nil?
       org = current_user.organization
     else
-      org = current_user.organizations.find(params[:id])
+      org = current_user.organizations.find_by_short_name(params[:id])
     end
     if org
       @organization = get_typed_organization(org)
