@@ -13,7 +13,6 @@
 			<%= format_field("Content", @attachment.attachment_type.name ) %>
 			<%= format_field("Notes", @attachment.notes ) %>
 			<%= format_field("Upload time", format_date_time(@attachment.created_at) ) %>
-			<%= format_field("Uploaded by", link_to(@attachment.user.name, user_path(@attachment.user))) %>
 		<% end %>
 	</div>
 </div>

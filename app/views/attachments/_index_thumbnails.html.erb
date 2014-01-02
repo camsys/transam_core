@@ -4,7 +4,7 @@
 		<ul class="thumbnails">
 			<% @attachments.each do |attachment| %>
 				<% if attachment.attachment_type.name == "Photo" %>
-					<%= image_thumbnail_tag({:class => 'span2', :icon => "fa fa-file", :title => attachment.name, :path => inventory_attachment_path(@asset, attachment)}) do %>
+					<%= image_thumbnail_tag({:class => 'span2 img_thumbnail', :icon => attachment.attachment_type.display_icon_name, :title => attachment.name, :path => inventory_attachment_path(@asset, attachment)}) do %>
 						<%= image_tag attachment.file.url(:thumb), :class => "img-polaroid" if attachment.file  %>
 					<% end %>
 				<% end %>
@@ -17,8 +17,8 @@
 		<h4>Documents</h4>
 		<ul class="thumbnails">
 			<% @attachments.each do |attachment| %>
-				<% if attachment.attachment_type_id  != 1 %>
-					<%= action_thumbnail_tag({:class => 'span3', :icon => "fa fa-file", :title => attachment.name, :path => inventory_attachment_path(@asset, attachment)}) do %>
+				<% if attachment.attachment_type.id != 1 %>
+					<%= action_thumbnail_tag({:class => 'span2 doc_thumbnail', :icon => attachment.attachment_type.display_icon_name, :title => attachment.name, :path => inventory_attachment_path(@asset, attachment)}) do %>
 						<%= image_tag attachment.file if attachment.file  %>
 					<% end %>
 				<% end %>
@@ -28,6 +28,7 @@
 </div>
 <script type="text/javascript">
 
-	fix_thumbnail_margins(3);
+	transam.fix_thumbnail_margins(2, 'img_thumbnail');
+	transam.fix_thumbnail_margins(3, 'doc_thumbnail');
 
 </script>
