@@ -3,7 +3,7 @@
 # Organization
 #
 # Represents a basic organization in a flat organizational hierarchy
-# without any relationships to other organizations
+# without any relationships to other organizations or assets
 #
 #------------------------------------------------------------------------------
 class Organization < ActiveRecord::Base
@@ -32,13 +32,13 @@ class Organization < ActiveRecord::Base
   #------------------------------------------------------------------------------
   # Associations common to all organizations
   #------------------------------------------------------------------------------
+
   # Every organization belongs to a customer
   belongs_to :customer
+
   # Every organization has a type
   belongs_to :organization_type
-  
-  # Every organization can own a set of assets
-  has_many :assets
+    
   # Every organization can have a set of users
   has_many :users
   
@@ -47,12 +47,8 @@ class Organization < ActiveRecord::Base
   
   # Every organization can have messages
   has_many :messages
-  
-  #has_many :user_organization_maps
-    
-  # Accessors for associations
-  #attr_accessible :customer_id, :organization_type_id
-  
+      
+  # Validations for associations  
   validates :customer_id,           :presence => true
   validates :organization_type_id,  :presence => true
   
@@ -127,11 +123,11 @@ class Organization < ActiveRecord::Base
   #
   #------------------------------------------------------------------------------
         
-  # returns the count of assets of the given type
-  def asset_count(asset_type) 
-    return assets.where('asset_type_id = ?', asset_type.id).count
-  end
-  
+  # Generic organizations do not own transit assets
+  def has_assets?
+    false
+  end   
+          
   # Returns a policy for an untyped organization
   def get_policy
     # get a typed version of the organization and return the
@@ -149,22 +145,7 @@ class Organization < ActiveRecord::Base
     elems << zip unless zip.blank?
     elems.compact.join(', ')    
   end
-  
-  def html_address
-    html = address1
-    html << "<br/>"
-    html << address2 unless address2.blank?
-    html << "<br/>" unless address2.blank?
-    html << city
-    html << ", "
-    html << state
-    html << ", "
-    html << zip
-    html << "<br/>"
     
-    return html.html_safe
-  end
-  
   #------------------------------------------------------------------------------
   #
   # Protected Methods
