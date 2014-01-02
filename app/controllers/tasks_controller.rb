@@ -120,7 +120,7 @@ class TasksController < OrganizationAwareController
   
   # Callbacks to share common setup or constraints between actions.
   def set_task
-    @task = find_task(params[:id])
+    @task = params[:id].nil? ? nil : Task.find_by_task_key(params[:id])
   end
 
   # make sure that only tasks for this user or unassigned tasks for this agency are viewed or edited
