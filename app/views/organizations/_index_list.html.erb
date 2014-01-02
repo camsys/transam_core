@@ -1,0 +1,24 @@
+<div class="row-fluid">
+	<div class="span12">
+		<table class="table table-condensed table-striped table-hover table-bordered">
+			<thead>
+				<th>Organization</th>
+				<th>Type</th>
+				<th>Phone</th>
+				<th>Web Site</th>
+				<th>Last Updated</th>
+			</thead>
+			<tbody>
+				<% @organizations.each do |org| %>
+				<tr data-action-path = '<%= organization_path(org) %>'>
+					<td><%= org.name %></td>
+					<td><%= org.organization_type.name %></td>
+					<td><%= number_to_phone(org.phone, :area_code => true) %></td>
+					<td><%= link_to(org.url, org.url, target: "_blank") %></td>
+					<td><%= format_date_time(org.updated_at) %></td>
+				</tr>
+				<% end %>
+			</tbody>
+		</table>
+	</div>
+</div>

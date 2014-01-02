@@ -1,0 +1,17 @@
+<div class="row-fluid">
+	<div class="span12">
+		<ul class="thumbnails">
+			<% @organizations.each do |organization| %>
+				<%= action_thumbnail_tag({:icon => organization.organization_type.display_icon_name, :title => organization.name, :path => organization_path(organization)}) do %>
+					<%= content_tag "p", organization.organization_type.name %>
+					<%= content_tag "address" do %>
+						<%= format_address(organization) %>
+						<abbr title="Phone">P:</abbr> <%= number_to_phone(organization.phone, :area_code => true) %>
+					<% end %>
+				<% end %>
+			<% end %>
+		</ul>
+	</div>
+</div>
+
+<%= render 'scripts' %>

@@ -1,0 +1,25 @@
+<div class="row-fluid">
+	<div class="span12">
+		<div class="navbar">
+			<div class="navbar-inner">
+				<ul class="nav">
+					<li class="<%= get_nav_link_class('organizations', OrganizationsController::SESSION_VIEW_TYPE_VAR, OrganizationsController::VIEW_TYPE_LIST) %>">
+						<%= link_to organizations_path(:view_type => OrganizationsController::VIEW_TYPE_LIST) do %>
+						<i class="fa fa-th-large"></i> List View
+						<% end %>
+					</li>
+					<li class="<%= get_nav_link_class('organizations', OrganizationsController::SESSION_VIEW_TYPE_VAR, OrganizationsController::VIEW_TYPE_TABLE) %>">
+						<%= link_to organizations_path(:view_type => OrganizationsController::VIEW_TYPE_TABLE) do %>
+						<i class="fa fa-list-alt"></i> Table View
+						<% end %>
+					</li>
+					<li class="<%= get_nav_link_class('organizations', OrganizationsController::SESSION_VIEW_TYPE_VAR, OrganizationsController::VIEW_TYPE_MAP) %>">
+						<%= link_to organizations_path(:view_type => OrganizationsController::VIEW_TYPE_MAP) do %>
+						<i class="fa fa-globe"></i> Map View
+						<% end %>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>

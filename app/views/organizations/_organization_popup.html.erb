@@ -1,0 +1,11 @@
+<div data-action-path = '<%= organization_path(organization) %>' %>
+	<div class="well well-small">
+		<div class="caption">
+			<i class="fa fa-building-o fa-3x pull-left"></i> <h4><%= organization.name %></h4>
+		</div>
+		<%= content_tag "address" do %>
+			<%= format_address(organization) %>
+			<%= number_to_phone(organization.phone, :area_code => true) %>
+		<% end %>
+	</div>    	
+</div>

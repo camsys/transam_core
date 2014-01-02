@@ -1,0 +1,30 @@
+<div class="row-fluid">
+	<div class="span8">
+		<%= LeafletMap({ :mapid => 'lmap', :markers => @markers, :tile_provider => 'CLOUDMADE', :min_zoom => 3, :max_zoom => 15, :class => "thumbnail first_in_row", :style => "height:500px;margin-left:0;" }) %>
+	</div>
+	<div class="span4">
+		<fieldset>
+			<legend>
+				Organizations
+			</legend>
+			<ul id="markers_list" class="nav nav-list">
+				<% @organizations.each do |org| %>
+				<li>
+					<a href='#' onclick="selectMarkerById('<%= org.id %>')"><%= org.name %></a>
+				</li>
+				<% end %>
+			</ul>
+		</fieldset>
+	</div>
+</div>
+<%= yield :scripts %>
+
+<script type="text/javascript" charset="utf-8">
+  // Install a hover event handler for orgs. When hovering,
+  // the map icon is panned to and the popup shown
+  $('.place-select').hover(function() {
+    var id = $(this).data('id');
+    selectMarkerById(id);
+  });
+
+</script>
