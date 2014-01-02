@@ -46,7 +46,7 @@ class User < ActiveRecord::Base
   belongs_to :organization
   
   # every user has access to 0 or more organizations for reporting
-  has_and_belongs_to_many :organizations
+  has_and_belongs_to_many :organizations, :join_table => 'users_organizations'
   
   has_many   :messages
 
