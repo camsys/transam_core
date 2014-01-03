@@ -13,7 +13,7 @@ class AssetSubtypeReport < AbstractReport
       report_filter_type = 0
     end
 
-    if report_filter_type > 0
+    if report_filter_type == 0
       subtypes = AssetSubtype.all
     else
       subtypes = AssetSubtype.find_by_asset_type_id(report_filter_type)    

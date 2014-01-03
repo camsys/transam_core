@@ -3,6 +3,27 @@
 //
 var transam = new function() {
 
+  	// Load a chart in the background
+  	this.load_ajax_panel = function(div_id, url, method, loader_panel) {
+    	$.ajax({
+	    	type: method,
+        	url: url,
+        	cache: false,
+        	beforeSend:function() {
+          		if (loader_panel) {
+            		$("#" + div_id).html(loader_panel);
+          		}
+        	},       
+        	success: function(html) {
+          		$("#" + div_id).empty();
+          		$("#" + div_id).append(html);
+        	},
+			error: function (data) {
+	      		show_alert(div_id, "We are sorry but something went wrong. Please try again.");                
+	      	}
+    	});
+  	};
+
 	this.ajax_render_action = function(url, method) {
 		$.ajax({
 	    	type: method,
@@ -40,7 +61,7 @@ var transam = new function() {
 	};
 	
 	// Set a key value. Keys must be unique strings
-	this. set_ui_key_value = function(key, value) {
+	this.set_ui_key_value = function(key, value) {
 		//alert('setting value for ' + key + ' to ' + value);
 	    window.sessionStorage.setItem(key, value);
 	};
@@ -110,14 +131,12 @@ var transam = new function() {
 		});		
 	};
 
+	// Internal functions
+	var show_error_message = function(div_id, message) {
+		$("#" + div_id).empty();
+        #("#" + div_id).append('<div class="alert alert-error">' + message + '</div>');		
+	};
 
-    var internalFunction = function() {
-
-    };
-
-    this.publicFunction = function() {
-
-    };
 };
 
 

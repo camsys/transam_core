@@ -1,0 +1,20 @@
+<script type="text/javascript">
+  
+  function draw_charts() {
+    <% Report.show_in_dashboard.each do |report| %>
+    transam.load_ajax_panel('<%= "report_#{report.id}" %>', '<%= report_path(report, :partial => 1) %>', '<%= loader_panel_tag() %>');
+    <% end %>  
+  };
+  
+  $(document).ready(function() {
+    draw_charts();
+  });
+  
+  // Handle the resize event and make sure the chart is redrawn for the new size
+  window.onresize = function() {
+    draw_charts();
+  };
+    
+</script>
+
+

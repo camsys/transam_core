@@ -12,6 +12,6 @@ class Report < ActiveRecord::Base
   default_scope { where(:active => true) }
       
   scope :show_in_nav, -> { where(:show_in_nav => true) }
-  scope :show_in_dashboard, -> { where(:show_in_dashoard => true) }
+  scope :show_in_dashboard, -> { where(:show_in_dashboard => true) }
 
 end
