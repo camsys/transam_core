@@ -19,7 +19,7 @@ var transam = new function() {
           		$("#" + div_id).append(html);
         	},
 			error: function (data) {
-	      		show_alert(div_id, "We are sorry but something went wrong. Please try again.");                
+	      		show_error_message(div_id, "We are sorry but something went wrong. Please try again.");                
 	      	}
     	});
   	};
@@ -134,7 +134,7 @@ var transam = new function() {
 	// Internal functions
 	var show_error_message = function(div_id, message) {
 		$("#" + div_id).empty();
-        #("#" + div_id).append('<div class="alert alert-error">' + message + '</div>');		
+        $("#" + div_id).append('<div class="alert alert-error">' + message + '</div>');		
 	};
 
 };

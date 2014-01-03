@@ -1,5 +1,10 @@
 module TransamTagHelper
   
+  def loader_panel_tag(options={})
+    html = "<div class='loader'><i class='fa fa-spinner fa-spin fa-2x'></div>"
+    return html.html_safe     
+  end
+  
   def image_thumbnail_tag(options={}, &block)
 
     # Check to see if there is any content in the block    
