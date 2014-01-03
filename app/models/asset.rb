@@ -139,13 +139,13 @@ class Asset < ActiveRecord::Base
         
   # List of fields which can be searched using a simple text-based search
   SEARCHABLE_FIELDS = [
-    'asset_key',
+    'object_key',
     'asset_tag'
   ] 
           
   # List of fields that should be nilled when a copy is made
   CLEANSABLE_FIELDS = [
-    'asset_key',
+    'object_key',
     'asset_tag',
     'last_reported_condition_type_id',
     'estimated_condition_type_id',

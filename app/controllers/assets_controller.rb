@@ -305,7 +305,7 @@ class AssetsController < AssetAwareController
     list = []
     unless assets.nil?
       assets.each do |a|
-        list << a.asset_key
+        list << a.object_key
       end
     end
     cache_objects(ASSET_KEY_LIST_VAR, list)

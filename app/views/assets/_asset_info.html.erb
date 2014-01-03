@@ -5,7 +5,7 @@
 				<%= format_field("Asset Tag", @asset.asset_tag ) %>
 				<%= format_field("Class", @asset.asset_type.name ) %>
 				<%= format_field("Type", @asset.asset_subtype.name ) %>
-				<%= format_field("Asset Key", @asset.asset_key ) %>
+				<%= format_field("Asset Key", @asset.object_key ) %>
 			<% end %>
 			<%= panel_tag('Condition', {:icon => 'fa fa-refresh', :class => "header_part span4"}) do %>
 				<%= format_field("Last reported condition", @asset.last_reported_condition_type.name ) %>
