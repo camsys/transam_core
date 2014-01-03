@@ -1,3 +1,5 @@
-<%= render 'subnav' %>
+<% unless @chart_only == false %>
+	<%= render 'subnav' %>
+<% end %>
 
 <%= render @report_view %>

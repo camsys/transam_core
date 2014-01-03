@@ -29,9 +29,13 @@ class ReportsController < OrganizationAwareController
       
       # see if we need to load the layout or if it is a partial
       if params[:partial]
+        # don't render the table or header
+        @chart_only = true
         render :layout => false
         return
       end
+      
+      @chart_only = false
       
       respond_to do |format|
         format.html
