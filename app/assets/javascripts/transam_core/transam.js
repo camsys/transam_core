@@ -3,7 +3,14 @@
 //
 var transam = new function() {
 
-  	// Load a chart in the background
+	// Draws a google char based on the chart data and chart options passed in
+	this.draw_chart = function(div_id, chart_type, chart_options, chart_data) {
+				
+		chart = new google.visualization.PieChart(document.getElementById(div_id));
+		chart.draw(chart_data, chart_options);
+	};
+
+  	// Load a block of html in the background
   	this.load_ajax_panel = function(div_id, url, method, loader_panel) {
     	$.ajax({
 	    	type: method,
