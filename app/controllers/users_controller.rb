@@ -144,7 +144,7 @@ class UsersController < OrganizationAwareController
   
   # Callbacks to share common setup or constraints between actions.
   def set_user
-    @user = params[:id].nil? ? nil : User.find_by_user_key(params[:id])
+    @user = params[:id].nil? ? nil : User.find_by_object_key(params[:id])
   end
   
   def check_for_cancel

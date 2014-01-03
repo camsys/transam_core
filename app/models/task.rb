@@ -20,7 +20,7 @@ class Task < ActiveRecord::Base
 
   # Always generate a unique asset key before saving to the database
   before_validation(:on => :create) do
-    generate_unique_key(:task_key)
+    generate_unique_key(:object_key)
   end
   
   # Associations
@@ -38,22 +38,21 @@ class Task < ActiveRecord::Base
   #attr_accessible :from_user_id, :from_organization_id, :priority_type_id, :for_organization_id, :assigned_to_user_id, :subject, :body, :complete_by
 
   # Validations on core attributes
-  validates :task_key,         :presence => true
-
-  validates :from_user_id, :presence => true
-  validates :from_organization_id, :presence => true
-  validates :priority_type_id, :presence => true
-  validates :assigned_to_user_id, :presence => true
-  validates :for_organization_id, :presence => true
-  validates :subject, :presence => true
-  validates :body, :presence => true
-  validates :complete_by, :presence => true
+  validates :object_key,            :presence => true, :uniqueness => true
+  validates :from_user_id,          :presence => true
+  validates :from_organization_id,  :presence => true
+  validates :priority_type_id,      :presence => true
+  validates :assigned_to_user_id,   :presence => true
+  validates :for_organization_id,   :presence => true
+  validates :subject,               :presence => true
+  validates :body,                  :presence => true
+  validates :complete_by,           :presence => true
    
   default_scope { order('complete_by') }
 
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
-    :task_key,
+    :object_key,
     :from_user_id,
     :from_organization_id, 
     :priority_type_id, 

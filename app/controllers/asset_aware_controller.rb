@@ -68,7 +68,7 @@ protected
   # otherwise a base class asset is returned
   # 
   def get_selected_asset(convert=true)
-    selected_asset = @organization.assets.find_by_asset_key(params[:inventory_id]) unless params[:inventory_id].blank?
+    selected_asset = @organization.assets.find_by_object_key(params[:inventory_id]) unless params[:inventory_id].blank?
     if convert
       asset = get_typed_asset(selected_asset)
     else

@@ -8,9 +8,9 @@ class Message < ActiveRecord::Base
   #------------------------------------------------------------------------------
   
   #require rails to use the key as the restful parameter. All URLS will be of the form
-  # /message/{message_key}/...
+  # /message/{object_key}/...
   def to_param
-    message_key
+    object_key
   end
   
   #------------------------------------------------------------------------------
@@ -20,7 +20,7 @@ class Message < ActiveRecord::Base
 
   # Always generate a unique asset key before saving to the database
   before_validation(:on => :create) do
-    generate_unique_key(:message_key)
+    generate_unique_key(:object_key)
   end
   
   # Associations
@@ -33,19 +33,18 @@ class Message < ActiveRecord::Base
   has_many   :responses, :class_name => "Message", :foreign_key => "thread_message_id"
   
   # Validations on core attributes
-  validates :message_key,         :presence => true
-  
-  validates :organization_id, :presence => true
-  validates :user_id, :presence => true
-  validates :priority_type_id, :presence => true
-  validates :subject, :presence => true
-  validates :body, :presence => true
+  validates :object_key,        :presence => true, :uniqueness => true
+  validates :organization_id,   :presence => true
+  validates :user_id,           :presence => true
+  validates :priority_type_id,  :presence => true
+  validates :subject,           :presence => true
+  validates :body,              :presence => true
    
   default_scope { order('created_at DESC') }
       
   # List of allowable form param hash keys  
   FORM_PARAMS = [
-    :message_key,
+    :object_key,
     :organization_id,
     :user_id,
     :to_user_id,

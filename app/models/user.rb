@@ -25,9 +25,9 @@ class User < ActiveRecord::Base
   #------------------------------------------------------------------------------
   
   #require rails to use the key as the restful parameter. All URLS will be of the form
-  # /user/{user_key}/...
+  # /user/{object_key}/...
   def to_param
-    user_key
+    object_key
   end
   
   #------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ class User < ActiveRecord::Base
 
   # Always generate a unique asset key before saving to the database
   before_validation(:on => :create) do
-    generate_unique_key(:user_key)
+    generate_unique_key(:object_key)
   end
   
   # Associations
@@ -51,8 +51,7 @@ class User < ActiveRecord::Base
   has_many   :messages
 
   # Validations on core attributes
-  validates :user_key,      :presence => true
-
+  validates :object_key,    :presence => true, :uniqueness => true
   validates :first_name,    :presence => true
   validates :last_name,     :presence => true
   validates :email,         :presence => true, :uniqueness => true
@@ -74,7 +73,7 @@ class User < ActiveRecord::Base
          
   # List of allowable form param hash keys  
   FORM_PARAMS = [
-    :user_key,
+    :object_key,
     :organization_id,
     :first_name,
     :last_name,

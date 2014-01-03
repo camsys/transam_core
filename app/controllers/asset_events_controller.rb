@@ -1,5 +1,8 @@
 class AssetEventsController < AssetAwareController
-  before_filter :check_for_cancel, :only => [:create, :update]
+
+  # set the @asset_event variable before any actions are invoked
+  before_filter :get_asset_event,   :only => [:show, :edit, :update, :destroy]  
+  before_filter :check_for_cancel,  :only => [:create, :update]
 
   # always use generic untyped assets for this controller
   RENDER_TYPED_ASSETS = false
@@ -60,17 +63,14 @@ class AssetEventsController < AssetAwareController
 
   def show
 
-    asset_event = @asset.asset_events.find(params[:id])    
     # if not found or the object does not belong to the asset
     # send them back to index.html.erb
-    if asset_event.nil?
+    if @asset_event.nil?
       redirect_to(inventory_asset_events_url(@asset), :flash => { :alert => 'Record not found!'})
       return
     end
  
     @page_title = @asset.name
-    # get the typed version of this asset_event
-    @asset_event = AssetEvent.as_typed_event(asset_event)
     @form_name = @asset_event.asset_event_type.form_name
     
     @disabled = true
@@ -83,17 +83,14 @@ class AssetEventsController < AssetAwareController
 
   def edit
 
-    asset_event = @asset.asset_events.find(params[:id])         
     # if not found or the object does not belong to the asset
     # send them back to index.html.erb
-    if asset_event.nil?
+    if @asset_event.nil?
       redirect_to(inventory_asset_events_url(@asset), :flash => { :alert => 'Record not found!'})
       return
     end
 
     @page_title = @asset.name
-    # get the typed version of this asset_event
-    @asset_event = AssetEvent.as_typed_event(asset_event)
     @form_name = @asset_event.asset_event_type.form_name    
     @disabled = false
    
@@ -101,16 +98,12 @@ class AssetEventsController < AssetAwareController
   
   def update
 
-    asset_event = @asset.asset_events.find(params[:id])         
     # if not found or the object does not belong to the asset
     # send them back to index.html.erb
-    if asset_event.nil?
+    if @asset_event.nil?
       redirect_to(inventory_asset_events_url(@asset), :flash => { :alert => 'Record not found!'})
       return
     end
-
-    # get the typed version of this asset_event
-    @asset_event = AssetEvent.as_typed_event(asset_event)    
 
     respond_to do |format|
       if @asset_event.update_attributes(form_params)
@@ -155,7 +148,6 @@ class AssetEventsController < AssetAwareController
 
   def destroy
 
-    @asset_event = @asset.asset_events.find(params[:id])    
     # if not found or the object does not belong to the asset
     # send them back to index.html.erb
     if @asset_event.nil?
@@ -170,6 +162,20 @@ class AssetEventsController < AssetAwareController
     respond_to do |format|
       format.html { redirect_to(inventory_asset_events_url(@asset), :flash => { :notice => 'Event was successfully removed.'}) } 
       format.json { head :no_content }
+    end
+  end
+  
+  #------------------------------------------------------------------------------
+  #
+  # Protected Methods
+  #
+  #------------------------------------------------------------------------------
+  protected
+
+  def get_asset_event
+    asset_event = AssetEvent.find_by_object_key(params[:id]) unless params[:id].nil?
+    if asset_event
+      @asset_event = AssetEvent.as_typed_event(asset_event)
     end
   end
 

@@ -133,7 +133,7 @@ class PoliciesController < OrganizationAwareController
 
   def get_policy
     # See if it is our policy
-    @policy = Policy.find(params[:id]) unless params[:id].nil?
+    @policy = Policy.find_by_object_key(params[:id]) unless params[:id].nil?
     if @policy.nil?
       @policy = Organization.get_typed_organization(@organization).get_policy
     end

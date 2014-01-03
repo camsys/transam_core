@@ -1,5 +1,7 @@
 class AttachmentsController < AssetAwareController
-  before_filter :check_for_cancel, :only => [:create, :update]
+    
+  before_action :set_attachment,    :only => [:show, :edit, :update, :destroy, :download]  
+  before_filter :check_for_cancel,  :only => [:create, :update]
 
   # always use generic untyped assets for this controller
   RENDER_TYPED_ASSETS = false
@@ -43,7 +45,6 @@ class AttachmentsController < AssetAwareController
 
   def download
     
-    @attachment = @asset.attachments.find(params[:id])
     if @attachment.nil?
       redirect_to(inventory_attachments_url(@asset), :flash => { :alert => 'Record not found!'})
       return            
@@ -55,7 +56,6 @@ class AttachmentsController < AssetAwareController
   
   def show
   
-    @attachment = @asset.attachments.find(params[:id])
     if @attachment.nil?
       redirect_to(inventory_attachments_url(@asset), :flash => { :alert => 'Record not found!'})
       return            
@@ -89,7 +89,6 @@ class AttachmentsController < AssetAwareController
 
   def edit
 
-    @attachment = @asset.attachments.find(params[:id])
     if @attachment.nil?
       redirect_to(inventory_attachments_url(@asset), :flash => { :alert => 'Record not found!'})
       return            
@@ -99,7 +98,6 @@ class AttachmentsController < AssetAwareController
   
   def update
 
-    @attachment = @asset.attachments.find(params[:id])
     if @attachment.nil?
       redirect_to(inventory_attachments_url(@asset), :flash => { :alert => 'Record not found!'})
       return            
@@ -130,7 +128,6 @@ class AttachmentsController < AssetAwareController
 
   def destroy
 
-    @attachment = @asset.attachments.find(params[:id])
     if @attachment.nil?
       redirect_to(inventory_attachments_url(@asset), :flash => { :alert => 'Record not found!'})
       return      
@@ -150,6 +147,10 @@ class AttachmentsController < AssetAwareController
   #
   #------------------------------------------------------------------------------
   private
+
+  def set_attachment
+    @attachment = @asset.attachments.find_by_object_key(params[:id]) unless params[:id].nil?
+  end
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def form_params

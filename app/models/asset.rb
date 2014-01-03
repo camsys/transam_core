@@ -19,9 +19,9 @@ class Asset < ActiveRecord::Base
   #------------------------------------------------------------------------------
   
   #require rails to use the asset key as the restful parameter. All URLS will be of the form
-  # /inventory/{asset_key}/...
+  # /inventory/{object_key}/...
   def to_param
-    asset_key
+    object_key
   end
   
   #------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ class Asset < ActiveRecord::Base
 
   # Always generate a unique asset key before saving to the database
   before_validation(:on => :create) do
-    generate_unique_key(:asset_key)
+    generate_unique_key(:object_key)
   end
        
   #------------------------------------------------------------------------------
@@ -88,7 +88,7 @@ class Asset < ActiveRecord::Base
   #attr_accessible :asset_tag
   
   # Validations on core attributes
-  validates       :asset_key,         :presence => true
+  validates       :object_key,        :presence => true, :uniqueness => true
   validates       :asset_tag,         :presence => true
 
   #------------------------------------------------------------------------------
@@ -158,7 +158,7 @@ class Asset < ActiveRecord::Base
   ]
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
-    :asset_key,
+    :object_key,
     :organization_id, 
     :asset_type_id, 
     :asset_subtype_id, 
