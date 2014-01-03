@@ -4,14 +4,7 @@ class MessagesController < OrganizationAwareController
   before_filter :check_for_cancel, :only => [:create] 
 
   SESSION_VIEW_TYPE_VAR = 'messages_subnav_view_type'
-  
-  # always use generic untyped organizations for this controller
-  RENDER_TYPED_ORGANIZATIONS = false
-  
-  def render_typed_organizations
-    RENDER_TYPED_ORGANIZATIONS
-  end
-  
+    
   def index
 
     @page_title = 'Messages'

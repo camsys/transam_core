@@ -6,25 +6,25 @@ class NeedsReport < AbstractReport
   
 protected
   
-  def get_assets(current_user, analysis_year, report_filter_type)
+  def get_assets(organization, analysis_year, report_filter_type)
     
     # get the list of assets for this organization
     if report_filter_type > 0
-      assets = current_user.organization.assets.where('asset_type_id = ? AND replacement_year = ?', report_filter_type, analysis_year).order('asset_type_id, asset_subtype_id')
+      assets = organization.assets.where('asset_type_id = ? AND replacement_year = ?', report_filter_type, analysis_year).order('asset_type_id, asset_subtype_id')
     else
-      assets = current_user.organization.assets.where('replacement_year = ?', analysis_year).order('asset_type_id, asset_subtype_id')
+      assets = organization.assets.where('replacement_year = ?', analysis_year).order('asset_type_id, asset_subtype_id')
     end
     return assets
     
   end
 
-  def get_backlog_assets(current_user, report_filter_type)
+  def get_backlog_assets(organization, report_filter_type)
     
     # get the list of assets for this agency
     if report_filter_type > 0
-      assets = current_user.organization.assets.where('asset_type_id = ? AND in_backlog = ?', report_filter_type, true).order('asset_type_id, asset_subtype_id')
+      assets = organization.assets.where('asset_type_id = ? AND in_backlog = ?', report_filter_type, true).order('asset_type_id, asset_subtype_id')
     else
-      assets = current_user.organization.assets.where("in_backlog = ?", true).order('asset_type_id, asset_subtype_id')
+      assets = organization.assets.where("in_backlog = ?", true).order('asset_type_id, asset_subtype_id')
     end
     return assets
     

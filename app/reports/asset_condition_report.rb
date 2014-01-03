@@ -4,7 +4,7 @@ class AssetConditionReport < AbstractReport
     super(attributes)
   end    
   
-  def get_data(current_user, params)
+  def get_data(organization, params)
 
     # Check to see if we got an asset type to sub select on
     if params[:report_filter_type] 
@@ -18,9 +18,9 @@ class AssetConditionReport < AbstractReport
 
     ConditionType.all.each do |x|
       if report_filter_type > 0
-        count = current_user.organization.assets.where("asset_type_id = ? AND last_reported_condition_type_id = ?", report_filter_type, x.id).count
+        count = organization.assets.where("asset_type_id = ? AND last_reported_condition_type_id = ?", report_filter_type, x.id).count
       else
-        count = current_user.organization.assets.where("last_reported_condition_type_id = ?", x.id).count
+        count = organization.assets.where("last_reported_condition_type_id = ?", x.id).count
       end
       a << [x.name, count]
     end

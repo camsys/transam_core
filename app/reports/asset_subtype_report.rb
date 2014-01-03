@@ -4,7 +4,7 @@ class AssetSubtypeReport < AbstractReport
     super(attributes)
   end    
   
-  def get_data(current_user, params)
+  def get_data(organization, params)
 
     # Check to see if we got an asset type to sub select on
     if params[:report_filter_type] 
@@ -23,7 +23,7 @@ class AssetSubtypeReport < AbstractReport
     labels = ['Asset Subtype', 'Count']
 
     subtypes.each do |x|
-      count = current_user.organization.assets.where("asset_subtype_id = ?", x.id).count
+      count = organization.assets.where("asset_subtype_id = ?", x.id).count
       a << [x.name, count]
     end
         

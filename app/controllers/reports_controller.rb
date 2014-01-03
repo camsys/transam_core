@@ -25,7 +25,7 @@ class ReportsController < OrganizationAwareController
       @page_title = @report.name
       
       report_instance = @report.class_name.constantize.new
-      @data = report_instance.get_data(current_user, params)
+      @data = report_instance.get_data(@organization, params)
       
       # see if we need to load the layout or if it is a partial
       if params[:partial]

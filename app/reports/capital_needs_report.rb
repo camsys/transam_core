@@ -6,7 +6,7 @@ class CapitalNeedsReport < NeedsReport
     super(attributes)
   end    
   
-  def get_data(current_user, params)
+  def get_data(organization, params)
     
     # Check to see if we got an asset type to sub select on
     if params[:report_filter_type] 
@@ -22,7 +22,7 @@ class CapitalNeedsReport < NeedsReport
     report_row = BasicReportRow.new(BACKLOG_KEY)
     a[BACKLOG_KEY] = report_row
     # get the backlog assets
-    assets = get_backlog_assets(current_user, report_filter_type)
+    assets = get_backlog_assets(organization, report_filter_type)
     assets.find_each do |asset|
       report_row.add(asset)
     end
@@ -31,7 +31,7 @@ class CapitalNeedsReport < NeedsReport
       report_row = BasicReportRow.new(year)
       a[year] = report_row
       # get the assets for this analysis year
-      assets = get_assets(current_user, year, report_filter_type)
+      assets = get_assets(organization, year, report_filter_type)
       assets.find_each do |asset|
         report_row.add(asset)
       end

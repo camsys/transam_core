@@ -3,6 +3,7 @@
 # for any concrete controllers that are based on an organization
 #
 class OrganizationAwareController < TransamController
+  
   # set the @organization variable before any actions are invoked
   before_filter :get_organization
          
