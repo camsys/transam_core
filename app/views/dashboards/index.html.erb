@@ -1,19 +1,13 @@
 <div class="row-fluid">
 	<div class="span6">
 		<ul class="thumbnails">
-			
-			<%= dialog_tag("Inventory Summary", "fa fa-bar-chart-o") do %>
-				<%= link_to dashboard_path(:id => 1) do %>
-					<div id="dashboard_count_by_asset_type" style="width: 300; height: 200px;"></div>
+			<% Report.show_in_dashboard.each do |report| %>
+				<%= dialog_tag(report.name, report.report_type.display_icon_name) do %>
+					<%= link_to report_path(report) do %>
+						<div id='<%= "report_#{report.id}" %>' style="width: 300; height: 200px;"></div>
+					<% end %>
 				<% end %>
 			<% end %>
-
-			<%= dialog_tag("Asset Condition Summary", "fa fa-bar-chart-o") do %>
-				<%= link_to dashboard_path(:id => 2) do %>
-					<div id="dashboard_vehicle_condition" style="width: 300; height: 200px;"></div>
-				<% end %>
-			<% end %>
-				
 		</ul>
 	</div>		
 	<div class="span6">
@@ -52,62 +46,3 @@
 		</ul>
 	</div>
 </div>
-<script type="text/javascript">
-
-	//fix_thumbnail_margins();
-
-	google.load("visualization", "1", {
-		packages : ["corechart"]
-	});
-
-	google.setOnLoadCallback(draw_charts);
-
-	function draw_charts() {
-		var chart1_data = new google.visualization.DataTable();
-		chart1_data.addColumn('string', '<%= @summary_counts_by_type[:labels].first %>');
-		<% @summary_counts_by_type[:labels].last(@summary_counts_by_type[:labels].length - 1).each do |col| %>
-		chart1_data.addColumn('number', '<%= col %>');
-		<% end %>
-		<% @summary_counts_by_type[:data].each do |row| %>
-		chart1_data.addRow(<%= raw row.to_json %>);
-		<% end %>
-
-		var chart2_data = new google.visualization.DataTable();
-		chart2_data.addColumn('string', '<%= @summary_counts_by_condition[:labels].first %>');
-		<% @summary_counts_by_condition[:labels].last(@summary_counts_by_condition[:labels].length - 1).each do |col| %>
-		chart2_data.addColumn('number', '<%= col %>');
-		<% end %>
-		<% @summary_counts_by_condition[:data].each do |row| %>
-		chart2_data.addRow(<%= raw row.to_json %>);
-		<% end %>
-
-		
-		var chart1_options = {
-			is3D : true
-		};
-
-		var chart1 = new google.visualization.PieChart(document.getElementById('dashboard_count_by_asset_type'));
-		chart1.draw(chart1_data, chart1_options);
-
-		var chart2_options = {
-			is3D : true
-		};
-
-		var chart2 = new google.visualization.PieChart(document.getElementById('dashboard_vehicle_condition'));
-		chart2.draw(chart2_data, chart2_options);
-
-		var chart3_options = {
-			hAxis : {
-				title : 'Age (years)'
-			},
-			isStacked : true
-		};
-	}
-
-	// Handle the resize event and make sure the chart is redrawn for the new size
-	window.onresize = function() {
-		draw_charts();
-	};
-
-</script>
-
