@@ -2,10 +2,8 @@
 	<div class="span6">
 		<ul class="thumbnails">
 			<% Report.show_in_dashboard.each do |report| %>
-				<%= dialog_tag(report.name, report.report_type.display_icon_name) do %>
-					<%= link_to report_path(report) do %>
-						<div id='<%= "report_#{report.id}" %>' style="width: 300; height: 200px;"></div>
-					<% end %>
+				<%= dialog_tag(report.name, report.report_type.display_icon_name, "View", report_path(report)) do %>
+					<div id='<%= "report_#{report.id}" %>' style="width: 300; height: 200px;"></div>
 				<% end %>
 			<% end %>
 		</ul>
