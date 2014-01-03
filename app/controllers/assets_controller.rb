@@ -322,7 +322,7 @@ class AssetsController < AssetAwareController
     # make sure we have a list and an asset to find
     if id_list && asset
       # get the index of the current asset in the array      
-      current_index = id_list.index(@asset.asset_key)
+      current_index = id_list.index(@asset.object_key)
       if current_index
         if current_index > 0
           @prev_asset_id = id_list[current_index - 1] 
