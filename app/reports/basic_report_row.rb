@@ -12,7 +12,7 @@ class BasicReportRow
   def add(asset)
     self.count += 1
     self.replacement_cost += asset.replacement_cost unless asset.replacement_cost.nil?
-    self.id_list << asset.asset_key
+    self.id_list << asset.object_key
   end
   
 end
