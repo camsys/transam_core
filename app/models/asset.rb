@@ -165,6 +165,7 @@ class Asset < ActiveRecord::Base
     :asset_tag,
     :manufacturer_id,
     :manufacturer_model_id,
+    :manufacture_year,
     :replacement_cost,
     :replacement_year,
     :last_reported_condition_type_id,
@@ -247,7 +248,7 @@ class Asset < ActiveRecord::Base
     
   # return the number of years since the asset was manufactured. It can't be less than 0
   def age(on_date=Date.today)
-    [on_date.year - in_service_date.year, 0].max
+    [on_date.year - manufacture_year, 0].max
   end
       
   # returns the date the asset was put into service. This date will be dependent on the asset type
