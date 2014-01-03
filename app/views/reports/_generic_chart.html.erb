@@ -1,10 +1,10 @@
 <div class="row-fluid">
 	<div class="well well-small span12">
-		<div id='<%= "chart_#{report.id}" %>'></div>
+		<div id='<%= "chart_#{@report.id}" %>'></div>
 	</div>
 </div>
 
-<%= unless @chart_only == false %>
+<% unless @chart_only == true %>
 	<div class="row-fluid">
 		<div class="span12">
 			<table class="table table-condensed table-striped table-hover table-bordered">
@@ -31,32 +31,37 @@
 
 <script type="text/javascript">
 
+
 	google.load("visualization", "1", {
 		packages : ["corechart"]
 	});
 
-	var data = <%= @data.to_json %>
-	
-	var <%= "chart_data_#{report.id}" %> = new google.visualization.DataTable();
-	<%= "chart_data_#{report.id}" %>.addColumn('string', '<%= @data[:labels].first %>');
-	<% @data[:labels].last(@data[:labels].length - 1).each do |col| %>
-	<%= "chart_data_#{report.id}" %>.addColumn('number', '<%= col %>');
-	<% end %>
-	<% @data[:data].each do |row| %>
-	<%= "chart_data_#{report.id}" %>.addRow(<%= raw row.to_json %>);
-	<% end %>
-	var <%= "chart_options_#{report.id}" %> = {
+	function <%= "chart_func_#{@report.id}" %>() {
+		
+		var div_id = '<%= "chart_#{@report.id}" %>';
+		
+		var chart_data = new google.visualization.DataTable();
+		chart_data.addColumn('string', '<%= @data[:labels].first %>');
+		<% @data[:labels].last(@data[:labels].length - 1).each do |col| %>
+		chart_data.addColumn('number', '<%= col %>');
+		<% end %>
+		<% @data[:data].each do |row| %>
+		chart_data.addRow(<%= raw row.to_json %>);
+		<% end %>
+		
+		var chart_options = {
 			is3D : true,
 			height : 300
 		};
+		// Draw it
+		transam.draw_chart(div_id, 'pie', chart_options, chart_data);		
+	};
+	// Set a callback to run when the Google Visualization API is loaded.
+	google.setOnLoadCallback(<%= "chart_func_#{@report.id}" %>);
 
-	$(document).ready(function() {
-		transam.draw_chart('<%= "chart_#{report.id}" %>', 'pie', <%= "chart_options_#{report.id}" %>, <%= "chart_data_#{report.id}" %>);
-	});
-	
 	// Handle the resize event and make sure the chart is redrawn for the new size
 	window.onresize = function() {
-		transam.draw_chart('<%= "chart_#{report.id}" %>', 'pie', <%= "chart_options_#{report.id}" %>, <%= "chart_data_#{report.id}" %>);
+		<%= "chart_func_#{@report.id}" %>();
 	};
 
 </script>
