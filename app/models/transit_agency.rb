@@ -15,8 +15,9 @@ class TransitAgency < Organization
   #------------------------------------------------------------------------------
   # Associations 
   #------------------------------------------------------------------------------
+  
   # every transit agency can own assets
-  has_many :assets
+  has_many :assets, :foreign_key => 'organization_id'
     
   #------------------------------------------------------------------------------
   # Scopes
