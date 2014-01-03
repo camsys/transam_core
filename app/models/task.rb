@@ -10,7 +10,7 @@ class Task < ActiveRecord::Base
   #require rails to use the asset key as the restful parameter. All URLS will be of the form
   # /task/{task_key}/...
   def to_param
-    task_key
+    object_key
   end
   
   #------------------------------------------------------------------------------
