@@ -8,7 +8,7 @@
 				<%= format_field("Asset Key", @asset.object_key ) %>
 			<% end %>
 			<%= panel_tag('Condition', {:icon => 'fa fa-refresh', :class => "header_part span4"}) do %>
-				<%= format_field("Last reported condition", @asset.last_reported_condition_type.name ) %>
+				<%= format_field("Last reported condition", @asset.last_reported_condition_type.nil? ? 'Unknown' : @asset.last_reported_condition_type.name ) %>
 				<%= format_field("Reported on", @asset.calculate_last_reported_condition_date.nil? ? '' : format_date(@asset.calculate_last_reported_condition_date) ) %>
 				<%= format_field("Est. condition", number_with_precision(@asset.estimated_condition_rating, :precision => 2)) %>
 				<%= format_field("Est. rating", @asset.estimated_condition_type.nil? ? 'Unknown' : @asset.estimated_condition_type.name ) %>

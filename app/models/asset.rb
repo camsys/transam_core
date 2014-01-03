@@ -419,7 +419,7 @@ class Asset < ActiveRecord::Base
   # This is called before each save so no errors should be generated but we need to complete as many
   # updates as possible
   def update_asset_state
-    Rails.logger.info "Updating condition for asset_key = #{asset_key}"
+    Rails.logger.info "Updating condition for asset = #{object_key}"
 
     begin
       self.last_reported_disposition_type = calculate_last_reported_disposition
