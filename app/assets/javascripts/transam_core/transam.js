@@ -6,7 +6,7 @@ var transam = new function() {
 	// Draws a google char based on the chart data and chart options passed in
 	this.draw_chart = function(div_id, chart_type, chart_options, chart_data) {
 				
-		chart = new google.visualization.PieChart(document.getElementById(div_id));
+		var chart = new google.visualization.PieChart(document.getElementById(div_id));
 		chart.draw(chart_data, chart_options);
 	};
 
@@ -21,10 +21,10 @@ var transam = new function() {
             		$("#" + div_id).html(loader_panel);
           		}
         	},       
-        	success: function(html) {
-          		$("#" + div_id).empty();
-          		$("#" + div_id).append(html);
-        	},
+        	//success: function(html) {
+          	//	$("#" + div_id).empty();
+          	//	$("#" + div_id).append(html);
+        	//},
 			error: function (data) {
 	      		show_error_message(div_id, "We are sorry but something went wrong. Please try again.");                
 	      	}

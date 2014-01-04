@@ -1,0 +1,24 @@
+$('<%= "#report_#{@report.id}" %>').html("<%= escape_javascript(render 'chart') %>");
+
+function <%= "chart_func_#{@report.id}" %>() {
+  
+  var div_id = '<%= "chart_#{@report.id}" %>';
+  
+  var chart_data = new google.visualization.DataTable();
+  chart_data.addColumn('string', '<%= @data[:labels].first %>');
+  <% @data[:labels].last(@data[:labels].length - 1).each do |col| %>
+  chart_data.addColumn('number', '<%= col %>');
+  <% end %>
+  <% @data[:data].each do |row| %>
+  chart_data.addRow(<%= raw row.to_json %>);
+  <% end %>
+  
+  var chart_options = {
+    is3D : true,
+    height : 200
+  };
+  transam.draw_chart(div_id, 'pie', chart_options, chart_data);  
+};
+// Set a callback to run when the Google Visualization API is loaded.
+google.setOnLoadCallback(<%= "chart_func_#{@report.id}" %>);
+<%= "chart_func_#{@report.id}" %>();

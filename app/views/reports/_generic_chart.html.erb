@@ -4,30 +4,28 @@
 	</div>
 </div>
 
-<% unless @chart_only == true %>
-	<div class="row-fluid">
-		<div class="span12">
-			<table class="table table-condensed table-striped table-hover table-bordered">
-				<thead>
-					<tr>
-						<% @data[:labels].each do |col| %>
-						<th><%= col %></th>
-						<% end %>
-					</tr>
-				</thead>
-				<tbody>
-					<% @data[:data].each do |row| %>
-					<tr>
-						<% row.each do |col| %>
-						<td><%= col %></td>
-						<% end %>
-					</tr>
+<div class="row-fluid">
+	<div class="span12">
+		<table class="table table-condensed table-striped table-hover table-bordered">
+			<thead>
+				<tr>
+					<% @data[:labels].each do |col| %>
+					<th><%= col %></th>
 					<% end %>
-				</tbody>
-			</table>
-		</div>
+				</tr>
+			</thead>
+			<tbody>
+				<% @data[:data].each do |row| %>
+				<tr>
+					<% row.each do |col| %>
+					<td><%= col %></td>
+					<% end %>
+				</tr>
+				<% end %>
+			</tbody>
+		</table>
 	</div>
-<% end %>
+</div>
 
 <script type="text/javascript">
 

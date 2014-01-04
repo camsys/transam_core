@@ -13,6 +13,21 @@ class ReportsController < OrganizationAwareController
         
   end
 
+  def load
+
+    # load this report and create the report instance 
+    @report = Report.find(params[:id])
+
+    report_instance = @report.class_name.constantize.new
+    @data = report_instance.get_data(@organization, params)
+
+    respond_to do |format|
+      format.js 
+      format.json { render :json => @data.to_json }
+    end
+    
+  end
+  
   # renders a dashboard detail page. Actual details depends on the id parameter passed
   # from the view
   def show
@@ -26,16 +41,6 @@ class ReportsController < OrganizationAwareController
       
       report_instance = @report.class_name.constantize.new
       @data = report_instance.get_data(@organization, params)
-      
-      # see if we need to load the layout or if it is a partial
-      if params[:partial]
-        # don't render the table or header
-        @chart_only = true
-        render :layout => false
-        return
-      end
-      
-      @chart_only = false
       
       respond_to do |format|
         format.html
