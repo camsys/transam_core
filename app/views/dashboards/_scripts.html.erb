@@ -6,7 +6,7 @@
     
 	function create_charts() {
     	<% Report.show_in_dashboard.each do |report| %>
-    	load_ajax_panel('<%= "report_#{report.id}" %>', "<%= load_report_path(report) %>", "get", "<%= raw loader_panel_tag() %>");
+    	transam.load_ajax_panel('<%= "report_#{report.id}" %>', "<%= load_report_path(report) %>", "get", "<%= raw loader_panel_tag() %>");
     	<% end %>  
   	};
 	function draw_charts() {
