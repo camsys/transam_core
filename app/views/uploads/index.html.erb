@@ -1,0 +1,10 @@
+
+<%= render 'index_subnav' %>
+
+<% if @uploads.empty? %>
+	<%= render 'empty_list' %>
+<% elsif @view_type == UploadsController::VIEW_TYPE_TABLE %>
+	<%= render 'index_table' %>
+<% else %>
+	<%= render 'index_thumbnails' %>
+<% end %>

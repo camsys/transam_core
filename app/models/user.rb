@@ -48,7 +48,11 @@ class User < ActiveRecord::Base
   # every user has access to 0 or more organizations for reporting
   has_and_belongs_to_many :organizations, :join_table => 'users_organizations'
   
+  # Every user can have 0 or more messages
   has_many   :messages
+  
+  # Every user can have 0 or more files they have uploaded
+  has_many   :uploads
 
   # Validations on core attributes
   validates :object_key,    :presence => true, :uniqueness => true

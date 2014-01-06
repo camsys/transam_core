@@ -1,0 +1,29 @@
+<%= render 'subnav' %>
+
+<div class="row-fluid">
+	<div class="span12">
+		<ul class="thumbnails">
+			<%= panel_tag('Upload', {:icon => "fa fa-upload", :class => "span12"}) do %>
+				<div class="row-fluid">
+					<div class="span6">
+						<%= format_field("Name", @upload.original_filename ) %>
+						<%= format_field("Content", @upload.file_content_type.name ) %>						
+						<%= format_field("Status", @upload.file_status_type.name ) %>
+					</div>
+					<div class="span6">
+						<%= format_field("Upload time", format_date_time(@upload.created_at) ) %>
+						<%= format_field("Uploaded by", @upload.user.name ) %>
+					</div>
+				</div>
+			<% end %>
+			<%= panel_tag('Processing Log', {:icon => "icon-upload", :class => "span12"}) do %>
+			<% end %>
+		</ul>
+	</div>
+</div>
+
+<script type="text/javascript">
+
+	fix_thumbnail_margins(12);
+
+</script>

@@ -1,0 +1,28 @@
+<div class="row-fluid">
+	<div class="span12">
+		<table id="datatable" class="table table-condensed table-striped table-hover table-bordered">
+			<thead>
+				<th>File</th>
+				<th>Content</th>
+				<th>Loaded By</th>
+				<th>Status</th>
+				<th>Created</th>
+				<th>Last Updated</th>
+			</thead>
+			<tbody>
+				<% @uploads.each do |f| %>
+				<tr data-action-path = '<%= upload_path(f) %>' >
+					<td><%= f.original_filename %></td>
+					<td><%= f.file_content_type.name %></td>
+					<td><%= f.user.name %></td>
+					<td><%= f.file_status_type.name %></td>
+					<td><%= format_date_time(f.created_at) %></td>
+					<td><%= format_date_time(f.updated_at) %></td>
+				</tr>
+				<% end %>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<%= render 'shared/datatable_javascript' %>

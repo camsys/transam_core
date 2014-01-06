@@ -1,0 +1,16 @@
+<div class="row-fluid">
+	<div class="span12">
+		<%= form_tag create_templates_uploads_url, :id => 'template_form', :method => "get", :class => 'form-horizontal' do %>
+		<ul class="thumbnails">
+			<%= panel_tag('Select Inventory and Template Type', {:icon => 'icon-upload', :class => "span8 offset2"}) do %>		
+				<%= select_tag(:asset_type, options_from_collection_for_select(AssetType.all, "id", "name"), :prompt => 'Select asset type...', :id => 'asset_subtype_filter') %>
+				<%= select_tag(:file_content_type, options_from_collection_for_select(FileContentType.all, :id, :name), :prompt => 'Select template type...', :id => 'file_content_type') %>
+				<div class="form-actions panel-form-actions">
+					<%= submit_tag 'Generate template', :name => 'submit', :class=>"btn" %>
+					<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn" %>
+				</div>				
+			<% end %>
+		</ul>
+		<% end %>
+	</div>
+</div>

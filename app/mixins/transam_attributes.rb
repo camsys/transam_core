@@ -37,6 +37,10 @@ module TransamAttributes
     Task.allowable_params
   end
 
+  def upload_allowable_params
+    Upload.allowable_params
+  end
+
   def user_allowable_params
     User.allowable_params
   end
