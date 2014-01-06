@@ -1,0 +1,3 @@
+class FinalDispositionsFileHandler < AbstractFileHandler
+  
+end

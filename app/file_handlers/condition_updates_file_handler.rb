@@ -1,0 +1,3 @@
+class ConditionUpdatesFileHandler < AbstractFileHandler
+  
+end

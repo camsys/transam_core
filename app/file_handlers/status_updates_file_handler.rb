@@ -1,0 +1,3 @@
+class StatusUpdatesFileHandler < AbstractFileHandler
+  
+end
