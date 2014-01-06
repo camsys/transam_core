@@ -108,7 +108,7 @@ class AssetEventsController < AssetAwareController
     respond_to do |format|
       if @asset_event.update_attributes(form_params)
         # The event was updated so we need to update the asset condition
-        Rails.logger.info "Updating condition for asset with key = #{@asset.asset_key}"
+        Rails.logger.info "Updating condition for asset with object_key = #{@asset.object_key}"
         @asset.update_condition_and_disposition
         format.html { redirect_to inventory_asset_event_url(@asset, @asset_event), :notice => "Event was successfully updated." }
         format.json { head :no_content }

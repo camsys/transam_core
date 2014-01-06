@@ -40,7 +40,7 @@ class AssetsController < AssetAwareController
       markers = []
       @assets.each do |asset|
         if asset.geo_locatable? and asset.mappable?
-          markers << get_map_marker(asset, asset.asset_key, false) # not draggable
+          markers << get_map_marker(asset, asset.object_key, false) # not draggable
         end
       end
       @markers = markers.to_json  
@@ -91,7 +91,7 @@ class AssetsController < AssetAwareController
     markers = []
     if @asset.geo_locatable? and @asset.mappable?
       @asset.find_close(DEFAULT_SEARCH_RADIUS, DEFAULT_SEARCH_UNITS).each do |a|
-        markers << get_map_marker(a, a.asset_key, false, 0, 'purpleIcon')
+        markers << get_map_marker(a, a.object_key, false, 0, 'purpleIcon')
       end
       # Add the current marker with a high Z index so it shows on top
       markers << get_map_marker(@asset, 'asset', false, 100) # not draggable
@@ -289,8 +289,8 @@ class AssetsController < AssetAwareController
       @search_text = params[:search_text].strip
       assets = klass.search_query(@organization, @search_text).order(:asset_subtype_id).limit(MAX_ROWS_RETURNED)            
     elsif @id_filter_list
-      asset_keys = @id_filter_list.split(STRING_TOKENIZER)
-      assets = klass.where('organization_id = ? AND asset_key in (?)', @organization.id, asset_keys).order(:asset_subtype_id)           
+      object_keys = @id_filter_list.split(STRING_TOKENIZER)
+      assets = klass.where('organization_id = ? AND object_key in (?)', @organization.id, object_keys).order(:asset_subtype_id)           
     elsif @asset_subtype > 0
       assets = klass.where('organization_id = ? AND asset_subtype_id = ?', @organization.id, @asset_subtype).limit(MAX_ROWS_RETURNED)           
     else
