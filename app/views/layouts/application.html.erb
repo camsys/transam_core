@@ -28,6 +28,9 @@
 						<div class="row-fluid">
 							<div class="span6">
 								<%= link_to app_title, "/", :class => "brand" %>
+								<%= link_to organization_path(current_user.organization), :class => "brand" do %>
+									<small><%= current_user.organization.name %></small>
+								<% end %>
 							</div>
 							<div class="span6">
 								<ul class="nav pull-right">
