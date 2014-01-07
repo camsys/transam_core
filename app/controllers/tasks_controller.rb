@@ -25,7 +25,8 @@ class TasksController < OrganizationAwareController
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
     if @task.nil?
-      redirect_to(user_tasks_url, :flash => { :alert => 'Record not found!'})
+      notify_user(:alert, "Record not found!")
+      redirect_to user_tasks_url
       return
     end
  
@@ -58,7 +59,9 @@ class TasksController < OrganizationAwareController
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
     if @task.nil?
-      redirect_to(user_tasks_url(current_user), :flash => { :alert => 'Record not found!'})
+      notify_user(:alert, "Record not found!")
+      redirect_to user_tasks_url
+      return
     end
 
   end
@@ -75,7 +78,8 @@ class TasksController < OrganizationAwareController
 
     respond_to do |format|
       if @task.save
-        format.html { redirect_to user_tasks_url(current_user), :notice => "Task was successfully created." }
+        notify_user(:notice, "Task was successfully created.")
+        format.html { redirect_to user_tasks_url(current_user) }
         format.json { render :json => @task, :status => :created, :location => @task }
       else
         format.html { render :action => "new" }
@@ -90,13 +94,15 @@ class TasksController < OrganizationAwareController
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
     if @task.nil?
-      redirect_to(user_tasks_url(current_user), :flash => { :alert => 'Record not found!'})
+      notify_user(:alert, "Record not found!")
+      redirect_to user_tasks_url
       return
     end
 
     respond_to do |format|
       if @task.update_attributes(form_params)
-        format.html { redirect_to user_tasks_url(current_user), :notice => "Task was successfully updated." }
+        notify_user(:notice, "Task was successfully updated.")
+        format.html { redirect_to user_tasks_url(current_user) }
         format.json { head :no_content }
       else
         format.html { render :action => "edit" }
@@ -104,13 +110,6 @@ class TasksController < OrganizationAwareController
       end
     end
   end
-
-  def check_for_cancel
-    unless params[:cancel].blank?
-      # check that the user has access to this agency
-      redirect_to(user_tasks_url(current_user))
-    end
-  end 
   
   #------------------------------------------------------------------------------
   #
@@ -118,6 +117,13 @@ class TasksController < OrganizationAwareController
   #
   #------------------------------------------------------------------------------
   private
+
+  def check_for_cancel
+    unless params[:cancel].blank?
+      # check that the user has access to this agency
+      redirect_to(user_tasks_url(current_user))
+    end
+  end 
   
   # Callbacks to share common setup or constraints between actions.
   def set_task
