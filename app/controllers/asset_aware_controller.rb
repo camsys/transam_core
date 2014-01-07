@@ -41,10 +41,11 @@ class AssetAwareController < OrganizationAwareController
     end
     subtypes = AssetSubtype.where("description LIKE ?", query_str)
     subtypes.each do |subtype|
-      matches << {
+      elem = {
         "id" => subtype.id,
         "name" => subtype.full_name
-      }
+      } 
+      matches << elem unless matches.include?(elem)
     end
 
     respond_to do |format|
