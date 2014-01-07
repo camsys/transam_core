@@ -23,8 +23,8 @@ Gem::Specification.new do |s|
   s.add_dependency "paper_trail"
   
   # for background processing jobs  
-  gem 'delayed_job_active_record'
+  s.add_dependency 'delayed_job_active_record'
   # for running background processes
-  gem 'daemons'
+  s.add_dependency 'daemons'
   
 end
