@@ -9,7 +9,7 @@ class AssetConditionUpdateJob < Job
   
   attr_accessor :object_key
   
-  def run_job    
+  def run    
     asset = Asset.find_by_object_key(object_key)
     if asset
       asset.update_condition_and_disposition
