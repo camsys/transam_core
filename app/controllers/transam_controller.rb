@@ -23,11 +23,10 @@ class TransamController < ApplicationController
     if defined?(super)
       super
     else
-      :flash[type] = message
+      flash[type] = message
     end
   end
   
-  end       
   # Determine which layout to use based on the authorized state
   def layout_by_resource
     if user_signed_in?
