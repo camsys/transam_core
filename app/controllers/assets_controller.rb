@@ -129,6 +129,10 @@ class AssetsController < AssetAwareController
 
     respond_to do |format|
       if @asset.update_attributes(form_params)
+        
+        # If the asset was successfully updated, schedule update the condition and disposition asynchronously
+        Delayed::Job.enqueue AssetConditionUpdateJob.new(@asset.object_key), :priority => 0
+        
         format.html { redirect_to inventory_url(@asset), :notice => "Asset #{@asset.name} was successfully updated." }
         format.json { head :no_content }
       else
@@ -185,7 +189,9 @@ class AssetsController < AssetAwareController
     
     respond_to do |format|
       if @asset.save
-        @asset.update_condition_and_disposition
+        # If the asset was successfully saved, schedule update the condition and disposition asynchronously
+        Delayed::Job.enqueue AssetConditionUpdateJob.new(@asset.object_key), :priority => 0
+        
         format.html { redirect_to inventory_url(@asset), :notice => "Asset #{@asset.name} was successfully created." }
         format.json { render :json => @asset, :status => :created, :location => @asset }
       else

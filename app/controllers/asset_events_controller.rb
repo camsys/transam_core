@@ -107,9 +107,10 @@ class AssetEventsController < AssetAwareController
 
     respond_to do |format|
       if @asset_event.update_attributes(form_params)
+
         # The event was updated so we need to update the asset condition
-        Rails.logger.info "Updating condition for asset with object_key = #{@asset.object_key}"
-        @asset.update_condition_and_disposition
+        Delayed::Job.enqueue AssetConditionUpdateJob.new(@asset.object_key), :priority => 0
+        
         format.html { redirect_to inventory_asset_event_url(@asset, @asset_event), :notice => "Event was successfully updated." }
         format.json { head :no_content }
       else
@@ -133,9 +134,10 @@ class AssetEventsController < AssetAwareController
     
     respond_to do |format|
       if @asset_event.save
-        Rails.logger.debug 'Event Saved. Updating asset condition'
-        # The event was created so we need to update the asset condition
-        @asset.update_condition_and_disposition
+        
+        # The event was updated so we need to update the asset condition
+        Delayed::Job.enqueue AssetConditionUpdateJob.new(@asset.object_key), :priority => 0
+        
         format.html { redirect_to inventory_asset_events_url(@asset), :notice => "Event was successfully created." }
         format.json { render :json => @asset_event, :status => :created, :location => @asset_event }
       else
