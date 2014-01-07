@@ -67,6 +67,8 @@ class AssetsController < AssetAwareController
         
     # create a copy of the asset and null out all the fields that are identified as cleansable
     new_asset = @asset.copy(true)
+
+    notify_user(:notice, "Asset #{@asset.name} was successfully updated.")
         
     @asset = new_asset
     Rails.logger.debug @asset.inspect
@@ -133,7 +135,9 @@ class AssetsController < AssetAwareController
         # If the asset was successfully updated, schedule update the condition and disposition asynchronously
         Delayed::Job.enqueue AssetConditionUpdateJob.new(@asset.object_key), :priority => 0
         
-        format.html { redirect_to inventory_url(@asset), :notice => "Asset #{@asset.name} was successfully updated." }
+        notify_user(:notice, "Asset #{@asset.name} was successfully updated.")
+        
+        format.html { redirect_to inventory_url(@asset) }
         format.json { head :no_content }
       else
         format.html { render :action => "edit" }
@@ -154,7 +158,9 @@ class AssetsController < AssetAwareController
 
     asset_subtype = AssetSubtype.find(params[:asset_subtype])
     if asset_subtype.nil?
-      redirect_to(inventory_index_url, :flash => { :alert => "Asset subtype not found. Can't create new asset!"})      
+      notify_user(:alert, "Asset subtype '#{params[:asset_subtype]}' not found. Can't create new asset!")
+      redirect_to(inventory_index_url ) 
+      return     
     end
  
     @page_title = 'New ' + asset_subtype.name
@@ -191,8 +197,10 @@ class AssetsController < AssetAwareController
       if @asset.save
         # If the asset was successfully saved, schedule update the condition and disposition asynchronously
         Delayed::Job.enqueue AssetConditionUpdateJob.new(@asset.object_key), :priority => 0
+
+        notify_user(:notice, "Asset #{@asset.name} was successfully created.")
         
-        format.html { redirect_to inventory_url(@asset), :notice => "Asset #{@asset.name} was successfully created." }
+        format.html { redirect_to inventory_url(@asset) }
         format.json { render :json => @asset, :status => :created, :location => @asset }
       else
         #Rails.logger.debug @asset.errors.inspect        
@@ -216,10 +224,11 @@ class AssetsController < AssetAwareController
     @asset.asset_events.each { |x| x.destroy }
 
     @asset.destroy
-    message = "Asset was sucessfully removed."
+    
+    notify_user(:notice, "Asset was successfully removed.")
 
     respond_to do |format|
-      format.html { redirect_to(inventory_url, :flash => { :notice => message}) } 
+      format.html { redirect_to(inventory_url) } 
       format.json { head :no_content }
     end
     

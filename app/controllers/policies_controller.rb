@@ -69,7 +69,8 @@ class PoliciesController < OrganizationAwareController
     @policy = current_user.organization.policies.find(new_policy.id)
     respond_to do |format|
       if @policy
-        format.html { redirect_to edit_policy_url(@policy), :notice => "Policy #{old_policy_name} was successfully copied." }
+        notify_user(:notice, "Policy #{old_policy_name} was successfully copied.")
+        format.html { redirect_to edit_policy_url(@policy) }
         format.json { render :json => @policy, :status => :created, :location => @policy }
       else
         format.html { render :action => "edit" }
@@ -86,7 +87,8 @@ class PoliciesController < OrganizationAwareController
 
     respond_to do |format|
       if @policy.save
-        format.html { redirect_to policy_url(@policy), :notice => "Policy #{@policy.name} was successfully created." }
+        notify_user(:notice, "Policy #{@policy.name} was successfully created.")
+        format.html { redirect_to policy_url(@policy) }
         format.json { render :json => @policy, :status => :created, :location => @policy }
       else
         format.html { render :action => "new" }
@@ -99,7 +101,8 @@ class PoliciesController < OrganizationAwareController
 
     respond_to do |format|
       if @policy.update_attributes(form_params)
-        format.html { redirect_to policy_url(@policy), :notice => "Policy #{@policy.name} was successfully updated." }
+        notify_user(:notice, "Policy #{@policy.name} was successfully updated.")
+        format.html { redirect_to policy_url(@policy) }
         format.json { head :no_content }
       else
         format.html { render :action => "edit" }
@@ -111,9 +114,9 @@ class PoliciesController < OrganizationAwareController
   def destroy
 
     @policy.destroy
-
+    notify_user(:notice, "Policy was successfully removed.")
     respond_to do |format|
-      format.html { redirect_to policies_url, :notice => "Policy #{@policy.name} was successfully removed." }
+      format.html { redirect_to policies_url }
       format.json { head :no_content }
     end
   end
@@ -133,7 +136,8 @@ class PoliciesController < OrganizationAwareController
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
     if @policy.nil?
-      redirect_to(policies_url, :flash => { :alert => 'Record not found!'})
+      notify_user(:alert, 'Record not found!')
+      redirect_to(policies_url)
       return
     end
     

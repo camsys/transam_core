@@ -54,8 +54,9 @@ class UploadsController < OrganizationAwareController
     @upload.customer = current_user.organization.customer
     
     respond_to do |format|
-      if @upload.save        
-        format.html { redirect_to uploads_url, :notice => "File was successfully uploaded." }
+      if @upload.save
+        notify_user(:notice, "File was successfully uploaded.")        
+        format.html { redirect_to uploads_url }
         format.json { render :json => @upload, :status => :created, :location => @upload }
       else
         format.html { render :action => "new" }
@@ -67,14 +68,16 @@ class UploadsController < OrganizationAwareController
   def destroy
 
     if @upload.nil?
-      redirect_to(files_url, :flash => { :alert => 'Record not found!'})
+      notify_user(:alert, "Record not found!")
+      redirect_to files_url
       return      
     end
 
     @upload.destroy
+    notify_user(:notice, "File was successfully removed.")
 
     respond_to do |format|
-      format.html { redirect_to(uploads_url, :flash => { :notice => 'File was successfully removed.'}) } 
+      format.html { redirect_to(uploads_url) } 
       format.json { head :no_content }
     end
   end

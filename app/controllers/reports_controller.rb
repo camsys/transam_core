@@ -17,7 +17,10 @@ class ReportsController < OrganizationAwareController
 
     # load this report and create the report instance 
     @report = Report.find(params[:id])
-
+    if @report.nil?
+      notify_user(:alert, "Can't find report.")
+    end
+    
     report_instance = @report.class_name.constantize.new
     @data = report_instance.get_data(@organization, params)
 
@@ -31,9 +34,16 @@ class ReportsController < OrganizationAwareController
   # renders a dashboard detail page. Actual details depends on the id parameter passed
   # from the view
   def show
-    
+
     # load this report and create the report instance 
     @report = Report.find(params[:id])
+
+    if @report.nil?
+      notify_user(:alert, "Can't find report.")
+      redirect_to reports_url
+      return
+    end
+    
 
     if @report
       @report_view = @report.view_name

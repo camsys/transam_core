@@ -46,7 +46,8 @@ class AttachmentsController < AssetAwareController
   def download
     
     if @attachment.nil?
-      redirect_to(inventory_attachments_url(@asset), :flash => { :alert => 'Record not found!'})
+      notify_user(:alert, 'Record not found!')
+      redirect_to(inventory_attachments_url(@asset))
       return            
     end
     # send the attachment    
@@ -57,7 +58,8 @@ class AttachmentsController < AssetAwareController
   def show
   
     if @attachment.nil?
-      redirect_to(inventory_attachments_url(@asset), :flash => { :alert => 'Record not found!'})
+      notify_user(:alert, 'Record not found!')
+      redirect_to(inventory_attachments_url(@asset))
       return            
     end
 
@@ -77,7 +79,8 @@ class AttachmentsController < AssetAwareController
     
     respond_to do |format|
       if @attachment.save        
-        format.html { redirect_to inventory_attachments_url(@asset), :notice => "Attachment was successfully uploaded." }
+        notify_user(:notice, "Attachment was successfully uploaded.")
+        format.html { redirect_to inventory_attachments_url(@asset) }
         format.json { render :json => @attachment, :status => :created, :location => @attachment }
       else
         format.html { render :action => "new" }
@@ -90,7 +93,8 @@ class AttachmentsController < AssetAwareController
   def edit
 
     if @attachment.nil?
-      redirect_to(inventory_attachments_url(@asset), :flash => { :alert => 'Record not found!'})
+      notify_user(:alert, 'Record not found!')
+      redirect_to(inventory_attachments_url(@asset))
       return            
     end
     @page_title = @attachment.name
@@ -99,14 +103,16 @@ class AttachmentsController < AssetAwareController
   def update
 
     if @attachment.nil?
-      redirect_to(inventory_attachments_url(@asset), :flash => { :alert => 'Record not found!'})
+      notify_user(:alert, 'Record not found!')
+      redirect_to(inventory_attachments_url(@asset))
       return            
     end
     @page_title = @attachment.name
 
     respond_to do |format|
       if @attachment.update_attributes(form_params)
-        format.html { redirect_to inventory_attachment_url(@asset, @attachment), :notice => "Attachment was successfully updated." }
+        notify_user(:notice, "Attachment was successfully updated.")
+        format.html { redirect_to inventory_attachment_url(@asset, @attachment)}
         format.json { head :no_content }
       else
         format.html { render :action => "edit" }
@@ -129,14 +135,17 @@ class AttachmentsController < AssetAwareController
   def destroy
 
     if @attachment.nil?
-      redirect_to(inventory_attachments_url(@asset), :flash => { :alert => 'Record not found!'})
+      notify_user(:alert, 'Record not found!')
+      redirect_to(inventory_attachments_url(@asset))
       return      
     end
 
     @attachment.destroy
 
+    notify_user(:notice, 'Attachment was successfully removed.')
+
     respond_to do |format|
-      format.html { redirect_to(inventory_attachments_url(@asset), :flash => { :notice => 'Attachment was successfully removed.'}) } 
+      format.html { redirect_to(inventory_attachments_url(@asset)) } 
       format.json { head :no_content }
     end
   end
@@ -161,7 +170,8 @@ class AttachmentsController < AssetAwareController
     unless params[:cancel].blank?
       get_asset
       if @asset.nil?
-        redirect_to(inventory_url, :flash => { :alert => 'Record not found!'})
+        notify_user(:alert, 'Record not found!')
+        redirect_to(inventory_url)
         return      
       end
       redirect_to inventory_attachments_url(@asset)

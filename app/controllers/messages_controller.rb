@@ -25,7 +25,8 @@ class MessagesController < OrganizationAwareController
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
     if @message.nil?
-      redirect_to(user_messages_url(current_user), :flash => { :alert => 'Record not found!'})
+      notify_user(:alert, 'Record not found!')      
+      redirect_to(user_messages_url(current_user))
       return
     end
 
@@ -75,20 +76,13 @@ class MessagesController < OrganizationAwareController
 
     respond_to do |format|
       if @message.save
-        format.html { redirect_to user_messages_url(current_user), :notice => "Message was successfully created." }
+        notify_user(:notice, "Message was successfully sent.")
+        format.html { redirect_to user_messages_url(current_user) }
         format.json { render :json => @message, :status => :created }
       else
         format.html { render :action => "new" }
         format.json { render :json => @message.errors, :status => :unprocessable_entity }
       end
-    end
-  end
-
-  
-  def check_for_cancel 
-    unless params[:cancel].blank?
-      # check that the user has access to this agency
-      redirect_to(user_messages_url(current_user))
     end
   end
   
@@ -98,6 +92,14 @@ class MessagesController < OrganizationAwareController
   #
   #------------------------------------------------------------------------------
   private
+
+  def check_for_cancel 
+    unless params[:cancel].blank?
+      # check that the user has access to this agency
+      redirect_to(user_messages_url(current_user))
+      return
+    end
+  end
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def form_params

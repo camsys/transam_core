@@ -27,8 +27,9 @@ class OrganizationAwareController < TransamController
         @organization = org
       end
     else
-        redirect_to(organizations_url, :flash => { :alert => 'Record not found!'})
-        return
+      notify_user(:alert, 'Record not found!')
+      redirect_to(organizations_url)
+      return
     end
     
   end

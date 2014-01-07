@@ -16,6 +16,18 @@ class TransamController < ApplicationController
   VIEW_TYPE_TABLE = 2   # table
   VIEW_TYPE_MAP   = 3   # map
        
+  # Centralized message sender that can be overriden by an implementation
+  def notify_user(type, message)
+    # if there is a notify_user method in ApplicationController use it otherwise
+    # use this one
+    if defined?(super)
+      super
+    else
+      :flash[type] = message
+    end
+  end
+  
+  end       
   # Determine which layout to use based on the authorized state
   def layout_by_resource
     if user_signed_in?

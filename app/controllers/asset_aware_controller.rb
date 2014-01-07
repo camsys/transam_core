@@ -93,7 +93,8 @@ protected
     # check that the asset is owned by the agency
     @asset = get_selected_asset(render_typed_assets) 
     if @asset.nil?
-      redirect_to(inventory_index_url, :flash => { :alert => 'Record not found!'})
+      notify_user(:alert, 'Record not found!')
+      redirect_to(inventory_index_url)
       return      
     end    
   end

@@ -66,7 +66,8 @@ class AssetEventsController < AssetAwareController
     # if not found or the object does not belong to the asset
     # send them back to index.html.erb
     if @asset_event.nil?
-      redirect_to(inventory_asset_events_url(@asset), :flash => { :alert => 'Record not found!'})
+      notify_user(:alert, 'Record not found!')
+      redirect_to(inventory_asset_events_url(@asset))
       return
     end
  
@@ -86,7 +87,8 @@ class AssetEventsController < AssetAwareController
     # if not found or the object does not belong to the asset
     # send them back to index.html.erb
     if @asset_event.nil?
-      redirect_to(inventory_asset_events_url(@asset), :flash => { :alert => 'Record not found!'})
+      notify_user(:alert, 'Record not found!')
+      redirect_to(inventory_asset_events_url(@asset))
       return
     end
 
@@ -101,17 +103,20 @@ class AssetEventsController < AssetAwareController
     # if not found or the object does not belong to the asset
     # send them back to index.html.erb
     if @asset_event.nil?
-      redirect_to(inventory_asset_events_url(@asset), :flash => { :alert => 'Record not found!'})
+      notify_user(:alert, 'Record not found!')
+      redirect_to(inventory_asset_events_url(@asset))
       return
     end
 
     respond_to do |format|
       if @asset_event.update_attributes(form_params)
 
+        notify_user(:notice, "Event was successfully updated.")   
+
         # The event was updated so we need to update the asset condition
         Delayed::Job.enqueue AssetConditionUpdateJob.new(@asset.object_key), :priority => 0
-        
-        format.html { redirect_to inventory_asset_event_url(@asset, @asset_event), :notice => "Event was successfully updated." }
+             
+        format.html { redirect_to inventory_asset_event_url(@asset, @asset_event) }
         format.json { head :no_content }
       else
         format.html { render "edit" }
@@ -135,10 +140,12 @@ class AssetEventsController < AssetAwareController
     respond_to do |format|
       if @asset_event.save
         
+        notify_user(:notice, "Event was successfully created.")   
+        
         # The event was created so we need to update the asset condition
         Delayed::Job.enqueue AssetConditionUpdateJob.new(@asset.object_key), :priority => 0
         
-        format.html { redirect_to inventory_asset_events_url(@asset), :notice => "Event was successfully created." }
+        format.html { redirect_to inventory_asset_events_url(@asset)}
         format.json { render :json => @asset_event, :status => :created, :location => @asset_event }
       else
         Rails.logger.debug @asset_event.errors.inspect
@@ -153,17 +160,20 @@ class AssetEventsController < AssetAwareController
     # if not found or the object does not belong to the asset
     # send them back to index.html.erb
     if @asset_event.nil?
-      redirect_to(inventory_asset_events_url(@asset), :flash => { :alert => 'Record not found!'})
+      notify_user(:alert, 'Record not found!')
+      redirect_to(inventory_asset_events_url(@asset))
       return
     end
 
     @asset_event.destroy
 
+    notify_user(:notice, "Event was successfully removed.")   
+
     # The event was removed so we need to update the asset condition
     Delayed::Job.enqueue AssetConditionUpdateJob.new(@asset.object_key), :priority => 0
 
     respond_to do |format|
-      format.html { redirect_to(inventory_asset_events_url(@asset), :flash => { :notice => 'Event was successfully removed.'}) } 
+      format.html { redirect_to(inventory_asset_events_url(@asset)) } 
       format.json { head :no_content }
     end
   end

@@ -58,7 +58,8 @@ class OrganizationsController < OrganizationAwareController
 
     respond_to do |format|
       if @organization.update_attributes(form_params)
-        format.html { redirect_to organization_url(@organization), :notice => "#{@organization.name} was successfully updated." }
+        notify_user(:notice, "#{@organization.name} was successfully updated.")
+        format.html { redirect_to organization_url(@organization) }
         format.json { head :no_content }
       else
         format.html { render :action => "edit" }

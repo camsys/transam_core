@@ -36,7 +36,8 @@ class UsersController < OrganizationAwareController
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
     if @user.nil?
-      redirect_to(users_url, :flash => { :alert => 'Record not found!'})
+      notify_user(:alert, "Record not found!")
+      redirect_to users_url
       return
     end
  
@@ -70,7 +71,9 @@ class UsersController < OrganizationAwareController
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
     if @user.nil?
-      redirect_to(users_url, :flash => { :alert => 'Record not found!'})
+      notify_user(:alert, "Record not found!")
+      redirect_to users_url
+      return
     end
 
   end
@@ -84,7 +87,8 @@ class UsersController < OrganizationAwareController
 
     respond_to do |format|
       if @user.save
-        format.html { redirect_to user_url(@user), :notice => "User #{@user.name} was successfully created." }
+        notify_user(:notice, "User #{@user.name} was successfully created.")
+        format.html { redirect_to user_url(@user) }
         format.json { render :json => @user, :status => :created, :location => @user }
       else
         format.html { render :action => "new" }
@@ -98,13 +102,15 @@ class UsersController < OrganizationAwareController
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
     if @user.nil?
-      redirect_to(users_url, :flash => { :alert => 'Record not found!'})
+      notify_user(:alert, "Record not found!")
+      redirect_to users_url
       return
     end
 
     respond_to do |format|
       if @user.update_attributes(form_params)
-        format.html { redirect_to user_url(@user), :notice => "User #{@user.name} was successfully updated." }
+        notify_user(:notice, "User #{@user.name} was successfully updated.")
+        format.html { redirect_to user_url(@user) }
         format.json { head :no_content }
       else
         format.html { render :action => "edit" }
@@ -118,14 +124,16 @@ class UsersController < OrganizationAwareController
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
     if @user.nil?
-      redirect_to(users_url, :flash => { :alert => 'Record not found!'})
+      notify_user(:alert, "Record not found!")
+      redirect_to users_url
       return
     end
 
     @user.destroy
+    notify_user(:notice, "User was successfully removed.")
 
     respond_to do |format|
-        format.html { redirect_to users_url, :notice => "User #{@user.name} was successfully removed." }
+      format.html { redirect_to users_url }
       format.json { head :no_content }
     end
   end
