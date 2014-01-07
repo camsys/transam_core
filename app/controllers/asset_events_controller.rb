@@ -135,7 +135,7 @@ class AssetEventsController < AssetAwareController
     respond_to do |format|
       if @asset_event.save
         
-        # The event was updated so we need to update the asset condition
+        # The event was created so we need to update the asset condition
         Delayed::Job.enqueue AssetConditionUpdateJob.new(@asset.object_key), :priority => 0
         
         format.html { redirect_to inventory_asset_events_url(@asset), :notice => "Event was successfully created." }
@@ -158,8 +158,9 @@ class AssetEventsController < AssetAwareController
     end
 
     @asset_event.destroy
+
     # The event was removed so we need to update the asset condition
-    @asset.update_condition_and_disposition
+    Delayed::Job.enqueue AssetConditionUpdateJob.new(@asset.object_key), :priority => 0
 
     respond_to do |format|
       format.html { redirect_to(inventory_asset_events_url(@asset), :flash => { :notice => 'Event was successfully removed.'}) } 
