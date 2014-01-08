@@ -175,10 +175,6 @@ class Asset < ActiveRecord::Base
     :estimated_condition_type_id,
     :estimated_condition_rating,
     :in_backlog,
-    :location_reference_type_id,
-    :location_reference,
-    :geometry,
-    :location_comments,
     :created_by_id, 
     :updated_by_id
   ]

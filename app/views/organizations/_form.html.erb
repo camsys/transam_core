@@ -1,68 +1,35 @@
 <% if @organization.errors.count > 0 %>
-<%= render(:partial => 'shared/form_errors', :locals => {:obj => @organization}) %>
+	<%= render(:partial => 'shared/form_errors', :locals => {:obj => @organization}) %>	
 <% end%>
 <div class="row-fluid">
-	<div class="span12">
-		<%= simple_form_for(@organization, :html => {:class => 'form-vertical' }) do |f| %>
+	<%= simple_form_for(@policy, :html => {:class => 'form-vertical span12' }, :defaults => {:disabled => @disabled }) do |f| %>
+	<div class="row-fluid">
 		<ul class="thumbnails">
-			<li class="thumbnail span6">
-				<div class="form_part">
-					<fieldset>
-						<legend>
-							Corporate
-						</legend>
-						<%= f.input :name %>
-						<%= f.association :organization_type %>
-						<%= f.association :district %>
-					</fieldset>
-				</div>
-			</li>
-			<li class="thumbnail span6">
-				<div class="form_part">
-					<fieldset>
-						<legend>
-							Contact
-						</legend>
-						<%= f.input :phone, :as => :tel %>
-						<%= f.input :fax, :as => :tel %>
-						<%= f.input :url, :as => :url %>
-					</fieldset>
-				</div>
-			</li>
-
-			<li class="thumbnail span6">
-				<div class="form_part">
-					<fieldset>
-						<legend>
-							Corporate Address
-						</legend>
-						<%= f.input :address1 %>
-						<%= f.input :address2 %>
-						<%= f.input :city %>
-						<%= f.input :state %>
-						<%= f.input :zip %>
-					</fieldset>
-				</div>
-			</li>
-
+			<%= panel_tag('Corporate', {:icon => 'fa fa-book', :class => "span4 form_part"}) do %>
+				<%= f.input :name %>
+				<%= f.association :organization_type %>
+				<%= f.association :district %>
+			<% end %>
+			<%= panel_tag('Contact', {:icon => 'fa fa-book', :class => "span4 form_part"}) do %>
+				<%= f.input :phone, :as => :tel %>
+				<%= f.input :fax, :as => :tel %>
+				<%= f.input :address1 %>
+				<%= f.input :address2 %>
+				<%= f.input :city %>
+				<%= f.input :state %>
+				<%= f.input :zip %>				
+				<%= f.input :url, :as => :url %>
+			<% end %>
+			<%= panel_tag('Services', {:icon => 'fa fa-book', :class => "span4 form_part"}) do %>
+				<%= f.association :interest_rate %>
+			<% end %>
 		</ul>
-		<% if ! @disabled %>
-		<div class="form-actions">
-			<%= f.button :submit %>
-			<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn" %>
-		</div>
-		<% end %>
-		<% end %>
 	</div>
+	<% if ! @disabled %>
+	<div class="form-actions">
+		<%= f.button :submit %>
+		<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn" %>
+	</div>
+	<% end %>
+	<% end %>
 </div>
-<script type="text/javascript">
-	fix_thumbnail_margins(6);
-
-	enable_date_pickers();
-
-	make_same_height('.form_part');
-
-	//make_same_height('.header_part');
-
-</script>
-

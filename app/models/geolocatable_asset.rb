@@ -50,12 +50,22 @@ class GeolocatableAsset < Asset
   CLEANSABLE_FIELDS = [
 
   ] 
+  # List of hash parameters allowed by the controller
+  FORM_PARAMS = [
+    :location_reference_type_id,
+    :location_reference,
+    :geometry,
+    :location_comments
+  ]
     
   #------------------------------------------------------------------------------
   #
   # Class Methods
   #
   #------------------------------------------------------------------------------
+  def self.allowable_params
+    FORM_PARAMS
+  end
 
 
   #------------------------------------------------------------------------------
