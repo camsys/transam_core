@@ -22,10 +22,10 @@ class AssetAgeReport < AbstractReport
         
     (1..MAX_REPORTING_YEARS).each do |year|
       counts = []
-      counts << year.to_s
+      counts << "#{year}"
       manufacture_year = year.year.ago
       AssetType.all.each do |type| 
-        counts << organization.assets.where("asset_type_id = ? AND manufacture_year = ?", organization.id, type.id, manufacture_year).count
+        counts << organization.assets.where("asset_type_id = ? AND manufacture_year = ?", type.id, manufacture_year).count
       end
       a << counts
     end
@@ -33,10 +33,10 @@ class AssetAgeReport < AbstractReport
     # get the bucket for MAX_YEARS+ years old
     year = MAX_REPORTING_YEARS
     counts = []
-    counts << year.to_s
+    counts << "+#{year}"
     manufacture_year = MAX_REPORTING_YEARS.year.ago
     AssetType.all.each do |type| 
-      counts << organization.assets.where("asset_type_id = ? AND manufacture_year < ?", organization.id, type.id, manufacture_year).count
+      counts << organization.assets.where("asset_type_id = ? AND manufacture_year < ?", type.id, manufacture_year).count
     end
     a << counts
         

@@ -38,8 +38,9 @@
 		
 		var div_id = '<%= "chart_#{@report.id}" %>';
 		var chart_type = '<%= @report.chart_type %>';
-		var chart_options = <%= raw @report.chart_options.to_json %>
-		
+ 		var report_chart_options = <%= @report.chart_options %>;
+		var chart_options = $.extend({}, report_chart_options, {height: 300}); 
+
 		var chart_data = new google.visualization.DataTable();
 		chart_data.addColumn('string', '<%= @data[:labels].first %>');
 		<% @data[:labels].last(@data[:labels].length - 1).each do |col| %>
@@ -49,10 +50,6 @@
 		chart_data.addRow(<%= raw row.to_json %>);
 		<% end %>
 		
-		var chart_options = {
-			is3D : true,
-			height : 300
-		};
 		// Draw it
 		transam.draw_chart(div_id, chart_type, chart_options, chart_data);		
 	};
