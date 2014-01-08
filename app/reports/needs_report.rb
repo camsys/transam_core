@@ -4,7 +4,7 @@ class NeedsReport < AbstractReport
     super(attributes)
   end    
   
-protected
+  protected
   
   def get_assets(organization, analysis_year, report_filter_type)
     

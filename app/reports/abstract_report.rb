@@ -1,7 +1,8 @@
 class AbstractReport
 
   # From the application config    
-  MAX_NEEDS_REPORTING_YEARS = Rails.application.config.max_needs_reporting_years   
+  MAX_FORECASTING_YEARS = Rails.application.config.max_forecasting_years   
+  MAX_REPORTING_YEARS   = Rails.application.config.max_reporting_years   
 
   def initialize(attributes = {})
 
