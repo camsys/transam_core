@@ -37,6 +37,8 @@
 	function <%= "chart_func_#{@report.id}" %>() {
 		
 		var div_id = '<%= "chart_#{@report.id}" %>';
+		var chart_type = '<%= @report.chart_type %>';
+		var chart_options = <%= raw @report.chart_options.to_json %>
 		
 		var chart_data = new google.visualization.DataTable();
 		chart_data.addColumn('string', '<%= @data[:labels].first %>');
@@ -52,7 +54,7 @@
 			height : 300
 		};
 		// Draw it
-		transam.draw_chart(div_id, 'pie', chart_options, chart_data);		
+		transam.draw_chart(div_id, chart_type, chart_options, chart_data);		
 	};
 	// Set a callback to run when the Google Visualization API is loaded.
 	google.setOnLoadCallback(<%= "chart_func_#{@report.id}" %>);

@@ -25,7 +25,7 @@ class AssetAgeReport < AbstractReport
       counts << year.to_s
       manufacture_year = year.year.ago
       AssetType.all.each do |type| 
-        counts << Asset.where("organization_id = ? AND asset_type_id = ? AND manufacture_year = ?", organization.id, type.id, manufacture_year).count
+        counts << organization.assets.where("asset_type_id = ? AND manufacture_year = ?", organization.id, type.id, manufacture_year).count
       end
       a << counts
     end
@@ -36,7 +36,7 @@ class AssetAgeReport < AbstractReport
     counts << year.to_s
     manufacture_year = MAX_REPORTING_YEARS.year.ago
     AssetType.all.each do |type| 
-      counts << Asset.where("organization_id = ? AND asset_type_id = ? AND manufacture_year < ?", organization.id, type.id, manufacture_year).count
+      counts << organization.assets.where("asset_type_id = ? AND manufacture_year < ?", organization.id, type.id, manufacture_year).count
     end
     a << counts
         

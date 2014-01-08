@@ -5,9 +5,32 @@ var transam = new function() {
 
 	// Draws a google char based on the chart data and chart options passed in
 	this.draw_chart = function(div_id, chart_type, chart_options, chart_data) {
-				
-		var chart = new google.visualization.PieChart(document.getElementById(div_id));
-		chart.draw(chart_data, chart_options);
+
+		var container = document.getElementById(div_id);
+		if (container == null) {
+			return;
+		} 		
+		var chart = null;
+		if (chart_type === 'area') {
+			chart = new google.visualization.AreaChart(container);
+		} else if (chart_type === 'bar') {
+			chart = new google.visualization.BarChart(container);
+		} else if (chart_type === 'column') {
+			chart = new google.visualization.ColumnChart(container);
+		} else if (chart_type === 'combo') {
+			chart = new google.visualization.ComboChart(document.getElementById(div_id));
+		} else if (chart_type === 'histogram') {
+			chart = new google.visualization.Histogram(document.getElementById(div_id));
+		} else if (chart_type === 'line') {
+			chart = new google.visualization.LineChart(document.getElementById(div_id));
+		} else if (chart_type === 'pie') {
+			chart = new google.visualization.PieChart(document.getElementById(div_id));
+		} else if (chart_type === 'scatter') {
+			chart = new google.visualization.ScatterChart(document.getElementById(div_id));
+		}
+		if (chart) {
+			chart.draw(chart_data, chart_options);
+		}
 	};
 
   	// Load a block of html in the background
