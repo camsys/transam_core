@@ -140,7 +140,9 @@ class Asset < ActiveRecord::Base
   # List of fields which can be searched using a simple text-based search
   SEARCHABLE_FIELDS = [
     'object_key',
-    'asset_tag'
+    'asset_tag',
+    'manufacture_year',
+    'notes'
   ] 
           
   # List of fields that should be nilled when a copy is made
@@ -154,7 +156,8 @@ class Asset < ActiveRecord::Base
     'last_reported_condition_rating',
     'estimated_replacement_year',
     'estimated_condition_rating',
-    'in_backlog'
+    'in_backlog',
+    'notes'
   ]
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
@@ -166,6 +169,7 @@ class Asset < ActiveRecord::Base
     :manufacturer_id,
     :manufacturer_model_id,
     :manufacture_year,
+    :notes,
     :replacement_cost,
     :replacement_year,
     :last_reported_condition_type_id,
