@@ -27,7 +27,8 @@ class OrganizationsController < OrganizationAwareController
   def show
     
     @page_title = @organization.name
-
+    @disabled = true
+    
     respond_to do |format|
       format.html # show.html.erb
       format.json { render :json => @organization }

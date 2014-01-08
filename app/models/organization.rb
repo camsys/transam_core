@@ -36,8 +36,11 @@ class Organization < ActiveRecord::Base
   # Every organization belongs to a customer
   belongs_to :customer
 
-  # Every organization has a type
+  # Every organization has a class type
   belongs_to :organization_type
+
+  # Every organization provides one or more service types
+  has_and_belongs_to_many :service_types
     
   # Every organization can have a set of users
   has_many :users
@@ -94,7 +97,8 @@ class Organization < ActiveRecord::Base
     :url,
     :active,
     :latitude,
-    :longitude
+    :longitude,
+    :service_type_ids => []
   ]
 
   #------------------------------------------------------------------------------

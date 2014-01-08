@@ -1,21 +1,5 @@
 <%= render 'organization_subnav' %>
 
-<div class="row-fluid">
-	<div class="span12">
-		<ul class="thumbnails">
-			<%= panel_tag('Corporate', {:icon => 'fa fa-building-o', :class => "span6 header_part"}) do %>
-				<%= format_field("Name", @organization.name ) %>
-				<%= format_field("Short Name", @organization.short_name ) %>
-				<%= format_field("Org Type", @organization.organization_type.name ) %>
-			<% end %>
-			<%= panel_tag('Contact', {:icon => 'fa fa-book', :class => "span6 header_part"}) do %>
-				<%= format_field("Phone", number_to_phone(@organization.phone, :area_code => true) ) %>
-				<%= format_field("FAX", number_to_phone(@organization.fax, :area_code => true ) ) %>
-				<%= format_field("Address", format_address(@organization)) %>
-				<%= format_field("Web Site", link_to(@organization.url, @organization.url, :target => '_blank') ) %>
-			<% end %>
-		</ul>
-	</div>
-</div>
+<%= render 'form' %>
 
 <%= render 'scripts' %>

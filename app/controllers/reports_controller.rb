@@ -39,7 +39,7 @@ class ReportsController < OrganizationAwareController
     @report = Report.find(params[:id])
 
     if @report.nil?
-      notify_user(:alert, "Can't find report.")
+      notify_user(:alert, "Record not found!")
       redirect_to reports_url
       return
     end
