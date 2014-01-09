@@ -12,7 +12,7 @@ class ServiceLifeAgeAndCondition < ServiceLifeCalculator
     # get the predicted last year of service based on the asset condition
     last_year_by_condition = by_condition(asset)
     # return the minimum of the two
-    [last_year_by, last_year_by_condition].min
+    [last_year_by_age, last_year_by_condition].min
   end
   
 end
