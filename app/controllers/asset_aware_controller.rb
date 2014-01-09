@@ -28,24 +28,16 @@ class AssetAwareController < OrganizationAwareController
   def filter
     
     query = params[:query]
-    query_str = query + "%"
+    query_str = "%" + query + "%"
     Rails.logger.debug query_str
     
     matches = []
-    subtypes = AssetSubtype.where("name LIKE ?", query_str)
+    subtypes = AssetSubtype.where("name LIKE ? OR description LIKE ?", query_str, query_str)
     subtypes.each do |subtype|
       matches << {
         "id" => subtype.id,
-        "name" => subtype.full_name
+        "name" => subtype.name
       }
-    end
-    subtypes = AssetSubtype.where("description LIKE ?", query_str)
-    subtypes.each do |subtype|
-      elem = {
-        "id" => subtype.id,
-        "name" => subtype.full_name
-      } 
-      matches << elem unless matches.include?(elem)
     end
 
     respond_to do |format|
