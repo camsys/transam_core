@@ -39,9 +39,6 @@ class Organization < ActiveRecord::Base
   # Every organization has a class type
   belongs_to :organization_type
 
-  # Every organization provides one or more service types
-  has_and_belongs_to_many :service_types
-    
   # Every organization can have a set of users
   has_many :users
   
@@ -79,6 +76,7 @@ class Organization < ActiveRecord::Base
   validates :zip,                   :presence => true
   #validates :license_holder, :presence => true
   validates :phone,                 :presence => true
+  validates :url,                   :presence => true
 
   # List of allowable form param hash keys  
   FORM_PARAMS = [
