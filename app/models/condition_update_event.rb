@@ -25,7 +25,7 @@ class ConditionUpdateEvent < AssetEvent
   # Scopes
   #------------------------------------------------------------------------------
   # set the default scope
-  default_scope { where(:asset_event_type_id => AssetEventType.find_by_class_name(self.name).id) }
+  default_scope { where(:asset_event_type_id => AssetEventType.find_by_class_name(self.name).id).order(:event_date) }
     
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [

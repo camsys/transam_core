@@ -1,22 +1,22 @@
 #
-# Disposition update event. This is event type is required for
-# all implementations
+# Service Status Update Event. This is event type is required for
+# all implementations and represents envets that change the service
+# status of an asset: START SERVICE, SUSPEND SERVICE etc.
+# 
 #
-class DispositionUpdateEvent < AssetEvent
+class ServiceStatusUpdateEvent < AssetEvent
       
   # Callbacks
   after_initialize :set_defaults
       
   # Associations
   
-  # Disposition of the asset
-  belongs_to  :disposition_type
+  # Service Status of the asset
+  belongs_to  :service_status_type
+
       
-  # general accessors
-  #attr_accessible :disposition_type_id
-  
-  validates :disposition_type_id, :presence => true
-    
+  validates :service_status_type_id, :presence => true
+      
   #------------------------------------------------------------------------------
   # Scopes
   #------------------------------------------------------------------------------
@@ -25,7 +25,7 @@ class DispositionUpdateEvent < AssetEvent
     
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
-    :disposition_type_id
+    :service_status_type_id
   ]
   
   #------------------------------------------------------------------------------
@@ -42,22 +42,7 @@ class DispositionUpdateEvent < AssetEvent
   def self.asset_event_type
     AssetEventType.find_by_class_name(self.name)
   end
-
-  #------------------------------------------------------------------------------
-  #
-  # Instance Methods
-  #
-  #------------------------------------------------------------------------------
-  
-  def get_update
-    disposition_type.name unless disposition_type.nil?
-  end
-  
-  #------------------------------------------------------------------------------
-  #
-  # Protected Methods
-  #
-  #------------------------------------------------------------------------------
+    
   protected
 
   # Set resonable defaults for a new condition update event

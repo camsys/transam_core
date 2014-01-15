@@ -192,7 +192,7 @@ class AssetEventsController < AssetAwareController
     if event_type and asset
       klass = event_type.job_name.constantize
       job = klass.new(asset.object_key)
-      Delayed::Job.enqueue job, :priority => priority
+      fire_background_job(job, priority)
     end
   end
   

@@ -55,6 +55,9 @@ class Asset < ActiveRecord::Base
   # each asset has zero or more condition updates
   has_many   :condition_updates, -> {where :asset_event_type_id => ConditionUpdateEvent.asset_event_type.id }, :class_name => "ConditionUpdateEvent" 
 
+  # each asset has zero or more service status updates
+  has_many   :service_status_updates, -> {where :asset_event_type_id => ServiceStatusUpdateEvent.asset_event_type.id }, :class_name => "ServiceStatusUpdateEvent" 
+
   # each asset has zero or more disposition updates
   has_many   :disposition_updates, -> {where :asset_event_type_id => DispositionUpdateEvent.asset_event_type.id }, :class_name => "DispositionUpdateEvent"
   
@@ -101,8 +104,11 @@ class Asset < ActiveRecord::Base
   # The last reported condition type for the asset                                                              
   belongs_to      :last_reported_condition_type,      :class_name => "ConditionType",   :foreign_key => :last_reported_condition_type_id
 
+  # The disposition type for the asset. Null if the asset is still operational                                                             
+  belongs_to      :disposition_type
+
   # The last reported disposition type for the asset                                                              
-  belongs_to      :last_reported_disposition_type,    :class_name => "DispositionType", :foreign_key => :last_reported_disposition_type_id
+  belongs_to      :last_reported_service_status_type, :class_name => "ServiceStatusType", :foreign_key => :last_reported_service_status_type_id
 
   # The last estimated condition type for the asset                                                              
   belongs_to      :estimated_condition_type,          :class_name => "ConditionType",   :foreign_key => :estimated_condition_type_id
@@ -151,13 +157,16 @@ class Asset < ActiveRecord::Base
     'object_key',
     'asset_tag',
     'last_reported_condition_type_id',
+    'last_reported_service_status_type_id',
     'estimated_condition_type_id',
     'replacement_year',
     'replacement_cost',
     'last_reported_condition_rating',
+    'last_reported_disposition_type_id',
     'estimated_replacement_year',
     'estimated_condition_rating',
     'in_backlog',
+    'disposition_date',
     'notes'
   ]
   # List of hash parameters allowed by the controller
@@ -173,6 +182,7 @@ class Asset < ActiveRecord::Base
     :notes,
     :replacement_cost,
     :replacement_year,
+    :last_reported_service_status_type_id,
     :last_reported_condition_type_id,
     :last_reported_disposition_type_id,
     :last_reported_condition_rating,
@@ -180,6 +190,7 @@ class Asset < ActiveRecord::Base
     :estimated_condition_type_id,
     :estimated_condition_rating,
     :in_backlog,
+    :disposition_date,
     :created_by_id, 
     :updated_by_id
   ]
@@ -270,15 +281,33 @@ class Asset < ActiveRecord::Base
   def policy
     return organization.get_policy
   end
-  
-  # Returns the set of condition updates
-  def condition_history
-    condition_updates
-  end  
+    
+  # Record that the asset has been disposed. This updates the dispostion date and the disposition_type attributes
+  def record_disposition
+    unless new_record?
+      unless disposition_updates.empty?
+        disposition_event = disposition_updates.last
+        disposition_date = disposition_event.event_date
+        disposition_type = disposition_event.dispostion_type
+        save
+        reload
+      end
+    end
+  end
+
+  # Forces an update of an assets service status. This performs an update on the record
+  def update_asset_service_status
+    # can't do this if it is a new record as none of the IDs would be set
+    unless new_record?
+      service_status_type = service_status_updates.last.service_status_type unless service_status_updates.empty?      
+      save
+      reload
+    end
+  end
   
   # Forces an update of an assets condition. This performs an update on the record
-  def update_condition_and_disposition
-    # can't do this if it is a new record as non of the IDs would be set
+  def update_asset_condition
+    # can't do this if it is a new record as none of the IDs would be set
     unless new_record?
       update_asset_state
       save
@@ -294,7 +323,6 @@ class Asset < ActiveRecord::Base
   end
 
 
-  
   #------------------------------------------------------------------------------
   #
   # This set of methods calculate age, condition, and cost metrics for the asset based
@@ -380,13 +408,8 @@ class Asset < ActiveRecord::Base
     condition_updates.empty? ? nil : condition_updates.first.event_date
   end
 
-  # returns the disposition type for the last reported disposition for the asset. Unknown if no disposition has been reported
-  def calculate_last_reported_disposition
-    disposition_updates.empty? ? DispositionType.find_by_name('Unknown') : disposition_updates.first.disposition_type
-  end
-
-  # returns the date for the last reported disposition for the asset. Nil if no disposition has been reported
-  def calculate_last_reported_disposition_date
+  # calculate last reported status
+  def calculate_last_reported_service_status
     disposition_updates.empty? ? nil : disposition_updates.first.event_date
   end
 
@@ -421,12 +444,6 @@ class Asset < ActiveRecord::Base
   # updates as possible
   def update_asset_state
     Rails.logger.info "Updating condition for asset = #{object_key}"
-
-    begin
-      self.last_reported_disposition_type = calculate_last_reported_disposition
-    rescue Exception => e
-      Rails.logger.info e.message  
-    end  
 
     begin
       self.replacement_year = calculate_replacement_year
