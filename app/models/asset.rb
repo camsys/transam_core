@@ -296,7 +296,7 @@ class Asset < ActiveRecord::Base
   end
 
   # Forces an update of an assets service status. This performs an update on the record
-  def update_asset_service_status
+  def update_service_status
     # can't do this if it is a new record as none of the IDs would be set
     unless new_record?
       service_status_type = service_status_updates.last.service_status_type unless service_status_updates.empty?      
@@ -306,7 +306,7 @@ class Asset < ActiveRecord::Base
   end
   
   # Forces an update of an assets condition. This performs an update on the record
-  def update_asset_condition
+  def update_condition
     # can't do this if it is a new record as none of the IDs would be set
     unless new_record?
       update_asset_state

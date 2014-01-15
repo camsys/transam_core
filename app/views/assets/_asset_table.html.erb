@@ -11,7 +11,7 @@
 			<th class="center">Tag</th>					
 			<th class="center">Manu.</th>
 			<th class="center">Model</th>
-			<th class="center">Disp</th>
+			<th class="center">Stat</th>
 			<th class="center">Cost</th>
 			
 			<th class="center">Age</th>
@@ -31,7 +31,7 @@
 				<td class="left"><%= a.asset_tag %></td>
 				<td class="left"><%= a.manufacturer.code %></td>
 				<td class="left"><%= a.manufacturer_model.name %></td>
-				<td class="center"><%= a.last_reported_disposition_type.code unless a.last_reported_disposition_type.nil? %></td>
+				<td class="center"><%= a.last_reported_service_status_type.code unless a.last_reported_service_status_type.nil? %></td>
 				<td class="right"><%= format_as_currency(a.cost) %></td>
 
 				<td class="right"><%= a.age %></td>

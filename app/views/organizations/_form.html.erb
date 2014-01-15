@@ -2,7 +2,7 @@
 	<%= render(:partial => 'shared/form_errors', :locals => {:obj => @organization}) %>	
 <% end%>
 <div class="row-fluid">
-	<%= simple_form_for(@policy, :html => {:class => 'form-vertical span12' }, :defaults => {:disabled => @disabled }) do |f| %>
+	<%= simple_form_for(@organization, :html => {:class => 'form-vertical span12' }, :defaults => {:disabled => @disabled }) do |f| %>
 	<div class="row-fluid">
 		<ul class="thumbnails">
 			<%= panel_tag('Corporate', {:icon => 'fa fa-book', :class => "span4 form_part"}) do %>
