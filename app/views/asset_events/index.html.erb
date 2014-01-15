@@ -51,10 +51,6 @@
 
 		// Create a JSON data table
 		data = [
-			{
-			'start': new Date(<%= js_date(@asset.in_service_date) %>),
-			'content': 'In Service Date'
-			},
 			<% @events.each do |e| %>
 				{
 				'start': new Date(<%= js_date(e.event_date) %>),
