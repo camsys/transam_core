@@ -89,18 +89,26 @@ class AssetEvent < ActiveRecord::Base
       return o
     end
   end
-  
+
   #------------------------------------------------------------------------------
   #
   # Instance Methods
   #
   #------------------------------------------------------------------------------
+
+  # returns true if the organization instance is strongly typed, i.e., a concrete class
+  # false otherwise.
+  # true
+  def is_typed?
+    self.class.to_s == asset_event_type.class_name
+  end
       
   # Return the update by coercing as a typed class and returning the appropriate
   # update from it
   def get_update
-    evt = AssetEvent.as_typed_event(self)
-    evt.get_update
+    # get a typed version of the asset event and return its value
+    evt = is_typed? ? self : AssetEvent.as_typed_event(self)
+    return evt.get_update unless evt.nil?    
   end
   
   #------------------------------------------------------------------------------

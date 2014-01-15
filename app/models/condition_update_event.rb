@@ -47,7 +47,8 @@ class ConditionUpdateEvent < AssetEvent
   def self.asset_event_type
     AssetEventType.find_by_class_name(self.name)
   end
-  
+
+  # This must be overriden otherwise a stack error will occur  
   def get_update
     condition_type.name unless condition_type.nil?
   end

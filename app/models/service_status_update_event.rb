@@ -43,7 +43,15 @@ class ServiceStatusUpdateEvent < AssetEvent
     AssetEventType.find_by_class_name(self.name)
   end
     
-  protected
+  #------------------------------------------------------------------------------
+  #
+  # Instance Methods
+  #
+  #------------------------------------------------------------------------------
+  
+  def get_update
+    service_status_type.name unless service_status_type.nil?
+  end
 
   # Set resonable defaults for a new condition update event
   def set_defaults
