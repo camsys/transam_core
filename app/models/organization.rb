@@ -41,10 +41,7 @@ class Organization < ActiveRecord::Base
 
   # Every organization can have a set of users
   has_many :users
-  
-  # Every organization can have a set of policies
-  has_many :policies
-  
+    
   # Every organization can have messages
   has_many :messages
       
@@ -95,8 +92,7 @@ class Organization < ActiveRecord::Base
     :url,
     :active,
     :latitude,
-    :longitude,
-    :service_type_ids => []
+    :longitude
   ]
 
   #------------------------------------------------------------------------------
@@ -129,15 +125,14 @@ class Organization < ActiveRecord::Base
   def has_assets?
     false
   end   
-          
-  # Returns a policy for an untyped organization
-  def get_policy
-    # get a typed version of the organization and return the
-    # results of the typed org
-    org = Organization.get_typed_organization(self)
-    return org.get_policy unless org.nil?
+            
+  # returns true if the organization instance is strongly typed, i.e., a concrete class
+  # false otherwise.
+  # true
+  def is_typed?
+    self.class.to_s == organization_type.class_name
   end
-    
+              
   def full_address
     elems = []
     elems << address1 unless address1.blank?

@@ -19,11 +19,12 @@ class TransitAgency < Organization
   # every transit agency can own assets
   has_many :assets, :foreign_key => 'organization_id'
     
+  # every transit agency can have 0 or mroe policies
+  has_many :policies
+  
   #------------------------------------------------------------------------------
   # Scopes
   #------------------------------------------------------------------------------
-  # set the default scope
-  default_scope { where(:orgnization_type_id => OrganizationType.find_by_class_name(self.name).id) }
   
   # List of allowable form param hash keys  
   FORM_PARAMS = [
@@ -45,14 +46,22 @@ class TransitAgency < Organization
   #
   #------------------------------------------------------------------------------
 
-  # Boolean for agencies that own assets
+  # Dependent on inventory
   def has_assets?
-    true
+    assets.count > 0
   end   
        
-  # returns the count of assets of the given type
-  def asset_count(asset_type) 
-    return assets.where('asset_type_id = ?', asset_type.id).count
+  # returns the count of assets of the given type. If no type is selected it returns the total
+  # number of assets
+  def asset_count(asset_type = nil) 
+    asset_type.nil? ? assets.count : assets.where('asset_type_id = ?', asset_type.id).count
+  end
+    
+  # Returns a policy for a transit organization
+  def get_policy
+    # get a typed version of the organization and return its value
+    org = is_typed? ? self : Organization.get_typed_organization(self)
+    return org.get_policy unless org.nil?    
   end
     
   #------------------------------------------------------------------------------
@@ -65,7 +74,6 @@ class TransitAgency < Organization
   # Set resonable defaults for a new organization
   def set_defaults
     super
-    self.organization_type ||= OrganizationType.find_by_class_name(self.name).first
   end    
   
 end
