@@ -38,6 +38,11 @@ class TransamController < ApplicationController
     
   protected
 
+  # Queues a job to be executed in the background
+  def fire_background_job(job, priority = 0)
+    Delayed::Job.enqueue job, :priority => priority
+  end
+
   # Cache an array of objects
   def cache_objects(key, objects, expires_in = OBJECT_CACHE_EXPIRE_SECONDS)
     Rails.logger.debug "ApplicationController CACHE put for key #{get_cache_key(current_user, key)}"
