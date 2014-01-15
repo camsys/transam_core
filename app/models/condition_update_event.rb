@@ -15,7 +15,9 @@ class ConditionUpdateEvent < AssetEvent
   # assessed condition rating
   #attr_accessible :assessed_rating
       
-  validates :condition_type_id, :presence => true
+  validates                 :condition_type_id, :presence => true
+  validates_numericality_of :assessed_rating, :greater_than_or_equal_to => 0,   :less_than_or_equal_to => 5
+  validates_numericality_of :current_mileage, :greater_than_or_equal_to => 0,   :only_integer => :true,   :allow_nil => :true
   
   before_validation do
     self.assessed_rating ||= ConditionType.find(condition_type_id).rating
@@ -30,7 +32,8 @@ class ConditionUpdateEvent < AssetEvent
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
     :condition_type_id,
-    :assessed_rating
+    :assessed_rating,
+    :current_mileage
   ]
   
   #------------------------------------------------------------------------------
