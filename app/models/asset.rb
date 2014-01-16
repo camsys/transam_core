@@ -450,7 +450,7 @@ class Asset < ActiveRecord::Base
       method_object.call(asset)
     rescue Exception => e
       Rails.logger.error e.message
-      raise TransamException.new "#{class_name} calculation failed for asset #{asset.object_key} and policy #{policy.name}"
+      raise RuntimeError.new "#{class_name} calculation failed for asset #{asset.object_key} and policy #{policy.name}"
     end
   end
 
