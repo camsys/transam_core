@@ -24,7 +24,7 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
       # we can calculate a new slope by determining the rate of change over the life of the asset
       # based on the last reported condition
 
-      condition_report = asset.condition_updates.first
+      condition_report = asset.condition_updates.last
       rating = condition_report.assessed_rating
       
       # Get the age of the asset when the report was created
@@ -53,7 +53,7 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
       # get the maximum (initial) rating for a new asset
       max_rating = ConditionType.max_rating
 
-      condition_report = asset.condition_updates.first
+      condition_report = asset.condition_updates.last
       current_rating = condition_report.assessed_rating
       age_at_report = asset.age(condition_report.event_date)
 
