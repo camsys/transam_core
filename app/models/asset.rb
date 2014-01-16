@@ -276,12 +276,16 @@ class Asset < ActiveRecord::Base
   # Record that the asset has been disposed. This updates the dispostion date and the disposition_type attributes
   def record_disposition
     Rails.logger.info "Recording final disposition for asset = #{object_key}"
-    unless new_record?
-      unless disposition_updates.empty?
-        event = disposition_updates.last
-        disposition_date = event.event_date
-        disposition_type = event.dispostion_type
-        save
+
+    # Make sure we are working with a concrete asset class
+    asset = is_typed? ? self : Asset.get_typed_asset(self)
+    
+    unless asset.new_record?
+      unless asset.disposition_updates.empty?
+        event = asset.disposition_updates.last
+        asset.disposition_date = event.event_date
+        asset.disposition_type = event.dispostion_type
+        asset.save
         reload
       end
     end
@@ -291,13 +295,16 @@ class Asset < ActiveRecord::Base
   def update_service_status
     Rails.logger.info "Updating service status for asset = #{object_key}"
 
+    # Make sure we are working with a concrete asset class
+    asset = is_typed? ? self : Asset.get_typed_asset(self)
+    
     # can't do this if it is a new record as none of the IDs would be set
-    unless new_record?
-      unless service_status_updates.empty?
-        event = service_status_updates.last
-        service_status_date = event.event_date
-        service_status_type = event.service_status_type
-        save
+    unless asset.new_record?
+      unless asset.service_status_updates.empty?
+        event = asset.service_status_updates.last
+        asset.service_status_date = event.event_date
+        asset.service_status_type = event.service_status_type
+        asset.save
         reload
       end
     end
