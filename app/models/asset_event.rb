@@ -46,7 +46,7 @@ class AssetEvent < ActiveRecord::Base
   validates :event_date,          :presence => true
     
   # default scope
-  default_scope { order("event_date DESC") }
+  default_scope { order("event_date") }
   # named scopes
   
   # List of hash parameters allowed by the controller
