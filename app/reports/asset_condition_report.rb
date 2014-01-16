@@ -18,9 +18,9 @@ class AssetConditionReport < AbstractReport
 
     ConditionType.all.each do |x|
       if report_filter_type > 0
-        count = organization.assets.where("asset_type_id = ? AND last_reported_condition_type_id = ?", report_filter_type, x.id).count
+        count = organization.assets.where("asset_type_id = ? AND reported_condition_type_id = ?", report_filter_type, x.id).count
       else
-        count = organization.assets.where("last_reported_condition_type_id = ?", x.id).count
+        count = organization.assets.where("reported_condition_type_id = ?", x.id).count
       end
       a << [x.name, count]
     end

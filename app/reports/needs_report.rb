@@ -10,9 +10,9 @@ class NeedsReport < AbstractReport
     
     # get the list of assets for this organization
     if report_filter_type > 0
-      assets = organization.assets.where('asset_type_id = ? AND replacement_year = ?', report_filter_type, analysis_year).order('asset_type_id, asset_subtype_id')
+      assets = organization.assets.where('asset_type_id = ? AND policy_replacement_year = ?', report_filter_type, analysis_year).order('asset_type_id, asset_subtype_id')
     else
-      assets = organization.assets.where('replacement_year = ?', analysis_year).order('asset_type_id, asset_subtype_id')
+      assets = organization.assets.where('policy_replacement_year = ?', analysis_year).order('asset_type_id, asset_subtype_id')
     end
     return assets
     
