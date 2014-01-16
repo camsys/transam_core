@@ -102,34 +102,16 @@ class Asset < ActiveRecord::Base
   #------------------------------------------------------------------------------
                  
   # The last reported condition type for the asset                                                              
-  belongs_to      :last_reported_condition_type,      :class_name => "ConditionType",   :foreign_key => :last_reported_condition_type_id
+  belongs_to      :reported_condition_type,   :class_name => "ConditionType",   :foreign_key => :reported_condition_type_id
+
+  # The last estimated condition type for the asset                                                              
+  belongs_to      :estimated_condition_type,  :class_name => "ConditionType",   :foreign_key => :estimated_condition_type_id
 
   # The disposition type for the asset. Null if the asset is still operational                                                             
   belongs_to      :disposition_type
 
   # The last reported disposition type for the asset                                                              
-  belongs_to      :last_reported_service_status_type, :class_name => "ServiceStatusType", :foreign_key => :last_reported_service_status_type_id
-
-  # The last estimated condition type for the asset                                                              
-  belongs_to      :estimated_condition_type,          :class_name => "ConditionType",   :foreign_key => :estimated_condition_type_id
-
-  # The calculated replacement year
-  #attr_accessible :replacement_year
-
-  # The calculated replacement cost
-  #attr_accessible :replacement_cost
-
-  # The last reported condition rating for the asset                                                              
-  #attr_accessible :last_reported_condition_rating
-
-  # The estimated replacement year
-  #attr_accessible :estimated_replacement_year
-
-  # The last reported condition rating for the asset                                                              
-  #attr_accessible :estimated_condition_rating
-  
-  # Wether the asset is determined to be in backlog (true/false)
-  #attr_accessible :in_backlog
+  belongs_to      :service_status_type
 
   #------------------------------------------------------------------------------
   # Scopes
@@ -156,19 +138,22 @@ class Asset < ActiveRecord::Base
   CLEANSABLE_FIELDS = [
     'object_key',
     'asset_tag',
-    'last_reported_condition_type_id',
-    'last_reported_service_status_type_id',
-    'estimated_condition_type_id',
-    'replacement_year',
-    'replacement_cost',
-    'last_reported_condition_rating',
-    'last_reported_disposition_type_id',
+    'policy_replacement_year',
     'estimated_replacement_year',
-    'estimated_condition_rating',
+    'estimated_replacement_cost',
     'in_backlog',
+    'replacement_cost',
+    'reported_condition_type_id',
+    'reported_condition_rating',
+    'reported_condition_date',
+    'estimated_condition_type_id',
+    'estimated_condition_rating',
+    'service_status_type_id',
+    'disposition_date',
     'disposition_date',
     'notes'
   ]
+  
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
     :object_key,
@@ -180,19 +165,23 @@ class Asset < ActiveRecord::Base
     :manufacturer_model_id,
     :manufacture_year,
     :notes,
-    :replacement_cost,
-    :replacement_year,
-    :last_reported_service_status_type_id,
-    :last_reported_condition_type_id,
-    :last_reported_disposition_type_id,
-    :last_reported_condition_rating,
+    :policy_replacement_year,
     :estimated_replacement_year,
+    :estimated_replacement_cost,
+    :in_backlog,
+    :reported_condition_type_id,
+    :reported_condition_rating,
+    :reported_condition_date,
     :estimated_condition_type_id,
     :estimated_condition_rating,
-    :in_backlog,
-    :disposition_date,
-    :created_by_id, 
-    :updated_by_id
+    :service_status_type_id,
+    :service_status_date,
+    :disposition_date, 
+    :disposition_type_id,
+    :disposition_type_id,
+    :disposition_type_id,
+    :created_by_id,
+    :updated_by_id    
   ]
   
   #------------------------------------------------------------------------------
@@ -277,18 +266,21 @@ class Asset < ActiveRecord::Base
     asset_events
   end  
       
-  # returns the the organizations's policy that governs the replacement of this asset
+  # returns the the organizations's policy that governs the replacement of this asset. This needs to upcast
+  # the organization type to a class that owns assets
   def policy
-    return organization.get_policy
+    org = Organization.get_typed_organization(organization)
+    return org.get_policy
   end
     
   # Record that the asset has been disposed. This updates the dispostion date and the disposition_type attributes
   def record_disposition
+    Rails.logger.info "Recording final disposition for asset = #{object_key}"
     unless new_record?
       unless disposition_updates.empty?
-        disposition_event = disposition_updates.last
-        disposition_date = disposition_event.event_date
-        disposition_type = disposition_event.dispostion_type
+        event = disposition_updates.last
+        disposition_date = event.event_date
+        disposition_type = event.dispostion_type
         save
         reload
       end
@@ -297,20 +289,26 @@ class Asset < ActiveRecord::Base
 
   # Forces an update of an assets service status. This performs an update on the record
   def update_service_status
+    Rails.logger.info "Updating service status for asset = #{object_key}"
+
     # can't do this if it is a new record as none of the IDs would be set
     unless new_record?
-      service_status_type = service_status_updates.last.service_status_type unless service_status_updates.empty?      
-      save
-      reload
+      unless service_status_updates.empty?
+        event = service_status_updates.last
+        service_status_date = event.event_date
+        service_status_type = event.service_status_type
+        save
+        reload
+      end
     end
   end
   
-  # Forces an update of an assets condition. This performs an update on the record
-  def update_condition
+  # Forces an update of an assets condition. This performs an update on the record. If a policy is passed
+  # that policy is used to update the asset otherwise the default policy is used
+  def update_condition(policy = nil)
     # can't do this if it is a new record as none of the IDs would be set
     unless new_record?
-      update_asset_state
-      save
+      update_asset_state(policy)
       reload
     end
   end
@@ -322,110 +320,6 @@ class Asset < ActiveRecord::Base
     a
   end
 
-
-  #------------------------------------------------------------------------------
-  #
-  # This set of methods calculate age, condition, and cost metrics for the asset based
-  # on the policy. These calculations are typically costly to perform and should be used
-  # to update the asset attributes using the update_condition_and_disposition method
-  #
-  #------------------------------------------------------------------------------
-    
-  # returns the year in which the asset should be replaced based on the policy and asset
-  # characteristics
-  def calculate_replacement_year(policy = nil)
-
-    # Make sure we are working with a concrete asset class
-    asset = is_typed? ? self : Asset.get_typed_asset(self)
-    
-    # Get the policy to use
-    policy = policy.nil? ? asset.policy : policy
-    
-    # see what metric we are using to determine the service life of the asset
-    class_name = policy.service_life_calculation_type.class_name
-    calculate(asset, policy, class_name)    
-    
-  end
-
-  # returns the cost for replacing the asset in the replacement year based on the policy
-  def calculate_replacement_cost(policy = nil)
-
-    # Make sure we are working with a concrete asset class
-    asset = is_typed? ? self : Asset.get_typed_asset(self)
-
-    # Get the policy to use
-    policy = policy.nil? ? asset.policy : policy
-
-    # see what metric we are using to determine the replacement cost of the asset
-    class_name = policy.cost_calculation_type.class_name
-    calculate(asset, policy, class_name)    
-    
-  end
-  
-  # Estimate the condition of the asset and return the rating value
-  def calculate_estimated_condition_rating(policy = nil)
-
-    # Make sure we are working with a concrete asset class
-    asset = is_typed? ? self : Asset.get_typed_asset(self)
-
-    # Get the policy to use
-    policy = policy.nil? ? asset.policy : policy
-
-    # see what metric we are using to estimate the condition of the asset
-    class_name = policy.condition_estimation_type.class_name
-    calculate(asset, policy, class_name)
-  end
-  
-  # Estimate the condition of the asset and return the condition type
-  def calculate_estimated_condition(policy = nil)
-    estimated_rating = calculate_estimated_condition_rating(policy)
-    ConditionType.from_rating(estimated_rating)
-  end
-
-  # Estimate the year that the asset will need replacing
-  def calculate_estimated_replacement_year(policy = nil)
-    
-     # Make sure we are working with a concrete asset class
-    asset = is_typed? ? self : Asset.get_typed_asset(self)
-
-    # Get the policy to use
-    policy = policy.nil? ? asset.policy : policy
-
-    # see what metric we are using to estimate the condition of the asset
-    class_name = policy.condition_estimation_type.class_name
-    calculate(asset, policy, class_name, 'last_servicable_year')
-   
-  end
-
-  # returns the last reported condition for the asset. If no condition has been reported an Unknown condition is
-  # returned
-  def calculate_last_reported_condition
-    condition_updates.empty? ? ConditionType.find_by_name('Unknown') : condition_updates.first.condition_type
-  end
-  
-  # returns the date for the last reported condition. Nil if no condition has been reported
-  def calculate_last_reported_condition_date
-    condition_updates.empty? ? nil : condition_updates.first.event_date
-  end
-
-  # calculate last reported status
-  def calculate_last_reported_service_status
-    disposition_updates.empty? ? nil : disposition_updates.first.event_date
-  end
-
-  # returns true if the asset is beyond its service life based on the current policy.
-  # If a date is provided, the assesment is made relative to that date otherwise the
-  # current date is used
-  def calculate_is_in_backlog(on_date=Date.today)
-    
-    # backlog is with respect to the end of the previous fiscal year
-    analysis_date = (on_date - 1.year).end_of_year
-
-    replacement_year = calculate_replacement_year
-    replacement_year < on_date.year ? true : false
-  end
-  
-  
   #------------------------------------------------------------------------------
   #
   # Protected Methods
@@ -445,54 +339,81 @@ class Asset < ActiveRecord::Base
   def update_asset_state
     Rails.logger.info "Updating condition for asset = #{object_key}"
 
+    # Make sure we are working with a concrete asset class
+    asset = is_typed? ? self : Asset.get_typed_asset(self)
+    
+    # Get the policy to use
+    policy = policy.nil? ? asset.policy : policy
+    
+    # exit if we can find a policy to work on
+    if policy.nil?
+      Rails.logger.warn "Can't find a policy for asset = #{object_key}"
+      return
+    end
+    
+    # returns the year in which the asset should be replaced based on the policy and asset
+    # characteristics
     begin
-      self.replacement_year = calculate_replacement_year
+      # see what metric we are using to determine the service life of the asset
+      class_name = policy.service_life_calculation_type.class_name
+      asset.policy_replacement_year = calculate(asset, policy, class_name) 
     rescue Exception => e
       Rails.logger.info e.message  
     end  
 
+    # Estimate the year that the asset will need replacing
     begin
-      self.replacement_cost = calculate_replacement_cost
+      class_name = policy.condition_estimation_type.class_name
+      asset.estimated_replacement_year = calculate(asset, policy, class_name, 'last_servicable_year')
     rescue Exception => e
       Rails.logger.info e.message  
     end  
 
+    # returns the cost for replacing the asset in the replacement year based on the policy
     begin
-      self.last_reported_condition_type = calculate_last_reported_condition
-    rescue Exception => e
-      Rails.logger.info e.message  
-    end  
-
-    begin
-      self.last_reported_condition_rating = condition_updates.first.assessed_rating unless condition_updates.empty?
-    rescue Exception => e
-      Rails.logger.info e.message  
-    end  
-
-    begin
-      self.estimated_condition_rating = calculate_estimated_condition_rating
-    rescue Exception => e
-      Rails.logger.info e.message  
-    end  
-
-    begin
-      self.estimated_condition_type = calculate_estimated_condition
-    rescue Exception => e
-      Rails.logger.info e.message  
-    end  
-
-    begin
-      self.estimated_replacement_year = calculate_estimated_replacement_year
-    rescue Exception => e
-      Rails.logger.info e.message  
-    end  
-
-    begin
-      self.in_backlog = calculate_is_in_backlog
+      class_name = policy.cost_calculation_type.class_name
+      asset.estimated_replacement_cost = calculate(asset, policy, class_name)
     rescue Exception => e
       Rails.logger.info e.message  
     end  
     
+    # determine if the asset is in backlog
+    begin
+      # Check to see if the asset should have been replaced before this year
+      replacement_year = asset.policy_replacement_year
+      asset.in_backlog = replacement_year < Date.today.year
+    rescue Exception => e
+      Rails.logger.info e.message  
+    end  
+
+    # Update the reported condition
+    begin
+      if asset.condition_updates.empty?
+        asset.reported_condition_date = Date.today
+        asset.reported_condition_rating = 0.0
+        asset.reported_condition_type = ConditionType.find_by_name('Unknown')        
+      else
+        event = condition_updates.last
+        asset.reported_condition_date = event.event_date
+        asset.reported_condition_rating = event.assessed_rating
+        asset.reported_condition_type = event.condition_type
+      end
+    rescue Exception => e
+      Rails.logger.info e.message  
+    end  
+
+    # Update the estimated condition
+    begin
+      # see what metric we are using to estimate the condition of the asset
+      class_name = policy.condition_estimation_type.class_name
+      asset.estimated_condition_rating = calculate(asset, policy, class_name)
+      asset.estimated_condition_type = ConditionType.from_rating(asset.estimated_condition_rating)
+    rescue Exception => e
+      Rails.logger.info e.message  
+    end  
+    
+    # save changes to this asset
+    asset.save    
   end
 
   def searchable_fields

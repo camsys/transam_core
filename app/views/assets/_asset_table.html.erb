@@ -2,10 +2,9 @@
 	<thead>
 		<tr>
 			<th class="center" colspan="6">Asset</th>
-			<th class="center" colspan="4">Condition</th>
-			<th class="center" colspan="2">Replacement</th>
+			<th class="center" colspan="5">Condition</th>
+			<th class="center" colspan="3">Replacement</th>
 		</tr>
-
 		<tr>
 			<th class="center">Type</th>
 			<th class="center">Tag</th>					
@@ -16,11 +15,13 @@
 			
 			<th class="center">Age</th>
 			<th class="center">Backlog</th>
-			<th class="center">Reported</th>
-			<th class="center">Estimated</th>
+			<th class="center">Rating</th>
+			<th class="center">Rep.</th>
+			<th class="center">Est.</th>
 
 			<th class="center">Cost</th>
-			<th class="center">Year</th>
+			<th class="center">Policy</th>
+			<th class="center">Est.</th>
 			
 		</tr>
 	</thead>
@@ -31,16 +32,18 @@
 				<td class="left"><%= a.asset_tag %></td>
 				<td class="left"><%= a.manufacturer.code %></td>
 				<td class="left"><%= a.manufacturer_model.name %></td>
-				<td class="center"><%= a.last_reported_service_status_type.code unless a.last_reported_service_status_type.nil? %></td>
+				<td class="center"><%= a.service_status_type.code unless a.service_status_type.nil? %></td>
 				<td class="right"><%= format_as_currency(a.cost) %></td>
 
 				<td class="right"><%= a.age %></td>
 				<td class="center"><%= format_as_boolean(a.in_backlog) %></td>
-				<td class="center"><%= a.last_reported_condition_type.name unless a.last_reported_condition_type.nil? %>
+				<td class="center"><%= format_as_decimal(a.reported_condition_rating, 1) %></td>
+				<td class="center"><%= a.reported_condition_type.name unless a.reported_condition_type.nil? %>
 				<td class="center"><%= a.estimated_condition_type.name unless a.estimated_condition_type.nil? %>
 				
-				<td class="right"><%= format_as_currency(a.replacement_cost) %></td>
-				<td class="right"><%= a.replacement_year %></td>
+				<td class="right"><%= format_as_currency(a.estimated_replacement_cost) %></td>
+				<td class="right"><%= a.policy_replacement_year %></td>
+				<td class="right"><%= a.estimated_replacement_year %></td>
 				
 			</tr>
 		<% end %>
