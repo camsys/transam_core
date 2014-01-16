@@ -114,7 +114,7 @@ class AssetEventsController < AssetAwareController
         notify_user(:notice, "Event was successfully updated.")   
 
         # The event was updated so we need to update the asset.
-        fire_asset_update_event(@asset_event.event_type, @asset)
+        fire_asset_update_event(@asset_event.asset_event_type, @asset)
              
         format.html { redirect_to inventory_asset_event_url(@asset, @asset_event) }
         format.json { head :no_content }
@@ -143,7 +143,7 @@ class AssetEventsController < AssetAwareController
         notify_user(:notice, "Event was successfully created.")   
 
         # The event was removed so we need to update the asset 
-        fire_asset_update_event(@asset_event.event_type, @asset)
+        fire_asset_update_event(@asset_event.asset_event_type, @asset)
                 
         format.html { redirect_to inventory_asset_events_url(@asset)}
         format.json { render :json => @asset_event, :status => :created, :location => @asset_event }
@@ -165,13 +165,13 @@ class AssetEventsController < AssetAwareController
       return
     end
 
-    event_type = @asset_event.event_type
+    asset_event_type = @asset_event.asset_event_type
     @asset_event.destroy
 
     notify_user(:notice, "Event was successfully removed.")   
 
     # The event was removed so we need to update the asset condition
-    fire_asset_update_event(event_type, @asset)
+    fire_asset_update_event(asset_event_type, @asset)
 
     respond_to do |format|
       format.html { redirect_to(inventory_asset_events_url(@asset)) } 
@@ -188,9 +188,9 @@ class AssetEventsController < AssetAwareController
   
   # Updates the asset by firing a background job to update the asset. The job is based on the
   # type of event that was modified
-  def fire_asset_update_event(event_type, asset, priority = 0)
-    if event_type and asset
-      klass = event_type.job_name.constantize
+  def fire_asset_update_event(asset_event_type, asset, priority = 0)
+    if asset_event_type and asset
+      klass = asset_event_type.job_name.constantize
       job = klass.new(asset.object_key)
       fire_background_job(job, priority)
     end
