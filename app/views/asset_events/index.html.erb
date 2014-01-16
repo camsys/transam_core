@@ -57,10 +57,10 @@
 				'content': ' <%= e.asset_event_type.name %>'
 				},
 			<% end %>
-			<% unless @asset.replacement_year.nil? %>
+			<% unless @asset.policy_replacement_year.nil? %>
 				{
-				'start': new Date(<%= js_year(@asset.replacement_year) %>),
-				'content': 'Policy End of Service'
+				'start': new Date(<%= js_year(@asset.policy_replacement_year) %>),
+				'content': 'End of Useful Life'
 				},
 			<% end %>
 			<% unless @asset.estimated_replacement_year.nil? %>
