@@ -336,7 +336,7 @@ class Asset < ActiveRecord::Base
 
   # This is called before each save so no errors should be generated but we need to complete as many
   # updates as possible
-  def update_asset_state
+  def update_asset_state(policy = nil)
     Rails.logger.info "Updating condition for asset = #{object_key}"
 
     # Make sure we are working with a concrete asset class
