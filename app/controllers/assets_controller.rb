@@ -58,6 +58,7 @@ class AssetsController < AssetAwareController
     respond_to do |format|
       format.html
       format.json { render :json => @assets }
+      format.xls      
     end
   end
 
