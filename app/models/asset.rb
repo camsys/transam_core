@@ -320,6 +320,31 @@ class Asset < ActiveRecord::Base
     a
   end
 
+  # calculate the year that the asset will need replacing based on 
+  # a policy
+  def calculate_replacement_year(policy = nil)
+    # Make sure we are working with a concrete asset class
+    asset = is_typed? ? self : Asset.get_typed_asset(self)
+    
+    # Get the policy to use
+    policy = policy.nil? ? asset.policy : policy
+    class_name = policy.service_life_calculation_type.class_name
+    calculate(asset, policy, class_name)
+    
+  end
+  # calculate the estimated year that the asset will need replacing based on 
+  # a policy
+  def calculate_estimated_replacement_year(policy = nil)
+    # Make sure we are working with a concrete asset class
+    asset = is_typed? ? self : Asset.get_typed_asset(self)
+    
+    # Get the policy to use
+    policy = policy.nil? ? asset.policy : policy
+    class_name = policy.condition_estimation_type.class_name
+    calculate(asset, policy, class_name, 'last_servicable_year')
+    
+  end
+
   #------------------------------------------------------------------------------
   #
   # Protected Methods
@@ -441,12 +466,12 @@ class Asset < ActiveRecord::Base
   # with the same signature can be passed in
   def calculate(asset, policy, class_name, target_method = 'calculate')
     begin
-      Rails.logger.info "#{class_name}, #{target_method}"
+      Rails.logger.debug "#{class_name}, #{target_method}"
       # create an instance of this class and call the method
       calculator_instance = class_name.constantize.new(policy)
-      Rails.logger.info "Instance created #{calculator_instance}"
+      Rails.logger.debug "Instance created #{calculator_instance}"
       method_object = calculator_instance.method(target_method) 
-      Rails.logger.info "Instance method created #{method_object}"
+      Rails.logger.debug "Instance method created #{method_object}"
       method_object.call(asset)
     rescue Exception => e
       Rails.logger.error e.message
