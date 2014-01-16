@@ -71,6 +71,12 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
   # Calculates the linear deterioration in asset quality per year
   def rate_of_deterioration_per_year(max_rating, min_rating, years)
 
+    # Check the edge case where the asset is new or dates are messed up and
+    # the asset is reporting negative years
+    if years < 1
+      return 0.0
+    end
+    
     # Determine the change in condition
     delta = max_rating - min_rating
     
