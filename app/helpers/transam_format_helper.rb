@@ -4,6 +4,11 @@ module TransamFormatHelper
   def format_as_currency(val)
     number_to_currency(val.to_i, :precision => 0)
   end
+
+  # returns a number as a decimal
+  def format_as_decimal(val, precision = 2)
+    number_with_precision(val, :precision => precision)
+  end
     
   # formats a boolean field 
   def format_as_boolean(val)
