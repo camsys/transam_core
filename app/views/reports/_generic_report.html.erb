@@ -24,6 +24,7 @@
 			</thead>
 			<tbody>
 				<% total_cost = 0 %>
+				<% count = 0 %>
 				<% @data.each_value do |row| %>
 				<tr data-action-path = '<%= inventory_index_path(:ids => list_to_delimited_string(row.id_list)) %>'>
 					<td class="left"><%= row.asset_subtype.asset_type.name %></td>
@@ -32,12 +33,15 @@
 					<td class="right"><%= format_as_currency(row.replacement_cost / row.count.to_f) %></td>
 					<td class="right"><%= format_as_currency(row.replacement_cost) %></td>
 				</tr>
+				<% count += row.count %>
 				<% total_cost += row.replacement_cost %>
 				<% end %>
 			</tbody>
 			<tfoot>
 				<tr>
-					<th colspan="4"></th>
+					<th colspan="2"></th>
+					<th class="right"><%= count %></th>					
+					<th colspan="1" ></th>
 					<th class="right"><%= format_as_currency(total_cost) %></th>					
 				</tr>
 			</tfoot>
@@ -46,7 +50,6 @@
 	</div>
 </div>
 
-<%= render 'shared/datatable_javascript' %>
 
 <script type="text/javascript">
 
@@ -56,7 +59,7 @@
 
 	function draw_chart() {
 		
-		var div_id = 'chart';
+		var div_id = '<%= "chart_#{@report.id}" %>';
 		var chart_data = new google.visualization.DataTable();
 		chart_data.addColumn('string', 'Asset Type');	
 		chart_data.addColumn('number', '($)');
@@ -64,7 +67,6 @@
 			chart_data.addRow(['<%= row.asset_subtype.name %>', {v: <%= row.replacement_cost.to_i %>, f: '<%= format_as_currency(row.replacement_cost) %>'}]);
 		<% end %>
 		
-		var chart = null;
 		var chart_options = {
 			is3D : true,
 			height : 300,

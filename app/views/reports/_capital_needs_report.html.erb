@@ -1,8 +1,8 @@
 
 <div class="row-fluid">
-		<div class="well well-small span12">
-			<div id="chart"></div>
-		</div>
+	<div class="well well-small span12">
+		<div id='<%= "chart_#{@report.id}" %>'></div>
+	</div>
 </div>
 
 <div class="row-fluid">
@@ -17,18 +17,21 @@
 			</thead>
 			<tbody>
 				<% total_cost = 0 %>
+				<% count = 0 %>
 				<% @data.each_value do |row| %>
 				<tr data-action-path = '<%= inventory_index_path(:ids => list_to_delimited_string(row.id_list)) %>'>
 					<td class="left"><%= row.key %></td>
 					<td class="right"><%= row.count %></td>
 					<td class="right"><%= format_as_currency(row.replacement_cost) %></td>
 				</tr>
+				<% count += row.count %>				
 				<% total_cost += row.replacement_cost %>
 				<% end %>
 			</tbody>
 			<tfoot>
 				<tr>
-					<th colspan="2"></th>
+					<th colspan="1"></th>
+					<th class="right"><%= count %></th>
 					<th class="right"><%= format_as_currency(total_cost) %></th>
 				</tr>
 			</tfoot>
@@ -43,9 +46,9 @@
 
 	google.load('visualization', '1.0', {'packages':['corechart']});
 
-	google.setOnLoadCallback(draw_chart);
-
-	function draw_chart() {
+	function <%= "chart_func_#{@report.id}" %>() {
+		
+		var div_id = '<%= "chart_#{@report.id}" %>';
 
 		var chart_data = new google.visualization.DataTable();
 		chart_data.addColumn('string', 'Asset Type');	
@@ -54,20 +57,21 @@
 			chart_data.addRow(['<%= row.key %>', {v: <%= row.replacement_cost.to_i %>, f: '<%= format_as_currency(row.replacement_cost) %>'}]);
 		<% end %>
 		
-		var chart = null;
 		var chart_options = {
 			is3D : true,
 			height : 300,
 			legend : {position : 'none'},
 			vAxis :  {title : '($)'}
 		};
-		chart = new google.visualization.ColumnChart(document.getElementById('chart'));
-		chart.draw(chart_data, chart_options);
-	}
+		transam.draw_chart(div_id, 'column', chart_options, chart_data);		
+	};
+	
+	// Set a callback to run when the Google Visualization API is loaded.
+	google.setOnLoadCallback(<%= "chart_func_#{@report.id}" %>);
 
 	// Handle the resize event and make sure the chart is redrawn for the new size
 	window.onresize = function() {
-		draw_chart();
+		<%= "chart_func_#{@report.id}" %>();
 	};
 		
 </script>
