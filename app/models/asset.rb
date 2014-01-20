@@ -144,14 +144,13 @@ class Asset < ActiveRecord::Base
     'estimated_replacement_year',
     'estimated_replacement_cost',
     'in_backlog',
-    'replacement_cost',
     'reported_condition_type_id',
     'reported_condition_rating',
     'reported_condition_date',
     'estimated_condition_type_id',
     'estimated_condition_rating',
     'service_status_type_id',
-    'disposition_date',
+    'disposition_type_id',
     'disposition_date'
  ]
   
@@ -177,8 +176,6 @@ class Asset < ActiveRecord::Base
     :service_status_type_id,
     :service_status_date,
     :disposition_date, 
-    :disposition_type_id,
-    :disposition_type_id,
     :disposition_type_id,
     :created_by_id,
     :updated_by_id    
