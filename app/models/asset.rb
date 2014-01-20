@@ -47,7 +47,6 @@ class Asset < ActiveRecord::Base
   
   # each asset belongs to a single manufacturer and has a single model 
   belongs_to :manufacturer
-  belongs_to :manufacturer_model
   
   # Each asset has zero or more asset events. These are all events regardless of event type
   has_many   :asset_events        
@@ -63,6 +62,11 @@ class Asset < ActiveRecord::Base
   
   # Each asset has zero or more attachments 
   has_many   :attachments
+
+  # Each asset has zero or more notes 
+  has_many   :asset_notes
+    
+  accepts_nested_attributes_for :asset_notes    
     
   # Each asset can be associated with 0 or more districts
   has_and_belongs_to_many :districts
@@ -131,7 +135,7 @@ class Asset < ActiveRecord::Base
     'object_key',
     'asset_tag',
     'manufacture_year',
-    'notes'
+    'manufacturer_model'
   ] 
           
   # List of fields that should be nilled when a copy is made
@@ -150,9 +154,8 @@ class Asset < ActiveRecord::Base
     'estimated_condition_rating',
     'service_status_type_id',
     'disposition_date',
-    'disposition_date',
-    'notes'
-  ]
+    'disposition_date'
+ ]
   
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
@@ -162,9 +165,8 @@ class Asset < ActiveRecord::Base
     :asset_subtype_id, 
     :asset_tag,
     :manufacturer_id,
-    :manufacturer_model_id,
+    :manufacturer_model,
     :manufacture_year,
-    :notes,
     :policy_replacement_year,
     :estimated_replacement_year,
     :estimated_replacement_cost,
