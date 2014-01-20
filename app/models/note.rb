@@ -1,4 +1,4 @@
-class AssetNote < ActiveRecord::Base
+class Note < ActiveRecord::Base
 
   # Include the unique key mixin
   include UniqueKey

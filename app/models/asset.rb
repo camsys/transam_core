@@ -64,9 +64,7 @@ class Asset < ActiveRecord::Base
   has_many   :attachments
 
   # Each asset has zero or more notes 
-  has_many   :asset_notes
-    
-  accepts_nested_attributes_for :asset_notes    
+  has_many   :notes
     
   # Each asset can be associated with 0 or more districts
   has_and_belongs_to_many :districts

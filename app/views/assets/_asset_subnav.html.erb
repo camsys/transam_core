@@ -8,6 +8,10 @@
 						<% end %>
 					</li>
 					<li>
+						<%= link_to  inventory_notes_path(@asset) do %> <i class="fa fa-file-o"></i> Notes (<%= @asset.notes.length %>)
+						<% end %>
+					</li>
+					<li>
 						<%= link_to  inventory_asset_events_path(@asset) do %> <i class="fa fa-calendar"></i> History (<%= @asset.asset_events.length %>)
 						<% end %>
 					</li>
