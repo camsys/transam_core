@@ -49,6 +49,7 @@ class NotesController < AssetAwareController
 
     @note = Note.new(form_params)
     @note.asset = @asset
+    @note.creator = current_user
     
     respond_to do |format|
       if @note.save        

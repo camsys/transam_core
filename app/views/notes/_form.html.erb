@@ -1,0 +1,15 @@
+<div class="row-fluid">
+	<div class="span12">
+		<ul class="thumbnails">
+		<%= panel_tag('Note', {:icon => 'fa fa-file', :class => "span8 offset2"}) do %>
+			<%= simple_form_for([@asset, @note], :url => @note.new_record? ? inventory_notes_path(@asset) : inventory_note_path(@asset, @note), :method => @note.new_record? ? "post" : "put", :html => {:multipart => true, :class => 'form-horizontal' }) do |f| %>
+				<%= f.input :comments, :prompt => 'Some notes...', :input_html => { :class => 'span10', :rows => 20 } %>
+				<div class="form-actions panel-form-actions">
+					<%= f.button :submit, 'Save note' %>
+					<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn" %>
+				</div>
+			<% end %>
+		<% end %>
+		</ul>
+	</div>
+</div>	
