@@ -283,18 +283,18 @@ class AssetsController < AssetAwareController
     # If the asset type and subtypes are not set we default to the asset base class
     if @id_filter_list or (@asset_type == 0 and @asset_subtype == 0)
       class_name = ASSET_BASE_CLASS_NAME
-      @view = ASSET_BASE_CLASS_VIEW
+      @view = "#{ASSET_BASE_CLASS_VIEW.underscore}_index"
     elsif @asset_subtype > 0
       # we have an asset subtype so get it and get the asset type from it. We also set the filter form
       # to the name of the selected subtype
       subtype = AssetSubtype.find(@asset_subtype)
       class_name = subtype.asset_type.class_name
       @filter = subtype.full_name
-      @view = class_name.underscore
+      @view = "#{class_name.underscore}_index"
     else
       asset_type = AssetType.find(@asset_type)
       class_name = asset_type.class_name
-      @view = class_name.underscore
+      @view = "#{class_name.underscore}_index"
     end
     # Create a class instance of the asset type which can be used to perform
     # active record queries
