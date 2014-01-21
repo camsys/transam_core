@@ -9,7 +9,24 @@ module TransamFormatHelper
   def format_as_decimal(val, precision = 2)
     number_with_precision(val, :precision => precision)
   end
-    
+
+  # returns a number as a percentage
+  def format_as_percentage(val, precision = 0)
+    "#{number_with_precision(val, :precision => precision)}%"
+  end
+
+  # returns a collection as a formatted list
+  def format_as_list(coll)
+    html = "<ul class='unstyled'>"
+    coll.each do |e|
+      html << "<li>"
+      html << e.to_s
+      html << "</li>"
+    end
+    html << "</ul>"
+    html.html_safe
+  end    
+
   # formats a boolean field 
   def format_as_boolean(val)
     if val
