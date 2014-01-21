@@ -1,5 +1,5 @@
 <%= render 'organization_subnav' %>
 
-<%= render 'form' %>
+<%= render "#{@organization.class.name.underscore}_form" %>
 
 <%= render 'scripts' %>

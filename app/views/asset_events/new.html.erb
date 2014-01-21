@@ -2,6 +2,6 @@
 
 <%= render(:partial => 'shared/form_errors', :locals => {:obj => @asset_event}) unless @asset_event.errors.empty? %>	
 
-<%= render @asset_event.asset_event_type.form_name %>
+<%= render "#{@asset_event.class.name.underscore}_form" %>
 
 <%= render 'scripts' %>

@@ -1,5 +1,5 @@
 <%= render 'subnav' %>
 
-<%= render @form_name %>
+<%= render "#{@asset_event.class.name.underscore}_view" %>
 
 <%= render 'scripts' %>

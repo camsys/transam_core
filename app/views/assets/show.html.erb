@@ -2,6 +2,6 @@
 
 <%= render 'asset_info' %>
 
-<%= render @asset.asset_type.form_name %>
+<%= render "#{@asset.class.name.underscore}_view" %>
 
 <%= render 'scripts' %>

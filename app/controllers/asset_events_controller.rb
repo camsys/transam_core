@@ -49,7 +49,6 @@ class AssetEventsController < AssetAwareController
     asset_event_type = AssetEventType.find(params[:event_type])
     if asset_event_type
       @asset_event = AssetEvent.get_new_typed_event(asset_event_type)
-      @form_name = asset_event_type.form_name
     end
 
     @page_sub_title = @asset.name
@@ -71,9 +70,7 @@ class AssetEventsController < AssetAwareController
       return
     end
  
-    @page_title = @asset.name
-    @form_name = @asset_event.asset_event_type.form_name
-    
+    @page_title = @asset.name    
     @disabled = true
     
     respond_to do |format|
@@ -93,7 +90,6 @@ class AssetEventsController < AssetAwareController
     end
 
     @page_title = @asset.name
-    @form_name = @asset_event.asset_event_type.form_name    
     @disabled = false
    
   end

@@ -290,11 +290,11 @@ class AssetsController < AssetAwareController
       subtype = AssetSubtype.find(@asset_subtype)
       class_name = subtype.asset_type.class_name
       @filter = subtype.full_name
-      @view = subtype.asset_type.index_name
+      @view = class_name.underscore
     else
       asset_type = AssetType.find(@asset_type)
       class_name = asset_type.class_name
-      @view = asset_type.index_name
+      @view = class_name.underscore
     end
     # Create a class instance of the asset type which can be used to perform
     # active record queries
