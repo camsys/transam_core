@@ -6,14 +6,14 @@
 			<%= panel_tag('User', {:icon => 'fa fa-user', :class => "span4 form_part"}) do %>
 				<%= format_field("Name", @user.name ) %>
 				<%= format_field("e-mail", @user.email ) %>
-				<%= format_field("Primary phone", format_as_phone(@user.phone) ) %>
+				<%= format_field("Primary phone", format_as_phone_number(@user.phone) ) %>
 				<%= format_field("Timezone", @user.timezone ) %>
 			<% end %>
 			<%= panel_tag('Organization', {:icon => 'fa fa-building-o', :class => "span4 form_part"}) do %>
 				<%= format_field("Company", link_to(@organization.name, organization_path(@organization)) ) %>						
 				<%= format_field("Address", format_as_address(@user.organization) ) %>
-				<%= format_field("Phone", format_as_phone(@user.organization.phone) ) %>
-				<%= format_field("Fax", format_as_phone(@user.organization.fax) ) %>
+				<%= format_field("Phone", format_as_phone_number(@user.organization.phone) ) %>
+				<%= format_field("Fax", format_as_phone_number(@user.organization.fax) ) %>
 			<% end %>
 			<%= panel_tag('Activity', {:icon => 'fa fa-clock-o', :class => "span4 form_part"}) do %>
 				<%= format_field("Created", format_as_date_time(@user.created_at) ) %>

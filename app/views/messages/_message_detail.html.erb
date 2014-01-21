@@ -1,5 +1,5 @@
 <div class="media-body">
-	<h4 class="media-heading"><%= message.subject %><small class="pull-right"><%= format_date_time(message.created_at) %></small></h4>
+	<h4 class="media-heading"><%= message.subject %><small class="pull-right"><%= format_as_date_time(message.created_at) %></small></h4>
 	<div class="well well-small div_thumbnail" data-action-path = '<%= user_message_path(current_user, message) %>'>
 		<p class="message-header"><strong>From: <%= message.user.name %></strong></p>
 		<p class="message-body">
