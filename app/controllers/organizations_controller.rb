@@ -26,6 +26,12 @@ class OrganizationsController < OrganizationAwareController
   
   def show
     
+    if @organization.nil?
+      notify_user(:alert, "Record not found.")
+      redirect_to organizations_url 
+      return
+    end
+    
     @page_title = @organization.name
     @disabled = true
     
@@ -37,6 +43,12 @@ class OrganizationsController < OrganizationAwareController
   end
 
   def map
+
+    if @organization.nil?
+      notify_user(:alert, "Record not found.")
+      redirect_to organizations_url 
+      return
+    end
     
     @page_title = @organization.name
     @organizations = []
@@ -52,10 +64,20 @@ class OrganizationsController < OrganizationAwareController
   
   # Edit simply returns the selected organization
   def edit
+    if @organization.nil?
+      notify_user(:alert, "Record not found.")
+      redirect_to organizations_url 
+      return
+    end
     @page_title = "Update"    
   end
 
   def update
+    if @organization.nil?
+      notify_user(:alert, "Record not found.")
+      redirect_to organizations_url 
+      return
+    end
 
     respond_to do |format|
       if @organization.update_attributes(form_params)
