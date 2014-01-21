@@ -1,5 +1,10 @@
 module TransamFormatHelper
         
+  # formats a URL as a link
+  def format_as_url(url, target = '_blank')
+    link_to(url, url, target: "_blank")
+  end      
+  
   # truncates any decimals and returns the number as currency
   def format_as_currency(val)
     number_to_currency(val.to_i, :precision => 0)
@@ -15,6 +20,11 @@ module TransamFormatHelper
     "#{number_with_precision(val, :precision => precision)}%"
   end
 
+  # returns a number formatted as a phone number
+  def format_as_phone_number(val, area_code = true)
+    number_to_phone(org.phone, :area_code => area_code)
+  end
+  
   # returns a collection as a formatted list
   def format_as_list(coll)
     html = "<ul class='unstyled'>"
@@ -44,20 +54,20 @@ module TransamFormatHelper
   end
   
   # Standard formats for dates and times
-  def format_date_time(datetime)
+  def format_as_date_time(datetime)
     return datetime.strftime("%I:%M %p %b %d %Y") unless datetime.nil?
   end
   
-  def format_date(date)
+  def format_as_date(date)
     return date.strftime("%b %d %Y") unless date.nil?
   end
   
-  def format_time(time)
+  def format_as_time(time)
     return time.strftime("%I:%M") unless time.nil?
   end
   
   # formats an address
-  def format_address(m)
+  def format_as_address(m)
     html = m.address1
     html << "<br/>"
     html << m.address2 unless m.address2.blank?

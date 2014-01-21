@@ -1,6 +1,3 @@
-<% if @policy.errors.count > 0 %>
-	<%= render(:partial => 'shared/form_errors', :locals => {:obj => @policy}) %>	
-<% end%>
 <div class="row-fluid">
 	<%= simple_form_for(@policy, :html => {:class => 'form-horizontal span12' }) do |f| %>
 	<div class="row-fluid">

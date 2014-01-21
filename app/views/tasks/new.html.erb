@@ -1,7 +1,5 @@
 <%= render 'task_subnav' %>
 
-<% if @task.errors.count > 0 %>
-	<%= render(:partial => 'shared/form_errors', :locals => {:obj => @task}) %>	
-<% end%>
+<%= render(:partial => 'shared/form_errors', :locals => {:obj => @task}) unless @task.errors.empty? %>	
 
 <%= render 'form' %>

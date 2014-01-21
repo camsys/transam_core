@@ -11,7 +11,7 @@
 						<%= format_field("Status", @upload.file_status_type.name ) %>
 					</div>
 					<div class="span6">
-						<%= format_field("Upload time", format_date_time(@upload.created_at) ) %>
+						<%= format_field("Upload time", format_as_date_time(@upload.created_at) ) %>
 						<%= format_field("Uploaded by", @upload.user.name ) %>
 					</div>
 				</div>

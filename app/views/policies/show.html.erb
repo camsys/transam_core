@@ -7,10 +7,10 @@
 				<%= format_field("Policy Owner", @policy.organization.name ) %>
 				<%= format_field("Effective Year", @policy.year ) %>
 				<%= format_field("Description", @policy.description ) %>
-				<%= format_field("Current", @policy.current ) %>
+				<%= format_field("Current", format_as_boolean(@policy.current) ) %>
 			<% end %>
 			<%= panel_tag('Calculations', {:icon => 'fa fa-usd', :class => "span6 header_part"}) do %>
-				<%= format_field("Interest rate", number_with_precision(@policy.interest_rate, :precision => 3) ) %>
+				<%= format_field("Interest rate", format_as_decimal(@policy.interest_rate, 3) ) %>
 				<%= format_field("Replacement Cost Calculation", @policy.cost_calculation_type.name, @policy.cost_calculation_type.description ) %>
 				<%= format_field("Service Life Calculation", @policy.service_life_calculation_type.name, @policy.service_life_calculation_type.description ) %>
 				<%= format_field("Condition Estimation Calculation", @policy.condition_estimation_type.name, @policy.condition_estimation_type.description ) %>

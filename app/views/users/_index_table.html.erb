@@ -18,10 +18,10 @@
 					<td><%= u.first_name %></td>
 					<td><%= u.last_name %></td>
 					<td><%= u.email %></td>
-					<td><%= number_to_phone(u.phone) %></td>
-					<td><%= u.roles.first.name.titleize unless u.roles.first.nil? %></td>
-					<td><%= format_date_time(u.created_at) %></td>
-					<td><%= format_date_time(u.last_sign_in_at) %></td>
+					<td><%= format_as_phone(u.phone) %></td>
+					<td><%= format_as_list(u.roles) %></td>
+					<td><%= format_as_date_time(u.created_at) %></td>
+					<td><%= format_as_date_time(u.last_sign_in_at) %></td>
 				</tr>
 				<% end %>
 			</tbody>

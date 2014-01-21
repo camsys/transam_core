@@ -16,8 +16,8 @@
 					<td><%= f.file_content_type.name %></td>
 					<td><%= f.user.name %></td>
 					<td><%= f.file_status_type.name %></td>
-					<td><%= format_date_time(f.created_at) %></td>
-					<td><%= format_date_time(f.updated_at) %></td>
+					<td><%= format_as_date_time(f.created_at) %></td>
+					<td><%= format_as_date_time(f.updated_at) %></td>
 				</tr>
 				<% end %>
 			</tbody>

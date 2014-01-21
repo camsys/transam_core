@@ -17,9 +17,9 @@
 					<td><%= p.organization.name %></td>
 					<td><%= p.name %></td>
 					<td><%= p.year %></td>
-					<td><%= get_boolean(p.current) %></td>
-					<td><%= format_date_time(p.created_at) %></td>
-					<td><%= format_date_time(p.updated_at) %></td>
+					<td><%= format_as_boolean(p.current) %></td>
+					<td><%= format_as_date_time(p.created_at) %></td>
+					<td><%= format_as_date_time(p.updated_at) %></td>
 				</tr>
 				<% end %>
 			</tbody>

@@ -13,9 +13,9 @@
 				<tr data-action-path = '<%= organization_path(org) %>'>
 					<td><%= org.name %></td>
 					<td><%= org.organization_type.name %></td>
-					<td><%= number_to_phone(org.phone, :area_code => true) %></td>
-					<td><%= link_to(org.url, org.url, target: "_blank") %></td>
-					<td><%= format_date_time(org.updated_at) %></td>
+					<td><%= format_as_phone_number(org.phone) %></td>
+					<td><%= format_as_url(org.url) %></td>
+					<td><%= format_as_date_time(org.updated_at) %></td>
 				</tr>
 				<% end %>
 			</tbody>

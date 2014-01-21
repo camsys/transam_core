@@ -5,7 +5,7 @@
 		<%= panel_tag('Note', {:icon => 'fa fa-file-o', :class => "span12"}) do %>
 			<%= format_field("Note", @note.comments ) %>
 			<%= format_field("Created By", @note.creator.name ) %>
-			<%= format_field("Created", format_date_time(@note.created_at)) %>
+			<%= format_field("Created", format_as_date_time(@note.created_at)) %>
 		<% end %>
 	</div>
 </div>
