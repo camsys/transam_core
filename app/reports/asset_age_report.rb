@@ -19,7 +19,7 @@ class AssetAgeReport < AbstractReport
 
     AssetType.all.each do |type| 
       asset_counts << organization.assets.where("asset_type_id = ?", type.id).count
-      labels << type.name
+      labels << type.name unless asset_counts.last == 0
     end
         
     (1..MAX_REPORTING_YEARS).each do |year|
