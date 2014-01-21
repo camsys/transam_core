@@ -1,6 +1,3 @@
-<% if @organization.errors.count > 0 %>
-	<%= render(:partial => 'shared/form_errors', :locals => {:obj => @organization}) %>	
-<% end%>
 <div class="row-fluid">
 	<%= simple_form_for(@organization, :html => {:class => 'form-vertical span12' }, :defaults => {:disabled => @disabled }) do |f| %>
 	<div class="row-fluid">
