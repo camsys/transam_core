@@ -22,7 +22,7 @@ module TransamFormatHelper
 
   # returns a number formatted as a phone number
   def format_as_phone_number(val, area_code = true)
-    number_to_phone(org.phone, :area_code => area_code)
+    number_to_phone(val, :area_code => area_code)
   end
   
   # returns a collection as a formatted list
@@ -45,7 +45,7 @@ module TransamFormatHelper
   end
         
   # formats a date/time as a distance in words. e.g. 6 days ago
-  def format_date_time_distance(datetime)
+  def format_as_date_time_distance(datetime)
     dist = distance_of_time_in_words_to_now(datetime)
     if Time.now > datetime
       dist = dist + " ago"
