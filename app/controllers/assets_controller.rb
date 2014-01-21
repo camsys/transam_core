@@ -9,7 +9,6 @@ class AssetsController < AssetAwareController
 
   # From the application config    
   ASSET_BASE_CLASS_NAME     = Rails.application.config.asset_base_class_name   
-  ASSET_BASE_CLASS_VIEW     = Rails.application.config.asset_base_class_view   
   MAX_ROWS_RETURNED         = Rails.application.config.max_rows_returned
   DEFAULT_SEARCH_RADIUS     = Rails.application.config.default_search_radius
   DEFAULT_SEARCH_UNITS      = Unit.new(Rails.application.config.default_search_units)
@@ -283,7 +282,7 @@ class AssetsController < AssetAwareController
     # If the asset type and subtypes are not set we default to the asset base class
     if @id_filter_list or (@asset_type == 0 and @asset_subtype == 0)
       class_name = ASSET_BASE_CLASS_NAME
-      @view = "#{ASSET_BASE_CLASS_VIEW.underscore}_index"
+      @view = "#{ASSET_BASE_CLASS_NAME.underscore}_index"
     elsif @asset_subtype > 0
       # we have an asset subtype so get it and get the asset type from it. We also set the filter form
       # to the name of the selected subtype
