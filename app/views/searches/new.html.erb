@@ -3,5 +3,7 @@
 <%= render 'search_form' %>
 
 <% if @assets.count > 0 %>
-	<%= render '/assets/table_index' %>
+	<%= render '/assets/asset_table' %>
 <% end %>
+
+<%= render 'shared/datatable_javascript' %>
