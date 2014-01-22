@@ -23,7 +23,7 @@
 				<% row = row + 1 %>
 				<tr data-action-path = '<%= inventory_asset_event_path(@asset, e) %>'>
 					<td><%= e.asset_event_type.name %></td>
-					<td><%= format_date(e.event_date) %></td>
+					<td><%= format_as_date(e.event_date) %></td>
 					<td><%= e.get_update %></td>					
 					<td><%= e.comments %></td>
 				</tr>
