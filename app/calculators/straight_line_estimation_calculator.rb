@@ -59,11 +59,14 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
 
       # Get the observed rate of change in asset quality
       rate_of_change = rate_of_deterioration_per_year(max_rating, current_rating, age_at_report)
-      # determine the year that the service quality will fall below the threshold
-      years_at_rate = (max_rating - current_rating) / rate_of_change
-      year = asset.in_service_date.year + years_at_rate.to_i
+      if rate_of_change < 0.01
+        year = INFINITY.to_i
+      else
+        # determine the year that the service quality will fall below the threshold
+        years_at_rate = (max_rating - current_rating) / rate_of_change
+        year = asset.in_service_date.year + years_at_rate.to_i
+      end
     end
-      
   end  
 
   protected
@@ -71,18 +74,25 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
   # Calculates the linear deterioration in asset quality per year
   def rate_of_deterioration_per_year(max_rating, min_rating, years)
 
+    Rails.logger.debug "Max rating = #{max_rating}, min_rating = #{min_rating}, years = #{years}."
+    
     # Check the edge case where the asset is new or dates are messed up and
     # the asset is reporting negative years
     if years < 1
       return 0.0
     end
-    
+        
     # Determine the change in condition
     delta = max_rating - min_rating
-    
-    # Determine the normal rate of change in rating per year
-    delta / years
-    
+       
+    if delta < 0.1
+      # There has been no significant change so amortize the rating over the 
+      # number of years
+      0.0
+    else        
+      # Determine the normal rate of change in rating per year
+      delta / years
+    end
   end
   
 end

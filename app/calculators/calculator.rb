@@ -7,6 +7,8 @@
 
 class Calculator
   
+  INFINITY = 999999999.9
+  
   def initialize(policy)
     @policy = policy
   end
