@@ -5,8 +5,8 @@
 				<%= action_thumbnail_tag({:icon => organization.organization_type.display_icon_name, :title => organization.name, :path => organization_path(organization)}) do %>
 					<%= content_tag "p", organization.organization_type.name %>
 					<%= content_tag "address" do %>
-						<%= format_address(organization) %>
-						<abbr title="Phone">P:</abbr> <%= number_to_phone(organization.phone, :area_code => true) %>
+						<%= format_as_address(organization) %>
+						<abbr title="Phone">P:</abbr> <%= format_as_phone_number(organization.phone) %>
 					<% end %>
 				<% end %>
 			<% end %>
