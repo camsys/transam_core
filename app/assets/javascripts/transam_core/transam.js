@@ -3,6 +3,23 @@
 //
 var transam = new function() {
 
+	// Converts a table to a datatable
+	this.render_data_table = function(div_id, filter) {
+		$("#" + div_id).dataTable( {
+			"bFilter" : false,
+			"bLengthChange" : true,
+			"bProcessing" : true,
+			"sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
+			"sPaginationType": "bootstrap",
+			"oLanguage": {
+				"sLengthMenu": "_MENU_ records per page"
+			},
+			"fnDrawCallback": function( oSettings ) {
+	      		transam.install_quick_link_handlers();
+	    	}		
+		} );		
+	};
+	
 	// Draws a google char based on the chart data and chart options passed in
 	this.draw_chart = function(div_id, chart_type, chart_options, chart_data) {
 
