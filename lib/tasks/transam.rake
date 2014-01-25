@@ -1,6 +1,6 @@
 namespace :transam do
   desc "Updates the condition of every asset"
-  task update_asset_condition: :environment do
+  task update_condition: :environment do
     Asset.all.each do |a|
       a.update_condition
     end
