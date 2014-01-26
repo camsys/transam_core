@@ -11,4 +11,10 @@ namespace :transam do
       a.update_service_status
     end
   end
+  desc "Updates the estimated value of every asset"
+  task update_estimated_value: :environment do
+    Asset.all.each do |a|
+      a.update_estimated_value
+    end
+  end
 end
