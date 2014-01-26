@@ -150,6 +150,7 @@ class Asset < ActiveRecord::Base
     'estimated_condition_type_id',
     'estimated_condition_rating',
     'service_status_type_id',
+    'estimated_value',
     'disposition_type_id',
     'disposition_date'
  ]
@@ -167,6 +168,7 @@ class Asset < ActiveRecord::Base
     :policy_replacement_year,
     :estimated_replacement_year,
     :estimated_replacement_cost,
+    :estimated_value,
     :in_backlog,
     :reported_condition_type_id,
     :reported_condition_rating,
@@ -306,10 +308,21 @@ class Asset < ActiveRecord::Base
       end
     end
   end
+
+  # Forces an update of an assets estimated value. This performs an update on the record
+  def update_estimated_value(policy = nil)
+    
+    # can't do this if it is a new record as none of the IDs would be set
+    unless asset.new_record?
+      update_asset_value(policy)
+      reload
+    end
+  end
   
   # Forces an update of an assets condition. This performs an update on the record. If a policy is passed
   # that policy is used to update the asset otherwise the default policy is used
   def update_condition(policy = nil)
+    
     # can't do this if it is a new record as none of the IDs would be set
     unless new_record?
       update_asset_state(policy)
@@ -363,8 +376,7 @@ class Asset < ActiveRecord::Base
     end
   end
 
-  # This is called before each save so no errors should be generated but we need to complete as many
-  # updates as possible
+  # updates the calcuated values of an asset
   def update_asset_state(policy = nil)
     Rails.logger.info "Updating condition for asset = #{object_key}"
 
@@ -443,6 +455,33 @@ class Asset < ActiveRecord::Base
     
     # save changes to this asset
     asset.save    
+  end
+
+  # updates the estimated value of an asset
+  def update_asset_value(policy = nil)
+    Rails.logger.info "Updating estimated value for asset = #{object_key}"
+
+    # Make sure we are working with a concrete asset class
+    asset = is_typed? ? self : Asset.get_typed_asset(self)
+    
+    # Get the policy to use
+    policy = policy.nil? ? asset.policy : policy
+    
+    # exit if we can find a policy to work on
+    if policy.nil?
+      Rails.logger.warn "Can't find a policy for asset = #{object_key}"
+      return
+    end
+    
+    begin
+      # see what metric we are using to determine the service life of the asset
+      class_name = policy.depreciation_calculation_type.class_name
+      asset.estimated_value = calculate(asset, policy, class_name) 
+      # save changes to this asset
+      asset.save    
+    rescue Exception => e
+      Rails.logger.info e.message  
+    end      
   end
 
   def searchable_fields
