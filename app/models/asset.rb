@@ -313,7 +313,7 @@ class Asset < ActiveRecord::Base
   def update_estimated_value(policy = nil)
     
     # can't do this if it is a new record as none of the IDs would be set
-    unless asset.new_record?
+    unless new_record?
       update_asset_value(policy)
       reload
     end
