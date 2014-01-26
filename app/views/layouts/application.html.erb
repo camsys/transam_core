@@ -61,16 +61,10 @@
 			</div>
 			<!-- Begin page content -->
 			<div class="container-fluid">
-				<div>
-					<!-- Main Page Content -->
-					<%= render 'shared/page_header' %>
-					<%= render 'shared/messages' %>
-					<div class="row-fluid">
-						<div class="span12">
-							<%= yield %>
-						</div>
-					</div>
-				</div>
+				<!-- Main Page Content -->
+				<%= render 'shared/page_header' %>
+				<%= render 'shared/messages' %>
+				<%= yield %>
 			</div>
 
 			<div id="push"></div>
