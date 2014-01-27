@@ -1,26 +1,18 @@
-<div class="row-fluid">
-	<div class="span12">
-		<div class="navbar">
-			<div class="navbar-inner">
-				<ul class="nav">
-					<li>
-						<%= link_to :back do %> 
-						<i class="fa fa-angle-left"></i> Back
-						<% end %>
-					</li>
-					<li class="divider-vertical"></li>
-					<li class="nav">
-						<%= link_to edit_user_path(@user) do %>
-						<i class="fa fa-edit"></i> Update
-						<% end %>
-					</li>
-					<li>
-						<%= link_to edit_user_password_path do %>
-						<i class="fa fa-key"></i> Change Password
-						<% end %>
-					</li>
-				</ul>
-			</div>
-		</div>
-	</div>
-</div>
+<%= sub_nav_tag({}) do %>
+	<li>
+		<%= link_to :back do %> 
+		<i class="fa fa-angle-left"></i> Back
+		<% end %>
+	</li>
+	<li class="divider-vertical"></li>
+	<li class="nav">
+		<%= link_to edit_user_path(@user) do %>
+		<i class="fa fa-edit"></i> Update
+		<% end %>
+	</li>
+	<li>
+		<%= link_to edit_user_password_path do %>
+		<i class="fa fa-key"></i> Change Password
+		<% end %>
+	</li>
+<% end %>

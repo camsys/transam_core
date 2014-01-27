@@ -1,5 +1,5 @@
 module TransamTagHelper
-  
+    
   def loader_panel_tag(options={})
     html = "<div class='loader'><i class='fa fa-spinner fa-spin fa-2x'></div>"
     return html.html_safe     
@@ -70,7 +70,12 @@ module TransamTagHelper
     return html.html_safe     
   end
 
-  def subnav_elem_tag(&block)
+  #
+  #
+  # Sub Navigation Tag Helpers
+  #
+  #
+  def sub_nav_elem_tag(&block)
 
     content = capture(&block)
     html = "<li>"    
@@ -80,7 +85,7 @@ module TransamTagHelper
     return html.html_safe
   end
   
-  def subnav_tag(options={}, &block)
+  def sub_nav_tag(options={}, &block)
     
     # Check to see if there is any content in the block    
     content = capture(&block)

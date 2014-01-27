@@ -1,20 +1,12 @@
-<div class="row-fluid">
-	<div class="span12">
-		<div class="navbar">
-			<div class="navbar-inner">
-				<ul class="nav">
-					<li class="<%= get_nav_link_class('reports', ReportsController::SESSION_VIEW_TYPE_VAR, ReportsController::VIEW_TYPE_LIST) %>">
-						<%= link_to reports_path(:view_type => ReportsController::VIEW_TYPE_LIST) do %>
-						<i class="fa fa-th-large"></i> List View
-						<% end %>
-					</li>
-					<li class="<%= get_nav_link_class('reports', ReportsController::SESSION_VIEW_TYPE_VAR, ReportsController::VIEW_TYPE_TABLE) %>">
-						<%= link_to reports_path(:view_type => ReportsController::VIEW_TYPE_TABLE) do %>
-						<i class="fa fa-list-alt"></i> Table View
-						<% end %>
-					</li>
-				</ul>
-			</div>
-		</div>
-	</div>
-</div>
+<%= sub_nav_tag({}) do %>
+	<li class="<%= get_nav_link_class('reports', ReportsController::SESSION_VIEW_TYPE_VAR, ReportsController::VIEW_TYPE_LIST) %>">
+		<%= link_to reports_path(:view_type => ReportsController::VIEW_TYPE_LIST) do %>
+		<i class="fa fa-th-large"></i> List View
+		<% end %>
+	</li>
+	<li class="<%= get_nav_link_class('reports', ReportsController::SESSION_VIEW_TYPE_VAR, ReportsController::VIEW_TYPE_TABLE) %>">
+		<%= link_to reports_path(:view_type => ReportsController::VIEW_TYPE_TABLE) do %>
+		<i class="fa fa-list-alt"></i> Table View
+		<% end %>
+	</li>
+<% end %>

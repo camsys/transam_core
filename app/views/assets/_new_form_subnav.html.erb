@@ -1,21 +1,12 @@
-<div class="row-fluid">
-	<div class="span12">
-		<div class="navbar">
-			<div class="navbar-inner">
-				<ul class="nav">
-					<li>
-						<%= link_to :back do %>
-						<i class="fa fa-angle-left"></i> Back
-						<% end %>
-					</li>
-					<li>
-						<%= link_to inventory_index_path do %>
-						<i class="fa fa-ban-circle"></i> Cancel
-						<% end %>
-					</li>
-				</ul>
-			</div>
-
-		</div>
-	</div>
-</div>
+<%= sub_nav_tag({}) do %>
+	<li>
+		<%= link_to :back do %>
+		<i class="fa fa-angle-left"></i> Back
+		<% end %>
+	</li>
+	<li>
+		<%= link_to inventory_index_path do %>
+		<i class="fa fa-ban-circle"></i> Cancel
+		<% end %>
+	</li>
+<% end %>

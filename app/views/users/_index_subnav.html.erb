@@ -1,5 +1,5 @@
 <div row-fluid>
-	<div class="span12]">
+	<div class="span12">
 		<div class="navbar">
 			<div class="navbar-inner">
 				<ul class="nav">
@@ -19,14 +19,12 @@
 						<% end %>
 					</li>
 				</ul>
-
 				<%= form_tag users_path, :id => 'search_form', :method => "get", :class => 'navbar-form form-search pull-right' do %>
 				<div class="input-append span2">
 					<%= text_field_tag :search_text, @search_text, :class => "search-query"%>
 					<button type="submit" class="btn">Search</button>
 				</div>
 				<% end %>
-
 			</div>
 		</div>
 	</div>
