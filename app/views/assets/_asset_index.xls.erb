@@ -20,6 +20,7 @@
   <Worksheet ss:Name="Assets">
     <Table>
 		<Column ss:AutoFitWidth="1" ss:Width="82"/>
+		<Column ss:AutoFitWidth="1" ss:Width="82"/>
 		<Column ss:AutoFitWidth="1" ss:Width="46.5"/>
 		<Column ss:AutoFitWidth="1" ss:Width="70"/>
 		<Column ss:AutoFitWidth="1" ss:Width="70"/>
@@ -38,6 +39,7 @@
 		<Column ss:AutoFitWidth="1" ss:Width="81"/>
 		<Column ss:AutoFitWidth="1" ss:Width="81"/>
       <Row>
+		  <Cell><Data ss:Type="String">Asset Key</Data></Cell>
 		<Cell><Data ss:Type="String">Class</Data></Cell>
         <Cell><Data ss:Type="String">Type</Data></Cell>
         <Cell><Data ss:Type="String">Asset Tag</Data></Cell>
@@ -59,6 +61,7 @@
       </Row>
     <% @assets.each do |a| %>
       <Row>
+        <Cell><Data ss:Type="String"><%= a.object_key %></Data></Cell>
         <Cell><Data ss:Type="String"><%= a.asset_type.name %></Data></Cell>
         <Cell><Data ss:Type="String"><%= a.asset_subtype.name %></Data></Cell>
         <Cell><Data ss:Type="String"><%= a.asset_tag %></Data></Cell>
