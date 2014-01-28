@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+  xmlns:x="urn:schemas-microsoft-com:office:excel"
+  xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+  xmlns:html="http://www.w3.org/TR/REC-html40">
+ <Styles>
+  <Style ss:ID="Default" ss:Name="Normal">
+   <Alignment ss:Vertical="Bottom"/>
+   <Borders/>
+   <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#000000"/>
+   <Interior/>
+   <NumberFormat/>
+   <Protection/>
+  </Style>
+  <Style ss:ID="s62">
+   <NumberFormat ss:Format="&quot;$&quot;#,##0"/>
+  </Style>
+ </Styles>
+  <Worksheet ss:Name="Assets">
+    <Table>
+		<Column ss:AutoFitWidth="1" ss:Width="82"/>
+		<Column ss:AutoFitWidth="1" ss:Width="46.5"/>
+		<Column ss:AutoFitWidth="1" ss:Width="70"/>
+		<Column ss:AutoFitWidth="1" ss:Width="70"/>
+		
+		<Column ss:AutoFitWidth="1" ss:Width="81"/>
+		<Column ss:AutoFitWidth="1" ss:Width="81"/>
+		<Column ss:AutoFitWidth="1" ss:Width="81"/>
+		
+		<Column ss:AutoFitWidth="1" ss:Width="81"/>
+		<Column ss:AutoFitWidth="1" ss:Width="81"/>
+		<Column ss:AutoFitWidth="1" ss:Width="81"/>
+		<Column ss:AutoFitWidth="1" ss:Width="81"/>
+		
+		<Column ss:AutoFitWidth="1" ss:Width="81"/>
+		<Column ss:AutoFitWidth="1" ss:Width="81"/>
+		<Column ss:AutoFitWidth="1" ss:Width="81"/>
+		<Column ss:AutoFitWidth="1" ss:Width="81"/>
+      <Row>
+		<Cell><Data ss:Type="String">Class</Data></Cell>
+        <Cell><Data ss:Type="String">Type</Data></Cell>
+        <Cell><Data ss:Type="String">Asset Tag</Data></Cell>
+		<Cell><Data ss:Type="String">Status</Data><Cell>
+			
+        <Cell><Data ss:Type="String">Manufacturer</Data></Cell>
+        <Cell><Data ss:Type="String">Model</Data></Cell>
+        <Cell><Data ss:Type="String">Manufacture Year</Data></Cell>
+		
+        <Cell><Data ss:Type="String">Reported condition</Data></Cell>
+        <Cell><Data ss:Type="String">Reported on</Data></Cell>
+        <Cell><Data ss:Type="String">Est. rating</Data></Cell>
+        <Cell><Data ss:Type="String">Est. condition</Data></Cell>
+		
+        <Cell><Data ss:Type="String">Age</Data></Cell>
+        <Cell><Data ss:Type="String">Policy year</Data></Cell>
+        <Cell><Data ss:Type="String">Est. Year</Data></Cell>
+        <Cell><Data ss:Type="String">Est. cost</Data></Cell>
+      </Row>
+    <% @assets.each do |a| %>
+      <Row>
+        <Cell><Data ss:Type="String"><%= a.asset_type.name %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= a.asset_subtype.name %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= a.asset_tag %></Data></Cell>
+		<Cell><Data ss:Type="String"><%= a.service_status_type.nil? ? 'Unknown' : a.service_status_type.name %></Data></Cell>
+		
+        <Cell><Data ss:Type="String"><%= a.manufacturer.name %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= a.manufacturer_model  %></Data></Cell>
+        <Cell><Data ss:Type="Number"><%= a.manufacture_year %></Data></Cell>
+
+        <Cell><Data ss:Type="String"><%= a.reported_condition_type.nil? ? 'Unknown' : a.reported_condition_type.name %></Data></Cell>
+		<Cell><Data ss:Type="String"><%= format_as_date(a.reported_condition_date)  %></Data></Cell>
+		<Cell><Data ss:Type="Number"><%= format_as_decimal(a.estimated_condition_rating, 1)  %></Data></Cell>
+		<Cell><Data ss:Type="String"><%= a.estimated_condition_type.nil? ? 'Unknown' : a.estimated_condition_type.name  %></Data></Cell>
+
+        <Cell><Data ss:Type="Number"><%= a.age %></Data></Cell>
+        <Cell><Data ss:Type="Number"><%= a.policy_replacement_year %></Data></Cell>
+		<Cell><Data ss:Type="Number"><%= a.estimated_replacement_year %></Data></Cell>
+		<Cell><Data ss:Type="String"><%= format_as_currency(a.estimated_replacement_cost) %></Data></Cell>
+		
+      </Row>
+    <% end %>
+    </Table>
+  </Worksheet>
+</Workbook>
+
