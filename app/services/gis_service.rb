@@ -43,18 +43,22 @@ class GisService
     dist = GisService.convert_distance(point1.euclidean_distance(point2), @input_unit, @output_unit)
   end
   
-  # Converts a coordinate defiend as a lat,lon into a Point geometry
-  def as_point(lat, lon)
-    @geometry_factory.reset
-    @geometry_factory.begin_geometry(Point, @srid)
-    @geometry_factory.add_point_x_y(lon, lat)
-    @geometry_factory.end_geometry
-    @geometry_factory.geometry
-  end
-
   def from_wkt(wkt)
     Rails.logger.debug "WELL_KNOWN_TEXT '#{wkt}'"
     Geometry.from_ewkt(wkt)
+  end
+  
+  def search_box_from_bbox(bbox)
+    
+    elems = bbox.split(",")
+    puts elems.inspect
+    
+    minLon = elems[0].to_f
+    minLat = elems[1].to_f
+    maxLon = elems[2].to_f
+    maxLat = elems[3].to_f
+    
+    as_polygon(minLat, minLon, maxLat, maxLon)    
   end
   
   # Creates a Polygon geometry that can be used as a search box for spatial
@@ -76,6 +80,27 @@ class GisService
     maxLon = lng + delta_lon
     minLon = lng - delta_lon
 
+    as_polygon(minLat, minLon, maxLat, maxLon)    
+  end
+
+  # Converts one distance unit to another
+  def self.convert_distance(val, from_unit, to_unit)
+    val * from_unit.convert_to(to_unit).scalar.to_f
+  end
+  
+  # Converts a coordinate defined as a lat,lon into a Point geometry
+  def as_point(lat, lon)
+    Rails.logger.debug "Creating point geometry from lat = #{lat}, lon = #{lon}"
+    @geometry_factory.reset
+    @geometry_factory.begin_geometry(Point, @srid)
+    @geometry_factory.add_point_x_y(lon, lat)
+    @geometry_factory.end_geometry
+    Rails.logger.debug "Geometry = #{@geometry_factory.geometry}"
+    @geometry_factory.geometry
+  end
+  
+  def as_polygon(minlat, minLon, maxLat, maxLon)
+    Rails.logger.debug "Creating polygon geometry from (#{minlat}, {minLon}), (#{maxLat}, {maxLon})"
     @geometry_factory.reset
     @geometry_factory.begin_geometry(Polygon, @srid)
     @geometry_factory.begin_geometry(Point, @srid)
@@ -94,15 +119,12 @@ class GisService
     @geometry_factory.add_point_x_y(maxLon, minLat) # ensure that the polygon is closed
     @geometry_factory.end_geometry
     @geometry_factory.end_geometry
-    @geometry_factory.geometry
+    Rails.logger.debug "Geometry = #{@geometry_factory.geometry}"
+    @geometry_factory.geometry    
   end
 
-  # Converts one distance unit to another
-  def self.convert_distance(val, from_unit, to_unit)
-    val * from_unit.convert_to(to_unit).scalar.to_f
-  end
-  
-protected
+  protected
+   
   def rad2deg(r)
     r * RAD2DEG
   end

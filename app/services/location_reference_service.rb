@@ -109,7 +109,7 @@ protected
   
   def geocode_lrs(locref)
     Rails.logger.debug "LRS #{locref}"
-    message = "GIS LRS Service is not installed. Unable to locate refernce."
+    message = "GIS LRS Service is not installed. Unable to locate reference."
     @errors << message                
   end
 

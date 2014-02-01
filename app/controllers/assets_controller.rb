@@ -24,8 +24,11 @@ class AssetsController < AssetAwareController
     id_list = get_cached_objects(ASSET_KEY_LIST_VAR)
     redirect_to inventory_index_url(:ids => id_list)
   end
-  
+    
   # renders either a table or map view of a selected list of assets
+  #
+  # Parameters include asset_type, asset_subtype, id_list, bbox, 
+  #
   def index
     
     # remember the view type
@@ -56,6 +59,7 @@ class AssetsController < AssetAwareController
     
     respond_to do |format|
       format.html
+      format.js
       format.json { render :json => @assets }
       format.xls      
     end
@@ -299,17 +303,33 @@ class AssetsController < AssetAwareController
     # active record queries
     klass = Object.const_get class_name    
 
-    # see if we got a search to filter on
+    # Get the assets based on set of params that were included in the request
     if ! params[:search_text].blank?
       @search_text = params[:search_text].strip
       assets = klass.search_query(@organization, @search_text).order(:asset_subtype_id).limit(MAX_ROWS_RETURNED)            
     elsif @id_filter_list
-      object_keys = @id_filter_list.split(STRING_TOKENIZER)
-      assets = klass.where('organization_id = ? AND object_key in (?)', @organization.id, object_keys).order(:asset_subtype_id)           
-    elsif @asset_subtype > 0
-      assets = klass.where('organization_id = ? AND asset_subtype_id = ?', @organization.id, @asset_subtype).limit(MAX_ROWS_RETURNED)           
+      asset_keys = @id_filter_list.split(STRING_TOKENIZER)
+      assets = klass.where('organization_id = ? AND asset_key in (?)', @organization.id, asset_keys).order(:asset_subtype_id)   
     else
-      assets = klass.where('organization_id = ?', @organization.id).order(:asset_subtype_id).limit(MAX_ROWS_RETURNED) 
+      clauses = []
+      values = []
+      clauses << ['organization_id = ?']
+      values << [@organization.id]
+
+      unless @asset_subtype == 0
+        clauses << ['asset_subtype_id = ?'] 
+        values << [@asset_subtype]   
+      end
+      
+      unless params[:box].blank?
+        gis_service = GisService.new
+        search_box = gis_service.search_box_from_bbox(params[:box])
+        wkt = "#{search_box.as_wkt}"
+        clauses << ['MBRContains(GeomFromText("' + wkt + '"), geometry) = ?']
+        values << [1]
+      end
+      # send the query
+      assets = klass.where(clauses.join(' AND '), *values).order(:asset_subtype_id)
     end
     
     return assets
