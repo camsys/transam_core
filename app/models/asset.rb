@@ -118,7 +118,7 @@ class Asset < ActiveRecord::Base
   #------------------------------------------------------------------------------
   # Scopes
   #------------------------------------------------------------------------------
-  default_scope { order("asset.asset_subtype_id") }
+  default_scope { order("assets.asset_subtype_id") }
   
   #------------------------------------------------------------------------------
   # Lists. These lists are used by derived classes to make up lists of attributes
