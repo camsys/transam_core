@@ -360,6 +360,10 @@ class Asset < ActiveRecord::Base
     
   end
 
+  def searchable_fields
+    SEARCHABLE_FIELDS
+  end
+
   #------------------------------------------------------------------------------
   #
   # Protected Methods
@@ -480,10 +484,6 @@ class Asset < ActiveRecord::Base
     rescue Exception => e
       Rails.logger.info e.message  
     end      
-  end
-
-  def searchable_fields
-    SEARCHABLE_FIELDS
   end
   
   def cleansable_fields
