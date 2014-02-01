@@ -118,10 +118,8 @@ class Asset < ActiveRecord::Base
   #------------------------------------------------------------------------------
   # Scopes
   #------------------------------------------------------------------------------
-            
-  # generic search scope
-  scope :search_query, lambda {|organization, search_text| {:conditions => [Asset.get_search_query_string(Asset.new.searchable_fields), {:organization_id => organization.id, :search => search_text }]}}  
-
+  default_scope { order("asset.asset_subtype_id") }
+  
   #------------------------------------------------------------------------------
   # Lists. These lists are used by derived classes to make up lists of attributes
   # that can be used for operations like full text search etc. Each derived class
@@ -520,31 +518,6 @@ class Asset < ActiveRecord::Base
       Rails.logger.error e.message
       raise RuntimeError.new "#{class_name} calculation failed for asset #{asset.object_key} and policy #{policy.name}"
     end
-  end
-
-  # constructs a query string for a search
-  def self.get_search_query_string(searchable_fields_list)
-    
-    query_str = []
-        
-    query_str << 'organization_id = :organization_id'
-    
-    first = true
-    
-    searchable_fields_list.each do |field|
-      if first
-        first = false
-        query_str << ' AND ('
-      else
-        query_str << ' OR '
-      end
-      
-      query_str << field
-      query_str << ' LIKE :search'
-    end
-    query_str << ')' unless searchable_fields_list.empty?
-    
-    return query_str.join      
   end
 
 end

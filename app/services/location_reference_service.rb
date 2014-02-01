@@ -59,7 +59,7 @@ class LocationReferenceService
     "(#{format_coord_part(lng)},#{format_coord_part(lat)})"
   end
 
-protected
+  protected
 
   def parse_coordinate(locref)
     Rails.logger.debug "COORDINATE #{locref}"

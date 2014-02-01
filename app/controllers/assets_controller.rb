@@ -27,7 +27,7 @@ class AssetsController < AssetAwareController
     
   # renders either a table or map view of a selected list of assets
   #
-  # Parameters include asset_type, asset_subtype, id_list, bbox, 
+  # Parameters include asset_type, asset_subtype, id_list, box, or search_text 
   #
   def index
     
@@ -306,35 +306,62 @@ class AssetsController < AssetAwareController
     # Get the assets based on set of params that were included in the request
     if ! params[:search_text].blank?
       @search_text = params[:search_text].strip
-      assets = klass.search_query(@organization, @search_text).order(:asset_subtype_id).limit(MAX_ROWS_RETURNED)            
-    elsif @id_filter_list
-      asset_keys = @id_filter_list.split(STRING_TOKENIZER)
-      assets = klass.where('organization_id = ? AND asset_key in (?)', @organization.id, asset_keys).order(:asset_subtype_id)   
-    else
-      clauses = []
-      values = []
-      clauses << ['organization_id = ?']
-      values << [@organization.id]
+    end
 
-      unless @asset_subtype == 0
-        clauses << ['asset_subtype_id = ?'] 
-        values << [@asset_subtype]   
-      end
+    # here we build the query one clause at a time based on the input params
+    clauses = []
+    values = []
+    clauses << ['organization_id = ?']
+    values << [@organization.id]
+
+    unless @search_text.blank?
+      # get the list of searchable fields from the asset class
+      searchable_fields = klass.new.searchable_fields
+      # create an OR query for each field
+      query_str = []    
+      first = true
+    
+      searchable_fields.each do |field|
+        if first
+          first = false
+          query_str << '('
+        else
+          query_str << ' OR '
+        end
       
-      unless params[:box].blank?
-        gis_service = GisService.new
-        search_box = gis_service.search_box_from_bbox(params[:box])
-        wkt = "#{search_box.as_wkt}"
-        clauses << ['MBRContains(GeomFromText("' + wkt + '"), geometry) = ?']
-        values << [1]
+        query_str << field
+        query_str << ' LIKE ? '
+        # add the value in for this sub clause
+        values << @search_text
       end
-      # send the query
-      assets = klass.where(clauses.join(' AND '), *values).order(:asset_subtype_id)
+      query_str << ')' unless searchable_fields.empty?
+
+      clauses << [query_str.join] 
+    end
+
+    unless @id_filter_list.blank?
+      clauses << ['asset_key in (?)'] 
+      values << [@id_filter_list.split(STRING_TOKENIZER)]           
     end
     
+    unless @asset_subtype == 0
+      clauses << ['asset_subtype_id = ?'] 
+      values << [@asset_subtype]   
+    end
+    
+    unless params[:box].blank?
+      gis_service = GisService.new
+      search_box = gis_service.search_box_from_bbox(params[:box])
+      wkt = "#{search_box.as_wkt}"
+      clauses << ['MBRContains(GeomFromText("' + wkt + '"), geometry) = ?']
+      values << [1]
+    end
+    # send the query
+    assets = klass.where(clauses.join(' AND '), *values).order(:asset_subtype_id)
+
     return assets
   end
-  
+    
   # stores the just-created list of asset ids in the session
   def cache_assets(assets)
     list = []
@@ -377,6 +404,11 @@ class AssetsController < AssetAwareController
   #
   #------------------------------------------------------------------------------
   private
+
+  # constructs a query string for a search from a list of searchable fields provided by an asset class
+  def get_search_query_string(searchable_fields_list)
+    
+  end
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def form_params
