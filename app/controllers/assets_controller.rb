@@ -357,7 +357,7 @@ class AssetsController < AssetAwareController
       values << [1]
     end
     # send the query
-    assets = klass.where(clauses.join(' AND '), *values).order(:asset_subtype_id)
+    assets = klass.where(clauses.join(' AND '), *values)
 
     return assets
   end
