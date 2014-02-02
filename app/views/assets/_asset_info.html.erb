@@ -2,8 +2,8 @@
 	<div class="span12">
 		<ul class="thumbnails">
 			<%= panel_tag('Identification', {:icon => 'fa fa-refresh', :class => "header_part span4"}) do %>
+				<%= format_field("Owner", @asset.organization.name ) %>
 				<%= format_field("Asset Tag", @asset.asset_tag ) %>
-				<%= format_field("Class", @asset.asset_type.name ) %>
 				<%= format_field("Type", @asset.asset_subtype.name ) %>
 				<%= format_field("Status",  @asset.service_status_type.nil? ? 'Unknown' : @asset.service_status_type.name ) %>
 			<% end %>
