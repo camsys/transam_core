@@ -3,7 +3,9 @@ class SearchesController < OrganizationAwareController
   def create
 
     # Need to protect the organization id as it is passed a param
-    @searcher = AssetSearcher.new(params[:searcher].except(:organization_id))
+    @searcher = AssetSearcher.new(params[:searcher])
+    @searcher.user = current_user
+    
     # allow override of organization id
     if params[:searcher][:organization_id]
       org = current_user.organizations.find(params[:searcher][:organization_id])

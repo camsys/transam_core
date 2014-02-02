@@ -2,6 +2,9 @@
 # Abstract base searcher class for searches
 #
 class BaseSearcher
+  
+  # Every search must have a user as the searcher
+  attr_accessor :user
  
   #performs ActiveRecord-like mass assignment of attributes             
   def initialize(attributes = {})
@@ -10,6 +13,15 @@ class BaseSearcher
   
   protected
 
+  # returns a list of PKs from a collection
+  def get_id_list(coll)
+    ids = []
+    coll.each do |e|
+      ids << e.id
+    end
+    ids
+  end
+  
   # requires each attribute in the hash to be names the same as the class property
   def mass_assign(attributes)
     attributes.each do |attribute, value|
