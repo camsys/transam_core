@@ -7,10 +7,10 @@ class SearchesController < OrganizationAwareController
     @searcher.user = current_user
     
     # allow override of organization id
-    if params[:searcher][:organization_id]
-      org = current_user.organizations.find(params[:searcher][:organization_id])
-    else
+    if params[:searcher][:organization_id].blank?
       org = @organization
+    else
+      org = current_user.organizations.find(params[:searcher][:organization_id])
     end
     @searcher.organization_id = org.nil? ? @organization.id : org.id
     
