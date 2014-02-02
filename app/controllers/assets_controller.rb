@@ -340,7 +340,7 @@ class AssetsController < AssetAwareController
     end
 
     unless @id_filter_list.blank?
-      clauses << ['asset_key in (?)'] 
+      clauses << ['object_key in (?)'] 
       values << [@id_filter_list.split(STRING_TOKENIZER)]           
     end
     
