@@ -2,14 +2,22 @@ class SearchesController < OrganizationAwareController
                 
   def create
 
-    @searcher = AssetSearcher.new(params[:searcher])
-    @searcher.organization_id = @organization.id
+    # Need to protect the organization id as it is passed a param
+    @searcher = AssetSearcher.new(params[:searcher].except(:organization_id))
+    # allow override of organization id
+    if params[:searcher][:organization_id]
+      org = current_user.organizations.find(params[:searcher][:organization_id])
+    else
+      org = @organization
+    end
+    @searcher.organization_id = org.nil? ? @organization.id : org.id
     
     @page_title = 'Search Results'
     @assets = @searcher.assets
             
     respond_to do |format|
       format.html { render 'new' }
+      format.js   { render 'new' }
       format.json { render :json => @assets }
     end
     

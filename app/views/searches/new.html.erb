@@ -2,8 +2,10 @@
 
 <%= render 'search_form' %>
 
+<div id="asset_table">
 <% if @assets.count > 0 %>
 	<%= render '/assets/asset_table' %>
-<% end %>
+<% end %>	
+</div>
 
 <%= render 'shared/datatable_javascript' %>
