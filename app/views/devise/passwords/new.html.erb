@@ -1,10 +1,10 @@
 <%= dialog_tag("Forgot your password?", "fa fa-sign-in") do %>
 	<div class="row-fluid">
-		<div class="span12">
-			
-			<%= render 'shared/messages' %>
-			
-			<%= simple_form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => {:method => :post, :class => 'form-vertical' }) do |f| %>
+		<div class="span10 offset1">
+			<div class="span12">
+				<%= render 'shared/messages' %>
+			</div>
+			<%= simple_form_for(resource, :as => resource_name, :url => user_unlock_path(resource_name), :html => {:method => :post, :class => 'form-vertical' }) do |f| %>
   			  <%= f.error_notification %>
 			  <%= f.input :email, :required => true, :autofocus => true %>
 			
