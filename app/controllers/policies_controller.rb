@@ -51,6 +51,8 @@ class PoliciesController < OrganizationAwareController
 
   def edit
     
+    @page_title = "Update #{@policy.name}"
+    
   end
 
   # Copy a policy to a new policy. This could be copying from a parent agency to a member agency or
