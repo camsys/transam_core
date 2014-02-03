@@ -1,4 +1,4 @@
-<%= dialog_tag("Forgot your password?", "icon-signin") do %>
+<%= dialog_tag("Forgot your password?", "fa fa-sign-in") do %>
 	<div class="row-fluid">
 		<div class="span12">
 			
@@ -7,10 +7,14 @@
 			<%= simple_form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => {:method => :post, :class => 'form-vertical' }) do |f| %>
   			  <%= f.error_notification %>
 			  <%= f.input :email, :required => true, :autofocus => true %>
-			  <%= f.button :submit, "Send me reset password instructions", :class => 'btn-primary' %>
+			
+			  <div class="form-actions">
+			    <%= f.button :submit, "Send me reset password instructions", :class => 'btn-primary' %>
+			  </div>
+			
 			<% end %>						
 			
-		  	<%= link_to "Sign in", new_session_path(resource_name) %>
+		  	<%= link_to "Sign in", new_user_session_path(resource_name) %>
 
 		</div>
 	</div>
