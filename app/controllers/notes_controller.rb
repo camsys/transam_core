@@ -29,7 +29,9 @@ class NotesController < AssetAwareController
   end
   
   def show
-  
+
+    @page_title = "Note"
+      
     if @note.nil?
       notify_user(:alert, 'Record not found!')
       redirect_to(inventory_notes_url(@asset))
@@ -44,8 +46,6 @@ class NotesController < AssetAwareController
   end
 
   def create      
-
-    @page_title = "Upload Attachment"
 
     @note = Note.new(form_params)
     @note.asset = @asset
@@ -66,6 +66,8 @@ class NotesController < AssetAwareController
 
   def edit
 
+    @page_title = "Update Note"
+
     if @note.nil?
       notify_user(:alert, 'Record not found!')
       redirect_to(inventory_notes_url(@asset))
@@ -81,7 +83,6 @@ class NotesController < AssetAwareController
       redirect_to(inventory_notes_url(@asset))
       return            
     end
-    @page_title =@note.created_at.to_s
 
     respond_to do |format|
       if @note.update_attributes(form_params)
@@ -97,6 +98,7 @@ class NotesController < AssetAwareController
   
   def new
 
+    @page_title = "New Note"
     @note = Note.new
 
     respond_to do |format|
@@ -148,7 +150,7 @@ class NotesController < AssetAwareController
         redirect_to(inventory_url)
         return      
       end
-      redirect_to inventory_notes_url(@asset)
+      redirect_to inventory_url(@asset)
     end
   end
     
