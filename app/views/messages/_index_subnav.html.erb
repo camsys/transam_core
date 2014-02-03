@@ -3,16 +3,6 @@
 		<div class="navbar">
 			<div class="navbar-inner">
 				<ul class="nav">
-					<li class="<%= get_nav_link_class('messages', MessagesController::SESSION_VIEW_TYPE_VAR, MessagesController::VIEW_TYPE_LIST) %>">
-						<%= link_to user_messages_path(current_user, :view_type => MessagesController::VIEW_TYPE_LIST) do %>
-						<i class="fa fa-th-large"></i> List View
-						<% end %>
-					</li>
-					<li class="<%= get_nav_link_class('messages', MessagesController::SESSION_VIEW_TYPE_VAR, MessagesController::VIEW_TYPE_TABLE) %>">
-						<%= link_to user_messages_path(current_user, :view_type => MessagesController::VIEW_TYPE_TABLE) do %>
-						<i class="fa fa-list-alt"></i> Table View
-						<% end %>
-					</li>
 					<li>
 						<%= link_to new_user_message_path(current_user) do %>
 						<i class="fa fa-edit"></i> New Message

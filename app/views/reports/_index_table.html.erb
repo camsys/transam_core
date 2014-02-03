@@ -7,9 +7,9 @@
 			</thead>
 			<tbody>
 				<% @reports.each do |report| %>
-				<tr data-action-path = '<%= report_path(report[:report_id]) %>'>
-					<td><%= report[:name] %></td>
-					<td><%= report[:description] %></td>
+				<tr data-action-path = '<%= report_path(report.id) %>'>
+					<td><%= report.name %></td>
+					<td><%= report.description %></td>
 				</tr>
 				<% end %>
 			</tbody>
