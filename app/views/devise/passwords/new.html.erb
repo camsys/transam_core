@@ -1,4 +1,4 @@
-<%= dialog_tag("Forgot your password?", "fa fa-sign-in") do %>
+<%= dialog_tag("Forgot your password?", "fa fa-exclamation") do %>
 	<div class="row-fluid">
 		<div class="span10 offset1">
 			<div class="span12">
@@ -14,7 +14,7 @@
 			
 			<% end %>						
 			
-		  	<%= link_to "Sign in", new_user_session_path(resource_name) %>
+		  	<%= link_to "Sign in", new_user_session_path %>
 
 		</div>
 	</div>
