@@ -86,7 +86,8 @@ class User < ActiveRecord::Base
     :email,
     :password,
     :password_confirmation,
-    :remember_me
+    :remember_me,
+    :external_id
   ]
   
   #------------------------------------------------------------------------------

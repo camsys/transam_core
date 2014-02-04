@@ -4,8 +4,10 @@
 		<ul class="thumbnails">
 			<%= panel_tag('Corporate', {:icon => 'fa fa-book', :class => "span4 form_part"}) do %>
 				<%= f.input :name %>
+				<%= f.input :short_name %>
 				<%= f.association :organization_type %>
 				<%= f.association :district %>
+				<%= f.input :external_id, :placeholder => "External id..." %>
 			<% end %>
 			<%= panel_tag('Contact', {:icon => 'fa fa-book', :class => "span4 form_part"}) do %>
 				<%= f.input :phone, :as => :tel %>

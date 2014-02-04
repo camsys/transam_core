@@ -79,6 +79,7 @@ class Organization < ActiveRecord::Base
   FORM_PARAMS = [
     :customer_id,
     :organization_type_id,
+    :external_id,
     :license_holder,
     :name,
     :short_name,
