@@ -1,0 +1,8 @@
+<%= simple_form_for([current_user, @response]) do |f| %>
+	<%= hidden_field_tag :message_id, @message.id %>
+	<fieldset>
+		<legend>Reply</legend>
+		<%= f.text_area :body, :class => "span12", :rows => 10, :placeholder => "Enter your reply..."%>
+		<%= f.button :submit, 'Send Reply' %>
+	</fieldset>
+<% end %>

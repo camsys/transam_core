@@ -11,13 +11,6 @@
 </div>
 <div class="row-fluid">
 	<div class="span8 offset2">
-	<%= simple_form_for([current_user, @response]) do |f| %>
-	<%= hidden_field_tag :message_id, @message.id %>
-	<fieldset>
-		<legend>Response</legend>
-		<%= f.text_area :body, :class => "span12", :rows => 6, :placeholder => "Enter your reply..."%>
-		<%= f.button :submit, 'Send Reply' %>
-	</fieldset>
-	<% end %>
+		<%= render 'response_form' %>
 	</div
 </div>
