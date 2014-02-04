@@ -12,11 +12,17 @@ class ConditionType < ActiveRecord::Base
     order("rating DESC").first.rating
   end
   def self.min_rating 
-    order("rating ASC").first.rating
+    where('name <> ?', 'Unknown').order("rating ASC").first.rating
   end
   
   def self.from_rating(estimated_rating)
-    ConditionType.where("rating = ?", [[estimated_rating.ceil, 1].max, 5].min).first unless estimated_rating.nil?
+    return if estimated_rating.nil?
+    # Round the condition type to the nearest whole number
+    val = (estimated_rating + 0.5).floor
+    # bound it
+    val = [est_rat, max_rating].min
+    val = [est_rat, min_rating].max
+    ConditionType.where("rating = ?", val).first
   end
 
 end
