@@ -20,8 +20,8 @@ class ConditionType < ActiveRecord::Base
     # Round the condition type to the nearest whole number
     val = (estimated_rating + 0.5).floor
     # bound it
-    val = [est_rat, max_rating].min
-    val = [est_rat, min_rating].max
+    val = [val, max_rating].min
+    val = [val, min_rating].max
     ConditionType.where("rating = ?", val).first
   end
 
