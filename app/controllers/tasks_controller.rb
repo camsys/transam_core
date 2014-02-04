@@ -5,6 +5,31 @@ class TasksController < OrganizationAwareController
 
   SESSION_VIEW_TYPE_VAR = 'tasks_subnav_view_type'
   
+  # Ajax callback returning a list of tasks as JSON calendar events
+  def filter
+    filter_start_time = DateTime.strptime(params[:start], '%s')
+    filter_end_time   = DateTime.strptime(params[:end], '%s')
+    
+    tasks = Task.where("assigned_to_user_id = ? AND complete_by BETWEEN ? AND ?", current_user.id, filter_start_time, filter_end_time).order("complete_by")
+    events = []
+    tasks.each do |t|
+      events << {
+        :id => t.id,
+        :title => t.subject,
+        :allDay => false,
+        :start => t.complete_by,
+        :url => user_task_path(current_user, t),
+        :color => get_event_color(t)
+      }
+    end
+
+    Rails.logger.debug events.inspect
+    
+    respond_to do |format|
+      format.json { render :json => events }
+    end
+  end
+  
   def index
 
     @page_title = 'Tasks'
@@ -109,6 +134,24 @@ class TasksController < OrganizationAwareController
         format.json { render :json => @task.errors, :status => :unprocessable_entity }
       end
     end
+  end
+
+  #------------------------------------------------------------------------------
+  #
+  # Protected Methods
+  #
+  #------------------------------------------------------------------------------
+  protected
+  
+  def get_event_color(task)
+    if task.priority_type == 1
+      color = '#FF0000'
+    elsif task.priority_type == 2
+      color = '#00FF00'
+    else
+      color = '00FFFF'
+    end
+    color
   end
   
   #------------------------------------------------------------------------------

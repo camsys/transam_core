@@ -1,8 +1,25 @@
 
 <%= render 'index_subnav' %>
 
-<% if @tasks.empty? %>
-	<%= render 'empty_list' %>
-<% else %>
-	<%= render 'index_list' %>
-<% end %>
+<div id='calendar'></div>
+
+<script type="text/javascript">
+
+  var events_url = '#{filter_user_tasks_path(current_user.id)}';
+  
+  $(document).ready(function() {
+    // page is now ready, initialize the calendar...
+    $('#calendar').fullCalendar({
+      weekMode: 'variable',
+      weekends: false,
+      events: {
+        url: events_url,
+        error: function() {
+            alert('there was an error while fetching events!');
+        }
+      }      
+    });
+  });
+
+</script>
+
