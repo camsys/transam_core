@@ -10,6 +10,7 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
     
     # get the maximum (initial) rating for a new asset
     max_rating = ConditionType.max_rating
+    min_rating = ConditionType.min_rating
   
     # See if we have condition updates
     if asset.condition_updates.empty?
@@ -35,8 +36,10 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
     rate_of_change = rate_of_deterioration_per_year(max_rating, rating, years)
     
     # calculate the expected rating based on the assets age and either the expected or observed
-    # rate of cahnge
-    rating = max_rating - (rate_of_change * asset.age)
+    # rate of change
+    estimated_rating = max_rating - (rate_of_change * asset.age)
+    # return the max of the estimated rating or the minimum rating value
+    [estimated_rating, min_rating].max
           
   end
   
