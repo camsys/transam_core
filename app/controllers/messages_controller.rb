@@ -3,17 +3,56 @@ class MessagesController < OrganizationAwareController
   before_action :set_message, :only => [:show, :edit, :update, :destroy]  
   before_filter :check_for_cancel, :only => [:create] 
 
-  SESSION_VIEW_TYPE_VAR = 'messages_subnav_view_type'
+  # Enumerables for message filters
+  MESSAGE_TYPE_NEW    = 1 
+  MESSAGE_TYPE_OLD    = 2
+  MESSAGE_TYPE_SENT   = 3
+    
+  SESSION_FILTER_TYPE_VAR = 'messages_filter_type'
     
   def index
 
-    @page_title = 'Messages'
-    # Select messages for this user or ones that are for the agency as a whole
-    @messages = Message.where("organization_id = ? AND thread_message_id IS NULL AND (to_user_id IS NULL OR to_user_id = ?)", @organization.id, current_user.id).order("created_at DESC")
+    # Get the filter
+    @filter = get_filter_type(SESSION_FILTER_TYPE_VAR)
+    puts @filter
     
-    # remember the view type
-    @view_type = get_view_type(SESSION_VIEW_TYPE_VAR)
-
+    # Start to set up the query
+    conditions  = []
+    values      = []
+    # every query is bounded by the user's organization
+    conditions << 'organization_id = ?'
+    values << @organization.id
+    
+    if @filter == MESSAGE_TYPE_NEW
+      @page_title = 'New Messages'
+      # New messages must be for the current user
+      conditions << 'to_user_id = ?'
+      values << current_user.id
+      # ad not have been previously opened
+      conditions << 'opened_at IS NULL'
+      
+    elsif @filter == MESSAGE_TYPE_SENT
+      
+      @page_title = 'New Messages'
+      # New messages must be from the current user    
+      conditions << 'user_id = ?'
+      values << current_user.id
+ 
+    else
+      # Already read messages
+      @page_title = 'Messages'            
+      # All others must be for the current user
+      conditions << 'to_user_id = ?'
+      values << current_user.id
+      # and have been previously opened
+      conditions << 'opened_at IS NOT NULL'
+    end    
+ 
+    # Get the messages
+    @messages = Message.where(conditions.join(' AND '), *values).order("created_at DESC")
+    
+    puts "Filter Val = '#{session[SESSION_FILTER_TYPE_VAR]}'"
+    
     respond_to do |format|
       format.html # index.html.erb
       format.json { render :json => @messages }
@@ -37,7 +76,14 @@ class MessagesController < OrganizationAwareController
  
     @page_title = 'Message'
     
+    # Mark this message as opened if not opened previously
+    if @message.opened_at.nil?
+      @message.opened_at = Time.now
+      @message.save
+    end
+        
     respond_to do |format|
+      format.js # show.html.erb
       format.html # show.html.erb
       format.json { render :json => @message }
     end
@@ -92,6 +138,18 @@ class MessagesController < OrganizationAwareController
   #
   #------------------------------------------------------------------------------
   private
+
+  # returns the fitler type for the current controller and sets the session variable
+  # to store any change in fitler type for the controller
+  def get_filter_type(session_var)
+    filter_type = params[:filter].nil? ? session[session_var].to_i : params[:filter].to_i
+    if filter_type.nil?
+      filter_type = MESSAGE_TYPE_NEW
+    end
+    # remember the view type in the session
+    session[session_var] = filter_type   
+    return filter_type 
+  end
 
   def check_for_cancel 
     unless params[:cancel].blank?

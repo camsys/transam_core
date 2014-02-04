@@ -2,4 +2,15 @@
 
 <%= render(:partial => 'shared/form_errors', :locals => {:obj => @message}) unless @message.errors.empty? %>	
 
-<%= render 'form' %>
+<div class="row-fluid">
+	<div class="span3">
+		<%= render 'sidebar' %>
+	</div>
+	<div class="span9">
+		<div class="row-fluid">
+			<div class="span12">
+				<%= render 'form' %>
+			</div>
+		</div>
+	</div>
+</div>

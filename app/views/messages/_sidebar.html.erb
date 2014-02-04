@@ -1,0 +1,11 @@
+<ul class="nav nav-pills nav-stacked">
+  <li class="<%= get_nav_link_class('messages', MessagesController::SESSION_FILTER_TYPE_VAR, MessagesController::MESSAGE_TYPE_NEW) %>">
+  	<%= link_to "New Messages", user_messages_path(current_user, :filter => MessagesController::MESSAGE_TYPE_NEW) %>
+  </li>
+  <li class="<%= get_nav_link_class('messages', MessagesController::SESSION_FILTER_TYPE_VAR, MessagesController::MESSAGE_TYPE_OLD) %>">
+  	<%= link_to "Inbox", user_messages_path(current_user, :filter => MessagesController::MESSAGE_TYPE_OLD) %>
+  </li>
+  <li class="<%= get_nav_link_class('messages', MessagesController::SESSION_FILTER_TYPE_VAR, MessagesController::MESSAGE_TYPE_SENT) %>">
+  	<%= link_to "Sent", user_messages_path(current_user, :filter => MessagesController::MESSAGE_TYPE_SENT) %>
+  </li>
+</ul>

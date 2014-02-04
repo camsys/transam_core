@@ -1,0 +1,5 @@
+<% if @message.nil? %>
+	$('#message_panel').html("<p>Nothing found.</p>");
+<% else %>
+	$('#message_panel').html("<%= escape_javascript(render 'message') %>");
+<% end %>	
