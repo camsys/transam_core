@@ -5,7 +5,7 @@
 
 <script type="text/javascript">
 
-  var events_url = '#{filter_user_tasks_path(current_user.id)}';
+  var events_url = '<%= filter_user_tasks_path(current_user.id) %>';
   
   $(document).ready(function() {
     // page is now ready, initialize the calendar...
