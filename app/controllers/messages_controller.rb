@@ -116,7 +116,7 @@ class MessagesController < OrganizationAwareController
       @message.priority_type_id = parent_message.priority_type_id
       @message.subject = 'Re: ' + parent_message.subject
       @message.to_user_id = parent_message.to_user_id.nil? ? nil : parent_message.user_id
-      @message.thread = parent_message
+      #@message.thread = parent_message
       parent_message.responses << @message
     end
 

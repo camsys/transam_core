@@ -28,8 +28,6 @@ class Message < ActiveRecord::Base
   belongs_to :user
   belongs_to :to_user, :class_name => 'User', :foreign_key => "to_user_id"
   belongs_to :priority_type
-  belongs_to :thread, :class_name => "Message", :foreign_key => "id"
-
   has_many   :responses, :class_name => "Message", :foreign_key => "thread_message_id"
   
   # Validations on core attributes
