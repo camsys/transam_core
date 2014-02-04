@@ -24,7 +24,6 @@
 
 	function load_message(elem) {
 		var url = $(elem).data('url');
-		alert('Message clicked url = ' + url);
     	transam.load_ajax_panel('message_panel', url, "get", "<%= raw loader_panel_tag() %>");
 	}
 </script>
