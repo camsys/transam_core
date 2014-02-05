@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>TransAM Message from <%= @message.user.name %></h1>
+    <p>
+      The following message was sent to you via TransAM>.<br/>
+    </p>
+    <p>
+    	<%= @message.body.html_safe %>
+    </p>
+    <p>You can check the message by clicking on the link below or copying it into a browser.</p>
+    <p><%= user_message_path(@message.to_user, @message) %>.</p>
+    <p><br/><br/</p>
+    <p>Do not reply to this message as it is generated from TransAM.</p>
+  </body>
+</html>

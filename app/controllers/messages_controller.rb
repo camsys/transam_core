@@ -127,6 +127,11 @@ class MessagesController < OrganizationAwareController
     respond_to do |format|
       if @message.save
         notify_user(:notice, "Message was successfully sent.")
+        # See if the user wants to be notified by email
+        if @message.to_user.notify_via_email
+          # create a job and place it on the queue
+          Delayed::Job.enqueue SendMessageAsEmailJob.new(@message.object_key), :priority => 0
+        end
         format.html { redirect_to user_messages_url(current_user) }
         format.json { render :json => @message, :status => :created }
       else
