@@ -10,7 +10,7 @@
 			</thead>
 			<tbody>
 				<% @messages.each do |m| %>
-					<%= content_tag "tr", :data => {:action_path => user_messages_path(current_user, :msg => m) } do %>
+					<%= content_tag "tr", :data => {:action_path => user_messages_path(current_user, :filter => MessagesController::MESSAGE_TYPE_NEW, :msg => m) } do %>
 						<td class="left"><%= m.priority_type.name %></td>
 						<td class="left"><%= m.subject %></td>
 						<td class="left"><%= m.user.name %></td>
