@@ -214,7 +214,7 @@ class AssetsController < AssetAwareController
     end
   end
       
-  # called when the user wants to delete a trip
+  # called when the user wants to delete an asset
   def destroy
 
     # make sure we can find the asset we are supposed to be removing and that it belongs to us. 
@@ -226,7 +226,7 @@ class AssetsController < AssetAwareController
     # remove any child objects
     @asset.attachments.each { |x| x.destroy }
     @asset.asset_events.each { |x| x.destroy }
-
+    @asset.notes.each {|x| x.destroy }
     @asset.destroy
     
     notify_user(:notice, "Asset was successfully removed.")
