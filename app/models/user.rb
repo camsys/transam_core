@@ -64,6 +64,8 @@ class User < ActiveRecord::Base
 
   validates :email, :format => { :with => /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/, :message => "email address is not valid" }
 
+  # default scope
+  default_scope { where(:active => true) }
   
   # search scope
   scope :search_query, lambda {|organization, search_text| {:conditions => [User.get_search_query_string(SEARCHABLE_FIELDS), {organization_id => organization.id, :search => search_text }]}}  
