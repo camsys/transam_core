@@ -98,7 +98,7 @@ class MessagesController < OrganizationAwareController
     @message.user = current_user
     @message.priority_type = PriorityType.default
 
-    @message.to_user = User.find(params[:to_user]) unless params[:to_user].nil?
+    @message.to_user = User.find_by_object_key(params[:to_user]) unless params[:to_user].nil?
     @message.subject = params[:subject] unless params[:subject].nil?
     @message.body    = params[:body] unless params[:body].nil?
 
