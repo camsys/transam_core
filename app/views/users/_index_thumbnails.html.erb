@@ -7,6 +7,9 @@
 						Phone: <%= number_to_phone(user.phone, :area_code => true) %><br/>
 						Email: <%= user.email %>
 					<% end %>
+					<%= link_to new_user_message_path(user, :to_user => user) do %>
+					<i class="fa fa-envelope-o"></i> Send message
+					<% end %>					
 				<% end %>
 			<% end %>
 		</ul>

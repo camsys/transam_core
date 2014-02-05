@@ -18,7 +18,7 @@ class SessionsController < Devise::SessionsController
   # POST /resource/sign_in
   def create
     super
-    ::Rails.logger.info "\n***\nSuccessful login with email : #{request.filtered_parameters["email"]}\n***\n"
+    ::Rails.logger.info "Successful login with email : #{request.filtered_parameters["email"]}\n"
   end
 
   protected
@@ -32,7 +32,7 @@ class SessionsController < Devise::SessionsController
   private
   
   def log_failed_login
-    ::Rails.logger.info "\n***\nFailed login with email : #{request.filtered_parameters["email"]}\n***\n" if failed_login?
+    ::Rails.logger.info "Failed login with email : #{request.filtered_parameters["email"]}\n" if failed_login?
   end 
 
   def failed_login?
@@ -40,7 +40,7 @@ class SessionsController < Devise::SessionsController
   end 
   
   def log_logout
-     ::Rails.logger.info "*** Logging out : #{current_user.email} ***\n"  
+     ::Rails.logger.info "Logging out : #{current_user.email}\n"  
   end
     
 end

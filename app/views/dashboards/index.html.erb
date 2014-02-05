@@ -32,7 +32,7 @@
 				<% end %>
 			<% end %>
 
-			<%= dialog_tag("Messages", "fa fa-envelope", "New Message", new_user_message_path(current_user)) do %>
+			<%= dialog_tag("New Messages", "fa fa-envelope", "New Message", new_user_message_path(current_user)) do %>
 				<% if @messages.empty? %>
 					<%= render 'messages/empty_list' %>
 				<% else %>

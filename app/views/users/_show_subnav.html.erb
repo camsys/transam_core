@@ -8,11 +8,16 @@
 	<li class="nav">
 		<%= link_to edit_user_path(@user) do %>
 		<i class="fa fa-edit"></i> Update
-		<% end %>
+		<% end if current_user.can_edit?(@user) %>
 	</li>
 	<li>
 		<%= link_to edit_user_password_path do %>
 		<i class="fa fa-key"></i> Change Password
-		<% end %>
+		<% end if current_user.can_edit?(@user) %>
 	</li>
+	<li>
+		<%= link_to new_user_message_path(@user, :to_user => @user) do %>
+		<i class="fa fa-envelope-o"></i> Send message
+		<% end %>
+	</li>	
 <% end %>

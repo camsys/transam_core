@@ -16,7 +16,7 @@
 					<li>
 						<%= link_to new_user_path do %>
 						<i class="fa fa-plus"></i> Add User
-						<% end %>
+						<% end if current_user.can_add_user? %>
 					</li>
 				</ul>
 				<%= form_tag users_path, :id => 'search_form', :method => "get", :class => 'navbar-form form-search pull-right' do %>
