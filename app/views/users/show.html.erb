@@ -8,6 +8,7 @@
 				<%= format_field("e-mail", @user.email ) %>
 				<%= format_field("Primary phone", format_as_phone_number(@user.phone) ) %>
 				<%= format_field("Timezone", @user.timezone ) %>
+				<%= format_field("Send Emails", @user.notify_via_email ) %>
 			<% end %>
 			<%= panel_tag('Organization', {:icon => 'fa fa-building-o', :class => "span4 form_part"}) do %>
 				<%= format_field("Company", link_to(@organization.name, organization_path(@organization)) ) %>						

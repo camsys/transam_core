@@ -86,10 +86,12 @@ class User < ActiveRecord::Base
     :phone,
     :timezone,
     :email,
+    :notify_via_email,
     :password,
     :password_confirmation,
     :remember_me,
-    :external_id
+    :external_id,
+    :active
   ]
   
   #------------------------------------------------------------------------------
