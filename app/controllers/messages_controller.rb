@@ -98,6 +98,10 @@ class MessagesController < OrganizationAwareController
     @message.user = current_user
     @message.priority_type = PriorityType.default
 
+    @message.to_user = User.find(params[:to_user]) unless params[:to_user].nil?
+    @message.subject = params[:subject] unless params[:subject].nil?
+    @message.body    = params[:body] unless params[:body].nil?
+
     respond_to do |format|
       format.html # new.html.erb
       format.json { render :json => @message }
