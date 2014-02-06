@@ -13,7 +13,7 @@
 			<%= panel_tag('Settings', {:icon => 'fa fa-cog', :class => "span4 form_part"}) do %>
 				<%= f.input :timezone, :as => :time_zone, priority: /US/, :prompt => "Select timezone..." %>
 				<%= f.input :external_id, :placeholder => "External id..." %>
-				<%= f.input :notify_via_email, :as => :checkboxes %>
+				<%= f.input :notify_via_email %>
 			<% end %>
 		</ul>
 		<% if ! @disabled %>

@@ -2,14 +2,14 @@
 	<%= simple_form_for(@organization, :html => {:class => 'form-vertical span12' }, :defaults => {:disabled => @disabled }) do |f| %>
 	<div class="row-fluid">
 		<ul class="thumbnails">
-			<%= panel_tag('Corporate', {:icon => 'fa fa-book', :class => "span4 form_part"}) do %>
+			<%= panel_tag('Corporate', {:icon => 'fa fa-book', :class => "span6 form_part"}) do %>
 				<%= f.input :name %>
 				<%= f.input :short_name %>
 				<%= f.association :organization_type %>
 				<%= f.association :district %>
 				<%= f.input :external_id, :placeholder => "External id..." %>
 			<% end %>
-			<%= panel_tag('Contact', {:icon => 'fa fa-book', :class => "span4 form_part"}) do %>
+			<%= panel_tag('Contact', {:icon => 'fa fa-book', :class => "span6 form_part"}) do %>
 				<%= f.input :phone, :as => :tel %>
 				<%= f.input :fax, :as => :tel %>
 				<%= f.input :address1 %>
@@ -18,9 +18,6 @@
 				<%= f.input :state %>
 				<%= f.input :zip %>				
 				<%= f.input :url, :as => :url %>
-			<% end %>
-			<%= panel_tag('Services', {:icon => 'fa fa-book', :class => "span4 form_part"}) do %>
-				<%= f.association :interest_rate %>
 			<% end %>
 		</ul>
 	</div>
