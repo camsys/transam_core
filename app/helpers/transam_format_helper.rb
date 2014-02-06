@@ -37,10 +37,18 @@ module TransamFormatHelper
     html.html_safe
   end    
 
-  # formats a boolean field 
+  # formats a boolean field using a check if the value is true
   def format_as_boolean(val)
     if val
       return "<i class='fa fa-check fa-fw'></i>".html_safe
+    end
+  end
+  # formats a boolean field as Yes or No
+  def format_as_yes_no(val)
+    if val
+      return "Yes"
+    else
+      return "No"
     end
   end
         

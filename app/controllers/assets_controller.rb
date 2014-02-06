@@ -227,6 +227,7 @@ class AssetsController < AssetAwareController
     @asset.attachments.each { |x| x.destroy }
     @asset.asset_events.each { |x| x.destroy }
     @asset.notes.each {|x| x.destroy }
+    
     @asset.destroy
     
     notify_user(:notice, "Asset was successfully removed.")
