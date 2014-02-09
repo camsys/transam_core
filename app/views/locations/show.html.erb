@@ -1,0 +1,16 @@
+<%= render 'subnav' %>
+
+<div class="row-fluid">
+	<div class="span12">
+		<ul class="thumbnails">
+			<%= panel_tag('Details', {:icon => 'fa fa-book', :class => "span6 header_part"}) do %>
+				<%= format_field("Name", @location.name ) %>
+				<%= format_field("Type", @location.location_type ) %>
+			<% end %>
+			<%= panel_tag('Address', {:icon => 'fa fa-usd', :class => "span6 header_part"}) do %>
+				<%= format_field("Address", format_as_address(@location.full) ) %>
+			<% end %>
+		</ul>
+	</div>
+</div>
+<%= render 'scripts' %>

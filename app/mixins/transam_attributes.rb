@@ -44,5 +44,9 @@ module TransamAttributes
   def user_allowable_params
     User.allowable_params
   end
+
+  def location_allowable_params
+    Location.allowable_params
+  end
   
 end

@@ -1,0 +1,25 @@
+<div class="row-fluid">
+	<%= simple_form_for(@location, :html => {:class => 'form-vertical span12' }, :defaults => {:disabled => @disabled }) do |f| %>
+	<div class="row-fluid">
+		<ul class="thumbnails">
+			<%= panel_tag('Location', {:icon => 'fa fa-book', :class => "span6 form_part"}) do %>
+				<%= f.input :name %>
+				<%= f.association :location_type %>
+			<% end %>
+			<%= panel_tag('Address', {:icon => 'fa fa-book', :class => "span6 form_part"}) do %>
+				<%= f.input :address1 %>
+				<%= f.input :address2 %>
+				<%= f.input :city %>
+				<%= f.input :state %>
+				<%= f.input :zip %>				
+			<% end %>
+		</ul>
+	</div>
+	<% if ! @disabled %>
+	<div class="form-actions">
+		<%= f.button :submit %>
+		<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn" %>
+	</div>
+	<% end %>
+	<% end %>
+</div>

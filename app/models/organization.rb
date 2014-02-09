@@ -44,6 +44,9 @@ class Organization < ActiveRecord::Base
     
   # Every organization can have messages
   has_many :messages
+
+  # Every organization can have a set of locations
+  has_many :locations
       
   # Validations for associations  
   validates :customer_id,           :presence => true
