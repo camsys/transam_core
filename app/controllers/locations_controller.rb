@@ -1,6 +1,9 @@
 class LocationsController < OrganizationAwareController
   before_action :set_location, only: [:show, :edit, :update, :destroy]
 
+  # include the transam markers mixin
+  include TransamMapMarkers
+
   SESSION_VIEW_TYPE_VAR = 'locations_subnav_view_type'
 
   # GET /locations
@@ -8,10 +11,15 @@ class LocationsController < OrganizationAwareController
   def index
     
     @page_title = 'Locations'
-    @locations = @organization.locations
+    @locations = @organization.`locations
 
     # remember the view type
     @view_type = get_view_type(SESSION_VIEW_TYPE_VAR)
+
+    # If we are building a map, make sure we get the map artifacts
+    if @view_type == VIEW_TYPE_MAP
+      @markers = generate_map_markers(@locations)
+    end
     
     respond_to do |format|
       format.html # index.html.erb
@@ -125,7 +133,28 @@ class LocationsController < OrganizationAwareController
       format.json { head :no_content }
     end
   end
+  #------------------------------------------------------------------------------
+  #
+  # Protected Methods
+  #
+  #------------------------------------------------------------------------------
+  protected
+    #
+    # generate an array of map markers for use with the leaflet plugin
+    #
+    def generate_map_markers(locations_array, render_open = false)
+      objs = []
+      locations_array.each do |loc|
+        objs << get_location_marker(loc, render_open) unless loc.latitude.nil?
+      end
+      return objs.to_json    
+    end
 
+  #------------------------------------------------------------------------------
+  #
+  # Private Methods
+  #
+  #------------------------------------------------------------------------------
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_location

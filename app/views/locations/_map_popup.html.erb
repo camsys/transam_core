@@ -1,0 +1,10 @@
+<div data-action-path = '<%= location_path(location) %>' %>
+	<div class="well well-small">
+		<div class="caption">
+			<i class="fa fa-building-o fa-3x pull-left"></i> <h4><%= location.name %></h4>
+		</div>
+		<%= content_tag "address" do %>
+			<%= format_as_address(location) %>
+		<% end %>
+	</div>    	
+</div>

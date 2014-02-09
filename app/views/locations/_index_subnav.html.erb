@@ -4,9 +4,14 @@
 		<i class="fa fa-th-large"></i> List View
 		<% end %>
 	</li>
-	<li class="<%= get_nav_link_class('organizations', LocationsController::SESSION_VIEW_TYPE_VAR, LocationsController::VIEW_TYPE_TABLE) %>">
+	<li class="<%= get_nav_link_class('locations', LocationsController::SESSION_VIEW_TYPE_VAR, LocationsController::VIEW_TYPE_TABLE) %>">
 		<%= link_to locations_path(:view_type => LocationsController::VIEW_TYPE_TABLE) do %>
 		<i class="fa fa-list-alt"></i> Table View
+		<% end %>
+	</li>
+	<li class="<%= get_nav_link_class('locations', LocationsController::SESSION_VIEW_TYPE_VAR, LocationsController::VIEW_TYPE_MAP) %>">
+		<%= link_to locations_path(:view_type => LocationsController::VIEW_TYPE_MAP) do %>
+		<i class="fa fa-globe"></i> Map View
 		<% end %>
 	</li>
 	<li>
