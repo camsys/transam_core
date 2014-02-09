@@ -11,7 +11,7 @@ class LocationsController < OrganizationAwareController
   def index
     
     @page_title = 'Locations'
-    @locations = @organization.`locations
+    @locations = @organization.locations
 
     # remember the view type
     @view_type = get_view_type(SESSION_VIEW_TYPE_VAR)
