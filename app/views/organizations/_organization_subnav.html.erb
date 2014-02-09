@@ -5,11 +5,16 @@
 	</li>
 	<li>
 		<%= link_to users_path do %>
-		<i class="fa fa-group"></i> Users
+		<i class="fa fa-group"></i> <%= "Users (#{@organization.users.count})"%>
 		<% end %>
 	</li>
 	<li>
-		<%= link_to map_organization_path(current_user.organization) do %>
+		<%= link_to locations_path do %>
+		<i class="fa fa-flag-o"></i> <%= "Locations (#{@organization.locations.count})"%>
+		<% end %>
+	</li>
+	<li>
+		<%= link_to map_organization_path(@organization) do %>
 		<i class="fa fa-globe"></i> Map
 		<% end %>
 	</li>
