@@ -1,6 +1,8 @@
 class LocationsController < OrganizationAwareController
   before_action :set_location, only: [:show, :edit, :update, :destroy]
 
+  SESSION_VIEW_TYPE_VAR = 'locations_subnav_view_type'
+
   # GET /locations
   # GET /locations.json
   def index
