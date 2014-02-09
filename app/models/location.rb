@@ -1,5 +1,22 @@
 class Location < ActiveRecord::Base
             
+  # Include the unique key mixin
+  include UniqueKey
+  #------------------------------------------------------------------------------
+  # Overrides
+  #------------------------------------------------------------------------------
+  
+  #require rails to use the key as the restful parameter. All URLS will be of the form
+  # /location/{object_key}/...
+  def to_param
+    object_key
+  end
+
+  # Always generate a unique asset key before saving to the database
+  before_validation(:on => :create) do
+    generate_unique_key(:object_key)
+  end
+            
   # Associations
   belongs_to  :location_type
   belongs_to  :organization
@@ -9,6 +26,7 @@ class Location < ActiveRecord::Base
   geocoded_by       :full_address
   after_validation  :geocode  
       
+  validates :object_key,            :presence => true, :uniqueness => true
   validates :name,                  :presence => true
   validates :location_type_id,      :presence => true
   validates :address1,              :presence => true
@@ -21,6 +39,7 @@ class Location < ActiveRecord::Base
 
   # List of allowable form param hash keys  
   FORM_PARAMS = [
+    :object_key,
     :location_type_id,
     :organization_id,
     :name,
