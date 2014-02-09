@@ -1,25 +1,8 @@
-<h1>Listing locations</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
+<%= render 'index_subnav' %>
 
-  <tbody>
-    <% @locations.each do |location| %>
-      <tr>
-        <td><%= link_to 'Show', location %></td>
-        <td><%= link_to 'Edit', edit_location_path(location) %></td>
-        <td><%= link_to 'Destroy', location, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Location', new_location_path %>
+<% if @view_type == LoactionsController::VIEW_TYPE_TABLE %>
+	<%= render 'index_table' %>
+<% else %>
+	<%= render 'index_thumbnails' %>
+<% end %>

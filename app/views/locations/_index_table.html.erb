@@ -1,0 +1,24 @@
+<div class="row-fluid">
+	<div class="span12">
+		<table class="table table-condensed table-striped table-hover table-bordered">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Type</th>
+					<th>Address</th>
+					<th>Num Assets</th>
+				</tr>
+			</thead>
+			<tbody>
+				<% @locations.each do |loc| %>
+				<tr data-action-path = '<%= location_path(loc) %>'>
+					<td><%= loc.name %></td>
+					<td><%= loc.location_type %></td>
+					<td><%= format_as_address(loc) %></td>
+					<td><%= loc.assets.count %></td>
+				</tr>
+				<% end %>
+			</tbody>
+		</table>
+	</div>
+</div>
