@@ -1,10 +1,30 @@
 class UsersController < OrganizationAwareController
 
-  before_action :set_user, :only => [:show, :edit, :update, :destroy]  
+  before_action :set_user, :only => [:show, :edit, :update, :destroy, :set_current_org]  
   before_filter :check_for_cancel, :only => [:create, :update, :change_password]
   
   SESSION_VIEW_TYPE_VAR = 'users_subnav_view_type'
   
+  # User has selected an alternative org to view. This method sets a session variable
+  # which is used by OrganizationAwareController to set the @organization variable
+  # for subsequent views.
+  def set_current_org
+    org = @user.organizations.find_by_short_name(params[:orgs][:org_id])
+    if org.nil?
+      notify_user(:alert, "Record not found!")
+      redirect_to :back
+      return      
+    end
+    # Set the user's selected org
+    set_selected_organization(org)
+    
+    notify_user(:notice, "You are now viewing #{org.name}")
+    # send the user back to the view they were looking at. This might
+    # cause another redirect if the view is not associated with the 
+    # newly selected organization
+    redirect_to :back
+    
+  end
   # GET /users
   # GET /users.json
   def index

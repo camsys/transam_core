@@ -11,12 +11,24 @@
 
 		// Enable any date pickers etc
 		transam.enable_date_pickers();
-	
+		
+		// Enable the multiselect
+		$('.multiselect').multiselect({
+			onChange: function(element, checked) {
+      			$('#set_org_form').submit();
+      		},
+      		buttonClass: 'btn btn-inverse btn-large',
+      		maxHeight: 600,
+      		//buttonWidth: '300px',
+      		dropRight: true,
+      		enableFiltering: true
+		});
+				
 		// Check for any message divs and fade them out
 		elem = $('#message');
 		if (elem) {
 			elem.fadeOut(5000);
 		}	
 	});
-		  		
+  		
 </script>

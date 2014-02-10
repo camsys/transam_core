@@ -10,17 +10,32 @@ class OrganizationAwareController < TransamController
   # always use typed organizations for this controller
   RENDER_TYPED_ORGANIZATIONS = true
           
+  USER_SELECTED_ORGANIZATION = "user_selected_org_session_var"
+          
   protected
+
 
   def render_typed_organizations
     RENDER_TYPED_ORGANIZATIONS
+  end
+
+  # Set the session varibale with the newly selected organization
+  def set_selected_organization(org)
+    session[USER_SELECTED_ORGANIZATION] = org.short_name
   end
 
   # Sets the @organization class variable. 
   def get_organization
 
     if current_user
-      org = current_user.organization
+      # Check to see if the session org variable was set. If it is then we use the
+      # selected org
+      if session[USER_SELECTED_ORGANIZATION].nil?
+        org = current_user.organization
+      else
+        # not session variable so get the user's default organizations
+        org = Organization.find_by_short_name(session[USER_SELECTED_ORGANIZATION])
+      end
       if render_typed_organizations
         @organization = get_typed_organization(org)
       else
