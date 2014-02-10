@@ -2,7 +2,7 @@
 <%= render 'index_subnav' %>
 
 <% if @view_type == LocationsController::VIEW_TYPE_TABLE %>
-	<%= render 'index_list' %>
+	<%= render 'index_table' %>
 <% elsif @view_type == LocationsController::VIEW_TYPE_MAP %>
 	<%= render 'index_map' %>
 <% else %>

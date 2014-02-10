@@ -2,7 +2,7 @@
 	<div class="span12">
 		<ul class="thumbnails">
 			<% @locations.each do |loc| %>
-				<%= action_thumbnail_tag({:class => 'span3', :icon => "fa fa-book", :title => loc.name, :path => location_path(loc)}) do %>
+				<%= action_thumbnail_tag({:class => 'span3', :icon => "fa fa-map-marker", :title => loc.name, :path => location_path(loc)}) do %>
 					<%= content_tag "address" do %>
 						<%= format_as_address(loc) %>
 					<% end %>
