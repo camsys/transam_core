@@ -6,7 +6,7 @@ var transam = new function() {
 	// Converts a table to a datatable
 	this.render_data_table = function(div_id, filter) {
 		$("#" + div_id).dataTable( {
-			"bFilter" : false,
+			"bFilter" : filter,
 			"bLengthChange" : true,
 			"bProcessing" : true,
 			"sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
