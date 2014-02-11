@@ -1,25 +1,43 @@
 <div class="row-fluid">
-	<div class="span8">
+	<div class="span7">
 		<%= LeafletMap({ :mapid => 'lmap', :markers => @markers, :tile_provider => 'CLOUDMADE', :min_zoom => 3, :max_zoom => 15, :class => "thumbnail first_in_row", :style => "height:500px;margin-left:0;" }) %>
 	</div>
-	<div class="span4">
+	
+	<div class="span5">
 		<fieldset>
-			<legend>
-				Organizations
-			</legend>
-			<ul id="markers_list" class="nav nav-list">
-				<% @organizations.each do |org| %>
-				<li>
-					<a href='#' onclick="selectMarkerById('<%= org.id %>')"><%= org.name %></a>
-				</li>
-				<% end %>
-			</ul>
+			<legend>Organizations</legend>
+			<table id="datatable" class="table table-condensed table-striped table-hover">
+				<thead>
+	    			<tr>
+			            <th class="center">Name</th>
+			            <th class="center">Type</th>
+			            <th class="center">Address</th>
+			            <th class="center">Phone</th>
+			        </tr>
+				</thead>
+			    <tbody class="searchable">
+					<% @organizations.each do |org| %>
+			        <tr onclick="selectMarkerById('<%= org.id %>')">
+			            <td class="left"><%= org.name %></td>
+						<td class="left"><%= org.organization_type.name %></td>
+			            <td class="left nowrap"><%= format_as_address(org) %></td>
+			            <td class="right nowrap"><%= format_as_phone_number(org.phone) %></td>
+			        </tr>
+			        <% end %>
+			    </tbody>
+			</table>
 		</fieldset>
 	</div>
 </div>
-<%= yield :scripts %>
+
 
 <script type="text/javascript" charset="utf-8">
+
+	/* Table initialisation */
+	$(document).ready(function() {
+		transam.render_data_table("datatable", true);
+	} );
+
   // Install a hover event handler for orgs. When hovering,
   // the map icon is panned to and the popup shown
   $('.place-select').hover(function() {
@@ -28,3 +46,5 @@
   });
 
 </script>
+
+<%= yield :scripts %>

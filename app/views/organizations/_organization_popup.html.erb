@@ -4,7 +4,10 @@
 			<i class="fa fa-building-o fa-3x pull-left"></i> <h4><%= organization.name %></h4>
 		</div>
 		<%= content_tag "address" do %>
-			<%= format_as_address(organization) %>
+			<%= organization.address1 %>
+			<br/>
+			<%= "#{organization.city}, #{organization.state} #{organization.zip}" %>
+			<br/>
 			<%= format_as_phone_number(organization.phone) %>
 		<% end %>
 	</div>    	

@@ -4,18 +4,18 @@
 			<thead>
 				<th>Organization</th>
 				<th>Type</th>
+				<th>Address</th>
 				<th>Phone</th>
 				<th>Web Site</th>
-				<th>Last Updated</th>
 			</thead>
 			<tbody>
 				<% @organizations.each do |org| %>
 				<tr data-action-path = '<%= organization_path(org) %>'>
-					<td><%= org.name %></td>
-					<td><%= org.organization_type.name %></td>
-					<td><%= format_as_phone_number(org.phone) %></td>
-					<td><%= format_as_url(org.url) %></td>
-					<td><%= format_as_date_time(org.updated_at) %></td>
+					<td class="left"><%= org.name %></td>
+					<td class="left"><%= org.organization_type.name %></td>
+					<td class="left"><%= format_as_address(org) %></td>
+					<td class="right nowrap"><%= format_as_phone_number(org.phone) %></td>
+					<td class="left"><%= format_as_url(org.url) %></td>
 				</tr>
 				<% end %>
 			</tbody>
