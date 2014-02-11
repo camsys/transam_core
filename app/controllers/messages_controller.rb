@@ -14,7 +14,7 @@ class MessagesController < OrganizationAwareController
 
     # Get the filter
     @filter = get_filter_type(SESSION_FILTER_TYPE_VAR)
-    puts @filter
+    #puts @filter
     
     # Start to set up the query
     conditions  = []
@@ -51,7 +51,7 @@ class MessagesController < OrganizationAwareController
     # Get the messages
     @messages = Message.where(conditions.join(' AND '), *values).order("created_at DESC")
     
-    puts "Filter Val = '#{session[SESSION_FILTER_TYPE_VAR]}'"
+    #puts "Filter Val = '#{session[SESSION_FILTER_TYPE_VAR]}'"
     
     respond_to do |format|
       format.html # index.html.erb
@@ -148,7 +148,7 @@ class MessagesController < OrganizationAwareController
   #------------------------------------------------------------------------------
   private
 
-  # returns the fitler type for the current controller and sets the session variable
+  # returns the filter type for the current controller and sets the session variable
   # to store any change in fitler type for the controller
   def get_filter_type(session_var)
     filter_type = params[:filter].nil? ? session[session_var].to_i : params[:filter].to_i
