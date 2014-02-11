@@ -1,17 +1,20 @@
 class BasicReportRow
   
-  attr_accessor  :key, :count, :replacement_cost, :id_list
+  attr_accessor  :key, :count, :replacement_cost, :id_list, :cost_recovery
   
   def initialize(key)
     self.key = key
     self.count = 0
     self.replacement_cost = 0
+    self.cost_recovery = 0
     self.id_list = []
   end
   
   def add(asset)
+    calculator = DepreciationCalculator.new(nil)
     self.count += 1
     self.replacement_cost += asset.estimated_replacement_cost unless asset.estimated_replacement_cost.nil?
+    self.cost_recovery += calculator.residual_value(asset)
     self.id_list << asset.object_key
   end
   
