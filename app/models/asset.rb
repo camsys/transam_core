@@ -59,9 +59,6 @@ class Asset < ActiveRecord::Base
 
   # each asset has zero or more disposition updates
   has_many   :disposition_updates, -> {where :asset_event_type_id => DispositionUpdateEvent.asset_event_type.id }, :class_name => "DispositionUpdateEvent"
-
-  # each asset has zero or more purchase events
-  has_many   :purchase_events, -> {where :asset_event_type_id => PurchaseEvent.asset_event_type.id }, :class_name => "PurchaseEvent"
   
   # Each asset has zero or more attachments 
   has_many   :attachments
@@ -310,14 +307,6 @@ class Asset < ActiveRecord::Base
     end
   end
   
-  # Forces an update of the purchase details for the asset
-  def update_purchase_details
-    unless new_record?
-      update_asset_purchase_details_from_history
-      reload
-    end
-  end
-
   # Forces an update of an assets estimated value. This performs an update on the record
   def update_estimated_value(policy = nil)
     
@@ -468,25 +457,6 @@ class Asset < ActiveRecord::Base
     
     # save changes to this asset
     asset.save    
-  end
-
-  # updates the purchase details for an asset
-  def update_asset_purchase_details_from_history
-    Rails.logger.info "Updating purchase details for asset = #{object_key}"
-
-    # Make sure we are working with a concrete asset class
-    asset = is_typed? ? self : Asset.get_typed_asset(self)
-
-    begin
-      event = asset.purchase_events.first unless asset.purchase_events.empty?
-      if event
-        asset.purchase_cost = event.purchase_cost
-        asset.puchase_date = event.purchase_date
-        asset.save    
-      end
-    rescue Exception => e
-      Rails.logger.info e.message  
-    end      
   end
 
   # updates the estimated value of an asset
