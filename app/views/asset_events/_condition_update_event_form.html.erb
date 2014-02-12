@@ -14,8 +14,9 @@
 				<% end %>
 				<%= panel_tag('Condition', {:icon => 'fa fa-refresh', :class => "span6 form_part"}) do %>
 						
-						<%= f.association :condition_type, :prompt => 'Select the assessed condition...' %>
-						<%= f.input :comments, :input_html => { :class => "span12", :rows => 6 }, :placeholder => "Enter any additional comments..." %>
+					<%= f.input :current_mileage, :prompt => 'Enter odometer readubg...' %>
+					<%= f.association :condition_type, :prompt => 'Select the assessed condition...' %>
+					<%= f.input :comments, :input_html => { :class => "span12", :rows => 6 }, :placeholder => "Enter any additional comments..." %>
 				<% end %>
 			</ul>
 			<% if ! @disabled %>
