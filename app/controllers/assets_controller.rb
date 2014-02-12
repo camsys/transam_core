@@ -342,7 +342,7 @@ class AssetsController < AssetAwareController
 
     unless @id_filter_list.blank?
       clauses << ['object_key in (?)'] 
-      values << [@id_filter_list.split(STRING_TOKENIZER)]           
+      values << @id_filter_list          
     end
     
     unless @asset_subtype == 0
