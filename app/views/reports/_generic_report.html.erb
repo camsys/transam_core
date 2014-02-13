@@ -11,7 +11,6 @@
 			<thead>
 				<tr>
 					<th class="center" colspan="3">Category</th>
-					<th class="center"></th>
 					<th class="center" colspan="2">Replacement Cost</th>
 				</tr>
 				<tr>
@@ -64,7 +63,7 @@
 		chart_data.addColumn('string', 'Asset Type');	
 		chart_data.addColumn('number', '($)');
 		<% @data.each_value do |row| %>
-			chart_data.addRow(['<%= row.asset_subtype.name %>', {v: <%= row.replacement_cost.to_i %>, f: '<%= format_as_currency(row.replacement_cost) %>'}]);
+			chart_data.addRow(['<%= row.asset_subtype.name.html_safe %>', {v: <%= row.replacement_cost.to_i %>, f: '<%= format_as_currency(row.replacement_cost) %>'}]);
 		<% end %>
 		
 		var chart_options = {
