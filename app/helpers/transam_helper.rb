@@ -1,5 +1,8 @@
 module TransamHelper
   
+  # From the application config    
+  APP_VERSION = Rails.application.config.version   
+  
   WARNING_CLASS     = "warning"
   ERROR_CLASS       = "error"
   
@@ -11,6 +14,12 @@ module TransamHelper
     Gem.loaded_specs['transam_core'].version
   end
   
+  # Returns the application version. This is the version defined in the host app
+  # not the version of transam       
+  def app_version
+    APP_VERSION
+  end
+
   def app_title
     title = ENV["APPLICATION_TITLE"] ? ENV["APPLICATION_TITLE"] : 'TransAM Application'
     return title.html_safe
