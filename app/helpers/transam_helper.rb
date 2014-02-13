@@ -6,8 +6,13 @@ module TransamHelper
   ACTIVE_CLASS      = 'active'
   INACTIVE_CLASS    = 'inactive'
   
+  # Return the version of TransAM core that is running
+  def transam_version
+    Gem.loaded_specs['transam_core'].version
+  end
+  
   def app_title
-    title = ENV["APPLICATION_TITLE"] ? ENV["APPLICATION_TITLE"] : 'TransAM Core'
+    title = ENV["APPLICATION_TITLE"] ? ENV["APPLICATION_TITLE"] : 'TransAM Application'
     return title.html_safe
   end
   
