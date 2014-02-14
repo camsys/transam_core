@@ -1,34 +1,43 @@
+<% unless @asset.images.empty? %>
 <div class="row-fluid">
 	<div class="span12">
-		<h4>Photos</h4>
-		<ul class="thumbnails">
-			<% @attachments.each do |attachment| %>
-				<% if attachment.attachment_type.name == "Photo" %>
+		<fieldset>
+			<legend>Images</legend>
+			<ul class="thumbnails">
+				<% @asset.images.each do |attachment| %>
 					<%= image_thumbnail_tag({:class => 'span2 img_thumbnail', :icon => attachment.attachment_type.display_icon_name, :title => attachment.name, :path => inventory_attachment_path(@asset, attachment)}) do %>
-						<%= image_tag attachment.file.url(:thumb), :class => "img-polaroid" if attachment.file  %>
+						<%= image_tag attachment.file.url(:thumb), :class => "img-polaroid image-center" if attachment.file  %>
 					<% end %>
 				<% end %>
-			<% end %>
-		</ul>
+			</ul>
+		</fieldset>
 	</div>
 </div>
+<% end %>
+<% unless @asset.documents.empty? %>
 <div class="row-fluid">
 	<div class="span12">
-		<h4>Documents</h4>
-		<ul class="thumbnails">
-			<% @attachments.each do |attachment| %>
-				<% if attachment.attachment_type.id != 1 %>
+		<fieldset>
+			<legend>Documents</legend>
+			<ul class="thumbnails">
+				<% @asset.images.each do |attachment| %>
 					<%= action_thumbnail_tag({:class => 'span2 doc_thumbnail', :icon => attachment.attachment_type.display_icon_name, :title => attachment.name, :path => inventory_attachment_path(@asset, attachment)}) do %>
 						<%= image_tag attachment.file if attachment.file  %>
 					<% end %>
 				<% end %>
-			<% end %>
-		</ul>
+			</ul>
+		</fieldset>
 	</div>
 </div>
+<% end %>
 <script type="text/javascript">
 
-	transam.fix_thumbnail_margins(2, 'img_thumbnail');
-	transam.fix_thumbnail_margins(3, 'doc_thumbnail');
+	$(document).ready(function() {
 
+		transam.fix_thumbnail_margins(2, 'img_thumbnail');
+		transam.fix_thumbnail_margins(3, 'doc_thumbnail');
+		transam.make_same_height('.img_thumbnail');
+		transam.make_same_height('.doc_thumbnail');
+	});
+	
 </script>

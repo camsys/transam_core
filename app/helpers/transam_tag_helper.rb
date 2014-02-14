@@ -13,18 +13,16 @@ module TransamTagHelper
       content = "<p>&nbsp;</p>"
     end
 
-    html = "<li class='shadow "
+    html = "<li class='shadow thumbnail action-thumbnail "
     html << options[:class] unless options[:class].blank?
     html << "'>"
-    html << "<a class='thumbnail' href='"
+    html << "<div data-action-path='"
     html << options[:path]
     html << "'>"
-    #html << "<div class='well well-small' style='margin-bottom:0px;height:150px;'>"
 
     html << content
 
-    #html << "</div>"
-    html << "</a>"
+    html << "</div>"
     html << "</li>"
     
     return html.html_safe     
@@ -38,7 +36,7 @@ module TransamTagHelper
       content = "<p>&nbsp;</p>"
     end
 
-    html = "<li class='thumbnail shadow "
+    html = "<li class='thumbnail shadow action-thumbnail "
     html << options[:class] unless options[:class].blank?
     html << "'>"
     html << "<div data-action-path='"

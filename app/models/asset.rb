@@ -62,6 +62,9 @@ class Asset < ActiveRecord::Base
   
   # Each asset has zero or more attachments 
   has_many   :attachments
+  # Filter the attachments for easier selection
+  has_many   :images,     -> { where :attachment_type_id => 1}, :class_name => "Attachment"
+  has_many   :documents,  -> { where :attachment_type_id => 2}, :class_name => "Attachment"
 
   # Each asset has zero or more notes 
   has_many   :notes

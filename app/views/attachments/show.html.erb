@@ -2,17 +2,16 @@
 
 <div class="row-fluid">
 	<div class="span8">
-		<%= panel_tag('Photo', {:icon => 'fa fa-file', :class => "span12"}) do %>
+		<%= panel_tag(@attachment.name, {:icon => 'fa fa-picture-o', :class => "span12"}) do %>
 			<%= image_tag @attachment.file_url, :class => "img-polaroid" %>
 		<% end %>
 	</div>
 	<div class="span4">
 		<%= panel_tag('Details', {:icon => 'fa fa-file', :class => "span12"}) do %>
-			<%= format_field("Name", @attachment.name ) %>
 			<%= format_field("File Name", @attachment.original_filename ) %>
 			<%= format_field("Content", @attachment.attachment_type.name ) %>
-			<%= format_field("Notes", @attachment.notes ) %>
-			<%= format_field("Upload time", format_date_time(@attachment.created_at) ) %>
+			<%= format_field("Upload time", format_as_date_time(@attachment.created_at) ) %>
+			<%= format_field("Notes", @attachment.notes.html_safe ) unless @attachment.notes.blank? %>
 		<% end %>
 	</div>
 </div>
