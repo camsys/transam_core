@@ -99,8 +99,8 @@ class GisService
     @geometry_factory.geometry
   end
   
-  def as_polygon(minlat, minLon, maxLat, maxLon)
-    Rails.logger.debug "Creating polygon geometry from (#{minlat}, {minLon}), (#{maxLat}, {maxLon})"
+  def as_polygon(minLat, minLon, maxLat, maxLon)
+    Rails.logger.debug "Creating polygon geometry from (#{minLat}, {minLon}), (#{maxLat}, {maxLon})"
     @geometry_factory.reset
     @geometry_factory.begin_geometry(Polygon, @srid)
     @geometry_factory.begin_geometry(Point, @srid)

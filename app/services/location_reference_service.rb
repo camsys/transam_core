@@ -100,10 +100,12 @@ class LocationReferenceService
       end
     else
       addr = geocoder.results.first
-      latitude = addr[:lat]
-      longitude = addr[:lon]
-      @geometry = @gis_service.as_point(latitude, longitude)
-      @formatted_location_reference = addr[:formatted_address]
+      if addr
+        latitude = addr[:lat]
+        longitude = addr[:lon]
+        @geometry = @gis_service.as_point(latitude, longitude)
+        @formatted_location_reference = addr[:formatted_address]
+      end
     end
   end
   
