@@ -94,7 +94,7 @@ class GeolocatableAsset < Asset
     search_box = gis_service.search_box_from_point(geometry, search_radius, units)
     query_str = "SELECT * FROM assets WHERE MBRContains(GeomFromText('#{search_box.as_wkt}'), geometry) = 1"      
     Rails.logger.debug(query_str)
-    Sign.find_by_sql(query_str) 
+    Asset.find_by_sql(query_str) 
     
   end
   
