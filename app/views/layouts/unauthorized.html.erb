@@ -43,7 +43,6 @@
 			<!-- Main Page Content -->
 			<div class="row-fluid">
 				<div class="span12">					
-					<%= render 'shared/messages' %>
 					<div class="row-fluid" style="margin-top:40px;">
 						<div class="first-in-row span9">
 							<div class="hero-unit shadow" style = "height:300px">
@@ -54,7 +53,8 @@
 						</div>
 						<div class="span3">
 							<ul class="thumbnails">
-								<%= yield %>
+								<%= devise_error_messages! %>
+ 								<%= yield %>
 							</ul>
 						</div>
 					</div>		
