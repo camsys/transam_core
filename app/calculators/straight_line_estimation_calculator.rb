@@ -63,7 +63,8 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
       # Get the observed rate of change in asset quality
       rate_of_change = rate_of_deterioration_per_year(max_rating, current_rating, age_at_report)
       if rate_of_change < 0.01
-        year = INFINITY.to_i
+        # If the asset has not deteriorated, return the policy life
+        year = asset.in_service_date.year + asset.asset_subtype.avg_life_years
       else
         # determine the year that the service quality will fall below the threshold
         years_at_rate = current_rating / rate_of_change
