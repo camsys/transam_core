@@ -43,9 +43,7 @@
 			<!-- Main Page Content -->
 			<div class="row-fluid">
 				<div class="span12">					
-					<% flash.each do |type, message| %>
-						<%= content_tag :div, message, :id => "message", :class => "span12 alert fade in #{bootstrap_class_for(type)}" unless message.blank? %>
-					<% end %>						
+					<%= render 'shared/messages' %>
 					<div class="row-fluid" style="margin-top:40px;">
 						<div class="first-in-row span9">
 							<div class="hero-unit shadow" style = "height:300px">
@@ -56,7 +54,6 @@
 						</div>
 						<div class="span3">
 							<ul class="thumbnails">
-								<%= render 'shared/messages' %>
 								<%= yield %>
 							</ul>
 						</div>
