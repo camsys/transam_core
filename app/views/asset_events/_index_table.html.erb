@@ -15,7 +15,7 @@
 					<td><%= e.asset_event_type.name %></td>
 					<td><%= format_as_date(e.event_date) %></td>
 					<td><%= e.get_update %></td>					
-					<td><%= e.comments.html_safe %></td>
+					<td><%= e.comments %></td>
 				</tr>
 				<% end %>
 			</tbody>
