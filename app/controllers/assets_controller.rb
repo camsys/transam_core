@@ -293,7 +293,7 @@ class AssetsController < AssetAwareController
       # to the name of the selected subtype
       subtype = AssetSubtype.find(@asset_subtype)
       class_name = subtype.asset_type.class_name
-      @filter = subtype.full_name
+      @filter = subtype.name
       @view = "#{class_name.underscore}_index"
     else
       asset_type = AssetType.find(@asset_type)
