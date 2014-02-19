@@ -24,7 +24,7 @@ class AssetSubtypeReport < AbstractReport
 
     subtypes.each do |x|
       count = organization.assets.where("asset_subtype_id = ?", x.id).count
-      a << [x.name, count]
+      a << [x.name, count] unless count == 0
     end
         
     return {:labels => labels, :data => a}
