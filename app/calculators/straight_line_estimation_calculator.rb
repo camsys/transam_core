@@ -66,7 +66,7 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
         year = INFINITY.to_i
       else
         # determine the year that the service quality will fall below the threshold
-        years_at_rate = (max_rating - current_rating) / rate_of_change
+        years_at_rate = current_rating / rate_of_change
         year = asset.in_service_date.year + years_at_rate.to_i
       end
     end
