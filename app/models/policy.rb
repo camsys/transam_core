@@ -48,24 +48,9 @@ class Policy < ActiveRecord::Base
   
   # Has a single method for estimating condition
   belongs_to  :condition_estimation_type
-
-  #------------------------------------------------------------------------------
-  # Attributes common to policies
-  #------------------------------------------------------------------------------
-      
-  # Every policy has an effective year
-  #attr_accessible :year
-  # Every policy has a name and a description it is identified by
-  #attr_accessible :name
-  #attr_accessible :description
-   
-  # Interest rate used to determine future cost calculations. In the range (0..1)
-  #attr_accessible :interest_rate
-
-  # Condition threshold used to determine if an asset is in need or replacement
-  #attr_accessible :condition_threshold
   
-  #attr_accessible :active
+  # Has 0 or more policy items
+  has_many    :policy_items
 
   #------------------------------------------------------------------------------
   # Validations
