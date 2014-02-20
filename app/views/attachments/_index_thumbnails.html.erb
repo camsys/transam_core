@@ -6,7 +6,7 @@
 			<ul class="thumbnails">
 				<% @asset.images.each do |attachment| %>
 					<%= image_thumbnail_tag({:class => 'span2 img_thumbnail', :icon => attachment.attachment_type.display_icon_name, :title => attachment.name, :path => inventory_attachment_path(@asset, attachment)}) do %>
-						<%= image_tag attachment.file.url(:thumb), :class => "img-polaroid image-center" if attachment.file  %>
+						<%= image_tag attachment.image.url(:thumb), :class => "img-polaroid image-center" if attachment.image  %>
 					<% end %>
 				<% end %>
 			</ul>
@@ -22,7 +22,7 @@
 			<ul class="thumbnails">
 				<% @asset.images.each do |attachment| %>
 					<%= action_thumbnail_tag({:class => 'span2 doc_thumbnail', :icon => attachment.attachment_type.display_icon_name, :title => attachment.name, :path => inventory_attachment_path(@asset, attachment)}) do %>
-						<%= image_tag attachment.file if attachment.file  %>
+						<%= image_tag attachment.file if attachment.document  %>
 					<% end %>
 				<% end %>
 			</ul>

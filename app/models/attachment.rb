@@ -4,7 +4,8 @@ class Attachment < ActiveRecord::Base
   include UniqueKey
 
   # uploader
-  mount_uploader :file, AttachmentUploader      
+  mount_uploader :image,      ImageUploader      
+  mount_uploader :document,   DocumentUploader      
 
   #------------------------------------------------------------------------------
   # Overrides
@@ -42,7 +43,8 @@ class Attachment < ActiveRecord::Base
     :object_key,
     :asset_id,
     :attachment_type_id, 
-    :file, 
+    :image,
+    :document, 
     :name, 
     :notes,
     :original_filename,

@@ -1,7 +1,5 @@
-class AttachmentUploader < CarrierWave::Uploader::Base
+class DocumentUploader < CarrierWave::Uploader::Base
   
-  include CarrierWave::MiniMagick
-
   # make sure to save the orignal filename
   before :cache, :save_original_filename
   # Choose what kind of storage to use for this uploader:
@@ -16,19 +14,15 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   def move_to_store
     true
   end
-  
-  version :thumb do
-    process :resize_to_limit => [150, 150]
-  end
-  
+      
   def store_dir
-    "attachments/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
+    "attachments/documents/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
   end
 
   # Add a white list of extensions which are allowed to be uploaded.
   # For images you might use something like this:
   def extension_white_list
-    %w(pdf png jpg jpeg gif)
+    %w( pdf )
   end
 
   # Override the filename of the uploaded files:
@@ -41,7 +35,7 @@ class AttachmentUploader < CarrierWave::Uploader::Base
     model.original_filename ||= file.original_filename if file.respond_to?(:original_filename)
   end
 
-protected
+  protected
   
   def secure_token
     var = :"@#{mounted_as}_secure_token"
