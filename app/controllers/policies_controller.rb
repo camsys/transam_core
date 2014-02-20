@@ -36,17 +36,7 @@ class PoliciesController < OrganizationAwareController
 
   
   def new
-
-    @page_title = 'New Replacement Policy'
-
-    @policy = Policy.new
-    @policy.organization = @organization
-    @year_list = create_year_list
-    
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render :json => @policy }
-    end
+    #right now, no blank policies can be created - just copying existing policies
   end
 
   def edit
