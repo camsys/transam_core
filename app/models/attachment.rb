@@ -83,9 +83,13 @@ class Attachment < ActiveRecord::Base
   
   def update_file_attributes
     
-    if file.present? && file_changed?
-      self.content_type = file.file.content_type
-      self.file_size = file.file.size
+    if image.present? && image_changed?
+      self.content_type = image.file.content_type
+      self.file_size = image.file.size
+    end
+    if document.present? && document_changed?
+      self.content_type = document.file.content_type
+      self.file_size = document.file.size
     end
   end
 

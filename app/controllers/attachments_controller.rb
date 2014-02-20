@@ -124,6 +124,7 @@ class AttachmentsController < AssetAwareController
   def new
 
     @attachment = Attachment.new
+    @attachment.attachment_type_id = 1
 
     respond_to do |format|
       format.html # new.html.erb
