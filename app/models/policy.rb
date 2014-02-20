@@ -65,8 +65,8 @@ class Policy < ActiveRecord::Base
   validates :year,                              :presence => true
   validates :name,                              :presence => true
   validates :description,                       :presence => true
-  validates :interest_rate,                     :presence => true
-  validates :condition_threshold,               :presence => true
+  validates_numericality_of :interest_rate,     :greater_than_or_equal_to => 0.0, :less_than_or_equal_to => 100.0
+  validates_numericality_of :condition_threshold,:greater_than_or_equal_to => 0.0, :less_than_or_equal_to => 5.0
 
   #------------------------------------------------------------------------------
   # Scopes
@@ -115,7 +115,7 @@ class Policy < ActiveRecord::Base
   # Set resonable defaults for a new policy
   def set_defaults
     self.year ||= Date.today.year
-    self.interest_rate ||= 0.02
+    self.interest_rate ||= 0.025
     self.condition_threshold ||= 2.5 
     self.active ||= true
   end    
