@@ -47,10 +47,7 @@ class Organization < ActiveRecord::Base
 
   # Every organization can have a set of locations
   has_many :locations
-  
-  # Every organization can have a set of policies
-  has_many :policies
-      
+        
   # Validations for associations  
   validates :customer_id,           :presence => true
   validates :organization_type_id,  :presence => true

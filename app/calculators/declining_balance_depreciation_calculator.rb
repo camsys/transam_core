@@ -4,7 +4,7 @@ class DecliningBalanceDepreciationCalculator < DepreciationCalculator
   def calculate(asset)
 
     # depreciation time
-    num_years = @policy.get_policy_item(asset).avg_life_years
+    num_years = @policy.get_policy_item(asset).max_service_life_years
     
     # calculate the annual depreciation rate. This is double the actual depreciation rate
     depreciation_rate = (1 / num_years.to_f) * 2
