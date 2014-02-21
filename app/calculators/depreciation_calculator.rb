@@ -12,7 +12,7 @@ class DepreciationCalculator < Calculator
   end  
   
   def residual_value(asset)
-    purchase_cost(asset) * (asset.asset_subtype.pcnt_residual_value / 100.0)
+    purchase_cost(asset) * (@policy.get_policy_item(asset).pcnt_residual_value / 100.0)
   end
 
   def purchase_cost(asset)

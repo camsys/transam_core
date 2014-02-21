@@ -16,6 +16,8 @@ class PolicyItem < ActiveRecord::Base
   #------------------------------------------------------------------------------
   validates :policy_id, :presence => true
   validates :asset_subtype_id, :presence => true
+  validates_numericality_of :avg_life_years,    :only_integer => :true,   :greater_than_or_equal_to => 0
+  validates_numericality_of :avg_life_miles,    :only_integer => :true,   :greater_than_or_equal_to => 0
   validates_numericality_of :max_service_life_years,    :only_integer => :true,   :greater_than_or_equal_to => 0
   validates_numericality_of :max_service_life_miles,    :only_integer => :true,   :greater_than_or_equal_to => 0
   validates_numericality_of :replacement_cost,          :only_integer => :true,   :greater_than_or_equal_to => 0
@@ -32,6 +34,8 @@ class PolicyItem < ActiveRecord::Base
   FORM_PARAMS = [
     :policy_id,
     :asset_subtype_id, 
+    :avg_life_years,
+    :avg_life_miles,
     :max_service_life_years, 
     :max_service_life_miles, 
     :replacement_cost, 
@@ -57,8 +61,10 @@ class PolicyItem < ActiveRecord::Base
 
   # Set resonable defaults for a new policy
   def set_defaults
-    self.max_life_years ||= 0
-    self.max_life_miles ||= 0 
+    self.avg_life_years ||= 0
+    self.avg_life_miles ||= 0 
+    self.max_service_life_years ||= 0
+    self.max_service_life_miles ||= 0 
     self.replacement_cost ||= 0 
     self.active ||= true
   end    

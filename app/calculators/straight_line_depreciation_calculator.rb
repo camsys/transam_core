@@ -4,7 +4,7 @@ class StraightLineDepreciationCalculator < DepreciationCalculator
   def calculate(asset)
 
     # depreciation time
-    num_years = asset.asset_subtype.avg_life_years
+    num_years = @policy.get_policy_item(asset).avg_life_years
     
     # calcuate the depreciation       
     annual_depreciation = basis(asset) / num_years.to_f
