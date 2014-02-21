@@ -54,6 +54,12 @@ class PoliciesController < OrganizationAwareController
     new_policy.organization = current_user.organization
     new_policy.name = "Copy of " + @policy.name
     new_policy.description = "Copy of " + @policy.description
+    
+    new_policy.policy_items.clear
+    @policy.policy_items.each do |pi|
+      new_pi = pi.dup
+      new_policy.policy_items << new_pi
+    end
 
     new_policy.save
 
