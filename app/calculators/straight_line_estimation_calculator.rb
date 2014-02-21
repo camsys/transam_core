@@ -10,7 +10,7 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
     
     # get the maximum (initial) rating for a new asset
     max_rating = ConditionType.max_rating
-    min_rating = ConditionType.min_rating
+    min_rating = @policy.condition_threshold
   
     # See if we have condition updates
     if asset.condition_updates.empty?
