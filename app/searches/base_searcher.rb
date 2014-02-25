@@ -40,7 +40,7 @@ class BaseSearcher
   end
   
   def conditions_options
-    conditions_parts.map { |condition| condition[1..-1] }.flatten
+    conditions_parts.map { |condition| condition[1..-1] }.flatten(1)
   end
   
   def conditions_parts
