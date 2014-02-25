@@ -60,7 +60,7 @@ class AssetsController < AssetAwareController
     respond_to do |format|
       format.html
       format.js
-      format.json { render :json => @assets }
+      format.json { render :json => get_as_json(@assets, @row_count) }
       format.xls      
     end
   end
@@ -283,6 +283,12 @@ class AssetsController < AssetAwareController
     else
       fmt = 'html'
     end
+    
+    # See if we got start row and count data
+    if params[:iDisplayStart] && params[:iDisplayLength]
+      start_row = params[:iDisplayStart]
+      num_rows  = params[:iDisplayLength]
+    end
         
     # If the asset type and subtypes are not set we default to the asset base class
     if @id_filter_list or (@asset_type == 0 and @asset_subtype == 0)
@@ -358,7 +364,8 @@ class AssetsController < AssetAwareController
       values << [1]
     end
     # send the query
-    assets = klass.where(clauses.join(' AND '), *values)
+    @row_count = klass.where(clauses.join(' AND '), *values).count
+    assets = klass.where(clauses.join(' AND '), *values).order("#{sort_column(klass)} #{sort_direction}").page(page).per_page(per_page)
 
     return assets
   end
@@ -406,6 +413,58 @@ class AssetsController < AssetAwareController
   #------------------------------------------------------------------------------
   private
 
+  def get_as_json(assets, total_rows)
+    {
+      sEcho: params[:sEcho].to_i,
+      iTotalRecords: total_rows,
+      iTotalDisplayRecords: assets.total_entries,
+      aaData: data(assets)
+    }
+  end
+
+  def data(assets)
+    assets.map do |a|
+      [
+        inventory_path(a),
+        a.organization.short_name,
+        a.asset_subtype.name,
+        a.asset_tag,
+        a.manufacturer.code,
+        a.manufacturer_model,
+        a.service_status_type.blank? ?  "" : a.service_status_type.code,
+        view_context.format_as_currency(a.cost),
+
+        a.age,
+        view_context.format_as_boolean(a.in_backlog),
+        view_context.format_as_decimal(a.reported_condition_rating, 1),
+        a.reported_condition_type.blank? ?  "" : a.reported_condition_type.name,
+        a.estimated_condition_type.blank? ? "" : a.estimated_condition_type.name,
+        view_context.format_as_currency(a.estimated_value),
+        
+        view_context.format_as_currency(a.estimated_replacement_cost),
+        a.policy_replacement_year,
+        a.estimated_replacement_year
+      ]
+    end
+  end
+  
+  def page
+    params[:iDisplayStart].to_i/per_page + 1
+  end
+
+  def per_page
+    params[:iDisplayLength].to_i > 0 ? params[:iDisplayLength].to_i : 10
+  end
+
+  def sort_column(klass)
+    columns = klass.column_names
+    columns[params[:iSortCol_0].to_i]
+  end
+
+  def sort_direction
+    params[:sSortDir_0] == "desc" ? "desc" : "asc"
+  end
+  
   # constructs a query string for a search from a list of searchable fields provided by an asset class
   def get_search_query_string(searchable_fields_list)
     

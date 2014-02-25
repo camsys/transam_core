@@ -1,11 +1,14 @@
-<table id="datatable" class="table table-condensed table-striped table-hover table-bordered">
+
+<table id="server_datatable" class="table table-condensed table-striped table-hover table-bordered">
 	<thead>
 		<tr>
+			<th class="center" colspan="1">Hidden</th>
 			<th class="center" colspan="7">Asset</th>
 			<th class="center" colspan="6">Condition</th>
 			<th class="center" colspan="3">Replacement</th>
 		</tr>
 		<tr>
+			<th class="center">Url</th>
 			<th class="center">Agcy</th>
 			<th class="center">Type</th>
 			<th class="center">Tag</th>					
@@ -29,28 +32,29 @@
 		</tr>
 	</thead>
 	<tbody>
-		<% @assets.each do |a| %>
-			<tr data-action-path = '<%= inventory_path(a) %>'>
-				<td class="left"><%= a.organization.short_name %></td>
-				<td class="left"><%= a.asset_subtype.name %></td>
-				<td class="left"><%= a.asset_tag %></td>
-				<td class="left"><%= a.manufacturer.code %></td>
-				<td class="left"><%= a.manufacturer_model %></td>
-				<td class="center"><%= a.service_status_type.code unless a.service_status_type.nil? %></td>
-				<td class="right"><%= format_as_currency(a.cost) %></td>
-
-				<td class="right"><%= a.age %></td>
-				<td class="center"><%= format_as_boolean(a.in_backlog) %></td>
-				<td class="center"><%= format_as_decimal(a.reported_condition_rating, 1) %></td>
-				<td class="center"><%= a.reported_condition_type.name unless a.reported_condition_type.nil? %>
-				<td class="center"><%= a.estimated_condition_type.name unless a.estimated_condition_type.nil? %>
-				<td class="right"><%= format_as_currency(a.estimated_value) %></td>
-				
-				<td class="right"><%= format_as_currency(a.estimated_replacement_cost) %></td>
-				<td class="right"><%= a.policy_replacement_year %></td>
-				<td class="right"><%= a.estimated_replacement_year %></td>
-				
-			</tr>
-		<% end %>
 	</tbody>
 </table>	
+
+<% columns = [
+	{:type => 'html', 	:class => "left"}, 
+	{:type => 'string', :class => "left"}, 
+	{:type => 'string', :class => "left"}, 
+	{:type => 'string', :class => "left nowrap"},
+	{:type => 'string', :class => "left"},
+	{:type => 'string', :class => "left"},
+	{:type => 'string', :class => "center"},
+	{:type => 'numeric', :class => "right"},
+	
+	{:type => 'numeric', :class => "center"},
+	{:type => 'html', :class => "center"},
+	{:type => 'numeric', :class => "center"},
+	{:type => 'string', :class => "center"},
+	{:type => 'string', :class => "center"},
+	{:type => 'numeric', :class => "right"},
+	
+	{:type => 'numeric', :class => "right"},
+	{:type => 'date', :class => "center"},
+	{:type => 'date', :class => "center"}
+	
+	] %>
+<%= raw datatable(columns, {:table_dom_id => 'server_datatable', :processing => image_tag("ajax-loader.gif"), :ajax_source => inventory_index_path }) %>
