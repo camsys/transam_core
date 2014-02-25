@@ -182,7 +182,7 @@ div.timeline-navigation-move-right {
 }
 
 div.timeline-navigation-new {
-    background: url('img/16/new.png') no-repeat center;
+    background: asset-url('img/16/new.png') no-repeat center;
 }
 
 /* separator between new and navigation buttons */
@@ -195,17 +195,17 @@ div.timeline-navigation-delete {
 }
 
 div.timeline-navigation-zoom-in {
-    background: url('img/16/zoomin.png') no-repeat center;
+    background: asset-url('img/16/zoomin.png') no-repeat center;
 }
 
 div.timeline-navigation-zoom-out {
-    background: url('img/16/zoomout.png') no-repeat center;
+    background: asset-url('img/16/zoomout.png') no-repeat center;
 }
 
 div.timeline-navigation-move-left {
-    background: url('img/16/moveleft.png') no-repeat center;
+    background: asset-url('img/16/moveleft.png') no-repeat center;
 }
 
 div.timeline-navigation-move-right {
-    background: url('img/16/moveright.png') no-repeat center;
+    background: asset-url('img/16/moveright.png') no-repeat center;
 }

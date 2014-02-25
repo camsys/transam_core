@@ -1,5 +1,5 @@
 <% if @assets.count > 0 %>
-	$('#asset_table').html(" <%= escape_javascript(render '/assets/asset_table') %>");
+	$('#asset_table').html(" <%= escape_javascript(render '/assets/asset_datatable') %>");
 	transam.render_data_table("datatable", false);
 <% else %>
 	$('#asset_table').html("<p>No matching assets found.</p>");
