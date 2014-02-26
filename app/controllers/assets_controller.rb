@@ -413,6 +413,8 @@ class AssetsController < AssetAwareController
   #------------------------------------------------------------------------------
   private
 
+  # Returns the set of assets, usually paged, as a JSON array compatible
+  # with the datatables Jquery plugin.
   def get_as_json(assets, total_rows)
     {
       sEcho: params[:sEcho].to_i,
@@ -422,6 +424,7 @@ class AssetsController < AssetAwareController
     }
   end
 
+  # Renders the assets as an array of arrays where each sub-array is an asset.
   def data(assets)
     assets.map do |a|
       [
@@ -448,10 +451,11 @@ class AssetsController < AssetAwareController
     end
   end
   
+  # Determine start row from the input params
   def page
     params[:iDisplayStart].to_i/per_page + 1
   end
-
+  # determine number of rows to return
   def per_page
     params[:iDisplayLength].to_i > 0 ? params[:iDisplayLength].to_i : 10
   end
