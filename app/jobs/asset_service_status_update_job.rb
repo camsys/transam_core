@@ -19,7 +19,7 @@ class AssetServiceStatusUpdateJob < Job
   end
 
   def prepare
-    Rails.logger.info "Executing AssetServiceStatusUpdateJob at #{Time.now.to_s} for Asset #{object_key}"    
+    Rails.logger.debug "Executing AssetServiceStatusUpdateJob at #{Time.now.to_s} for Asset #{object_key}"    
   end
   
   def check    

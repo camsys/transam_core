@@ -19,7 +19,7 @@ class SendMessageAsEmailJob < Job
   end
 
   def prepare
-    Rails.logger.info "Executing SendMessageAsEmailJob at #{Time.now.to_s} for Message #{object_key}"    
+    Rails.logger.debug "Executing SendMessageAsEmailJob at #{Time.now.to_s} for Message #{object_key}"    
   end
   
   def check    

@@ -19,7 +19,7 @@ class AssetDispositionUpdateJob < Job
   end
 
   def prepare
-    Rails.logger.info "Executing AssetDispositionUpdateJob at #{Time.now.to_s} for Asset #{object_key}"    
+    Rails.logger.debug "Executing AssetDispositionUpdateJob at #{Time.now.to_s} for Asset #{object_key}"    
   end
   
   def check    

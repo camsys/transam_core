@@ -4,7 +4,7 @@ class ServiceLifeAgeOnly < ServiceLifeCalculator
   # into service
   def calculate(asset)
 
-    Rails.logger.info "ServiceLifeAgeOnly.calculate(asset)"
+    Rails.logger.debug "ServiceLifeAgeOnly.calculate(asset)"
     
     by_age(asset)
     

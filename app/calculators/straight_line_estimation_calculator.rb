@@ -6,7 +6,7 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
   # posted against the asset
   def calculate(asset)
     
-    Rails.logger.info "StraightLineEstimationCalculator.calculate(asset)"
+    Rails.logger.debug "StraightLineEstimationCalculator.calculate(asset)"
     
     # get the maximum (initial) rating for a new asset
     max_rating = ConditionType.max_rating
@@ -47,7 +47,7 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
   # condition has been reported, the policy year is returned
   def last_servicable_year(asset)
 
-    Rails.logger.info "StraightLineEstimationCalculator.last_servicable_year(asset)"
+    Rails.logger.debug "StraightLineEstimationCalculator.last_servicable_year(asset)"
     
     # Return the policy year if there are no condition updates recorded against the asset
     if asset.condition_updates.empty?
