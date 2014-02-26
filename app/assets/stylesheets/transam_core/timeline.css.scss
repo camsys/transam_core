@@ -182,7 +182,7 @@ div.timeline-navigation-move-right {
 }
 
 div.timeline-navigation-new {
-    background: asset-url('img/16/new.png') no-repeat center;
+    background: url(image-path('timeline/new.png')) no-repeat center;
 }
 
 /* separator between new and navigation buttons */
@@ -191,21 +191,21 @@ div.timeline-navigation-new-line {
 }
 
 div.timeline-navigation-delete {
-    background: asset-url('img/16/delete.png') no-repeat center;
+    background: url(image-path('timeline/delete.png')) no-repeat center;
 }
 
 div.timeline-navigation-zoom-in {
-    background: asset-url('img/16/zoomin.png') no-repeat center;
+    background: url(image-path('timeline/zoomin.png')) no-repeat center;
 }
 
 div.timeline-navigation-zoom-out {
-    background: asset-url('img/16/zoomout.png') no-repeat center;
+    background: url(image-path('timeline/zoomout.png')) no-repeat center;
 }
 
 div.timeline-navigation-move-left {
-    background: asset-url('img/16/moveleft.png') no-repeat center;
+    background: url(image-path('timeline/moveleft.png')) no-repeat center;
 }
 
 div.timeline-navigation-move-right {
-    background: asset-url('img/16/moveright.png') no-repeat center;
+    background: url(image-path('timeline/moveright.png')) no-repeat center;
 }

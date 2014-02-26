@@ -404,7 +404,7 @@ class Asset < ActiveRecord::Base
       class_name = policy.service_life_calculation_type.class_name
       asset.policy_replacement_year = calculate(asset, policy, class_name) 
     rescue Exception => e
-      Rails.logger.info e.message  
+      Rails.logger.warn e.message  
     end  
 
     # Estimate the year that the asset will need replacing
@@ -412,7 +412,7 @@ class Asset < ActiveRecord::Base
       class_name = policy.condition_estimation_type.class_name
       asset.estimated_replacement_year = calculate(asset, policy, class_name, 'last_servicable_year')
     rescue Exception => e
-      Rails.logger.info e.message  
+      Rails.logger.warn e.message  
     end  
 
     # returns the cost for replacing the asset in the replacement year based on the policy
@@ -420,7 +420,7 @@ class Asset < ActiveRecord::Base
       class_name = policy.cost_calculation_type.class_name
       asset.estimated_replacement_cost = calculate(asset, policy, class_name)
     rescue Exception => e
-      Rails.logger.info e.message  
+      Rails.logger.warn e.message  
     end  
     
     # determine if the asset is in backlog
@@ -429,7 +429,7 @@ class Asset < ActiveRecord::Base
       replacement_year = asset.policy_replacement_year
       asset.in_backlog = replacement_year < Date.today.year
     rescue Exception => e
-      Rails.logger.info e.message  
+      Rails.logger.warn e.message  
     end  
 
     # Update the reported condition
@@ -445,7 +445,7 @@ class Asset < ActiveRecord::Base
         asset.reported_condition_type = event.condition_type
       end
     rescue Exception => e
-      Rails.logger.info e.message  
+      Rails.logger.warn e.message  
     end  
 
     # Update the estimated condition
@@ -455,7 +455,7 @@ class Asset < ActiveRecord::Base
       asset.estimated_condition_rating = calculate(asset, policy, class_name)
       asset.estimated_condition_type = ConditionType.from_rating(asset.estimated_condition_rating)
     rescue Exception => e
-      Rails.logger.info e.message  
+      Rails.logger.warn e.message  
     end  
     
     # save changes to this asset
@@ -485,7 +485,7 @@ class Asset < ActiveRecord::Base
       # save changes to this asset
       asset.save    
     rescue Exception => e
-      Rails.logger.info e.message  
+      Rails.logger.warn e.message  
     end      
   end
   
