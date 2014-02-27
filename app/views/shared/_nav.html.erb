@@ -77,7 +77,7 @@
   	</li>
 </ul>
 <% if current_user.organizations.count > 1 %>
-<ul class="nav pull-right text-left" style="padding-top: 10px; margin-right: -20px;">
+<ul class="nav pull-right text-left" style="padding-top: 8px;">
 	<%= form_tag set_current_org_user_path(current_user), :id => 'set_org_form', :method => "post", :class => 'navbar-form pull-right form-inline' do %>
 		<%= select("orgs", "org_id", current_user.organizations.collect {|o| [ o.name, o.short_name ] }, {:selected=> @organization.short_name}, {:class => "multiselect text-left"}) %>
 	<% end %>
