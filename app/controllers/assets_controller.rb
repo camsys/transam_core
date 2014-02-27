@@ -52,7 +52,7 @@ class AssetsController < AssetAwareController
     cache_assets(@assets)
    
     if @assets.count > 0
-      @page_title = "#{@assets.first.asset_type.name}"
+      @page_title = "#{@assets.first.asset_type.name}s"
     else
       @page_title = "Assets"
     end    
@@ -115,7 +115,8 @@ class AssetsController < AssetAwareController
   end
 
   def edit
-    @page_title = "Update " + @asset.name
+    @page_title = "Update: #{@asset.name}"
+    
     if @asset.geo_locatable? and @asset.mappable?
       markers = []
       markers << get_map_marker(@asset, 'asset', true) # make the marker draggable
@@ -167,7 +168,7 @@ class AssetsController < AssetAwareController
       return     
     end
  
-    @page_title = 'New ' + asset_subtype.name
+    @page_title = "New #{asset_subtype.name}"
 
     # Use the base class to create an asset of the correct type
     @asset = Asset.new_asset(asset_subtype)

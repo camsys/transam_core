@@ -24,18 +24,9 @@ class AssetEventsController < AssetAwareController
     # store it in the session
     session[:filter_type] = @filter_type
 
-    #if @filter_type == ACTION_FILTER_DISPOSITION
-    #  @events = @asset.disposition_updates
-    #  @page_title = 'Disposition History:'
-    #elsif @filter_type == ACTION_FILTER_CONDITION
-    #  @events = @asset.condition_updates
-    #  @page_title = 'Condition History:'
-    #else
-      @events = @asset.history      
-      @page_title = 'Asset History:'
-    #end    
+    @events = @asset.history      
+    @page_title = "Asset History: #{@asset.name}"
     
-
     respond_to do |format|
       format.html # index.html.erb
       format.json { render :json => @events }
@@ -51,7 +42,7 @@ class AssetEventsController < AssetAwareController
       @asset_event = AssetEvent.get_new_typed_event(asset_event_type)
     end
 
-    @page_sub_title = @asset.name
+    @page_title = "New #{@asset_event.name}: #{@asset.name}"
 
     respond_to do |format|
       format.html 
@@ -70,7 +61,7 @@ class AssetEventsController < AssetAwareController
       return
     end
  
-    @page_title = @asset.name    
+    @page_title = "#{@asset_event.name}: #{@asset.name}"
     @disabled = true
     
     respond_to do |format|
@@ -89,7 +80,7 @@ class AssetEventsController < AssetAwareController
       return
     end
 
-    @page_title = @asset.name
+    @page_title = "Update #{@asset_event.name}: #{@asset.name}"
     @disabled = false
    
   end

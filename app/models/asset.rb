@@ -239,7 +239,7 @@ class Asset < ActiveRecord::Base
   # default name for an asset
   # sub classes should override this with a class-specific name
   def name
-    return asset_subtype.name
+    return "#{asset_subtype.name}: #{asset_tag}"
   end
 
   # returns true if this instance can be geo_located. Always false for base class
