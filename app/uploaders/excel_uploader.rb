@@ -1,7 +1,7 @@
 class ExcelUploader < BaseUploader
 
   def store_dir
-    "file_uploads/#{mounted_as}/#{model.id}"
+    "file_uploads/#{model.id}"
   end
 
   # Add a white list of extensions which are allowed to be uploaded.

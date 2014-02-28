@@ -8,5 +8,6 @@ module TransamCore
     config.autoload_paths += %W(#{Rails.root}/app/reports)
     config.autoload_paths += %W(#{Rails.root}/app/searches)
     config.autoload_paths += %W(#{Rails.root}/app/services)
+    config.autoload_paths += %W(#{Rails.root}/app/uploaders)
   end
 end
