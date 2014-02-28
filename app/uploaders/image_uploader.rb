@@ -13,7 +13,7 @@ class ImageUploader < BaseUploader
   end
   
   def store_dir
-    "image_uploads/#{mounted_as}/#{model.id}"
+    "image_uploads/#{model.id}"
   end
 
   # Add a white list of extensions which are allowed to be uploaded.
