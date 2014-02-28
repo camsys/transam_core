@@ -10,9 +10,14 @@ module TransamFormatHelper
     number_to_currency(val.to_i, :precision => 0)
   end
 
+  # truncates any decimals and returns the number as currency
+  def format_as_integer(val)
+    number_with_precision(val, 0)
+  end
+
   # returns a number as a decimal
   def format_as_decimal(val, precision = 2)
-    number_with_precision(val, :precision => precision)
+    number_with_precision(val, :precision => precision, :delimiter => ",")
   end
 
   # returns a number as a percentage
