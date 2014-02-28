@@ -7,7 +7,7 @@ class UploadsController < OrganizationAwareController
   
   def index
 
-    @page_title = 'Uploads'
+    @page_title = 'File Uploads'
     @uploads = current_user.uploads
 
     # remember the view type
@@ -21,6 +21,8 @@ class UploadsController < OrganizationAwareController
   end
 
   def show
+    
+    @page_title = "Spreadsheet: #{@upload.original_filename}"
     
     respond_to do |format|
       format.html # show.html.erb
