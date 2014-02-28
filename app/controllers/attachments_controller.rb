@@ -31,7 +31,7 @@ class AttachmentsController < AssetAwareController
       @attachments = @asset.attachments.order('attachment_type_id, created_at')
     end
 
-    @page_title = 'Attachments'
+    @page_title = "#{@asset.name}: Attachments"
     
      # remember the view type
     @view_type = get_view_type(SESSION_VIEW_TYPE_VAR)
@@ -63,6 +63,8 @@ class AttachmentsController < AssetAwareController
       return            
     end
 
+    @page_title = "#{@asset.name}: #{@attachment.attachment_type.name}: #{@attachment.name}"
+    
     respond_to do |format|
       format.html # index.html.erb
       format.json { render :json => @attachment}
@@ -71,8 +73,6 @@ class AttachmentsController < AssetAwareController
   end
 
   def create      
-
-    @page_title = "Upload Attachment"
 
     @attachment = Attachment.new(form_params)
     @attachment.asset = @asset
@@ -97,7 +97,8 @@ class AttachmentsController < AssetAwareController
       redirect_to(inventory_attachments_url(@asset))
       return            
     end
-    @page_title = @attachment.name
+
+    @page_title = "#{@asset.name}: Update: #{@attachment.name}"
   end
   
   def update
@@ -122,6 +123,8 @@ class AttachmentsController < AssetAwareController
   end
   
   def new
+
+    @page_title = "#{@asset.name}: New Attachment"
 
     @attachment = Attachment.new
     @attachment.attachment_type_id = 1
