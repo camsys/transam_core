@@ -1,7 +1,7 @@
 class DocumentUploader < TransamAbstractUploader
         
   def store_dir
-    "document_uploads/#{model.id}"
+    "document_uploads/#{model.object_key}"
   end
 
   # Add a white list of extensions which are allowed to be uploaded.

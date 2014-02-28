@@ -1,7 +1,7 @@
 class ExcelUploader < TransamAbstractUploader
 
   def store_dir
-    "file_uploads/#{model.id}"
+    "file_uploads/#{model.object_key}"
   end
 
   # Add a white list of extensions which are allowed to be uploaded.

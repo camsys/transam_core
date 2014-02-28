@@ -13,7 +13,7 @@ class ImageUploader < TransamAbstractUploader
   end
   
   def store_dir
-    "image_uploads/#{model.id}"
+    "image_uploads/#{model.object_key}"
   end
 
   # Add a white list of extensions which are allowed to be uploaded.
