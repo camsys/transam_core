@@ -25,7 +25,7 @@ class AssetEventsController < AssetAwareController
     session[:filter_type] = @filter_type
 
     @events = @asset.history      
-    @page_title = "Asset History: #{@asset.name}"
+    @page_title = "#{@asset.name}: Asset History"
     
     respond_to do |format|
       format.html # index.html.erb
@@ -42,7 +42,7 @@ class AssetEventsController < AssetAwareController
       @asset_event = AssetEvent.get_new_typed_event(asset_event_type)
     end
 
-    @page_title = "New #{@asset_event.name}: #{@asset.name}"
+    @page_title = "#{@asset.name}: New #{@asset_event.name}"
 
     respond_to do |format|
       format.html 
@@ -61,7 +61,7 @@ class AssetEventsController < AssetAwareController
       return
     end
  
-    @page_title = "#{@asset_event.name}: #{@asset.name}"
+    @page_title = "#{@asset.name}: #{@asset_event.asset_event_type.name}: #{@asset_event.event_date}"
     @disabled = true
     
     respond_to do |format|
@@ -80,7 +80,7 @@ class AssetEventsController < AssetAwareController
       return
     end
 
-    @page_title = "Update #{@asset_event.name}: #{@asset.name}"
+    @page_title = "#{@asset.name}: Update #{@asset_event.asset_event_type.name}"
     @disabled = false
    
   end
