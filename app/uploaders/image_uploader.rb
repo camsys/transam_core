@@ -1,4 +1,4 @@
-class ImageUploader < BaseUploader
+class ImageUploader < TransamAbstractUploader
   
   include CarrierWave::RMagick
   

@@ -1,4 +1,4 @@
-class DocumentUploader < BaseUploader
+class DocumentUploader < TransamAbstractUploader
         
   def store_dir
     "document_uploads/#{model.id}"
