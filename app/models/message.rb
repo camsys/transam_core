@@ -34,6 +34,7 @@ class Message < ActiveRecord::Base
   validates :object_key,        :presence => true, :uniqueness => true
   validates :organization_id,   :presence => true
   validates :user_id,           :presence => true
+  validates :to_user_id,        :presence => true
   validates :priority_type_id,  :presence => true
   validates :subject,           :presence => true
   validates :body,              :presence => true
