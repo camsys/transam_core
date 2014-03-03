@@ -33,13 +33,13 @@ module TransamHelper
   def bootstrap_class_for flash_type
     case flash_type
       when :success
-        "alert-success"
+        "alert-success alert-block"
       when :error
-        "alert-error"
+        "alert-error alert-block"
       when :alert
-        "alert-block"
+        "alert alert-block"
       when :notice
-        "alert-info"
+        "alert-info alert-block"
       else
         flash_type.to_s
     end
