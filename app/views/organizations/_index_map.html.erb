@@ -1,6 +1,6 @@
 <div class="row-fluid">
 	<div class="span7">
-		<%= LeafletMap({ :mapid => 'lmap', :markers => @markers, :tile_provider => 'CLOUDMADE', :min_zoom => 3, :max_zoom => 15, :class => "thumbnail first_in_row", :style => "height:500px;margin-left:0;" }) %>
+		<%= LeafletMap({ :mapid => 'lmap', :markers => @markers, :tile_provider => get_tile_provider, :min_zoom => 3, :max_zoom => 15, :class => "thumbnail first_in_row", :style => "height:500px;margin-left:0;" }) %>
 	</div>
 	
 	<div class="span5">
