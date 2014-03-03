@@ -20,7 +20,7 @@
 						<td class="right"><%= number_to_human_size(a.file_size) %></td>						
 						<td class="right"><%= format_as_date_time(a.created_at) %></td>
 						<td class="center">
-							<%= link_to download_inventory_attachment_path(@asset, a), :class => 'btn btn-small', :confirm => 'Download this file?', :target => '_blank' do %>
+							<%= link_to download_inventory_attachment_path(@asset, a), :class => 'btn btn-small', :data => {:confirm => 'Download this file?'}, :target => '_blank' do %>
 								<i class="icon-download"></i> Download
 							<% end %>
 						</td>

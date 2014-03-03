@@ -28,7 +28,7 @@
 						<% end %>
 					</li>
 					<li>
-						<%= link_to inventory_path(@asset), :title => "Remove the asset?", :method => :delete, :confirm => "Are you sure you want to remove this asset?" do %> 
+						<%= link_to inventory_path(@asset), :title => "Remove the asset?", :method => :delete, :data => {:confirm => "Are you sure you want to remove this asset?"} do %> 
 							<i class="fa fa-times"></i> Remove
 						<% end %>
 					</li>

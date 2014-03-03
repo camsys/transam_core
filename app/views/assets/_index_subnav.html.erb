@@ -32,7 +32,7 @@
 
 					<% if @assets.count > 0 %>
 					<li>
-						<%= link_to inventory_index_path(:format => 'xls'), :confirm => "Do you want to download these assets as an XLS?" do %>
+						<%= link_to inventory_index_path(:format => 'xls'), :data => {:confirm => "Do you want to download these assets as an XLS?"} do %>
 						<i class="fa fa-download"></i> Export to Excel
 						<% end %>
 					</li>
