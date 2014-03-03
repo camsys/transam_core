@@ -1,12 +1,12 @@
 module TransamMapHelper
   
   # From the application config    
-  TILE_PROVIDER = 'GOOGLEMAP' 
+  TILE_PROVIDER = Rails.application.config.map_tile_provider
   
   ALPHABET = ('A'..'Z').to_a
 
   # Return the tile provider
-  def get_tile_provider
+  def get_map_tile_provider
     TILE_PROVIDER
   end
   
