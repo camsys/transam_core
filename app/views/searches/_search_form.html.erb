@@ -12,27 +12,10 @@
 	</ul>
 	<% if ! @disabled %>
 	<div class="form-actions">
-		<%= f.button :submit, 'Search' %>
+		<%= f.button :submit, 'Search', :id => 'submit_btn' %>
 		<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn" %>
 	</div>
 	<% end %>
 	<% end %>
 	</div>
 </div>
-
-<script type="text/javascript">
-
-	$(document).ready(function() {
-
-		transam.enable_date_pickers();
-			
-		transam.make_same_height('.form_part');
-		transam.make_same_height('.header_part');
-	
-		transam.fix_thumbnail_margins(3, 'form_part');
-		transam.fix_thumbnail_margins(4, 'header_part');
-	});
-	
-</script>
-
-

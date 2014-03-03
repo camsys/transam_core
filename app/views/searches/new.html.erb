@@ -2,10 +2,15 @@
 
 <%= render 'search_form' %>
 
+<div id="spinner">
+	<%= image_tag("ajax-loader.gif") %>
+</div>
+ 
 <div id="asset_table">
 <% if @assets.count > 0 %>
 	<%= render '/assets/asset_datatable' %>
+	<%= render 'shared/datatable_javascript' %>
 <% end %>	
 </div>
 
-<%= render 'shared/datatable_javascript' %>
+<%= render 'scripts' %>

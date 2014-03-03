@@ -1,3 +1,5 @@
+$('#spinner').hide();
+$('#asset_table').show();
 <% if @assets.count > 0 %>
 	$('#asset_table').html(" <%= escape_javascript(render '/assets/asset_datatable') %>");
 	transam.render_data_table("datatable", false);
