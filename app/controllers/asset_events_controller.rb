@@ -42,7 +42,7 @@ class AssetEventsController < AssetAwareController
       @asset_event = AssetEvent.get_new_typed_event(asset_event_type)
     end
 
-    @page_title = "#{@asset.name}: New #{@asset_event.name}"
+    @page_title = "#{@asset.name}: New #{@asset_event.asset_event_type.name}"
 
     respond_to do |format|
       format.html 
