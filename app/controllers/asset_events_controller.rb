@@ -14,18 +14,28 @@ class AssetEventsController < AssetAwareController
 
   def index
 
-    # Check to see if we got an filter to sub select on
-    if params[:filter_type].nil? 
-      # see if one is stored in the session
-      @filter_type = session[:filter_type].nil? ? 0 : session[:filter_type]
+    # Check to see if we got a filter to sub select on
+    if params[:filter_type]
+      # see if it was blank
+      if params[:filter_type].blank?
+        @filter_type = 0
+      else
+        @filter_type = params[:filter_type].to_i
+      end
     else
-      @filter_type = params[:filter_type].to_i
+      # See if there is one in the session
+      @filter_type = session[:filter_type].nil? ? 0 : session[:filter_type]
     end
     # store it in the session
     session[:filter_type] = @filter_type
 
-    @events = @asset.history      
-    @page_title = "#{@asset.name}: Asset History"
+    if @filter_type == 0
+      @events = @asset.asset_events
+    else
+      @events = @asset.asset_events.where('asset_event_type_id = ?', @filter_type)
+    end
+         
+    @page_title = "#{@asset.name}: History"
     
     respond_to do |format|
       format.html # index.html.erb
