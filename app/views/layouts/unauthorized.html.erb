@@ -42,8 +42,15 @@
 					<div>
 						<!-- Main Page Content -->
 						<div class="row-fluid">
+							<div class="span12" style="margin-top:20px;">
+								<% flash.each do |type, message| %>
+									<%= content_tag :div, message, :class => "alert fade in #{bootstrap_class_for(type)}" unless message.blank? %>
+								<% end %>
+							</div>
+						</div>
+						<div class="row-fluid">
 							<div class="span12">
-								<div class="row-fluid" style="margin-top:40px;">
+								<div class="row-fluid">
 									<div class="first-in-row span9">
 										<div class="hero-unit shadow" style = "height:300px">
 											<%= image_tag "logo.png", :class => "image pull-left", :style => "height:300px;width:300px;"%>
