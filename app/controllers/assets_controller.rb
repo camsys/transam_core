@@ -34,9 +34,10 @@ class AssetsController < AssetAwareController
     # remember the view type
     @view_type = get_view_type(SESSION_VIEW_TYPE_VAR)
 
-    # this call sets up @asset_type, @asset_subtype, @assets and @view
+    # this call sets up @asset_type, @asset_subtype, @assets @asset_class, and @view
     @assets = get_assets
-    
+    @page_title = "#{@asset_class}s"
+   
     # If we are viewing as a map we need to generate the markers
     if @view_type == VIEW_TYPE_MAP
       markers = []
@@ -50,13 +51,7 @@ class AssetsController < AssetAwareController
     
     # cache the set of asset ids in case we need them later
     cache_assets(@assets)
-   
-    if @assets.count > 0
-      @page_title = "#{@assets.first.asset_type.name}s"
-    else
-      @page_title = "Assets"
-    end    
-    
+       
     respond_to do |format|
       format.html
       format.js
@@ -248,7 +243,8 @@ class AssetsController < AssetAwareController
   protected
         
   # returns a list of assets for an index view (index, map) based on user selections
-  # this call sets up @asset_type, @asset_subtype, @assets, @id_filter_list and @view
+  # this call sets up @asset_type, @asset_subtype, @assets, @id_filter_list @asset_class
+  # and @view
   def get_assets
 
     # Check to see if we got an asset type to sub select on. This occurs when the user
@@ -273,6 +269,16 @@ class AssetsController < AssetAwareController
     # store it in the session for later
     session[:asset_subtype] = @asset_subtype
         
+    # Check to see if we got a search text to filter on
+    if params[:search_text].nil?
+      # See if one is stored in the session
+      @search_text = session[:search_text].blank? ? nil : session[:search_text]
+    else
+      @search_text = params[:search_text]
+    end
+    # store it in the session for later
+    session[:search_text] = @search_text
+    
     # Check to see if we got list of assets to filter on
     if params[:ids]
       @id_filter_list = params[:ids]
@@ -310,12 +316,8 @@ class AssetsController < AssetAwareController
     # Create a class instance of the asset type which can be used to perform
     # active record queries
     klass = Object.const_get class_name    
-
-    # Get the assets based on set of params that were included in the request
-    if ! params[:search_text].blank?
-      @search_text = params[:search_text].strip
-    end
-
+    @asset_class = klass.name
+    
     # here we build the query one clause at a time based on the input params
     clauses = []
     values = []
