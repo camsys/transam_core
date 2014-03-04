@@ -2,9 +2,17 @@
 	<div class="span12">
 		<%= form_tag create_templates_uploads_url, :id => 'template_form', :method => "get", :class => 'form-horizontal' do %>
 		<ul class="thumbnails">
-			<%= panel_tag('Select Inventory and Template Type', {:icon => 'icon-upload', :class => "span8 offset2"}) do %>		
-				<%= select_tag(:asset_type, options_from_collection_for_select(AssetType.all, "id", "name"), :prompt => 'Select asset type...', :id => 'asset_subtype_filter') %>
-				<%= select_tag(:file_content_type, options_from_collection_for_select(FileContentType.all, :id, :name), :prompt => 'Select template type...', :id => 'file_content_type') %>
+			<%= panel_tag('Select Template and Asset Type', {:icon => 'icon-upload', :class => "span8 offset2"}) do %>		
+				<%= select_tag(:template_type, options_for_select(@template_type_array), :prompt => 'Select template type...') %>
+				<%= select_tag(:asset_type, options_from_collection_for_select(@asset_type_array, "id", "name"), :prompt => 'Select asset type...', :id => 'asset_subtype_filter') %>
+				
+				</br>
+				<% AssetEventType.all.each do |aet| %>
+				    <%= check_box_tag 'asset_event_type_ids[]', aet.id %>
+				    <%= aet.name %>
+					</br>
+				<% end %>
+
 				<div class="form-actions panel-form-actions">
 					<%= submit_tag 'Generate template', :name => 'submit', :class=>"btn" %>
 					<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn" %>
