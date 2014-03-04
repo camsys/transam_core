@@ -11,7 +11,7 @@
 		<% end if current_user.can_edit?(@user) %>
 	</li>
 	<li>
-		<%= link_to edit_user_password_path do %>
+		<%= link_to change_password_user_path(@user) do %>
 		<i class="fa fa-key"></i> Change Password
 		<% end if current_user.can_edit?(@user) %>
 	</li>

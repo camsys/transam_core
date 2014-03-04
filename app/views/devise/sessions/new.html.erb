@@ -1,9 +1,6 @@
 <%= dialog_tag("Log in to TransAM", "fa fa-sign-in") do %>
 	<div class="row-fluid">
 		<div class="span10 offset1">
-			<div class="span12">
-				<%= devise_error_messages! %>
-			</div>
 			<%= simple_form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => {:class => 'form-vertical' }) do |f| %>
   			  <%= f.error_notification %>
 			  <%= f.input :email, :autofocus => true %>

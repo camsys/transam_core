@@ -1,7 +1,7 @@
 class UsersController < OrganizationAwareController
 
-  before_action :set_user, :only => [:show, :edit, :update, :destroy, :set_current_org]  
-  before_filter :check_for_cancel, :only => [:create, :update, :change_password]
+  before_action :set_user, :only => [:show, :edit, :update, :destroy, :set_current_org, :change_password, :update_password]  
+  before_filter :check_for_cancel, :only => [:create, :update, :update_password]
   
   SESSION_VIEW_TYPE_VAR = 'users_subnav_view_type'
   
@@ -29,8 +29,7 @@ class UsersController < OrganizationAwareController
   # GET /users.json
   def index
     
-    @page_title = @organization.name
-    @page_sub_title = 'Users'
+    @page_title = "#{@organization.name}: Users"
     
     if ! params[:search_text].blank?
       @search_text = params[:search_text].strip
@@ -61,7 +60,7 @@ class UsersController < OrganizationAwareController
       return
     end
  
-    @page_title = @user.name
+    @page_title = "#{@user.name}: Settings"
     
     respond_to do |format|
       format.html # show.html.erb
@@ -73,8 +72,7 @@ class UsersController < OrganizationAwareController
   # GET /users/new.json
   def new
 
-    @page_title = @organization.name
-    @page_sub_title = 'New User'
+    @page_title = "#{@organization.name}: New User"
 
     @user = User.new
     @user.organization = @organization
@@ -88,6 +86,23 @@ class UsersController < OrganizationAwareController
   # GET /users/1/edit
   def edit
 
+    @page_title = "#{@user.name}: Update"
+
+    # if not found or the object does not belong to the users
+    # send them back to index.html.erb
+    if @user.nil?
+      notify_user(:alert, "Record not found!")
+      redirect_to users_url
+      return
+    end
+
+  end
+
+  # GET /users/1/edit
+  def change_password
+
+    @page_title = "Change Password"
+    
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
     if @user.nil?
@@ -119,6 +134,8 @@ class UsersController < OrganizationAwareController
 
   def update
 
+    @page_title = "#{@user.name}: Update"
+
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
     if @user.nil?
@@ -138,6 +155,33 @@ class UsersController < OrganizationAwareController
       end
     end
   end
+  
+  def update_password
+
+    @page_title = "Change Password"
+
+    # if not found or the object does not belong to the users
+    # send them back to index.html.erb
+    if @user.nil?
+      notify_user(:alert, "Record not found!")
+      redirect_to users_url
+      return
+    end
+
+    respond_to do |format|
+      if @user.update_with_password(form_params)
+        # automatically sign in the user bypassing validation
+        notify_user(:notice, "User #{@user.name} was successfully updated.")
+        sign_in @user, :bypass => true
+        format.html { redirect_to user_url(@user) }
+        format.json { head :no_content }
+      else
+        format.html { render :action => "change_password" }
+        format.json { render :json => @user.errors, :status => :unprocessable_entity }
+      end
+    end
+  end
+  
 
   def destroy
 
@@ -167,7 +211,11 @@ class UsersController < OrganizationAwareController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def form_params
-    params.require(:user).permit(user_allowable_params)
+    allowable_params = user_allowable_params
+    allowable_params << :password
+    allowable_params << :password_confirmation
+    allowable_params << :current_password
+    params.require(:user).permit(allowable_params)
   end
   
   # Callbacks to share common setup or constraints between actions.
@@ -177,7 +225,7 @@ class UsersController < OrganizationAwareController
   
   def check_for_cancel
     unless params[:cancel].blank?
-      redirect_to users_url
+      redirect_to user_url(current_user)
     end
   end
 end
