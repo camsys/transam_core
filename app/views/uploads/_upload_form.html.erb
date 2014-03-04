@@ -5,6 +5,7 @@
 			<%= panel_tag('File', {:icon => 'fa fa-upload', :class => "span8 offset2"}) do %>		
 				<%= f.input :file, :label => 'Select your inventory spreadsheet...' %>
 				<%= f.association :file_content_type, :label => 'Spreadsheet content...' %>
+				<%= f.input :force_updates %>
 				<div class="form-actions panel-form-actions">
 					<%= f.button :submit %>
 					<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn" %>

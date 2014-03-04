@@ -54,7 +54,13 @@ class Upload < ActiveRecord::Base
     :file_status_type_id, 
     :file_content_type_id,
     :file,
-    :original_filename
+    :original_filename,
+    :force_update,
+    :num_rows_processed,
+    :num_rows_added,
+    :num_rows_replaced,
+    :num_rows_failed,
+    :processing_log
   ]
   
   #------------------------------------------------------------------------------
