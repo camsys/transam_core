@@ -32,7 +32,11 @@ class OrganizationsController < OrganizationAwareController
       return
     end
     
-    @page_title = @organization.name
+    if @organization.id == current_user.organization.id
+      @page_title = "My Organization"
+    else
+      @page_title = @organization.name
+    end
     @disabled = true
     
     respond_to do |format|
