@@ -60,7 +60,11 @@ class UsersController < OrganizationAwareController
       return
     end
  
-    @page_title = "#{@user.name}: Settings"
+    if @user.id == current_user.id
+      @page_title = "My Settings"
+    else
+      @page_title = "#{@user.name}: Settings"
+    end
     
     respond_to do |format|
       format.html # show.html.erb
