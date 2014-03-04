@@ -9,10 +9,9 @@
 				<%= format_field("Force", format_as_boolean(@upload.force_update)) %>						
 				<%= format_field("Uploaded by", @upload.user.name ) %>
 				<%= format_field("Upload time", format_as_date_time(@upload.created_at) ) %>
+				<%= format_field("Status", @upload.file_status_type.name ) %>
 			<% end %>
 			<%= panel_tag('Processing', {:icon => "fa fa-upload", :class => "header_part span6"}) do %>
-				<%= format_field("Status", @upload.file_status_type.name ) %>
-				<%= format_field("Started", format_as_date_time(@upload.processing_started_at) ) %>
 				<%= format_field("Time Started", format_as_date_time(@upload.processing_started_at) ) %>
 				<%= format_field("Time Complete", format_as_date_time(@upload.processing_completed_at) ) %>
 				<%= format_field("Num rows processed", format_as_integer(@upload.num_rows_processed) ) %>
