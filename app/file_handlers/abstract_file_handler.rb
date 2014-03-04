@@ -21,8 +21,8 @@ class AbstractFileHandler
     results = process(@upload)
     
     # update the model with the results of the processing
-    @upload.processing_log = results[:log]
-    @upload.file_status_type = results[:status]
+    @upload.file_status_type  = results.first
+    @upload.processing_log    = results.last
     @upload.save
     
   end

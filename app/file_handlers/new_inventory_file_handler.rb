@@ -9,7 +9,7 @@ class NewInventoryFileHandler < AbstractFileHandler
     processing_log = "Process complete"
     
     # Return the results
-    {:status => new_status, :log => processing_log}
+    [new_status, processing_log]
   end
 
   

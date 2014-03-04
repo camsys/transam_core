@@ -2,7 +2,7 @@ module TransamFormatHelper
         
   # formats a URL as a link
   def format_as_url(url, target = '_blank')
-    link_to(url, url, target: "_blank")
+    link_to(url, url, :target => target)
   end      
   
   # truncates any decimals and returns the number as currency
