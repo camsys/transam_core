@@ -60,7 +60,9 @@ class Upload < ActiveRecord::Base
     :num_rows_added,
     :num_rows_replaced,
     :num_rows_failed,
-    :processing_log
+    :processing_log,
+    :processing_completed_at,
+    :processing_started_at
   ]
   
   #------------------------------------------------------------------------------

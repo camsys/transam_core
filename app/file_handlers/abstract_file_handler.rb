@@ -9,20 +9,33 @@ class AbstractFileHandler
 
   attr_accessor :upload
   attr_accessor :errors
-
+  attr_accessor :num_rows_processed
+  attr_accessor :num_rows_added
+  attr_accessor :num_rows_replaced
+  attr_accessor :num_rows_failed
+  attr_accessor :new_status
+  attr_accessor :processing_log
+  
   # Errors are trapped and handled by the Job that executes this handler
   def execute
     
     # Indicate that processing is starting
-    @upload.file_status_type = FileStatusType.find_by_name("In Progress")
+    @upload.processing_started_at = Time.now
+    @upload.file_status_type      = FileStatusType.find_by_name("In Progress")
     @upload.save
     
-    # process the file
-    results = process(@upload)
+    # process the file. This method is responsible for setting the results
+    process(@upload)
     
     # update the model with the results of the processing
-    @upload.file_status_type  = results.first
-    @upload.processing_log    = results.last
+    @upload.file_status_type      = @new_status
+    @upload.num_rows_processed    = @num_rows_processed
+    @upload.num_rows_added        = @num_rows_added
+    @upload.num_rows_replaced     = @num_rows_replaced
+    @upload.num_rows_failed       = @num_rows_failed
+    
+    @upload.processing_log        = @processing_log
+    @upload.processing_completed_at = Time.now
     @upload.save
     
   end
