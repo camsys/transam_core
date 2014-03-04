@@ -12,7 +12,7 @@ module TransamFormatHelper
 
   # truncates any decimals and returns the number as currency
   def format_as_integer(val)
-    number_with_precision(val, 0)
+    format_as_decimal(val, 0)
   end
 
   # returns a number as a decimal
