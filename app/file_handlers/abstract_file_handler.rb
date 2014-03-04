@@ -35,7 +35,7 @@ class AbstractFileHandler
       @errors << "File URL can't be blank."      
     end
     # return true or false depending on if errors were generated
-    errors.count > 0
+    @errors.empty?
   end  
   
   def initialize(*args)

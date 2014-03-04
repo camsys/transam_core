@@ -6,11 +6,16 @@
 			<%= panel_tag('Spreadsheet', {:icon => "fa fa-upload", :class => "header_part span6"}) do %>
 				<%= format_field("Name", @upload.original_filename ) %>
 				<%= format_field("Content", @upload.file_content_type.name ) %>						
+				<%= format_field("Force", format_as_boolean(@upload.force_update)) %>						
 				<%= format_field("Uploaded by", @upload.user.name ) %>
 				<%= format_field("Upload time", format_as_date_time(@upload.created_at) ) %>
 			<% end %>
 			<%= panel_tag('Status', {:icon => "fa fa-upload", :class => "header_part span6"}) do %>
 				<%= format_field("Status", @upload.file_status_type.name ) %>
+				<%= format_field("Num rows processed", format_as_integer(@upload.num_rows_processed) ) %>
+				<%= format_field("Num rows added", format_as_integer(@upload.num_rows_added) ) %>
+				<%= format_field("Num rows replaced", format_as_integer(@upload.num_rows_replaced) ) %>
+				<%= format_field("Num rows failed", format_as_integer(@upload.num_rows_failed) ) %>
 			<% end %>
 		</ul>
 	</div>
@@ -20,6 +25,7 @@
 		<fieldset>
 			<legend>Processing Log</legend>
 			<div class="processing_log">
+				<%= @upload.processing_log.html_safe unless @upload.processing_log.blank? %>
 			</div>
 		</fieldset>
 	</div>

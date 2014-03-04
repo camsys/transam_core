@@ -2,15 +2,14 @@ class InventoryUpdatesFileHandler < AbstractFileHandler
   
   # Perform the processing
   def process(upload)
-      
-    file_url = upload.file.url
     
+    file_url = upload.file.url
       
     new_status = FileStatusType.find_by_name("Complete")
     processing_log = "Process complete"
     
     # Return the results
-    [:status => new_status, :log => processing_log]
+    {:status => new_status, :log => processing_log}
   end
 
   
@@ -19,5 +18,5 @@ class InventoryUpdatesFileHandler < AbstractFileHandler
     super
     self.upload = upload
   end
-
+  
 end
