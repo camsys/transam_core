@@ -1,7 +1,8 @@
-class NewInventoryFileHandler < AbstractFileHandler
+class InventoryUpdatesFileHandler < AbstractFileHandler
   
   # Perform the processing
-  def process(contents)
+  def process(upload)
+      
     file_url = upload.file.url
     
       
@@ -18,5 +19,5 @@ class NewInventoryFileHandler < AbstractFileHandler
     super
     self.upload = upload
   end
-  
+
 end
