@@ -90,7 +90,11 @@ class UsersController < OrganizationAwareController
   # GET /users/1/edit
   def edit
 
-    @page_title = "#{@user.name}: Update"
+    if @user.id == current_user.id
+      @page_title = "My Settings: Update"
+    else
+      @page_title = "#{@user.name}: Update"
+    end
 
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
@@ -138,7 +142,11 @@ class UsersController < OrganizationAwareController
 
   def update
 
-    @page_title = "#{@user.name}: Update"
+    if @user.id == current_user.id
+      @page_title = "My Settings: Update"
+    else
+      @page_title = "#{@user.name}: Update"
+    end
 
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
