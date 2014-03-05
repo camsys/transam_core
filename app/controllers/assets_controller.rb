@@ -435,7 +435,7 @@ class AssetsController < AssetAwareController
         a.organization.short_name,
         a.asset_subtype.name,
         a.asset_tag,
-        a.manufacturer.code,
+        a.manufacturer.nil? ? "" : a.manufacturer.code,
         a.manufacturer_model,
         a.service_status_type.blank? ?  "" : a.service_status_type.code,
         view_context.format_as_currency(a.cost),

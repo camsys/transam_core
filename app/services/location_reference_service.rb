@@ -13,7 +13,8 @@ class LocationReferenceService
     
   attr_accessor :location_reference
   attr_accessor :format
-  attr_accessor :geometry, :formatted_location_reference
+  attr_accessor :geometry
+  attr_accessor :formatted_location_reference
   attr_accessor :errors
   attr_reader   :gis_service
   
