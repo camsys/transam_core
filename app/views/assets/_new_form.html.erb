@@ -21,7 +21,7 @@
 						</div>
 					</div>
 					<div class="form-actions">
-						<%= submit_tag 'Create New Asset', :class => "btn" %>						
+						<%= submit_tag 'Create New Asset', :class => "btn", :id => "submit_button" %>						
 					</div>					
 				<% end %>
 			</ul>
@@ -36,7 +36,12 @@
   	var typeahead_min_chars = <%= Rails.application.config.ui_typeahead_min_chars %>
   	var typeahead_list_length = <%= Rails.application.config.ui_typeahead_list_length %>
   	var timeout;
-
+  	
+	$(document).ready(function() {  	
+  		// Disable the submit button
+  		$('#submit_button').attr("disabled", "disabled");
+	});
+	
 	  // Enable typeahead for the filter
 	  $('#filter').typeahead({
 	      items: typeahead_list_length,
@@ -44,6 +49,7 @@
 	      source: function(query, process) {
 	          if (timeout) {
 	            clearTimeout(timeout);
+	            $('#submit_button').attr("disabled", "disabled");
 	          }
 	          timeout = setTimeout(function() {
 	            return $.ajax({
@@ -98,6 +104,7 @@
 	        // Update the UI
 	        $('#filter').attr('value', item.name);
 	        $('#asset_subtype').attr('value', item.id);
+			$('#submit_button').removeAttr("disabled");    
 	        var url = '/inventory/details/?asset_subtype=' + item.id
 	        transam.ajax_render_action(url, 'get');
 	        return item.name;
