@@ -5,6 +5,7 @@
 				<ul class="nav">
 					<li>
 						<%= form_tag inventory_index_url, :id => 'asset_filter_form', :method => "get", :class => 'navbar-form form-inline' do %>
+							<%= hidden_field_tag :asset_type, @asset_type  %>
 							<%= hidden_field_tag :asset_subtype, @asset_subtype  %>
 							<%= hidden_field_tag :view_type, @view_type  %>
 						<div class="input-prepend input-append">
@@ -92,7 +93,8 @@
 	                url: $('#filter').data('link'),
 	                type: 'get',
 	                data: {
-	                  query: query
+	                  query: query,
+	                  asset_type: $('#asset_type').val()
 	                },
 	                dataType: 'json',
 	                success: function(result) {

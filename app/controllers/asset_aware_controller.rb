@@ -27,12 +27,17 @@ class AssetAwareController < OrganizationAwareController
   # Returns a JSON array of matching asset subtypes based on a typeahead name or description
   def filter
     
+    asset_type = params[:asset_type]
     query = params[:query]
     query_str = "%" + query + "%"
     Rails.logger.debug query_str
     
     matches = []
-    subtypes = AssetSubtype.where("name LIKE ? OR description LIKE ?", query_str, query_str)
+    if asset_type.blank? || asset_type == '0'
+      subtypes = AssetSubtype.where("name LIKE ? OR description LIKE ?", query_str, query_str)
+    else
+      subtypes = AssetSubtype.where("asset_type_id = ? AND (name LIKE ? OR description LIKE ?)", asset_type, query_str, query_str)
+    end
     subtypes.each do |subtype|
       matches << {
         "id" => subtype.id,
