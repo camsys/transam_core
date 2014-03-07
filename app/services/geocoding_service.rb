@@ -2,7 +2,7 @@
 # Centralizes all the geocoding logic we need
 class GeocodingService
 
-  attr_accessor :raw_address, :results, :sensor, :bounds, :components, :errors
+  attr_accessor :raw_address, :results, :sensor, :bounds, :region, :components, :errors
 
   INCLUDED_TYPES = %w{
     airport 
@@ -22,6 +22,7 @@ class GeocodingService
     @sensor = false
     @components = Rails.application.config.geocoder_components
     @bounds = Rails.application.config.geocoder_bounds
+    @region = Rails.application.config.geocoder_region
     attrs.each do |k, v|
       self.send "#{k}=", v
     end
@@ -55,7 +56,7 @@ class GeocodingService
       return @results
     end
     begin
-      res = Geocoder.search(@raw_address, :sensor => @sensor, :components => @components, :bounds => @bounds)
+      res = Geocoder.search(@raw_address, :sensor => @sensor, :components => @components, :region => @region, :bounds => @bounds)
       Rails.logger.debug res.ai
       process_results(res)
     rescue Exception => e
