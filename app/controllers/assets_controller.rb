@@ -36,7 +36,7 @@ class AssetsController < AssetAwareController
 
     # this call sets up @asset_type, @asset_subtype, @assets @asset_class, and @view
     @assets = get_assets
-    @page_title = "#{@asset_class}s"
+    @page_title = "#{@asset_class.underscore.humanize}s"
    
     # If we are viewing as a map we need to generate the markers
     if @view_type == VIEW_TYPE_MAP
@@ -435,8 +435,7 @@ class AssetsController < AssetAwareController
         a.organization.short_name,
         a.asset_subtype.name,
         a.asset_tag,
-        a.manufacturer.nil? ? "" : a.manufacturer.code,
-        a.manufacturer_model,
+        a.description,
         a.service_status_type.blank? ?  "" : a.service_status_type.code,
         view_context.format_as_currency(a.cost),
 
