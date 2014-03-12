@@ -40,14 +40,13 @@ class Asset < ActiveRecord::Base
 
   # each asset belongs to a single organization
   belongs_to :organization        
+  
   # each asset has a single asset type
   belongs_to :asset_type          
+  
   # each asset has a single asset subtype
   belongs_to :asset_subtype       
-  
-  # each asset belongs to a single manufacturer and has a single model 
-  belongs_to :manufacturer
-  
+    
   # Each asset has zero or more asset events. These are all events regardless of event type
   has_many   :asset_events        
 
@@ -133,8 +132,7 @@ class Asset < ActiveRecord::Base
   SEARCHABLE_FIELDS = [
     'object_key',
     'asset_tag',
-    'manufacture_year',
-    'manufacturer_model'
+    'manufacture_year'
   ] 
           
   # List of fields that should be nilled when a copy is made
@@ -163,8 +161,6 @@ class Asset < ActiveRecord::Base
     :asset_type_id, 
     :asset_subtype_id, 
     :asset_tag,
-    :manufacturer_id,
-    :manufacturer_model,
     :manufacture_year,
     :policy_replacement_year,
     :estimated_replacement_year,
