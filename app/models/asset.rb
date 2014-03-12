@@ -367,13 +367,6 @@ class Asset < ActiveRecord::Base
     SEARCHABLE_FIELDS
   end
 
-  #------------------------------------------------------------------------------
-  #
-  # Protected Methods
-  #
-  #------------------------------------------------------------------------------
-  protected
-  
   # nils out all fields identified to be cleansed
   def cleanse
     cleansable_fields.each do |field|
@@ -381,6 +374,13 @@ class Asset < ActiveRecord::Base
     end
   end
 
+  #------------------------------------------------------------------------------
+  #
+  # Protected Methods
+  #
+  #------------------------------------------------------------------------------
+  protected
+  
   # updates the calcuated values of an asset
   def update_asset_state(policy = nil)
     Rails.logger.info "Updating condition for asset = #{object_key}"

@@ -1,4 +1,4 @@
-class NewInventoryFileHandler < AbstractFileHandler
+class InventoryUpdatesFileHandler < AbstractFileHandler
   
   # Perform the processing
   def process(upload)

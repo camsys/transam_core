@@ -44,7 +44,9 @@
 						<div class="row-fluid">
 							<div class="span12" style="margin-top:20px;">
 								<% flash.each do |type, message| %>
-									<%= content_tag :div, message, :class => "alert fade in #{bootstrap_class_for(type)}" unless message.blank? %>
+									<% if type == :success || type == :alert %>
+										<%= content_tag :div, message, :class => "alert fade in #{bootstrap_class_for(type)}" unless message.blank? %>
+									<% end %>
 								<% end %>
 							</div>
 						</div>

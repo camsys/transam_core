@@ -67,6 +67,9 @@ class UploadsController < OrganizationAwareController
     respond_to do |format|
       if @upload.save
         notify_user(:notice, "File was successfully uploaded.")        
+        # create a job to process this file in the background
+        create_upload_process_job(@upload)
+
         format.html { redirect_to uploads_url }
         format.json { render :json => @upload, :status => :created, :location => @upload }
       else
@@ -94,6 +97,15 @@ class UploadsController < OrganizationAwareController
   end
 
   protected
+  
+  # Generates a background job to propcess the file
+  def create_upload_process_job(upload, priority = 0)
+    if upload
+      job = UploadProcessorJob.new(upload.object_key)
+      fire_background_job(job, priority)
+    end
+  end
+  
   # Never trust parameters from the scary internet, only allow the white list through.
   def form_params
     params.require(:upload).permit(upload_allowable_params)
