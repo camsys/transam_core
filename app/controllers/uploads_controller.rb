@@ -7,7 +7,7 @@ class UploadsController < OrganizationAwareController
   
   def index
 
-    @page_title = 'Spreadsheet Uploads'
+    @page_title = 'Uploads'
     @uploads = current_user.uploads
 
     # remember the view type
@@ -22,8 +22,6 @@ class UploadsController < OrganizationAwareController
 
   def show
     
-    @page_title = "Spreadsheet: #{@upload.original_filename}"
-    
     respond_to do |format|
       format.html # show.html.erb
       format.json { render :json => @upload }
@@ -33,11 +31,22 @@ class UploadsController < OrganizationAwareController
 
   def templates
     @page_title = "Download Template"
+    @template_type_array = ['New', 'Update']
     
+    #prepare a list of just the asset types of the current organization
+    @asset_type_array = []
+    AssetType.all.each do |at|
+      if @organization.asset_count(at) > 0 
+        @asset_type_array << at
+      end
+    end
   end
   
   def create_templates
+    asset_event_type_ids = []
+    asset_event_type_ids = params[:asset_event_type_ids].collect { |id| id.to_i } if params[:asset_event_type_ids]
     
+  
   end
   
   def new
