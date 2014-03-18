@@ -2,7 +2,7 @@
 	<ul class="nav nav-pills nav-stacked">
 		<li class="nav-header" style="font-size:1.25em;margin-left:-10px;">Messages</li>
   		<li class="<%= get_nav_link_class('messages', MessagesController::SESSION_FILTER_TYPE_VAR, MessagesController::MESSAGE_TYPE_NEW) %>">
-  			<%= link_to "New Messages (#{current_user.messages.where('opened_at IS NULL').count})", user_messages_path(current_user, :filter => MessagesController::MESSAGE_TYPE_NEW) %>
+  			<%= link_to "New Messages (#{current_user.messages.where('to_user_id = ? AND opened_at IS NULL', current_user.id).count})", user_messages_path(current_user, :filter => MessagesController::MESSAGE_TYPE_NEW) %>
   		</li>
   		<li class="<%= get_nav_link_class('messages', MessagesController::SESSION_FILTER_TYPE_VAR, MessagesController::MESSAGE_TYPE_OLD) %>">
   			<%= link_to "Inbox", user_messages_path(current_user, :filter => MessagesController::MESSAGE_TYPE_OLD) %>
