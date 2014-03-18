@@ -9,4 +9,8 @@ class PriorityType < ActiveRecord::Base
     where(:is_default => true).first
   end      
 
+  def to_s
+    name
+  end
+
 end
