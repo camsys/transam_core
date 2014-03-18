@@ -12,6 +12,10 @@ class AssetSubtype < ActiveRecord::Base
   def full_name
     "#{name} - #{description}"
   end      
+
+  def to_s
+    name
+  end
                    
 end
       

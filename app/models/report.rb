@@ -14,4 +14,8 @@ class Report < ActiveRecord::Base
   scope :show_in_nav, -> { where(:show_in_nav => true) }
   scope :show_in_dashboard, -> { where(:show_in_dashboard => true) }
 
+  def to_s
+    name
+  end
+
 end

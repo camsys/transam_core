@@ -125,6 +125,10 @@ class Organization < ActiveRecord::Base
   #
   #------------------------------------------------------------------------------
         
+  def to_s
+    short_name
+  end
+  
   # Generic organizations do not own transit assets
   def has_assets?
     false

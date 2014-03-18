@@ -25,4 +25,8 @@ class ConditionType < ActiveRecord::Base
     ConditionType.where("rating = ?", val).first
   end
 
+  def to_s
+    name
+  end
+
 end

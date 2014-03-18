@@ -115,6 +115,10 @@ class User < ActiveRecord::Base
     ! roles.find(role_id).nil?
   end
       
+  def to_s
+    name
+  end
+  
   def name
     return first_name + " " + last_name unless new_record?
   end
