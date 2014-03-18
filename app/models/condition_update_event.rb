@@ -17,7 +17,7 @@ class ConditionUpdateEvent < AssetEvent
       
   validates                 :condition_type_id, :presence => true
   validates_numericality_of :assessed_rating, :greater_than_or_equal_to => 0,   :less_than_or_equal_to => 5
-  validates_numericality_of :current_mileage, :greater_than_or_equal_to => 0,   :only_integer => :true,   :allow_nil => :true
+  validates_numericality_of :current_mileage, :greater_than_or_equal_to => 0,   :less_than_or_equal_to => 1000000,  :only_integer => :true,   :allow_nil => :true
   
   before_validation do
     self.assessed_rating ||= ConditionType.find(condition_type_id).rating
