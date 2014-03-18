@@ -11,7 +11,7 @@
 			<%= format_field("File Name", @attachment.original_filename ) %>
 			<%= format_field("Content", @attachment.attachment_type.name ) %>
 			<%= format_field("Upload Time", format_as_date_time(@attachment.created_at) ) %>
-			<%= format_field("Uploaded By", link_to(@attachment.creator, user_path(@attachment.creator)) ) %>
+			<%= format_field("Uploaded By", link_to(@attachment.creator.name, user_path(@attachment.creator)) ) %>
 			<%= format_field("Notes", @attachment.notes.html_safe ) unless @attachment.notes.blank? %>
 		<% end %>
 	</div>
