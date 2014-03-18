@@ -9,8 +9,7 @@
 			<th class="center">Agcy</th>
 			<th class="center">Type</th>
 			<th class="center">Tag</th>					
-			<th class="center">Manu.</th>
-			<th class="center">Model</th>
+			<th class="center">Description</th>
 			<th class="center">Stat</th>
 			<th class="center">Cost</th>
 			
@@ -34,8 +33,7 @@
 				<td class="left"><%= a.organization.short_name %></td>
 				<td class="left"><%= a.asset_subtype.name %></td>
 				<td class="left"><%= a.asset_tag %></td>
-				<td class="left"><%= a.manufacturer.code %></td>
-				<td class="left"><%= a.manufacturer_model %></td>
+				<td class="left"><%= a.description %></td>
 				<td class="center"><%= a.service_status_type.code unless a.service_status_type.nil? %></td>
 				<td class="right"><%= format_as_currency(a.cost) %></td>
 
