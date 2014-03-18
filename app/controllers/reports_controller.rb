@@ -37,7 +37,14 @@ class ReportsController < OrganizationAwareController
 
     # load this report and create the report instance 
     @report = Report.find(params[:id])
-
+    @report_filter_type = params[:report_filter_type]
+    @asset_types = []
+    AssetType.all.each do |at|
+      if @organization.asset_count(at) > 0
+        @asset_types << [at.name, at.id]
+      end
+    end
+    
     if @report.nil?
       notify_user(:alert, "Record not found!")
       redirect_to reports_url

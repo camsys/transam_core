@@ -9,7 +9,7 @@
 		<%= form_tag report_url(@report), :id => 'asset_filter_form', :method => "get", :class => 'navbar-form form-inline' do %>
 		<div class="input-prepend">
 			<span class="add-on">Filter</span>
-			<%= select_tag(:report_filter_type, options_for_select(AssetType.all.collect{|a| [a.name, a.id]}, :selected => @report_filter_type), :style => 'margin-top:0px', :prompt => 'All', :id => 'asset_filter') %>
+			<%= select_tag(:report_filter_type, options_for_select(@asset_types, :selected => @report_filter_type), :style => 'margin-top:0px', :prompt => 'All', :id => 'asset_filter') %>
 		</div>
 		<% end %>
 	</li>
