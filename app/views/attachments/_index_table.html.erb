@@ -7,6 +7,7 @@
 					<th class="center">Name</th>
 					<th class="center">Filename</th>
 					<th class="center">File size</th>
+					<th class="center">Uploaded By</th>
 					<th class="center">Uploaded On</th>
 					<th class="center">Actions</th>
 				</tr>
@@ -18,6 +19,7 @@
 						<td class="left"><%= a.name %></td>
 						<td class="left"><%= a.original_filename %></td>
 						<td class="right"><%= number_to_human_size(a.file_size) %></td>						
+						<td class="left"><%= a.creator %></td>
 						<td class="right"><%= format_as_date_time(a.created_at) %></td>
 						<td class="center">
 							<%= link_to download_inventory_attachment_path(@asset, a), :class => 'btn btn-small', :data => {:confirm => 'Download this file?'}, :target => '_blank' do %>

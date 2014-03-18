@@ -76,6 +76,7 @@ class AttachmentsController < AssetAwareController
 
     @attachment = Attachment.new(form_params)
     @attachment.asset = @asset
+    @attachment.creator = current_user
     
     respond_to do |format|
       if @attachment.save        

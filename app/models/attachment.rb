@@ -29,6 +29,7 @@ class Attachment < ActiveRecord::Base
   # Associations
   belongs_to :asset
   belongs_to :attachment_type
+  belongs_to :creator, :class_name => "User", :foreign_key => "created_by_id"
   
   validates :object_key,          :presence => true, :uniqueness => true
   validates :asset_id,            :presence => true
