@@ -9,11 +9,6 @@
 		<% end %>
 	</li>
 	<li>
-		<%= link_to locations_path do %>
-		<i class="fa fa-flag-o"></i> <%= "Locations (#{@organization.locations.count})"%>
-		<% end %>
-	</li>
-	<li>
 		<%= link_to map_organization_path(@organization) do %>
 		<i class="fa fa-globe"></i> Map
 		<% end %>
