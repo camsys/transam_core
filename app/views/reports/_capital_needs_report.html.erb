@@ -21,7 +21,7 @@
 				<% @data.each_value do |row| %>
 				<tr data-action-path = '<%= inventory_index_path(:ids => row.id_list) %>'>
 					<td class="left"><%= row.key %></td>
-					<td class="right"><%= row.count %></td>
+					<td class="right"><%= format_as_integer(row.count) %></td>
 					<td class="right"><%= format_as_currency(row.replacement_cost) %></td>
 					<td class="right"><%= format_as_currency(row.cost_recovery) %></td>
 					<td class="right"><%= format_as_currency(row.replacement_cost - row.cost_recovery) %></td>
@@ -50,14 +50,14 @@
 	function draw_chart() {
 
 		var chart_data = new google.visualization.DataTable();
-		chart_data.addColumn('string', 'Asset Type');	
+		chart_data.addColumn('string', 'Asset Type');
 		chart_data.addColumn('number', '($)');
 		chart_data.addColumn('number', '($)');
 		<% @data.each_value do |row| %>
 			<% capital_rqd = row.replacement_cost - row.cost_recovery %>
 			chart_data.addRow(['<%= row.key %>', {v: <%= capital_rqd.to_i %>, f: '<%= format_as_currency(capital_rqd) %>'}, {v: <%= row.cost_recovery.to_i %>, f: '<%= format_as_currency(row.cost_recovery) %>'}]);
 		<% end %>
-		
+
 		var chart = null;
 		var chart_options = {
 			is3D : true,
@@ -75,6 +75,6 @@
 	window.onresize = function() {
 		draw_chart();
 	};
-		
+
 </script>
 

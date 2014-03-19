@@ -1,7 +1,7 @@
 <div class="row-fluid">
 	<div class="span12">
 		<fieldset>
-			<legend>Policy Rules</legend>	
+			<legend>Policy Rules</legend>
 			<table id="datatable" class="table table-condensed table-striped table-hover table-bordered control-group" style="margin-top:0px;">
 				<thead>
 					<tr>
@@ -24,7 +24,7 @@
 						<td class="left"><%= pi.asset_subtype.asset_type.name %></td>
 						<td class="left"><%= pi.asset_subtype.name %></td>
 						<td class="right"><%= pi.max_service_life_years %></td>
-						<td class="right"><%= pi.max_service_life_miles %></td>
+						<td class="right"><%= format_as_integer(pi.max_service_life_miles) %></td>
 						<td class="right"><%= format_as_currency(pi.replacement_cost) %></td>
 						<td class="right"><%= pi.pcnt_residual_value %></td>
 					</tr>
