@@ -173,12 +173,16 @@ class TasksController < OrganizationAwareController
   protected
   
   def get_event_color(task)
-    if task.priority_type == 1
+    if task.task_status_type_id == 1      # New
       color = '#FF0000'
-    elsif task.priority_type == 2
+    elsif task.task_status_type_id == 2   # In Progress
       color = '#00FF00'
+    elsif task.task_status_type_id == 3   # Complete
+      color = '#0000FF'
+    elsif task.task_status_type_id == 4   # On Hold
+      color = '#00FFFF'
     else
-      color = '00FFFF'
+      color = 'FF00FF'                    # Cancelled
     end
     color
   end
