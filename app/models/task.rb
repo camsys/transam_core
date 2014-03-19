@@ -34,6 +34,7 @@ class Task < ActiveRecord::Base
   belongs_to :user
   belongs_to :to_user
   belongs_to :priority_type
+  belongs_to :task_status_type
   
   #attr_accessible :from_user_id, :from_organization_id, :priority_type_id, :for_organization_id, :assigned_to_user_id, :subject, :body, :complete_by
 
@@ -56,6 +57,7 @@ class Task < ActiveRecord::Base
     :from_user_id,
     :from_organization_id, 
     :priority_type_id, 
+    :tastk_sttaus_type_id,
     :assigned_to_user_id, 
     :for_organization_id,
     :subject,
@@ -75,6 +77,7 @@ class Task < ActiveRecord::Base
       
   # Set resonable defaults for a new asset
   def set_defaults
+    self.tasK-status_type_id ||= TaskStatusType.find_by_name('Not Started').id    
   end    
       
 end
