@@ -77,7 +77,7 @@ class Task < ActiveRecord::Base
       
   # Set resonable defaults for a new asset
   def set_defaults
-    self.tasK-status_type_id ||= TaskStatusType.find_by_name('Not Started').id    
+    self.task_status_type_id ||= TaskStatusType.find_by_name('Not Started').id    
   end    
       
 end
