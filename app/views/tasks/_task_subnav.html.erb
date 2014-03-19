@@ -13,7 +13,7 @@
 							<i class="fa fa-plus"></i> New Task
 						<% end %>
 					</li>
-				  	<% if @task && ! @task.new_record? %>
+				  	<% if @task && ! @task.new_record? && ! @task.complete? %>
 						<li>
 							<%= link_to edit_user_task_path(current_user, @task) do %> 
 								<i class="fa fa-edit"></i> Update
@@ -21,7 +21,7 @@
 						</li>
 					<% end %>
 				</ul>
-				<% if @task.completed_on.nil? %>
+				<% unless @task.complete? %>
 					<%= form_tag update_status_user_task_path(current_user, @task), :id => 'task_action_form', :method => "patch", :class => 'navbar-form pull-right form-inline' do %>
 					<div class="input-append span2">
 						<%= select_tag(:task_status, options_for_select(TaskStatusType.all.collect{|a| [a.name, a.id]}), :class => "inline", :style => "margin-top:0;", :prompt => 'Update status...') %>

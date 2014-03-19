@@ -74,7 +74,36 @@ class Task < ActiveRecord::Base
   def self.allowable_params
     FORM_PARAMS
   end
-      
+
+  #------------------------------------------------------------------------------
+  #
+  # Instance Methods
+  #
+  #------------------------------------------------------------------------------
+
+  def cancelled?
+    (task_status_type_id == 5)
+  end
+  def complete?
+    (task_status_type_id == 3)
+  end
+  def on_hold?
+    (task_status_type_id == 4)
+  end
+  def in_progress?
+    (task_status_type_id == 2)
+  end
+  def not_started?
+    (task_status_type_id == 1)
+  end
+  
+  #------------------------------------------------------------------------------
+  #
+  # Private Methods
+  #
+  #------------------------------------------------------------------------------
+  private
+        
   # Set resonable defaults for a new asset
   def set_defaults
     self.task_status_type_id ||= TaskStatusType.find_by_name('Not Started').id    
