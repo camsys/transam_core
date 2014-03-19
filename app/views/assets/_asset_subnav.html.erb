@@ -59,8 +59,8 @@
 				<%= form_tag new_inventory_asset_event_path(@asset), :id => 'asset_action_form', :method => "get", :class => 'navbar-form pull-right form-inline' do %>
 				<div class="input-append span2">
 					<%= select_tag(:event_type, options_for_select(AssetEventType.all.collect{|a| [a.name, a.id]}), :class => "inline", :style => "margin-top:0;", :prompt => 'Add Event...') %>
-					<button class="btn" type="submit">
-						Go!
+					<button class="btn" type="submit" id="submit_button">
+						Add
 					</button>
 				</div>
 				<% end %>
