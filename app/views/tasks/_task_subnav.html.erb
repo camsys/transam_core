@@ -1,19 +1,37 @@
-<%= sub_nav_tag({}) do %>
-	<li>
-		<%= link_to user_tasks_path(current_user) do %> 
-			<i class="fa fa-calendar"></i> All tasks
-		<% end %>
-	</li>
-	<li>
-		<%= link_to new_user_task_path(current_user) do %> 
-			<i class="fa fa-plus"></i> New Task
-		<% end %>
-	</li>
-  	<% if @task && ! @task.new_record? %>
-		<li>
-			<%= link_to edit_user_task_path(current_user, @task) do %> 
-				<i class="fa fa-edit"></i> Update
-			<% end %>
-		</li>
-	<% end %>
-<% end %>
+<div class="row-fluid">
+	<div class="span12">
+		<div class="navbar">
+			<div class="navbar-inner">
+				<ul class="nav">
+					<li>
+						<%= link_to user_tasks_path(current_user) do %> 
+							<i class="fa fa-calendar"></i> All tasks
+						<% end %>
+					</li>
+					<li>
+						<%= link_to new_user_task_path(current_user) do %> 
+							<i class="fa fa-plus"></i> New Task
+						<% end %>
+					</li>
+				  	<% if @task && ! @task.new_record? %>
+						<li>
+							<%= link_to edit_user_task_path(current_user, @task) do %> 
+								<i class="fa fa-edit"></i> Update
+							<% end %>
+						</li>
+					<% end %>
+				</ul>
+				<% if @task.completed_on.nil? %>
+					<%= form_tag update_status_user_task_path(current_user, @task), :id => 'task_action_form', :method => "patch", :class => 'navbar-form pull-right form-inline' do %>
+					<div class="input-append span2">
+						<%= select_tag(:task_status, options_for_select(TaskStatusType.all.collect{|a| [a.name, a.id]}), :class => "inline", :style => "margin-top:0;", :prompt => 'Update status...') %>
+						<button class="btn" type="submit" id="submit_button">
+							Set
+						</button>
+					</div>
+					<% end unless @task.new_record? %>
+				<% end %>
+			</div>
+		</div>
+	</div>
+</div>

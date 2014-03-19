@@ -1,16 +1,18 @@
 <%= render 'task_subnav' %>
 
 <div class="row-fluid">
-	<div class="span6 offset3">
+	<div class="span12">
 		<ul class="thumbnails">
-		<%= panel_tag(@task.subject, {:icon => 'fa fa-calendar', :class => "span12 form_part"}) do %>
-			<%= format_field("Due", format_as_date(@task.complete_by)) %>
-			<%= format_field("From", @task.from_user.name ) %>
-			<%= format_field("Description", @task.body ) %>
-			<% if @task.completed_on %>
-				<%= format_field("Completed On", format_as_date(@task.completed_on)) %>
+			<%= panel_tag(@task.subject, {:icon => 'fa fa-calendar', :class => "span8 offset2 form_part"}) do %>
+				<%= format_field("Status", @task.task_status_type ) %>
+				<%= format_field("Due", format_as_date(@task.complete_by)) %>
+				<%= format_field("Priority", @task.priority_type ) %>
+				<%= format_field("From", @task.from_user.name ) %>
+				<%= format_field("Description", @task.body.html_safe ) %>
+				<% if @task.completed_on %>
+					<%= format_field("Completed On", format_as_date(@task.completed_on)) %>
+				<% end %>
 			<% end %>
-		<% end %>
 		</ul>
 	</div>
 </div>

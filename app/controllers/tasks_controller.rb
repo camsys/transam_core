@@ -1,6 +1,6 @@
 class TasksController < OrganizationAwareController
   
-  before_action :set_task, :only => [:show, :edit, :update, :destroy]  
+  before_action :set_task, :only => [:show, :edit, :update, :destroy, :update_status]  
   before_filter :check_for_cancel, :only => [:create, :update] 
 
   SESSION_VIEW_TYPE_VAR = 'tasks_subnav_view_type'
@@ -112,6 +112,35 @@ class TasksController < OrganizationAwareController
       end
     end
 
+  end
+
+  def update_status
+
+    # if not found or the object does not belong to the users
+    # send them back to index.html.erb
+    if @task.nil?
+      notify_user(:alert, "Record not found!")
+      redirect_to user_tasks_url
+      return
+    end
+
+    @task.task_status_type = TaskStatusType.find(params[:task_status])
+    if @task.task_status_type.name == 'Complete'
+      @task.completed_on = Date.today
+    else 
+      @task.completed_on = nil
+    end
+    
+    respond_to do |format|
+      if @task.save
+        notify_user(:notice, "Task was successfully updated.")
+        format.html { redirect_to user_task_url(current_user, @task) }
+        format.json { head :no_content }
+      else
+        format.html { render :action => "edit" }
+        format.json { render :json => @task.errors, :status => :unprocessable_entity }
+      end
+    end
   end
 
   def update
