@@ -62,6 +62,7 @@ class Task < ActiveRecord::Base
     :for_organization_id,
     :subject,
     :body,
+    :send_reminder,
     :complete_by
   ]
   
@@ -107,6 +108,7 @@ class Task < ActiveRecord::Base
   # Set resonable defaults for a new asset
   def set_defaults
     self.task_status_type_id ||= TaskStatusType.find_by_name('Not Started').id    
+    self.send_reminder ||= true   
   end    
       
 end

@@ -9,6 +9,7 @@
 					<%= f.input_field :complete_by, :as => :string, :class => 'span8 datepicker', :style => "margin-top:0" %>
 					<%= content_tag :span, :class => "add-on" do %><i class="icon-calendar"></i><% end %>
 				<% end %>
+				<%= f.input :send_reminder %>
 				<%= f.association :priority_type, :include_blank => false %>
 				<%= f.input :body, :label => 'Details', :input_html => { :class => "span10", :rows => 6 }, :placeholder => "Enter any details about this task..."%>
 				<div class="form-actions panel-form-actions">
