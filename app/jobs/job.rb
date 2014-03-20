@@ -26,4 +26,12 @@ class Job
       Rails.logger.warn e.message      
     end
   end
+  
+  protected
+  
+  # Get the system user
+  def get_system_user
+    User.where('first_name = ? AND last_name = ?', 'system', 'user').first
+  end
+  
 end
