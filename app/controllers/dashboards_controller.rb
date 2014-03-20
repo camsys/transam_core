@@ -2,12 +2,20 @@ class DashboardsController < OrganizationAwareController
         
   def index
     
-    @page_title = 'Dashboard'
+    @page_title = 'My Dashboard'
     
     # Select messages for this user or ones that are for the agency as a whole
-    @messages = Message.where("organization_id = ? AND to_user_id = ? AND opened_at IS NULL", @organization.id, current_user.id).order("created_at DESC")
+    @messages = Message.where("to_user_id = ? AND opened_at IS NULL", @organization.id, current_user.id).order("created_at DESC")
+
     # Select tasks for this user or ones that are for the agency as a whole
-    @tasks = Task.where("for_organization_id = ? AND completed_on IS NULL AND (assigned_to_user_id IS NULL OR assigned_to_user_id = ?)", @organization.id, current_user.id).order("complete_by")
+
+    # Get the task status types to search for
+    task_statuses = []
+    task_statuses << TaskStatusType.find_by_name('Not Started')
+    task_statuses << TaskStatusType.find_by_name('In Progress')
+    task_statuses << TaskStatusType.find_by_name('On Hold')
+            
+    @tasks = Task.where("assigned_to_user_id = ? AND task_status_type_id IN(?)", current_user.id, task_statuses).order("complete_by")
             
   end
 
