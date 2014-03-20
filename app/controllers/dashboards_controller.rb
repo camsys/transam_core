@@ -5,7 +5,7 @@ class DashboardsController < OrganizationAwareController
     @page_title = 'My Dashboard'
     
     # Select messages for this user or ones that are for the agency as a whole
-    @messages = Message.where("to_user_id = ? AND opened_at IS NULL", @organization.id, current_user.id).order("created_at DESC")
+    @messages = Message.where("to_user_id = ? AND opened_at IS NULL", current_user.id).order("created_at DESC")
 
     # Select tasks for this user or ones that are for the agency as a whole
 
