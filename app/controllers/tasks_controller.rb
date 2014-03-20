@@ -5,18 +5,25 @@ class TasksController < OrganizationAwareController
 
   SESSION_VIEW_TYPE_VAR   = 'tasks_subnav_view_type'
   SESSION_FILTER_TYPE_VAR = 'tasks_subnav_filter_type'
+  SESSION_SELECT_TYPE_VAR = 'tasks_subnav_select_type'
   
   # Ajax callback returning a list of tasks as JSON calendar events
   def filter
     filter_start_time = DateTime.strptime(params[:start], '%s')
     filter_end_time   = DateTime.strptime(params[:end], '%s')
     @filter = get_filter_type(SESSION_FILTER_TYPE_VAR)
+    @select = get_select_type(SESSION_SELECT_TYPE_VAR)
     
     # here we build the query one clause at a time based on the input params
     clauses = []
     values = []
-    clauses << ['assigned_to_user_id = ?']
-    values << [current_user.id]
+    if @select == 0
+      clauses << ['assigned_to_user_id = ?']
+      values << [current_user.id]
+    else
+      clauses << ['for_organization_id = ?']
+      values << [current_user.organization.id]
+    end
     if @filter.to_i > 0
       clauses << ['task_status_type_id = ?']
       values << [@filter]      
@@ -31,11 +38,11 @@ class TasksController < OrganizationAwareController
     tasks.each do |t|
       events << {
         :id => t.id,
-        :title => t.subject,
+        :title => @select == 0 ? t.subject : "(#{t.assigned_to.initials}) #{t.subject}",
         :allDay => false,
         :start => t.complete_by,
         :url => user_task_path(current_user, t),
-        :color => get_event_color(t)
+        :className => get_css_class_name(t)
       }
     end
 
@@ -48,6 +55,7 @@ class TasksController < OrganizationAwareController
 
     @page_title = 'My Tasks'
     @filter = get_filter_type(SESSION_FILTER_TYPE_VAR)
+    @select = get_select_type(SESSION_SELECT_TYPE_VAR)
     
     # Select tasks for this user or ones that are for the agency as a whole
     @tasks = Task.where("for_organization_id = ? AND completed_on IS NULL AND (assigned_to_user_id IS NULL OR assigned_to_user_id = ?)", @organization.id, current_user.id).order("complete_by")
@@ -199,6 +207,17 @@ class TasksController < OrganizationAwareController
     session[session_var] = filter_type   
     return filter_type 
   end
+  # returns the select type for the current controller and sets the session variable
+  # to store any change in select type for the controller
+  def get_select_type(session_var)
+    select_type = params[:select].nil? ? session[session_var].to_i : params[:select].to_i
+    if select_type.nil?
+      select_type = 0
+    end
+    # remember the view type in the session
+    session[session_var] = select_type   
+    return select_type 
+  end
   
   def get_event_color(task)
     if task.task_status_type_id == 1      # New
@@ -213,6 +232,20 @@ class TasksController < OrganizationAwareController
       color = 'FF00FF'                    # Cancelled
     end
     color
+  end
+  def get_css_class_name(task)
+    if task.task_status_type_id == 1      # New
+      classname = 'alert alert-error'
+    elsif task.task_status_type_id == 2   # In Progress
+      classname = 'alert alert-info'
+    elsif task.task_status_type_id == 3   # Complete
+      classname = 'alert alert-success'
+    elsif task.task_status_type_id == 4   # On Hold
+      classname = 'alert'
+    else
+      classname = 'btn'                    # Cancelled
+    end
+    classname
   end
   
   #------------------------------------------------------------------------------

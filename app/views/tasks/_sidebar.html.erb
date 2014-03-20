@@ -16,6 +16,13 @@
   		<li class="<%= get_nav_link_class('tasks', TasksController::SESSION_FILTER_TYPE_VAR, 4) %>">
   			<%= link_to "On Hold", user_tasks_path(current_user, :filter => 4) %>
   		</li>
+  		<li class="divider"></li>
+  		<li>
+  			<div class="btn-group" data-toggle="buttons-radio" style="width:100%;">
+				<button type="button" id="my_tasks_btn"  class="btn btn-info" style="width:50%;">My Tasks</button>
+				<button type="button" id="all_tasks_btn" class="btn btn-info" style="width:50%;">Everyone's Tasks</button>
+  			</div>
+  		</li>
 	</ul>
 </div>
 
