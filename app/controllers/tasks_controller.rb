@@ -46,7 +46,7 @@ class TasksController < OrganizationAwareController
   
   def index
 
-    @page_title = 'Tasks'
+    @page_title = 'My Tasks'
     @filter = get_filter_type(SESSION_FILTER_TYPE_VAR)
     
     # Select tasks for this user or ones that are for the agency as a whole
