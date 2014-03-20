@@ -1,6 +1,6 @@
 <ul class="dropdown-menu">
 	<li class="text-left">												
-		<%= link_to user_tasks_path(current_user)  do %>
+		<%= link_to user_tasks_path(current_user, :filter => 0, :select => 0)  do %>
 			<i class="fa fa-calendar fa-fw"></i> My tasks
 		<% end %>
 	</li>
