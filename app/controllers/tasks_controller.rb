@@ -3,14 +3,30 @@ class TasksController < OrganizationAwareController
   before_action :set_task, :only => [:show, :edit, :update, :destroy, :update_status]  
   before_filter :check_for_cancel, :only => [:create, :update] 
 
-  SESSION_VIEW_TYPE_VAR = 'tasks_subnav_view_type'
+  SESSION_VIEW_TYPE_VAR   = 'tasks_subnav_view_type'
+  SESSION_FILTER_TYPE_VAR = 'tasks_subnav_filter_type'
   
   # Ajax callback returning a list of tasks as JSON calendar events
   def filter
     filter_start_time = DateTime.strptime(params[:start], '%s')
     filter_end_time   = DateTime.strptime(params[:end], '%s')
+    @filter = get_filter_type(SESSION_FILTER_TYPE_VAR)
     
-    tasks = Task.where("assigned_to_user_id = ? AND complete_by BETWEEN ? AND ?", current_user.id, filter_start_time, filter_end_time).order("complete_by")
+    # here we build the query one clause at a time based on the input params
+    clauses = []
+    values = []
+    clauses << ['assigned_to_user_id = ?']
+    values << [current_user.id]
+    if @filter.to_i > 0
+      clauses << ['task_status_type_id = ?']
+      values << [@filter]      
+    end
+    clauses << ['complete_by BETWEEN ? AND ?']
+    values << [filter_start_time]
+    values << [filter_end_time]
+    
+    tasks = Task.where(clauses.join(' AND '), *values).order("complete_by")
+
     events = []
     tasks.each do |t|
       events << {
@@ -23,8 +39,6 @@ class TasksController < OrganizationAwareController
       }
     end
 
-    Rails.logger.debug events.inspect
-    
     respond_to do |format|
       format.json { render :json => events }
     end
@@ -33,6 +47,8 @@ class TasksController < OrganizationAwareController
   def index
 
     @page_title = 'Tasks'
+    @filter = get_filter_type(SESSION_FILTER_TYPE_VAR)
+    
     # Select tasks for this user or ones that are for the agency as a whole
     @tasks = Task.where("for_organization_id = ? AND completed_on IS NULL AND (assigned_to_user_id IS NULL OR assigned_to_user_id = ?)", @organization.id, current_user.id).order("complete_by")
     
@@ -171,6 +187,18 @@ class TasksController < OrganizationAwareController
   #
   #------------------------------------------------------------------------------
   protected
+  
+  # returns the filter type for the current controller and sets the session variable
+  # to store any change in fitler type for the controller
+  def get_filter_type(session_var)
+    filter_type = params[:filter].nil? ? session[session_var].to_i : params[:filter].to_i
+    if filter_type.nil?
+      filter_type = 0
+    end
+    # remember the view type in the session
+    session[session_var] = filter_type   
+    return filter_type 
+  end
   
   def get_event_color(task)
     if task.task_status_type_id == 1      # New

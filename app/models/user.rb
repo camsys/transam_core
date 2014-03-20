@@ -50,9 +50,12 @@ class User < ActiveRecord::Base
   
   # Every user can have 0 or more messages
   has_many   :messages
+
+  # Every user can have 0 or more tasks
+  has_many   :messages
   
   # Every user can have 0 or more files they have uploaded
-  has_many   :uploads
+  has_many   :tasks,        :foreign_key => :assigned_to_user_id
 
   # Validations on core attributes
   validates :object_key,    :presence => true, :uniqueness => true

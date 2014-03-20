@@ -1,0 +1,21 @@
+<div id="sidebar" class="navbar-inner span3">
+	<ul class="nav nav-pills nav-stacked">
+		<li class="nav-header" style="font-size:1.25em;margin-left:-10px;">Tasks</li>
+  		<li class="<%= get_nav_link_class('tasks', TasksController::SESSION_FILTER_TYPE_VAR, 0) %>">
+  			<%= link_to "All", user_tasks_path(current_user, :filter => 0) %>
+  		</li>
+  		<li class="<%= get_nav_link_class('tasks', TasksController::SESSION_FILTER_TYPE_VAR, 1) %>">
+  			<%= link_to "Not Started", user_tasks_path(current_user, :filter => 1) %>
+  		</li>
+  		<li class="<%= get_nav_link_class('tasks', TasksController::SESSION_FILTER_TYPE_VAR, 2) %>">
+  			<%= link_to "In Progress", user_tasks_path(current_user, :filter => 2) %>
+  		</li>
+  		<li class="<%= get_nav_link_class('tasks', TasksController::SESSION_FILTER_TYPE_VAR, 3) %>">
+  			<%= link_to "Completed", user_tasks_path(current_user, :filter => 3) %>
+  		</li>
+  		<li class="<%= get_nav_link_class('tasks', TasksController::SESSION_FILTER_TYPE_VAR, 4) %>">
+  			<%= link_to "On Hold", user_tasks_path(current_user, :filter => 4) %>
+  		</li>
+	</ul>
+</div>
+
