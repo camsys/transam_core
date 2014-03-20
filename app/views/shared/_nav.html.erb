@@ -16,7 +16,7 @@
 				<% if @organization.asset_count(at) > 0 %>
 					<li  class="text-left">												
 						<%= link_to inventory_index_path(:asset_type => at.id)  do %>
-							<i class="<%= at.display_icon_name %> fa-fw"></i> <%= at.name %>								
+							<i class="<%= at.display_icon_name %> fa-fw"></i> <%= at.name.pluralize(2) %>								
 						<% end %>
 					</li>
 				<% end %>
