@@ -36,7 +36,7 @@ class AssetsController < AssetAwareController
 
     # this call sets up @asset_type, @asset_subtype, @assets @asset_class, and @view
     @assets = get_assets
-    @page_title = "#{@asset_class.underscore.humanize}s"
+    @page_title = "#{@asset_class.underscore.humanize}".pluralize(2)
    
     # If we are viewing as a map we need to generate the markers
     if @view_type == VIEW_TYPE_MAP
