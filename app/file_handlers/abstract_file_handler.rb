@@ -34,13 +34,13 @@ class AbstractFileHandler
   
   def can_process?
     if @upload.nil?
-      @errors << "Upload is missing or invalid."
+      @process_log << add_processing_message(1, 'error', "Upload is missing or invalid.")
     end
     if @upload.file.url.blank?
-      @errors << "File URL can't be blank."      
+      @process_log << add_processing_message(1, 'error', "File URL can't be blank.")
     end
     # return true or false depending on if errors were generated
-    @errors.empty?
+    @process_log.empty?
   end  
 
   # Adds a message to the process log
@@ -48,9 +48,15 @@ class AbstractFileHandler
     
     # See if we are bumping the level up or down
     if @log_level < level
-      @process_log << "<ul>"
+      while @log_level < level
+        @process_log << "<ul>"
+        @log_level += 1
+      end
     elsif @log_level > level
-      @process_log << "</ul>"
+      while @log_level > level
+        @process_log << "</ul>"
+        @log_level -= 1
+      end
     end
     @log_level = level
     
