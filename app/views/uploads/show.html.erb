@@ -27,7 +27,7 @@
 	<div class="span12">
 		<fieldset>
 			<legend>Processing Log</legend>
-			<div class="processing_log">
+			<div class="processing_log" style="overflow-y:scroll;height:200px;">
 				<%= @upload.processing_log.html_safe unless @upload.processing_log.blank? %>
 			</div>
 		</fieldset>
