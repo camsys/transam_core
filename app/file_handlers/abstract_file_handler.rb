@@ -1,20 +1,11 @@
 #------------------------------------------------------------------------------
 #
-# AssetConditionUpdateJob
+# AbstractFileHandler
 #
-# Updates an assets condition
+# Base class for file handlers
 #
 #------------------------------------------------------------------------------
 class AbstractFileHandler
-
-  attr_accessor :upload
-  attr_accessor :errors
-  attr_accessor :num_rows_processed
-  attr_accessor :num_rows_added
-  attr_accessor :num_rows_replaced
-  attr_accessor :num_rows_failed
-  attr_accessor :new_status
-  attr_accessor :processing_log
   
   # Errors are trapped and handled by the Job that executes this handler
   def execute
@@ -33,8 +24,9 @@ class AbstractFileHandler
     @upload.num_rows_added        = @num_rows_added
     @upload.num_rows_replaced     = @num_rows_replaced
     @upload.num_rows_failed       = @num_rows_failed
+    @upload.num_rows_skipped      = @num_rows_skipped
     
-    @upload.processing_log        = @processing_log
+    @upload.processing_log        = @process_log.join('')
     @upload.processing_completed_at = Time.now
     @upload.save
     
@@ -50,9 +42,35 @@ class AbstractFileHandler
     # return true or false depending on if errors were generated
     @errors.empty?
   end  
+
+  # Adds a message to the process log
+  def add_processing_message(level, severity, text)
+    
+    # See if we are bumping the level up or down
+    if @log_level < level
+      @process_log << "<ul>"
+    elsif @log_level > level
+      @process_log << "</ul>"
+    end
+    @log_level = level
+    
+    if level == 1
+      @process_log << "<p class='text-#{severity}'>#{text}</p>" 
+    elsif level == 2
+      @process_log << "<li><p class='text-#{severity}'>#{text}</p></li>"
+    end
+    
+  end
+
+  protected
+  def is_number?(val)
+    Float(val) != nil rescue false
+  end
   
+  private
   def initialize(*args)
-    @errors = []
+    @process_log = []
+    @log_level = 1
   end
     
 end
