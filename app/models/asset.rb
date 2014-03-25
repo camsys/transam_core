@@ -34,6 +34,9 @@ class Asset < ActiveRecord::Base
     generate_unique_key(:object_key)
   end
        
+  # Clean up any HABTM associations before the asset is destroyed
+  before_destroy { :districts.clear }
+  
   #------------------------------------------------------------------------------
   # Associations common to all asset types
   #------------------------------------------------------------------------------
@@ -47,8 +50,8 @@ class Asset < ActiveRecord::Base
   # each asset has a single asset subtype
   belongs_to :asset_subtype       
     
-  # Each asset has zero or more asset events. These are all events regardless of event type
-  has_many   :asset_events        
+  # Each asset has zero or more asset events. These are all events regardless of event type. Events are deleted when the asset is deleted
+  has_many   :asset_events, :dependent => :destroy        
 
   # each asset has zero or more condition updates
   has_many   :condition_updates, -> {where :asset_event_type_id => ConditionUpdateEvent.asset_event_type.id }, :class_name => "ConditionUpdateEvent" 
@@ -59,14 +62,15 @@ class Asset < ActiveRecord::Base
   # each asset has zero or more disposition updates
   has_many   :disposition_updates, -> {where :asset_event_type_id => DispositionUpdateEvent.asset_event_type.id }, :class_name => "DispositionUpdateEvent"
   
-  # Each asset has zero or more attachments 
-  has_many   :attachments
+  # Each asset has zero or more attachments. Attachments are deleted when the asset is deleted
+  has_many   :attachments,  :dependent => :destroy
+  
   # Filter the attachments for easier selection
   has_many   :images,     -> { where :attachment_type_id => 1}, :class_name => "Attachment"
   has_many   :documents,  -> { where :attachment_type_id => 2}, :class_name => "Attachment"
 
   # Each asset has zero or more notes 
-  has_many   :notes
+  has_many   :notes,        :dependent => :destroy
     
   # Each asset can be associated with 0 or more districts
   has_and_belongs_to_many :districts

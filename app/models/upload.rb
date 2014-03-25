@@ -43,7 +43,7 @@ class Upload < ActiveRecord::Base
   validates :original_filename, :presence => true
 
   # default scope
-  default_scope order('created_at DESC')
+  default_scope { order('created_at DESC') }
   scope :new_files, -> { where('file_status_type_id = ?', FileStatusType.find_by_name('Unprocessed').id) }
   
   # List of hash parameters allowed by the controller
