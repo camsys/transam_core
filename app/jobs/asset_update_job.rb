@@ -1,17 +1,19 @@
 #------------------------------------------------------------------------------
 #
-# AssetValueUpdateJob
+# AssetUpdateJob
 #
-# Updates an assets estimated value
+# Updates all componetns of an asset
 #
 #------------------------------------------------------------------------------
-class AssetValueUpdateJob < Job
+class AssetUpdateJob < Job
   
   attr_accessor :object_key
   
   def run    
     asset = Asset.find_by_object_key(object_key)
     if asset
+      asset.update_condition
+      asset.update_service_status
       asset.update_estimated_value
     else
       raise RuntimeError, "Can't find Asset with object_key #{object_key}"
@@ -19,7 +21,7 @@ class AssetValueUpdateJob < Job
   end
 
   def prepare
-    Rails.logger.debug "Executing AssetValueUpdateJob at #{Time.now.to_s} for Asset #{object_key}"    
+    Rails.logger.debug "Executing AssetUpdateJob at #{Time.now.to_s} for Asset #{object_key}"    
   end
   
   def check    
