@@ -19,7 +19,7 @@ class ReplacementCostPlusInterestCalculator < ReplacementCostCalculator
     Rails.logger.debug "actual replacement_year #{replacement_year}"
          
     # Do the math...
-    num_years_to_replacement = [replacement_year - asset.in_service_date.year, 0].max
+    num_years_to_replacement = [replacement_year - asset.manufacture_year, 0].max
     Rails.logger.debug "num_years_to_replacement #{num_years_to_replacement}"
     
     future_cost(initial_cost, num_years_to_replacement)

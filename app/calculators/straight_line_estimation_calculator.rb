@@ -51,7 +51,7 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
     
     # Return the policy year if there are no condition updates recorded against the asset
     if asset.condition_updates.empty?
-      year = asset.in_service_date.year + @policy.get_policy_item(asset).max_service_life_years
+      year = asset.manufacture_year + @policy.get_policy_item(asset).max_service_life_years
     else
       # get the maximum (initial) rating for a new asset
       max_rating = ConditionType.max_rating
@@ -64,11 +64,11 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
       rate_of_change = rate_of_deterioration_per_year(max_rating, current_rating, age_at_report)
       if rate_of_change < 0.01
         # If the asset has not deteriorated, return the policy life
-        year = asset.in_service_date.year + @policy.get_policy_item(asset).max_service_life_years
+        year = asset.manufacture_year + @policy.get_policy_item(asset).max_service_life_years
       else
         # determine the year that the service quality will fall below the threshold
         years_at_rate = current_rating / rate_of_change
-        year = asset.in_service_date.year + years_at_rate.to_i
+        year = asset.manufacture_year + years_at_rate.to_i
       end
     end
   end  

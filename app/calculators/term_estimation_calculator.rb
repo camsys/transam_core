@@ -49,7 +49,7 @@ class TermEstimationCalculator < ConditionEstimationCalculator
   def last_servicable_year(asset)
 
     Rails.logger.debug "TERMEstimationCalculator.last_servicable_year(asset)"
-    year = asset.in_service_date.year + @policy.get_policy_item(asset).max_service_life_years
+    year = asset.manufacture_year + @policy.get_policy_item(asset).max_service_life_years
     
   end  
   

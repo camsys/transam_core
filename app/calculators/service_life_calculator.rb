@@ -2,10 +2,10 @@ class ServiceLifeCalculator < Calculator
   
   protected
   
-  # calculate the service life based on the in_service_date plue
-  # the avberage asset lie based on the policy
+  # calculate the service life based on the manufacture_year plus
+  # the average asset life based on the policy
   def by_age(asset)
-    asset.in_service_date.year + @policy.get_policy_item(asset).max_service_life_years
+    asset.manufacture_year + @policy.get_policy_item(asset).max_service_life_years
   end
   
   def by_condition(asset)

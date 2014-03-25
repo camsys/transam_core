@@ -11,7 +11,7 @@ class DecliningBalanceDepreciationCalculator < DepreciationCalculator
     rv = residual_value(asset)
     v  = purchase_cost(asset)
     # calculate the value of the asset at the end of each year
-    [0..age].each do |year|
+    [0..asset.age].each do |year|
       v -= (v * depreciation_rate)
       # if the value drops below the residual value then the depreciation stops
       break if v < rv

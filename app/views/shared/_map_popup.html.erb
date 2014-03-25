@@ -12,7 +12,6 @@
 			<div class="popup-content">
 				<%= format_list_field("Type", asset.name ) %>
 				<%= format_list_field("Asset Tag", asset.asset_tag ) %>
-				<%= format_list_field("Installed", format_as_date(asset.in_service_date) ) %>
 				<%= format_list_field("Condition", asset.reported_condition_type.name) unless asset.reported_condition_type.nil? %>		
 			</dl>
 		</div>

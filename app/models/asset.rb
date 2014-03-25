@@ -252,16 +252,7 @@ class Asset < ActiveRecord::Base
   def age(on_date=Date.today)
     [on_date.year - manufacture_year, 0].max
   end
-      
-  # returns the date the asset was put into service. This date will be dependent on the asset type
-  # so we always refer to the concrete class to determine the appropriate date to start the asset
-  # service tracking
-  def in_service_date
-    # get a typed version of the asset and return its value
-    asset = is_typed? ? self : Asset.get_typed_asset(self)
-    return asset.in_service_date unless asset.nil?
-  end    
-  
+        
   # returns the list of events associated with this asset order be date, earliest first
   def history
     asset_events
