@@ -339,7 +339,10 @@ class Asset < ActiveRecord::Base
     # Get the policy to use
     policy = policy.nil? ? asset.policy : policy
     class_name = policy.service_life_calculation_type.class_name
-    calculate(asset, policy, class_name)
+    # determine the last year that the vehicle is viable based on the policy
+    last_year_for_service = calculate(asset, policy, class_name)
+    # the asset will need replacing the next year
+    return last_year_for_service + 1
     
   end
   # calculate the estimated year that the asset will need replacing based on 
@@ -351,7 +354,10 @@ class Asset < ActiveRecord::Base
     # Get the policy to use
     policy = policy.nil? ? asset.policy : policy
     class_name = policy.condition_estimation_type.class_name
-    calculate(asset, policy, class_name, 'last_servicable_year')
+    # estimate the last year that the asset will be servicable
+    last_year_for_service = calculate(asset, policy, class_name, 'last_servicable_year')
+    # the asset will need replacing the next year
+    return last_year_for_service + 1
     
   end
 

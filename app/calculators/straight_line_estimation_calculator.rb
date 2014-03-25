@@ -48,14 +48,15 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
   def last_servicable_year(asset)
 
     Rails.logger.debug "StraightLineEstimationCalculator.last_servicable_year(asset)"
-    
+        
     # Return the policy year if there are no condition updates recorded against the asset
     if asset.condition_updates.empty?
       year = asset.manufacture_year + @policy.get_policy_item(asset).max_service_life_years
     else
       # get the maximum (initial) rating for a new asset
       max_rating = ConditionType.max_rating
-
+      min_rating = @policy.condition_threshold
+      
       condition_report = asset.condition_updates.last
       current_rating = condition_report.assessed_rating
       age_at_report = asset.age(condition_report.event_date)
@@ -67,7 +68,7 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
         year = asset.manufacture_year + @policy.get_policy_item(asset).max_service_life_years
       else
         # determine the year that the service quality will fall below the threshold
-        years_at_rate = current_rating / rate_of_change
+        years_at_rate = (max_rating - min_rating)  / rate_of_change
         year = asset.manufacture_year + years_at_rate.to_i
       end
     end
