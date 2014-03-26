@@ -133,7 +133,7 @@ class AssetsController < AssetAwareController
       if @asset.update_attributes(form_params)
         
         # If the asset was successfully updated, schedule update the condition and disposition asynchronously
-        Delayed::Job.enqueue AssetConditionUpdateJob.new(@asset.object_key), :priority => 0
+        Delayed::Job.enqueue AssetUpdateJob.new(@asset.object_key), :priority => 0
         
         notify_user(:notice, "Asset #{@asset.name} was successfully updated.")
         
@@ -196,7 +196,7 @@ class AssetsController < AssetAwareController
     respond_to do |format|
       if @asset.save
         # If the asset was successfully saved, schedule update the condition and disposition asynchronously
-        Delayed::Job.enqueue AssetConditionUpdateJob.new(@asset.object_key), :priority => 0
+        Delayed::Job.enqueue AssetUpdateJob.new(@asset.object_key), :priority => 0
 
         notify_user(:notice, "Asset #{@asset.name} was successfully created.")
         
