@@ -1,7 +1,7 @@
 class SessionsController < Devise::SessionsController
   after_filter  :log_failed_login, :only => :new
   after_filter  :clear_flash_messages, :only => [:create, :destroy]  
-  before_filter :log_logout, :only => :destroy  #add this at the top with the other filters
+  before_filter :log_logout, :only => :destroy 
 
   # determine which layout to use based on the current user state
   layout :layout_by_resource
@@ -18,7 +18,7 @@ class SessionsController < Devise::SessionsController
   # POST /resource/sign_in
   def create
     super
-    ::Rails.logger.info ">>>> Successful login with email : #{request.filtered_parameters["email"]} at #{Time.now}"
+    Rails.logger.info "Successful login with email : #{params["email"]} at #{Time.now}"
   end
 
   protected
@@ -32,7 +32,7 @@ class SessionsController < Devise::SessionsController
   private
   
   def log_failed_login
-    ::Rails.logger.info ">>>> Failed login with email : #{request.filtered_parameters["email"]} at #{Time.now}" if failed_login?
+    Rails.logger.info "Failed login with email: #{params["email"]} at #{Time.now}" if failed_login?
   end 
 
   def failed_login?
@@ -40,7 +40,7 @@ class SessionsController < Devise::SessionsController
   end 
   
   def log_logout
-     ::Rails.logger.info ">>>> Logging out : #{current_user.email} at #{Time.now}"  
+    Rails.logger.info "Logout for user with email: #{current_user.email} at #{Time.now}"
   end
     
 end
