@@ -18,11 +18,11 @@ class ConditionType < ActiveRecord::Base
   def self.from_rating(estimated_rating)
     return if estimated_rating.nil?
     # Round the condition type to the nearest whole number
-    val = (estimated_rating + 0.5).floor
+    val = (estimated_rating.to_f + 0.5).to_i
     # bound it
     val = [val, max_rating].min
     val = [val, min_rating].max
-    ConditionType.where("rating = ?", val).first
+    ConditionType.find_by_rating(val)
   end
 
   def to_s
