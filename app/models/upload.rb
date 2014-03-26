@@ -25,22 +25,20 @@ class Upload < ActiveRecord::Base
     
   # Associations
   belongs_to :user
-  belongs_to :customer
+  belongs_to :organization
   belongs_to :file_status_type
   belongs_to :file_content_type
   
   # uploader
   mount_uploader :file, ExcelUploader      
-
-  #attr_accessible :customer_id, :user_id, :file_content_type_id, :file_status_type_id, :file, :original_filename  
     
-  validates :object_key,        :presence => true, :uniqueness => true
-  validates :customer_id, :presence => true
-  validates :user_id, :presence => true
-  validates :file_status_type_id, :presence => true
-  validates :file_content_type_id, :presence => true
-  validates :file, :presence => true
-  validates :original_filename, :presence => true
+  validates :object_key,            :presence => true, :uniqueness => true
+  validates :organization_id,       :presence => true
+  validates :user_id,               :presence => true
+  validates :file_status_type_id,   :presence => true
+  validates :file_content_type_id,  :presence => true
+  validates :file,                  :presence => true
+  validates :original_filename,     :presence => true
 
   # default scope
   default_scope { order('created_at DESC') }
@@ -49,7 +47,7 @@ class Upload < ActiveRecord::Base
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
     :object_key,
-    :customer_id, 
+    :organization_id, 
     :user_id, 
     :file_status_type_id, 
     :file_content_type_id,
@@ -93,6 +91,7 @@ class Upload < ActiveRecord::Base
     self.num_rows_added = nil
     self.num_rows_replaced = nil
     self.num_rows_failed = nil
+    self.num_rows_skipped = nil
     self.processing_log = nil
     self.processing_completed_at = nil
     self.processing_started_at = nil

@@ -40,13 +40,13 @@ class Organization < ActiveRecord::Base
   belongs_to :organization_type
 
   # Every organization can have a set of users
-  has_many :users
+  has_many  :users
     
   # Every organization can have messages
-  has_many :messages
+  has_many  :messages
 
-  # Every organization can have a set of locations
-  has_many :locations
+  # Every organization can have a set of uploads
+  has_many  :uploads
         
   # Validations for associations  
   validates :customer_id,           :presence => true
@@ -125,6 +125,10 @@ class Organization < ActiveRecord::Base
   #
   #------------------------------------------------------------------------------
         
+  def coded_name
+    "#{short_name}-#{name}"
+  end      
+  
   def to_s
     short_name
   end

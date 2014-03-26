@@ -4,7 +4,7 @@
 		<i class="fa fa-folder-open"></i> All Uploads
 		<% end %>
 	</li>
-	<% if @upload.can_resubmit? %>
+	<% if current_user.has_role? :admin && @upload.can_resubmit? %>
 	<li>
 		<%= link_to resubmit_upload_path(@upload), :confirm => 'Are you sure you want to re-process this file?' do %>
 		<i class="fa fa-repeat"></i> Resubmit

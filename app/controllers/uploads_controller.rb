@@ -8,7 +8,7 @@ class UploadsController < OrganizationAwareController
   def index
 
     @page_title = 'Uploads'
-    @uploads = current_user.uploads
+    @uploads = @organization.uploads
 
     # remember the view type
     @view_type = get_view_type(SESSION_VIEW_TYPE_VAR)
@@ -89,11 +89,18 @@ class UploadsController < OrganizationAwareController
     
   end
   
+  #
+  # Create a new upload. If the current user is an admin they can set the 
+  # organization owning the upload otherwise it defaults to the user's organization
+  #
   def create
 
     @upload = Upload.new(form_params)
     @upload.user = current_user
-    @upload.customer = current_user.organization.customer
+    # Make sure we set the organization
+    unless current_user.has_role? :admin
+      @upload.organiztion = current_user.organization
+    end
     
     respond_to do |format|
       if @upload.save
