@@ -290,6 +290,7 @@ class AssetsController < AssetAwareController
     else
       fmt = 'html'
     end
+    puts "fmt = #{fmt}, params[:format] = #{params[:format]}"
     
     # See if we got start row and count data
     if params[:iDisplayStart] && params[:iDisplayLength]
@@ -368,8 +369,12 @@ class AssetsController < AssetAwareController
     end
     # send the query
     @row_count = klass.where(clauses.join(' AND '), *values).count
-    assets = klass.where(clauses.join(' AND '), *values).order("#{sort_column(klass)} #{sort_direction}").page(page).per_page(per_page)
-
+    if fmt == 'xls' 
+      # if it is an xls export get all the rows
+      assets = klass.where(clauses.join(' AND '), *values)
+    else
+      assets = klass.where(clauses.join(' AND '), *values).order("#{sort_column(klass)} #{sort_direction}").page(page).per_page(per_page)
+    end
     return assets
   end
     
