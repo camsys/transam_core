@@ -1,6 +1,6 @@
 class UploadsController < OrganizationAwareController
 
-  before_action :set_upload, :only => [:show, :destroy]  
+  before_action :set_upload, :only => [:show, :destroy, :resubmit]  
   before_filter :check_for_cancel, :only => [:create, :update]
   
   SESSION_VIEW_TYPE_VAR = 'uploads_subnav_view_type'
@@ -22,8 +22,42 @@ class UploadsController < OrganizationAwareController
 
   def show
     
+    if @upload.nil?
+      notify_user(:alert, "Record not found!")
+      redirect_to uploads_url
+      return      
+    end
+    
+    @page_title = "Upload: #{@upload.original_filename}"
     respond_to do |format|
       format.html # show.html.erb
+      format.json { render :json => @upload }
+    end
+    
+  end
+
+  # Reload the worksheet. This action pushes the spreadsheet back into the queue
+  # to be processed
+  def resubmit
+    
+    if @upload.nil?
+      notify_user(:alert, "Record not found!")
+      redirect_to uploads_url
+      return      
+    end
+    
+    # Make sure the force flag is set and that the model is set back to
+    # unprocessed
+    @upload.reset
+    @upload.force_update = true
+    @upload.save
+    
+    notify_user(:notice, "File was resubmitted for processing.")        
+    # create a job to process this file in the background
+    create_upload_process_job(@upload)
+    
+    respond_to do |format|
+      format.html { render 'show' }
       format.json { render :json => @upload }
     end
     
@@ -46,7 +80,6 @@ class UploadsController < OrganizationAwareController
     asset_event_type_ids = []
     asset_event_type_ids = params[:asset_event_type_ids].collect { |id| id.to_i } if params[:asset_event_type_ids]
     
-  
   end
   
   def new
@@ -57,8 +90,6 @@ class UploadsController < OrganizationAwareController
   end
   
   def create
-
-    @page_title = "Upload Spreadsheet"
 
     @upload = Upload.new(form_params)
     @upload.user = current_user
@@ -83,7 +114,7 @@ class UploadsController < OrganizationAwareController
 
     if @upload.nil?
       notify_user(:alert, "Record not found!")
-      redirect_to files_url
+      redirect_to uploads_url
       return      
     end
 

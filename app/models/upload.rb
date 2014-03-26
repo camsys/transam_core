@@ -34,7 +34,7 @@ class Upload < ActiveRecord::Base
 
   #attr_accessible :customer_id, :user_id, :file_content_type_id, :file_status_type_id, :file, :original_filename  
     
-  validates       :object_key,        :presence => true, :uniqueness => true
+  validates :object_key,        :presence => true, :uniqueness => true
   validates :customer_id, :presence => true
   validates :user_id, :presence => true
   validates :file_status_type_id, :presence => true
@@ -73,6 +73,29 @@ class Upload < ActiveRecord::Base
     
   def self.allowable_params
     FORM_PARAMS
+  end
+
+  #------------------------------------------------------------------------------
+  #
+  # Instance Methods
+  #
+  #------------------------------------------------------------------------------
+  def can_resubmit?
+    return false if new_record?
+    return false if file_status_type_id < 3
+    return true
+  end
+  
+  # Resets the state of the upload
+  def reset
+    self.file_status_type_id = FileStatusType.find_by_name('Unprocessed').id  
+    self.num_rows_processed = nil
+    self.num_rows_added = nil
+    self.num_rows_replaced = nil
+    self.num_rows_failed = nil
+    self.processing_log = nil
+    self.processing_completed_at = nil
+    self.processing_started_at = nil
   end
   
   protected
