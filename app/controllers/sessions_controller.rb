@@ -18,7 +18,7 @@ class SessionsController < Devise::SessionsController
   # POST /resource/sign_in
   def create
     super
-    Rails.logger.info "Successful login with email : #{params['email']} at #{Time.now}"
+    Rails.logger.info "Successful login with email : #{current_user.email} at #{Time.now}"
   end
 
   protected
