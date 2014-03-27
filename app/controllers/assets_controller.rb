@@ -290,7 +290,7 @@ class AssetsController < AssetAwareController
     else
       fmt = 'html'
     end
-    puts "fmt = #{fmt}, params[:format] = #{params[:format]}"
+    #puts "fmt = #{fmt}, params[:format] = #{params[:format]}"
     
     # See if we got start row and count data
     if params[:iDisplayStart] && params[:iDisplayLength]

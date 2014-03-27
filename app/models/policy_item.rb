@@ -28,7 +28,7 @@ class PolicyItem < ActiveRecord::Base
   #------------------------------------------------------------------------------
   # Scopes
   #------------------------------------------------------------------------------
-  default_scope { where(:active => true).order(:asset_subtype_id) }
+  default_scope { where(:active => true).order('asset_subtype_id ASC') }
   
   #------------------------------------------------------------------------------
   # List of hash parameters allowed by the controller
