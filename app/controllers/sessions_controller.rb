@@ -18,7 +18,7 @@ class SessionsController < Devise::SessionsController
   # POST /resource/sign_in
   def create
     super
-    Rails.logger.info "Successful login with email : #{params["email"]} at #{Time.now}"
+    Rails.logger.info "Successful login with email : #{params['email']} at #{Time.now}"
   end
 
   protected
@@ -32,7 +32,7 @@ class SessionsController < Devise::SessionsController
   private
   
   def log_failed_login
-    Rails.logger.info "Failed login with email: #{params["email"]} at #{Time.now}" if failed_login?
+    Rails.logger.info "Failed login with email: #{params['email']} at #{Time.now}" if failed_login?
   end 
 
   def failed_login?
