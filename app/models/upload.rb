@@ -83,6 +83,11 @@ class Upload < ActiveRecord::Base
     return false if file_status_type_id < 3
     return true
   end
+  def can_delete?
+    return false if new_record?
+    return false if file_status_type_id < 3
+    return true
+  end
   
   # Resets the state of the upload
   def reset

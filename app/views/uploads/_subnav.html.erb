@@ -4,4 +4,19 @@
 		<i class="fa fa-folder-open"></i> All Uploads
 		<% end %>
 	</li>
+	<% if current_user.has_role? :admin && @upload.can_resubmit? %>
+	<li>
+		<%= link_to resubmit_upload_path(@upload), :confirm => "Are you sure you want to resubmit this file for processing?" do %>
+		<i class="fa fa-repeat"></i> Resubmit
+		<% end %>
+	</li>
+	
+	<% end %>
+	<% if @upload.can_delete? %>
+	<li>
+    <li><%= link_to upload_path(@upload), :method => :delete, :data => {:confirm => "Are you sure you want to remove this file?"} do %>
+		<i class="fa fa-times"></i> Remove
+		<% end %>
+	</li>
+	<% end %>
 <% end %>
