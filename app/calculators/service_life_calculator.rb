@@ -1,3 +1,10 @@
+#------------------------------------------------------------------------------
+#
+# ServiceLifeCalculator
+#
+# base class for ServiceLife calculators
+#
+#------------------------------------------------------------------------------
 class ServiceLifeCalculator < Calculator
   
   protected

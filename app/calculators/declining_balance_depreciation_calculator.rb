@@ -1,3 +1,8 @@
+#------------------------------------------------------------------------------
+#
+# DecliningBalanceDepreciationCalculator
+#
+#------------------------------------------------------------------------------
 class DecliningBalanceDepreciationCalculator < DepreciationCalculator
   
   # Determines the estimated value for an asset. 

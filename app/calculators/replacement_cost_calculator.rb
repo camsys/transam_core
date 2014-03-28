@@ -1,3 +1,8 @@
+#------------------------------------------------------------------------------
+#
+# ReplacementCostCalculator
+#
+#------------------------------------------------------------------------------
 class ReplacementCostCalculator < CostCalculator
   
   # Determines the calculated replacement cost for an asset. 

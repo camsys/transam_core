@@ -1,3 +1,8 @@
+#------------------------------------------------------------------------------
+#
+# ReplacementCostPlusInterestCalculator
+#
+#------------------------------------------------------------------------------
 class ReplacementCostPlusInterestCalculator < ReplacementCostCalculator
   
   # average replacement cost (policy year) for the asset plus accrued interest from the policy year until the replacement year

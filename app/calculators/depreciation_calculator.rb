@@ -1,6 +1,6 @@
 #------------------------------------------------------------------------------
 #
-# Base class for calculating asset depreciatio
+# Base class for calculating asset depreciation
 #
 #------------------------------------------------------------------------------
 class DepreciationCalculator < Calculator

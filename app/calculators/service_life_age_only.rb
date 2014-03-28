@@ -1,3 +1,8 @@
+#------------------------------------------------------------------------------
+#
+# ServiceLifeAgeOnly
+#
+#------------------------------------------------------------------------------
 class ServiceLifeAgeOnly < ServiceLifeCalculator
   
   # Calculates the last year for service given the asset sub type and the date the asset was placed

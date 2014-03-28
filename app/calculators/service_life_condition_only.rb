@@ -1,3 +1,8 @@
+#------------------------------------------------------------------------------
+#
+# ServiceLifeConditionOnly
+#
+#------------------------------------------------------------------------------
 class ServiceLifeConditionOnly < ServiceLifeCalculator
   
   # Calculates the last year for service based on the condition of the asset

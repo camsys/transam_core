@@ -1,3 +1,8 @@
+#------------------------------------------------------------------------------
+#
+# TermEstimationCalculator
+#
+#------------------------------------------------------------------------------
 class TermEstimationCalculator < ConditionEstimationCalculator
   
   # Estimates the condition rating of an asset using approximations of
@@ -12,13 +17,13 @@ class TermEstimationCalculator < ConditionEstimationCalculator
     
     if asset.asset_type.name == 'Vehicle'
       if years <= 3
-        return -1.75 / 3 * years + 5 + 1.75 / 3;
+        return -1.75 / 3 * years + 5 + 1.75 / 3
       else
         return 3.29886 * Math.exp(-0.0178422 * years)            
       end
     elsif asset.asset_type.name == 'Rail Car'
       if years <= 2.5
-        return -3.75/5 * years + 5 + 3.75/5
+        return -3.75 / 5 * years + 5 + 3.75 / 5
       else
         return 4.54794 * Math.exp(-0.0204658 * years)
       end
@@ -44,13 +49,15 @@ class TermEstimationCalculator < ConditionEstimationCalculator
     
   end
   
-  # Estimates the last servicable year for the asset based on the last reported condition. If no
-  # condition has been reported, the policy year is returned
+  # Estimates the last servicable year for the asset based on the TERM Decay curves
   def last_servicable_year(asset)
 
     Rails.logger.debug "TERMEstimationCalculator.last_servicable_year(asset)"
-    year = asset.manufacture_year + @policy.get_policy_item(asset).max_service_life_years
-    
+    #TODO implement this
+    # If we don't have a term curve then default to a Straight Line Estimation
+    slc = StraightLineEstimationCalculator.new(@policy)
+    return slc.last_servicable_year(asset)
+
   end  
   
   def scaled_sigmoid(val)

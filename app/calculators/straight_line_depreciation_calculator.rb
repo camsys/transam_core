@@ -1,3 +1,8 @@
+#------------------------------------------------------------------------------
+#
+# StraightLineDepreciationCalculator
+#
+#------------------------------------------------------------------------------
 class StraightLineDepreciationCalculator < DepreciationCalculator
   
   # Determines the estimated value for an asset. 
