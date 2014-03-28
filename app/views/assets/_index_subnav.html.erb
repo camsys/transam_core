@@ -17,19 +17,6 @@
 					</li>
 					
 					<li class="divider-vertical"></li>
-					
-					<li class="<%= get_nav_link_class('assets', AssetsController::SESSION_VIEW_TYPE_VAR, AssetsController::VIEW_TYPE_TABLE) %>">
-						<%= link_to inventory_index_path(:view_type => AssetsController::VIEW_TYPE_TABLE) do %>
-						<i class="fa fa-list-alt"></i> Table View
-						<% end %>
-					</li>
-					<li class="<%= get_nav_link_class('assets', AssetsController::SESSION_VIEW_TYPE_VAR, AssetsController::VIEW_TYPE_MAP) %>">
-						<%= link_to inventory_index_path(:view_type => AssetsController::VIEW_TYPE_MAP) do %>
-						<i class="fa fa-globe"></i> Map View
-						<% end %>
-					</li>					
-
-					<li class="divider-vertical"></li>
 
 					<% if @assets.count > 0 %>
 					<li>

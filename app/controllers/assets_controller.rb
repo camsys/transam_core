@@ -3,9 +3,12 @@ class AssetsController < AssetAwareController
   # Include map helpers into this class
   include TransamMapMarkers
   
-  before_filter :check_for_cancel, :only => [:create, :update]
+  # Set the view variabless form the params @asset_type, @asset_subtype, @search_text, @spatial_filter, @view
+  before_filter :set_view_vars,     :only => [:index, :map]
+  # Don't process cancel buttons  
+  before_filter :check_for_cancel,  :only => [:create, :update]
   # set the @asset variable before any actions are invoked
-  before_filter :get_asset, :only => [:show, :edit, :copy, :update, :destroy]
+  before_filter :get_asset,         :only => [:show, :edit, :copy, :update, :destroy]
 
   # From the application config    
   ASSET_BASE_CLASS_NAME     = Rails.application.config.asset_base_class_name   
@@ -24,6 +27,43 @@ class AssetsController < AssetAwareController
     id_list = get_cached_objects(ASSET_KEY_LIST_VAR)
     redirect_to inventory_index_url(:ids => id_list)
   end
+
+  # Sets the spatial filter bounding box  
+  def spatial_filter
+
+    # Check to see if we got spatial filter. If it is nil then spatial fitlering has been
+    # diabled
+    @spatial_filter = params[:spatial_filter]
+    # store it in the session for later
+    session[:spatial_filter] = @spatial_filter
+
+  end  
+  
+  # Implements a map view which includes spatial filtering
+  def map
+        
+    @assets = get_assets
+    @page_title = "#{@asset_class.underscore.humanize}".pluralize(2)
+   
+    markers = []
+    @assets.each do |asset|
+      if asset.geo_locatable? and asset.mappable?
+        markers << get_map_marker(asset, asset.object_key, false) # not draggable
+      end
+    end
+    @markers = markers.to_json  
+    
+    # cache the set of asset ids in case we need them later
+    cache_assets(@assets)
+       
+    respond_to do |format|
+      format.html
+      format.js
+      format.json { render :json => get_as_json(@assets, @row_count) }
+      format.xls      
+    end
+
+  end
     
   # renders either a table or map view of a selected list of assets
   #
@@ -31,24 +71,11 @@ class AssetsController < AssetAwareController
   #
   def index
     
-    # remember the view type
-    @view_type = get_view_type(SESSION_VIEW_TYPE_VAR)
-
-    # this call sets up @asset_type, @asset_subtype, @assets @asset_class, and @view
+    # disable any spatial filters for this view
+    @spatial_filter = nil
     @assets = get_assets
     @page_title = "#{@asset_class.underscore.humanize}".pluralize(2)
-   
-    # If we are viewing as a map we need to generate the markers
-    if @view_type == VIEW_TYPE_MAP
-      markers = []
-      @assets.each do |asset|
-        if asset.geo_locatable? and asset.mappable?
-          markers << get_map_marker(asset, asset.object_key, false) # not draggable
-        end
-      end
-      @markers = markers.to_json  
-    end    
-    
+       
     # cache the set of asset ids in case we need them later
     cache_assets(@assets)
        
@@ -241,11 +268,19 @@ class AssetsController < AssetAwareController
   #
   #------------------------------------------------------------------------------
   protected
-        
-  # returns a list of assets for an index view (index, map) based on user selections
-  # this call sets up @asset_type, @asset_subtype, @assets, @id_filter_list @asset_class
-  # and @view
-  def get_assets
+  #     
+  # Sets the view variables. This is used to set up the vars before a call to get_assets
+  #   @asset_type
+  #   @asset_subtype
+  #   @search_text
+  #   @id_filter_list
+  #   @spatial_filter
+  #   @fmt
+  #   @view
+  #   @asset_class_name
+  #   @filter
+  #
+  def set_view_vars
 
     # Check to see if we got an asset type to sub select on. This occurs when the user
     # selects an asset type from the drop down
@@ -284,39 +319,47 @@ class AssetsController < AssetAwareController
       @id_filter_list = params[:ids]
     end
         
+    # Check to see if we got spatial filter. This session variable is managed
+    # by the spatial_filter method
+    @spatial_filter = session[:spatial_filter]
+
     # Check to see if we got a different format to render
     if params[:format] 
-      fmt = params[:format]
+      @fmt = params[:format]
     else
-      fmt = 'html'
+      @fmt = 'html'
     end
-    #puts "fmt = #{fmt}, params[:format] = #{params[:format]}"
     
     # See if we got start row and count data
     if params[:iDisplayStart] && params[:iDisplayLength]
-      start_row = params[:iDisplayStart]
-      num_rows  = params[:iDisplayLength]
+      @start_row = params[:iDisplayStart]
+      @num_rows  = params[:iDisplayLength]
     end
         
     # If the asset type and subtypes are not set we default to the asset base class
     if @id_filter_list or (@asset_type == 0 and @asset_subtype == 0)
-      class_name = ASSET_BASE_CLASS_NAME
-      @view = "#{ASSET_BASE_CLASS_NAME.underscore}_index"
+      @asset_class_name = ASSET_BASE_CLASS_NAME
     elsif @asset_subtype > 0
       # we have an asset subtype so get it and get the asset type from it. We also set the filter form
       # to the name of the selected subtype
       subtype = AssetSubtype.find(@asset_subtype)
-      class_name = subtype.asset_type.class_name
+      @asset_class_name = subtype.asset_type.class_name
       @filter = subtype.name
-      @view = "#{class_name.underscore}_index"
     else
       asset_type = AssetType.find(@asset_type)
-      class_name = asset_type.class_name
-      @view = "#{class_name.underscore}_index"
+      @asset_class_name = asset_type.class_name
     end
+    @view = "#{@asset_class_name.underscore}_index"
+        
+  end
+        
+  # returns a list of assets for an index view (index, map) based on user selections. Called after
+  # a call to set_view_vars
+  def get_assets
+
     # Create a class instance of the asset type which can be used to perform
     # active record queries
-    klass = Object.const_get class_name    
+    klass = Object.const_get @asset_class_name    
     @asset_class = klass.name
     
     # here we build the query one clause at a time based on the input params
@@ -360,16 +403,16 @@ class AssetsController < AssetAwareController
       values << [@asset_subtype]   
     end
     
-    unless params[:box].blank?
+    unless @spatial_filter.blank?
       gis_service = GisService.new
-      search_box = gis_service.search_box_from_bbox(params[:box])
+      search_box = gis_service.search_box_from_bbox(@spatial_filter)
       wkt = "#{search_box.as_wkt}"
       clauses << ['MBRContains(GeomFromText("' + wkt + '"), geometry) = ?']
       values << [1]
     end
     # send the query
     @row_count = klass.where(clauses.join(' AND '), *values).count
-    if fmt == 'xls' 
+    if @fmt == 'xls' 
       # if it is an xls export get all the rows
       assets = klass.where(clauses.join(' AND '), *values)
     else
