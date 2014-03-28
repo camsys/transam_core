@@ -51,10 +51,11 @@ class InventoryLoader
   end
   
   def as_date(cell_val)
-    if is_a?(Date)
-      val = cell_val
-    else
-      val = 0.0
+    #puts "As Date val = #{cell_val.to_s}"
+    begin
+      val = Date.parse(cell_val.to_s)
+    rescue
+      val = Date.today
     end
     val
   end
@@ -68,14 +69,9 @@ class InventoryLoader
     val
   end
 
-  def as_integer(cell_val)    # Check to see if the spreadsheet encoded this as a number
-    #Rails.logger.debug "Converting to integer '#{cell_val}'"
-    if is_number?(cell_val)
-      val = cell_val.to_i
-    else
-      val = 0
-    end
-    val
+  def as_integer(cell_val)
+    val = as_float(cell_val) + 0.5
+    val.to_i
   end
   
   def as_string(cell_val)
