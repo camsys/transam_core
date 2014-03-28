@@ -1,46 +1,88 @@
+#------------------------------------------------------------------------------
+#
+# StraightLineEstimationCalculator
+#
+#------------------------------------------------------------------------------
 class StraightLineEstimationCalculator < ConditionEstimationCalculator
   
   # Estimates the condition rating of an asset using straight-line depreciation
-  # based on either a measured rate of change if the asset has one or more 
-  # condition updates, or the expected rate of change is no updates have been 
-  # posted against the asset
+  # based on 
+  #
+  # 1] a measured rate of change if the asset has one or more condition updates, or 
+  # 2] the expected rate of change if no updates have been posted against the asset
+  #
+  # If the asset has mileage reported then the measured rate of change will be the minimum
+  # of the condition assement or milege assessment
+  #
   def calculate(asset)
     
     Rails.logger.debug "StraightLineEstimationCalculator.calculate(asset)"
+
+    #
+    # We calculate the slope (y2 - y1) / (x2 - x2) where the x axis is the years and the y axis is the rating
+    #   point (x1, y1) is the new asset (0 years, max_condition) 
+    #   point (x2, y2) is the last known data point if we have one or the end of useful life determined by
+    #                  the policy if we dont
+
+    # Get what we need from the policy    
+    policy_item = @policy.get_policy_item(asset)
+
+    # this is the rating that indicates the asset is at the end of its useful life. Usually 2.5 for FTA applications
+    condition_threshold = @policy.condition_threshold
+
+    # this is the max number of years for the asset, i.e. the number of years before the asset's rating is expected to
+    # reach the condition_threshold value
+    years_policy = policy_item.max_service_life_years
+
+    # Age of the asset in years
+    asset_age = asset.age
     
-    # get the maximum (initial) rating for a new asset
-    max_rating = ConditionType.max_rating
-    min_rating = @policy.condition_threshold
-  
-    # See if we have condition updates
+    # get the maximum and minimum rating for a new asset
+    max_rating = ConditionType.max_rating  # Usually 5.0 for FTA applicaitons 
+    min_rating = ConditionType.min_rating  # Usually 1.0 for FTA applications
+
+    # Assets always rated at the max value when they are new
+    x1 = 0
+    y1 = max_rating
+
+    # we might calculate this later if we have data
+    mileage_slope = 0.0     
+
+    # If there are no condition updates then just return the policy based
+    # estimation
     if asset.condition_updates.empty?
-
-      # Get the minimum accepatable condition from the policy
-      rating = @policy.condition_threshold
-
-      # Expected age of the asset in years
-      years = @policy.get_policy_item(asset).max_service_life_years
-      
+      x2 = condition_threshold
+      y2 = years_policy
+      condition_slope = slope(x1, y1, x2, y2)
     else
-      # we can calculate a new slope by determining the rate of change over the life of the asset
-      # based on the last reported condition
-
+      # We determine the new slope from the last data point reported
       condition_report = asset.condition_updates.last
-      rating = condition_report.assessed_rating
       
-      # Get the age of the asset when the report was created
-      years = asset.age(condition_report.event_date)
-        
+      last_rating   = condition_report.assessed_rating
+      last_mileage  = condition_report.current_mileage
+      age_at_report = asset.age(condition_report.event_date)
+  
+      # Determine the current slope
+      x2 = age_at_report
+      y2 = last_rating
+      condition_slope = slope(x1, y1, x2, y2)
+  
+      # See if we can do a mileage calculation
+      if last_mileage && policy_item.max_service_life_miles && age_at_report > 0
+        # Here the slope is based on the number of miles remaining. This keeps the
+        # slope in the same direction
+        y1 = policy_item.max_service_life_miles
+        y2 = policy_item.max_service_life_miles - last_mileage
+        # determine the scale factor to make the mileage in the same interval as condition
+        scale_factor = (max_rating - condition_threshold) / policy_item.max_service_life_miles
+        # get the slope
+        mileage_slope = slope(x1, y1, x2, y2) * scale_factor        
+      end
     end
-    # Get the rate of change in asset quality per year
-    rate_of_change = rate_of_deterioration_per_year(max_rating, rating, years)
-    
-    # calculate the expected rating based on the assets age and either the expected or observed
-    # rate of change
-    estimated_rating = max_rating - (rate_of_change * asset.age)
-    # return the max of the estimated rating or the minimum rating value
-    [estimated_rating, min_rating].max
-          
+    # determine the minimum estimated rating, this is the one with the most negative slope
+    est_rating = max_rating + ([mileage_slope, condition_slope].min * asset_age)
+    # make sure we don't go below the minimum. This is possible as the slope can extend infinitely for extreme cases
+    [est_rating, min_rating].max
   end
   
   # Estimates the last servicable year for the asset based on the last reported condition. If no
@@ -49,55 +91,56 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
 
     Rails.logger.debug "StraightLineEstimationCalculator.last_servicable_year(asset)"
         
+    policy_item     = @policy.get_policy_item(asset)
+    years_policy    = policy_item.max_service_life_years
+    years_mileage   = 9999
+    years_condition = 9999
+    
     # Return the policy year if there are no condition updates recorded against the asset
-    if asset.condition_updates.empty?
-      year = asset.manufacture_year + @policy.get_policy_item(asset).max_service_life_years
-    else
-      # get the maximum (initial) rating for a new asset
-      max_rating = ConditionType.max_rating
-      min_rating = @policy.condition_threshold
+    unless asset.condition_updates.empty?
+
+      condition_threshold = @policy.condition_threshold
       
+      # Get the latest condition report
       condition_report = asset.condition_updates.last
-      current_rating = condition_report.assessed_rating
+      
+      last_rating   = condition_report.assessed_rating
+      last_mileage  = condition_report.current_mileage
       age_at_report = asset.age(condition_report.event_date)
 
-      # Get the observed rate of change in asset quality
-      rate_of_change = rate_of_deterioration_per_year(max_rating, current_rating, age_at_report)
-      if rate_of_change < 0.01
-        # If the asset has not deteriorated, return the policy life
-        year = asset.manufacture_year + @policy.get_policy_item(asset).max_service_life_years
-      else
-        # determine the year that the service quality will fall below the threshold
-        years_at_rate = (max_rating - min_rating)  / rate_of_change
-        year = asset.manufacture_year + years_at_rate.to_i
+      # Using the slope intercept formula y = mx + b
+      #    where m is the slope
+      #    b in the y intercept (max_rating)
+      # we can solve for x (year) when we know y (condition) by re-arranging to
+      # x = (y - b) / m
+      
+      x1 = 0
+      y1 = max_rating
+      x2 = age_at_report
+      y2 = last_rating
+      m = slope(x1, y1, x2, y2)
+      b = max_rating
+      y = condition_threshold
+      x = (y - b) / m
+      # Take care of any rounding errors
+      years_condition = (x + 0.1).to_i
+      
+      # See if we can do one for mileage
+      if current_mileage && policy_item.max_service_life_miles && age_at_report > 0
+        # Here we ge teh slope and then predict the x (year) when there are no
+        # more miles to use up
+        y1 = policy_item.max_service_life_miles
+        y2 = policy_item.max_service_life_miles - last_mileage
+        m = slope(x1, y1, x2, y2)
+        b = policy_item.max_service_life_miles
+        y = 0
+        x = (y - b) / m
+        # Take care of any rounding errors
+        years_mileage = (x + 0.1).to_i
       end
     end
+    # return the last year that the asset is viable
+    asset.manufacture_year + [years_policy, years_mileage, years_condition].min
   end  
 
-  protected
-
-  # Calculates the linear deterioration in asset quality per year
-  def rate_of_deterioration_per_year(max_rating, min_rating, years)
-
-    Rails.logger.debug "Max rating = #{max_rating}, min_rating = #{min_rating}, years = #{years}."
-    
-    # Check the edge case where the asset is new or dates are messed up and
-    # the asset is reporting negative years
-    if years < 1
-      return 0.0
-    end
-        
-    # Determine the change in condition
-    delta = max_rating - min_rating
-       
-    if delta < 0.1
-      # There has been no significant change so amortize the rating over the 
-      # number of years
-      0.0
-    else        
-      # Determine the normal rate of change in rating per year
-      delta / years
-    end
-  end
-  
 end

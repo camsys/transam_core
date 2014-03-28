@@ -4,5 +4,10 @@ class ConditionEstimationCalculator < Calculator
   def last_year(asset)
     nil
   end  
+
+  # determine the slope between two points
+  def slope(x1, y1, x2, y2)
+    (y2 - y1) / (x2 - x1)
+  end
   
 end
