@@ -130,7 +130,7 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
       years_condition = (x + 0.1).to_i
       
       # See if we can do one for mileage
-      if current_mileage && policy_item.max_service_life_miles && age_at_report > 0
+      if last_mileage && policy_item.max_service_life_miles && age_at_report > 0
         # Here we ge teh slope and then predict the x (year) when there are no
         # more miles to use up
         y1 = policy_item.max_service_life_miles
