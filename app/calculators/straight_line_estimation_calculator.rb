@@ -99,8 +99,12 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
     # Return the policy year if there are no condition updates recorded against the asset
     unless asset.condition_updates.empty?
 
+      # get the maximum and minimum rating for a new asset
+      max_rating = ConditionType.max_rating  # Usually 5.0 for FTA applicaitons 
+      min_rating = ConditionType.min_rating  # Usually 1.0 for FTA applications
+
       condition_threshold = @policy.condition_threshold
-      
+            
       # Get the latest condition report
       condition_report = asset.condition_updates.last
       
