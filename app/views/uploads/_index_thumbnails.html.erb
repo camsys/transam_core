@@ -2,7 +2,7 @@
 	<div class="span12">
 		<ul class="thumbnails">
 			<% @uploads.each do |upload| %>
-				<%= action_thumbnail_tag({:class => 'span2 doc_thumbnail', :icon => "fa fa-upload", :title => upload.original_filename, :path => upload_path(upload)}) do %>
+				<%= action_thumbnail_tag({:class => 'span3 doc_thumbnail', :icon => "fa fa-upload", :title => upload.original_filename, :path => upload_path(upload)}) do %>
 					<%= content_tag "address" do %>
 					<% end %>
 					<%= format_field("File Status", upload.file_status_type.name) %>
