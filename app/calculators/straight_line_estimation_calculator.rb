@@ -26,6 +26,7 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
 
     # Get what we need from the policy    
     policy_item = @policy.get_policy_item(asset)
+    Rails.logger.debug policy_item.inspect
 
     # this is the rating that indicates the asset is at the end of its useful life. Usually 2.5 for FTA applications
     condition_threshold = @policy.condition_threshold
@@ -41,6 +42,8 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
     max_rating = ConditionType.max_rating  # Usually 5.0 for FTA applicaitons 
     min_rating = ConditionType.min_rating  # Usually 1.0 for FTA applications
 
+    Rails.logger.debug "asset_age=#{asset_age}, threshold=#{condition_threshold}, min_rating=#{min_rating}, max_rating=#{max_rating}"
+
     # Assets always rated at the max value when they are new
     x1 = 0
     y1 = max_rating
@@ -51,12 +54,16 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
     # If there are no condition updates then just return the policy based
     # estimation
     if asset.condition_updates.empty?
-      x2 = condition_threshold
-      y2 = years_policy
+      Rails.logger.debug "No condition updates."
+      x2 = years_policy
+      y2 = condition_threshold
+      Rails.logger.debug "x1=#{x1} y1=#{y1} x2=#{x2} y2=#{y2}"
       condition_slope = slope(x1, y1, x2, y2)
+      Rails.logger.debug "Slope = #{condition_slope}."
     else
       # We determine the new slope from the last data point reported
       condition_report = asset.condition_updates.last
+      Rails.logger.debug condition_report.inspect
       
       last_rating   = condition_report.assessed_rating
       last_mileage  = condition_report.current_mileage
@@ -65,7 +72,9 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
       # Determine the current slope
       x2 = age_at_report
       y2 = last_rating
+      Rails.logger.debug "x1=#{x1} y1=#{y1} x2=#{x2} y2=#{y2}"
       condition_slope = slope(x1, y1, x2, y2)
+      Rails.logger.debug "Slope = #{condition_slope}."
   
       # See if we can do a mileage calculation
       if last_mileage && policy_item.max_service_life_miles && age_at_report > 0
@@ -80,9 +89,12 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
       end
     end
     # determine the minimum estimated rating, this is the one with the most negative slope
-    est_rating = max_rating + ([mileage_slope, condition_slope].min * asset_age)
+    min_slope = [mileage_slope, condition_slope].min
+    Rails.logger.debug "min_slope = #{min_slope} age=#{asset_age} max_rating=#{max_rating}"
+    est_rating = max_rating + (min_slope * asset_age)
+    Rails.logger.debug "est rating = #{est_rating}"
     # make sure we don't go below the minimum. This is possible as the slope can extend infinitely for extreme cases
-    [est_rating, min_rating].max
+    [est_rating.round(2), min_rating].max
   end
   
   # Estimates the last servicable year for the asset based on the last reported condition. If no
@@ -122,13 +134,17 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
       y1 = max_rating
       x2 = age_at_report
       y2 = last_rating
+      Rails.logger.debug "x1=#{x1} y1=#{y1} x2=#{x2} y2=#{y2}"
       m = slope(x1, y1, x2, y2)
-      b = max_rating
-      y = condition_threshold
-      x = (y - b) / m
-      # Take care of any rounding errors
-      years_condition = (x + 0.1).to_i
-      
+      if m.abs.between?(0.00001, 0.99999)
+        b = max_rating
+        y = condition_threshold
+        Rails.logger.debug "y = mx + b => #{y} = #{m}x + #{b}"
+        x = (y - b) / m
+        Rails.logger.debug "x = (y - b) / m  => #{x} = (#{y} - #{b}) + #{m}"
+        # Take care of any rounding errors
+        years_condition = (x + 0.1).to_i
+      end      
       # See if we can do one for mileage
       if last_mileage && policy_item.max_service_life_miles && age_at_report > 0
         # Here we ge teh slope and then predict the x (year) when there are no
@@ -136,14 +152,17 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
         y1 = policy_item.max_service_life_miles
         y2 = policy_item.max_service_life_miles - last_mileage
         m = slope(x1, y1, x2, y2)
-        b = policy_item.max_service_life_miles
-        y = 0
-        x = (y - b) / m
-        # Take care of any rounding errors
-        years_mileage = (x + 0.1).to_i
+        if m.abs.between?(0.00001, 0.99999)
+          b = policy_item.max_service_life_miles
+          y = 0
+          x = (y - b) / m
+          # Take care of any rounding errors
+          years_mileage = (x + 0.1).to_i
+        end
       end
     end
     # return the last year that the asset is viable
+    Rails.logger.debug "years_policy = #{years_policy}, years_mileage = #{years_mileage}, years_condition = #{years_condition}"
     asset.manufacture_year + [years_policy, years_mileage, years_condition].min
   end  
 
