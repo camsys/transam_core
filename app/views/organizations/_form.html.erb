@@ -15,8 +15,8 @@
 				<%= f.input :address1 %>
 				<%= f.input :address2 %>
 				<%= f.input :city %>
-				<%= f.input :state %>
-				<%= f.input :zip %>				
+				<%= f.input :state, :as => :select, :collection => Country['US'].states %>
+				<%= f.input :zip %>
 				<%= f.input :url, :as => :url %>
 			<% end %>
 		</ul>
