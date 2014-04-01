@@ -1,24 +1,40 @@
 <div class="row-fluid">
 	<div class="span12">
-		<%= form_tag create_templates_uploads_url, :id => 'template_form', :method => "get", :class => 'form-horizontal' do %>
 		<ul class="thumbnails">
-			<%= panel_tag('Select Template and Asset Type', {:icon => 'icon-upload', :class => "span8 offset2"}) do %>		
-				<%= select_tag(:template_type, options_for_select(@template_type_array), :prompt => 'Select template type...') %>
-				<%= select_tag(:asset_type, options_from_collection_for_select(@asset_type_array, "id", "name"), :prompt => 'Select asset type...', :id => 'asset_subtype_filter') %>
-				
-				</br>
-				<% AssetEventType.all.each do |aet| %>
-				    <%= check_box_tag 'asset_event_type_ids[]', aet.id %>
-				    <%= aet.name %>
-					</br>
+			<%= panel_tag('Select Template and Asset Type', {:icon => 'icon-upload', :class => "span8 offset2"}) do %>	
+				<%= simple_form_for(:template_proxy, :url => create_template_uploads_url, :id => 'template_form', :method => "post", :html => {:class => 'form-horizontal'}) do |f| %>
+					<%= f.input :file_content_type_id, :collection => FileContentType.all, :include_blank => false %>
+					<div id="asset_type_input">	
+						<%= f.input :asset_types, :collection => @asset_types, :as => :check_boxes %>	
+					</div>
+					<div class="form-actions panel-form-actions">
+          				<%= f.button :submit, 'Download Template', :class => 'btn' %>
+						<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn" %>
+					</div>				
 				<% end %>
-
-				<div class="form-actions panel-form-actions">
-					<%= submit_tag 'Generate template', :name => 'submit', :class=>"btn" %>
-					<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn" %>
-				</div>				
 			<% end %>
 		</ul>
-		<% end %>
 	</div>
 </div>
+
+<script type="text/javascript">
+
+	$(document).ready(function() {
+		// Hide the asset type div when the page is loaded
+		$('#asset_type_input').hide();
+		
+		// Install a change handler to unhide the div if the user selects other than
+		// the new inventory selector
+		$('#template_proxy_file_content_type_id').change(function() {
+			var val = this.value;
+			if (val == 1) {
+				// Hide the other input
+				$('#asset_type_input').hide();
+			} else {
+				// Unhide id
+				$('#asset_type_input').show();
+			}
+		});
+	});
+		
+</script>

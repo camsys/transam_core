@@ -1,7 +1,7 @@
 class UploadsController < OrganizationAwareController
 
   before_action :set_upload, :only => [:show, :destroy, :resubmit]  
-  before_filter :check_for_cancel, :only => [:create, :update]
+  before_filter :check_for_cancel, :only => [:create, :update, :create_template]
   
   SESSION_VIEW_TYPE_VAR = 'uploads_subnav_view_type'
   
@@ -65,21 +65,38 @@ class UploadsController < OrganizationAwareController
 
   def templates
     @page_title = "Download Template"
-    @template_type_array = ['New', 'Update']
     
     #prepare a list of just the asset types of the current organization
-    @asset_type_array = []
+    @asset_types = []
     AssetType.all.each do |at|
       if @organization.asset_count(at) > 0 
-        @asset_type_array << at
+        @asset_types << at
       end
     end
   end
   
-  def create_templates
-    asset_event_type_ids = []
-    asset_event_type_ids = params[:asset_event_type_ids].collect { |id| id.to_i } if params[:asset_event_type_ids]
+  def create_template
     
+    template_proxy = TemplateProxy.new(params[:template_proxy])
+    file_content_type = FileContentType.find(template_proxy.file_content_type_id)
+    if template_proxy.valid?
+      # Find out which builder is used to construct the template
+      builder = file_content_type.template_builder_name.constantize.new
+      builder.organization = @organization
+      builder.asset_types = template_proxy.asset_types
+      # Generate the spreadsheet
+      template = StringIO.new
+      builder.build template
+
+      # Send it to the user
+      filename = #{@organization.short_name}_#{file_content_type.class_name.underscore}_#{Date.today}.xls"
+      send_data template.string, :filename => filename, :type => "application/vnd.ms-excel"
+    else
+      respond_to do |format|
+        format.html { render :action => "templates" }
+      end
+    end
+        
   end
   
   def new
