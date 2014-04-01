@@ -11,6 +11,7 @@
 					<%= format_field("Num. rows skipped", format_as_integer(upload.num_rows_skipped)) %>
 					<%= format_field("Num. rows replaced", format_as_integer(upload.num_rows_replaced)) %>
 					<%= format_field("Num. rows failed", format_as_integer(upload.num_rows_failed)) %>
+					<%= format_field("Total Processing Time", format_as_integer((upload.processing_completed_at - upload.processing_started_at)/60)) %>
 				<% end %>
 			<% end %>
 		</ul>
