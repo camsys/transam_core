@@ -80,17 +80,17 @@ class UploadsController < OrganizationAwareController
     template_proxy = TemplateProxy.new(params[:template_proxy])
     file_content_type = FileContentType.find(template_proxy.file_content_type_id)
     if template_proxy.valid?
-      # Find out which builder is used to construct the template
-      builder = file_content_type.template_builder_name.constantize.new
+      # Find out which builder is used to construct the template and create an instance
+      builder = file_content_type.builder_name.constantize.new
       builder.organization = @organization
       builder.asset_types = template_proxy.asset_types
-      # Generate the spreadsheet
-      template = StringIO.new
-      builder.build template
+      
+      # Generate the spreadsheet. This returns a StringIO that has been rewound
+      stream = builder.build
 
       # Send it to the user
-      filename = #{@organization.short_name}_#{file_content_type.class_name.underscore}_#{Date.today}.xls"
-      send_data template.string, :filename => filename, :type => "application/vnd.ms-excel"
+      filename = "#{@organization.short_name.downcase}_#{file_content_type.class_name.underscore}_#{Date.today}.xls"
+      send_data stream.string, :filename => filename, :type => "application/vnd.ms-excel"
     else
       respond_to do |format|
         format.html { render :action => "templates" }
