@@ -99,7 +99,7 @@ class UploadsController < OrganizationAwareController
     @upload.user = current_user
     # Make sure we set the organization
     unless current_user.has_role? :admin
-      @upload.organiztion = current_user.organization
+      @upload.organization = current_user.organization
     end
     
     respond_to do |format|
