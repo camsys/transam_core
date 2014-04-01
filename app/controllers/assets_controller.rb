@@ -246,11 +246,7 @@ class AssetsController < AssetAwareController
       return            
     end
     
-    # remove any child objects
-    @asset.attachments.each { |x| x.destroy }
-    @asset.asset_events.each { |x| x.destroy }
-    @asset.notes.each {|x| x.destroy }
-    
+    # Destroy this asset, call backs to remove each associated object will be made
     @asset.destroy
     
     notify_user(:notice, "Asset was successfully removed.")

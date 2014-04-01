@@ -35,7 +35,7 @@ class Asset < ActiveRecord::Base
   end
        
   # Clean up any HABTM associations before the asset is destroyed
-  before_destroy { :districts.clear }
+  before_destroy { districts.clear }
   
   #------------------------------------------------------------------------------
   # Associations common to all asset types
@@ -69,7 +69,7 @@ class Asset < ActiveRecord::Base
   has_many   :images,     -> { where :attachment_type_id => 1}, :class_name => "Attachment"
   has_many   :documents,  -> { where :attachment_type_id => 2}, :class_name => "Attachment"
 
-  # Each asset has zero or more notes 
+  # Each asset has zero or more notes. Notes are deleted when the asset is destroyed
   has_many   :notes,        :dependent => :destroy
     
   # Each asset can be associated with 0 or more districts
