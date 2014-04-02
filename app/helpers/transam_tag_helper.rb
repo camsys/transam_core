@@ -42,7 +42,7 @@ module TransamTagHelper
     html << "<div data-action-path='"
     html << options[:path]
     html << "'>"
-    html << "<div class='well well-small' style='margin-bottom:0px;height:auto;word-wrap:break-word;'>"
+    html << "<div class='well well-small' style='margin-bottom:0px;height:150px;'>"
     html << "<div class='row-fluid'>"
     html << "<div class='span4'>"
     html << "<i class='"
@@ -50,7 +50,7 @@ module TransamTagHelper
     html << " fa-4x' style='margin-top:5px;'></i>"
     html << "</div>"
     html << "<div class='span8'>"
-    html << "<h4>"
+    html << "<h4'>"
     html << options[:title]
     html << "</div>"
     html << "</div>"
