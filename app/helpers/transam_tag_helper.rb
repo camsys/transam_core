@@ -41,7 +41,7 @@ module TransamTagHelper
     html << "'>"
     html << "<div data-action-path='"
     html << options[:path]
-    html << "' style='overflow:hidden;'>"
+    html << "'>"
     html << "<div class='well well-small' style='margin-bottom:0px;height:125px;'>"
     html << "<div class='row-fluid'>"
     html << "<div class='span4'>"
@@ -50,16 +50,15 @@ module TransamTagHelper
     html << " fa-4x' style='margin-top:5px;'></i>"
     html << "</div>"
     html << "<div class='span8'>"
-    html << "<h4'>"
+    html << "<h4>"
     html << options[:title]
+    html << "</h4>"    
     html << "</div>"
     html << "</div>"
-    html << "<div class='row-fluid'>"
-    html << "<div class='span12'>"
+    html << "<div class='span12 first-in-row' style='margin-top:5px;'>"
 
     html << content
 
-    html << "</div>"
     html << "</div>"
     html << "</div>"
     html << "</div>"
