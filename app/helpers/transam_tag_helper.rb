@@ -41,7 +41,7 @@ module TransamTagHelper
     html << "'>"
     html << "<div data-action-path='"
     html << options[:path]
-    html << "'>"
+    html << "' style='overflow:hidden;'>"
     html << "<div class='well well-small' style='margin-bottom:0px;height:125px;'>"
     html << "<div class='row-fluid'>"
     html << "<div class='span4'>"
