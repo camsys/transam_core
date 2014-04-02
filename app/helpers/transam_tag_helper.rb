@@ -1,15 +1,15 @@
 module TransamTagHelper
-    
+
   def loader_panel_tag(options={})
     html = "<div class='loader'><i class='fa fa-spinner fa-spin fa-2x'></div>"
-    return html.html_safe     
+    return html.html_safe
   end
-  
+
   def image_thumbnail_tag(options={}, &block)
 
-    # Check to see if there is any content in the block    
+    # Check to see if there is any content in the block
     content = capture(&block)
-    if content.nil?      
+    if content.nil?
       content = "<p>&nbsp;</p>"
     end
 
@@ -24,15 +24,15 @@ module TransamTagHelper
 
     html << "</div>"
     html << "</li>"
-    
-    return html.html_safe     
+
+    return html.html_safe
   end
 
   def action_thumbnail_tag(options={}, &block)
 
-    # Check to see if there is any content in the block    
+    # Check to see if there is any content in the block
     content = capture(&block)
-    if content.nil?      
+    if content.nil?
       content = "<p>&nbsp;</p>"
     end
 
@@ -42,7 +42,7 @@ module TransamTagHelper
     html << "<div data-action-path='"
     html << options[:path]
     html << "'>"
-    html << "<div class='well well-small' style='margin-bottom:0px;height:150px;'>"
+    html << "<div class='well well-small' style='margin-bottom:0px;height:auto;word-wrap:break-word;'>"
     html << "<div class='row-fluid'>"
     html << "<div class='span4'>"
     html << "<i class='"
@@ -64,8 +64,8 @@ module TransamTagHelper
     html << "</div>"
     html << "</div>"
     html << "</li>"
-    
-    return html.html_safe     
+
+    return html.html_safe
   end
 
   #
@@ -76,18 +76,18 @@ module TransamTagHelper
   def sub_nav_elem_tag(&block)
 
     content = capture(&block)
-    html = "<li>"    
-    html << content 
+    html = "<li>"
+    html << content
     html << "</li>"
-        
+
     return html.html_safe
   end
-  
+
   def sub_nav_tag(options={}, &block)
-    
-    # Check to see if there is any content in the block    
+
+    # Check to see if there is any content in the block
     content = capture(&block)
-    if content.nil?      
+    if content.nil?
       content = "<p>&nbsp;</p>"
     end
 
@@ -104,15 +104,15 @@ module TransamTagHelper
     html << "</div>"
     html << "</div>"
     html << "</div>"
-    
-    return html.html_safe     
+
+    return html.html_safe
   end
 
   def panel_tag(panel_name, options={}, &block)
-    
-    # Check to see if there is any content in the block    
+
+    # Check to see if there is any content in the block
     content = capture(&block)
-    if content.nil?      
+    if content.nil?
       content = "<p>&nbsp;</p>"
     end
 
@@ -130,21 +130,21 @@ module TransamTagHelper
     html << "</h4>"
 
     html << "</div>"
-    html << "<div class='panel-content'>"    
+    html << "<div class='panel-content'>"
     html << content
     html << "</div>"
     html << "</li>"
-    
-    return html.html_safe     
+
+    return html.html_safe
   end
-  
-  def dialog_tag(dialog_name, icon=nil, link_text=nil, link_path=nil, &block)    
-    # Check to see if there is any content in the block    
+
+  def dialog_tag(dialog_name, icon=nil, link_text=nil, link_path=nil, &block)
+    # Check to see if there is any content in the block
     content = capture(&block)
-    if content.nil?      
+    if content.nil?
       content = "<p>&nbsp;</p>"
     end
-    
+
     html = "<li class='span12 thumbnail first-in-row shadow'>"
     html << "<div class='dialog-header navbar-inner'>"
     if link_path.nil?
@@ -170,11 +170,11 @@ module TransamTagHelper
       html << "</div>"
     end
     html << "</div>"
-    html << "<div class='dialog-content'>"    
+    html << "<div class='dialog-content'>"
     html << content
     html << "</div>"
     html << "</li>"
-    return html.html_safe    
+    return html.html_safe
   end
-    
+
 end
