@@ -43,25 +43,23 @@ class TemplateBuilder
     # add the rows
     add_rows(sheet)
 
-    sheet.merge_cells("A1:B1")
-
+    # Perform any additional processing
+    post_process(sheet)
+    
     # Serialize the spreadsheet to the stream and return it
     p.to_stream()
 
   end
-
 
   protected
 
   # Override with new styles
   def styles
     [
-      {:name => 'asset_id_col',  :num_fmt => 0, :bg_color => "FFBDC8", :fg_color => '000000', :b => true},
       {:name => 'general',  :num_fmt => 0},
       {:name => 'currency', :num_fmt => 5},
       {:name => 'percent',  :num_fmt => 9},
-      {:name => 'date',     :format_code => "yyyy-mm-dd"},
-      {:name => 'vehichle_characteristic', :num_fmt => 0, :bg_color => "FFFEB2", :b => true}
+      {:name => 'date',     :format_code => "yyyy-mm-dd"}
     ]
   end
 
