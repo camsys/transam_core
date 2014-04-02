@@ -64,7 +64,7 @@ class PoliciesController < OrganizationAwareController
     new_policy.save
 
     # now attempt to load the newly created record
-    @policy = current_user.organization.policies.find(new_policy.id)
+    @policy = Policy.find(new_policy.id)
     respond_to do |format|
       if @policy
         notify_user(:notice, "Policy #{old_policy_name} was successfully copied.")
