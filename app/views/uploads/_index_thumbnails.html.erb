@@ -4,15 +4,10 @@
 			<% @uploads.each do |upload| %>
 				<%= action_thumbnail_tag({:class => 'span3 doc_thumbnail', :icon => "fa fa-upload", :title => upload.original_filename, :path => upload_path(upload)}) do %>
 					<%= content_tag "address" do %>
-						<%= format_field("File Status", upload.file_status_type.name) %>
+						<%= format_field("Loaded by", upload.user.name) %>
+						<%= format_field("Loaded on", format_as_date(upload.created_at)) %>
+						<%= format_field("File Status", upload.file_status_type) %>
 						<%= format_field("Rows processed", format_as_integer(upload.num_rows_processed)) %>
-						<%= format_field("Rows added", format_as_integer(upload.num_rows_added)) %>
-						<%= format_field("Rows skipped", format_as_integer(upload.num_rows_skipped)) %>
-						<%= format_field("Rows replaced", format_as_integer(upload.num_rows_replaced)) %>
-						<%= format_field("Rows failed", format_as_integer(upload.num_rows_failed)) %>
-						<% unless upload.processing_completed_at.nil? %>
-							<%= format_field("Total Processing Time", format_as_integer((upload.processing_completed_at - upload.processing_started_at)/60)) %>
-						<% end %>
 					<% end %>
 				<% end %>
 			<% end %>
