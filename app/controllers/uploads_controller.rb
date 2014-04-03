@@ -107,17 +107,14 @@ class UploadsController < OrganizationAwareController
   end
   
   #
-  # Create a new upload. If the current user is an admin they can set the 
-  # organization owning the upload otherwise it defaults to the user's organization
+  # Create a new upload. If the current user has a list of organizations, they can create
+  # an upload for any organization in their list
   #
   def create
 
     @upload = Upload.new(form_params)
     @upload.user = current_user
-    # Make sure we set the organization
-    unless current_user.has_role? :admin
-      @upload.organization = current_user.organization
-    end
+    @upload.organization = @organization
     
     respond_to do |format|
       if @upload.save
