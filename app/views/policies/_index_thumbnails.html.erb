@@ -4,7 +4,9 @@
 			<% @policies.each do |policy| %>
 				<%= action_thumbnail_tag({:class => 'span3', :icon => "fa fa-book", :title => policy.name, :path => policy_path(policy)}) do %>
 					<p><%= policy.description %></p>
-					<h5>Current? <%= format_as_boolean(policy.current) %></h5>		
+					<% if policy.current %>
+						<p><strong>Current</strong></p>		
+					<% end %>
 				<% end %>
 			<% end %>
 		</ul>
