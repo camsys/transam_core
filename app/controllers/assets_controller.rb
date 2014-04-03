@@ -529,7 +529,7 @@ class AssetsController < AssetAwareController
   # Overrides the utility method in the base class
   #
   def get_selected_asset(convert=true)
-    selected_asset = params[:id].nil? ? nil : Asset.where('organization_id = ? AND object_key = ?', @organization, params[:id]).first
+    selected_asset = params[:id].nil? ? nil : Asset.where('organization_id = ? AND object_key = ?', @organization.id, params[:id]).first
     if convert
       asset = get_typed_asset(selected_asset)
     else
