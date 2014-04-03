@@ -26,34 +26,34 @@ class OrganizationsController < OrganizationAwareController
   
   def show
     
-    if @organization.nil?
+    if @org.nil?
       notify_user(:alert, "Record not found.")
       redirect_to organizations_url 
       return
     end
     
-    if @organization.id == current_user.organization.id
+    if @org.id == current_user.organization.id
       @page_title = "My Organization"
     else
-      @page_title = @organization.name
+      @page_title = @org.name
     end
     
     respond_to do |format|
       format.html # show.html.erb
-      format.json { render :json => @organization }
+      format.json { render :json => @org }
     end
     
   end
 
   def map
 
-    if @organization.nil?
+    if @org.nil?
       notify_user(:alert, "Record not found.")
       redirect_to organizations_url 
       return
     end
     
-    @page_title = @organization.name
+    @page_title = @org.name
     @organizations = []
     @organizations << @organization
     @markers = generate_map_markers(@organizations, true)
@@ -67,29 +67,29 @@ class OrganizationsController < OrganizationAwareController
   
   # Edit simply returns the selected organization
   def edit
-    if @organization.nil?
+    if @org.nil?
       notify_user(:alert, "Record not found.")
       redirect_to organizations_url 
       return
     end
-    @page_title = "Update"    
+    @page_title = "Update: #{@org.name}"    
   end
 
   def update
-    if @organization.nil?
+    if @org.nil?
       notify_user(:alert, "Record not found.")
       redirect_to organizations_url 
       return
     end
 
     respond_to do |format|
-      if @organization.update_attributes(form_params)
-        notify_user(:notice, "#{@organization.name} was successfully updated.")
-        format.html { redirect_to organization_url(@organization) }
+      if @org.update_attributes(form_params)
+        notify_user(:notice, "#{@org.name} was successfully updated.")
+        format.html { redirect_to organization_url(@org) }
         format.json { head :no_content }
       else
         format.html { render :action => "edit" }
-        format.json { render :json => @organization.errors, :status => :unprocessable_entity }
+        format.json { render :json => @org.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -127,7 +127,7 @@ class OrganizationsController < OrganizationAwareController
       org = current_user.organizations.find_by_short_name(params[:id])
     end
     if org
-      @organization = get_typed_organization(org)
+      @org = get_typed_organization(org)
     end
   end
 
@@ -138,8 +138,8 @@ class OrganizationsController < OrganizationAwareController
   
   def check_for_cancel
     unless params[:cancel].blank?
-      @organization = get_organization
-      redirect_to organization_url(@organization)
+      @org = get_organization
+      redirect_to organization_url(@org)
     end
   end
   

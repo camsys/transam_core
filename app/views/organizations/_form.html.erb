@@ -1,5 +1,5 @@
 <div class="row-fluid">
-	<%= simple_form_for(@organization, :html => {:class => 'form-vertical span12' }, :defaults => {:disabled => @disabled }) do |f| %>
+	<%= simple_form_for(@org, :html => {:class => 'form-vertical span12' }) do |f| %>
 	<div class="row-fluid">
 		<ul class="thumbnails">
 			<%= panel_tag('Corporate', {:icon => 'fa fa-book', :class => "span6 form_part"}) do %>
