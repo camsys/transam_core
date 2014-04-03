@@ -1,4 +1,5 @@
 class OrganizationsController < OrganizationAwareController
+  before_filter :get_org, :only => [:show, :map, :edit, :update]
   before_filter :check_for_cancel, :only => [:create, :update]
   
   # include the transam markers mixin
@@ -55,7 +56,7 @@ class OrganizationsController < OrganizationAwareController
     
     @page_title = @org.name
     @organizations = []
-    @organizations << @organization
+    @organizations << @org
     @markers = generate_map_markers(@organizations, true)
                   
     respond_to do |format|
@@ -120,7 +121,7 @@ class OrganizationsController < OrganizationAwareController
       
   # Returns the agency that has been selected by the user. The agency must
   # be user's agency or one of its member agencies. 
-  def get_organization
+  def get_org
     if params[:id].nil?
       org = current_user.organization
     else
