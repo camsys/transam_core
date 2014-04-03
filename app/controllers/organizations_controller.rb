@@ -37,7 +37,6 @@ class OrganizationsController < OrganizationAwareController
     else
       @page_title = @organization.name
     end
-    @disabled = true
     
     respond_to do |format|
       format.html # show.html.erb
