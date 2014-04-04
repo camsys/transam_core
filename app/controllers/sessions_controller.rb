@@ -32,7 +32,7 @@ class SessionsController < Devise::SessionsController
   private
   
   def log_failed_login
-    Rails.logger.info "Failed login with email: #{params['email']} at #{Time.now}" if failed_login?
+    Rails.logger.info "Failed login with email: #{params['user']['email']} at #{Time.now}" if failed_login?
   end 
 
   def failed_login?
