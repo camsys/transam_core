@@ -16,6 +16,7 @@ class DispositionUpdateEvent < AssetEvent
   #attr_accessible :disposition_type_id
   
   validates :disposition_type_id, :presence => true
+  validates :sales_proceeds,      :numericality => {:only_integer => true, :greater_than_or_equal_to => 0}, :allow_nil => true 
     
   #------------------------------------------------------------------------------
   # Scopes
@@ -25,7 +26,14 @@ class DispositionUpdateEvent < AssetEvent
     
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
-    :disposition_type_id
+    :disposition_type_id,
+    :sales_proceeds,
+    :new_owner_name,
+    :address1,
+    :address2,
+    :city,
+    :state,
+    :zip
   ]
   
   #------------------------------------------------------------------------------
