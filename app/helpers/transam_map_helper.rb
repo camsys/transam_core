@@ -1,7 +1,7 @@
 module TransamMapHelper
   
   # From the application config    
-  TILE_PROVIDER = Rails.application.config.map_tile_provider
+  TILE_PROVIDER = SystemConfig.instance.map_tile_provider
   
   ALPHABET = ('A'..'Z').to_a
 

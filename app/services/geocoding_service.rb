@@ -20,9 +20,9 @@ class GeocodingService
     # reset the current state
     reset
     @sensor = false
-    @components = Rails.application.config.geocoder_components
-    @bounds = Rails.application.config.geocoder_bounds
-    @region = Rails.application.config.geocoder_region
+    @components = SystemConfig.instance.geocoder_components
+    @bounds     = SystemConfig.instance.geocoder_bounds
+    @region     = SystemConfig.instance.geocoder_region
     attrs.each do |k, v|
       self.send "#{k}=", v
     end

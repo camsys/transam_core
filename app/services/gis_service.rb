@@ -1,6 +1,6 @@
 class GisService
   
-  DEFAULT_SRID        = Rails.application.config.default_srid
+  DEFAULT_SRID        = SystemConfig.instance.default_srid
   
   DEG2RAD             = 0.0174532925199433    # Pi / 180 
   RAD2DEG             = 57.29577951308232     # 180 / Pi

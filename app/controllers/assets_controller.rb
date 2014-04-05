@@ -11,10 +11,10 @@ class AssetsController < AssetAwareController
   before_filter :get_asset,         :only => [:show, :edit, :copy, :update, :destroy]
 
   # From the application config    
-  ASSET_BASE_CLASS_NAME     = Rails.application.config.asset_base_class_name   
-  MAX_ROWS_RETURNED         = Rails.application.config.max_rows_returned
-  DEFAULT_SEARCH_RADIUS     = Rails.application.config.default_search_radius
-  DEFAULT_SEARCH_UNITS      = Unit.new(Rails.application.config.default_search_units)
+  ASSET_BASE_CLASS_NAME     = SystemConfig.instance.asset_base_class_name   
+  MAX_ROWS_RETURNED         = SystemConfig.instance.max_rows_returned
+  DEFAULT_SEARCH_RADIUS     = SystemConfig.instance.default_search_radius
+  DEFAULT_SEARCH_UNITS      = Unit.new(SystemConfig.instance.default_search_units)
   
   STRING_TOKENIZER          = '|'
 
