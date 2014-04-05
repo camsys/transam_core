@@ -8,6 +8,9 @@
 #------------------------------------------------------------------------------
 class GeolocatableAsset < Asset
 
+  DEFAULT_SEARCH_RADIUS     = SystemConfig.instance.search_radius
+  DEFAULT_SEARCH_UNITS      = Unit.new(SystemConfig.instance.search_units)
+
   # ----------------------------------------------------  
   # Callbacks
   # ----------------------------------------------------  
@@ -88,7 +91,7 @@ class GeolocatableAsset < Asset
   # Returns a spatial search around an asset. The search is contrained by a minimim size bounding box that would contain
   # a circle of radius search_radius feet around the asset. Uses a native quesry and spatial index to optimize the search
   # the default is to search within one 300 ft (100 yds)
-  def find_close(search_radius = 300, units = GisService::FEET)
+  def find_close(search_radius = DEFAULT_SEARCH_RADIUS, units = DEFAULT_SEARCH_UNITS)
     
     gis_service = GisService.new
     search_box = gis_service.search_box_from_point(geometry, search_radius, units)

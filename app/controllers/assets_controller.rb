@@ -13,8 +13,8 @@ class AssetsController < AssetAwareController
   # From the application config    
   ASSET_BASE_CLASS_NAME     = SystemConfig.instance.asset_base_class_name   
   MAX_ROWS_RETURNED         = SystemConfig.instance.max_rows_returned
-  DEFAULT_SEARCH_RADIUS     = SystemConfig.instance.default_search_radius
-  DEFAULT_SEARCH_UNITS      = Unit.new(SystemConfig.instance.default_search_units)
+  DEFAULT_SEARCH_RADIUS     = SystemConfig.instance.search_radius
+  DEFAULT_SEARCH_UNITS      = Unit.new(SystemConfig.instance.search_units)
   
   STRING_TOKENIZER          = '|'
 
