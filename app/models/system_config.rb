@@ -23,7 +23,8 @@ class SystemConfig < ActiveRecord::Base
   validates :geocoder_region,             :presence => true
   validates :num_forecasting_years,       :presence => true
   validates :num_reporting_years,         :presence => true
-  validates :base_class_name,             :presence => true
+  validates :asset_base_class_name,       :presence => true
+  validates :max_rows_returned,           :presence => true
   validates :data_file_path,              :presence => true
   validates :new_inventory_template_name, :presence => true
       
