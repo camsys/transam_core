@@ -19,7 +19,9 @@ class User < ActiveRecord::Base
 
   # Include the unique key mixin
   include UniqueKey
-
+  # Include the Authorize mixin
+  include Authorize
+  
   #------------------------------------------------------------------------------
   # Overrides
   #------------------------------------------------------------------------------
@@ -124,24 +126,6 @@ class User < ActiveRecord::Base
   
   def name
     return first_name + " " + last_name unless new_record?
-  end
-
-  def can_edit?(u)
-    # idiot check
-    return false if u.nil?
-    # admins can edit anyone
-    return true if has_role? :admin
-    # users can only edit themselves
-    return true if id == u.id
-    # Can;t do it
-    return false
-  end
-
-  def can_add_user?
-    # admins can add
-    return true if has_role? :admin
-    # Can't do it
-    return false
   end
 
   #------------------------------------------------------------------------------
