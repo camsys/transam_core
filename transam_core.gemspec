@@ -17,6 +17,7 @@ Gem::Specification.new do |s|
   s.test_files = Dir["test/**/*"]
 
   s.add_dependency "rails"
+  s.add_dependency "cancan"
   s.add_dependency "devise"
   s.add_dependency "rolify"
   s.add_dependency "georuby"
