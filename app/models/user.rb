@@ -19,8 +19,6 @@ class User < ActiveRecord::Base
 
   # Include the unique key mixin
   include UniqueKey
-  # Include the Authorize mixin
-  include Authorize
   
   #------------------------------------------------------------------------------
   # Overrides
