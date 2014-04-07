@@ -51,7 +51,7 @@ class PoliciesController < OrganizationAwareController
     
     old_policy_name = @policy.name
     new_policy = @policy.dup
-    new_policy.organization = current_user.organization
+    new_policy.organization = @organization
     new_policy.name = "Copy of " + @policy.name
     new_policy.description = "Copy of " + @policy.description
     new_policy.current = false
