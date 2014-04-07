@@ -4,18 +4,20 @@
 		<i class="fa fa-folder-open"></i> All Uploads
 		<% end %>
 	</li>
-	<% if @upload && can? :update, @upload %>
-		<li>
-			<%= link_to resubmit_upload_path(@upload), :confirm => "Are you sure you want to resubmit this file for processing?" do %>
-			<i class="fa fa-repeat"></i> Resubmit
-			<% end %>
-		</li>	
-	<% end %>
-	
-	<% if @upload && can? :delete, @upload %>
-	    <li><%= link_to upload_path(@upload), :method => :delete, :data => {:confirm => "Are you sure you want to remove this file?"} do %>
-			<i class="fa fa-times"></i> Remove
-			<% end %>
-		</li>
+	<% if @upload && ! @upload.new_record? %>
+		<% if can? :update, @upload %>
+			<li>
+				<%= link_to resubmit_upload_path(@upload), :confirm => "Are you sure you want to resubmit this file for processing?" do %>
+				<i class="fa fa-repeat"></i> Resubmit
+				<% end %>
+			</li>	
+		<% end %>
+		
+		<% if can? :delete, @upload %>
+		    <li><%= link_to upload_path(@upload), :method => :delete, :data => {:confirm => "Are you sure you want to remove this file?"} do %>
+				<i class="fa fa-times"></i> Remove
+				<% end %>
+			</li>
+		<% end %>
 	<% end %>
 <% end %>
