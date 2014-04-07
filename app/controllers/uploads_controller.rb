@@ -115,6 +115,7 @@ class UploadsController < OrganizationAwareController
     @upload = Upload.new(form_params)
     @upload.user = current_user
     @upload.organization = @organization
+    @page_title = "Upload Spreadsheet"
     
     respond_to do |format|
       if @upload.save
