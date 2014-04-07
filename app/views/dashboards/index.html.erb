@@ -15,11 +15,15 @@
 			<%= dialog_tag("Quick Links", "fa fa-bookmark") do %>
 				<div class="span12">
 					<ul class="thumbnails">
-						<%= render(:partial => 'quick_link', :locals => {:action_title => 'New Asset', :action_path => new_asset_inventory_index_path, :action_icon => 'fa fa-plus'})%>
-						<%= render(:partial => 'quick_link', :locals => {:action_title => 'Search', :action_path => new_search_path, :action_icon => 'fa fa-search'})%>
-						<%= render(:partial => 'quick_link', :locals => {:action_title => 'Upload File', :action_path => new_upload_path, :action_icon => 'fa fa-upload'})%>
-						<%= render(:partial => 'quick_link', :locals => {:action_title => 'Activity', :action_path => uploads_path, :action_icon => 'fa fa-rotate-right'})%>
-						<%= render(:partial => 'quick_link', :locals => {:action_title => 'Templates', :action_path => templates_uploads_path, :action_icon => 'fa fa-table'})%>
+						<% if can? :create, Asset %>
+							<%= render(:partial => 'quick_link', :locals => {:action_title => 'New Asset', :action_path => new_asset_inventory_index_path, :action_icon => 'fa fa-plus'}) %>
+						<% end %>
+						<%= render(:partial => 'quick_link', :locals => {:action_title => 'Search', :action_path => new_search_path, :action_icon => 'fa fa-search'}) %>
+						<% if can? :create, Upload %>
+							<%= render(:partial => 'quick_link', :locals => {:action_title => 'Upload File', :action_path => new_upload_path, :action_icon => 'fa fa-upload'}) %>
+							<%= render(:partial => 'quick_link', :locals => {:action_title => 'Templates', :action_path => templates_uploads_path, :action_icon => 'fa fa-table'}) %>
+						<% end %>
+						<%= render(:partial => 'quick_link', :locals => {:action_title => 'Activity', :action_path => uploads_path, :action_icon => 'fa fa-rotate-right'}) %>
 					</ul>
 				</div>
 			<% end %>

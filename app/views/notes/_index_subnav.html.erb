@@ -5,11 +5,12 @@
 		<% end %>
   	</li>
   	
-  	<li class="divider-vertical" />
-
-	<li>
-		<%= link_to new_inventory_note_path(@asset) do %>
-		<i class="fa fa-plus"></i> New Note
-		<% end %>
-	</li>
+  	<% if can? :update, @asset %>
+	  	<li class="divider-vertical" />
+		<li>
+			<%= link_to new_inventory_note_path(@asset) do %>
+			<i class="fa fa-plus"></i> New Note
+			<% end %>
+		</li>
+	<% end %>
 <% end %>

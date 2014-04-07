@@ -26,11 +26,13 @@
 					</li>
 					<% end %>
 
-					<li>
-						<%= link_to new_asset_inventory_index_path do %>
-						<i class="fa fa-plus"></i> Add Asset
-						<% end %>
-					</li>
+					<% if can? :create, Asset %>
+						<li>
+							<%= link_to new_asset_inventory_index_path do %>
+							<i class="fa fa-plus"></i> Add Asset
+							<% end %>
+						</li>
+					<% end %>
 					<li>
 						<%= link_to new_search_path do %>
 						<i class="fa fa-search"></i> Search

@@ -77,6 +77,7 @@ class OrganizationsController < OrganizationAwareController
   end
 
   def update
+    
     if @org.nil?
       notify_user(:alert, "Record not found.")
       redirect_to organizations_url 

@@ -13,4 +13,11 @@
 		<i class="fa fa-globe"></i> Map
 		<% end %>
 	</li>
+	<% if can? :update, @org %>
+		<li>
+			<%= link_to edit_organization_path(@org) do %>
+			<i class="fa fa-edit"></i> Update
+			<% end %>
+		</li>
+	<% end %>
 <% end %>

@@ -13,12 +13,15 @@
 						<i class="fa fa-list-alt"></i> Table View
 						<% end %>
 					</li>
-					<li>
-						<%= link_to new_user_path do %>
-						<i class="fa fa-plus"></i> Add User
-						<% end if current_user.can_add_user? %>
-					</li>
+					<% if can? :create, User %>
+						<li>
+							<%= link_to new_user_path do %>
+							<i class="fa fa-plus"></i> Add User
+							<% end %>
+						</li>
+					<% end %>
 				</ul>
+				
 				<%= form_tag users_path, :id => 'search_form', :method => "get", :class => 'navbar-form form-search pull-right' do %>
 				<div class="input-append span2">
 					<%= text_field_tag :search_text, @search_text, :class => "search-query"%>

@@ -4,15 +4,19 @@
 		<i class="fa fa-angle-left"></i> Back
 		<% end %>
 	<% end %>
-	<% if current_user.organization.id == @organization.id %>
+	<% if can? :update, @policy %>
 		<%= sub_nav_elem_tag do %>
 			<%= link_to edit_policy_path(@policy) do %> <i class="fa fa-edit"></i> Update <% end %>
 		<% end %>
+	<% end %>
+	<% if can? :delete, @policy %>
 		<%= sub_nav_elem_tag do %>
 			<%= link_to policy_path(@policy), :disabled => @policy.active, :method => :delete, :data => {:confirm => "Are you sure?. The action cannot be undone!."} do %> <i class="icon-remove"></i> Remove <% end %>
 		<% end %>
 	<% end %>
-	<%= sub_nav_elem_tag do %>
-		<%= link_to copy_policy_path(@policy) do %> <i class="fa fa-copy"></i> Copy <% end %>
+	<% if can? :create, @policy %>
+		<%= sub_nav_elem_tag do %>
+			<%= link_to copy_policy_path(@policy) do %> <i class="fa fa-copy"></i> Copy <% end %>
+		<% end %>
 	<% end %>
 <% end %>

@@ -9,9 +9,11 @@
 		<i class="fa fa-list-alt"></i> Table View
 		<% end %>
 	</li>
-	<li>
-		<%= link_to new_upload_path do %>
-		<i class="fa fa-upload"></i> Upload File
-		<% end %>
-	</li>
+	<% if can? :create, Upload %>
+		<li>
+			<%= link_to new_upload_path do %>
+			<i class="fa fa-upload"></i> Upload File
+			<% end %>
+		</li>
+	<% end %>
 <% end %>

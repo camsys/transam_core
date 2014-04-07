@@ -4,20 +4,24 @@
 		<i class="fa fa-angle-left"></i> Back
 		<% end %>
 	</li>
+	<% if can? :update, @user %>
+		<li class="nav">
+			<%= link_to edit_user_path(@user) do %>
+			<i class="fa fa-edit"></i> Update
+			<% end %>
+		</li>
+		<li>
+			<%= link_to change_password_user_path(@user) do %>
+			<i class="fa fa-key"></i> Change Password
+			<% end %>
+		</li>
+	<% end %>
 	<li class="divider-vertical"></li>
-	<li class="nav">
-		<%= link_to edit_user_path(@user) do %>
-		<i class="fa fa-edit"></i> Update
-		<% end if current_user.can_edit?(@user) %>
-	</li>
-	<li>
-		<%= link_to change_password_user_path(@user) do %>
-		<i class="fa fa-key"></i> Change Password
-		<% end if current_user.can_edit?(@user) %>
-	</li>
+
 	<li>
 		<%= link_to new_user_message_path(@user, :to_user => @user) do %>
 		<i class="fa fa-envelope-o"></i> Send message
 		<% end %>
 	</li>	
+
 <% end %>
