@@ -4,7 +4,7 @@
 		<i class="fa fa-angle-left"></i> Back
 		<% end %>
   	</li>
-  	<% if can? :update @asset %>
+  	<% if can? :update, @asset %>
 	  	<% if @note && ! @note.new_record? %>
 		<li class="divider-vertical"></li>
 	    <li><%= link_to edit_inventory_note_path(@asset, @note) do %>
