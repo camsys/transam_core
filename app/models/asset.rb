@@ -276,7 +276,7 @@ class Asset < ActiveRecord::Base
       unless asset.disposition_updates.empty?
         event = asset.disposition_updates.last
         asset.disposition_date = event.event_date
-        asset.disposition_type = event.dispostion_type
+        asset.disposition_type = event.disposition_type
         asset.save
         reload
       end
