@@ -50,7 +50,7 @@ module TransamTagHelper
     html << " fa-4x' style='margin-top:5px;'></i>"
     html << "</div>"
     html << "<div class='span8'>"
-    html << "<h4>"
+    html << "<h4 class='thumbnail-caption'>"
     html << options[:title]
     html << "</h4>"    
     html << "</div>"
