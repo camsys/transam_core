@@ -10,6 +10,8 @@
 			<i class="fa fa-edit"></i> Update
 			<% end %>
 		</li>
+	<% end %>
+	<% if @user.id == current_user.id %>
 		<li>
 			<%= link_to change_password_user_path(@user) do %>
 			<i class="fa fa-key"></i> Change Password
