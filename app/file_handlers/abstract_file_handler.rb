@@ -15,20 +15,26 @@ class AbstractFileHandler
     @upload.file_status_type      = FileStatusType.find_by_name("In Progress")
     @upload.save
     
-    # process the file. This method is responsible for setting the results
-    process(@upload)
-    
-    # update the model with the results of the processing
-    @upload.file_status_type      = @new_status
-    @upload.num_rows_processed    = @num_rows_processed
-    @upload.num_rows_added        = @num_rows_added
-    @upload.num_rows_replaced     = @num_rows_replaced
-    @upload.num_rows_failed       = @num_rows_failed
-    @upload.num_rows_skipped      = @num_rows_skipped
-    
-    @upload.processing_log        = @process_log.join('')
-    @upload.processing_completed_at = Time.now
-    @upload.save
+    begin
+      # process the file. This method is responsible for setting the results
+      process(@upload)
+    rescue => e
+      # Record the error message in the processing log
+      add_processing_message(1, 'error', "#{e}")
+      @new_status = FileStatusType.find_by_name("Errored")
+    ensure
+      # update the model with the results of the processing
+      @upload.file_status_type      = @new_status
+      @upload.num_rows_processed    = @num_rows_processed
+      @upload.num_rows_added        = @num_rows_added
+      @upload.num_rows_replaced     = @num_rows_replaced
+      @upload.num_rows_failed       = @num_rows_failed
+      @upload.num_rows_skipped      = @num_rows_skipped
+      @upload.processing_log        = @process_log.join('')
+      
+      @upload.processing_completed_at = Time.now
+      @upload.save
+    end
     
   end
   
