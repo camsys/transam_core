@@ -2,6 +2,16 @@
 
 	$(document).ready(function() {
 
+		// Add an on change event for the dropdown
+		$('#event_type').change(function() {
+			var val = $(this).val();
+			if (val === '') {
+				$('#submit_button').attr('disabled','disabled');
+			} else {
+				$('#submit_button').removeAttr('disabled');
+			}
+		});
+
 		transam.enable_date_pickers();
 			
 		transam.make_same_height('.form_part');
