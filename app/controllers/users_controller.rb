@@ -28,17 +28,23 @@ class UsersController < OrganizationAwareController
   # GET /users
   # GET /users.json
   def index
-    
-    @page_title = "#{@organization.name}: Users"
+
+    # See if we got a org param. If se we are searching within one of the organizations in our list
+    # otherwise we are searching our own organization
+    if params[:org].blank?
+      org = @organization
+    else
+      org = Organization.find_by_short_name(params[:org])
+    end    
+    @page_title = "#{org.name}: Users"
     
     if ! params[:search_text].blank?
       @search_text = params[:search_text].strip
-      @users = User.search_query(@organization, @search_text).order(:last_name)           
+      @users = User.search_query(org, @search_text).order(:last_name)           
     else
-      @users = @organization.users.order(:last_name)
+      @users = org.users.order(:last_name)
     end
     
-
     # remember the view type
     @view_type = get_view_type(SESSION_VIEW_TYPE_VAR)
 
