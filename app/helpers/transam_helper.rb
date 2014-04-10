@@ -37,7 +37,7 @@ module TransamHelper
       when :error
         "alert-error alert-block"
       when :alert
-        "alert alert-block"
+        "alert-warning alert-block"
       when :notice
         "alert-info alert-block"
       else

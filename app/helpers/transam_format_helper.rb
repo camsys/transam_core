@@ -110,11 +110,11 @@ module TransamFormatHelper
   # format for a field
   def format_field(label, value, popover_text=nil)
  
-    html = "<div class='row-fluid control-group'>"
-    html << "<div class='span4 display-label'>"
+    html = "<div class='row control-group'>"
+    html << "<div class='col-md-4 display-label'>"
     html << label
     html << "</div>"
-    html << "<div class='span8 display-value'>"
+    html << "<div class='col-md-8 display-value'>"
     html << value.to_s unless value.nil?
     unless popover_text.nil?
       html << '&nbsp;'

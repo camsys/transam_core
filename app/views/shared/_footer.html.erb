@@ -1,10 +1,10 @@
 <div id="footer">
-	<div class="container-fluid">
-		<div class="row-fluid">
-			<div class="span4">
+	<div class="container">
+		<div class="row" style="margin-top:15px;">
+			<div class="col-md-4">
 		    	<p class="muted credit">&copy; 2013-2014 <a href="http://camsys.com" target="_blank">Cambridge Systematics</a></p>
 		    </div>
-		    <div class="span4">
+		    <div class="col-md-4">
 		    	<p class="muted credit" style="text-align:center;">
 		    		<%= link_to 'Privacy Policy', page_path('privacy_policy') %>
 			    	&#8226;
@@ -13,7 +13,7 @@
 		    		<%= link_to 'About', page_path('about') %>
 			    </p>
 		    </div>
-		    <div class="span4">
+		    <div class="col-md-4">
     			<p class="muted credit" style="float:right"><%= "Build #{app_version}" %> Powered by <a href="https://github.com/camsys/transam_core/wiki", target="_blank"><%= "TransAM Ver #{transam_version}" %></a></p>
 		    </div>
 		</div>

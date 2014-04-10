@@ -1,14 +1,3 @@
-<li class="span2">
-	<%= content_tag("div", :class => 'thumbnail div_thumbnail quick-link', :data => {:action_path => action_path}) do %>
-		<div class="well well-small">
-			<div class="row-fluid">
-				<div class="span12 center">
-					<i class="<%= action_icon %> fa-3x"></i>				
-				</div>
-				<div class="span12 center">
-					<span class="muted"><%= action_title %></span>
-				</div>
-			</div>
-		</div>    
-  	<% end %>	
-</li>
+<%= link_to action_path, :class => "btn btn-primary btn-lg btn-quick-link"  do %>
+	<span class="<%= action_icon %> fa-fw fa-2x"></span><br/><%= action_title %>								
+<% end %>
