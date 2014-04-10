@@ -33,9 +33,25 @@
 </div>
 <script type="text/javascript" charset="utf-8">
 
-	// Add a listener on the event type filter that submits the form when changed
-	$('#event_filter').change(function() {
-		$('#event_filter_form').submit();  
-	});
+	$(document).ready(function() {
 
+		// Disable to add event button until a selection has been made
+		$('#submit_button').attr('disabled','disabled');
+
+		// Add an on change event for the dropdown
+		$('#event_type').change(function() {
+			var val = $(this).val();
+			if (val === '') {
+				$('#submit_button').attr('disabled','disabled');
+			} else {
+				$('#submit_button').removeAttr('disabled');
+			}
+		});
+
+		// Add a listener on the event type filter that submits the form when changed
+		$('#event_filter').change(function() {
+			$('#event_filter_form').submit();  
+		});
+	});
+	
 </script>
