@@ -1,50 +1,43 @@
-<div class="row-fluid">
-	<div class="span6">
-		<ul class="thumbnails">
-			<% Report.show_in_dashboard.each do |report| %>
-				<%= dialog_tag(report.name, report.report_type.display_icon_name, "View", report_path(report)) do %>
-					<div id='<%= "report_#{report.id}" %>' style="width: 300; height: 200px;"></div>
-				<% end %>
+<div class="row">
+	<div class="col-md-6">
+		<% Report.show_in_dashboard.each do |report| %>
+			<%= dialog_tag(report.name, {:icon => report.report_type.display_icon_name, :link_text => "View", :link_path => report_path(report)}) do %>
+				<div id='<%= "report_#{report.id}" %>' style="width: 300; height: 200px;"></div>
 			<% end %>
-		</ul>
+		<% end %>
 	</div>		
-	<div class="span6">
+	<div class="col-md-6">
 
-		<ul class="thumbnails">
-
-			<%= dialog_tag("Quick Links", "fa fa-bookmark") do %>
-				<div class="span12">
-					<ul class="thumbnails">
-						<% if can? :create, Asset %>
-							<%= render(:partial => 'quick_link', :locals => {:action_title => 'New Asset', :action_path => new_asset_inventory_index_path, :action_icon => 'fa fa-plus'}) %>
-						<% end %>
-						<%= render(:partial => 'quick_link', :locals => {:action_title => 'Search', :action_path => new_search_path, :action_icon => 'fa fa-search'}) %>
-						<% if can? :create, Upload %>
-							<%= render(:partial => 'quick_link', :locals => {:action_title => 'Upload File', :action_path => new_upload_path, :action_icon => 'fa fa-upload'}) %>
-							<%= render(:partial => 'quick_link', :locals => {:action_title => 'Templates', :action_path => templates_uploads_path, :action_icon => 'fa fa-table'}) %>
-						<% end %>
-						<%= render(:partial => 'quick_link', :locals => {:action_title => 'Activity', :action_path => uploads_path, :action_icon => 'fa fa-rotate-right'}) %>
-					</ul>
-				</div>
-			<% end %>
-
-			<%= dialog_tag("Tasks", "fa fa-calendar", "New Task", new_user_task_path(current_user)) do %>
-				<% if @tasks.empty? %>
-					<%= render 'tasks/empty_list' %>
-				<% else %>
-					<%= render 'tasks/index_list' %>
+		<%= dialog_tag("Quick Links", {:icon => "fa fa-bookmark"}) do %>
+			<div class="col-md-12">
+				<% if can? :create, Asset %>
+					<%= render(:partial => 'quick_link', :locals => {:action_title => 'New Asset', :action_path => new_asset_inventory_index_path, :action_icon => 'fa fa-plus'}) %>
 				<% end %>
-			<% end %>
-
-			<%= dialog_tag("New Messages", "fa fa-envelope", "New Message", new_user_message_path(current_user)) do %>
-				<% if @messages.empty? %>
-					<%= render 'messages/empty_list' %>
-				<% else %>
-					<%= render 'messages/message_list' %>
+				<%= render(:partial => 'quick_link', :locals => {:action_title => 'Search', :action_path => new_search_path, :action_icon => 'fa fa-search'}) %>
+				<% if can? :create, Upload %>
+					<%= render(:partial => 'quick_link', :locals => {:action_title => 'Upload File', :action_path => new_upload_path, :action_icon => 'fa fa-upload'}) %>
+					<%= render(:partial => 'quick_link', :locals => {:action_title => 'Templates', :action_path => templates_uploads_path, :action_icon => 'fa fa-table'}) %>
 				<% end %>
+				<%= render(:partial => 'quick_link', :locals => {:action_title => 'Activity', :action_path => uploads_path, :action_icon => 'fa fa-rotate-right'}) %>
+			</div>
+		<% end %>
+
+		<%= dialog_tag("Tasks", {:icon => "fa fa-calendar", :link_text => "New Task", :link_path => new_user_task_path(current_user)}) do %>
+			<% if @tasks.empty? %>
+				<%= render 'tasks/empty_list' %>
+			<% else %>
+				<%= render 'tasks/index_list' %>
 			<% end %>
+		<% end %>
+
+		<%= dialog_tag("New Messages", {:icon => "fa fa-envelope", :link_text => "New Message", :link_path => new_user_message_path(current_user)}) do %>
+			<% if @messages.empty? %>
+				<%= render 'messages/empty_list' %>
+			<% else %>
+				<%= render 'messages/message_list' %>
+			<% end %>
+		<% end %>
 			
-		</ul>
 	</div>
 </div>
 
