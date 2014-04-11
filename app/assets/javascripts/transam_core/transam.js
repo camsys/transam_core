@@ -11,13 +11,13 @@ var transam = new function() {
 	  		// alert('File Size = ' + this.size + ' Max File Size = ' + max_file_size);
 	  		if (this.size && max_bytes && this.size > parseInt(max_bytes)) {
 	  			// Show a warning message using the popup message provider
-		    	this.show_popup_message('Warning', warning_message);
+		    	show_popup_message('Warning', warning_message);
 		    	$(inputFile).val('');
 	  		}
 	  	});	 
 	};
 	// Show a popup message in the UI
-	this.show_popup_message = function(title, message) {
+	var show_popup_message = function(title, message) {
 		$.gritter.add({
 			title: title,
 			text: message
