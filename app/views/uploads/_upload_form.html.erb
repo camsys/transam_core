@@ -15,3 +15,17 @@
 		 <% end %>
 	</div>
 </div>
+
+<script type="text/javascript">
+	
+	var max_file_size_mb = <%= Rails.application.config.max_upload_file_size %>;
+
+	$(document).ready(function() {
+		// Insert a change listener to validate the file size before uplaoding.
+		$('#upload_file').change(function() {
+			transam.validate_file_size(this, max_file_size_mb);
+		});			
+	});
+
+		
+</script>

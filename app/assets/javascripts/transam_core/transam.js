@@ -3,6 +3,26 @@
 //
 var transam = new function() {
 
+	// validate a file size
+	this.validate_file_size = function(inputFile, max_file_size_mb) {
+		var warning_message = "This file exceeds the maximum allowed file size (" + max_file_size_mb + " MB). Please select a smaller file.";
+		var max_bytes = max_file_size_mb * 1048576;
+	  	$.each(inputFile.files, function() {
+	  		// alert('File Size = ' + this.size + ' Max File Size = ' + max_file_size);
+	  		if (this.size && max_bytes && this.size > parseInt(max_bytes)) {
+		    	show_popup_message('Warning', warning_message);
+		    	$(inputFile).val('');
+	  		}
+	  	});	 
+	};
+	// Show a popup message in the UI
+	this.show_popup_message = function(title, message) {
+		$.gritter.add({
+			title: title,
+			text: 'message
+		});
+	};
+
 	// Converts a table to a datatable
 	this.render_data_table = function(div_id, filter) {
 		$("#" + div_id).dataTable( {
