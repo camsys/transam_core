@@ -2,7 +2,7 @@ class TransamAbstractUploader < CarrierWave::Uploader::Base
   
   # make sure to save the orignal filename
   before :cache, :save_original_filename
-  
+     
   # Move files from cache to store rather than re-uploading
   def move_to_cache
     true

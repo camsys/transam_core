@@ -4,10 +4,9 @@ class DocumentUploader < TransamAbstractUploader
     "document_uploads/#{model.object_key}"
   end
 
-  # Add a white list of extensions which are allowed to be uploaded.
-  # For images you might use something like this:
+  # A white list of extensions which are allowed to be uploaded.
   def extension_white_list
-    %w( pdf )
+    %w( pdf doc docx xls xlsx )
   end
 
 end
