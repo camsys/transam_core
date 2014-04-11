@@ -10,7 +10,8 @@ var transam = new function() {
 	  	$.each(inputFile.files, function() {
 	  		// alert('File Size = ' + this.size + ' Max File Size = ' + max_file_size);
 	  		if (this.size && max_bytes && this.size > parseInt(max_bytes)) {
-		    	show_popup_message('Warning', warning_message);
+	  			// Show a warning message using the popup message provider
+		    	this.show_popup_message('Warning', warning_message);
 		    	$(inputFile).val('');
 	  		}
 	  	});	 
