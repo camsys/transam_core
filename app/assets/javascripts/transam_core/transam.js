@@ -19,7 +19,7 @@ var transam = new function() {
 	this.show_popup_message = function(title, message) {
 		$.gritter.add({
 			title: title,
-			text: 'message
+			text: message
 		});
 	};
 
