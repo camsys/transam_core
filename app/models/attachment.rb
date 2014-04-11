@@ -1,3 +1,6 @@
+# Include the FileSizevalidator mixin
+require 'file_size_validator' 
+
 class Attachment < ActiveRecord::Base
 
   # From system config
@@ -5,8 +8,6 @@ class Attachment < ActiveRecord::Base
   
   # Include the unique key mixin
   include UniqueKey
-  # Include the FileSizevalidator mixin
-  include FileSizeValidator
 
   # uploader
   mount_uploader :image,      ImageUploader      
