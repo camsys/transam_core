@@ -1,7 +1,12 @@
 class Attachment < ActiveRecord::Base
 
+  # From system config
+  MAX_UPLOAD_FILE_SIZE = Rails.application.config.max_upload_file_size
+  
   # Include the unique key mixin
   include UniqueKey
+  # Include the FileSizevalidator mixin
+  include FileSizeValidator
 
   # uploader
   mount_uploader :image,      ImageUploader      
@@ -36,9 +41,8 @@ class Attachment < ActiveRecord::Base
   validates :attachment_type_id,  :presence => true
   validates :name,                :presence => true
   validates :original_filename,   :presence => true
-  #validates :content_type, :presence => true
-  #validates :file_size, :presence => true
-
+  validates :image,               :presence => true, :file_size => { :maximum => MAX_UPLOAD_FILE_SIZE.megabytes.to_i }
+  
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
     :object_key,

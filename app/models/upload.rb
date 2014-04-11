@@ -1,8 +1,13 @@
 class Upload < ActiveRecord::Base
   
+  # From system config
+  MAX_UPLOAD_FILE_SIZE = Rails.application.config.max_upload_file_size
+  
   # Include the unique key mixin
   include UniqueKey
-
+  # Include the FileSizevalidator mixin
+  include FileSizeValidator
+  
   #------------------------------------------------------------------------------
   # Overrides
   #------------------------------------------------------------------------------
@@ -37,9 +42,9 @@ class Upload < ActiveRecord::Base
   validates :user_id,               :presence => true
   validates :file_status_type_id,   :presence => true
   validates :file_content_type_id,  :presence => true
-  validates :file,                  :presence => true
+  validates :file,                  :presence => true, :file_size => { :maximum => MAX_UPLOAD_FILE_SIZE.megabytes.to_i }
   validates :original_filename,     :presence => true
-
+   
   # default scope
   default_scope { order('created_at DESC') }
   scope :new_files, -> { where('file_status_type_id = ?', FileStatusType.find_by_name('Unprocessed').id) }
