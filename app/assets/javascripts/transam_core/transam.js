@@ -18,12 +18,11 @@ var transam = new function() {
 	};
 	// Show a popup message in the UI
 	var show_popup_message = function(type, title, message) {
+		var class_name = 'alert alert-info';
 		if (type == 'error') {
 			class_name = 'alert alert-danger';
 		} else if (type == 'warning') {
 			class_name = 'alert alert-warning';			
-		} else {
-			class_name = 'alert alert-info';
 		}
 		$.gritter.add({
 			title: title,
