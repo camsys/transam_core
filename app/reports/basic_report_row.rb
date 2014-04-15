@@ -11,10 +11,9 @@ class BasicReportRow
   end
   
   def add(asset)
-    calculator = DepreciationCalculator.new(nil)
     self.count += 1
     self.replacement_cost += asset.estimated_replacement_cost unless asset.estimated_replacement_cost.nil?
-    self.cost_recovery += calculator.residual_value(asset)
+    self.cost_recovery += asset.estimated_value
     self.id_list << asset.object_key
   end
   
