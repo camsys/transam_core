@@ -47,7 +47,7 @@ class AssetsController < AssetAwareController
    
     markers = []
     @assets.each do |asset|
-      if asset.geo_locatable? and asset.mappable?
+      if asset.mappable?
         markers << get_map_marker(asset, asset.object_key, false) # not draggable
       end
     end
@@ -117,7 +117,7 @@ class AssetsController < AssetAwareController
     @page_title = @asset.name
     @disabled = true
     markers = []
-    if @asset.geo_locatable? and @asset.mappable?
+    if @asset.mappable?
       @asset.find_close(DEFAULT_SEARCH_RADIUS, DEFAULT_SEARCH_UNITS).each do |a|
         markers << get_map_marker(a, a.object_key, false, 0, 'purpleIcon')
       end
