@@ -1,78 +1,79 @@
-<div class="row">
-	<div class="col-md-12">
-		<nav class="navbar navbar-default" role="navigation">
-			<div class="container-fluid">
-				<ul class="nav navbar-nav">
-					<li>
-						<%= link_to back_inventory_index_path do %> <i class="fa fa-angle-left"></i> Back
-						<% end %>
-					</li>
-					<% if can? :update, @asset %>
-						<li>
-							<%= link_to  new_inventory_note_path(@asset) do %> <i class="fa fa-paperclip"></i> Add Note
-							<% end %>
-						</li>
-					<% end %>
-					<li>
-						<%= link_to  inventory_asset_events_path(@asset) do %> <i class="fa fa-calendar"></i> History (<%= @asset.asset_events.length %>)
-						<% end %>
-					</li>
-					<li>
-						<%= link_to  inventory_attachments_path(@asset) do %> <i class="fa fa-file"></i> Attachments (<%= @asset.attachments.length %>)
-						<% end %>
-					</li>
-					<% if can? :update, @asset %>
-						<li>
-							<%= link_to edit_inventory_path(@asset) do %> <i class="fa fa-edit"></i> Update
-							<% end %>
-						</li>
-					<% end %>
-					<% if can? :create, Asset %>
-						<li>
-							<%= link_to copy_inventory_path(@asset) do %> <i class="fa fa-copy"></i> Copy
-							<% end %>
-						</li>
-					<% end %>
-					<% if can? :delete, Asset %>
-						<li>
-							<%= link_to inventory_path(@asset), :title => "Remove the asset?", :method => :delete, :data => {:confirm => "Are you sure you want to remove this asset?"} do %> 
-								<i class="fa fa-times"></i> Remove
-							<% end %>
-						</li>
-					<% end %>
-
-					<li>
-						<% if @prev_asset_id %>
-							<%= link_to inventory_path(@prev_asset_id) do %>
-								<i class="fa fa-angle-left"></i> Prev
-							<% end %>
-						<% else %>
-							<%= link_to '#', :disabled => true do %>
-								<i class="fa fa-angle-left"></i> Prev
-							<% end %>
-						<% end %>
-					</li>
-					<li>
-						<% if @next_asset_id %>
-							<%= link_to inventory_path(@next_asset_id) do %>
-								<i class="fa fa-angle-right"></i> Next
-							<% end %>
-						<% else %>
-							<%= link_to '#', :disabled => true do %>
-								<i class="fa fa-angle-right"></i> Next
-							<% end %>
-						<% end %>
-					</li>
-				</ul>
-				<% if can? :update, @asset %>
-					<%= form_tag new_inventory_asset_event_path(@asset), :id => 'asset_action_form', :method => "get", :class => 'navbar-form navbar-right' do %>
-						<div class="form-group">
-							<%= select_tag(:event_type, options_for_select(AssetEventType.all.collect{|a| [a.name, a.id]}), :class => "form-control", :style => "margin-top:0;", :prompt => 'Add Event...') %>
-						</div>
-						<button type="submit" class="btn btn-default"><i class="fa fa-plus"></i></button>
-					<% end %>
-				<% end %>
+<%= sub_nav_tag({}) do %>
+	<li>
+		<%= link_to back_inventory_index_path do %> 
+			<i class="fa fa-angle-left"></i> Back
+		<% end %>
+	</li>
+	<% if can? :update, @asset %>
+		<li>
+			<%= link_to  new_inventory_note_path(@asset) do %> 
+				<i class="fa fa-paperclip"></i> Add Note
+			<% end %>
+		</li>
+	<% end %>
+	<li>
+		<%= link_to  inventory_asset_events_path(@asset) do %> 
+			<i class="fa fa-calendar"></i> History (<%= @asset.asset_events.length %>)
+		<% end %>
+	</li>
+	<li>
+		<%= link_to  inventory_attachments_path(@asset) do %> 
+			<i class="fa fa-file"></i> Attachments (<%= @asset.attachments.length %>)
+		<% end %>
+	</li>
+	<% if can? :update, @asset %>
+		<li>
+			<%= link_to edit_inventory_path(@asset) do %> 
+				<i class="fa fa-edit"></i> Update
+			<% end %>
+		</li>
+	<% end %>
+	<% if can? :create, Asset %>
+		<li>
+			<%= link_to copy_inventory_path(@asset) do %> 
+				<i class="fa fa-copy"></i> Copy
+			<% end %>
+		</li>
+	<% end %>
+	<% if can? :delete, Asset %>
+		<li>
+			<%= link_to inventory_path(@asset), :title => "Remove the asset?", :method => :delete, :data => {:confirm => "Are you sure you want to remove this asset?"} do %> 
+				<i class="fa fa-times"></i> Remove
+			<% end %>
+		</li>
+	<% end %>
+	<li>
+		<% if @prev_asset_id %>
+			<%= link_to inventory_path(@prev_asset_id) do %>
+				<i class="fa fa-angle-left"></i> Prev
+			<% end %>
+		<% else %>
+			<%= link_to '#', :disabled => true do %>
+				<i class="fa fa-angle-left"></i> Prev
+			<% end %>
+		<% end %>
+	</li>
+	<li>
+		<% if @next_asset_id %>
+			<%= link_to inventory_path(@next_asset_id) do %>
+				<i class="fa fa-angle-right"></i> Next
+			<% end %>
+		<% else %>
+			<%= link_to '#', :disabled => true do %>
+				<i class="fa fa-angle-right"></i> Next
+			<% end %>
+		<% end %>
+	</li>
+</ul>
+	<% if can? :update, @asset %>
+		<%= form_tag new_inventory_asset_event_path(@asset), :id => 'asset_action_form', :method => "get", :class => 'navbar-form navbar-right' do %>
+			<div class="form-group">
+				<%= select_tag(:event_type, options_for_select(AssetEventType.all.collect{|a| [a.name, a.id]}), :class => "form-control", :style => "margin-top:0;", :prompt => 'Add Event...') %>
 			</div>
-		</div>
-	</div>
-</div>
+			<button type="submit" class="btn btn-default">
+				<i class="fa fa-plus"></i>
+			</button>
+		<% end %>
+	<% end %>
+
+<% end %>
