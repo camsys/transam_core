@@ -1,21 +1,23 @@
 <%= sub_nav_tag({}) do %>
-    <li>
-		<%= link_to inventory_attachments_path(@asset) do %> 
-		<i class="fa fa-angle-left"></i> Back
-		<% end %>
-  	</li>
-  	<% if can? :update, @asset %>
-	  	<% if @attachment && ! @attachment.new_record? %>
-		<li class="divider-vertical"></li>
-	    <li><%= link_to edit_inventory_attachment_path(@asset, @attachment) do %>
-	  			<i class="fa fa-edit"></i> Update 
-	  		<% end %>
-	  	</li>
-		<li class="divider-vertical"></li>
-	    <li><%= link_to inventory_attachment_path(@asset, @attachment), :method => :delete, :data => {:confirm => "Are you sure you want to remove this attachment?"} do %>
-				<i class="fa fa-remove"></i> Remove
-			<% end %>
-	  	</li>
-		<% end %>  	
-  	<% end %>  		
+  <li>
+	 <%= link_to inventory_attachments_path(@asset) do %> 
+	   <i class="fa fa-angle-left"></i> Back
+	 <% end %>
+	</li>
+	<% if can? :update, @asset %>
+  	<% if @attachment && ! @attachment.new_record? %>
+      <li class="divider-vertical"></li>
+      <li>
+        <%= link_to edit_inventory_attachment_path(@asset, @attachment) do %>
+          <i class="fa fa-edit"></i> Update 
+  		  <% end %>
+      </li>
+      <li class="divider-vertical"></li>
+      <li>
+        <%= link_to inventory_attachment_path(@asset, @attachment), :method => :delete, :data => {:confirm => "Are you sure you want to remove this attachment?"} do %>
+          <i class="fa fa-remove"></i> Remove
+		    <% end %>
+      </li>
+    <% end %>  	
+	<% end %>  		
 <% end %>
