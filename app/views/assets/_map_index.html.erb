@@ -1,7 +1,7 @@
-<div class="row-fluid">
-	<div id="results" class="span6">
+<div class="row">
+	<div id="results" class="col-md-6">
 	</div>
-	<div class="span6">
+	<div class="col-md-6">
 		<%= LeafletMap({ :mapid => 'lmap', :markers => @markers, :tile_provider => get_map_tile_provider, :min_zoom => 10, :max_zoom => 18, :class => "map", :style => "height:600px;" }) %>
 	</div>
 </div>
