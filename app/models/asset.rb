@@ -87,8 +87,7 @@ class Asset < ActiveRecord::Base
   validates     :asset_type_id,       :presence => true
   validates     :asset_subtype_id,    :presence => true
   validates     :created_by_id,       :presence => true
-  validates     :manufacture_year,    :presence => true
-  validates_numericality_of :manufacture_year,    :only_integer => :true,   :greater_than_or_equal_to => 1900
+  validates     :manufacture_year,    :presence => true, :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 1900}
     
   #------------------------------------------------------------------------------
   # Attributes common to all asset types
