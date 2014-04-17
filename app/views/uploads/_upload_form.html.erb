@@ -1,18 +1,22 @@
-<div class="row-fluid">
-	<div class="span12">
+<div class="row">
+	<div class="col-md-12">
 		<%= simple_form_for(@upload, :html => {:multipart => true, :class => 'form-horizontal' }) do |f| %>
-		<ul class="thumbnails">
-			<%= panel_tag('File', {:icon => 'fa fa-upload', :class => "span8 offset2"}) do %>		
-				<%= f.input :file, :label => 'Spreadsheet' %>
-				<%= f.association :file_content_type, :label => 'Spreadsheet content' %>
-				<%= f.input :force_update %>
-				<div class="form-actions panel-form-actions">
-					<%= f.button :submit %>
-					<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn" %>
-				</div>				
-			<% end %>
-		</ul>
-		 <% end %>
+			<ul>
+				<div class="col-md-8 col-md-offset-2">
+					<%= dialog_tag('File', {:icon => 'fa fa-upload', :class => "header_part"}) do %>	
+						<div class="col-md-9 col-md-offset-4">
+							<%= f.input :file, :label => 'Spreadsheet' %>
+							<%= f.association :file_content_type, :label => 'Spreadsheet content' %>
+							<%= f.input :force_update %>
+							<div class="form-actions panel-form-actions">
+								<%= f.button :submit %>
+								<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn" %>
+							</div>	
+						</div>
+					<% end %>
+				</div>
+			</ul>
+		<% end %>
 	</div>
 </div>
 

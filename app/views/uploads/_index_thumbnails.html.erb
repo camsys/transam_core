@@ -1,8 +1,8 @@
-<div class="row-fluid">
-	<div class="span12">
-		<ul class="thumbnails">
+<div class="row">
+	<div class="col-md-12">
+		<ul>
 			<% @uploads.each do |upload| %>
-				<%= action_thumbnail_tag({:class => 'span3 doc_thumbnail', :icon => "fa fa-upload", :title => upload.original_filename, :path => upload_path(upload)}) do %>
+				<%= action_thumbnail_tag({:class => 'doc_thumbnail col-md-3', :icon => "fa fa-upload", :title => upload.original_filename, :path => upload_path(upload)}) do %>
 					<dl class="dl-horizontal thumbnail-list">
 						<dt>Content:</dt>
 						<dd><%= upload.file_content_type %></dd>
