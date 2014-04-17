@@ -1,12 +1,12 @@
-<div class="row-fluid">
-	<div class="span7">
+<div class="row">
+	<div class="col-md-7">
 		<%= LeafletMap({ :mapid => 'lmap', :markers => @markers, :tile_provider => get_map_tile_provider, :min_zoom => 3, :max_zoom => 15, :class => "thumbnail first_in_row", :style => "height:500px;margin-left:0;" }) %>
 	</div>
 	
-	<div class="span5">
+	<div class="col-md-5">
 		<fieldset>
 			<legend>Organizations</legend>
-			<table id="datatable" class="table table-condensed table-striped table-hover">
+			<table id="datatable" class="table table-condensed table-striped table-hover" style="border:1px solid #e7e7e7;border-radius:4px;">
 				<thead>
 	    			<tr>
 			            <th class="center">Name</th>

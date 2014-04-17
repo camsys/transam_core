@@ -1,8 +1,8 @@
-<div class="row-fluid">
-	<div class="span12">
-		<ul class="thumbnails">
+<div class="row">
+	<div class="col-md-12">
+		<ul>
 			<% @organizations.each do |organization| %>
-				<%= action_thumbnail_tag({:class => "span3", :icon => organization.organization_type.display_icon_name, :title => organization.name, :path => organization_path(organization)}) do %>
+				<%= action_thumbnail_tag({:class => "col-md-3", :icon => organization.organization_type.display_icon_name, :title => organization.name, :path => organization_path(organization)}) do %>
 					<%= content_tag "p", organization.organization_type.name %>
 					<%= content_tag "address" do %>
 						<%= format_as_address(organization) %>
