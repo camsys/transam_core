@@ -1,6 +1,6 @@
-<div id="sidebar" class="navbar-inner span3">
-	<ul class="nav nav-pills nav-stacked">
-		<li class="nav-header" style="font-size:1.25em;margin-left:-10px;">Tasks</li>
+<div class="navbar-inner">
+	<ul class="nav nav-pills nav-stacked" style="border:1px solid #e7e7e7;border-radius:4px;">
+		<li class="nav-header" style="font-size:1.25em;padding-top:8px;padding-left:8px;">Tasks</li>
   		<li class="<%= get_nav_link_class('tasks', TasksController::SESSION_FILTER_TYPE_VAR, 0) %>">
   			<%= link_to "All", user_tasks_path(current_user, :filter => 0) %>
   		</li>
@@ -25,4 +25,3 @@
   		</li>
 	</ul>
 </div>
-
