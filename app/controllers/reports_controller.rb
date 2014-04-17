@@ -22,6 +22,9 @@ class ReportsController < OrganizationAwareController
     end
     
     report_instance = @report.class_name.constantize.new
+    # inject the sql for the report into the params
+    params[:sql] = @report.custom_sql unless @report.custom_sql.blank?
+    # get the report data    
     @data = report_instance.get_data(@organization, params)
 
     respond_to do |format|
@@ -57,6 +60,9 @@ class ReportsController < OrganizationAwareController
       @page_title = @report.name
       
       report_instance = @report.class_name.constantize.new
+      # inject the sql for the report into the params
+      params[:sql] = @report.custom_sql unless @report.custom_sql.blank?
+      # get the report data
       @data = report_instance.get_data(@organization, params)
       
       respond_to do |format|
