@@ -1,15 +1,7 @@
-<div class="row-fluid">
-	<div class="span12">
-		<div class="navbar">
-			<div class="navbar-inner">
-				<ul class="nav">
-					<li>
-						<%= link_to new_user_message_path(current_user) do %>
-						<i class="fa fa-edit"></i> New Message
-						<% end %>
-					</li>
-				</ul>
-			</div>
-		</div>
-	</div>
-</div>
+<%= sub_nav_tag({}) do %>
+	<li>
+		<%= link_to new_user_message_path(current_user) do %>
+		<i class="fa fa-edit"></i> New Message
+		<% end %>
+	</li>
+<% end %>

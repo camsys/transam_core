@@ -1,13 +1,15 @@
-<ul class="thumbnails">
-	<%= panel_tag('Message', {:icon => 'fa fa-envelope', :class => "span12 form_part"}) do %>
+<ul class="col-md-12">
+	<%= dialog_tag('Message', {:icon => 'fa fa-envelope', :class => "form_part"}) do %>
 		<%= simple_form_for([current_user, @message], :html => {:class => 'form-horizontal' }) do |f| %>
 			<%= f.association :to_user, :collection => @organization.users %>
-			<%= f.input :subject, :input_html => { :class => "span10" }, :placeholder => "Subject..." %>
+			<%= f.input :subject, :input_html => { :class => "col-md-10" }, :placeholder => "Subject..." %>
 			<%= f.association :priority_type, :include_blank => false %>
-			<%= f.input :body, :input_html => { :class => "span10", :rows => 10 }, :placeholder => "Enter your message..."%>
+			<%= f.input :body, :input_html => { :class => "col-md-10", :rows => 10 }, :placeholder => "Enter your message..."%>
 			<div class="form-actions panel-form-actions">
-				<%= f.button :submit %>
-				<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn" %>
+        <div class="col-md-8 col-md-offset-3">
+  				<%= f.button :submit %>
+  				<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn" %>
+        </div>
 			</div>
 		<% end %>
 	<% end %>
