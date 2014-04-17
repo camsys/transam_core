@@ -62,10 +62,12 @@
 				</div>
 				<!-- Begin page content -->
 				<div class="container-fluid">
-					<!-- Main Page Content -->
-					<%= render 'shared/page_header' %>
-					<%= render 'shared/messages' %>
-					<%= yield %>
+					<div class="col-md-12" style="padding-left:20px; padding-right:20px;">
+						<!-- Main Page Content -->
+						<%= render 'shared/page_header' %>
+						<%= render 'shared/messages' %>
+						<%= yield %>
+					</div>
 				</div>
 			</div>
 		</div>
