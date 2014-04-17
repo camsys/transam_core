@@ -32,7 +32,7 @@ module TransamFormatHelper
   
   # returns a collection as a formatted list
   def format_as_list(coll)
-    html = "<ul class='unstyled'>"
+    html = "<ul class='list-unstyled'>"
     coll.each do |e|
       html << "<li>"
       html << e.to_s
