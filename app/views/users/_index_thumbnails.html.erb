@@ -1,8 +1,8 @@
-<div class="row-fluid">
-	<div class="span12">
-		<ul class="thumbnails">
+<div class="row">
+	<div class="col-md-12">
+		<ul>
 			<% @users.each do |user| %>
-				<%= action_thumbnail_tag({:class => 'span3', :icon => "fa fa-user", :title => user.name, :path => user_path(user)}) do %>
+				<%= action_thumbnail_tag({:class => 'col-md-3', :icon => "fa fa-user", :title => user.name, :path => user_path(user)}) do %>
 					<%= content_tag "address" do %>
 						Phone: <%= number_to_phone(user.phone, :area_code => true) %><br/>
 						Email: <%= user.email %>
