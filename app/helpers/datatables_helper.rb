@@ -33,7 +33,7 @@ module DatatablesHelper
             "sProcessing": '#{processing}'
           },
           "sPaginationType": "bootstrap",
-          "sDom": "<'row'<'col-xs-6'l><'col-xs-6'f>r>t<'row'<'col-xs-6'i><'col-cs-6'p>>",
+          "sDom": "<'row'<'col-xs-6'l><'col-xs-6'f>r>t<'row'<'col-xs-6'i><'col-xs-6'p>>",
           "iDisplayLength": #{per_page},
           "bProcessing": true,
           "bServerSide": #{server_side},
