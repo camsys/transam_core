@@ -4,12 +4,11 @@
 		<i class="fa fa-angle-left"></i> Back
 		<% end %>
 	</li>
-	<li class="divider-vertical"></li>
 	<li>
 		<%= form_tag report_url(@report), :id => 'asset_filter_form', :method => "get", :class => 'navbar-form form-inline' do %>
 		<div class="input-prepend">
 			<span class="add-on">Filter</span>
-			<%= select_tag(:report_filter_type, options_for_select(@asset_types, :selected => @report_filter_type), :style => 'margin-top:0px', :prompt => 'All', :id => 'asset_filter') %>
+			<%= select_tag(:report_filter_type, options_for_select(@asset_types, :selected => @report_filter_type), :prompt => 'All', :id => 'asset_filter') %>
 		</div>
 		<% end %>
 	</li>

@@ -1,8 +1,8 @@
-<div class="row-fluid">
-	<div class="span12">
-		<ul class="thumbnails">	
+<div class="row">
+	<div class="col-md-12">
+		<ul>	
 			<% @reports.each do |report| %>
-				<%= action_thumbnail_tag({:class => 'span3', :icon => report.report_type.display_icon_name, :title => report.name, :path => report_path(report) }) do %>
+				<%= action_thumbnail_tag({:class => 'col-md-3', :icon => report.report_type.display_icon_name, :title => report.name, :path => report_path(report) }) do %>
 					<%= content_tag "p" do %>
 						<%= report.description %>
 					<% end %>
