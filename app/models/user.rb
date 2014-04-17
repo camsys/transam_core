@@ -61,11 +61,9 @@ class User < ActiveRecord::Base
   validates :object_key,    :presence => true, :uniqueness => true
   validates :first_name,    :presence => true
   validates :last_name,     :presence => true
-  validates :email,         :presence => true, :uniqueness => true
+  validates :email,         :presence => true, :uniqueness => true, :format => { :with => /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/, :message => "email address is not valid" }
   validates :phone,         :presence => true
   validates :timezone,      :presence => true
-
-  validates :email, :format => { :with => /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/, :message => "email address is not valid" }
 
   # default scope
   default_scope { where(:active => true) }

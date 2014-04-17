@@ -48,17 +48,15 @@ class GeolocatableAsset < Asset
   #------------------------------------------------------------------------------
   
   SEARCHABLE_FIELDS = [
-    'location_comments'
   ] 
   CLEANSABLE_FIELDS = [
-
   ] 
+  
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
     :location_reference_type_id,
     :location_reference,
-    :geometry,
-    :location_comments
+    :geometry
   ]
     
   #------------------------------------------------------------------------------

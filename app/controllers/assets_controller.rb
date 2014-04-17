@@ -47,7 +47,7 @@ class AssetsController < AssetAwareController
    
     markers = []
     @assets.each do |asset|
-      if asset.geo_locatable? and asset.mappable?
+      if asset.mappable?
         markers << get_map_marker(asset, asset.object_key, false) # not draggable
       end
     end

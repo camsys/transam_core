@@ -9,6 +9,10 @@
 				<%= format_field("Priority", @task.priority_type ) %>
 				<%= format_field("From", @task.from_user.name ) %>
 				<%= format_field("Description", @task.body.html_safe ) %>
+				<%= format_field("Assigned On", format_as_date(@task.created_at) ) %>
+				<% if @task.updated_at > @task.created_at %>
+					<%= format_field("Last Updated On", format_as_date_time(@task.updated_at)) %>
+				<% end %>
 				<% if @task.completed_on %>
 					<%= format_field("Completed On", format_as_date(@task.completed_on)) %>
 				<% end %>

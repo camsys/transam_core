@@ -15,9 +15,9 @@ class ConditionUpdateEvent < AssetEvent
   # assessed condition rating
   #attr_accessible :assessed_rating
       
-  validates                 :condition_type_id, :presence => true
-  validates_numericality_of :assessed_rating, :greater_than_or_equal_to => 0,   :less_than_or_equal_to => 5, :allow_nil => :true
-  validates_numericality_of :current_mileage, :greater_than_or_equal_to => 0,   :less_than_or_equal_to => 1000000,  :only_integer => :true,   :allow_nil => :true
+  validates :condition_type_id, :presence => true
+  validates :assessed_rating,   :numericality => {:greater_than_or_equal_to => 0, :less_than_or_equal_to => 5}, :allow_nil => :true
+  validates :current_mileage,   :numericality => {:greater_than_or_equal_to => 0, :less_than_or_equal_to => 1000000,  :only_integer => :true}, :allow_nil => :true
   
   before_validation do
     self.assessed_rating ||= ConditionType.find(condition_type_id).rating unless condition_type_id.blank?

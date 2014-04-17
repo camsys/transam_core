@@ -55,18 +55,18 @@ class Policy < ActiveRecord::Base
   #------------------------------------------------------------------------------
   # Validations
   #------------------------------------------------------------------------------
-  validates  :object_key,                       :presence => true, :uniqueness => true
+  validates :object_key,                        :presence => true, :uniqueness => true
   validates :organization_id,                   :presence => true
   validates :service_life_calculation_type_id,  :presence => true
   validates :cost_calculation_type_id,          :presence => true
   validates :depreciation_calculation_type_id,  :presence => true
   validates :condition_estimation_type_id,      :presence => true
 
-  validates :year,                              :presence => true
-  validates :name,                              :presence => true
+  validates :year,                              :presence => true, :numericality => {:only_integer => true, :greater_than_or_equal_to => Date.today.year }
+  validates :name,                              :presence => true, :uniqueness => true
   validates :description,                       :presence => true
-  validates_numericality_of :interest_rate,     :greater_than_or_equal_to => 0.0, :less_than_or_equal_to => 100.0
-  validates_numericality_of :condition_threshold,:greater_than_or_equal_to => 0.0, :less_than_or_equal_to => 5.0
+  validates :interest_rate,                     :presence => true, :numericality => {:greater_than_or_equal_to => 0.0, :less_than_or_equal_to => 100.0 }
+  validates :condition_threshold,               :presence => true, :numericality => {:greater_than_or_equal_to => 0.0, :less_than_or_equal_to => 5.0 }
 
   #------------------------------------------------------------------------------
   # Scopes
