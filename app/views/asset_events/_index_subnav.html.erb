@@ -8,12 +8,11 @@
 	  					<i class="fa fa-angle-left"></i> Back
 				  		<% end %>
 			  	</li>
-					<li class="divider-vertical"></li>
 					<li>
 						<%= form_tag inventory_asset_events_path(@asset), :id => 'event_filter_form', :method => "get", :class => 'navbar-form form-inline' do %>
 							<div class="input-prepend">
 								<span class="add-on">Filter</span>
-				    			<%= select_tag(:filter_type, options_for_select(AssetEventType.all.collect{|a| [a.name, a.id]}, :selected => @filter_type), :style => 'margin-top:0px', :prompt => 'All Updates', :id => 'event_filter') %>	  
+				    			<%= select_tag(:filter_type, options_for_select(AssetEventType.all.collect{|a| [a.name, a.id]}, :selected => @filter_type), :style => 'margin-top:5px', :prompt => 'All Updates', :id => 'event_filter') %>	  
 			    		</div>  
 						<% end %>		
 					</li>

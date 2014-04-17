@@ -3,13 +3,15 @@
 <%= render(:partial => 'shared/form_errors', :locals => {:obj => @message}) unless @message.errors.empty? %>	
 
 <div class="row">
-	<div class="col-md-3">
-		<%= render 'sidebar' %>
-	</div>
-	<div class="col-md-9">
-		<div class="row">
-			<div class="col-md-12">
-				<%= render 'form' %>
+	<div class="col-md-12">
+		<div class="col-md-3">
+			<%= render 'sidebar' %>
+		</div>
+		<div class="col-md-9">
+			<div class="row">
+				<div class="col-md-12">
+					<%= render 'form' %>
+				</div>
 			</div>
 		</div>
 	</div>

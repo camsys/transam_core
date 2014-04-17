@@ -2,14 +2,14 @@
 	<%= simple_form_for(@org, :html => {:class => 'form-vertical col-md-12' }) do |f| %>
 	<div class="row">
 		<ul class="col-md-6">
-			<%= panel_tag('Corporate', {:icon => 'fa fa-book', :class => "form_part"}) do %>
+			<%= dialog_tag('Corporate', {:icon => 'fa fa-book', :class => "form_part"}) do %>
 				<%= f.input :name %>
 				<%= f.input :short_name %>
 				<%= f.association :organization_type %>
 				<%= f.association :district %>
 				<%= f.input :external_id, :placeholder => "External id..." %>
 			<% end %>
-			<%= panel_tag('Contact', {:icon => 'fa fa-book', :class => "col-md-6 form_part"}) do %>
+			<%= dialog_tag('Contact', {:icon => 'fa fa-book', :class => "col-md-6 form_part"}) do %>
 				<%= f.input :phone, :as => :tel %>
 				<%= f.input :fax, :as => :tel %>
 				<%= f.input :address1 %>

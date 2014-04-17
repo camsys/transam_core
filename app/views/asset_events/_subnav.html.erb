@@ -6,7 +6,6 @@
 	</li>
 	<% if can? :update, @asset %>
   	<% if @asset_event && ! @asset_event.new_record? %>
-      <li class="divider-vertical"></li>
       <li>
     	  <%= link_to edit_inventory_asset_event_path(@asset, @asset_event) do %>
         <i class="fa fa-edit"></i> Update 

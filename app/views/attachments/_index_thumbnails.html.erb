@@ -3,7 +3,7 @@
 	<div class="col-md-12">
 		<fieldset>
 			<legend>Images</legend>
-			<ul class="thumbnails">
+			<ul>
 				<% @asset.images.each do |attachment| %>
 					<%= image_thumbnail_tag({:class => 'col-md-2 img_thumbnail', :icon => attachment.attachment_type.display_icon_name, :title => attachment.name, :path => inventory_attachment_path(@asset, attachment)}) do %>
 						<%= image_tag attachment.image.url(:thumb), :class => "img-polaroid image-center" if attachment.image  %>
@@ -19,7 +19,7 @@
 	<div class="col-md-12">
 		<fieldset>
 			<legend>Documents</legend>
-			<ul class="thumbnails">
+			<ul>
 				<% @asset.images.each do |attachment| %>
 					<%= action_thumbnail_tag({:class => 'col-md-2 doc_thumbnail', :icon => attachment.attachment_type.display_icon_name, :title => attachment.name, :path => inventory_attachment_path(@asset, attachment)}) do %>
 						<%= image_tag attachment.file if attachment.document  %>

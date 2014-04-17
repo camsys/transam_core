@@ -4,19 +4,15 @@
 			<i class="fa fa-angle-left"></i> Back
 		<% end %>
 	</li>
-	
-	<li class="divider-vertical" />
 
 	<li>
 	<%= form_tag inventory_attachments_path(@asset), :id => 'attachment_filter_form', :method => "get", :class => 'navbar-form form-inline' do %>
 		<div class="input-prepend">
 			<span class="add-on">Filter</span>
-			<%= select_tag(:filter_type, options_for_select(AttachmentType.all.collect{|a| [a.name, a.id]}, :selected => @filter_type), :style => "margin-top:0;", :prompt => 'All attachment types...', :id => 'attachment_filter') %>	  
+			<%= select_tag(:filter_type, options_for_select(AttachmentType.all.collect{|a| [a.name, a.id]}, :selected => @filter_type), :style => "margin-top:5px;", :prompt => 'All attachment types...', :id => 'attachment_filter') %>	  
 		</div>  
 	<% end %>		
 	</li>
-
-  	<li class="divider-vertical" />
 
 	<li class="<%= get_nav_link_class('attachments', AttachmentsController::SESSION_VIEW_TYPE_VAR, AttachmentsController::VIEW_TYPE_LIST) %>">
 		<%= link_to inventory_attachments_path(:view_type => AttachmentsController::VIEW_TYPE_LIST) do %>
@@ -29,7 +25,6 @@
 		<% end %>
 	</li>
 	<% if can? :update, @asset %>
-	  	<li class="divider-vertical" />
 		<li>
 			<%= link_to new_inventory_attachment_path(@asset) do %>
 			<i class="fa fa-plus"></i> New Attachment

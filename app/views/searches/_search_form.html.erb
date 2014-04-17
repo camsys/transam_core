@@ -3,7 +3,7 @@
 		<%= simple_form_for(:searcher, :url => searches_path, :html => {:class => '' }) do |f| %>
 			<ul>
 				<div class="col-md-3">
-					<%= panel_tag('Asset Characteristics', {:icon => 'fa fa-refresh', :class => "form_part"}) do %>
+					<%= dialog_tag('Asset Characteristics', {:icon => 'fa fa-refresh', :class => "form_part"}) do %>
 						<%= f.input :asset_type_id, :collection => AssetType.all, :include_blank => "Any...", :multiple => true %>
 						<%= f.input :asset_subtype_id, :collection => AssetSubtype.all, :include_blank => "Any...", :multiple => true %>
 						<%= f.input :asset_tag %>
