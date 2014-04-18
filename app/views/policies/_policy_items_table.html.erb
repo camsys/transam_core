@@ -1,38 +1,36 @@
 <div class="row">
-	<div class="col-md-12">
-		<fieldset>
-			<legend>Policy Rules</legend>
-			<table id="datatable" class="table table-condensed table-striped table-hover table-bordered control-group" style="margin-top:0px;">
-				<thead>
-					<tr>
-						<th colspan="2" class="center">Asset</th>
-						<th colspan="2" class="center">Service Life</th>
-						<th colspan="2" class="center">Costs</th>
-					</tr>
-					<tr>
-						<th class="left">Class</th>
-						<th class="left">Subclass</th>
-						<th class="right">Years</th>
-						<th class="right">Miles</th>
-						<th class="right">Replacement</th>
-						<th class="right">Pcnt Residual Value</th>
-					</tr>
-				</thead>
-				<tbody>
-					<% @policy.policy_items.each do |pi| %>
-					<tr>
-						<td class="left"><%= pi.asset_subtype.asset_type.name %></td>
-						<td class="left"><%= pi.asset_subtype.name %></td>
-						<td class="right"><%= pi.max_service_life_years %></td>
-						<td class="right"><%= format_as_integer(pi.max_service_life_miles) %></td>
-						<td class="right"><%= format_as_currency(pi.replacement_cost) %></td>
-						<td class="right"><%= pi.pcnt_residual_value %></td>
-					</tr>
-					<% end %>
-				</tbody>
-			</table>
-		</fieldset>
-	</div>
+	<fieldset>
+		<legend>Policy Rules</legend>
+		<table id="datatable" class="table table-condensed table-striped table-hover table-bordered control-group" style="margin-top:0px;" width="100%">
+			<thead>
+				<tr>
+					<th colspan="2" class="center">Asset</th>
+					<th colspan="2" class="center">Service Life</th>
+					<th colspan="2" class="center">Costs</th>
+				</tr>
+				<tr>
+					<th class="left">Class</th>
+					<th class="left">Subclass</th>
+					<th class="right">Years</th>
+					<th class="right">Miles</th>
+					<th class="right">Replacement</th>
+					<th class="right">Pcnt Residual Value</th>
+				</tr>
+			</thead>
+			<tbody>
+				<% @policy.policy_items.each do |pi| %>
+				<tr>
+					<td class="left"><%= pi.asset_subtype.asset_type.name %></td>
+					<td class="left"><%= pi.asset_subtype.name %></td>
+					<td class="right"><%= pi.max_service_life_years %></td>
+					<td class="right"><%= format_as_integer(pi.max_service_life_miles) %></td>
+					<td class="right"><%= format_as_currency(pi.replacement_cost) %></td>
+					<td class="right"><%= pi.pcnt_residual_value %></td>
+				</tr>
+				<% end %>
+			</tbody>
+		</table>
+	</fieldset>
 </div>
 
 <%= render 'shared/datatable_javascript' %>
