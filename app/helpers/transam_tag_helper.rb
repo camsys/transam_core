@@ -36,34 +36,31 @@ module TransamTagHelper
       content = "<p>&nbsp;</p>"
     end
 
-    html = "<li class='thumbnail shadow action-thumbnail "
+    html = "<div class='"
     html << options[:class] unless options[:class].blank?
     html << "'>"
-    html << "<div data-action-path='"
+    html << "<div class='thumbnail action-thumbnail' data-action-path='"
     html << options[:path]
-    html << "'>"
-    html << "<div class='well well-small' style='margin-bottom:0px;height:125px;'>"
-    html << "<div class='row'>"
-    html << "<div class='col-md-4'>"
+    html << "'>"    
+    
+    html << "<div class='well well-small' style='padding:10px;margin-bottom:0;'>"
+
+    html << "<div class='caption' style='padding:0;'>"
+    html << "<h3 style='margin-top:0;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;'>"
     html << "<i class='"
     html << options[:icon]
-    html << " fa-4x' style='margin-top:5px;'></i>"
-    html << "</div>"
-    html << "<div class='col-md-8'>"
-    html << "<h4 class='action-thumbnail-caption'>"
+    html << " fa-2x'></i> "
     html << options[:title]
-    html << "</h4>"    
+    html << "</h3>"    
     html << "</div>"
-    html << "</div>"
-    html << "<div class='col-md-12 first-in-row' style='margin-top:5px;'>"
-
+      
     html << content
 
     html << "</div>"
     html << "</div>"
     html << "</div>"
-    html << "</li>"
 
+   
     return html.html_safe
   end
 
