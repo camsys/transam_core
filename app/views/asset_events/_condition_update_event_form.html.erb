@@ -1,34 +1,32 @@
 <div class="row">
-	<div class="col-md-12">
-		<%= simple_form_for([@asset, @asset_event], :as => :asset_event, :url => @asset_event.new_record? ? inventory_asset_events_path(@asset) : inventory_asset_event_path(@asset, @asset_event), :method => @asset_event.new_record? ? 'post' : 'put', :defaults => {:disabled => @disabled }, :html => {:class => 'form-horizontal' }) do |f| %>
-			<%= hidden_field_tag :event_type, @asset_event.asset_event_type.id %>
+	<%= simple_form_for([@asset, @asset_event], :as => :asset_event, :url => @asset_event.new_record? ? inventory_asset_events_path(@asset) : inventory_asset_event_path(@asset, @asset_event), :method => @asset_event.new_record? ? 'post' : 'put', :defaults => {:disabled => @disabled }, :html => {:class => 'form-horizontal' }) do |f| %>
+		<%= hidden_field_tag :event_type, @asset_event.asset_event_type.id %>
 
-			<ul class="col-md-6">
-				<%= dialog_tag('Inspection', {:icon => 'fa fa-refresh', :class => "form_part"}) do %>
-						
-					<%= f.input :event_date, :label => 'Date of inspection', :wrapper => :append, :class => "inline"  do %>
-						<%= f.input_field :event_date, :as => :string, :class => 'datepicker', :style => "margin-top:0", :disabled => @disabled %>
-						<%= content_tag :span, :class => "add-on" do %><i class="icon-calendar"></i><% end %>
-					<% end %>
-	
+		<ul class="col-md-6">
+			<%= dialog_tag('Inspection', {:icon => 'fa fa-refresh', :class => "form_part"}) do %>
+					
+				<%= f.input :event_date, :label => 'Date of inspection', :wrapper => :append, :class => "inline"  do %>
+					<%= f.input_field :event_date, :as => :string, :class => 'datepicker', :style => "margin-top:0", :disabled => @disabled %>
+					<%= content_tag :span, :class => "add-on" do %><i class="icon-calendar"></i><% end %>
 				<% end %>
-			</ul>	
 
-			<ul class="col-md-6">
-				<%= dialog_tag('Condition', {:icon => 'fa fa-refresh', :class => "form_part"}) do %>
-						
-					<%= f.input :current_mileage, :prompt => 'Enter odometer reading...' %>
-					<%= f.association :condition_type, :prompt => 'Select the assessed condition...' %>
-					<%= f.input :comments, :input_html => { :class => "col-md-12", :rows => 6 }, :placeholder => "Enter any additional comments..." %>
-				<% end %>
-			</ul>
-
-			<% if ! @disabled %>
-				<div class="form-actions panel-form-actions">
-					<%= f.button :submit, 'Update condition', :class => 'btn' %>
-					<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn" %>
-				</div>
 			<% end %>
+		</ul>	
+
+		<ul class="col-md-6">
+			<%= dialog_tag('Condition', {:icon => 'fa fa-refresh', :class => "form_part"}) do %>
+					
+				<%= f.input :current_mileage, :prompt => 'Enter odometer reading...' %>
+				<%= f.association :condition_type, :prompt => 'Select the assessed condition...' %>
+				<%= f.input :comments, :input_html => { :class => "col-md-12", :rows => 6 }, :placeholder => "Enter any additional comments..." %>
+			<% end %>
+		</ul>
+
+		<% if ! @disabled %>
+			<div class="form-actions panel-form-actions">
+				<%= f.button :submit, 'Update condition', :class => 'btn' %>
+				<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn" %>
+			</div>
 		<% end %>
-	</div>
+	<% end %>
 </div>	

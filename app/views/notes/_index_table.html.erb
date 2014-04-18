@@ -1,22 +1,20 @@
 <div class="row">
-	<div class="col-md-12">
-		<table id="datatable" class="table table-condensed table-striped table-hover table-bordered">
-			<thead>
-				<tr>
-					<th class="center">Name</th>
-					<th class="center">Created On</th>
+	<table id="datatable" class="table table-condensed table-striped table-hover table-bordered">
+		<thead>
+			<tr>
+				<th class="center">Name</th>
+				<th class="center">Created On</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% @notes.each do |a| %>
+				<tr data-action-path='<%= inventory_note_path(@asset, a) %>' >
+					<td class="left"><%= a.comments %></td>
+					<td class="right"><%= format_as_date_time(a.created_at) %></td>
 				</tr>
-			</thead>
-			<tbody>
-				<% @notes.each do |a| %>
-					<tr data-action-path='<%= inventory_note_path(@asset, a) %>' >
-						<td class="left"><%= a.comments %></td>
-						<td class="right"><%= format_as_date_time(a.created_at) %></td>
-					</tr>
-				<% end %>
-			</tbody>
-		</table>
-	</div>
+			<% end %>
+		</tbody>
+	</table>
 </div>
 
 <%= render 'shared/datatable_javascript' %>
