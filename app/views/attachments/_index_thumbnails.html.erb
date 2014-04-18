@@ -1,43 +1,24 @@
 <% unless @asset.images.empty? %>
 <div class="row">
-	<div class="col-md-12">
-		<fieldset>
-			<legend>Images</legend>
-			<ul class="thumbnails">
-				<% @asset.images.each do |attachment| %>
-					<%= image_thumbnail_tag({:class => 'col-md-2 img_thumbnail', :icon => attachment.attachment_type.display_icon_name, :title => attachment.name, :path => inventory_attachment_path(@asset, attachment)}) do %>
-						<%= image_tag attachment.image.url(:thumb), :class => "img-polaroid image-center" if attachment.image  %>
-					<% end %>
-				<% end %>
-			</ul>
-		</fieldset>
-	</div>
+	<fieldset>
+		<legend>Images</legend>
+		<% @asset.images.each do |attachment| %>
+			<%= image_thumbnail_tag({:class => 'col-md-2 img_thumbnail', :icon => attachment.attachment_type.display_icon_name, :title => attachment.name, :path => inventory_attachment_path(@asset, attachment)}) do %>
+				<%= image_tag attachment.image.url(:thumb), :class => "img-polaroid image-center" if attachment.image  %>
+			<% end %>
+		<% end %>
+	</fieldset>
 </div>
 <% end %>
 <% unless @asset.documents.empty? %>
 <div class="row">
-	<div class="col-md-12">
-		<fieldset>
-			<legend>Documents</legend>
-			<ul class="thumbnails">
-				<% @asset.images.each do |attachment| %>
-					<%= action_thumbnail_tag({:class => 'col-md-2 doc_thumbnail', :icon => attachment.attachment_type.display_icon_name, :title => attachment.name, :path => inventory_attachment_path(@asset, attachment)}) do %>
-						<%= image_tag attachment.file if attachment.document  %>
-					<% end %>
-				<% end %>
-			</ul>
-		</fieldset>
-	</div>
+	<fieldset>
+		<legend>Documents</legend>
+		<% @asset.images.each do |attachment| %>
+			<%= action_thumbnail_tag({:class => 'col-md-2 doc_thumbnail', :icon => attachment.attachment_type.display_icon_name, :title => attachment.name, :path => inventory_attachment_path(@asset, attachment)}) do %>
+				<%= image_tag attachment.file if attachment.document  %>
+			<% end %>
+		<% end %>
+	</fieldset>
 </div>
 <% end %>
-<script type="text/javascript">
-
-	$(document).ready(function() {
-
-		transam.fix_thumbnail_margins(2, 'img_thumbnail');
-		transam.fix_thumbnail_margins(3, 'doc_thumbnail');
-		transam.make_same_height('.img_thumbnail');
-		transam.make_same_height('.doc_thumbnail');
-	});
-	
-</script>
