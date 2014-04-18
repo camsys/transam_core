@@ -1,27 +1,35 @@
-<%= sub_nav_tag({}) do %>
-	<li class="<%= get_nav_link_class('users', UsersController::SESSION_VIEW_TYPE_VAR, UsersController::VIEW_TYPE_LIST) %>">
-		<%= link_to users_path(:view_type => UsersController::VIEW_TYPE_LIST) do %>
-			<i class="fa fa-th-large"></i> List View
-		<% end %>
-	</li>
-	<li class="<%= get_nav_link_class('users', UsersController::SESSION_VIEW_TYPE_VAR, UsersController::VIEW_TYPE_TABLE) %>">
-		<%= link_to users_path(:view_type => UsersController::VIEW_TYPE_TABLE) do %>
-			<i class="fa fa-list-alt"></i> Table View
-		<% end %>
-	</li>
-	<% if can? :create, User %>
-		<li>
-			<%= link_to new_user_path do %>
-				<i class="fa fa-plus"></i> Add User
-			<% end %>
-		</li>
-	<% end %>
-</ul>
+<div class="row">
+	<div class="col-md-12">
+		<nav class="navbar navbar-default" role="navigation">
+			<div class="container-fluid">
+				<ul class="nav navbar-nav">
 
-	<%= form_tag users_path, :id => 'search_form', :method => "get", :class => 'navbar-form form-search pull-right' do %>
-		<div class="input-append">
-			<%= text_field_tag :search_text, @search_text, :class => "search-query"%>
-			<button type="submit" class="btn">Search</button>
-		</div>
-	<% end %>
-<% end %>
+					<li class="<%= get_nav_link_class('users', UsersController::SESSION_VIEW_TYPE_VAR, UsersController::VIEW_TYPE_LIST) %>">
+						<%= link_to users_path(:view_type => UsersController::VIEW_TYPE_LIST) do %>
+							<i class="fa fa-th-large"></i> List View
+						<% end %>
+					</li>
+					<li class="<%= get_nav_link_class('users', UsersController::SESSION_VIEW_TYPE_VAR, UsersController::VIEW_TYPE_TABLE) %>">
+						<%= link_to users_path(:view_type => UsersController::VIEW_TYPE_TABLE) do %>
+							<i class="fa fa-list-alt"></i> Table View
+						<% end %>
+					</li>
+					<% if can? :create, User %>
+						<li>
+							<%= link_to new_user_path do %>
+								<i class="fa fa-plus"></i> Add User
+							<% end %>
+						</li>
+					<% end %>
+				</ul>
+				<%= form_tag users_path, :id => 'search_form', :method => "get", :role => "search", :class => 'navbar-form navbar-right' do %>
+					<div class="form-group">
+						<%= text_field_tag :search_text, @search_text, :class => "form-control", :placeholder => "Search"%>
+					</div>
+					<button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+				<% end %>
+	
+			</div>
+		</nav>
+	</div>
+</div>

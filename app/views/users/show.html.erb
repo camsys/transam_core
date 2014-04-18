@@ -1,34 +1,30 @@
 <%= render 'show_subnav' %>
 
 <div class="row">
-	<div class="col-md-12">
-		<ul>
-			<div class="col-md-4">
-				<%= dialog_tag('User', {:icon => 'fa fa-user', :class => "form_part"}) do %>
-					<%= format_field("Name", @user.name ) %>
-					<%= format_field("e-mail", @user.email ) %>
-					<%= format_field("Primary phone", format_as_phone_number(@user.phone) ) %>
-					<%= format_field("Timezone", @user.timezone ) %>
-					<%= format_field("Send Emails", format_as_boolean(@user.notify_via_email) ) %>
-				<% end %>
-			</div>
-			<div class="col-md-4">
-				<%= dialog_tag('Organization', {:icon => 'fa fa-building-o', :class => "form_part"}) do %>
-					<%= format_field("Company", link_to(@organization.name, organization_path(@organization)) ) %>						
-					<%= format_field("Address", format_as_address(@user.organization) ) %>
-					<%= format_field("Phone", format_as_phone_number(@user.organization.phone) ) %>
-					<%= format_field("Fax", format_as_phone_number(@user.organization.fax) ) %>
-				<% end %>
-			</div>
-			<div class="col-md-4">
-				<%= dialog_tag('Activity', {:icon => 'fa fa-clock-o', :class => "form_part"}) do %>
-					<%= format_field("Created", format_as_date_time(@user.created_at) ) %>
-					<%= format_field("Last updated", format_as_date_time(@user.updated_at) ) %>
-					<%= format_field("Last login", format_as_date_time(@user.last_sign_in_at) ) %>
-					<%= format_field("Last login IP", @user.last_sign_in_ip ) %>
-				<% end %>
-			</div>
-		</ul>
+	<div class="col-md-4">
+		<%= dialog_tag('User', {:icon => 'fa fa-user', :class => "form_part"}) do %>
+			<%= format_field("Name", @user.name ) %>
+			<%= format_field("e-mail", @user.email ) %>
+			<%= format_field("Primary phone", format_as_phone_number(@user.phone) ) %>
+			<%= format_field("Timezone", @user.timezone ) %>
+			<%= format_field("Send Emails", format_as_boolean(@user.notify_via_email) ) %>
+		<% end %>
+	</div>
+	<div class="col-md-4">
+		<%= dialog_tag('Organization', {:icon => 'fa fa-building-o', :class => "form_part"}) do %>
+			<%= format_field("Company", link_to(@organization.name, organization_path(@organization)) ) %>						
+			<%= format_field("Address", format_as_address(@user.organization) ) %>
+			<%= format_field("Phone", format_as_phone_number(@user.organization.phone) ) %>
+			<%= format_field("Fax", format_as_phone_number(@user.organization.fax) ) %>
+		<% end %>
+	</div>
+	<div class="col-md-4">
+		<%= dialog_tag('Activity', {:icon => 'fa fa-clock-o', :class => "form_part"}) do %>
+			<%= format_field("Created", format_as_date_time(@user.created_at) ) %>
+			<%= format_field("Last updated", format_as_date_time(@user.updated_at) ) %>
+			<%= format_field("Last login", format_as_date_time(@user.last_sign_in_at) ) %>
+			<%= format_field("Last login IP", @user.last_sign_in_ip ) %>
+		<% end %>
 	</div>
 </div>
 

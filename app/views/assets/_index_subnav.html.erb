@@ -1,47 +1,47 @@
 <div class="row">
 	<div class="col-md-12">
 		<nav class="navbar navbar-default" role="navigation">
-		<div class="container-fluid">
-			<%= form_tag inventory_index_url, :id => 'asset_filter_form', :method => "get", :class => 'navbar-form navbar-left' do %>
-				<%= hidden_field_tag :asset_type, @asset_type  %>
-				<%= hidden_field_tag :asset_subtype, @asset_subtype  %>
-				<%= hidden_field_tag :view_type, @view_type  %>
-				<div class="form-group">
-					<span class="form-group-addon">Asset Type</span>
-					<%= text_field_tag :filter, @filter, :autocomplete => "off", :class => "form-control ajax-typeahead", :data => {:link => filter_inventory_index_path, :provide => "typeahead"} %>
-				</div>
-				<button type="submit" id="clear_selection", class="btn btn-default">Clear</button>
-			<% end %>
-			<ul class="nav navbar-nav">
-				<% if @assets.count > 0 %>
-				<li>
-					<%= link_to inventory_index_path(:format => 'xls'), :data => {:confirm => "Do you want to download these assets as an XLS?"} do %>
-					<i class="fa fa-download"></i> Export to Excel
-					<% end %>
-				</li>
+			<div class="container-fluid">
+				<%= form_tag inventory_index_url, :id => 'asset_filter_form', :method => "get", :class => 'navbar-form navbar-left' do %>
+					<%= hidden_field_tag :asset_type, @asset_type  %>
+					<%= hidden_field_tag :asset_subtype, @asset_subtype  %>
+					<%= hidden_field_tag :view_type, @view_type  %>
+					<div class="form-group">
+						<span class="form-group-addon">Asset Type</span>
+						<%= text_field_tag :filter, @filter, :autocomplete => "off", :class => "form-control ajax-typeahead", :data => {:link => filter_inventory_index_path, :provide => "typeahead"} %>
+					</div>
+					<button type="submit" id="clear_selection", class="btn btn-default">Clear</button>
 				<% end %>
-
-				<% if can? :create, Asset %>
+				<ul class="nav navbar-nav">
+					<% if @assets.count > 0 %>
 					<li>
-						<%= link_to new_asset_inventory_index_path do %>
-						<i class="fa fa-plus"></i> Add Asset
+						<%= link_to inventory_index_path(:format => 'xls'), :data => {:confirm => "Do you want to download these assets as an XLS?"} do %>
+						<i class="fa fa-download"></i> Export to Excel
 						<% end %>
 					</li>
-				<% end %>
-				<li>
-					<%= link_to new_search_path do %>
-					<i class="fa fa-search"></i> Search
 					<% end %>
-				</li>
-			</ul>
-			<%= form_tag inventory_index_path, :id => 'asset_search_form', :method => "get", :role => "search", :class => 'navbar-form navbar-right' do %>
-				<%= hidden_field_tag :asset_type, @asset_type %>
-				<div class="form-group">
-					<%= text_field_tag :search_text, @search_text, :class => "form-control", :placeholder => "Search"%>
-				</div>
-				<button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
-			<% end %>
-		</div>
+	
+					<% if can? :create, Asset %>
+						<li>
+							<%= link_to new_asset_inventory_index_path do %>
+							<i class="fa fa-plus"></i> Add Asset
+							<% end %>
+						</li>
+					<% end %>
+					<li>
+						<%= link_to new_search_path do %>
+						<i class="fa fa-search"></i> Search
+						<% end %>
+					</li>
+				</ul>
+				<%= form_tag inventory_index_path, :id => 'asset_search_form', :method => "get", :role => "search", :class => 'navbar-form navbar-right' do %>
+					<%= hidden_field_tag :asset_type, @asset_type %>
+					<div class="form-group">
+						<%= text_field_tag :search_text, @search_text, :class => "form-control", :placeholder => "Search"%>
+					</div>
+					<button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+				<% end %>
+			</div>
 		</nav>
 	</div>
 </div>
