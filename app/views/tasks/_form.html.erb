@@ -1,4 +1,5 @@
 <div class="row">
+	<div class="col-md-12">
 		<%= dialog_tag('New Task', {:icon => 'fa fa-calendar', :class => "form_part"}) do %>
 			<%= simple_form_for([current_user, @task], :html => {:class => 'form-horizontal' }) do |f| %>
 				<%= f.input :subject, :label => 'Description', :input_html => { :class => "col-md-11" }, :placeholder => "Task..." %>

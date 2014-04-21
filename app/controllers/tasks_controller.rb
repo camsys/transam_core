@@ -107,6 +107,8 @@ class TasksController < OrganizationAwareController
 
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
+    @page_title = 'Edit Task'
+
     if @task.nil?
       notify_user(:alert, "Record not found!")
       redirect_to user_tasks_url
