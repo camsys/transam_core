@@ -14,10 +14,14 @@
 		<% end %>
 	</li>
 	<% if can? :update, @org %>
-		<li>
-			<%= link_to edit_organization_path(@org) do %>
-			<i class="fa fa-edit"></i> Update
-			<% end %>
-		</li>
+
+		<% if ! current_page?(edit_organization_path(@org)) %>
+			<li>
+				<%= link_to edit_organization_path(@org) do %>
+				<i class="fa fa-edit"></i> Update
+				<% end %>
+			</li>
+		<% end %>
+
 	<% end %>
 <% end %>

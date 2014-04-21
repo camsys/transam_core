@@ -9,7 +9,7 @@
 			<i class="fa fa-plus"></i> New Task
 		<% end %>
 	</li>
-	<% if @task && ! @task.new_record? && ! @task.complete? %>
+	<% if @task && ! @task.new_record? && ! @task.complete? && ! current_page?(edit_user_task_path(current_user, @task)) %>
 		<li>
 			<%= link_to edit_user_task_path(current_user, @task) do %> 
 				<i class="fa fa-edit"></i> Update
