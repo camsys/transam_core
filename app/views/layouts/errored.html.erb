@@ -25,31 +25,21 @@
 	</head>
 	<body>
 
-		<!-- Wrap all page content here -->
-		<div id="wrap">
-			<div id="view" class="container-fluid">
-				<!-- Header -->
-				<nav class="navbar navbar-fixed-top navbar-inverse" role="navigation">
-					<div class="container-fluid">
-						<div class="navbar-header">
-							<%= link_to app_title, "/", :class => "navbar-brand" %>
-						</div>
-					</div>
-				</nav>
-				
-				<!-- Begin page content -->
-				<div class="container" style="margin-top:60px">
-					<div class="row">
-						<div class="col-md-12">
-							<div class="jumbotron text-center">
-								<%= yield %>
-							</div>
-						</div>
-					</div>
+		<!-- Header -->
+		<nav class="navbar navbar-fixed-top navbar-inverse" role="navigation">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<%= link_to app_title, "/", :class => "navbar-brand" %>
 				</div>
 			</div>
+		</nav>
+		<!-- Begin page content -->
+		<div id="view" class="container-fluid">
+			<div class="jumbotron text-center">
+				<%= yield %>
+			</div>
 		</div>
-
+				
 		<%= render 'shared/footer' %>
 		<!-- push the java script to the bottom so the page loads faster -->
 		<%= render 'shared/javascript' %>

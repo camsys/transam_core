@@ -25,69 +25,64 @@
 	</head>
 	<body>
 
-		<!-- Wrap all page content here -->
-		<div id="wrap">
-			<div id="view" class="container-fluid">
-				<!-- Header -->
-				<nav class="navbar navbar-fixed-top navbar-inverse" role="navigation">
-					<div class="container-fluid">
-						<div class="navbar-header">
-							<%= link_to app_title, "/", :class => "navbar-brand" %>
-						</div>
-						<%= yield %>
+		<!-- Header -->
+		<nav class="navbar navbar-fixed-top navbar-inverse" role="navigation">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<%= link_to app_title, "/", :class => "navbar-brand" %>
+				</div>
+				<%= yield %>
+			</div>
+		</nav>
+		<!-- Begin page content -->
+		<div id="view" class="container-fluid" style="margin-top:-60px">
+			<div class="row">
+				<div class="col-md-12" style="margin-top:20px;">
+					<% flash.each do |type, message| %>
+						<% if type == :success || type == :alert %>
+							<%= content_tag :div, message, :class => "alert fade in #{bootstrap_class_for(type)}" unless message.blank? %>
+						<% end %>
+					<% end %>
+				</div>
+			</div>
+			<div class="jumbotron">
+				<div class="container">
+				<%= image_tag "logo.png", :class => "image pull-left", :style => "margin-left:-50px;height:300px;width:300px;"%>
+				<h1 class="text-center" style="margin-left:320px;"><%= app_title %></h1>
+				<div class="text-center" style="margin-left:320px;padding-top:20px;">
+					<%= credits %>
+				</div>
+				</div>
+			</div>
+			
+			<div class="container">
+				<div class="row">
+					<div class="col-md-4 text-center">
+						<span class="fa-stack fa-5x">
+						  <i class="fa fa-circle fa-stack-2x"></i>
+						  <i class="fa fa-flag fa-stack-1x fa-inverse"></i>
+						</span>									
+						<p class="lead">About TransAM</p>
+						<p class="content-body">Yada yda yada, lorem ipsum etc.</p>
+						<a class="btn btn-default" href="#" role="button">Learn more &raquo;</a>
 					</div>
-				</nav>
-				<!-- Begin page content -->
-				<div class="container-fluid" style="padding-top:10px;">
-					<div class="row">
-						<div class="col-md-12" style="margin-top:20px;">
-							<% flash.each do |type, message| %>
-								<% if type == :success || type == :alert %>
-									<%= content_tag :div, message, :class => "alert fade in #{bootstrap_class_for(type)}" unless message.blank? %>
-								<% end %>
-							<% end %>
-						</div>
+					<div class="col-md-4 text-center">
+						<span class="fa-stack fa-5x">
+						  <i class="fa fa-circle fa-stack-2x"></i>
+						  <i class="fa fa-desktop fa-stack-1x fa-inverse"></i>
+						</span>									
+						<p class="lead">System Status</p>
+						<p class="content-body"><i class="fa fa-thumbs-up"></i> System is up and running. There are no scheduled maintenance windows for this application.</p>
+						<a class="btn btn-default" href="#" role="button">Learn more &raquo;</a>
 					</div>
-					<div class="jumbotron">
-						<div class="container">
-						<%= image_tag "logo.png", :class => "image pull-left", :style => "margin-left:-50px;height:300px;width:300px;"%>
-						<h1 class="text-center" style="margin-left:320px;"><%= app_title %></h1>
-						<div class="text-center" style="margin-left:320px;padding-top:20px;">
-							<%= credits %>
-						</div>
-						</div>
-					</div>
-					
-					<div class="container">
-						<div class="row">
-							<div class="col-md-4 text-center">
-								<span class="fa-stack fa-5x">
-								  <i class="fa fa-circle fa-stack-2x"></i>
-								  <i class="fa fa-flag fa-stack-1x fa-inverse"></i>
-								</span>									
-								<p class="lead">About TransAM</p>
-								<p class="content-body">Yada yda yada, lorem ipsum etc.</p>
-								<a class="btn btn-default" href="#" role="button">Learn more &raquo;</a>
-							</div>
-							<div class="col-md-4 text-center">
-								<span class="fa-stack fa-5x">
-								  <i class="fa fa-circle fa-stack-2x"></i>
-								  <i class="fa fa-desktop fa-stack-1x fa-inverse"></i>
-								</span>									
-								<p class="lead">System Status</p>
-								<p class="content-body"><i class="fa fa-thumbs-up"></i> System is up and running. There are no scheduled maintenance windows for this application.</p>
-								<a class="btn btn-default" href="#" role="button">Learn more &raquo;</a>
-							</div>
-							<div class="col-md-4 text-center">
-								<span class="fa-stack fa-5x">
-								  <i class="fa fa-circle fa-stack-2x"></i>
-								  <i class="fa fa-question fa-stack-1x fa-inverse"></i>
-								</span>									
-								<p class="lead">Getting Help</p>
-								<p class="content-body">Technical support if provided by PennDOT/BPT. Call xxx at yyy to talk to someone...</p>
-								<a class="btn btn-default" href="#" role="button">Learn more &raquo;</a>
-							</div>
-						</div>
+					<div class="col-md-4 text-center">
+						<span class="fa-stack fa-5x">
+						  <i class="fa fa-circle fa-stack-2x"></i>
+						  <i class="fa fa-question fa-stack-1x fa-inverse"></i>
+						</span>									
+						<p class="lead">Getting Help</p>
+						<p class="content-body">Technical support if provided by PennDOT/BPT. Call xxx at yyy to talk to someone...</p>
+						<a class="btn btn-default" href="#" role="button">Learn more &raquo;</a>
 					</div>
 				</div>
 			</div>
