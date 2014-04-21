@@ -13,17 +13,17 @@ module TransamTagHelper
       content = "<p>&nbsp;</p>"
     end
 
-    html = "<li class='shadow thumbnail action-thumbnail "
+    html = "<div class='"
     html << options[:class] unless options[:class].blank?
     html << "'>"
-    html << "<div data-action-path='"
+    html << "<div class='thumbnail action-thumbnail' data-action-path='"
     html << options[:path]
-    html << "'>"
+    html << "'>"    
 
     html << content
 
     html << "</div>"
-    html << "</li>"
+    html << "</div>"
 
     return html.html_safe
   end
