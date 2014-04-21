@@ -1,19 +1,19 @@
 <div class="row">
 	<%= simple_form_for(@user, :html => {:class => 'form-vertical' }) do |f| %>
 		<div class="col-md-4">
-			<%= dialog_tag('User', {:icon => 'fa fa-user', :class => "span4 form_part"}) do %>
+			<%= dialog_tag('User', {:icon => 'fa fa-user', :class => "form_part"}) do %>
 				<%= f.input :first_name, :placeholder => "Users first name..." %>
 				<%= f.input :last_name, :placeholder => "Users last name..." %>
 				<%= f.input :email, :as => :email, :placeholder => "Users business email address..." %>
 			<% end %>
 		</div>
 		<div class="col-md-4">
-			<%= dialog_tag('Contact Information', {:icon => 'fa fa-book', :class => "span4 form_part"}) do %>
+			<%= dialog_tag('Contact Information', {:icon => 'fa fa-book', :class => "form_part"}) do %>
 				<%= f.input :phone, :as => :tel, :placeholder => "Users primary phone number..." %>
 			<% end %>
 		</div>
 		<div class="col-md-4">
-			<%= dialog_tag('Settings', {:icon => 'fa fa-cog', :class => "span4 form_part"}) do %>
+			<%= dialog_tag('Settings', {:icon => 'fa fa-cog', :class => "form_part"}) do %>
 				<%= f.input :timezone, :as => :time_zone, priority: /US/, :prompt => "Select timezone..." %>
 				<%= f.input :external_id, :placeholder => "External id..." %>
 				<%= f.input :notify_via_email %>
