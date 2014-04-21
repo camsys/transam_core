@@ -50,9 +50,9 @@
 					</div>
 					<div class="jumbotron">
 						<div class="container">
-						<%= image_tag "logo.png", :class => "image pull-left", :style => "height:300px;width:300px;"%>
-						<h1 style="margin-left:320px;"><%= app_title %></h1>
-						<div class="muted" style="margin-left:320px;padding-top:20px;">
+						<%= image_tag "logo.png", :class => "image pull-left", :style => "margin-left:-50px;height:300px;width:300px;"%>
+						<h1 class="text-center" style="margin-left:320px;"><%= app_title %></h1>
+						<div class="text-center" style="margin-left:320px;padding-top:20px;">
 							<%= credits %>
 						</div>
 						</div>
@@ -60,19 +60,31 @@
 					
 					<div class="container">
 						<div class="row">
-							<div class="col-md-4">
-								<h2>About TransAM</h2>
-								<p>Yada yada yada...</p>
+							<div class="col-md-4 text-center">
+								<span class="fa-stack fa-5x">
+								  <i class="fa fa-circle fa-stack-2x"></i>
+								  <i class="fa fa-flag fa-stack-1x fa-inverse"></i>
+								</span>									
+								<p class="lead">About TransAM</p>
+								<p class="content-body">Yada yda yada, lorem ipsum etc.</p>
 								<a class="btn btn-default" href="#" role="button">Learn more &raquo;</a>
 							</div>
-							<div class="col-md-4">
-								<h2>Messages</h2>
-								<p>System is working.</p>
-								<a class="btn btn-default" href="#" role="button">All messages &raquo;</a>
+							<div class="col-md-4 text-center">
+								<span class="fa-stack fa-5x">
+								  <i class="fa fa-circle fa-stack-2x"></i>
+								  <i class="fa fa-thumbs-up fa-stack-1x fa-inverse"></i>
+								</span>									
+								<p class="lead">System Status</p>
+								<p class="content-body">System is up and running!</p>
+								<a class="btn btn-default" href="#" role="button">Learn more &raquo;</a>
 							</div>
-							<div class="col-md-4">
-								<h2>Getting Help</h2>
-								<p>Technical support if provided by PennDOT/BPT. Call xxx at yyy to talk to someone...</p>
+							<div class="col-md-4 text-center">
+								<span class="fa-stack fa-5x">
+								  <i class="fa fa-circle fa-stack-2x"></i>
+								  <i class="fa fa-question fa-stack-1x fa-inverse"></i>
+								</span>									
+								<p class="lead">Getting Help</p>
+								<p class="content-body">Technical support if provided by PennDOT/BPT. Call xxx at yyy to talk to someone...</p>
 								<a class="btn btn-default" href="#" role="button">Learn more &raquo;</a>
 							</div>
 						</div>
@@ -81,8 +93,19 @@
 			</div>
 		</div>
 
+		<script type="text/javascript">
+		
+			$(document).ready(function() {
+				transam.make_same_height('.content-body');
+			});
+		
+		</script>
+
 		<%= render 'shared/footer' %>
 		<!-- push the java script to the bottom so the page loads faster -->
 		<%= render 'shared/javascript' %>
+
+
+		
 	</body>
 </html>
