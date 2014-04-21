@@ -6,10 +6,8 @@
 			<%= f.association :priority_type, :include_blank => false %>
 			<%= f.input :body, :input_html => { :class => "col-md-10", :rows => 10 }, :placeholder => "Enter your message..."%>
 			<div class="form-actions panel-form-actions">
-        <div class="col-md-8 col-md-offset-3">
-  				<%= f.button :submit %>
-  				<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn" %>
-        </div>
+				<%= f.button :submit %>
+				<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn" %>
 			</div>
 		<% end %>
 	<% end %>

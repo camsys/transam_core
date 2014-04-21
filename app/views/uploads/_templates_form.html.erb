@@ -2,7 +2,6 @@
 	<div class="col-md-8 col-md-offset-2">
 		<%= dialog_tag('Select Template and Asset Type', {:icon => 'icon-upload', :class => "header_part"}) do %>	
 			<%= simple_form_for(:template_proxy, :url => create_template_uploads_url, :id => 'template_form', :method => "post", :html => {:class => 'form-horizontal'}) do |f| %>
-				<div class="col-md-9 col-md-offset-4">
 					<%= f.input :file_content_type_id, :collection => FileContentType.all, :include_blank => false %>
 					<div id="asset_type_input">	
 						<%= f.input :asset_types, :collection => @asset_types, :as => :check_boxes %>	
@@ -10,8 +9,7 @@
 					<div class="form-actions panel-form-actions">
 					<%= f.button :submit, 'Download Template', :class => 'btn' %>
 						<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn" %>
-					</div>		
-				</div>		
+					</div>			
 			<% end %>
 		<% end %>
 	</div>

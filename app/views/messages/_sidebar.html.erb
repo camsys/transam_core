@@ -1,6 +1,6 @@
 <div class="row">
-	<ul class="nav nav-pills nav-stacked" style="border:1px solid #e7e7e7;border-radius:4px;">
-		<li class="nav-header" style="font-size:1.25em;padding-top:8px;padding-left:8px;">Messages</li>
+	<ul class="nav nav-pills nav-stacked" style="border:1px solid #dde4e9;border-radius:4px;background-color:#e7e7e7;padding:10px 20px 20px 20px;margin-right:20px;">
+		<li class="nav-header" style="font-size:1.25em;"><strong>Messages</strong></li>
   		<li class="<%= get_nav_link_class('messages', MessagesController::SESSION_FILTER_TYPE_VAR, MessagesController::MESSAGE_TYPE_NEW) %>">
   			<%= link_to "New Messages (#{Message.where('to_user_id = ? AND opened_at IS NULL', current_user.id).count})", user_messages_path(current_user, :filter => MessagesController::MESSAGE_TYPE_NEW) %>
   		</li>

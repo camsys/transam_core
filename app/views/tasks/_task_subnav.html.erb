@@ -20,7 +20,7 @@
 	<% unless @task.complete? %>
 		<%= form_tag update_status_user_task_path(current_user, @task), :id => 'task_action_form', :method => "patch", :class => 'navbar-form pull-right form-inline' do %>
 			<div class="input-append">
-				<%= select_tag(:task_status, options_for_select(TaskStatusType.all.collect{|a| [a.name, a.id]}), :class => "inline", :prompt => 'Update status...') %>
+				<%= select_tag(:task_status, options_for_select(TaskStatusType.all.collect{|a| [a.name, a.id]}), :class => "form-control", :prompt => 'Update status...') %>
 				<button class="btn" type="submit" id="submit_button">
 					Set
 				</button>

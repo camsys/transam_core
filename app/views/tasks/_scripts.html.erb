@@ -1,0 +1,20 @@
+<script type="text/javascript">
+
+  $(document).ready(function() {
+
+    // Disable to add event button until a selection has been made
+    $('#submit_button').attr('disabled','disabled');
+    
+    // Add an on change event for the dropdown
+    $('#task_status').change(function() {
+      var val = $(this).val();
+      if (val === '') {
+        $('#submit_button').attr('disabled','disabled');
+      } else {
+        $('#submit_button').removeAttr('disabled');
+      }
+    });
+  });
+    
+</script>
+

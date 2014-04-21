@@ -2,7 +2,6 @@
 	<ul class="col-md-8 col-md-offset-2">
 		<%= dialog_tag('New Photo', {:icon => 'fa fa-file', :class => "form_part"}) do %>
 			<%= simple_form_for([@asset, @attachment], :url => @attachment.new_record? ? inventory_attachments_path(@asset) : inventory_attachment_path(@asset, @attachment), :method => @attachment.new_record? ? "post" : "put", :html => {:multipart => true, :class => 'form-horizontal' }) do |f| %>
-				<div class="col-md-8 col-md-offset-4">
 					<%= f.input :attachment_type_id, :as => :hidden, :value => 1  %>
 					<%= f.input :image, :label => 'Select the photo to upload' %>
 					<%= f.input :name, :as => :string, :placeholder => "Enter a name for the photo...", :required => true %>
@@ -10,7 +9,6 @@
 						<%= f.button :submit, 'Save' %>
 						<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn" %>
 					</div>
-				</div>
 			<% end %>
 		<% end %>
 	</ul>
