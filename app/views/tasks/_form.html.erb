@@ -1,26 +1,23 @@
 <div class="row">
-	<div class="col-md-12">
-		<ul class="col-md-8 col-md-offset-2">
-			<%= dialog_tag('New Task', {:icon => 'fa fa-calendar', :class => "form_part"}) do %>
-				<%= simple_form_for([current_user, @task], :html => {:class => 'form-horizontal' }) do |f| %>
-					<%= f.input :subject, :label => 'Description', :input_html => { :class => "col-md-11" }, :placeholder => "Task..." %>
-					<%= f.association :assigned_to, :collection => @organization.users %>
-					<%= f.input :complete_by, :wrapper => :append, :class => "inline"  do %>
-						<%= f.input_field :complete_by, :as => :string, :class => 'col-md-11 datepicker', :style => "margin-top:0" %>
-						<%= content_tag :span, :class => "add-on" do %><i class="icon-calendar"></i><% end %>
-					<% end %>
-					<%= f.input :send_reminder %>
-					<%= f.association :priority_type, :include_blank => false %>
-					<%= f.input :body, :label => 'Details', :input_html => { :class => "col-md-10", :rows => 6 }, :placeholder => "Enter any details about this task..."%>
-					<div class="form-actions panel-form-actions">
-						<div class="col-md-8 col-md-offset-3">
-							<%= f.button :submit %>
-							<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn" %>
-						</div>
-					</div>
+		<%= dialog_tag('New Task', {:icon => 'fa fa-calendar', :class => "form_part"}) do %>
+			<%= simple_form_for([current_user, @task], :html => {:class => 'form-horizontal' }) do |f| %>
+				<%= f.input :subject, :label => 'Description', :input_html => { :class => "col-md-11" }, :placeholder => "Task..." %>
+				<%= f.association :assigned_to, :collection => @organization.users %>
+				<%= f.input :complete_by, :wrapper => :append, :class => "inline"  do %>
+					<%= f.input_field :complete_by, :as => :string, :class => 'col-md-11 datepicker', :style => "margin-top:0" %>
+					<%= content_tag :span, :class => "add-on" do %><i class="icon-calendar"></i><% end %>
 				<% end %>
+				<%= f.input :send_reminder %>
+				<%= f.association :priority_type, :include_blank => false %>
+				<%= f.input :body, :label => 'Details', :input_html => { :class => "col-md-10", :rows => 6 }, :placeholder => "Enter any details about this task..."%>
+				<div class="form-actions panel-form-actions">
+					<div class="col-md-8 col-md-offset-3">
+						<%= f.button :submit %>
+						<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn" %>
+					</div>
+				</div>
 			<% end %>
-		</ul>
+		<% end %>
 	</div>
 </div>	
 
