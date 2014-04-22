@@ -16,6 +16,10 @@
 
 	$(document).ready(function() {
 		transam.make_same_height('address');
+		
+		$(window).resize(function() {
+			transam.make_same_height('address');
+    	});		
 	});
 		
 </script>
