@@ -1,28 +1,25 @@
 <div class="row">
 	<%= simple_form_for(@policy, :html => {:class => 'form-horizontal col-md-12' }) do |f| %>
-	<div class="row">
-		<ul>
-			<div class="col-md-6">
-				<%= dialog_tag('Policy', {:icon => 'fa fa-book', :class => "form_part"}) do %>
-					<%= f.input :name, :input_html => { :class => "col-md-12" }, :placeholder => "Enter a name for this policy..." %>
-					<%= f.input :year, :label => 'Effective Fiscal Year', :collection => @year_list, :prompt => "Select an effective year..." %>
-					<%= f.input :description, :input_html => { :class => "col-md-12", :rows => 6 }, :placeholder => "Enter a description for the policy..." %>
-				<% end %>
-			</div>
-			<div class="col-md-6">
-				<%= dialog_tag('Calculators', {:icon => 'fa fa-usd', :class => "form_part"}) do %>
-					<%= f.input :interest_rate %>
-					<%= f.association :service_life_calculation_type, :label => "Service life calculator", :prompt => "Select..." %>
-					<%= f.association :cost_calculation_type, :label => "Cost calculator", :prompt => "Select..." %>
-					<%= f.association :condition_estimation_type, :label => "Condition estimator", :prompt => "Select..." %>
-					<%= f.input :condition_threshold %>
-					<%= f.association :depreciation_calculation_type, :label => "Depreciation calculator", :prompt => "Select..." %>
-				<% end %>
-			</div>
-		</ul>
-	</div>
-	<div class="form-actions">
+		<div class="col-md-6">
+			<%= dialog_tag('Policy', {:icon => 'fa fa-book', :class => "form_part"}) do %>
+				<%= f.input :name, :input_html => { :class => "span12" }, :placeholder => "Enter a name for this policy..." %>
+				<%= f.input :year, :label => 'Effective Fiscal Year', :collection => @year_list, :prompt => "Select an effective year..." %>
+				<%= f.input :description, :input_html => { :class => "span12", :rows => 6 }, :placeholder => "Enter a description for the policy..." %>
+			<% end %>
+		</div>
+		<div class="col-md-6">
+			<%= dialog_tag('Calculators', {:icon => 'fa fa-usd', :class => "form_part"}) do %>
+				<%= f.input :interest_rate %>
+				<%= f.association :service_life_calculation_type, :label => "Service life calculator", :prompt => "Select..." %>
+				<%= f.association :cost_calculation_type, :label => "Cost calculator", :prompt => "Select..." %>
+				<%= f.association :condition_estimation_type, :label => "Condition estimator", :prompt => "Select..." %>
+				<%= f.input :condition_threshold %>
+				<%= f.association :depreciation_calculation_type, :label => "Depreciation calculator", :prompt => "Select..." %>
+			<% end %>
+		</div>
+ 	<div class="form-actions">
 		<%= f.button :submit %>
 		<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn" %>
 	</div>
+	<% end %>
 </div>

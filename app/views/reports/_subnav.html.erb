@@ -5,7 +5,7 @@
 		<% end %>
 	</li>
 	<li>
-		<%= form_tag report_url(@report), :id => 'asset_filter_form', :method => "get", :class => 'navbar-form form-inline' do %>
+		<%= form_tag report_url(@report), :id => 'asset_filter_form', :method => "get", :class => 'navbar-form' do %>
 		<div class="input-prepend">
 			<span class="add-on">Filter</span>
 			<%= select_tag(:report_filter_type, options_for_select(@asset_types, :selected => @report_filter_type), :style => "margin-top:5px;", :prompt => 'All', :id => 'asset_filter') %>
