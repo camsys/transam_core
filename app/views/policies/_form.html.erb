@@ -1,5 +1,9 @@
 <div class="row">
-	<%= simple_form_for(@policy, :html => {:class => 'form-horizontal col-md-12' }) do |f| %>
+	<%= simple_form_for(@policy, 
+		:html => {:class => 'form-horizontal' },  
+		:wrapper => :horizontal_form, 
+		:wrapper_mappings => {:check_boxes => :horizontal_radio_and_checkboxes, :radio_buttons => :horizontal_radio_and_checkboxes, :file => :horizontal_file_input, :boolean => :horizontal_boolean}
+		) do |f| %>
 		<div class="col-md-6">
 			<%= dialog_tag('Policy', {:icon => 'fa fa-book', :class => "form_part"}) do %>
 				<%= f.input :name, :input_html => { :class => "span12" }, :placeholder => "Enter a name for this policy..." %>
@@ -17,9 +21,9 @@
 				<%= f.association :depreciation_calculation_type, :label => "Depreciation calculator", :prompt => "Select..." %>
 			<% end %>
 		</div>
- 	<div class="form-actions">
-		<%= f.button :submit %>
-		<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn" %>
-	</div>
+		<div class="col-md-12">
+			<%= f.button :submit, :class => "btn btn-primary" %>
+			<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn btn-warning" %>
+		</div>
 	<% end %>
 </div>

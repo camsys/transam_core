@@ -1,17 +1,16 @@
-<ul class="col-md-12">
+<%= simple_form_for([current_user, @message], :html => {:class => 'form-horizontal' }) do |f| %>
 	<%= dialog_tag('Message', {:icon => 'fa fa-envelope', :class => "form_part"}) do %>
-		<%= simple_form_for([current_user, @message], :html => {:class => 'form-horizontal' }) do |f| %>
-			<%= f.association :to_user, :collection => @organization.users %>
-			<%= f.input :subject, :input_html => { :class => "col-md-11" }, :placeholder => "Subject..." %>
-			<%= f.association :priority_type, :include_blank => false %>
-			<%= f.input :body, :input_html => { :class => "col-md-10", :rows => 10 }, :placeholder => "Enter your message..."%>
-			<div class="form-actions panel-form-actions">
-				<%= f.button :submit %>
-				<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn" %>
-			</div>
-		<% end %>
+		<%= f.association :to_user, :collection => @organization.users %>
+		<%= f.input :subject, :input_html => { :class => "col-md-11" }, :placeholder => "Subject..." %>
+		<%= f.association :priority_type, :include_blank => false %>
+		<%= f.input :body, :input_html => { :class => "col-md-10", :rows => 10 }, :placeholder => "Enter your message..."%>
 	<% end %>
-</ul>
+	<div>
+		<%= f.button :submit, :class => "btn btn-default" %>
+		<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn btn-warning" %>
+	</div>
+</div>
+<% end %>
 
 <script type="text/javascript">
   
