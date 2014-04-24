@@ -57,12 +57,12 @@ class ConditionUpdateEvent < AssetEvent
   #
   #------------------------------------------------------------------------------
 
-  # Override setters to remove any extraneous formats from the number strings eg $, etc.      
+  # Override numeric setters to remove any extraneous formats from the number strings eg $, etc.      
   def assessed_rating=(num)
-    self[:assessed_rating] = sanitize_number(num)
+    self[:assessed_rating] = sanitize_to_float(num)
   end      
   def current_mileage=(num)
-    self[:current_mileage] = sanitize_number(num)
+    self[:current_mileage] = sanitize_to_int(num)
   end      
 
   # This must be overriden otherwise a stack error will occur  

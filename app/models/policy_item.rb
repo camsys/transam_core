@@ -5,6 +5,9 @@
 #------------------------------------------------------------------------------
 class PolicyItem < ActiveRecord::Base
   
+  # Include the numeric sanitizers mixin
+  include NumericSanitizers
+  
   #------------------------------------------------------------------------------
   # Associations
   #------------------------------------------------------------------------------
@@ -56,16 +59,16 @@ class PolicyItem < ActiveRecord::Base
 
   # Override setters to remove any extraneous formats from the number strings eg $, etc.      
   def max_service_life_years=(num)
-    self[:max_service_life_years] = sanitize_number(num)
+    self[:max_service_life_years] = sanitize_to_int(num)
   end      
   def max_service_life_miles=(num)
-    self[:max_service_life_miles] = sanitize_number(num)
+    self[:max_service_life_miles] = sanitize_to_int(num)
   end      
   def replacement_cost=(num)
-    self[:replacement_cost] = sanitize_number(num)
+    self[:replacement_cost] = sanitize_to_int(num)
   end      
   def pcnt_residual_value=(num)
-    self[:pcnt_residual_value] = sanitize_number(num)
+    self[:pcnt_residual_value] = sanitize_to_int(num)
   end      
   
   #------------------------------------------------------------------------------
@@ -74,11 +77,6 @@ class PolicyItem < ActiveRecord::Base
   #
   #------------------------------------------------------------------------------
   protected
-
-  # Strip extraneous non-numeric characters from an input number and return a float
-  def sanitize_number(num)
-    num.to_s.scan(/\b-?[\d.]+/).join.to_f
-  end
 
   # Set resonable defaults for a new policy
   def set_defaults

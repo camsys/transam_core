@@ -10,6 +10,8 @@ class Policy < ActiveRecord::Base
   
   # Include the unique key mixin
   include UniqueKey
+  # Include the numeric sanitizers mixin
+  include NumericSanitizers
 
   #------------------------------------------------------------------------------
   # Overrides
@@ -110,15 +112,15 @@ class Policy < ActiveRecord::Base
   # Instance Methods
   #
   #------------------------------------------------------------------------------
-  # Override setters to remove any extraneous formats from the number strings eg $, etc.      
+  # Override numeric setters to remove any extraneous formats from the number strings eg $, etc.      
   def year=(num)
-    self[:year] = sanitize_number(num)
+    self[:year] = sanitize_to_int(num)
   end      
   def interest_rate=(num)
-    self[:interest_rate] = sanitize_number(num)
+    self[:interest_rate] = sanitize_to_float(num)
   end      
   def condition_threshold=(num)
-    self[:condition_threshold] = sanitize_number(num)
+    self[:condition_threshold] = sanitize_to_float(num)
   end      
 
   def get_policy_item(asset)
