@@ -51,6 +51,20 @@ class ConditionUpdateEvent < AssetEvent
     AssetEventType.find_by_class_name(self.name)
   end
 
+  #------------------------------------------------------------------------------
+  #
+  # Instance Methods
+  #
+  #------------------------------------------------------------------------------
+
+  # Override setters to remove any extraneous formats from the number strings eg $, etc.      
+  def assessed_rating=(num)
+    self[:assessed_rating] = sanitize_number(num)
+  end      
+  def current_mileage=(num)
+    self[:current_mileage] = sanitize_number(num)
+  end      
+
   # This must be overriden otherwise a stack error will occur  
   def get_update
     condition_type.name unless condition_type.nil?

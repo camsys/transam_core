@@ -110,6 +110,16 @@ class Policy < ActiveRecord::Base
   # Instance Methods
   #
   #------------------------------------------------------------------------------
+  # Override setters to remove any extraneous formats from the number strings eg $, etc.      
+  def year=(num)
+    self[:year] = sanitize_number(num)
+  end      
+  def interest_rate=(num)
+    self[:interest_rate] = sanitize_number(num)
+  end      
+  def condition_threshold=(num)
+    self[:condition_threshold] = sanitize_number(num)
+  end      
 
   def get_policy_item(asset)
     policy_items.where(:asset_subtype => asset.asset_subtype).first
@@ -120,6 +130,11 @@ class Policy < ActiveRecord::Base
   #
   #------------------------------------------------------------------------------
   protected 
+
+  # Strip extraneous non-numeric characters from an input number and return a float
+  def sanitize_number(num)
+    num.to_s.scan(/\b-?[\d.]+/).join.to_f
+  end
 
   # Set resonable defaults for a new policy
   def set_defaults

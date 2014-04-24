@@ -118,6 +118,11 @@ class AssetEvent < ActiveRecord::Base
   #------------------------------------------------------------------------------
   protected
 
+  # Strip extraneous non-numeric characters from an input number and return a float
+  def sanitize_number(num)
+    num.to_s.scan(/\b-?[\d.]+/).join.to_f
+  end
+
   # Set resonable defaults for a new asset event
   def set_defaults
     self.event_date ||= Date.today

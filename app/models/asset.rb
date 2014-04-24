@@ -221,6 +221,12 @@ class Asset < ActiveRecord::Base
   #
   #------------------------------------------------------------------------------
 
+  # Override setters to remove any extraneous formats from the number strings eg $, etc.      
+  def manufacture_year=(num)
+    self[:manufacture_year] = sanitize_number(num)
+  end      
+
+
   # Returns the initial cost of the asset. Derived classes should override this to 
   # handle asset-class specific caluclations where needed
   def cost
@@ -377,6 +383,12 @@ class Asset < ActiveRecord::Base
   #
   #------------------------------------------------------------------------------
   protected
+
+  # Strip extraneous non-numeric characters from an input number and return a float
+  def sanitize_number(num)
+    num.to_s.scan(/\b-?[\d.]+/).join.to_f
+  end
+  
   
   # updates the calcuated values of an asset
   def update_asset_state(policy = nil)

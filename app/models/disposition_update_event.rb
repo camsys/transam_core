@@ -54,6 +54,12 @@ class DispositionUpdateEvent < AssetEvent
   # Instance Methods
   #
   #------------------------------------------------------------------------------
+
+  # Override setters to remove any extraneous formats from the number strings eg $, etc.      
+  def sales_proceeds=(num)
+    self[:sales_proceeds] = sanitize_number(num)
+  end      
+  
   
   def get_update
     disposition_type.name unless disposition_type.nil?
