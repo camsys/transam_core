@@ -9,6 +9,7 @@ class AssetsController < AssetAwareController
   before_filter :check_for_cancel,  :only => [:create, :update]
   # set the @asset variable before any actions are invoked
   before_filter :get_asset,         :only => [:show, :edit, :copy, :update, :destroy]
+  before_filter :reformat_date_field, :only => [:create, :update]
 
   # From the application config    
   ASSET_BASE_CLASS_NAME     = SystemConfig.instance.asset_base_class_name   
@@ -547,5 +548,11 @@ class AssetsController < AssetAwareController
         redirect_to inventory_url(@asset)
       end
     end
+  end
+
+  def reformat_date_field
+    date_str = params[:asset][:purchase_date]
+    form_date = Date.strptime(date_str, '%m-%d-%Y')
+    params[:asset][:purchase_date] = form_date.strftime('%Y-%m-%d')
   end
 end
