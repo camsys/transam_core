@@ -1,23 +1,23 @@
 <div class="row">
-	<div class="col-md-12">
-		<%= dialog_tag('New Task', {:icon => 'fa fa-calendar', :class => "form_part"}) do %>
-			<%= simple_form_for([current_user, @task], :html => {:class => 'form-horizontal' }) do |f| %>
-				<%= f.input :subject, :label => 'Description', :input_html => { :class => "col-md-11" }, :placeholder => "Task..." %>
+	<%= simple_form_for([current_user, @task], :html => {:class => 'form-horizontal' }, :wrapper => :horizontal_form, :wrapper_mappings => {:boolean => :horizontal_boolean}) do |f| %>
+		<div class="col-md-8 col-md-offset-2">
+			<%= dialog_tag('New Task', {:icon => 'fa fa-calendar', :class => "form_part"}) do %>
+				<%= f.input :subject, :label => 'Description', :placeholder => "Task..." %>
 				<%= f.association :assigned_to, :collection => @organization.users %>
-				<%= f.input :complete_by, :wrapper => :append, :class => "inline"  do %>
-					<%= f.input_field :complete_by, :as => :string, :class => 'col-md-11 datepicker', :style => "margin-top:0" %>
-					<%= content_tag :span, :class => "add-on" do %><i class="icon-calendar"></i><% end %>
+				<%= f.input :complete_by, :wrapper => :horizontal_append  do %>
+					<%= f.input_field :complete_by, :as => :string, :class => 'col-md-11 datepicker form-control' %>
+					<%= content_tag :span, :class => "input-group-addon" do %><i class="fa fa-calendar"></i><% end %>
 				<% end %>
 				<%= f.input :send_reminder %>
 				<%= f.association :priority_type, :include_blank => false %>
 				<%= f.input :body, :label => 'Details', :input_html => { :class => "col-md-10", :rows => 6 }, :placeholder => "Enter any details about this task..."%>
-				<div class="form-actions panel-form-actions">
-					<%= f.button :submit %>
-					<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn" %>
+				<div class="col-md-12">
+					<%= f.button :submit, :class => "btn btn-primary" %>
+					<%= submit_tag 'Cancel', :name => 'cancel', :class => "btn btn-warning" %>
 				</div>
 			<% end %>
-		<% end %>
-	</div>
+		</div>
+	<% end %>
 </div>	
 
 

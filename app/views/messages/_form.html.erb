@@ -1,4 +1,4 @@
-<%= simple_form_for([current_user, @message], :html => {:class => 'form-horizontal' }) do |f| %>
+<%= simple_form_for([current_user, @message], :html => {:class => 'form-horizontal' }, :wrapper => :horizontal_form) do |f| %>
 	<%= dialog_tag('Message', {:icon => 'fa fa-envelope', :class => "form_part"}) do %>
 		<%= f.association :to_user, :collection => @organization.users %>
 		<%= f.input :subject, :input_html => { :class => "col-md-11" }, :placeholder => "Subject..." %>
@@ -6,7 +6,7 @@
 		<%= f.input :body, :input_html => { :class => "col-md-10", :rows => 10 }, :placeholder => "Enter your message..."%>
 	<% end %>
 	<div>
-		<%= f.button :submit, :class => "btn btn-default" %>
+		<%= f.button :submit, :class => "btn btn-primary" %>
 		<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn btn-warning" %>
 	</div>
 </div>

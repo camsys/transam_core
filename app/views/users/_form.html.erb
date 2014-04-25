@@ -1,5 +1,5 @@
 <div class="row">
-	<%= simple_form_for(@user, :html => {:class => 'form-vertical' }) do |f| %>
+	<%= simple_form_for(@user, :html => {:class => 'form-vertical' }, :wrapper => :vertical_form, :wrapper_mappings => {:boolean => :vertical_boolean}) do |f| %>
 		<div class="col-md-4">
 			<%= dialog_tag('User', {:icon => 'fa fa-user', :class => "form_part"}) do %>
 				<%= f.input :first_name, :placeholder => "Users first name..." %>
@@ -20,9 +20,9 @@
 			<% end %>
 		</div>
 		<% if ! @disabled %>
-			<div class="form-actions">
-				<%= f.button :submit %>
-				<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn" %>
+			<div class="col-md-12">
+				<%= f.button :submit, :class => "btn btn-primary" %>
+				<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn btn-warning" %>
 			</div>
 		<% end %>
 	<% end %>

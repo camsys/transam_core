@@ -1,18 +1,18 @@
 <div class="row">
-	<div class="col-md-8 col-md-offset-2">
-		<%= dialog_tag('Select Template and Asset Type', {:icon => 'icon-upload', :class => "header_part"}) do %>	
-			<%= simple_form_for(:template_proxy, :url => create_template_uploads_url, :id => 'template_form', :method => "post", :html => {:class => 'form-horizontal'}) do |f| %>
-					<%= f.input :file_content_type_id, :collection => FileContentType.all, :include_blank => false %>
-					<div id="asset_type_input">	
-						<%= f.input :asset_types, :collection => @asset_types, :as => :check_boxes %>	
-					</div>
-					<div class="form-actions panel-form-actions">
-					<%= f.button :submit, 'Download Template', :class => 'btn' %>
-						<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn" %>
-					</div>			
+	<%= simple_form_for(:template_proxy, :url => create_template_uploads_url, :id => 'template_form', :method => "post", :html => {:class => 'form-horizontal'}, :wrapper => :horizontal_form, :wrapper_mappings => {:check_boxes => :horizontal_radio_and_checkboxes}) do |f| %>
+		<div class="col-md-6 col-md-offset-3">
+			<%= dialog_tag('Select Template and Asset Type', {:icon => 'icon-upload', :class => "header_part"}) do %>	
+				<%= f.input :file_content_type_id, :collection => FileContentType.all, :include_blank => false %>
+				<div id="asset_type_input">	
+					<%= f.input :asset_types, :collection => @asset_types, :as => :check_boxes %>	
+				</div>
+				<div class="col-md-12">
+					<%= f.button :submit, 'Download Template', :class => 'btn btn-primary' %>
+					<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn btn-warning" %>
+				</div>			
 			<% end %>
-		<% end %>
-	</div>
+		</div>
+	<% end %>
 </div>
 
 <script type="text/javascript">
