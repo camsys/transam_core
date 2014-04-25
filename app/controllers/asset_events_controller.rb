@@ -1,8 +1,9 @@
 class AssetEventsController < AssetAwareController
 
   # set the @asset_event variable before any actions are invoked
-  before_filter :get_asset_event,   :only => [:show, :edit, :update, :destroy]  
-  before_filter :check_for_cancel,  :only => [:create, :update]
+  before_filter :get_asset_event,       :only => [:show, :edit, :update, :destroy]  
+  before_filter :check_for_cancel,      :only => [:create, :update]
+  before_filter :reformat_date_field,   :only => [:create, :update]
 
   # always use generic untyped assets for this controller
   RENDER_TYPED_ASSETS = false
@@ -71,7 +72,7 @@ class AssetEventsController < AssetAwareController
       return
     end
  
-    @page_title = "#{@asset.name}: #{@asset_event.asset_event_type.name}: #{@asset_event.event_date}"
+    @page_title = "#{@asset.name}: #{@asset_event.asset_event_type.name}: #{localize(@asset_event.event_date)}"
     @disabled = true
     
     respond_to do |format|
@@ -208,6 +209,15 @@ class AssetEventsController < AssetAwareController
   #------------------------------------------------------------------------------
   private
 
+  def reformat_date_field
+    #puts params.inspect
+    date_str = params[:asset_event][:event_date]
+    #puts date_str
+    form_date = Date.strptime(date_str, '%m-%d-%Y')
+    params[:asset_event][:event_date] = form_date.strftime('%Y-%m-%d')
+    #puts params.inspect
+  end
+  
   # Never trust parameters from the scary internet, only allow the white list through.
   def form_params
     params.require(:asset_event).permit(asset_event_allowable_params)
