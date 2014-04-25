@@ -51,7 +51,7 @@ class AttachmentsController < AssetAwareController
       return            
     end
     # send the attachment    
-    send_data @attachment.file, :filename => @attachment.original_filename
+    send_data @attachment.image, :filename => @attachment.original_filename
 
   end
   

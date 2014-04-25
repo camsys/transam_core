@@ -14,7 +14,7 @@
 			</thead>
 			<tbody>
 				<% @attachments.each do |a| %>
-					<tr data-action-path='<%= inventory_attachment_path(@asset, a) %>' >
+					<tr>
 						<td class="left"><%= a.attachment_type.name %></td>
 						<td class="left"><%= a.name %></td>
 						<td class="left"><%= a.original_filename %></td>
@@ -22,7 +22,10 @@
 						<td class="left"><%= a.creator.name %></td>
 						<td class="right"><%= format_as_date_time(a.created_at) %></td>
 						<td class="center">
-							<%= link_to download_inventory_attachment_path(@asset, a), :class => 'btn btn-primary btn-xs', :data => {:confirm => 'Download this file?'}, :target => '_blank' do %>
+							<%= link_to inventory_attachment_path(@asset, a), :class => 'btn btn-success btn-xs' do %>
+								<i class="fa fa-picture-o"></i> View
+							<% end %>
+							<%= link_to download_inventory_attachment_path(@asset, a), :data => {:confirm => "Do you want to download this file?"}, :class => 'btn btn-primary btn-xs' do %>
 								<i class="fa fa-download"></i> Download
 							<% end %>
 						</td>
