@@ -146,26 +146,6 @@ var transam = new function() {
 		$('.alert').alert('close');
 	};
 
-	//
-	// Adds the first-in-row class to a list of thumbnails. Assumes that
-	// the view is using the standard 12 column bootstrap layout
-	// span_size is the size of the span* classes added to each
-	// thumbnail 
-	this.fix_thumbnail_margins = function(span_size, class_name) {
-
-		var counter = 12 / span_size;
-		var selector = class_name == null ? '.thumbnail' : '.' + class_name;
-		var i = 0;
-		$(selector).each(function() {
-			var remainder = i % counter;
-			//alert('i = ' + i + ' remainder = ' + remainder);
-			if (remainder == 0) {
-				$(this).addClass('first-in-row');
-			}
-			i++;
-		});	
-	};
-
 	this.enable_date_pickers = function() {
 		// Use jquery to render date pickers for all datepicker input classes
 		$('.datepicker').datepicker({
