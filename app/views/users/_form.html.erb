@@ -7,11 +7,13 @@
 				<%= f.input :email, :as => :email, :placeholder => "Users business email address..." %>
 			<% end %>
 		</div>
+
 		<div class="col-md-4">
 			<%= dialog_tag('Contact Information', {:icon => 'fa fa-book', :class => "form_part"}) do %>
 				<%= f.input :phone, :as => :tel, :placeholder => "Users primary phone number..." %>
 			<% end %>
 		</div>
+
 		<div class="col-md-4">
 			<%= dialog_tag('Settings', {:icon => 'fa fa-cog', :class => "form_part"}) do %>
 				<%= f.input :timezone, :as => :time_zone, priority: /US/, :prompt => "Select timezone..." %>
@@ -19,12 +21,10 @@
 				<%= f.input :notify_via_email %>
 			<% end %>
 		</div>
-		<% if ! @disabled %>
-			<div class="col-md-12">
-				<%= f.button :submit, :class => "btn btn-primary" %>
-				<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn btn-warning" %>
-			</div>
-		<% end %>
+		<div class="col-md-12">
+			<%= f.button :submit, :class => "btn btn-primary" %>
+			<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn btn-warning" %>
+		</div>
 	<% end %>
 </div>
 

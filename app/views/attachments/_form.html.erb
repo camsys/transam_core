@@ -11,11 +11,11 @@
 				<%= f.input :attachment_type_id, :as => :hidden, :value => 1  %>
 				<%= f.input :image, :label => 'Select a photo to upload' %>
 				<%= f.input :name, :as => :string, :placeholder => "Enter a name for the photo...", :required => true %>
-				<div class="col-md-12">
-					<%= f.button :submit, 'Save', :class => "btn btn-primary" %>
-					<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn btn-warning" %>
-				</div>
 			<% end %>
+			<div class="col-md-12">
+				<%= f.button :submit, 'Save', :class => "btn btn-primary" %>
+				<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn btn-warning" %>
+			</div>
 		</div>
 	<% end %>
 </div>	

@@ -5,11 +5,11 @@
 				<%= f.input :file, :label => 'Spreadsheet' %>
 				<%= f.association :file_content_type, :label => 'Spreadsheet content' %>
 				<%= f.input :force_update, :as => :boolean %>
-				<div class="col-md-12">
-					<%= f.button :submit, :class=>"btn btn-primary" %>
-					<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn btn-warning" %>
-				</div>	
 			<% end %>
+			<div class="col-md-12">
+				<%= f.button :submit, :class=>"btn btn-primary" %>
+				<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn btn-warning" %>
+			</div>	
 		</div>
 	<% end %>
 </div>
