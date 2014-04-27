@@ -31,8 +31,8 @@
 				<div class="navbar-header">
 					<%= link_to app_title, "/", :class => "navbar-brand" %>
 					<% if current_user.organizations.count > 1 %>
-						<%= form_tag set_current_org_user_path(current_user), :id => 'set_org_form', :method => "post", :class => 'navbar-btn pull-right form-inline' do %>
-							<%= select("orgs", "org_id", current_user.organizations.collect {|o| [ o.coded_name, o.short_name ] }, {:selected=> @organization.short_name}, {:class => "navbar-brand multiselect text-left"}) %>
+						<%= form_tag set_current_org_user_path(current_user), :id => 'set_org_form', :method => "post", :class => 'navbar-btn navbar-left form-inline' do %>
+							<%= select("orgs", "org_id", current_user.organizations.collect {|o| [ o.coded_name, o.short_name ] }, {:selected=> @organization.short_name}, {:class => "navbar-control multiselect text-left"}) %>
 						<% end %>
 					<%end %>
 				</div>
@@ -65,7 +65,9 @@
 			<%= yield %>
 		</div>
 
-		<%= render 'shared/footer' %>
+		<div id="footer" class="footer">
+			<%= render 'shared/footer' %>
+		</div>
 		<!-- push the java script to the bottom so the page loads faster -->
 		<%= render 'shared/javascript' %>
 	</body>
