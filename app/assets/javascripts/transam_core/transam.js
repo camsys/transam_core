@@ -9,10 +9,10 @@ var transam = new function() {
 		var docHeight = $(window).height();
    		var footerHeight = $(footer_div).height();
    		var footerTop = $(footer_div).position().top + footerHeight;
-   		#alert(docHeight + "," + footerHeight + "," + footerTop);
+   		//alert(docHeight + "," + footerHeight + "," + footerTop);
    		if (footerTop < docHeight) {
     		$(footer_div).css('margin-top', (docHeight - footerTop) + 'px');
-   			#alert("Adjusted: " + docHeight + "," + footerHeight + "," + footerTop);
+   			//alert("Adjusted: " + docHeight + "," + footerHeight + "," + footerTop);
    		}	
 	};
 		
