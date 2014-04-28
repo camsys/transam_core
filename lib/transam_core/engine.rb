@@ -9,5 +9,15 @@ module TransamCore
     config.autoload_paths += %W(#{Rails.root}/app/searches)
     config.autoload_paths += %W(#{Rails.root}/app/services)
     config.autoload_paths += %W(#{Rails.root}/app/uploaders)
+
+    # Append migrations from the engine into the main app    
+    initializer :append_migrations do |app|
+      unless app.root.to_s.match root.to_s
+        config.paths["db/migrate"].expanded.each do |expanded_path|
+          app.config.paths["db/migrate"] << expanded_path
+        end
+      end
+    end
+    
   end
 end
