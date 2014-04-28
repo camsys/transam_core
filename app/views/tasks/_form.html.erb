@@ -5,7 +5,7 @@
 				<%= f.input :subject, :label => 'Description', :placeholder => "Task..." %>
 				<%= f.association :assigned_to, :collection => @organization.users %>
 				<%= f.input :complete_by, :wrapper => :horizontal_append  do %>
-					<%= f.input_field :complete_by, :as => :string, :class => 'col-md-11 datepicker form-control' %>
+					<%= f.input_field :complete_by, :as => :string, :class => 'col-md-11 datepicker form-control', :data => {'behavior' => 'datepicker'}, :value => f.object.complete_by.strftime("%m-%d-%Y") %>
 					<%= content_tag :span, :class => "input-group-addon" do %><i class="fa fa-calendar"></i><% end %>
 				<% end %>
 				<%= f.input :send_reminder %>
@@ -26,6 +26,9 @@
   // Document Ready
   $(document).ready(function(){
     $('#task_body').wysihtml5();
+    $('[data-behavior~=datepicker]').datepicker({
+      format: "mm-dd-yyyy"
+    });
   });
 	
 </script>

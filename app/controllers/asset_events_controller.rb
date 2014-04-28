@@ -210,12 +210,9 @@ class AssetEventsController < AssetAwareController
   private
 
   def reformat_date_field
-    #puts params.inspect
     date_str = params[:asset_event][:event_date]
-    #puts date_str
     form_date = Date.strptime(date_str, '%m-%d-%Y')
     params[:asset_event][:event_date] = form_date.strftime('%Y-%m-%d')
-    #puts params.inspect
   end
   
   # Never trust parameters from the scary internet, only allow the white list through.
