@@ -171,7 +171,7 @@ var transam = new function() {
 	this.make_same_height = function(class_name) {
 	
 		// remove any existing min-height attributes
-		$(class_name).css({'min-height' : ''});
+		$(class_name).css({'height' : ''});
 		
 		// Set the form parts to equal height
 		var max = -1;
@@ -181,7 +181,7 @@ var transam = new function() {
 			max = h > max ? h : max;
 		});
 		max += 10;
-		$(class_name).css({'min-height': max});	
+		$(class_name).css({'height': max});	
 	};
 
 	// Finds all elements marked as info icons and turns them into popups

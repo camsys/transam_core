@@ -43,7 +43,7 @@ module TransamTagHelper
     html << options[:path]
     html << "'>"    
     
-    html << "<div class='well well-small' style='padding:10px;margin-bottom:0;'>"
+    html << "<div class='well well-small thumbnail-content' style='padding:10px;margin-bottom:0;'>"
 
     html << "<div class='caption' style='padding:0;'>"
     html << "<h3 style='margin-top:0;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;'>"
