@@ -11,7 +11,7 @@
 	<% end %>
 	<% if can? :delete, @policy %>
 		<%= sub_nav_elem_tag do %>
-			<%= link_to policy_path(@policy), :disabled => @policy.active, :method => :delete, :data => {:confirm => "Are you sure?. The action cannot be undone!."} do %> <i class="icon-remove"></i> Remove <% end %>
+			<%= link_to policy_path(@policy), :disabled => @policy.active, :method => :delete, :data => {:confirm => "Are you sure?. The action cannot be undone!."} do %> <i class="fa fa-times"></i> Remove <% end %>
 		<% end %>
 	<% end %>
 	<% if can? :create, @policy %>
