@@ -36,8 +36,12 @@ class Task < ActiveRecord::Base
   belongs_to :priority_type
   belongs_to :task_status_type
   
-  #attr_accessible :from_user_id, :from_organization_id, :priority_type_id, :for_organization_id, :assigned_to_user_id, :subject, :body, :complete_by
-
+  # Each task can have notes associated with it
+  has_many    :comments,  :as => :commentable
+  # allow the controller to save and delete comments but only if they are added after the task 
+  # has been created.
+  accepts_nested_attributes_for :comments, :reject_if => :new_record, :allow_destroy => :true
+  
   # Validations on core attributes
   validates :object_key,            :presence => true, :uniqueness => true
   validates :from_user_id,          :presence => true
