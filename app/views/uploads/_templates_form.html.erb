@@ -1,7 +1,7 @@
 <div class="row">
 	<%= simple_form_for(:template_proxy, :url => create_template_uploads_url, :id => 'template_form', :method => "post", :html => {:class => 'form-horizontal'}, :wrapper => :horizontal_form, :wrapper_mappings => {:check_boxes => :horizontal_radio_and_checkboxes}) do |f| %>
 		<div class="col-md-6 col-md-offset-3">
-			<%= dialog_tag('Select Template and Asset Type', {:icon => 'icon-upload', :class => "header_part"}) do %>	
+			<%= dialog_tag('Select Template and Asset Type', {:icon => 'fa fa-upload', :class => "header_part"}) do %>	
 				<%= f.input :file_content_type_id, :collection => FileContentType.all, :include_blank => false %>
 				<div id="asset_type_input">	
 					<%= f.input :asset_types, :collection => @asset_types, :as => :check_boxes %>	

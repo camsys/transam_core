@@ -113,6 +113,7 @@ class Task < ActiveRecord::Base
   def set_defaults
     self.task_status_type_id ||= TaskStatusType.find_by_name('Not Started').id    
     self.send_reminder ||= true   
+    self.complete_by ||= Date.today + 1.day
   end    
       
 end

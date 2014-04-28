@@ -2,6 +2,7 @@ class TasksController < OrganizationAwareController
   
   before_action :set_task, :only => [:show, :edit, :update, :destroy, :update_status]  
   before_filter :check_for_cancel, :only => [:create, :update] 
+  before_filter :reformat_date_field, :only => [:create, :update]
 
   SESSION_VIEW_TYPE_VAR   = 'tasks_subnav_view_type'
   SESSION_FILTER_TYPE_VAR = 'tasks_subnav_filter_type'
@@ -277,6 +278,12 @@ class TasksController < OrganizationAwareController
   # Never trust parameters from the scary internet, only allow the white list through.
   def form_params
     params.require(:task).permit(task_allowable_params)
+  end
+
+  def reformat_date_field
+    date_str = params[:task][:complete_by]
+    form_date = Date.strptime(date_str, '%m-%d-%Y')
+    params[:task][:complete_by] = form_date.strftime('%Y-%m-%d')
   end
   
 end
