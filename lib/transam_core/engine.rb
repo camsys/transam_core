@@ -19,5 +19,14 @@ module TransamCore
       end
     end
     
+    # Append seeds from the engine into the main app    
+    initializer :append_seeds do |app|
+      unless app.root.to_s.match root.to_s
+        config.paths["db/seeds"].expanded.each do |expanded_path|
+          app.config.paths["db/seeds"] << expanded_path
+        end
+      end
+    end
+    
   end
 end
