@@ -1,16 +1,12 @@
 <%= render 'search_subnav' %>
 
 <%= render 'search_form' %>
-
-<div id="spinner">
-	<%= image_tag("ajax-loader.gif") %>
-</div>
  
-<div id="asset_table">
-<% if @assets.count > 0 %>
-	<%= render '/assets/asset_datatable' %>
-	<%= render 'shared/datatable_javascript' %>
-<% end %>	
+<div class="row" style="margin-top:20px;">
+  <div id="asset_table" class="col-md-12"></div>
+  <div id="spinner" class="col-md-12">
+    <%= image_tag("ajax-loader.gif") %>
+  </div>
 </div>
 
 <%= render 'scripts' %>
