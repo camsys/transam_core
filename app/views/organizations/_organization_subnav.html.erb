@@ -8,11 +8,13 @@
 		<i class="fa fa-group"></i> <%= "Users (#{@org.users.count})"%>
 		<% end %>
 	</li>
-	<li>
-		<%= link_to map_organization_path(@org) do %>
-		<i class="fa fa-globe"></i> Map
-		<% end %>
-	</li>
+	<% unless current_page?(map_organization_path(@org)) %>
+		<li>
+			<%= link_to map_organization_path(@org) do %>
+			<i class="fa fa-globe"></i> Map View
+			<% end %>
+		</li>
+	<% end %>
 	<% if can? :update, @org %>
 
 		<% if ! current_page?(edit_organization_path(@org)) %>
