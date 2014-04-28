@@ -2,6 +2,16 @@ Rails.application.routes.draw do
 
   mount RailsAdmin::Engine => '/admin', :as => 'admin'
 
+  devise_for :users, :controllers => { :sessions => "sessions", :unlocks => "unlocks", :passwords => "passwords" }
+
+  # server static pages
+  get "/pages/*id" => 'pages#show', :as => :page, :format => false
+  
+  # route errors to the appropriate pages
+  %w( 404 403 500 ).each do |code|
+    get code, :to => "errors#show", :code => code
+  end
+
   resources :inventory, :controller => 'assets' do
       collection do
         get 'filter'
