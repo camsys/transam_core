@@ -1,0 +1,18 @@
+.row
+  .col-md-8.col-md-offset-2
+    = simple_form_for([@commentable, @comment]) do |f|
+      = f.error_notification
+    
+      .form-inputs
+        = f.input :comment, :input_html => {:rows => 6}
+        
+      .form-actions
+        = f.button :submit, :class => "btn btn-primary"
+
+:javascript
+    
+  // Document Ready
+  $(document).ready(function(){
+    $('#comment_comment').wysihtml5();
+  });
+  

@@ -41,13 +41,13 @@ class Comment < ActiveRecord::Base
   # Each comment was created by a user
   belongs_to :creator, :class_name => "User", :foreign_key => "created_by_id"
   
-  validates :comments,            :presence => true
+  validates :comment,             :presence => true
   validates :created_by_id,       :presence => true
 
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
     :object_key,
-    :comments,
+    :comment,
     :commentable_id,
     :commentable_type,
     :created_by_id

@@ -1,0 +1,9 @@
+= sub_nav_tag({}) do
+  = sub_nav_elem_tag do
+    = link_to :back do
+      %i.fa.fa-comment= " Back"
+
+  - if can? :create, @comment
+    = sub_nav_elem_tag do
+      = link_to new_capital_project_path do
+        %i.fa.fa-comment= " New Comment"
