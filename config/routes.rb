@@ -41,6 +41,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :comments, :only => [:create, :update, :edit, :new]    
+  
   resources :dashboards, :only => [:index, :show]
   resources :searches, :only => [:new, :create]
   resources :reports, :only => [:index, :show] do
