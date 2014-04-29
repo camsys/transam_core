@@ -52,7 +52,7 @@ class Document < ActiveRecord::Base
   # Each comment was created by a user
   belongs_to :creator, :class_name => "User", :foreign_key => "created_by_id"
 
-  validates :name,                :presence => true
+  validates :object_key,          :presence => true
   validates :description,         :presence => true
   validates :original_filename,   :presence => true
   validates :document,            :presence => true, :file_size => { :maximum => MAX_UPLOAD_FILE_SIZE.megabytes.to_i }  
@@ -64,7 +64,6 @@ class Document < ActiveRecord::Base
     :documentable_id,
     :documentable_type,
     :document, 
-    :name, 
     :description,
     :original_filename,
     :content_type,

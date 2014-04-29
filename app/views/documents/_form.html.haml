@@ -1,0 +1,17 @@
+.row
+  .col-md-8.col-md-offset-2
+    = simple_form_for([@documentable, Document.new],
+        :html => {:multipart => true, :class => 'form-vertical' },
+        :wrapper => :vertical_form,
+        :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}) do |f|
+      = f.input :document
+      = f.input :description, :as => :text, :input_html => { :rows => 3 }, :placeholder => 'Enter a brief description of the document...'
+      = f.submit "Add document to project", :class => 'btn btn-primary'
+
+:javascript
+    
+  // Document Ready
+  $(document).ready(function(){
+    $('#document_description').wysihtml5();
+  });
+  

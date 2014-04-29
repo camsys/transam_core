@@ -33,6 +33,11 @@ Rails.application.routes.draw do
         get 'download'
       end
     end
+    resources :documents,   :only => [:create, :update, :edit, :new, :destroy] do
+      member do
+        get 'download'
+      end
+    end    
   end
       
   resources :organizations, :path => "org", :only => [:index, :show, :edit, :update] do
@@ -41,11 +46,16 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :comments, :only => [:create, :update, :edit, :new]    
+  resources :comments,    :only => [:create, :update, :edit, :new, :destroy]    
+  resources :documents,   :only => [:create, :update, :edit, :new, :destroy] do
+    member do
+      get 'download'
+    end
+  end
   
-  resources :dashboards, :only => [:index, :show]
-  resources :searches, :only => [:new, :create]
-  resources :reports, :only => [:index, :show] do
+  resources :dashboards,  :only => [:index, :show]
+  resources :searches,    :only => [:new, :create]
+  resources :reports,     :only => [:index, :show] do
     member do
       get 'load'  # load a report using ajax
     end
@@ -70,7 +80,9 @@ Rails.application.routes.draw do
       patch 'update_password'
     end
     resources :messages
+    
     resources :tasks do
+      resources :comments,    :only => [:create, :update, :edit, :new, :destroy]
       collection do
         get   'filter'
       end
@@ -78,6 +90,7 @@ Rails.application.routes.draw do
         patch 'update_status'
       end
     end
+    
   end
       
   resources :policies do
