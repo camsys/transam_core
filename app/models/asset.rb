@@ -66,10 +66,12 @@ class Asset < ActiveRecord::Base
   
   # Each asset has zero or more attachments. Attachments are deleted when the asset is deleted
   has_many   :attachments,  :dependent => :destroy
+
+  # Each asset has zero or more documents. Documents are deleted when the asset is deleted
+  has_many    :documents,  :as => :documentable, :dependent => :destroy
   
   # Filter the attachments for easier selection
   has_many   :images,     -> { where :attachment_type_id => 1}, :class_name => "Attachment"
-  has_many   :documents,  -> { where :attachment_type_id => 2}, :class_name => "Attachment"
 
   # Each asset has zero or more notes. Notes are deleted when the asset is destroyed
   has_many   :notes,        :dependent => :destroy

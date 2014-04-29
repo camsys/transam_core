@@ -3,8 +3,9 @@ class AddCommentModel < ActiveRecord::Migration
     
     # Comments table
     create_table :comments do |t|
-      t.integer   :commentable_id
-      t.string    :commentable_type
+      t.string    :object_key,        :limit => 12,   :null => :false
+      t.integer   :commentable_id,                    :null => :false
+      t.string    :commentable_type,                  :null => :false
       t.text      :comment,                           :null => :false
       t.integer   :created_by_id,                     :null => :false      
       t.timestamps

@@ -11,7 +11,6 @@ class Attachment < ActiveRecord::Base
 
   # uploader
   mount_uploader :image,      ImageUploader      
-  mount_uploader :document,   DocumentUploader      
 
   #------------------------------------------------------------------------------
   # Overrides
@@ -50,7 +49,6 @@ class Attachment < ActiveRecord::Base
     :asset_id,
     :attachment_type_id, 
     :image,
-    :document, 
     :name, 
     :notes,
     :original_filename,
@@ -93,10 +91,7 @@ class Attachment < ActiveRecord::Base
       self.content_type = image.file.content_type
       self.file_size = image.file.size
     end
-    if document.present? && document_changed?
-      self.content_type = document.file.content_type
-      self.file_size = document.file.size
-    end
+
   end
 
 end
