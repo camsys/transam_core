@@ -1,26 +1,28 @@
 <div class="row">
-	<table class="table table-condensed table-striped table-hover table-bordered" width="100%">
-		<thead>
-			<tr>
-				<th>Owning Agency</th>
-				<th>Name</th>
-				<th>Effective Year</th>
-				<th>Current</th>
-				<th>Created</th>
-				<th>Last Updated</th>
-			</tr>
-		</thead>
-		<tbody>
-			<% @policies.each do |p| %>
-			<tr data-action-path = '<%= policy_path(p) %>'>
-				<td><%= p.organization.name %></td>
-				<td><%= p.name %></td>
-				<td><%= p.year %></td>
-				<td><%= format_as_boolean(p.current) %></td>
-				<td><%= format_as_date_time(p.created_at) %></td>
-				<td><%= format_as_date_time(p.updated_at) %></td>
-			</tr>
-			<% end %>
-		</tbody>
-	</table>
+	<div class="col-md-12">
+		<table class="table table-condensed table-striped table-hover table-bordered">
+			<thead>
+				<tr>
+					<th>Owning Agency</th>
+					<th>Name</th>
+					<th>Effective Year</th>
+					<th>Current</th>
+					<th>Created</th>
+					<th>Last Updated</th>
+				</tr>
+			</thead>
+			<tbody>
+				<% @policies.each do |p| %>
+				<tr data-action-path = '<%= policy_path(p) %>'>
+					<td><%= p.organization.name %></td>
+					<td><%= p.name %></td>
+					<td><%= p.year %></td>
+					<td class="center"><%= format_as_boolean(p.current) %></td>
+					<td><%= format_as_date_time(p.created_at) %></td>
+					<td><%= format_as_date_time(p.updated_at) %></td>
+				</tr>
+				<% end %>
+			</tbody>
+		</table>
+	</div>
 </div>

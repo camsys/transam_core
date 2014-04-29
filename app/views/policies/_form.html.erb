@@ -6,9 +6,9 @@
 		) do |f| %>
 		<div class="col-md-6">
 			<%= dialog_tag('Policy', {:icon => 'fa fa-book', :class => "form_part"}) do %>
-				<%= f.input :name, :input_html => { :class => "span12" }, :placeholder => "Enter a name for this policy..." %>
+				<%= f.input :name, :placeholder => "Enter a name for this policy..." %>
 				<%= f.input :year, :label => 'Effective Fiscal Year', :collection => @year_list, :prompt => "Select an effective year..." %>
-				<%= f.input :description, :input_html => { :class => "span12", :rows => 6 }, :placeholder => "Enter a description for the policy..." %>
+				<%= f.input :description, :input_html => { :rows => 6 }, :placeholder => "Enter a description for the policy..." %>
 			<% end %>
 		</div>
 		<div class="col-md-6">
