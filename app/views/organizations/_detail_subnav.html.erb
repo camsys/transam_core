@@ -1,4 +1,11 @@
 <%= sub_nav_tag({}) do %>
+	<% if current_page?(map_organization_path(@org)) %>
+		<li>
+    	<%= link_to organization_path(@org) do %> 
+      	<i class="fa fa-angle-left"></i> Back
+    	<% end %>
+  	</li>
+	<% end %>
 	<li>
 		<%= link_to organizations_path do %> <i class="fa fa-building-o"></i> <%= "My Organizations (#{current_user.organizations.count})" %>
 		<% end %>

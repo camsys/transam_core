@@ -1,10 +1,16 @@
 <%= sub_nav_tag({}) do %>
-	<% if @asset.nil? || @asset.new_record? %>
-	<li>
-		<%= link_to :back do %>
-		<i class="fa fa-angle-left"></i> Back
-		<% end %>
-	</li>
+	<% if @asset.nil? %>
+		<li>
+			<%= link_to inventory_index_path do %>
+				<i class="fa fa-angle-left"></i> Back
+			<% end %>
+		</li>
+	<% elsif @asset.new_record? %>
+		<li>
+			<%= link_to :back do %>
+				<i class="fa fa-angle-left"></i> Back
+			<% end %>
+		</li>
 	<% else %>
 	<li>
 		<%= link_to inventory_path(@asset) do %>

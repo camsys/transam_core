@@ -1,0 +1,14 @@
+<%= sub_nav_tag({}) do %>
+  <li>
+	  <%= link_to inventory_path(@asset) do %> 
+      <i class="fa fa-angle-left"></i> Back
+    <% end %>
+	</li>
+	<% if can? :update, @asset %>
+    <li>
+      <%= link_to new_inventory_note_path(@asset) do %>
+        <i class="fa fa-plus"></i> New Note
+      <% end %>
+    </li>
+	<% end %>
+<% end %>

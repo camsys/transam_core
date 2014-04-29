@@ -1,7 +1,17 @@
 <%= sub_nav_tag({}) do %>
 	<%= sub_nav_elem_tag do %>
-		<%= link_to :back do %> 
-		<i class="fa fa-angle-left"></i> Back
-		<% end %>
+		<% if @policy.nil? || @policy.new_record? %>
+      <li>
+        <%= link_to policies_path(@organization) do %> 
+          <i class="fa fa-angle-left"></i> Back
+        <% end %>
+      </li>
+    <% else %>
+      <li>
+        <%= link_to policy_path(@policy) do %> 
+          <i class="fa fa-angle-left"></i> Back
+        <% end %>
+      </li>
+    <% end %>
 	<% end %>
 <% end %>
