@@ -12,6 +12,10 @@
 # has_many    :documents,  :as => :documentable
 #
 #------------------------------------------------------------------------------
+
+# Include the FileSizevalidator mixin
+require 'file_size_validator' 
+
 class Document < ActiveRecord::Base
 
   # From system config. This is the maximum document size that can be uploaded
