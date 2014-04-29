@@ -73,7 +73,7 @@ class NotesController < AssetAwareController
       redirect_to(inventory_notes_url(@asset))
       return            
     end
-    @page_title = @note.created_at.to_s
+    @page_title = "Update Note: #{@note.created_at.strftime("%m-%d-%Y")}"
   end
   
   def update

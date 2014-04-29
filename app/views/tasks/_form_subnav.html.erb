@@ -1,13 +1,13 @@
 <%= sub_nav_tag({}) do %>
-	<% if @note.nil? || @note.new_record? %>
+  <% if @task.nil? || @task.new_record? %>
     <li>
-      <%= link_to inventory_notes_path(@asset) do %> 
+      <%= link_to user_tasks_path(current_user) do %> 
         <i class="fa fa-angle-left"></i> Back
       <% end %>
     </li>
   <% else %>
     <li>
-      <%= link_to inventory_note_path(@asset, @note) do %> 
+      <%= link_to user_task_path(current_user, @task) do %> 
         <i class="fa fa-angle-left"></i> Back
       <% end %>
     </li>

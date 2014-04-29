@@ -1,9 +1,11 @@
 <%= sub_nav_tag({}) do %>
-	<li>
-		<%= link_to uploads_path do %>
-		<i class="fa fa-folder-open"></i> All Uploads
-		<% end %>
-	</li>
+	<% if @upload.nil? || @upload.new_record? %>
+		<li>
+			<%= link_to uploads_path do %>
+			<i class="fa fa-folder-open"></i> All Uploads
+			<% end %>
+		</li>
+	<% end %>
 	<% if @upload && ! @upload.new_record? %>
 		<% if can? :update, @upload %>
 			<li>
