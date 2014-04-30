@@ -83,6 +83,10 @@ class Task < ActiveRecord::Base
   #
   #------------------------------------------------------------------------------
 
+  def name
+    subject
+  end
+  
   def cancelled?
     (task_status_type_id == 5)
   end

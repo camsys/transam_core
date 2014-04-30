@@ -8,7 +8,7 @@ class CommentsController < OrganizationAwareController
     @commentable = find_commentable
     @comments = @commentable.comments
   
-    @page_title = "#{@commentable.project_number}: Comments"
+    @page_title = "#{@commentable.name}: Comments"
 
   end
 
@@ -20,13 +20,14 @@ class CommentsController < OrganizationAwareController
   # GET /comments/new
   def new
     @comment = Comment.new
+    @page_title = "#{@commentable.name}: New comment"
   end
 
   # GET /comments/1/edit
   def edit
 
     @commentable = @comment.commentable
-    @page_title = "#{@commentable.project_number}: Edit comment"
+    @page_title = "#{@commentable.name}: Edit comment"
 
   end
 
@@ -36,6 +37,7 @@ class CommentsController < OrganizationAwareController
     @commentable = find_commentable
     @comment = @commentable.comments.build(comment_params)
     @comment.creator = current_user
+    @page_title = "#{@commentable.name}: New comment"
     
     respond_to do |format|
       if @comment.save
@@ -55,6 +57,7 @@ class CommentsController < OrganizationAwareController
   def update
 
     @commentable = @comment.commentable
+    @page_title = "#{@commentable.name}: Edit comment"
 
     respond_to do |format|
       if @comment.update(comment_params)

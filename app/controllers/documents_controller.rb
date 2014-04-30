@@ -8,7 +8,7 @@ class DocumentsController < OrganizationAwareController
     @documentable = find_documentable
     @documents = @documentable.documents
   
-    @page_title = "#{@documentable.project_number}: Documents"
+    @page_title = "#{@documentable.name}: Documents"
 
   end
 
@@ -16,7 +16,7 @@ class DocumentsController < OrganizationAwareController
   def new
     @document = Document.new
     @documentable = find_documentable
-    @page_title = "#{@documentable.project_number}: New document"
+    @page_title = "#{@documentable.name}: New document"
     
   end
 
@@ -24,7 +24,7 @@ class DocumentsController < OrganizationAwareController
   def edit
 
     @documentable = @document.documentable
-    @page_title = "#{@documentable.project_number}: Edit document"
+    @page_title = "#{@documentable.name}: Edit document"
 
   end
 
@@ -47,7 +47,7 @@ class DocumentsController < OrganizationAwareController
     @document = @documentable.documents.build(document_params)
     @document.creator = current_user
 
-    @page_title = "#{@documentable.project_number}: New document"
+    @page_title = "#{@documentable.name}: New document"
     
     respond_to do |format|
       if @document.save
@@ -67,7 +67,7 @@ class DocumentsController < OrganizationAwareController
   def update
 
     @documentable = @document.documentable
-    @page_title = "#{@documentable.project_number}: Edit document"
+    @page_title = "#{@documentable.name}: Edit document"
 
     respond_to do |format|
       if @document.update(document_params)

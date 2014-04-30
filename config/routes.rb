@@ -53,6 +53,10 @@ Rails.application.routes.draw do
     end
   end
   
+  resources :tasks do
+    resources :comments
+  end
+  
   resources :dashboards,  :only => [:index, :show]
   resources :searches,    :only => [:new, :create]
   resources :reports,     :only => [:index, :show] do
