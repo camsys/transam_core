@@ -1,11 +1,11 @@
-class DocumentsController < OrganizationAwareController
+class DocumentsController < NestedResourceController
   before_action :set_document, :only => [:edit, :update, :destroy, :download]
 
   # GET /documents
   # GET /documents.json
   def index
        
-    @documentable = find_documentable
+    @documentable = find_resource
     @documents = @documentable.documents
   
     @page_title = "#{@documentable.name}: Documents"
@@ -15,7 +15,7 @@ class DocumentsController < OrganizationAwareController
   # GET /documents/new
   def new
     @document = Document.new
-    @documentable = find_documentable
+    @documentable = find_resource
     @page_title = "#{@documentable.name}: New document"
     
   end
@@ -43,7 +43,7 @@ class DocumentsController < OrganizationAwareController
   # POST /documents
   # POST /documents.json
   def create
-    @documentable = find_documentable
+    @documentable = find_resource
     @document = @documentable.documents.build(document_params)
     @document.creator = current_user
 
@@ -52,8 +52,7 @@ class DocumentsController < OrganizationAwareController
     respond_to do |format|
       if @document.save
         notify_user(:notice, 'Document was successfully created.')
-        url = "#{@documentable.class.name.underscore}_url('#{@documentable.object_key}')"   
-        format.html { redirect_to eval(url) }
+        format.html { redirect_to get_resource_url(@documentable) }
         format.json { render action: 'show', status: :created, location: @document }
       else
         format.html { render action: 'new' }
@@ -72,8 +71,7 @@ class DocumentsController < OrganizationAwareController
     respond_to do |format|
       if @document.update(document_params)
         notify_user(:notice, 'Document was successfully updated.')   
-        url = "#{@documentable.class.name.underscore}_url('#{@documentable.object_key}')"   
-        format.html { redirect_to eval(url) }
+        format.html { redirect_to get_resource_url(@documentable) }
         format.json { head :no_content }
       else
         format.html { render action: 'edit' }
@@ -91,24 +89,12 @@ class DocumentsController < OrganizationAwareController
     
     notify_user(:notice, 'Document was successfully removed.')   
     respond_to do |format|
-      url = "#{@documentable.class.name.underscore}_url('#{@documentable.object_key}')"   
-      format.html { redirect_to eval(url) }
+      format.html { redirect_to get_resource_url(@documentable) }
       format.json { head :no_content }
     end
   end
 
   private
-
-  # Get the class and object key of the documentable object we are operating on
-  def find_documentable
-    params.each do |name, value|
-      if name =~ /(.+)_id$/
-        return $1.classify.constantize.find_by_object_key(value)
-      end
-    end
-    
-    nil
-  end
     
   # Use callbacks to share common setup or constraints between actions.
   def set_document

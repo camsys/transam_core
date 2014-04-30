@@ -1,11 +1,11 @@
-class CommentsController < OrganizationAwareController
+class CommentsController < NestedResourceController
   before_action :set_comment, :only => [:edit, :update, :destroy]
 
   # GET /comments
   # GET /comments.json
   def index
        
-    @commentable = find_commentable
+    @commentable = find_resource
     @comments = @commentable.comments
   
     @page_title = "#{@commentable.name}: Comments"
@@ -20,6 +20,7 @@ class CommentsController < OrganizationAwareController
   # GET /comments/new
   def new
     @comment = Comment.new
+    @commentable = find_resource
     @page_title = "#{@commentable.name}: New comment"
   end
 
@@ -34,7 +35,7 @@ class CommentsController < OrganizationAwareController
   # POST /comments
   # POST /comments.json
   def create
-    @commentable = find_commentable
+    @commentable = find_resource
     @comment = @commentable.comments.build(comment_params)
     @comment.creator = current_user
     @page_title = "#{@commentable.name}: New comment"
@@ -42,8 +43,7 @@ class CommentsController < OrganizationAwareController
     respond_to do |format|
       if @comment.save
         notify_user(:notice, 'Comment was successfully created.')
-        url = "#{@commentable.class.name.underscore}_url('#{@commentable.object_key}')"   
-        format.html { redirect_to eval(url) }
+        format.html { redirect_to get_resource_url(@commentable) }
         format.json { render action: 'show', status: :created, location: @comment }
       else
         format.html { render action: 'new' }
@@ -62,8 +62,7 @@ class CommentsController < OrganizationAwareController
     respond_to do |format|
       if @comment.update(comment_params)
         notify_user(:notice, 'Comment was successfully updated.')   
-        url = "#{@commentable.class.name.underscore}_url('#{@commentable.object_key}')"   
-        format.html { redirect_to eval(url) }
+        format.html { redirect_to get_resource_url(@commentable) }
         format.json { head :no_content }
       else
         format.html { render action: 'edit' }
@@ -81,24 +80,12 @@ class CommentsController < OrganizationAwareController
     
     notify_user(:notice, 'Comment was successfully removed.')   
     respond_to do |format|
-      url = "#{@commentable.class.name.underscore}_url('#{@commentable.object_key}')"   
-      format.html { redirect_to eval(url) }
+      format.html { redirect_to get_resource_url(@commentable) }
       format.json { head :no_content }
     end
   end
 
   private
-
-  # Get the class and object key of the commentable object we are operating on
-  def find_commentable
-    params.each do |name, value|
-      if name =~ /(.+)_id$/
-        return $1.classify.constantize.find_by_object_key(value)
-      end
-    end
-    
-    nil
-  end
     
   # Use callbacks to share common setup or constraints between actions.
   def set_comment
