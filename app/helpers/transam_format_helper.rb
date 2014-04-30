@@ -93,32 +93,18 @@ module TransamFormatHelper
     html << "<br/>"    
     return html.html_safe
   end
-  
-  # formats for list
-  def format_list_field(label,  value)
-    html = "<div class='popup-row'>"
-    html << "<label>"
-    html << label
-    html << "</label>"
-    html << "<p style='margin-left:10px;margin-top:5px;margin-bottom:5px;'>"
-    html << value.to_s unless value.nil?
-    html << "</p>"
-    html << "</div>"
-    return html.html_safe    
-  end
-  
+    
   # format for a field
   def format_field(label, value, popover_text=nil)
  
     html = "<div class='row control-group'>"
-    html << "<div class='col-md-4 display-label'>"
+    html << "<div class='col-xs-4 display-label'>"
     html << label
     html << "</div>"
-    html << "<div class='col-md-8 display-value'>"
+    html << "<div class='col-xs-8 display-value'>"
     html << value.to_s unless value.nil?
     unless popover_text.nil?
-      html << '&nbsp;'
-      html << "<a href='#' class='info_icon' data-toggle='popover' title='Information' data-placement='top' data-content='" + popover_text + "'><i class='fa fa-info-sign'></i></a>"
+      html << "<i class='fa fa-info-circle info-icon' data-toggle='popover' data-trigger='hover' title='Information' data-placement='right' data-content='#{popover_text}'></i>"
     end
     html << "</div>"
     html << "</div>"
