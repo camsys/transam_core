@@ -24,7 +24,7 @@
 			<div class="input-append">
 				<%= select_tag(:task_status, options_for_select(TaskStatusType.all.collect{|a| [a.name, a.id]}), :class => "form-control", :prompt => 'Update status...') %>
 				<button class="btn" type="submit" id="submit_button">
-					Set
+					<i class="fa fa-plus"></i>
 				</button>
 			</div>
 		<% end unless @task.new_record? %>
