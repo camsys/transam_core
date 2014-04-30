@@ -27,7 +27,9 @@ Rails.application.routes.draw do
         get 'copy'
       end
     resources :asset_events    
-    resources :notes    
+    
+    resources :comments,   :only => [:create, :update, :edit, :new, :destroy]
+    
     resources :attachments do
       member do
         get 'download'
