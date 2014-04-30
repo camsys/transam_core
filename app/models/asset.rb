@@ -75,6 +75,9 @@ class Asset < ActiveRecord::Base
 
   # Each asset has zero or more notes. Notes are deleted when the asset is destroyed
   has_many   :notes,        :dependent => :destroy
+
+  # Each asset has zero or more comments. Comments are deleted when the asset is deleted
+  has_many    :comments,    :as => :commentable, :dependent => :destroy
     
   # Each asset can be associated with 0 or more districts
   has_and_belongs_to_many :districts
