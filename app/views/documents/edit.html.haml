@@ -1,3 +1,6 @@
 = render 'form_subnav'
 
-= render 'form'
+= render(:partial => 'shared/form_errors', :locals => {:obj => @document}) unless @document.errors.empty? 
+
+= render "form"
+

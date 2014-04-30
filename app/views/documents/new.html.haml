@@ -1,5 +1,6 @@
-%h1 New document
+= render 'form_subnav'
 
-= render 'form'
+= render(:partial => 'shared/form_errors', :locals => {:obj => @document}) unless @document.errors.empty? 
 
-= link_to 'Back', documents_path
+= render "form"
+
