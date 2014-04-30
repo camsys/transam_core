@@ -1,17 +1,15 @@
 <div class="row">
 	<div class="col-md-12">
 		<%= simple_form_for(:searcher, :url => searches_path, :html => {:class => '' }) do |f| %>
-			<ul>
-				<div class="col-md-3">
-					<%= dialog_tag('Asset Characteristics', {:icon => 'fa fa-refresh', :class => "form_part"}) do %>
-						<%= f.input :asset_type_id, :collection => AssetType.all, :include_blank => "Any...", :multiple => true %>
-						<%= f.input :asset_subtype_id, :collection => AssetSubtype.all, :include_blank => "Any...", :multiple => true %>
-						<%= f.input :asset_tag %>
-						<%= f.input :condition_type_id, :collection => ConditionType.all, :include_blank => "Any...", :multiple => true %>
-						<%= f.input :replacement_year, :as => :integer %>
-					<% end %>
-				</div>
-			</ul>
+			<div class="col-md-3">
+				<%= dialog_tag('Asset Characteristics', {:icon => 'fa fa-refresh', :class => "form_part"}) do %>
+					<%= f.input :asset_type_id, :collection => AssetType.all, :include_blank => "Any...", :multiple => true %>
+					<%= f.input :asset_subtype_id, :collection => AssetSubtype.all, :include_blank => "Any...", :multiple => true %>
+					<%= f.input :asset_tag %>
+					<%= f.input :condition_type_id, :collection => ConditionType.all, :include_blank => "Any...", :multiple => true %>
+					<%= f.input :replacement_year, :as => :integer %>
+				<% end %>
+			</div>
 			<% if ! @disabled %>
 				<div class="form-actions">
 					<%= f.button :submit, 'Search', :id => 'submit_btn' %>
