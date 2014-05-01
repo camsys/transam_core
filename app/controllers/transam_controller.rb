@@ -38,6 +38,24 @@ class TransamController < ApplicationController
     
   protected
 
+  # Wrap the search text with db string search wildcards. This might need to be adjusted
+  # depending on the database being used.
+  #
+  # These work for MySQL
+  #
+  def get_search_value(search_text, search_type)
+    if search_type == "equals"
+      val = search_text
+    elsif search_type == "starts_with"
+      val = "#{search_text}%"
+    elsif search_type == "ends_with"
+      val = "%#{search_text}"
+    else # contains or any
+      val = "%#{search_text}%"
+    end  
+    val  
+  end
+
   # Returns an array of object PKs that can be passsed to an IN query. Null safe and checks for an
   # empty collection
   def get_id_array(coll)

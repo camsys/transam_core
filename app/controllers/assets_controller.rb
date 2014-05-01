@@ -301,15 +301,18 @@ class AssetsController < AssetAwareController
     # store it in the session for later
     session[:asset_subtype] = @asset_subtype
         
-    # Check to see if we got a search text to filter on
+    # Check to see if we got a search text and search param to filter on
     if params[:search_text].nil?
       # See if one is stored in the session
-      @search_text = session[:search_text].blank? ? nil : session[:search_text]
+      @search_text  = session[:search_text].blank? ?  nil : session[:search_text]
+      @search_param = session[:search_param].blank? ? nil : session[:search_param]
     else
-      @search_text = params[:search_text]
+      @search_text  = params[:search_text]
+      @search_param = params[:search_param]
     end
     # store it in the session for later
-    session[:search_text] = @search_text
+    session[:search_text]   = @search_text
+    session[:search_param]  = @search_param
     
     # Check to see if we got list of assets to filter on
     if params[:ids]
@@ -371,7 +374,9 @@ class AssetsController < AssetAwareController
       # create an OR query for each field
       query_str = []    
       first = true
-    
+      # parameterize the search based on the selected search parameter
+      search_value = get_search_value(@search_text, @search_param)
+      # Construct the query based on the searchable fields for the model
       searchable_fields.each do |field|
         if first
           first = false
@@ -383,7 +388,7 @@ class AssetsController < AssetAwareController
         query_str << field
         query_str << ' LIKE ? '
         # add the value in for this sub clause
-        values << @search_text
+        values << search_value
       end
       query_str << ')' unless searchable_fields.empty?
 
@@ -431,12 +436,9 @@ class AssetsController < AssetAwareController
 
   # called from a show request
   def get_next_and_prev_asset_ids(asset)
-    #puts 'get_next_and_prev_asset_ids'
     @prev_asset_id = nil
     @next_asset_id = nil
     id_list = get_cached_objects(ASSET_KEY_LIST_VAR)
-    #puts id_list.inspect
-    #puts @asset.asset_id
     # make sure we have a list and an asset to find
     if id_list && asset
       # get the index of the current asset in the array      
@@ -450,8 +452,6 @@ class AssetsController < AssetAwareController
         end
       end
     end
-    #puts @prev_asset_id
-    #puts @next_asset_id
   end
     
   #------------------------------------------------------------------------------
@@ -460,7 +460,7 @@ class AssetsController < AssetAwareController
   #
   #------------------------------------------------------------------------------
   private
-
+  
   # Returns the set of assets, usually paged, as a JSON array compatible
   # with the datatables Jquery plugin.
   def get_as_json(assets, total_rows)

@@ -38,12 +38,49 @@ class UsersController < OrganizationAwareController
     end    
     @page_title = "#{org.name}: Users"
     
-    if ! params[:search_text].blank?
-      @search_text = params[:search_text].strip
-      @users = User.search_query(org, @search_text).order(:last_name)           
-    else
-      @users = org.users.order(:last_name)
+    # Start to set up the query
+    conditions  = []
+    values      = []
+    
+    # Only users that are in the selected organization
+    conditions << 'organization_id = ?'
+    values << org.id
+    
+    # See if we got a search string
+    if params[:search_text]
+      @search_text = params[:search_text]
+      @search_param = params[:search_param]
+      
+      # get the list of searchable fields from the model class
+      searchable_fields = User.new.searchable_fields
+      # create an OR query for each field
+      query_str = []    
+      first = true
+      # parameterize the search based on the selected search parameter
+      search_value = get_search_value(@search_text, @search_param)
+      # Construct the query based on the searchable fields for the model
+      searchable_fields.each do |field|
+        if first
+          first = false
+          query_str << '('
+        else
+          query_str << ' OR '
+        end
+      
+        query_str << field
+        query_str << ' LIKE ? '
+        # add the value in for this sub clause
+        values << search_value
+      end
+      query_str << ')' unless searchable_fields.empty?
+
+      conditions << query_str.join 
     end
+    puts conditions.inspect
+    puts values.inspect
+    
+    # Get the Users
+    @users = User.where(conditions.join(' AND '), *values).order(:last_name)
     
     # remember the view type
     @view_type = get_view_type(SESSION_VIEW_TYPE_VAR)

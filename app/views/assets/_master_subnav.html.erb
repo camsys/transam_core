@@ -6,11 +6,13 @@
 					<%= hidden_field_tag :asset_type, @asset_type  %>
 					<%= hidden_field_tag :asset_subtype, @asset_subtype  %>
 					<%= hidden_field_tag :view_type, @view_type  %>
-					<div class="form-group">
-						<span class="form-group-addon">Asset Type</span>
+					<div class="input-group" style="width:300px;">
+						<span class="input-group-addon">Asset Type</span>
 						<%= text_field_tag :filter, @filter, :autocomplete => "off", :class => "form-control ajax-typeahead", :data => {:link => filter_inventory_index_path, :provide => "typeahead"} %>
+						<span class="input-group-btn">
+							<button type="submit" id="clear_selection", class="btn btn-default">Clear</button>
+						</span>
 					</div>
-					<button type="submit" id="clear_selection", class="btn btn-default">Clear</button>
 				<% end %>
 				<ul class="nav navbar-nav">
 					<% if @assets.count > 0 %>
@@ -36,23 +38,23 @@
 				</ul>
 				<%= form_tag inventory_index_path, :id => 'asset_search_form', :method => "get", :role => "search", :class => 'navbar-form navbar-right' do %>
 					<%= hidden_field_tag :asset_type, @asset_type %>
-						<div class="input-group" style="width:300px;">
-							<div class="input-group-btn search-panel">
-					            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-					            	<span id="search_concept">Filter by</span> <span class="caret"></span>
-					            </button>
-					            <ul class="dropdown-menu" role="menu">
-					              <li><a href="#equals">Equals</a></li>
-					              <li><a href="#contains">Contains</a></li>
-					              <li><a href="#starts_with">Starts with</a></li>
-					              <li><a href="#end_with">Ends with</a></li>
-					            </ul>
-				            </div>
-            				<input type="hidden" name="search_param" value="all" id="search_param">         
-							<%= text_field_tag :search_text, @search_text, :class => "form-control", :placeholder => "Filter text..."%>
-				            <span class="input-group-btn">
-								<button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
-							</span>
+					<div class="input-group" style="width:300px;">
+						<div class="input-group-btn search-panel">
+				            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+				            	<span id="search_concept"><%= @search_param.blank? ? "Filter by" : @search_param %></span> <span class="caret"></span>
+				            </button>
+				            <ul class="dropdown-menu" role="menu">
+				              <li><a href="#equals">Equals</a></li>
+				              <li><a href="#contains">Contains</a></li>
+				              <li><a href="#starts_with">Starts with</a></li>
+				              <li><a href="#ends_with">Ends with</a></li>
+				            </ul>
+			            </div>
+        				<input type="hidden" name="search_param" value="<%= @search_param %>" id="search_param">         
+						<%= text_field_tag :search_text, @search_text, :class => "form-control", :placeholder => "Filter text..."%>
+			            <span class="input-group-btn">
+							<button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+						</span>
 					</div>
 				<% end %>
 			</div>
@@ -62,15 +64,6 @@
 
 <script type="text/javascript" charset="utf-8">
 
-	$(document).ready(function(e){
-    	$('.search-panel .dropdown-menu').find('a').click(function(e) {
-			e.preventDefault();
-			var param = $(this).attr("href").replace("#","");
-			var concept = $(this).text();
-			$('.search-panel span#search_concept').text(concept);
-			$('.input-group #search_param').val(param);
-		});
-	});
   	// Configure UI behaviors
   	var typeahead_delay = <%= Rails.application.config.ui_typeahead_delay %>
   	var typeahead_min_chars = <%= Rails.application.config.ui_typeahead_min_chars %>
