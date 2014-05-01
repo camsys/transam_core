@@ -1,0 +1,17 @@
+.row
+  .col-md-8.col-md-offset-2
+    = simple_form_for([@imagable, Image.new],
+        :html => {:multipart => true, :class => 'form-vertical' },
+        :wrapper => :vertical_form,
+        :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}) do |f|
+      = f.input :image
+      = f.input :description, :as => :text, :input_html => { :rows => 3 }, :placeholder => 'Enter a brief description of the image...'
+      = f.submit "Add image", :class => 'btn btn-primary'
+
+:javascript
+    
+  // Document Ready
+  $(document).ready(function(){
+    $('#image_description').wysihtml5();
+  });
+  

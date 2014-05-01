@@ -64,20 +64,18 @@ class Asset < ActiveRecord::Base
   # each asset has zero or more disposition updates
   has_many   :disposition_updates, -> {where :asset_event_type_id => DispositionUpdateEvent.asset_event_type.id }, :class_name => "DispositionUpdateEvent"
   
-  # Each asset has zero or more attachments. Attachments are deleted when the asset is deleted
-  has_many   :attachments,  :dependent => :destroy
+  # Each asset has zero or more images. Images are deleted when the asset is deleted
+  has_many    :images,      :as => :imagable,       :dependent => :destroy
 
   # Each asset has zero or more documents. Documents are deleted when the asset is deleted
-  has_many    :documents,  :as => :documentable, :dependent => :destroy
-  
-  # Filter the attachments for easier selection
-  has_many   :images,     -> { where :attachment_type_id => 1}, :class_name => "Attachment"
-
-  # Each asset has zero or more notes. Notes are deleted when the asset is destroyed
-  has_many   :notes,        :dependent => :destroy
+  has_many    :documents,   :as => :documentable,   :dependent => :destroy
 
   # Each asset has zero or more comments. Comments are deleted when the asset is deleted
   has_many    :comments,    :as => :commentable, :dependent => :destroy
+  
+  # Each asset has zero or more notes. Notes are deleted when the asset is destroyed
+  # Notes are deprecated and will be removed. Only use comments going forward
+  has_many   :notes,        :dependent => :destroy
     
   # Each asset can be associated with 0 or more districts
   has_and_belongs_to_many :districts

@@ -5,7 +5,7 @@
 				<legend>Images</legend>
 				<% @asset.images.each do |attachment| %>
 					<%= image_thumbnail_tag({:class => 'col-md-2 img_thumbnail', :path => inventory_attachment_path(@asset, attachment)}) do %>
-						<%= image_tag attachment.image.url(:thumb), :class => "img-polaroid image-center" if attachment.image  %>
+						<%= image_tag attachment.image.url, :class => "img-polaroid image-center" if attachment.image  %>
 					<% end %>
 				<% end %>
 			</fieldset>

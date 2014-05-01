@@ -1,0 +1,4 @@
+.row
+  - images.each do |d|
+    .col-md-2.col-sm-4.col-xs-6
+      = image_tag p.image.url(:thumb), :class => "img-responsive gallery-image" if p.image
