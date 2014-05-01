@@ -103,8 +103,8 @@ class Image < ActiveRecord::Base
   def update_file_attributes
     
     if image.present? && image
-      self.content_type = document.file.content_type
-      self.file_size = document.file.size
+      self.content_type = image.file.content_type
+      self.file_size = image.file.size
     end
   end
   
