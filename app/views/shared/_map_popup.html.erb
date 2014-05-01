@@ -10,9 +10,9 @@
 	<div class="row"  style="border-top:1px solid #CCCCCC;border-bottom:1px solid #CCCCCC;">
 		<div class="col-md-12">
 			<div class="popup-content">
-				<%= format_list_field("Type", asset.name ) %>
-				<%= format_list_field("Asset Tag", asset.asset_tag ) %>
-				<%= format_list_field("Condition", asset.reported_condition_type.name) unless asset.reported_condition_type.nil? %>		
+				<%= format_field("Type", asset.name ) %>
+				<%= format_field("Asset Tag", asset.asset_tag ) %>
+				<%= format_field("Condition", asset.reported_condition_type.name) unless asset.reported_condition_type.nil? %>		
 			</dl>
 		</div>
 	</div>
