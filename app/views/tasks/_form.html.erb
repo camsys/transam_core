@@ -12,7 +12,7 @@
 				<%= f.association :priority_type, :include_blank => false %>
 				<%= f.input :body, :label => 'Details', :input_html => { :class => "col-md-10", :rows => 6 }, :placeholder => "Enter any details about this task..."%>
 			<% end %>
-			<div class="col-md-12">
+			<div>
 				<%= f.button :submit, :class => "btn btn-primary" %>
 				<%= submit_tag 'Cancel', :name => 'cancel', :class => "btn btn-warning" %>
 			</div>
