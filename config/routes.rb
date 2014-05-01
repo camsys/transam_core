@@ -28,13 +28,14 @@ Rails.application.routes.draw do
       end
     resources :asset_events    
     
-    resources :comments,   :only => [:create, :update, :edit, :new, :destroy]
+    resources :comments,    :only => [:create, :update, :edit, :new, :destroy]
     
-    resources :attachments do
+    resources :images,      :only => [:create, :update, :edit, :new, :destroy] do
       member do
         get 'download'
       end
     end
+    
     resources :documents,   :only => [:create, :update, :edit, :new, :destroy] do
       member do
         get 'download'
@@ -50,6 +51,11 @@ Rails.application.routes.draw do
 
   resources :comments,    :only => [:create, :update, :edit, :new, :destroy]    
   resources :documents,   :only => [:create, :update, :edit, :new, :destroy] do
+    member do
+      get 'download'
+    end
+  end
+  resources :images,      :only => [:create, :update, :edit, :new, :destroy] do
     member do
       get 'download'
     end
