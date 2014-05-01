@@ -151,10 +151,13 @@ class Asset < ActiveRecord::Base
     'policy_replacement_year',
     'estimated_replacement_year',
     'estimated_replacement_cost',
+    'scheduled_replacement_year',
+    'scheduled_rehabilitation_year',
     'in_backlog',
     'reported_condition_type_id',
     'reported_condition_rating',
     'reported_condition_date',
+    'reported_milage',
     'estimated_condition_type_id',
     'estimated_condition_rating',
     'service_status_type_id',
@@ -174,11 +177,14 @@ class Asset < ActiveRecord::Base
     :policy_replacement_year,
     :estimated_replacement_year,
     :estimated_replacement_cost,
+    :scheduled_replacement_year,
+    :scheduled_rehabilitation_year,
     :estimated_value,
     :in_backlog,
     :reported_condition_type_id,
     :reported_condition_rating,
     :reported_condition_date,
+    :reported_milage,
     :estimated_condition_type_id,
     :estimated_condition_rating,
     :service_status_type_id,
@@ -226,6 +232,23 @@ class Asset < ActiveRecord::Base
   #
   #------------------------------------------------------------------------------
 
+  # Returns true if the asset is of the specified class or has the specified class as
+  # and ancestor (superclass).
+  #
+  # usage: a.type_of? type
+  # where type can be one of:
+  #    a symbol e.g :vehicle
+  #    a class name eg Vehicle
+  #    a string eg "vehicle"
+  #
+  def type_of?(type)
+    begin
+      self.class.ancestors.include?(type.to_s.classify.constantize)
+    rescue
+      false
+    end
+  end
+  
   # Override numeric setters to remove any extraneous formats from the number strings eg $, etc.      
   def manufacture_year=(num)
     self[:manufacture_year] = sanitize_to_int(num)
@@ -445,11 +468,13 @@ class Asset < ActiveRecord::Base
       if asset.condition_updates.empty?
         asset.reported_condition_date = Date.today
         asset.reported_condition_rating = 0.0
+        asset.reported_mileage = 0
         asset.reported_condition_type = ConditionType.find_by_name('Unknown')        
       else
         event = condition_updates.last
         asset.reported_condition_date = event.event_date
         asset.reported_condition_rating = event.assessed_rating
+        asset.reported_mileage = event.current_mileage
         asset.reported_condition_type = event.condition_type
       end
     rescue Exception => e
