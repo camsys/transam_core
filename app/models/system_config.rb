@@ -11,6 +11,7 @@ class SystemConfig < ActiveRecord::Base
       
   # Validations on core attributes
   validates :customer_id,                 :presence => true, :uniqueness => true
+  validates :start_of_fiscal_year,        :presence => true
   validates :map_tile_provider,           :presence => true
   validates :srid,                        :presence => true
   validates :min_lat,                     :presence => true
