@@ -6,7 +6,7 @@ class AssetEventsController < AssetAwareController
   before_filter :reformat_date_field,   :only => [:create, :update]
 
   # always use generic untyped assets for this controller
-  RENDER_TYPED_ASSETS = false
+  RENDER_TYPED_ASSETS = true
     
   # always render untyped assets for this controller
   def render_typed_assets

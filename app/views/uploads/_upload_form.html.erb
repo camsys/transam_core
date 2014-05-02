@@ -3,8 +3,8 @@
 		<div class="col-md-6 col-md-offset-3">
 			<%= dialog_tag('File', {:icon => 'fa fa-upload', :class => "header_part"}) do %>	
 				<%= f.input :file, :label => 'Spreadsheet' %>
-				<%= f.association :file_content_type, :label => 'Spreadsheet content' %>
-				<%= f.input :force_update, :as => :boolean %>
+				<%= f.association :file_content_type, :label => 'Spreadsheet Content' %>
+				<%= f.input :force_update, :as => :boolean, :label => "Force Update" %>
 			<% end %>
 			<div class="col-md-12">
 				<%= f.button :submit, :class=>"btn btn-primary" %>

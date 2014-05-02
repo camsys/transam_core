@@ -1,8 +1,8 @@
 <%= simple_form_for([current_user, @message], :html => {:class => 'form-horizontal' }, :wrapper => :horizontal_form) do |f| %>
 	<%= dialog_tag('Message', {:icon => 'fa fa-envelope', :class => "form_part"}) do %>
-		<%= f.association :to_user, :collection => @organization.users %>
+		<%= f.association :to_user, :collection => @organization.users, :label => "To User" %>
 		<%= f.input :subject, :input_html => { :class => "col-md-11" }, :placeholder => "Subject..." %>
-		<%= f.association :priority_type, :include_blank => false %>
+		<%= f.association :priority_type, :include_blank => false, :label => "Priority Type" %>
 		<%= f.input :body, :input_html => { :class => "col-md-10", :rows => 10 }, :placeholder => "Enter your message..."%>
 	<% end %>
 	<div>

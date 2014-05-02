@@ -11,7 +11,7 @@
 	</div>
 	<div class="col-md-6">
 		<%= dialog_tag('Calculations', {:icon => 'fa fa-usd', :class => "header_part"}) do %>
-			<%= format_field("Interest rate", format_as_decimal(@policy.interest_rate, 3) ) %>
+			<%= format_field("Interest Rate", format_as_decimal(@policy.interest_rate, 3) ) %>
 			<%= format_field("Replacement Cost Calculation", @policy.cost_calculation_type.name, @policy.cost_calculation_type.description ) %>
 			<%= format_field("Service Life Calculation", @policy.service_life_calculation_type.name, @policy.service_life_calculation_type.description ) %>
 			<%= format_field("Condition Estimation Calculation", @policy.condition_estimation_type.name, @policy.condition_estimation_type.description ) %>

@@ -13,12 +13,12 @@
 		</div>
 		<div class="col-md-6">
 			<%= dialog_tag('Calculators', {:icon => 'fa fa-usd', :class => "form_part"}) do %>
-				<%= f.input :interest_rate %>
-				<%= f.association :service_life_calculation_type, :label => "Service life calculator", :prompt => "Select..." %>
-				<%= f.association :cost_calculation_type, :label => "Cost calculator", :prompt => "Select..." %>
-				<%= f.association :condition_estimation_type, :label => "Condition estimator", :prompt => "Select..." %>
-				<%= f.input :condition_threshold %>
-				<%= f.association :depreciation_calculation_type, :label => "Depreciation calculator", :prompt => "Select..." %>
+				<%= f.input :interest_rate, :label => "Interest Rate" %>
+				<%= f.association :service_life_calculation_type, :label => "Service Life Calculator", :prompt => "Select..." %>
+				<%= f.association :cost_calculation_type, :label => "Cost Calculator", :prompt => "Select..." %>
+				<%= f.association :condition_estimation_type, :label => "Condition Estimator", :prompt => "Select..." %>
+				<%= f.input :condition_threshold, :label => "Condition Threshold" %>
+				<%= f.association :depreciation_calculation_type, :label => "Depreciation Calculator", :prompt => "Select..." %>
 			<% end %>
 		</div>
 		<div class="col-md-12">

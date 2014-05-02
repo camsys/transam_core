@@ -2,9 +2,9 @@
 	<%= simple_form_for(@user, :html => {:class => 'form-vertical' }, :wrapper => :vertical_form, :wrapper_mappings => {:boolean => :vertical_boolean}) do |f| %>
 		<div class="col-md-4">
 			<%= dialog_tag('User', {:icon => 'fa fa-user', :class => "form_part"}) do %>
-				<%= f.input :first_name, :placeholder => "Users first name..." %>
-				<%= f.input :last_name, :placeholder => "Users last name..." %>
-				<%= f.input :email, :as => :email, :placeholder => "Users business email address..." %>
+				<%= f.input :first_name, :placeholder => "User's first name...", :label => "First Name" %>
+				<%= f.input :last_name, :placeholder => "User's last name...", :label => "Last Name" %>
+				<%= f.input :email, :as => :email, :placeholder => "User's business email address..." %>
 			<% end %>
 		</div>
 
@@ -17,8 +17,8 @@
 		<div class="col-md-4">
 			<%= dialog_tag('Settings', {:icon => 'fa fa-cog', :class => "form_part"}) do %>
 				<%= f.input :timezone, :as => :time_zone, priority: /US/, :prompt => "Select timezone..." %>
-				<%= f.input :external_id, :placeholder => "External id..." %>
-				<%= f.input :notify_via_email %>
+				<%= f.input :external_id, :placeholder => "External ID..." %>
+				<%= f.input :notify_via_email, :label => "Notify via Email" %>
 			<% end %>
 		</div>
 		<div class="col-md-12">

@@ -3,13 +3,13 @@
 		<div class="col-md-8 col-md-offset-2">
 			<%= dialog_tag('New Task', {:icon => 'fa fa-calendar', :class => "form_part"}) do %>
 				<%= f.input :subject, :label => 'Description', :placeholder => "Task..." %>
-				<%= f.association :assigned_to, :collection => @organization.users %>
-				<%= f.input :complete_by, :wrapper => :horizontal_append  do %>
+				<%= f.association :assigned_to, :collection => @organization.users, :label => "Assigned To" %>
+				<%= f.input :complete_by, :wrapper => :horizontal_append, :label => "Complete By" do %>
 					<%= f.input_field :complete_by, :as => :string, :class => 'col-md-11 datepicker form-control', :data => {'behavior' => 'datepicker'}, :value => f.object.complete_by.strftime("%m-%d-%Y") %>
 					<%= content_tag :span, :class => "input-group-addon" do %><i class="fa fa-calendar"></i><% end %>
 				<% end %>
-				<%= f.input :send_reminder %>
-				<%= f.association :priority_type, :include_blank => false %>
+				<%= f.input :send_reminder, :label => "Send Remdiner" %>
+				<%= f.association :priority_type, :include_blank => false, :label => "Priority Type" %>
 				<%= f.input :body, :label => 'Details', :input_html => { :class => "col-md-10", :rows => 6 }, :placeholder => "Enter any details about this task..."%>
 			<% end %>
 			<div>
