@@ -7,7 +7,7 @@
 					<%= f.input :asset_types, :collection => @asset_types, :as => :check_boxes, :label => "Asset Types" %>	
 				</div>
 			<% end %>
-			<div class="col-md-12">
+			<div>
 				<%= f.button :submit, 'Download Template', :class => 'btn btn-primary' %>
 				<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn btn-warning" %>
 			</div>			

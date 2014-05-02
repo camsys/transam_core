@@ -6,7 +6,7 @@
 				<%= f.association :file_content_type, :label => 'Spreadsheet Content' %>
 				<%= f.input :force_update, :as => :boolean, :label => "Force Update" %>
 			<% end %>
-			<div class="col-md-12">
+			<div>
 				<%= f.button :submit, :class=>"btn btn-primary" %>
 				<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn btn-warning" %>
 			</div>	
