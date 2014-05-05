@@ -4,53 +4,12 @@
 
 			<div class="container-fluid">
 			  	<ul class="nav navbar-nav">
-				    <li><%= link_to inventory_path(@asset) do %>
+				    <li><%= link_to :back do %>
 		  					<i class="fa fa-angle-left"></i> Back
 					  		<% end %>
 				  	</li>
-					<li>
-
-						<%= form_tag inventory_asset_events_path(@asset), :id => 'event_filter_form', :method => "get", :class => 'navbar-form navbar-left' do %>
-							<div class="form-group">
-								<span class="form-group-addon">Filter</span>
-				    			<%= select_tag(:filter_type, options_for_select(AssetEventType.all.collect{|a| [a.name, a.id]}, :selected => @filter_type), :class => "form-control", :style => 'margin-top:0px', :prompt => 'All Updates', :id => 'event_filter') %>	  
-							</div>
-						<% end %>		
-					</li>
-				</ul>
-				<% if can? :update, @asset %>
-					<%= form_tag new_inventory_asset_event_path(@asset), :id => 'asset_action_form', :method => "get", :class => 'navbar-form navbar-right' do %>
-						<div class="form-group">
-							<%= select_tag(:event_type, options_for_select(AssetEventType.all.collect{|a| [a.name, a.id]}), :class => "form-control", :prompt => 'Add Event...') %>
-						</div>
-						<button type="submit" class="btn btn-default" id="submit_button"><i class="fa fa-plus"></i></button>
-					<% end %>
-				<% end %>
+				 </ul>
 			</div>
 		</div>
 	</div>
 </div>
-<script type="text/javascript" charset="utf-8">
-
-	$(document).ready(function() {
-
-		// Disable to add event button until a selection has been made
-		$('#submit_button').attr('disabled','disabled');
-
-		// Add an on change event for the dropdown
-		$('#event_type').change(function() {
-			var val = $(this).val();
-			if (val === '') {
-				$('#submit_button').attr('disabled','disabled');
-			} else {
-				$('#submit_button').removeAttr('disabled');
-			}
-		});
-
-		// Add a listener on the event type filter that submits the form when changed
-		$('#event_filter').change(function() {
-			$('#event_filter_form').submit();  
-		});
-	});
-	
-</script>

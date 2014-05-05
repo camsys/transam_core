@@ -1,4 +1,4 @@
-class ActicvityLogsController < OrganizationAwareController
+class ActivityLogsController < OrganizationAwareController
     
   def index
 
