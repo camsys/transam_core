@@ -1,8 +1,5 @@
 class DispositionType < ActiveRecord::Base
 
-  # Enable auditing of this model type
-  has_paper_trail
-
   # associations
   has_many :assets
   

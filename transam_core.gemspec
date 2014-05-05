@@ -21,7 +21,6 @@ Gem::Specification.new do |s|
   s.add_dependency "devise"
   s.add_dependency "rolify"
   s.add_dependency "georuby"
-  s.add_dependency "paper_trail"
   s.add_dependency "high_voltage"
   s.add_dependency "fullcalendar-rails"
   

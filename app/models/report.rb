@@ -1,8 +1,5 @@
 class Report < ActiveRecord::Base
 
-  # Enable auditing of this model type
-  has_paper_trail
-  
   # associations
   belongs_to :report_type
   

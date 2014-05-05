@@ -5,9 +5,6 @@
 #------------------------------------------------------------------------------
 class Policy < ActiveRecord::Base
   
-  # Enable auditing of this model type
-  has_paper_trail
-  
   # Include the unique key mixin
   include UniqueKey
   # Include the numeric sanitizers mixin
