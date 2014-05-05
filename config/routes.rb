@@ -66,7 +66,7 @@ Rails.application.routes.draw do
   end
   
   resources :dashboards,    :only => [:index, :show]
-  resources :activity_log,  :only => [:index]
+  resources :activity_logs, :only => [:index]
   resources :searches,      :only => [:new, :create]
   resources :reports,       :only => [:index, :show] do
     member do
