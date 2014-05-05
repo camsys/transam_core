@@ -1,3 +1,9 @@
-class ActivityLog
-  validates :organization_id, :item_type, :item_id, :user_id, :updated_by, :activity, :activity_time, :presence => true
+class ActivityLog < ActiveRecord::Base
+    
+  validates :organization_id, :item_type, :user_id, :activity, :activity_time, :presence => true
+  
+  belongs_to :organization
+  belongs_to :user
+  
 end
+
