@@ -10,14 +10,21 @@ class ConditionType < ActiveRecord::Base
     where('name <> ?', 'Unknown').order("rating ASC").first.rating
   end
   
+  # Uses FTA's condition assessment ratings 
   def self.from_rating(estimated_rating)
     return if estimated_rating.nil?
-    # Round the condition type to the nearest whole number
-    val = (estimated_rating.to_f + 0.5).to_i
-    # bound it
-    val = [val, max_rating].min
-    val = [val, min_rating].max
-    ConditionType.find_by_rating(val)
+    if estimated_rating >= 4.8
+      rating = 5
+    elsif estimated_rating >= 4.0
+      rating = 4
+    elsif estimated_rating >= 3.0
+      rating = 3
+    elsif estimated_rating >= 2.0
+      rating = 2
+    else
+      rating = 1
+    end
+    ConditionType.find_by_rating(rating)
   end
 
   def to_s
