@@ -3,7 +3,7 @@ class AddActivityLog < ActiveRecord::Migration
     create_table :activity_logs do |t|
       t.integer   :organization_id,                 :null => false
       t.string    :item_type,         :limit => 64, :null => false, :default => 'Object'
-      t.integer   :item_id,                         :null => false
+      t.integer   :item_id
       t.integer   :user_id,                         :null => false
       t.text      :activity,                        :null => false
       t.datetime  :activity_time,                                   :default => Time.now
