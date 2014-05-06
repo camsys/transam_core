@@ -39,7 +39,7 @@ class TaskReminderJob < Job
       msg.user          = sys_user
       msg.to_user       = task.assigned_to
       msg.subject       = 'Incomplete Task Reminder'
-      msg.body          = "<p>Task <strong>#{task.subject}</strong> is incomplete and is due to be completed by <strong>#{task.complete_by.to_date}</strong>.</p><p>You can view this task by clicking <a href='#{user_task_path(task.assigned_to, task)}'>here</a></p>"
+      msg.body          = "<p>Task <strong>#{task.subject}</strong> is incomplete and is due to be completed by <strong>#{task.complete_by.strftime("%m-%d-%Y")}</strong>.</p><p>You can view this task by clicking <a href='#{user_task_path(task.assigned_to, task)}'>here</a></p>"
       msg.priority_type = priority_type
       msg.save      
     end
