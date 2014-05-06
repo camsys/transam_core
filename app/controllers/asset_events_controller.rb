@@ -68,7 +68,7 @@ class AssetEventsController < AssetAwareController
     # send them back to index.html.erb
     if @asset_event.nil?
       notify_user(:alert, 'Record not found!')
-      redirect_to(inventory_asset_events_url(@asset))
+      redirect_to(inventory_path(@asset))
       return
     end
  
@@ -87,7 +87,7 @@ class AssetEventsController < AssetAwareController
     # send them back to index.html.erb
     if @asset_event.nil?
       notify_user(:alert, 'Record not found!')
-      redirect_to(inventory_asset_events_url(@asset))
+      redirect_to(inventory_path(@asset))
       return
     end
 
@@ -102,7 +102,7 @@ class AssetEventsController < AssetAwareController
     # send them back to index.html.erb
     if @asset_event.nil?
       notify_user(:alert, 'Record not found!')
-      redirect_to(inventory_asset_events_url(@asset))
+      redirect_to(inventory_path(@asset))
       return
     end
 
@@ -114,7 +114,7 @@ class AssetEventsController < AssetAwareController
         # The event was updated so we need to update the asset.
         fire_asset_update_event(@asset_event.asset_event_type, @asset)
              
-        format.html { redirect_to inventory_asset_event_url(@asset, @asset_event) }
+        format.html { redirect_to inventory_path(@asset) }
         format.json { head :no_content }
       else
         format.html { render "edit" }
@@ -143,7 +143,7 @@ class AssetEventsController < AssetAwareController
         # The event was removed so we need to update the asset 
         fire_asset_update_event(@asset_event.asset_event_type, @asset)
                 
-        format.html { redirect_to inventory_asset_events_url(@asset)}
+        format.html { redirect_to inventory_path(@asset) }
         format.json { render :json => @asset_event, :status => :created, :location => @asset_event }
       else
         Rails.logger.debug @asset_event.errors.inspect
@@ -159,7 +159,7 @@ class AssetEventsController < AssetAwareController
     # send them back to index.html.erb
     if @asset_event.nil?
       notify_user(:alert, 'Record not found!')
-      redirect_to(inventory_asset_events_url(@asset))
+      redirect_to(inventory_path(@asset))
       return
     end
 
@@ -172,7 +172,7 @@ class AssetEventsController < AssetAwareController
     fire_asset_update_event(asset_event_type, @asset)
 
     respond_to do |format|
-      format.html { redirect_to(inventory_asset_events_url(@asset)) } 
+      format.html { redirect_to(inventory_path(@asset)) } 
       format.json { head :no_content }
     end
   end
@@ -223,7 +223,7 @@ class AssetEventsController < AssetAwareController
   def check_for_cancel
     # go back to the asset view
     unless params[:cancel].blank?
-      redirect_to(inventory_asset_events_url(@asset))
+      redirect_to(inventory_path(@asset))
     end    
   end
     
