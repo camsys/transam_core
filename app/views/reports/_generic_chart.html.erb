@@ -19,7 +19,7 @@
 		
 		var div_id = '<%= "chart_#{@report.id}" %>';
 		var chart_type = '<%= @report.chart_type %>';
- 		var report_chart_options = <%= @report.chart_options %>;
+ 		var report_chart_options = <%= raw(@report.chart_options) %>;
 		var chart_options = $.extend({}, report_chart_options, {height: 300}); 
 
 		var chart_data = new google.visualization.DataTable();

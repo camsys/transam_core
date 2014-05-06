@@ -52,11 +52,12 @@
 
 		var chart_data = new google.visualization.DataTable();
 		chart_data.addColumn('string', 'Asset Type');
-		chart_data.addColumn('number', '($)');
-		chart_data.addColumn('number', '($)');
+		chart_data.addColumn('number', '$ Replacement Cost');
+		chart_data.addColumn('number', '$ Recovery');
+		chart_data.addColumn('number', '$ Required');
 		<% @data.each_value do |row| %>
 			<% capital_rqd = row.replacement_cost - row.cost_recovery %>
-			chart_data.addRow(['<%= row.key %>', {v: <%= capital_rqd.to_i %>, f: '<%= format_as_currency(capital_rqd) %>'}, {v: <%= row.cost_recovery.to_i %>, f: '<%= format_as_currency(row.cost_recovery) %>'}]);
+			chart_data.addRow(['<%= row.key %>', {v: <%= row.replacement_cost.to_i %>, f: '<%= format_as_currency(row.replacement_cost) %>'}, {v: <%= row.cost_recovery.to_i %>, f: '<%= format_as_currency(row.cost_recovery) %>'}, {v: <%= capital_rqd.to_i %>, f: '<%= format_as_currency(capital_rqd) %>'}]);
 		<% end %>
 
 		var chart = null;
@@ -64,9 +65,10 @@
 			is3D : true,
 			height : 300,
 			isStacked: false,
-			legend : {position : 'none'},
-			vAxis :  {title : '($)'},
-			colors: ['blue', 'green']
+			legend : {position : 'top'},
+			vAxis :  {title : '$'},
+			hAxis :  {title: "Year"},
+			colors:  ['blue', 'green', 'red']
 		};
 		chart = new google.visualization.ColumnChart(document.getElementById('chart'));
 		chart.draw(chart_data, chart_options);

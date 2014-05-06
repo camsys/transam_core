@@ -4,7 +4,7 @@ function <%= "chart_func_#{@report.id}" %>() {
   
   var div_id = '<%= "chart_#{@report.id}" %>';
   var chart_type = '<%= @report.chart_type %>';
-  var chart_options = <%= @report.chart_options %>;
+  var chart_options = <%= raw(@report.chart_options) %>;
   
   var chart_data = new google.visualization.DataTable();
   chart_data.addColumn('string', '<%= @data[:labels].first %>');

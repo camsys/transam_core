@@ -25,7 +25,7 @@ class ConditionType < ActiveRecord::Base
       rating = 1
     end
     ConditionType.find_by_rating(rating)
-  end
+  end                                                                                                                                   
 
   def to_s
     name
