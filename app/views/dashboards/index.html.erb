@@ -22,19 +22,25 @@
 			</div>
 		<% end %>
 
-		<%= dialog_tag("Tasks", {:icon => "fa fa-calendar", :link_text => "New Task", :link_path => new_user_task_path(current_user)}) do %>
+		<%= dialog_tag("Tasks (#{@tasks.count})", {:icon => "fa fa-calendar", :link_text => "New Task", :link_path => new_user_task_path(current_user)}) do %>
 			<% if @tasks.empty? %>
 				<%= render 'tasks/empty_list' %>
 			<% else %>
-				<%= render 'tasks/index_list' %>
+				<div class="dashboard-widget-content">
+					<%= render 'tasks/index_list' %>
+				</div>
+				<%= link_to "Show all...", user_tasks_path(current_user)  %>
 			<% end %>
 		<% end %>
 
-		<%= dialog_tag("New Messages", {:icon => "fa fa-envelope", :link_text => "New Message", :link_path => new_user_message_path(current_user)}) do %>
+		<%= dialog_tag("New Messages (#{@messages.count})", {:icon => "fa fa-envelope", :link_text => "New Message", :link_path => new_user_message_path(current_user)}) do %>
 			<% if @messages.empty? %>
 				<%= render 'messages/empty_list' %>
 			<% else %>
-				<%= render 'messages/message_list' %>
+				<div class="dashboard-widget-content">
+					<%= render 'messages/message_list' %>
+				</div>
+				<%= link_to "Show all...", user_messages_path(current_user) %>
 			<% end %>
 		<% end %>
 			
