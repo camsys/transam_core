@@ -13,7 +13,7 @@
 				<% @data[:data].each do |row| %>
 				<tr>
 					<% row.each do |col| %>
-						<td><%= "#{col}" %></td>
+						<td><%= format_as_general(col) %></td>
 					<% end %>
 				</tr>
 				<% end %>

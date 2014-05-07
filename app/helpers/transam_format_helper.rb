@@ -10,6 +10,17 @@ module TransamFormatHelper
     number_to_currency(val.to_i, :precision => 0)
   end
 
+  # if the value is a number it is formatted as a decimal or integer
+  # otherwise we assume it is a string and is returned
+  def format_as_general(val, precision = 2)
+    begin
+      Float(val)
+      number_with_precision(val, :precision => precision, :delimiter => ",")
+    rescue
+      val      
+    end
+  end
+
   # truncates any decimals and returns the number as currency
   def format_as_integer(val)
     format_as_decimal(val, 0)
