@@ -14,9 +14,15 @@
 				<%= f.input :fax, :as => :tel %>
 				<%= f.input :address1 %>
 				<%= f.input :address2 %>
-				<%= f.input :city %>
-				<%= f.input :state, :as => :select, :collection => Country['US'].states %>
-				<%= f.input :zip %>
+				<div class="col-sm-4">
+					<%= f.input :city %>
+				</div>
+				<div class="col-sm-4">
+					<%= f.input :state, :as => :select, :collection => Country['US'].states %>
+				</div>
+				<div class="col-sm-4">
+					<%= f.input :zip %>
+				</div>
 				<%= f.input :url, :as => :url %>
 			<% end %>
 		</ul>
