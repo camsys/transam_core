@@ -22,7 +22,7 @@
 						<% end %>
 					</li>
 					<% end %>
-	
+
 					<% if can? :create, Asset %>
 						<li>
 							<%= link_to new_asset_inventory_index_path do %>
@@ -38,7 +38,7 @@
 				</ul>
 				<%= form_tag inventory_index_path, :id => 'asset_search_form', :method => "get", :role => "search", :class => 'navbar-form navbar-right' do %>
 					<%= hidden_field_tag :asset_type, @asset_type %>
-					<div class="input-group" style="width:300px;">
+					<div class="input-group" style="width:200px;">
 						<div class="input-group-btn search-panel">
 				            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 				            	<span id="search_concept"><%= @search_param.blank? ? "Filter By" : @search_param %></span> <span class="caret"></span>
@@ -50,8 +50,8 @@
 				              <li><a href="#ends_with">Ends With</a></li>
 				            </ul>
 			            </div>
-        				<input type="hidden" name="search_param" value="<%= @search_param %>" id="search_param">         
-						<%= text_field_tag :search_text, @search_text, :class => "form-control", :placeholder => "Filter text..."%>
+        				<input type="hidden" name="search_param" value="<%= @search_param %>" id="search_param">
+						<%= text_field_tag :search_text, @search_text, :class => "form-control", :placeholder => "Filter text...", :style => "width:200px;" %>
 			            <span class="input-group-btn">
 							<button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
 						</span>
@@ -75,9 +75,9 @@
         $('#filter').attr('value', '');
         $('#asset_subtype').attr('value', 0);
         // Submit the form
-        $('#asset_filter_form').submit();		
+        $('#asset_filter_form').submit();
 	});
-	
+
 	  // Enable typeahead for the filter
 	  $('#filter').typeahead({
 	      items: typeahead_list_length,
@@ -96,12 +96,12 @@
 	                },
 	                dataType: 'json',
 	                success: function(result) {
-	  
+
 	                  var resultList = result.map(function (item) {
 	                      var aItem = { id: item.id, name: item.name };
 	                      return JSON.stringify(aItem);
 	                  });
-	  
+
 	                  return process(resultList);
 	                }
 	            });
@@ -111,8 +111,8 @@
 	        var item = JSON.parse(obj);
 	        return ~item.name.toLowerCase().indexOf(this.query.toLowerCase())
 	    },
-	
-	    sorter: function (items) {          
+
+	    sorter: function (items) {
 	       var beginswith = [], caseSensitive = [], caseInsensitive = [], item;
 	        while (aItem = items.shift()) {
 	            var item = JSON.parse(aItem);
@@ -120,12 +120,12 @@
 	            else if (~item.name.indexOf(this.query)) caseSensitive.push(JSON.stringify(item));
 	            else caseInsensitive.push(JSON.stringify(item));
 	        }
-	
+
 	        return beginswith.concat(caseSensitive, caseInsensitive)
-	
+
 	    },
-	
-	
+
+
 	    highlighter: function (obj) {
 	        var item = JSON.parse(obj);
 	        var query = this.query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
@@ -133,17 +133,17 @@
 	            return '<strong>' + match + '</strong>'
 	        })
 	    },
-	
+
 	    updater: function (obj) {
 	        var item = JSON.parse(obj);
-	        	        
+
 	        // Update the UI
 	        $('#filter').attr('value', item.name);
 	        $('#asset_subtype').attr('value', item.id);
 	        // Submit the form
 	        $('#asset_filter_form').submit();
 	        return item.name;
-	    }  
-	  });  
+	    }
+	  });
 
 </script>

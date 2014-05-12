@@ -28,7 +28,7 @@
 				</ul>
 				<%= form_tag organizations_path, :id => 'organizations_search_form', :method => "get", :role => "search", :class => 'navbar-form navbar-right' do %>
 					<%= hidden_field_tag :filter, @filter %>
-					<div class="input-group" style="width:300px;">
+					<div class="input-group" style="width:200px;">
 						<div class="input-group-btn search-panel">
 				            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 				            	<span id="search_concept"><%= @search_param.blank? ? "Filter By" : @search_param %></span> <span class="caret"></span>
@@ -40,8 +40,8 @@
 				              <li><a href="#ends_with">Ends With</a></li>
 				            </ul>
 			            </div>
-        				<input type="hidden" name="search_param" value="<%= @search_param %>" id="search_param">         
-						<%= text_field_tag :search_text, @search_text, :class => "form-control", :placeholder => "Filter text..."%>
+        				<input type="hidden" name="search_param" value="<%= @search_param %>" id="search_param">
+						<%= text_field_tag :search_text, @search_text, :class => "form-control", :placeholder => "Filter text...", :style => "width:200px;" %>
 			            <span class="input-group-btn">
 							<button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
 						</span>
