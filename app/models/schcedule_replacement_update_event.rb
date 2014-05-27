@@ -1,16 +1,16 @@
 #
-# Scheduled Replacement update event. This is event type is required for
+# Schedule Replacement update event. This is event type is required for
 # all implementations
 #
-class ScheduledReplacementUpdateEvent < AssetEvent
+class ScheduleReplacementUpdateEvent < AssetEvent
       
   # Callbacks
   after_initialize :set_defaults
       
   # Associations
         
-  validates :replacement_year,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => Date.today.year}, :allow_nil => true
-  validates :rebuild_year,      :numericality => {:only_integer => :true,   :greater_than_or_equal_to => Date.today.year}, :allow_nil => true
+  validates :replacement_year,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => Date.today.year - 1}, :allow_nil => true
+  validates :rebuild_year,      :numericality => {:only_integer => :true,   :greater_than_or_equal_to => Date.today.year - 1}, :allow_nil => true
       
   #------------------------------------------------------------------------------
   # Scopes

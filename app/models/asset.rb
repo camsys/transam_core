@@ -59,7 +59,7 @@ class Asset < ActiveRecord::Base
   has_many   :mileage_updates, -> {where :asset_event_type_id => MileageUpdateEvent.asset_event_type.id }, :class_name => "MileageUpdateEvent"
 
   # each asset has zero or more scheduled replacement updates
-  has_many   :scheduled_replacement_updates, -> {where :asset_event_type_id => ScheduledReplacementUpdateEvent.asset_event_type.id }, :class_name => "ScheduledReplacementUpdateEvent"
+  has_many   :schedule_replacement_updates, -> {where :asset_event_type_id => ScheduleReplacementUpdateEvent.asset_event_type.id }, :class_name => "ScheduleReplacementUpdateEvent"
 
   # each asset has zero or more service status updates
   has_many   :service_status_updates, -> {where :asset_event_type_id => ServiceStatusUpdateEvent.asset_event_type.id }, :class_name => "ServiceStatusUpdateEvent"
@@ -398,8 +398,8 @@ class Asset < ActiveRecord::Base
     asset = is_typed? ? self : Asset.get_typed_asset(self)
 
     unless asset.new_record?
-      unless asset.scheduled_replacement_updates.empty?
-        event = asset.scheduled_replacement_updates.last
+      unless asset.schedule_replacement_updates.empty?
+        event = asset.schedule_replacement_updates.last
         asset.scheduled_replacement_year = event.replacement_year unless event.replacement_year.nil?
         asset.scheduled_rehabilitation_year = event.rebuild_year unless event.rebuild_year.nil?
         asset.scheduled_by_user = true
