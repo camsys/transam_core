@@ -534,7 +534,7 @@ class Asset < ActiveRecord::Base
 
     # Update the reported mileage
     begin
-      if asset.milege_updates.empty?
+      if asset.mileage_updates.empty?
         asset.reported_mileage = 0
       else
         event = mileage_updates.last
