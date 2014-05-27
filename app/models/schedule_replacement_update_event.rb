@@ -9,8 +9,8 @@ class ScheduleReplacementUpdateEvent < AssetEvent
       
   # Associations
         
-  validates :replacement_year,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => Date.today.year - 1}, :allow_nil => true
-  validates :rebuild_year,      :numericality => {:only_integer => :true,   :greater_than_or_equal_to => Date.today.year - 1}, :allow_nil => true
+  validates :replacement_year,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => Date.today.year - 10}, :allow_nil => true
+  validates :rebuild_year,      :numericality => {:only_integer => :true,   :greater_than_or_equal_to => Date.today.year - 10}, :allow_nil => true
       
   #------------------------------------------------------------------------------
   # Scopes
