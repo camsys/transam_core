@@ -57,7 +57,7 @@ class DispositionUpdateEvent < AssetEvent
 
   # Override setters to remove any extraneous formats from the number strings eg $, etc.      
   def sales_proceeds=(num)
-    self.sales_proceeds = sanitize_to_int(num)
+    self[:sales_proceeds] = sanitize_to_int(num)
   end      
   
   

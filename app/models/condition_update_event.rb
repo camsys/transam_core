@@ -54,7 +54,7 @@ class ConditionUpdateEvent < AssetEvent
 
   # Override numeric setters to remove any extraneous formats from the number strings eg $, etc.      
   def assessed_rating=(num)
-    self.assessed_rating = sanitize_to_float(num)
+    self[:assessed_rating] = sanitize_to_float(num)
   end      
 
   # This must be overriden otherwise a stack error will occur  

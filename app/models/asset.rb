@@ -254,7 +254,7 @@ class Asset < ActiveRecord::Base
 
   # Override numeric setters to remove any extraneous formats from the number strings eg $, etc.
   def manufacture_year=(num)
-    self.manufacture_year = sanitize_to_int(num)
+    self[:manufacture_year] = sanitize_to_int(num)
   end
 
 

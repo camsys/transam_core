@@ -7,7 +7,7 @@ class MileageUpdateEvent < AssetEvent
   after_initialize :set_defaults
       
   # Associations
-  validates :current_mileage,   :numericality => {:greater_than_or_equal_to => 0, :less_than_or_equal_to => 1000000,  :only_integer => :true}, :allow_nil => :true
+  validates :current_mileage, :presence => :true, :numericality => {:greater_than_or_equal_to => 0, :less_than_or_equal_to => 1000000,  :only_integer => :true}
       
   #------------------------------------------------------------------------------
   # Scopes
@@ -42,7 +42,7 @@ class MileageUpdateEvent < AssetEvent
   #------------------------------------------------------------------------------
 
   def current_mileage=(num)
-    self.current_mileage = sanitize_to_int(num)
+    self[:current_mileage] = sanitize_to_int(num)
   end      
 
   # This must be overriden otherwise a stack error will occur  
