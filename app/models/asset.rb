@@ -356,6 +356,36 @@ class Asset < ActiveRecord::Base
     end
   end
 
+  # Forces an update of an assets mileage. This performs an update on the record. If a policy is passed
+  # that policy is used to update the asset otherwise the default policy is used
+  def update_mileage(policy = nil)
+
+    # can't do this if it is a new record as none of the IDs would be set
+    unless new_record?
+      update_asset_state(policy)
+      reload
+    end
+  end
+
+  # Forces an update of an assets location. This performs an update on the record.
+  def update_location
+
+    Rails.logger.info "Updating the recorded location for asset = #{object_key}"
+
+    # Make sure we are working with a concrete asset class
+    asset = is_typed? ? self : Asset.get_typed_asset(self)
+
+    unless asset.new_record?
+      unless asset.location_updates.empty?
+        event = asset.location_updates.last
+        asset.location_id = event.location_id
+        asset.location_notes = event.comments
+        asset.save
+        reload
+      end
+    end
+  end
+
   # Creates a duplicate that has all asset-specific attributes nilled
   def copy(cleanse = true)
     a = dup
