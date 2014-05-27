@@ -289,9 +289,9 @@ class Asset < ActiveRecord::Base
     [on_date.year - manufacture_year, 0].max
   end
 
-  # returns the list of events associated with this asset order be date, earliest first
+  # returns the list of events associated with this asset ordered by date, newest first
   def history
-    asset_events.order('event_date DESC')
+    AssetEvent.unscoped.where('asset_id = ?', id).order('event_date DESC')
   end
 
   # returns the the organizations's policy that governs the replacement of this asset. This needs to upcast
