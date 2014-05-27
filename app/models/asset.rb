@@ -55,6 +55,9 @@ class Asset < ActiveRecord::Base
   # each asset has zero or more condition updates
   has_many   :condition_updates, -> {where :asset_event_type_id => ConditionUpdateEvent.asset_event_type.id }, :class_name => "ConditionUpdateEvent"
 
+  # each asset has zero or more mileage updates. Only for vehicle assets.
+  has_many   :mileage_updates, -> {where :asset_event_type_id => MileageUpdateEvent.asset_event_type.id }, :class_name => "MileageUpdateEvent"
+
   # each asset has zero or more service status updates
   has_many   :service_status_updates, -> {where :asset_event_type_id => ServiceStatusUpdateEvent.asset_event_type.id }, :class_name => "ServiceStatusUpdateEvent"
 
@@ -248,7 +251,7 @@ class Asset < ActiveRecord::Base
 
   # Override numeric setters to remove any extraneous formats from the number strings eg $, etc.
   def manufacture_year=(num)
-    self[:manufacture_year] = sanitize_to_int(num)
+    self.manufacture_year = sanitize_to_int(num)
   end
 
 
@@ -465,14 +468,24 @@ class Asset < ActiveRecord::Base
       if asset.condition_updates.empty?
         asset.reported_condition_date = Date.today
         asset.reported_condition_rating = 0.0
-        asset.reported_mileage = 0
         asset.reported_condition_type = ConditionType.find_by_name('Unknown')
       else
         event = condition_updates.last
         asset.reported_condition_date = event.event_date
         asset.reported_condition_rating = event.assessed_rating
-        asset.reported_mileage = event.current_mileage
         asset.reported_condition_type = event.condition_type
+      end
+    rescue Exception => e
+      Rails.logger.warn e.message
+    end
+
+    # Update the reported mileage
+    begin
+      if asset.milege_updates.empty?
+        asset.reported_mileage = 0
+      else
+        event = mileage_updates.last
+        asset.reported_mileage = event.current_mileage
       end
     rescue Exception => e
       Rails.logger.warn e.message

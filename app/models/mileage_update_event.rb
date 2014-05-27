@@ -1,24 +1,14 @@
 #
-# Condition update event. This is event type is required for
-# all implementations
+# Mileage update event. 
 #
-class ConditionUpdateEvent < AssetEvent
+class MileageUpdateEvent < AssetEvent
       
   # Callbacks
   after_initialize :set_defaults
       
   # Associations
-  
-  # Condition of the asset
-  belongs_to  :condition_type
+  validates :current_mileage,   :numericality => {:greater_than_or_equal_to => 0, :less_than_or_equal_to => 1000000,  :only_integer => :true}, :allow_nil => :true
       
-  validates :condition_type_id, :presence => true
-  validates :assessed_rating,   :numericality => {:greater_than_or_equal_to => 0, :less_than_or_equal_to => 5}, :allow_nil => :true
-  
-  before_validation do
-    self.assessed_rating ||= ConditionType.find(condition_type_id).rating unless condition_type_id.blank?
-  end
-    
   #------------------------------------------------------------------------------
   # Scopes
   #------------------------------------------------------------------------------
@@ -27,8 +17,7 @@ class ConditionUpdateEvent < AssetEvent
     
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
-    :condition_type_id,
-    :assessed_rating,
+    :current_mileage
   ]
   
   #------------------------------------------------------------------------------
@@ -52,14 +41,13 @@ class ConditionUpdateEvent < AssetEvent
   #
   #------------------------------------------------------------------------------
 
-  # Override numeric setters to remove any extraneous formats from the number strings eg $, etc.      
-  def assessed_rating=(num)
-    self.assessed_rating = sanitize_to_float(num)
+  def current_mileage=(num)
+    self.current_mileage = sanitize_to_int(num)
   end      
 
   # This must be overriden otherwise a stack error will occur  
   def get_update
-    condition_type.name unless condition_type.nil?
+    current_mileage unless current_mileage.nil?
   end
   
   protected
