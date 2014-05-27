@@ -291,7 +291,7 @@ class Asset < ActiveRecord::Base
 
   # returns the list of events associated with this asset order be date, earliest first
   def history
-    asset_events
+    asset_events.order('event_date DESC')
   end
 
   # returns the the organizations's policy that governs the replacement of this asset. This needs to upcast
