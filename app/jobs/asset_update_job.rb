@@ -13,6 +13,8 @@ class AssetUpdateJob < Job
     asset = Asset.find_by_object_key(object_key)
     if asset
       asset.update_condition
+      asset.update_mileage
+      asset.update_location
       asset.update_service_status
       asset.update_estimated_value
     else
