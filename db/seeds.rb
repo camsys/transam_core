@@ -24,12 +24,13 @@ disposition_types = [
   {:active => 1, :name => 'Reprovisioned',:code => 'R', :description => 'Reprovisioned as a spare or backup.'},
   {:active => 1, :name => 'Trade-In',     :code => 'I', :description => 'Trade in on purchase of new asset.'}
 ]
+
 service_status_types = [
   {:active => 1, :name => 'Unknown',              :code => 'U', :description => 'Asset service status is unknown.'},
-  {:active => 1, :name => 'Start Service',        :code => 'S', :description => 'Asset first placed into service.'},
-  {:active => 1, :name => 'Suspend Service',      :code => 'H', :description => 'Asset is temporarily out of service.'},
+  {:active => 1, :name => 'Service Started',      :code => 'S', :description => 'Asset first placed into service.'},
+  {:active => 1, :name => 'Service Suspended',    :code => 'H', :description => 'Asset is temporarily out of service.'},
   {:active => 1, :name => 'In Service',           :code => 'O', :description => 'Asset is in service and operational.'},
-  {:active => 1, :name => 'Discontinue Service',  :code => 'X', :description => 'Asset is permanently out of service.'}
+  {:active => 1, :name => 'Service Discontinued', :code => 'X', :description => 'Asset is permanently out of service.'}
 ]
 
 cost_calculation_types = [
@@ -41,6 +42,18 @@ cost_calculation_types = [
 depreciation_calculation_types = [
   {:active => 1, :name => 'Straight Line',      :class_name => "StraightLineDepreciationCalculator",      :description => 'Calculates the value of an asset using a straight line depreciation method.'},
   {:active => 1, :name => 'Declining Balance',  :class_name => "DecliningBalanceDepreciationCalculator",  :description => 'Calculates the value of an asset using a double declining balance depreciation method.'}
+]
+
+service_life_calculation_types = [
+  {:active => 1, :name => 'Age Only',          :class_name => 'ServiceLifeAgeOnly',         :description => 'Calculate the replacement year based on the age of the asset.'},
+  {:active => 1, :name => 'Condition Only',    :class_name => 'ServiceLifeConditionOnly',   :description => 'Calculate the replacement year based on the condition of the asset.'},
+  {:active => 1, :name => 'Age and Condition', :class_name => 'ServiceLifeAgeAndCondition', :description => 'Calculate the replacement year based on the age of the asset or condition whichever minimizes asset life.'},
+  {:active => 1, :name => 'Age and Mileage',   :class_name => 'ServiceLifeAgeAndMileage',   :description => 'Calculate the replacement year based on the age of the asset or mileage whichever minimizes asset life.'}
+]
+
+condition_estimation_types = [
+  {:active => 1, :name => 'Straight Line',  :class_name => 'StraightLineEstimationCalculator',  :description => 'Asset condition is estimated using a straight-line approximation.'},
+  {:active => 1, :name => 'TERM',           :class_name => 'TermEstimationCalculator',          :description => 'Asset condition is estimated using FTA TERM approximations.'}
 ]
 
 license_types = [
@@ -89,7 +102,7 @@ district_types = [
 report_types = [
   {:active => 1, :name => 'Inventory Report',     :display_icon_name => "fa fa-bar-chart-o",  :description => 'Inventory Report.'},
   {:active => 1, :name => 'Capital Needs Report', :display_icon_name => "fa fa-usd",          :description => 'Capital Needs Report.'},
-  {:active => 1, :name => 'Tabular Report',       :display_icon_name => "fa fa-table",        :description => 'Custom SQL Report.'}
+  {:active => 1, :name => 'Database Query',       :display_icon_name => "fa fa-database",     :description => 'Custom SQL Report.'}
 ]
 
 location_reference_types = [
@@ -102,7 +115,7 @@ location_reference_types = [
 
 lookup_tables = %w{condition_types disposition_types cost_calculation_types license_types priority_types
   file_status_types attachment_types district_types report_types location_reference_types service_status_types
-  depreciation_calculation_types task_status_types
+  depreciation_calculation_types task_status_types service_life_calculation_types condition_estimation_types
   }
 
 puts ">>> Loading Core Lookup Tables <<<<"
