@@ -16,6 +16,18 @@ class TransamController < ApplicationController
   VIEW_TYPE_TABLE = 2   # table
   VIEW_TYPE_MAP   = 3   # map
        
+  # A set of utilities to determine the database adapter type
+  def is_mysql
+    get_db_adapter == 'mysql2'
+  end
+  def is_postgresql
+    get_db_adapter == 'postgres'    
+  end
+  # Returns the name of the database adapter
+  def get_db_adapter
+    ActiveRecord::Base.configurations[Rails.env]['adapter'] 
+  end
+  
   # Centralized message sender that can be overriden by an implementation
   def notify_user(type, message)
     # if there is a notify_user method in ApplicationController use it otherwise
