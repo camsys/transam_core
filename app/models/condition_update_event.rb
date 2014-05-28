@@ -16,7 +16,7 @@ class ConditionUpdateEvent < AssetEvent
   validates :assessed_rating,   :numericality => {:greater_than_or_equal_to => 0, :less_than_or_equal_to => 5}, :allow_nil => :true
   
   before_validation do
-    self.assessed_rating ||= ConditionType.find(condition_type_id).rating unless condition_type_id.blank?
+    self.condition_type ||= ConditionType.from_rating(assessed_rating) unless assessed_rating.blank?
   end
     
   #------------------------------------------------------------------------------
