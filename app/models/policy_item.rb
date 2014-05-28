@@ -23,6 +23,9 @@ class PolicyItem < ActiveRecord::Base
   validates :max_service_life_miles,                      :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}, :allow_nil => :true
   validates :replacement_cost,        :presence => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
   validates :pcnt_residual_value,     :presence => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0, :less_than_or_equal_to => 100}
+  validates :rehabilitation_cost,     :presence => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
+  validates :extended_service_life_years,     :presence => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
+  validates :extended_service_life_miles,     :presence => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
     
   #------------------------------------------------------------------------------
   # Scopes
@@ -38,6 +41,9 @@ class PolicyItem < ActiveRecord::Base
     :max_service_life_years, 
     :max_service_life_miles, 
     :replacement_cost, 
+    :rehabilitation_cost,
+    :extended_service_life_years,
+    :extended_service_life_miles,
     :pcnt_residual_value,
     :active    
   ]
@@ -67,6 +73,15 @@ class PolicyItem < ActiveRecord::Base
   def replacement_cost=(num)
     self[:replacement_cost] = sanitize_to_int(num)
   end      
+  def rehabilitation_cost=(num)
+    self[:rehabilitation_cost] = sanitize_to_int(num)
+  end      
+  def extended_service_life_years=(num)
+    self[:extended_service_life_years] = sanitize_to_int(num)
+  end      
+  def extended_service_life_miles=(num)
+    self[:extended_service_life_miles] = sanitize_to_int(num)
+  end      
   def pcnt_residual_value=(num)
     self[:pcnt_residual_value] = sanitize_to_int(num)
   end      
@@ -83,6 +98,9 @@ class PolicyItem < ActiveRecord::Base
     self.max_service_life_years ||= 0
     self.max_service_life_miles ||= 0 
     self.replacement_cost ||= 0 
+    self.extended_service_life_years ||= 0
+    self.extended_service_life_miles ||= 0 
+    self.rehabilitation_cost ||= 0 
     self.active ||= true
   end    
       
