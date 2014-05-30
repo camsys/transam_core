@@ -382,7 +382,7 @@ class Asset < ActiveRecord::Base
       unless asset.location_updates.empty?
         event = asset.location_updates.last
         asset.location_id = event.location_id
-        asset.location_notes = event.comments
+        asset.location_comments = event.comments
         asset.save
         reload
       end
