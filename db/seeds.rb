@@ -1,5 +1,8 @@
 #encoding: utf-8
 
+# determine if we are using postgres or mysql
+is_mysql = (ActiveRecord::Base.configurations[Rails.env]['adapter'] == 'mysql2')
+
 #------------------------------------------------------------------------------
 #
 # Lookup Tables
@@ -121,7 +124,11 @@ lookup_tables = %w{condition_types disposition_types cost_calculation_types lice
 puts ">>> Loading Core Lookup Tables <<<<"
 lookup_tables.each do |table_name|
   puts "  Processing #{table_name}"
-  ActiveRecord::Base.connection.execute("TRUNCATE TABLE #{table_name}")
+  if is_mysql
+    ActiveRecord::Base.connection.execute("TRUNCATE TABLE #{table_name};")
+  else
+    ActiveRecord::Base.connection.execute("TRUNCATE #{table_name} RESTART IDENTITY;")
+  end
   data = eval(table_name)
   klass = table_name.classify.constantize
   data.each do |row|
