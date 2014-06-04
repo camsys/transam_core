@@ -1,25 +1,22 @@
-
-<%= render 'master_subnav' %>
-
 <div class="row">
-<div class="col-md-12">
-	<div class="col-md-3">
-		<%= render 'sidebar' %>
-	</div>
-	<div class="col-md-9">
-		<div class="row">
-			<div class="col-md-12">
-				<frameset>
-					<legend><%= "Found #{pluralize(@messages.count, 'message')}"%></legend>
-					<%= render 'index_list' %>
-				</frameset>
+	<div class="col-md-12">
+		<div class="col-md-3">
+			<%= render 'sidebar' %>
+		</div>
+		<div class="col-md-9">
+			<div class="row">
+				<div class="col-md-12">
+					<frameset>
+						<legend><%= "Found #{pluralize(@messages.count, 'message')}"%></legend>
+						<%= render 'index_list' %>
+					</frameset>
+				</div>
+			</div>
+			<div class="col-md-12 first-in-row" style="padding-top:30px;">
+				<div id="message_panel"></div>
 			</div>
 		</div>
-		<div class="col-md-12 first-in-row" style="padding-top:30px;">
-			<div id="message_panel"></div>
-		</div>
 	</div>
-</div>
 </div>
 
 <script type="text/javascript">

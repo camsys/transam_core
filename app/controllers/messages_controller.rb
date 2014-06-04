@@ -1,5 +1,7 @@
 class MessagesController < OrganizationAwareController
   
+  add_breadcrumb "Home", :root_path
+  
   before_action :set_message, :only => [:show, :edit, :update, :destroy]  
   before_filter :check_for_cancel, :only => [:create] 
 
@@ -11,6 +13,8 @@ class MessagesController < OrganizationAwareController
   SESSION_FILTER_TYPE_VAR = 'messages_filter_type'
     
   def index
+
+    add_breadcrumb "My Messages", user_messages_path(current_user)
 
     # Get the filter
     @filter = get_filter_type(SESSION_FILTER_TYPE_VAR)
@@ -69,6 +73,9 @@ class MessagesController < OrganizationAwareController
       return
     end
 
+    add_breadcrumb "My Messages", user_messages_path(current_user)
+    add_breadcrumb @message.subject, user_message_path(current_user, @message)
+
     @response = Message.new
     @response.organization = @organization
     @response.user = current_user
@@ -92,6 +99,9 @@ class MessagesController < OrganizationAwareController
   def new
 
     @page_title = 'New Message'
+    
+    add_breadcrumb "My Messages", user_messages_path(current_user)
+    add_breadcrumb "New Message"
 
     @message = Message.new
     @message.organization = @organization
@@ -109,6 +119,9 @@ class MessagesController < OrganizationAwareController
   end
 
   def create
+
+    add_breadcrumb "My Messages", user_messages_path(current_user)
+    add_breadcrumb "New Message"
 
     @message = Message.new(form_params)
     @message.organization = @organization
