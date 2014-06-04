@@ -2,6 +2,8 @@
 
   $(document).ready(function() {
 
+	transam.make_same_height('.header-part');
+	
     // Disable to add event button until a selection has been made
     $('#submit_button').attr('disabled','disabled');
     
@@ -14,6 +16,22 @@
         $('#submit_button').removeAttr('disabled');
       }
     });
+    
+	// Manage the tabs
+	$('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+		// save the last tab selected
+		var this_tab = $(this).attr('href');
+		transam.set_ui_key_value('asset_tab', this_tab);
+	});
+
+	var last_tab = transam.get_ui_key_value('asset_tab');
+	if (last_tab) {
+		$('a[href='+last_tab+']').tab('show');
+	} else {
+		// Default to the first tab if no tab is stored
+		$('a[data-toggle="tab"]:first').tab('show');
+	}		
+    
   });
     
 </script>

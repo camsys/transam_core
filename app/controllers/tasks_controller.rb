@@ -1,5 +1,7 @@
 class TasksController < OrganizationAwareController
   
+  add_breadcrumb "Home", :root_path
+  
   before_action :set_task, :only => [:show, :edit, :update, :destroy, :update_status]  
   before_filter :check_for_cancel, :only => [:create, :update] 
   before_filter :reformat_date_field, :only => [:create, :update]
@@ -55,6 +57,8 @@ class TasksController < OrganizationAwareController
   def index
 
     @page_title = 'My Tasks'
+    add_breadcrumb "My Tasks", tasks_path
+
     @filter = get_filter_type(SESSION_FILTER_TYPE_VAR)
     @select = get_select_type(SESSION_SELECT_TYPE_VAR)
     
@@ -79,6 +83,9 @@ class TasksController < OrganizationAwareController
       redirect_to user_tasks_url
       return
     end
+
+    add_breadcrumb "My Tasks", tasks_path
+    add_breadcrumb @task.subject, task_path(@task)
  
     @page_title = 'Task'
     
@@ -92,6 +99,9 @@ class TasksController < OrganizationAwareController
 
     @page_title = 'New Task'
 
+    add_breadcrumb "My Tasks", tasks_path
+    add_breadcrumb 'New Task'
+    
     @task = Task.new
     @task.from_organization = @organization
     @task.from_user = current_user
@@ -110,6 +120,10 @@ class TasksController < OrganizationAwareController
     # send them back to index.html.erb
     @page_title = 'Edit Task'
 
+    add_breadcrumb "My Tasks", tasks_path
+    add_breadcrumb @task.subject, task_path(@task)
+    add_breadcrumb 'Update', edit_task_path(@task)
+
     if @task.nil?
       notify_user(:alert, "Record not found!")
       redirect_to user_tasks_url
@@ -127,6 +141,9 @@ class TasksController < OrganizationAwareController
     
     @task.from_organization = @organization
     @task.from_user = current_user
+
+    add_breadcrumb "My Tasks", tasks_path
+    add_breadcrumb 'New Task'
 
     respond_to do |format|
       if @task.save
@@ -179,6 +196,10 @@ class TasksController < OrganizationAwareController
       redirect_to user_tasks_url
       return
     end
+    
+    add_breadcrumb "My Tasks", tasks_path
+    add_breadcrumb @task.subject, task_path(@task)
+    add_breadcrumb 'Update', edit_task_path(@task)
 
     respond_to do |format|
       if @task.update_attributes(form_params)

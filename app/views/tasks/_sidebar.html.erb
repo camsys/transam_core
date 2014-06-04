@@ -18,6 +18,12 @@
   		</li>
   		<li class="divider"></li>
   		<li>
+			<%= link_to new_user_task_path(current_user) do %> 
+				<i class="fa fa-plus"></i> New Task
+			<% end %>
+  		</li>
+  		<li class="divider"></li>
+  		<li>
   			<div class="btn-group" data-toggle="buttons-radio" style="width:100%;">
 				<button type="button" id="my_tasks_btn"  class="btn btn-info" style="width:50%;">My Tasks</button>
 				<button type="button" id="all_tasks_btn" class="btn btn-info" style="width:50%;">Everyone's Tasks</button>
