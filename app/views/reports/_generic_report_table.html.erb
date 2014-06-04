@@ -1,23 +1,30 @@
 
 <div class="row">
 	<div class="col-md-12">
-		<table id="datatable" class="table table-condensed table-striped table-hover table-bordered">
-			<thead>
-				<tr>
-				<% @data[:labels].each do |label| %>
-					<th class="center"><%= "#{label}" %></th>
-				<% end %>
-				</tr>
-			</thead>
-			<tbody>
-				<% @data[:data].each do |row| %>
-				<tr>
-					<% row.each do |col| %>
-						<td><%= format_as_general(col) %></td>
-					<% end %>
-				</tr>
-				<% end %>
-			</tbody>
-		</table>
+ 		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title"><%= @report.name %></h3>
+			</div>
+			<div class="panel-body">
+				<table class="table">
+					<thead>
+						<tr>
+						<% @data[:labels].each do |label| %>
+							<th class="center"><%= "#{label}" %></th>
+						<% end %>
+						</tr>
+					</thead>
+					<tbody>
+						<% @data[:data].each do |row| %>
+						<tr>
+							<% row.each do |col| %>
+								<td><%= format_as_general(col) %></td>
+							<% end %>
+						</tr>
+						<% end %>
+					</tbody>
+				</table>
+			</div>
+		</div>
 	</div>
 </div>
