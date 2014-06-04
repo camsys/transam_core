@@ -1,0 +1,16 @@
+.row
+  .col-md-12
+    %table.table.table-condensed.table-hover
+      %thead
+        %th Priority
+        %th Subject
+        %th From
+        %th Due
+      %tbody
+        - @tasks.each do |t|
+          %tr{:data => {:action_path => user_task_path(current_user, t)}}
+            %td= t.priority_type.name
+            %td= t.subject
+            %td= t.from_user.name
+            %td= format_as_date_time_distance(t.complete_by)
+        
