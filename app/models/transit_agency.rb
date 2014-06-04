@@ -53,8 +53,8 @@ class TransitAgency < Organization
        
   # returns the count of assets of the given type. If no type is selected it returns the total
   # number of assets
-  def asset_count(asset_type = nil) 
-    asset_type.nil? ? assets.count : assets.where('asset_type_id = ?', asset_type.id).count
+  def asset_count(conditions = [], values = []) 
+    conditions.empty? ? assets.count : assets.where(conditions.join(' AND '), *values).count
   end
     
   # Returns a policy for a transit organization
