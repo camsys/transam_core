@@ -187,7 +187,8 @@ var transam = new function() {
 	// Finds all elements marked as info icons and turns them into popups
 	this.enable_info_popups = function(class_name) {
 		$(class_name).popover({
-			trigger: 'hover'
+			trigger: 'hover',
+			content: 'body'
 		});
 	};
 
