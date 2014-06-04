@@ -46,7 +46,7 @@ class ReportsController < OrganizationAwareController
     @report_filter_type = params[:report_filter_type]
     @asset_types = []
     AssetType.all.each do |at|
-      if @organization.asset_count(at) > 0
+      if @organization.asset_count(['asset_type_id = ?'], [at.id]) > 0
         @asset_types << [at.name, at.id]
       end
     end
