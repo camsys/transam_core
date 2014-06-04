@@ -1,5 +1,7 @@
 class AssetEventsController < AssetAwareController
 
+  add_breadcrumb "Home", :root_path
+
   # set the @asset_event variable before any actions are invoked
   before_filter :get_asset_event,       :only => [:show, :edit, :update, :destroy]  
   before_filter :check_for_cancel,      :only => [:create, :update]
@@ -46,7 +48,7 @@ class AssetEventsController < AssetAwareController
   end
   
   def new
-    
+        
     # get the asset event type
     asset_event_type = AssetEventType.find(params[:event_type])
     if asset_event_type
@@ -54,6 +56,10 @@ class AssetEventsController < AssetAwareController
     end
 
     @page_title = "#{@asset.name}: New #{@asset_event.asset_event_type.name}"
+    add_breadcrumb "#{@asset.asset_type.class_name.underscore.humanize.titleize}".pluralize(2), inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
+    add_breadcrumb "#{@asset.asset_subtype.name}", inventory_index_path(:asset_subtype => @asset.asset_subtype)
+    add_breadcrumb @asset.asset_tag, inventory_path(@asset)    
+    add_breadcrumb @asset_event.asset_event_type.name, new_inventory_asset_event_path(@asset)    
 
     respond_to do |format|
       format.html 

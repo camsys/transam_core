@@ -52,7 +52,7 @@ class AssetAwareController < OrganizationAwareController
 
   end
           
-protected
+  protected
   
   def render_typed_assets
     RENDER_TYPED_ASSETS

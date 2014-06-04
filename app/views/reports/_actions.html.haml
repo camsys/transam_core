@@ -1,0 +1,17 @@
+= form_tag report_url(@report), :method => :get, :id => 'asset_filter_form', :role => "form" do
+  .form-group
+    %label{:for => 'report_report_filter_type'} Filter
+    = select_tag(:report_filter_type, options_for_select(@asset_types, :selected => @report_filter_type), :class => "form-control", :prompt => 'All', :id => 'asset_filter')
+
+= link_to "#chart-div", :data => {:toggle => "collapse", :parent => "accordion"}, :class => "btn btn-primary", :id => "chart-toggle" do
+  Toggle chart
+
+:javascript
+
+  $(document).ready(function() {
+    
+    $('#asset_filter').change(function() {
+      $('#asset_filter_form').submit();
+    });
+  
+  });

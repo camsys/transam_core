@@ -1,4 +1,6 @@
 class AssetsController < AssetAwareController
+ 
+  add_breadcrumb "Home", :root_path
     
   # Include map helpers into this class
   include TransamMapMarkers
@@ -44,7 +46,7 @@ class AssetsController < AssetAwareController
   def map
         
     @assets = get_assets
-    @page_title = "#{@asset_class.underscore.humanize}".pluralize(2)
+    @page_title = "#{@asset_class.underscore.humanize.titleize}".pluralize(2)
    
     markers = []
     @assets.each do |asset|
@@ -75,8 +77,9 @@ class AssetsController < AssetAwareController
     # disable any spatial filters for this view
     @spatial_filter = nil
     @assets = get_assets
-    @page_title = "#{@asset_class.underscore.humanize}".pluralize(2)
-       
+    add_breadcrumb @asset_class.underscore.humanize.titleize.pluralize(2), inventory_index_path(:asset_type => @asset_type, :asset_subtype => 0)
+    add_breadcrumb AssetSubtype.find(@asset_subtype).name, inventory_index_path(:asset_subtype => @asset_subtype) unless @asset_subtype == 0
+
     # cache the set of asset ids in case we need them later
     cache_assets(@assets)
        
@@ -115,6 +118,10 @@ class AssetsController < AssetAwareController
   
   def show
     
+    add_breadcrumb "#{@asset.asset_type.class_name.underscore.humanize.titleize}".pluralize(2), inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
+    add_breadcrumb "#{@asset.asset_subtype.name}", inventory_index_path(:asset_subtype => @asset.asset_subtype)
+    add_breadcrumb @asset.asset_tag, inventory_path(@asset)    
+    
     @page_title = @asset.name
     @disabled = true
     markers = []
@@ -139,6 +146,11 @@ class AssetsController < AssetAwareController
 
   def edit
     @page_title = "Update: #{@asset.name}"
+
+    add_breadcrumb "#{@asset.asset_type.class_name.underscore.humanize.titleize}".pluralize(2), inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
+    add_breadcrumb "#{@asset.asset_subtype.name}", inventory_index_path(:asset_subtype => @asset.asset_subtype)
+    add_breadcrumb @asset.asset_tag, inventory_path(@asset)    
+    add_breadcrumb "Update master record", edit_inventory_path(@asset)    
     
     if @asset.geo_locatable? and @asset.mappable?
       markers = []
@@ -156,6 +168,10 @@ class AssetsController < AssetAwareController
       markers << get_map_marker(@asset, 'asset', true) # make the marker draggable
       @markers = markers.to_json
     end
+
+    add_breadcrumb "#{@asset.asset_type.class_name.underscore.humanize.titleize}".pluralize(2), inventory_index_path
+    add_breadcrumb @asset.name, inventory_path(@asset)    
+    add_breadcrumb "Modify", edit_inventory_path(@asset)    
 
     respond_to do |format|
       if @asset.update_attributes(form_params)
@@ -176,6 +192,8 @@ class AssetsController < AssetAwareController
 
   def new_asset
 
+    add_breadcrumb "Add Asset", new_asset_inventory_index_path  
+
     @page_title = 'New Asset'
     # Get the asset types for the filter dropdown
     @asset_types = AssetType.all
@@ -192,6 +210,9 @@ class AssetsController < AssetAwareController
     end
  
     @page_title = "New #{asset_subtype.name}"
+    add_breadcrumb "#{asset_subtype.asset_type.class_name.underscore.humanize.titleize}".pluralize(2), inventory_index_path(:asset_type => asset_subtype.asset_type)
+    add_breadcrumb "#{asset_subtype.name}", inventory_index_path(:asset_subtype => asset_subtype)
+    add_breadcrumb "New", new_inventory_path(asset_subtype)    
 
     # Use the base class to create an asset of the correct type
     @asset = Asset.new_asset(asset_subtype)
@@ -220,6 +241,10 @@ class AssetsController < AssetAwareController
     @asset.updator = current_user
 
     #Rails.logger.debug @asset.inspect
+
+    add_breadcrumb "#{asset_type.class_name.underscore.humanize.titleize}".pluralize(2), inventory_index_path(:asset_type => asset_subtype.asset_type)
+    add_breadcrumb "#{asset_subtype.name}", inventory_index_path(:asset_subtype => asset_subtype)
+    add_breadcrumb "New", new_inventory_path(asset_subtype)    
     
     respond_to do |format|
       if @asset.save

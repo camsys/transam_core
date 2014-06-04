@@ -4,6 +4,12 @@
 			<i class="fa fa-calendar fa-fw"></i> My tasks
 		<% end %>
 	</li>
+  	<li class="text-left">
+  		<%= link_to user_messages_path(current_user) do %>
+  			<i class="fa fa-envelope fa-fw"></i> My Messages
+  		<% end %>
+  	</li>
+	<li class="divider text-left"></li>
 	<li class="text-left">												
 		<%= link_to organization_path(current_user.organization)  do %>
 			<i class="fa fa-building-o fa-fw"></i> My organization

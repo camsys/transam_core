@@ -1,4 +1,7 @@
 class PoliciesController < OrganizationAwareController
+  
+  add_breadcrumb "Home", :root_path
+  
   #before_filter :authorize_admin
   before_filter :check_for_cancel, :only => [:create, :update]
   before_filter :get_policy, :except => [:index, :create, :new]
@@ -8,6 +11,7 @@ class PoliciesController < OrganizationAwareController
   def index
 
     @page_title = 'Policies'
+    add_breadcrumb "Policies", policies_path
    
     # get the policies for this agency 
     @policies = []
@@ -27,6 +31,8 @@ class PoliciesController < OrganizationAwareController
   def show
 
     @page_title = @policy.name
+    add_breadcrumb "Policies", policies_path
+    add_breadcrumb @policy.name, policy_path(@policy)
 
     respond_to do |format|
       format.html # show.html.erb
@@ -41,7 +47,9 @@ class PoliciesController < OrganizationAwareController
 
   def edit
     
-    @page_title = "Update #{@policy.name}"
+    add_breadcrumb "Policies", policies_path
+    add_breadcrumb @policy.name, policy_path(@policy)
+    add_breadcrumb 'Modify', edit_policy_path(@policy)
     
   end
 
@@ -97,6 +105,10 @@ class PoliciesController < OrganizationAwareController
   end
 
   def update
+
+    add_breadcrumb "Policies", policies_path
+    add_breadcrumb @policy.name, policy_path(@policy)
+    add_breadcrumb 'Modify', edit_policy_path(@policy)
 
     respond_to do |format|
       if @policy.update_attributes(form_params)

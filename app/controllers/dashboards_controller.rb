@@ -2,6 +2,8 @@ class DashboardsController < OrganizationAwareController
         
   def index
     
+    add_breadcrumb "Home", :root_path    
+    
     @page_title = 'My Dashboard'
     
     # Select messages for this user or ones that are for the agency as a whole

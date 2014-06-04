@@ -1,5 +1,8 @@
 class ReportsController < OrganizationAwareController
     
+  add_breadcrumb "Home", :root_path
+  add_breadcrumb "Reports", :reports_path
+  
   SESSION_VIEW_TYPE_VAR = 'reports_subnav_view_type'
       
   def index
@@ -57,6 +60,7 @@ class ReportsController < OrganizationAwareController
 
     if @report
       @report_view = @report.view_name
+      add_breadcrumb @report.name, report_path(@report)
       @page_title = @report.name
       
       report_instance = @report.class_name.constantize.new

@@ -1,0 +1,3 @@
+.breadcrumbs{:style => 'margin-top: 30px;'}
+  - unless params[:controller] == 'dashboards'
+    = render_breadcrumbs :builder => ::BootstrapBreadcrumbsBuilder, :separator => "&raquo;"
