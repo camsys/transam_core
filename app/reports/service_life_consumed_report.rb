@@ -20,6 +20,7 @@ class ServiceLifeConsumedReport < AbstractReport
 
     # Set up the labels one for each asset class
     labels = ['% Service Life Used']
+    # asset_cols is the index into the column array a[][x] for each asset type
     asset_cols = []
     if report_filter_type > 0
       asset_type = AssetType.find_by_id(report_filter_type)
@@ -27,15 +28,21 @@ class ServiceLifeConsumedReport < AbstractReport
     else
       AssetType.all.each do |type| 
         asset_count = organization.assets.where("asset_type_id = ?", type.id).count
-        asset_cols << -1
         if asset_count > 0
+          # push this asset type into the a matrix
           labels << type.name
-          asset_cols[asset_cols.size - 1] = asset_cols.size - 1
+          asset_cols << labels.size - 1 # account for the row label
+        else
+          asset_cols << -1
         end
       end
     end
+    # this is the number of asset types with assets
     num_asset_types = labels.size - 1
-                
+
+    #puts asset_cols.inspect
+    #puts labels.inspect
+                    
     # Set up the buckets using BUCKET_SIZE buckets.The array is now an array of length num_buckets where each element
     # is an array of ints with value 0 and length num_asset_types
     num_buckets = MAX_PCNT / BUCKET_SIZE
@@ -48,6 +55,9 @@ class ServiceLifeConsumedReport < AbstractReport
       a << counts
     end
 
+    puts "num buckets = #{num_buckets}"
+    puts "a num rows = #{a.size}, a num cols = #{a[0].size}"
+    
     # Process the assets and increament the bucket counters based on the %age useful life consumed for
     # each asset
     if report_filter_type > 0
@@ -64,8 +74,9 @@ class ServiceLifeConsumedReport < AbstractReport
       useful_life = policy.get_policy_item(asset)
       pcnt_consumed = (asset.age / useful_life.max_service_life_years.to_f) * 100.0
       # Get the column for this asset type, if we only have one it is the first column
-      col = report_filter_type > 0 ? 1 : asset_cols[asset.asset_type_id]
+      col = report_filter_type > 0 ? 1 : asset_cols[asset.asset_type_id - 1]
       row = [(pcnt_consumed / BUCKET_SIZE).to_i - 1, num_buckets].min
+      #puts "row = #{row}, col = #{col}"
       a[row][col] += 1
       num_assets += 1
     end
