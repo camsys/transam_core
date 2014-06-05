@@ -188,7 +188,9 @@ var transam = new function() {
 	this.enable_info_popups = function(class_name) {
 		$(class_name).popover({
 			trigger: 'hover',
-			content: 'body'
+			container: 'body',
+    		animation: 'true',
+    		html: 'true'    
 		});
 	};
 
