@@ -48,8 +48,8 @@ class Policy < ActiveRecord::Base
   # Has a single method for estimating condition
   belongs_to  :condition_estimation_type
   
-  # Has 0 or more policy items
-  has_many    :policy_items
+  # Has 0 or more policy items. The policy items are destroyed when the policy is destroyed
+  has_many    :policy_items, :dependent => :destroy
 
   #------------------------------------------------------------------------------
   # Validations
