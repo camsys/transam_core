@@ -27,7 +27,7 @@ Rails.application.routes.draw do
         get 'copy'
       end
     resources :asset_events    
-    
+        
     resources :comments,    :only => [:create, :update, :edit, :new, :destroy]
     
     resources :images,      :only => [:create, :update, :edit, :new, :destroy] do
@@ -41,6 +41,13 @@ Rails.application.routes.draw do
         get 'download'
       end
     end    
+  end
+      
+  # Provide an alias for asset paths which are discovered by form helpers such as 
+  # commentable, documentable, and imagable controllers
+  resources :assets, :path => :inventory do
+    resources :comments
+    resources :documents
   end
       
   resources :organizations, :path => "org", :only => [:index, :show, :edit, :update] do
