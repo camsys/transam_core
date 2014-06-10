@@ -183,7 +183,11 @@ class AssetsController < AssetAwareController
         
         # If the asset was successfully updated, schedule update the condition and disposition asynchronously
         Delayed::Job.enqueue AssetUpdateJob.new(@asset.object_key), :priority => 0
-        
+        # See if this asset has any dependents that use its spatial reference
+        if @asset.geometry and @asset.dependents.count > 0
+          # schedule an update to the spatial references of the dependent assets
+          Delayed::Job.enqueue AssetDependentSpatialReferenceUpdateJob.new(@asset.object_key), :priority => 0          
+        end
         notify_user(:notice, "Asset #{@asset.name} was successfully updated.")
         
         format.html { redirect_to inventory_url(@asset) }
