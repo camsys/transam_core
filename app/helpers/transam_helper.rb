@@ -30,6 +30,24 @@ module TransamHelper
     return credit.html_safe
   end
     
+  # Returns the correct FontAwesomne icon for a file type based on the 
+  # file extension
+  def get_file_icon_for_filename(filename)
+    ext = filename.split('.').last
+    if ["doc", "docx"].include? ext
+      icon = 'fa-file-word-o'
+    elsif ["xls", "xlsx"].include? ext
+      icon = 'fa-file-excel-o'
+    elsif ["pdf"].include? ext
+      icon = 'fa-file-pdf-o'
+    elsif ["ppt"].include? ext
+      icon = 'fa-file-powerpoint-o'
+    else
+      icon = 'fa-file-o'
+    end
+    icon
+  end
+  
   def bootstrap_class_for flash_type
     case flash_type
       when :success

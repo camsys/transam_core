@@ -2,7 +2,7 @@
   - documents.each do |d|
     %li.media
       .well.well-small
-        %i.fa.fa-file.fa-3x.pull-left
+        %i.fa.fa-3x.pull-left{:class => get_file_icon_for_filename(d.original_filename)}
         .media-body
           %h5.media-heading
             = "#{d.creator.name} at #{format_as_date_time(d.created_at)}"
