@@ -77,9 +77,14 @@ class AssetsController < AssetAwareController
     # disable any spatial filters for this view
     @spatial_filter = nil
     @assets = get_assets
-    add_breadcrumb @asset_class.underscore.humanize.titleize.pluralize(2), inventory_index_path(:asset_type => @asset_type, :asset_subtype => 0)
-    add_breadcrumb AssetSubtype.find(@asset_subtype).name, inventory_index_path(:asset_subtype => @asset_subtype) unless @asset_subtype == 0
-
+    if @asset_subtype == 0
+      add_breadcrumb @asset_class.underscore.humanize.titleize.pluralize(2), inventory_index_path(:asset_type => @asset_type, :asset_subtype => 0)
+    else
+      subtype = AssetSubtype.find(@asset_subtype)
+      add_breadcrumb subtype.asset_type.name.pluralize(2), inventory_index_path(:asset_type => subtype.asset_type, :asset_subtype => 0)
+      add_breadcrumb subtype.name, inventory_index_path(:asset_subtype =>subtype)
+    end
+    
     # cache the set of asset ids in case we need them later
     cache_assets(@assets)
        
@@ -118,7 +123,7 @@ class AssetsController < AssetAwareController
   
   def show
     
-    add_breadcrumb "#{@asset.asset_type.class_name.underscore.humanize.titleize}".pluralize(2), inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
+    add_breadcrumb "#{@asset.asset_type.name}".pluralize(2), inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
     add_breadcrumb "#{@asset.asset_subtype.name}", inventory_index_path(:asset_subtype => @asset.asset_subtype)
     add_breadcrumb @asset.asset_tag, inventory_path(@asset)    
     
@@ -147,7 +152,7 @@ class AssetsController < AssetAwareController
   def edit
     @page_title = "Update: #{@asset.name}"
 
-    add_breadcrumb "#{@asset.asset_type.class_name.underscore.humanize.titleize}".pluralize(2), inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
+    add_breadcrumb "#{@asset.asset_type.name}".pluralize(2), inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
     add_breadcrumb "#{@asset.asset_subtype.name}", inventory_index_path(:asset_subtype => @asset.asset_subtype)
     add_breadcrumb @asset.asset_tag, inventory_path(@asset)    
     add_breadcrumb "Update master record", edit_inventory_path(@asset)    
@@ -169,7 +174,7 @@ class AssetsController < AssetAwareController
       @markers = markers.to_json
     end
 
-    add_breadcrumb "#{@asset.asset_type.class_name.underscore.humanize.titleize}".pluralize(2), inventory_index_path
+    add_breadcrumb "#{@asset.asset_type.name}".pluralize(2), inventory_index_path
     add_breadcrumb @asset.name, inventory_path(@asset)    
     add_breadcrumb "Modify", edit_inventory_path(@asset)    
 
@@ -210,7 +215,7 @@ class AssetsController < AssetAwareController
     end
  
     @page_title = "New #{asset_subtype.name}"
-    add_breadcrumb "#{asset_subtype.asset_type.class_name.underscore.humanize.titleize}".pluralize(2), inventory_index_path(:asset_type => asset_subtype.asset_type)
+    add_breadcrumb "#{asset_subtype.asset_type.name}".pluralize(2), inventory_index_path(:asset_type => asset_subtype.asset_type)
     add_breadcrumb "#{asset_subtype.name}", inventory_index_path(:asset_subtype => asset_subtype)
     add_breadcrumb "New", new_inventory_path(asset_subtype)    
 
@@ -242,7 +247,7 @@ class AssetsController < AssetAwareController
 
     #Rails.logger.debug @asset.inspect
 
-    add_breadcrumb "#{asset_type.class_name.underscore.humanize.titleize}".pluralize(2), inventory_index_path(:asset_type => asset_subtype.asset_type)
+    add_breadcrumb "#{asset_type.name}".pluralize(2), inventory_index_path(:asset_type => asset_subtype.asset_type)
     add_breadcrumb "#{asset_subtype.name}", inventory_index_path(:asset_subtype => asset_subtype)
     add_breadcrumb "New", new_inventory_path(asset_subtype)    
     
