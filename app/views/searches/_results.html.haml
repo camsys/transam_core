@@ -1,0 +1,8 @@
+%fieldset
+	%legend Search Results
+	- if @data.empty?
+		%p No records found.
+	- else
+		= render @searcher.results_view
+		
+		= render 'shared/datatable_javascript'

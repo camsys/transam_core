@@ -1,0 +1,9 @@
+= render @searcher.form_view
+
+.row{:style => 'margin-top: 20px;'}
+  .col-md-12
+    #results_table
+    #spinner
+      = image_tag('ajax-loader.gif') 
+
+= render 'scripts'

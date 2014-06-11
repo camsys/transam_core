@@ -23,7 +23,7 @@
 			<% end %>
 			<li class="divider"></li>			
 			<li class="text-left">												
-				<%= link_to new_search_path do %>
+				<%= link_to new_search_path(:search_type => SearchesController::ASSET_SEARCH_TYPE) do %>
 					<i class="fa fa-search"></i> Search
 				<% end %>
 			</li>		

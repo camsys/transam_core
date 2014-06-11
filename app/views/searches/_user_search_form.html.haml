@@ -1,0 +1,18 @@
+.row
+  = simple_form_for(@searcher,
+  :as => :searcher,
+  :url => searches_path,
+  :method => 'post',
+  :html => {:class => 'form-vertical'},
+  :remote => true,
+  :wrapper => :vertical_form, 
+  :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}) do |f|
+    = hidden_field_tag :search_type, @search_type
+    = dialog_tag('Search Parameters', {:icon => 'fa fa-refresh', :class => "form_part"}) do 
+      .col-md-6        
+        = f.input :organization_id, :collection => Organization.all, :label_method => 'coded_name',  :include_blank => "Any..." unless current_user.organizations.count < 2
+      .col-md-6
+        = f.input :keywords, :label => "Keywords"
+    .col-md-12  
+      = f.button :submit, 'Search', :class=>"btn btn-primary", :id => 'submit_btn'
+      = button_tag 'Reset', :type => 'reset', :class=> 'btn btn-warning'

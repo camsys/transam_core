@@ -1,9 +1,0 @@
-<fieldset>
-  <legend>Results</legend>
-<% if @assets.count > 0 %>
-  <%= render '/assets/asset_datatable' %>
-  <%= render 'shared/datatable_javascript' %>
-<% else %>
-  <p>No records found.</p>
-<% end %> 
-</fieldset>

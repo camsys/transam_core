@@ -1,0 +1,34 @@
+.row
+  = simple_form_for(@searcher,
+  :as => :searcher,
+  :url => searches_path,
+  :method => 'post',
+  :html => {:class => 'form-vertical'},
+  :remote => true,
+  :wrapper => :vertical_form, 
+  :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}) do |f|
+    = hidden_field_tag :search_type, @search_type
+    .col-md-6        
+      = dialog_tag('Asset Class', {:icon => 'fa fa-refresh', :class => "form_part"}) do 
+        = f.input :organization_id, :collection => current_user.organizations, :label_method => 'coded_name',  :include_blank => "Any..." unless current_user.organizations.count < 2
+        = f.input :asset_type_id, :collection => AssetType.all, :include_blank => "Any...", :label => "Asset Type"
+        = f.input :asset_subtype_id, :collection => AssetSubtype.all, :include_blank => "Any...", :label => "Asset Subtype"
+    .col-md-6        
+      = dialog_tag('Asset Characteristics', {:icon => 'fa fa-refresh', :class => "form_part"}) do 
+        = f.input :asset_tag, :label => "Asset Tag"
+        = f.input :manufacturer_id, :collection => Manufacturer.all, :include_blank => "Any...", :multiple => true
+        = f.input :manufacturer_model, :label => "Manufacturer Model"
+        = f.input :location_id, :collection => @organization.assets.where('asset_type_id = ?', 5), :include_blank => "Any..."
+    .col-md-6        
+      = dialog_tag('Asset Condition', {:icon => 'fa fa-refresh', :class => "form_part"}) do 
+        = f.input :condition_type_id, :collection => ConditionType.all, :include_blank => "Any...", :multiple => true, :label => "Condition Type"
+        = f.input :replacement_year, :as => :integer, :label => "Replacement Year"
+    .col-md-6                
+      = dialog_tag('FTA Characteristics', {:icon => 'fa fa-refresh', :class => "form_part"}) do 
+        = f.input :fta_funding_type_id, :collection => FtaFundingType.all, :include_blank => "Any...", :multiple => true, :label => "FTA Funding Type"
+        = f.input :fta_funding_source_type_id, :collection => FtaFundingSourceType.all, :include_blank => "Any...", :multiple => true, :label => "FTA Funding Source Type"
+        = f.input :fta_vehicle_type_id, :collection => FtaVehicleType.all, :include_blank => "Any...", :multiple => true, :label => "FTA Vehicle Type"
+        = f.input :fta_ownership_type_id, :collection => FtaOwnershipType.all, :include_blank => "Any...", :multiple => true, :label => "FTA Ownership Type"
+    .col-md-12  
+      = f.button :submit, 'Search', :class=>"btn btn-primary", :id => 'submit_btn'
+      = button_tag 'Reset', :type => 'reset', :class=> 'btn btn-warning'

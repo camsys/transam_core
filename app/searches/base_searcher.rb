@@ -2,6 +2,9 @@
 # Abstract base searcher class for searches
 #
 class BaseSearcher
+
+  # From the application config    
+  MAX_ROWS_RETURNED         = SystemConfig.instance.max_rows_returned
   
   # Every search must have a user as the searcher
   attr_accessor :user
@@ -11,6 +14,19 @@ class BaseSearcher
     mass_assign(attributes)
   end    
   
+  # Caches the rows
+  def data
+    @data ||= perform_query
+  end
+  
+  # Override this to return the name of the form to display
+  def form_view
+  end
+
+  # Override this to return the name of the results table to display
+  def results_view
+  end
+
   protected
 
   # returns a list of PKs from a collection
