@@ -3,6 +3,7 @@ class UsersController < OrganizationAwareController
   before_action :set_user, :only => [:show, :edit, :update, :destroy, :set_current_org, :change_password, :update_password]  
   before_filter :check_for_cancel, :only => [:create, :update, :update_password]
   
+  INDEX_KEY_LIST_VAR    = "user_key_list_cache_var"
   SESSION_VIEW_TYPE_VAR = 'users_subnav_view_type'
   
   # User has selected an alternative org to view. This method sets a session variable
@@ -82,6 +83,9 @@ class UsersController < OrganizationAwareController
     # Get the Users
     @users = User.where(conditions.join(' AND '), *values).order(:last_name)
     
+    # cache the set of object keys in case we need them later
+    cache_list(@users, INDEX_KEY_LIST_VAR)
+
     # remember the view type
     @view_type = get_view_type(SESSION_VIEW_TYPE_VAR)
 
@@ -108,6 +112,11 @@ class UsersController < OrganizationAwareController
     else
       @page_title = "#{@user.name}: Settings"
     end
+   
+    # get the @prev_record_path and @next_record_path view vars
+    get_next_and_prev_object_keys(@user, INDEX_KEY_LIST_VAR)
+    @prev_record_path = @prev_record_key.nil? ? "#" : user_path(@prev_record_key)
+    @next_record_path = @next_record_key.nil? ? "#" : user_path(@next_record_key)
     
     respond_to do |format|
       format.html # show.html.erb

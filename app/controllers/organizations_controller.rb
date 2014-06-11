@@ -5,12 +5,16 @@ class OrganizationsController < OrganizationAwareController
   # include the transam markers mixin
   include TransamMapMarkers
   
+  INDEX_KEY_LIST_VAR    = "organization_key_list_cache_var"
   SESSION_VIEW_TYPE_VAR = 'organization_subnav_view_type'
     
   # GET /asset
   # GET /asset.json
   def index
     @organizations = current_user.organizations
+
+    # cache the set of asset ids in case we need them later
+    cache_list(@organizations, INDEX_KEY_LIST_VAR)
 
     # remember the view type
     @view_type = get_view_type(SESSION_VIEW_TYPE_VAR)
@@ -39,6 +43,11 @@ class OrganizationsController < OrganizationAwareController
       @page_title = @org.name
     end
     
+    # get the @prev_record_path and @next_record_path view vars
+    get_next_and_prev_object_keys(@org, INDEX_KEY_LIST_VAR)
+    @prev_record_path = @prev_record_key.nil? ? "#" : organization_path(@prev_record_key)
+    @next_record_path = @next_record_key.nil? ? "#" : organization_path(@next_record_key)
+    
     respond_to do |format|
       format.html # show.html.erb
       format.json { render :json => @org }
@@ -53,6 +62,11 @@ class OrganizationsController < OrganizationAwareController
       redirect_to organizations_url 
       return
     end
+
+    # get the @prev_record_path and @next_record_path view vars
+    get_next_and_prev_object_keys(@org, INDEX_KEY_LIST_VAR)
+    @prev_record_path = @prev_record_key.nil? ? "#" : organization_path(@prev_record_key)
+    @next_record_path = @next_record_key.nil? ? "#" : organization_path(@next_record_key)
     
     @page_title = @org.name
     @organizations = []

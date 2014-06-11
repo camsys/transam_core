@@ -126,6 +126,10 @@ class Organization < ActiveRecord::Base
     "#{short_name}-#{name}"
   end      
   
+  def object_key
+    "#{id}"
+  end
+  
   def to_s
     short_name
   end

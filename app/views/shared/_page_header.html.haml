@@ -1,3 +1,10 @@
 .breadcrumbs{:style => 'margin-top: 30px;'}
   - unless params[:controller] == 'dashboards'
-    = render_breadcrumbs :builder => ::BootstrapBreadcrumbsBuilder, :separator => "&raquo;"
+    - if @prev_record_path or @next_record_path
+      .row
+        .col-md-10
+          = render_breadcrumbs :builder => ::BootstrapBreadcrumbsBuilder, :separator => "&raquo;"
+        .col-md-2
+          = render 'shared/row_pager'
+    - else
+      = render_breadcrumbs :builder => ::BootstrapBreadcrumbsBuilder, :separator => "&raquo;"

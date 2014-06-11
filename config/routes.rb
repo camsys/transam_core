@@ -18,7 +18,6 @@ Rails.application.routes.draw do
         get 'details'
         get 'new_asset'
         get 'export'
-        get 'back'
         get 'map'
         get 'spatial_filter'
       end

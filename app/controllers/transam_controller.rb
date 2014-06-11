@@ -50,6 +50,42 @@ class TransamController < ApplicationController
     
   protected
 
+  # Stores the object keys of a list of objects in the session
+  def cache_list(objs, cache_key)
+    list = []
+    unless objs.nil?
+      objs.each do |a|
+        list << a.object_key
+      end
+    end
+    cache_objects(cache_key, list)
+  end
+  
+  # Sets view vars @prev_record_key, @next_record_key, @total_rows and @row_number for
+  # a current object
+  def get_next_and_prev_object_keys(obj, cache_key)
+    @prev_record_key = nil
+    @next_record_key = nil
+    @total_rows = 0
+    @row_number = 0
+    id_list = get_cached_objects(cache_key)
+    # make sure we have a list and an asset to find
+    if id_list && obj
+      @total_rows = id_list.size
+      # get the index of the current asset in the array      
+      current_index = id_list.index(obj.object_key)
+      if current_index
+        @row_number = current_index + 1
+        if current_index > 0
+          @prev_record_key = id_list[current_index - 1]
+        end
+        if current_index < id_list.size
+          @next_record_key = id_list[current_index + 1]
+        end
+      end
+    end
+  end
+
   # Wrap the search text with db string search wildcards. This might need to be adjusted
   # depending on the database being used.
   #

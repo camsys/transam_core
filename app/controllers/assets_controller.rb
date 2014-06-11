@@ -22,14 +22,9 @@ class AssetsController < AssetAwareController
   STRING_TOKENIZER          = '|'
 
   # Session Variables
-  ASSET_KEY_LIST_VAR        = "asset_key_list_cache_var"
+  INDEX_KEY_LIST_VAR        = "asset_key_list_cache_var"
   SESSION_VIEW_TYPE_VAR     = 'assets_subnav_view_type'
   
-  # accessed from a show action. Renders the list of assets shown previously
-  def back
-    id_list = get_cached_objects(ASSET_KEY_LIST_VAR)
-    redirect_to inventory_index_url(:ids => id_list)
-  end
 
   # Sets the spatial filter bounding box  
   def spatial_filter
@@ -57,7 +52,7 @@ class AssetsController < AssetAwareController
     @markers = markers.to_json  
     
     # cache the set of asset ids in case we need them later
-    cache_assets(@assets)
+    cache_list(@assets, INDEX_KEY_LIST_VAR)
        
     respond_to do |format|
       format.html
@@ -86,7 +81,7 @@ class AssetsController < AssetAwareController
     end
     
     # cache the set of asset ids in case we need them later
-    cache_assets(@assets)
+    cache_list(@assets, INDEX_KEY_LIST_VAR)
        
     respond_to do |format|
       format.html
@@ -139,8 +134,10 @@ class AssetsController < AssetAwareController
     end
     @markers = markers.to_json
         
-    # set the @prev_asset_id and @next_asset_id variables
-    get_next_and_prev_asset_ids(@asset)
+    # get the @prev_record_path and @next_record_path view vars
+    get_next_and_prev_object_keys(@asset, INDEX_KEY_LIST_VAR)
+    @prev_record_path = @prev_record_key.nil? ? "#" : inventory_path(@prev_record_key)
+    @next_record_path = @next_record_key.nil? ? "#" : inventory_path(@next_record_key)
     
     respond_to do |format|
       format.html # show.html.erb
@@ -470,8 +467,8 @@ class AssetsController < AssetAwareController
 
   # called from a show request
   def get_next_and_prev_asset_ids(asset)
-    @prev_asset_id = nil
-    @next_asset_id = nil
+    @prev_record_path = "#"
+    @next_record_path = "#"
     id_list = get_cached_objects(ASSET_KEY_LIST_VAR)
     # make sure we have a list and an asset to find
     if id_list && asset
@@ -479,10 +476,10 @@ class AssetsController < AssetAwareController
       current_index = id_list.index(@asset.object_key)
       if current_index
         if current_index > 0
-          @prev_asset_id = id_list[current_index - 1] 
+          @prev_record_path = inventory_path(id_list[current_index - 1])
         end
         if current_index < id_list.size
-          @next_asset_id = id_list[current_index + 1]
+          @next_record_path = inventory_path(id_list[current_index + 1])
         end
       end
     end
