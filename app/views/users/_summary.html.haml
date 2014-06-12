@@ -1,0 +1,8 @@
+.panel-body    
+  %fieldset
+    %legend.panel-legend Details
+    = format_field("Name", user.name )
+    = format_field("E-Mail", user.email )
+    = format_field("Primary Phone", format_as_phone_number(user.phone) )
+    = format_field("dotGrants ID", user.external_id )
+    = format_field("Send Emails", format_as_boolean(user.notify_via_email) )

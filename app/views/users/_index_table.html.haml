@@ -1,0 +1,42 @@
+%table.table.table-hover#datatable
+  %thead
+    %tr
+      %th.left Organization
+      %th.left First
+      %th.left Last
+      %th.left Email
+      %th.left Phone
+      %th.center Roles				
+
+      %th.right Last Login
+      %th.right Active Since       
+      
+      %th.center
+      				
+  %tbody
+    - @users.each do |u|      
+      %tr.popup-details{:data => {:action_path => user_path(u)}}
+        %td= u.organization.short_name
+        %td= u.first_name
+        %td= u.last_name
+        %td= u.email
+        %td= format_as_phone_number(u.phone)
+            
+        %td= format_as_list(u.roles)
+        
+        %td.right= format_as_date_time(u.last_sign_in_at)
+        %td.right= format_as_date_time(u.created_at)
+
+        %td.center
+          %i.fa.fa-info-circle.text-info.popup-details{:data => {:title => "#{u.name}", :content => "#{raw render :partial => 'users/summary', :locals => {:user => u}}"}}
+
+= render 'shared/datatable_javascript'
+
+:javascript
+  $('.popup-details').popover({
+    trigger: 'hover',
+    container: 'body',
+    placement: 'left',
+    animation: 'true',
+    html: 'true'    
+  });  

@@ -1,5 +1,8 @@
 class UsersController < OrganizationAwareController
 
+  add_breadcrumb "Home",  :root_path
+  add_breadcrumb "Users", :users_path
+
   before_action :set_user, :only => [:show, :edit, :update, :destroy, :set_current_org, :change_password, :update_password]  
   before_filter :check_for_cancel, :only => [:create, :update, :update_password]
   
@@ -29,26 +32,21 @@ class UsersController < OrganizationAwareController
   # GET /users
   # GET /users.json
   def index
-
-    # See if we got a org param. If se we are searching within one of the organizations in our list
-    # otherwise we are searching our own organization
-    if params[:org].blank?
-      org = @organization
-    else
-      org = Organization.find_by_short_name(params[:org])
-    end    
-    @page_title = "#{org.name}: Users"
     
     # Start to set up the query
     conditions  = []
     values      = []
-    
-    # Only users that are in the selected organization
-    conditions << 'organization_id = ?'
-    values << org.id
-    
+        
+    # See if we got an organizaiton id
+    @organization_id = params[:organization_id]
+    unless @organization_id.blank?
+      @organization_id = @organization_id.to_i
+      conditions << 'organization_id = ?'
+      values << @organization_id
+    end
+
     # See if we got a search string
-    if params[:search_text]
+    unless params[:search_text].blank?
       @search_text = params[:search_text]
       @search_param = params[:search_param]
       
@@ -80,8 +78,13 @@ class UsersController < OrganizationAwareController
     puts conditions.inspect
     puts values.inspect
     
-    # Get the Users
-    @users = User.where(conditions.join(' AND '), *values).order(:last_name)
+    # Get the Users but check to see if a role was selected
+    @role = params[:role]
+    if @role.blank?
+      @users = User.where(conditions.join(' AND '), *values).order(:organization_id, :last_name)
+    else
+      @users = User.with_role(@role).where(conditions.join(' AND '), *values).order(:organization_id, :last_name)
+    end
     
     # cache the set of object keys in case we need them later
     cache_list(@users, INDEX_KEY_LIST_VAR)
@@ -98,6 +101,8 @@ class UsersController < OrganizationAwareController
   # GET /users/1
   # GET /users/1.json
   def show
+
+    add_breadcrumb @user.name  
 
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
@@ -128,6 +133,7 @@ class UsersController < OrganizationAwareController
   # GET /users/new.json
   def new
 
+    add_breadcrumb 'New'
     @page_title = "#{@organization.name}: New User"
 
     @user = User.new
@@ -143,10 +149,11 @@ class UsersController < OrganizationAwareController
   def edit
 
     if @user.id == current_user.id
-      @page_title = "My Settings: Update"
+      add_breadcrumb "My Settings", user_path(@user)
     else
-      @page_title = "#{@user.name}: Update"
+      add_breadcrumb @user.name, user_path(@user)
     end
+    add_breadcrumb 'Update' 
 
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
@@ -179,6 +186,7 @@ class UsersController < OrganizationAwareController
 
     @user = User.new(form_params)
     @user.organization = @organization
+    add_breadcrumb 'New'
 
     respond_to do |format|
       if @user.save
@@ -194,12 +202,6 @@ class UsersController < OrganizationAwareController
 
   def update
 
-    if @user.id == current_user.id
-      @page_title = "My Settings: Update"
-    else
-      @page_title = "#{@user.name}: Update"
-    end
-
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
     if @user.nil?
@@ -207,6 +209,13 @@ class UsersController < OrganizationAwareController
       redirect_to users_url
       return
     end
+
+    if @user.id == current_user.id
+      add_breadcrumb "My Settings", user_path(@user)
+    else
+      add_breadcrumb @user.name, user_path(@user)
+    end
+    add_breadcrumb 'Update' 
 
     respond_to do |format|
       if @user.update_attributes(form_params)

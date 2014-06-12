@@ -1,6 +1,6 @@
 .breadcrumbs{:style => 'margin-top: 30px;'}
   - unless params[:controller] == 'dashboards'
-    - if @prev_record_path or @next_record_path
+    - if @total_rows and @total_rows > 0
       .row
         .col-md-10
           = render_breadcrumbs :builder => ::BootstrapBreadcrumbsBuilder, :separator => "&raquo;"

@@ -1,0 +1,17 @@
+.row
+  .col-md-12
+    .panel.panel-default.header-part
+      .panel-heading
+        .row
+          .col-md-4
+            %h3.panel-title
+              %i.fa.fa-user
+              Users
+          .col-md-8
+            = render 'index_actions'
+      .panel-body
+        - if @users.empty?
+          %p No matching users found
+        - else
+          .col-md-12
+            = render 'index_table'
