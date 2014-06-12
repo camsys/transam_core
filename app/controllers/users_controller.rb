@@ -37,7 +37,7 @@ class UsersController < OrganizationAwareController
     conditions  = []
     values      = []
         
-    # See if we got an organizaiton id
+    # See if we got an organization id
     @organization_id = params[:organization_id]
     unless @organization_id.blank?
       @organization_id = @organization_id.to_i

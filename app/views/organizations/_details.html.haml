@@ -1,0 +1,27 @@
+%ul.nav.nav-tabs
+  %li
+    %a{:href => "#service", :data =>{:toggle => 'tab'}}
+      = "Service Area"
+  %li
+    %a{:href => "#map", :data =>{:toggle => 'tab'}}
+      = "Map"
+  %li
+    %a{:href => "#assets", :data =>{:toggle => 'tab'}}
+      = "Asset Summary"
+  %li
+    %a{:href => "#users", :data =>{:toggle => 'tab'}}
+      = "Users (#{@org.users.count})"
+
+.tab-content
+  .tab-pane.fade#service
+    .tab-content
+      = render 'service_area'
+  .tab-pane.fade#map
+    .tab-content
+      = render 'map'
+  .tab-pane.fade#assets
+    .tab-content
+      = render 'asset_summary'
+  .tab-pane.fade#users
+    .tab-content
+      = render 'users/index_table'

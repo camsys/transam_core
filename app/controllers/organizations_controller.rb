@@ -36,49 +36,32 @@ class OrganizationsController < OrganizationAwareController
       redirect_to organizations_url 
       return
     end
-    
-    if @org.id == current_user.organization.id
-      @page_title = "My Organization"
-    else
-      @page_title = @org.name
-    end
+
+    add_breadcrumb @org.organization_type.name.pluralize(2), organizations_path(:organization_type_id => @org.organization_type.id)
+    add_breadcrumb @org.short_name  
     
     # get the @prev_record_path and @next_record_path view vars
     get_next_and_prev_object_keys(@org, INDEX_KEY_LIST_VAR)
     @prev_record_path = @prev_record_key.nil? ? "#" : organization_path(@prev_record_key)
     @next_record_path = @next_record_key.nil? ? "#" : organization_path(@next_record_key)
     
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render :json => @org }
-    end
-    
-  end
-
-  def map
-
-    if @org.nil?
-      notify_user(:alert, "Record not found.")
-      redirect_to organizations_url 
-      return
-    end
-
-    # get the @prev_record_path and @next_record_path view vars
-    get_next_and_prev_object_keys(@org, INDEX_KEY_LIST_VAR)
-    @prev_record_path = @prev_record_key.nil? ? "#" : organization_path(@prev_record_key)
-    @next_record_path = @next_record_key.nil? ? "#" : organization_path(@next_record_key)
-    
-    @page_title = @org.name
     @organizations = []
     @organizations << @org
     @markers = generate_map_markers(@organizations, true)
-                  
-    respond_to do |format|
-      format.html # map.html.erb
-      format.json { render @markers }
-    end
+
+    # get the data for the tabs
+    @users = @org.users
     
+    rep = AssetSubtypeReport.new
+    @data = rep.get_data(@org, {})
+    @total_assets = @org.assets.count
+
+    respond_to do |format|
+      format.html # show.html.erb
+      format.json { render :json => @org }
+    end    
   end
+
   
   # Edit simply returns the selected organization
   def edit
@@ -87,6 +70,10 @@ class OrganizationsController < OrganizationAwareController
       redirect_to organizations_url 
       return
     end
+    
+    add_breadcrumb @org.short_name, organization_path(@org)  
+    add_breadcrumb "Update"
+        
     @page_title = "Update: #{@org.name}"    
   end
 
@@ -97,6 +84,9 @@ class OrganizationsController < OrganizationAwareController
       redirect_to organizations_url 
       return
     end
+
+    add_breadcrumb @org.short_name, organization_path(@org)  
+    add_breadcrumb "Update"
 
     respond_to do |format|
       if @org.update_attributes(form_params)

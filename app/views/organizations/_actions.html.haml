@@ -1,0 +1,10 @@
+.btn-group.pull-right.panel-action
+  %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
+    I want to  
+    %span.caret
+  %ul.dropdown-menu{:role => 'menu'}
+    - if can? :update, @org
+      %li
+        = link_to edit_organization_path(@org) do
+          %i.fa.fa-edit.fa-fw
+          = " Update this organization"
