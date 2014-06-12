@@ -47,14 +47,11 @@ Rails.application.routes.draw do
   resources :assets, :path => :inventory do
     resources :comments
     resources :documents
+    resources :images
   end
       
-  resources :organizations, :path => "org", :only => [:index, :show, :edit, :update] do
-    member do
-      get 'map'
-    end
-  end
-
+  resources :organizations, :path => "org", :only => [:index, :show, :edit, :update] 
+  
   resources :comments,    :only => [:create, :update, :edit, :new, :destroy]    
   resources :documents,   :only => [:create, :update, :edit, :new, :destroy] do
     member do
