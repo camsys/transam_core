@@ -17,6 +17,11 @@ class AssetEventsController < AssetAwareController
 
   def index
 
+    add_breadcrumb @asset.asset_type.name.pluralize(2), inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
+    add_breadcrumb @asset.asset_subtype.name.pluralize(2), inventory_index_path(:asset_subtype => @asset.asset_subtype)
+    add_breadcrumb @asset.asset_tag, inventory_path(@asset)
+    add_breadcrumb "History"
+
     # Check to see if we got a filter to sub select on
     if params[:filter_type]
       # see if it was blank
@@ -55,11 +60,10 @@ class AssetEventsController < AssetAwareController
       @asset_event = AssetEvent.get_new_typed_event(asset_event_type)
     end
 
-    @page_title = "#{@asset.name}: New #{@asset_event.asset_event_type.name}"
-    add_breadcrumb "#{@asset.asset_type.class_name.underscore.humanize.titleize}".pluralize(2), inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
-    add_breadcrumb "#{@asset.asset_subtype.name}", inventory_index_path(:asset_subtype => @asset.asset_subtype)
-    add_breadcrumb @asset.asset_tag, inventory_path(@asset)    
-    add_breadcrumb @asset_event.asset_event_type.name, new_inventory_asset_event_path(@asset)    
+    add_breadcrumb @asset.asset_type.name.pluralize(2), inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
+    add_breadcrumb @asset.asset_subtype.name.pluralize(2), inventory_index_path(:asset_subtype => @asset.asset_subtype)
+    add_breadcrumb @asset.asset_tag, inventory_path(@asset)
+    add_breadcrumb @asset_event.asset_event_type.name
 
     respond_to do |format|
       format.html 
@@ -77,10 +81,12 @@ class AssetEventsController < AssetAwareController
       redirect_to(inventory_url(@asset))
       return
     end
- 
-    @page_title = "#{@asset.name}: #{@asset_event.asset_event_type.name}: #{localize(@asset_event.event_date)}"
-    @disabled = true
-    
+
+    add_breadcrumb @asset.asset_type.name.pluralize(2), inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
+    add_breadcrumb @asset.asset_subtype.name.pluralize(2), inventory_index_path(:asset_subtype => @asset.asset_subtype)
+    add_breadcrumb @asset.asset_tag, inventory_path(@asset)
+    add_breadcrumb @asset_event.asset_event_type.name
+     
     respond_to do |format|
       format.html # show.html.erb
       format.json { render :json => @asset_event }
@@ -97,8 +103,11 @@ class AssetEventsController < AssetAwareController
       return
     end
 
-    @page_title = "#{@asset.name}: Update #{@asset_event.asset_event_type.name}"
-    @disabled = false
+    add_breadcrumb @asset.asset_type.name.pluralize(2), inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
+    add_breadcrumb @asset.asset_subtype.name.pluralize(2), inventory_index_path(:asset_subtype => @asset.asset_subtype)
+    add_breadcrumb @asset.asset_tag, inventory_path(@asset)
+    add_breadcrumb @asset_event.asset_event_type.name, edit_inventory_asset_event_path(@asset, @asset_event)
+    add_breadcrumb "Update"
    
   end
   
@@ -111,6 +120,12 @@ class AssetEventsController < AssetAwareController
       redirect_to(inventory_url(@asset))
       return
     end
+
+    add_breadcrumb @asset.asset_type.name.pluralize(2), inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
+    add_breadcrumb @asset.asset_subtype.name.pluralize(2), inventory_index_path(:asset_subtype => @asset.asset_subtype)
+    add_breadcrumb @asset.asset_tag, inventory_path(@asset)
+    add_breadcrumb @asset_event.asset_event_type.name, edit_inventory_asset_event_path(@asset, @asset_event)
+    add_breadcrumb "Update"
 
     respond_to do |format|
       if @asset_event.update_attributes(form_params)
