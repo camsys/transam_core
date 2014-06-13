@@ -107,7 +107,7 @@ Rails.application.routes.draw do
       end
     end
     # Add user organization filters
-    resources :user_organizations_filters
+    resources :user_organization_filters
   end
       
   resources :policies do
