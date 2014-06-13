@@ -71,6 +71,7 @@ class OrganizationsController < OrganizationAwareController
       return
     end
     
+    add_breadcrumb @org.organization_type.name.pluralize(2), organizations_path(:organization_type_id => @org.organization_type.id)
     add_breadcrumb @org.short_name, organization_path(@org)  
     add_breadcrumb "Update"
         
