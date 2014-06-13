@@ -106,7 +106,8 @@ Rails.application.routes.draw do
         patch 'update_status'
       end
     end
-    
+    # Add user organization filters
+    resources :user_organizations_filters
   end
       
   resources :policies do
