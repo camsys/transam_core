@@ -9,6 +9,11 @@
   			<i class="fa fa-envelope fa-fw"></i> My Messages
   		<% end %>
   	</li>
+  	<li class="text-left">
+  		<%= link_to user_user_organization_filters_path(current_user) do %>
+  			<i class="fa fa-filter fa-fw"></i> My Filters
+  		<% end %>
+  	</li>
 	<li class="divider text-left"></li>
 	<li class="text-left">												
 		<%= link_to organization_path(current_user.organization)  do %>
