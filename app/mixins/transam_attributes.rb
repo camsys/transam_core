@@ -26,7 +26,7 @@ module TransamAttributes
   end
 
   def organization_allowable_params
-    Organization.allowable_params
+    Organization.allowable_params + TransitAgency.allowable_params
   end
 
   def policy_allowable_params
