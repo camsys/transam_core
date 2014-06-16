@@ -108,7 +108,7 @@ report_types = [
   {:active => 1, :name => 'Database Query',       :display_icon_name => "fa fa-database",     :description => 'Custom SQL Report.'}
 ]
 
-rural_urban_types = [
+urban_rural_types = [
   {:active => 1, :name => 'Rural',        :description => 'Organization serving rural areas only.'},
   {:active => 1, :name => 'Urban',        :description => 'Organization serving urban areas only.'},
   {:active => 1, :name => 'Rural/Urban',  :description => 'Organizaiton serving both urban and rural areas.'}
@@ -125,7 +125,7 @@ location_reference_types = [
 lookup_tables = %w{condition_types disposition_types cost_calculation_types license_types priority_types
   file_status_types attachment_types district_types report_types location_reference_types service_status_types
   depreciation_calculation_types task_status_types service_life_calculation_types condition_estimation_types
-  rural_urban_types
+  urban_rural_types
   }
 
 puts ">>> Loading Core Lookup Tables <<<<"
