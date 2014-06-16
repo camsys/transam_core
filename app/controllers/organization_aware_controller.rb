@@ -25,7 +25,7 @@ class OrganizationAwareController < TransamController
     orgs.each do |o|
       list << o.id
     end
-    session[USER_SELECTED_ORGANIZATION_ID_LIST] = org.short_name
+    session[USER_SELECTED_ORGANIZATION_ID_LIST] = list
   end
   
   # Set the session varibale with the newly selected organization
@@ -59,6 +59,10 @@ class OrganizationAwareController < TransamController
       else
         # not session variable so get the user's default organizations
         @organization_list = session[USER_SELECTED_ORGANIZATION_ID_LIST]
+        # Make sure the list is not empty
+        if @organization_list.nil? or @organization_list.empty?
+          @organization_list = [current_user.organization.id]        
+        end
       end
       
     else

@@ -1,0 +1,22 @@
+%table.table.table-hover#datatable
+  %thead
+    %tr
+      %th.left Name
+      %th.left Description
+      %th.right Org Count
+
+      %th.right Created
+      %th.right Last Updated       
+      
+  %tbody
+    - @user_organization_filters.each do |f|      
+      %tr.popup-details{:data => {:action_path => user_user_organization_filter_path(current_user, f)}}
+        %td= f.name
+        %td= f.description
+        %td.right= f.grantees.count
+
+        %td.right= format_as_date_time(f.created_at)
+        %td.right= format_as_date_time(f.updated_at)
+
+= render 'shared/datatable_javascript'
+

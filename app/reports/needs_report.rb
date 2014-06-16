@@ -6,25 +6,25 @@ class NeedsReport < AbstractReport
   
   protected
   
-  def get_assets(organization, analysis_year, report_filter_type)
+  def get_assets(organization_id_list, analysis_year, report_filter_type)
     
     # get the list of assets for this organization
     if report_filter_type > 0
-      assets = organization.assets.where('asset_type_id = ? AND policy_replacement_year = ?', report_filter_type, analysis_year)
+      assets = Asset.where('assets.organization_id IN (?) AND assets.asset_type_id = ? AND assets.policy_replacement_year = ?', organization_id_list, report_filter_type, analysis_year)
     else
-      assets = organization.assets.where('policy_replacement_year = ?', analysis_year)
+      assets = Asset.where('assets.organization_id IN (?) AND assets.policy_replacement_year = ?', organization_id_list, analysis_year)
     end
     return assets
     
   end
 
-  def get_backlog_assets(organization, report_filter_type)
+  def get_backlog_assets(organization_id_list, report_filter_type)
     
     # get the list of assets for this agency
     if report_filter_type > 0
-      assets = organization.assets.where('asset_type_id = ? AND in_backlog = ?', report_filter_type, true)
+      assets = Asset.where('assets.organization_id IN (?) AND assets.asset_type_id = ? AND assets.in_backlog = ?', organization_id_list, report_filter_type, true)
     else
-      assets = organization.assets.where("in_backlog = ?", true)
+      assets = Asset.where("assets.organization_id IN (?) AND assets.in_backlog = ?", organization_id_list, true)
     end
     return assets
     

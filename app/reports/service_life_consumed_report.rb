@@ -7,7 +7,7 @@ class ServiceLifeConsumedReport < AbstractReport
     super(attributes)
   end    
   
-  def get_data(organization, params)
+  def get_data(organization_id_list, params)
 
     # Check to see if we got an asset type to sub select on
     if params[:report_filter_type] 
@@ -27,7 +27,7 @@ class ServiceLifeConsumedReport < AbstractReport
       labels << asset_type.name
     else
       AssetType.all.each do |type| 
-        asset_count = organization.assets.where("asset_type_id = ?", type.id).count
+        asset_count = Asset.where("assets.organization_id IN (?) AND assets.asset_type_id = ?", organization_id_list, type.id).count
         if asset_count > 0
           # push this asset type into the a matrix
           labels << type.name
@@ -61,12 +61,12 @@ class ServiceLifeConsumedReport < AbstractReport
     # Process the assets and increament the bucket counters based on the %age useful life consumed for
     # each asset
     if report_filter_type > 0
-      assets = organization.assets.where("asset_type_id = ?", report_filter_type)
+      assets = Asset.where("assets.organization_id IN (?) AND asset_type_id = ?", organization_id_list, report_filter_type)
     else
-      assets = organization.assets
+      assets = Asset.where("assets.organization_id IN (?)", organization_id_list)
     end
     # get the current policy so we can deduce useful life
-    policy = organization.get_policy
+    policy = Policy.first #organization.get_policy
     # count the number of assets so we can normalize ther report
     num_assets = 0
     assets.each do |asset|

@@ -4,7 +4,7 @@ class CustomSqlReport < AbstractReport
     super(attributes)
   end    
   
-  def get_data(organization, params)
+  def get_data(organization_id_list, params)
 
     # Check to see if we got an asset type to sub select on
     if params[:report_filter_type] 

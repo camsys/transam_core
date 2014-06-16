@@ -66,7 +66,7 @@ class AssetAwareController < OrganizationAwareController
   # otherwise a base class asset is returned
   # 
   def get_selected_asset(convert=true)
-    selected_asset = Asset.where('organization_id = ? AND object_key = ?', @organization.id, params[:inventory_id]).first unless params[:inventory_id].blank?
+    selected_asset = Asset.where('organization_id IN (?) AND object_key = ?', @organization_list, params[:inventory_id]).first unless params[:inventory_id].blank?
     if convert
       asset = get_typed_asset(selected_asset)
     else

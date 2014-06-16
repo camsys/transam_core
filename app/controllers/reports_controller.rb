@@ -28,7 +28,7 @@ class ReportsController < OrganizationAwareController
     # inject the sql for the report into the params
     params[:sql] = @report.custom_sql unless @report.custom_sql.blank?
     # get the report data    
-    @data = report_instance.get_data(@organization, params)
+    @data = report_instance.get_data(@organization_list, params)
 
     respond_to do |format|
       format.js 
@@ -46,7 +46,8 @@ class ReportsController < OrganizationAwareController
     @report_filter_type = params[:report_filter_type]
     @asset_types = []
     AssetType.all.each do |at|
-      if @organization.asset_count(['asset_type_id = ?'], [at.id]) > 0
+      count = Asset.where('assets.organization_id IN (?) AND assets.asset_type_id = ?', @organization_list, at.id).count
+      if count > 0
         @asset_types << [at.name, at.id]
       end
     end
@@ -67,7 +68,7 @@ class ReportsController < OrganizationAwareController
       # inject the sql for the report into the params
       params[:sql] = @report.custom_sql unless @report.custom_sql.blank?
       # get the report data
-      @data = report_instance.get_data(@organization, params)
+      @data = report_instance.get_data(@organization_list, params)
       
       respond_to do |format|
         format.html

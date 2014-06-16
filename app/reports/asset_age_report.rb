@@ -4,7 +4,7 @@ class AssetAgeReport < AbstractReport
     super(attributes)
   end    
   
-  def get_data(organization, params)
+  def get_data(organization_id_list, params)
 
     # Check to see if we got an asset type to sub select on
     if params[:report_filter_type] 
@@ -21,9 +21,10 @@ class AssetAgeReport < AbstractReport
       asset_type = AssetType.find_by_id(report_filter_type)
       labels << asset_type.name
     else
-      AssetType.all.each do |type| 
-        asset_counts << organization.assets.where("asset_type_id = ?", type.id).count
-        labels << type.name unless asset_counts.last == 0
+      AssetType.all.each do |at|
+        count = Asset.where('assets.organization_id IN (?) AND assets.asset_type_id = ?', organization_id_list, at.id).count
+        asset_counts << count
+        labels << at.name unless count == 0
       end
     end
             
@@ -32,10 +33,10 @@ class AssetAgeReport < AbstractReport
       counts << "#{year}"
       manufacture_year = year.year.ago.year
       if report_filter_type > 0
-        counts << organization.assets.where("asset_type_id = ? AND manufacture_year = ?", report_filter_type, manufacture_year).count
+        counts << Asset.where("assets.organization_id IN (?) AND assets.asset_type_id = ? AND assets.manufacture_year = ?", organization_id_list, report_filter_type, manufacture_year).count
       else
         AssetType.all.each_with_index do |type, idx|
-          counts << organization.assets.where("asset_type_id = ? AND manufacture_year = ?", type.id, manufacture_year).count unless asset_counts[idx] == 0
+          counts << Asset.where("assets.organization_id IN (?) AND asset_type_id = ? AND manufacture_year = ?", organization_id_list, type.id, manufacture_year).count unless asset_counts[idx] == 0
         end
       end
       a << counts
@@ -47,10 +48,10 @@ class AssetAgeReport < AbstractReport
     counts << "+#{year}"
     manufacture_year = MAX_REPORTING_YEARS.year.ago.year
     if report_filter_type > 0
-      counts << organization.assets.where("asset_type_id = ? AND manufacture_year < ?", report_filter_type, manufacture_year).count
+      counts << Asset.where("assets.organization_id IN (?) AND assets.asset_type_id = ? AND assets.manufacture_year < ?", organization_id_list, report_filter_type, manufacture_year).count
     else
       AssetType.all.each_with_index do |type, idx|
-        counts << organization.assets.where("asset_type_id = ? AND manufacture_year < ?", type.id, manufacture_year).count unless asset_counts[idx] == 0
+        counts << Asset.where("assets.organization_id IN (?) AND assets.asset_type_id = ? AND assets.manufacture_year < ?", organization_id_list, type.id, manufacture_year).count unless asset_counts[idx] == 0
       end
     end
     a << counts

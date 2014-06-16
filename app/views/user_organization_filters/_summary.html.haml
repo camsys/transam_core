@@ -1,0 +1,7 @@
+%fieldset
+  %legend.panel-legend Details
+  = format_field("Name", filter.name )
+  = format_field("Num Orgs", filter.grantees.count )
+%fieldset
+  %legend.panel-legend Description
+  = filter.description.html_safe

@@ -4,7 +4,7 @@ class BacklogReport < AbstractReport
     super(attributes)
   end    
   
-  def get_data(organization, params)
+  def get_data(organization_id_list, params)
     
     # Check to see if we got an asset type to sub select on
     if params[:report_filter_type] 
@@ -15,9 +15,9 @@ class BacklogReport < AbstractReport
         
     # get the list of assets for this agency
     if report_filter_type > 0
-      assets = organization.assets.where('asset_type_id = ? AND in_backlog = ?', report_filter_type, true).order('asset_type_id, asset_subtype_id')
+      assets = Asset.where('organization_id IN (?) AND assets.asset_type_id = ? AND assets.in_backlog = ?', organization_id_list, report_filter_type, true).order('asset_type_id, asset_subtype_id')
     else
-      assets = organization.assets.where("in_backlog = ?", true).order('asset_type_id, asset_subtype_id')
+      assets = Asset.where("organization_id IN (?) AND assets.in_backlog = ?", organization_id_list, true).order('asset_type_id, asset_subtype_id')
     end
 
     a = {}

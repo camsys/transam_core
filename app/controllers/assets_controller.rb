@@ -396,8 +396,9 @@ class AssetsController < AssetAwareController
     # here we build the query one clause at a time based on the input params
     clauses = []
     values = []
-    clauses << ['organization_id = ?']
-    values << [@organization.id]
+    
+    clauses << ['organization_id IN (?)']
+    values << [@organization_list]
 
     unless @search_text.blank?
       # get the list of searchable fields from the asset class

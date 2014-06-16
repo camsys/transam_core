@@ -4,7 +4,7 @@ class NextFyNeedsReport < NeedsReport
     super(attributes)
   end    
   
-  def get_data(organization, params)
+  def get_data(organization_id_list, params)
         
     # Check to see if we got an asset type to sub select on
     if params[:report_filter_type] 
@@ -15,7 +15,7 @@ class NextFyNeedsReport < NeedsReport
         
     analysis_year = Date.today.year + 1
     
-    assets = get_assets(organization, analysis_year, report_filter_type)
+    assets = get_assets(organization_id_list, analysis_year, report_filter_type)
     
     return calc_need(assets)
         
