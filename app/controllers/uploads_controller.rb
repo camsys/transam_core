@@ -1,5 +1,7 @@
 class UploadsController < OrganizationAwareController
 
+  add_breadcrumb "Home", :root_path
+
   before_action :set_upload, :only => [:show, :destroy, :resubmit]  
   before_filter :check_for_cancel, :only => [:create, :update, :create_template]
   
@@ -7,9 +9,29 @@ class UploadsController < OrganizationAwareController
   
   def index
 
-    @page_title = 'Uploads'
-    @uploads = @organization.uploads
+    add_breadcrumb "Uploads", uploads_path
+    
+    # Start to set up the query
+    conditions  = []
+    values      = []
+    
+    # Add the organization clause
+    conditions << 'organization_id IN (?)'
+    values << get_id_array(current_user.organizations)
+    
+    # See if we got an organization type id
+    @file_status_type_id = params[:file_status_type_id]
+    unless @file_status_type_id.blank?
+      @file_status_type_id = @file_status_type_id.to_i
+      conditions << 'file_status_type_id = ?'
+      values << @file_status_type_id
+      
+      type = FileStatusType.find(@file_status_type_id)
+      add_breadcrumb type.name unless type.nil?
+    end
 
+    @uploads = Upload.where(conditions.join(' AND '), *values).order(:created_at)
+        
     # remember the view type
     @view_type = get_view_type(SESSION_VIEW_TYPE_VAR)
     
@@ -27,7 +49,10 @@ class UploadsController < OrganizationAwareController
       redirect_to uploads_url
       return      
     end
-    
+
+    add_breadcrumb "Uploads", uploads_path
+    add_breadcrumb @upload.original_filename
+        
     @page_title = "Upload: #{@upload.original_filename}"
     respond_to do |format|
       format.html # show.html.erb
@@ -64,6 +89,9 @@ class UploadsController < OrganizationAwareController
   end
 
   def templates
+    
+    add_breadcrumb "Templates"
+    
     @page_title = "Download Template"
     
     #prepare a list of just the asset types of the current organization
@@ -76,6 +104,8 @@ class UploadsController < OrganizationAwareController
   end
   
   def create_template
+
+    add_breadcrumb "Templates"
     
     template_proxy = TemplateProxy.new(params[:template_proxy])
     file_content_type = FileContentType.find(template_proxy.file_content_type_id)
@@ -100,6 +130,9 @@ class UploadsController < OrganizationAwareController
   end
   
   def new
+
+    add_breadcrumb "Uploads", uploads_path
+    add_breadcrumb "New"
     
     @page_title = "Upload Spreadsheet"
     @upload = Upload.new
@@ -114,8 +147,12 @@ class UploadsController < OrganizationAwareController
 
     @upload = Upload.new(form_params)
     @upload.user = current_user
-    @upload.organization = @organization
-    @page_title = "Upload Spreadsheet"
+    if @upload.organization.nil?
+      @upload.organization = @organization
+    end
+
+    add_breadcrumb "Uploads", uploads_path
+    add_breadcrumb "New"
     
     respond_to do |format|
       if @upload.save

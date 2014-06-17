@@ -1,0 +1,15 @@
+.btn-group.pull-right.panel-action
+  %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
+    I want to  
+    %span.caret
+  %ul.dropdown-menu{:role => 'menu'}
+    - if can? :update, @upload
+      %li
+        = link_to resubmit_upload_path(@upload), :confirm => "Are you sure you want to resubmit this file for processing?" do
+          %i.fa.fa-repeat.fa-fw
+          = " Resubmit this file"
+    - if can? :delete, @upload
+      %li
+        = link_to upload_path(@upload), :method => :delete, :data => {:confirm => "Are you sure you want to remove this file?"}  do
+          %i.fa.fa-times.fa-fw
+          = " Remove this file"

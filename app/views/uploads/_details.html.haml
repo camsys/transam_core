@@ -1,0 +1,15 @@
+%ul.nav.nav-tabs
+  %li
+    %a{:href => "#history", :data =>{:toggle => 'tab'}}
+      = "Processing"
+  %li
+    %a{:href => "#log", :data =>{:toggle => 'tab'}}
+      = "Process Log"
+
+.tab-content
+  .tab-pane.fade#history
+    .tab-content
+      = render 'history'
+  .tab-pane.fade#log
+    .tab-content{:style => "overflow-y:scroll;height:400px;"}
+      = render 'process_log'

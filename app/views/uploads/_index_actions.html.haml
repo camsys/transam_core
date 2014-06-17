@@ -1,0 +1,12 @@
+= form_tag uploads_path, :id => 'filter_form', :method => "get", :class => 'navbar-form navbar-right panel-action' do
+  .form-group
+    = select_tag(:file_status_type_id, options_for_select(FileStatusType.all.collect{|a| [a.name, a.id]}, :selected => @file_status_type_id), :class => "form-control", :prompt => "Any type...")
+
+:javascript
+  $(document).ready(function() {
+
+    $('#file_status_type_id').change(function() {
+      $('#filter_form').submit();
+    });
+    
+  });  

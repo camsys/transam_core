@@ -1,0 +1,9 @@
+.row
+  .col-md-12
+    = format_field("Time Started", format_as_date_time(@upload.processing_started_at) )
+    = format_field("Time Complete", format_as_date_time(@upload.processing_completed_at) )
+    = format_field("Num. Rows Processed", format_as_integer(@upload.num_rows_processed) )
+    = format_field("Num. Rows Added", format_as_integer(@upload.num_rows_added) )
+    = format_field("Num. Rows Skipped", format_as_integer(@upload.num_rows_skipped) )
+    = format_field("Num. Rows Replaced", format_as_integer(@upload.num_rows_replaced) )
+    = format_field("Num. Rows Failed", format_as_integer(@upload.num_rows_failed) )
