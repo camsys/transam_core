@@ -97,7 +97,8 @@ class UploadsController < OrganizationAwareController
     #prepare a list of just the asset types of the current organization
     @asset_types = []
     AssetType.all.each do |at|
-      if @organization.asset_count(at) > 0 
+      count = Asset.where('organization_id in (?) AND asset_type_id = ?', get_id_array(current_user.organizations), at.id).count
+      if count > 0 
         @asset_types << at
       end
     end
