@@ -49,14 +49,17 @@ class Asset < ActiveRecord::Base
   # each asset has a single asset subtype
   belongs_to :asset_subtype
 
+  # each asset has a single maintenance provider type
+  belongs_to :maintenance_provider_type
+
   # Each asset has zero or more asset events. These are all events regardless of event type. Events are deleted when the asset is deleted
   has_many   :asset_events, :dependent => :destroy
 
   # each asset has zero or more condition updates
   has_many   :condition_updates, -> {where :asset_event_type_id => ConditionUpdateEvent.asset_event_type.id }, :class_name => "ConditionUpdateEvent"
 
-  # each asset has zero or more mileage updates. Only for vehicle assets.
-  has_many   :mileage_updates, -> {where :asset_event_type_id => MileageUpdateEvent.asset_event_type.id }, :class_name => "MileageUpdateEvent"
+  # each asset has zero or more maintenance provider updates. .
+  has_many   :maintenance_provider_updates, -> {where :asset_event_type_id => MaintenanceProviderUpdateEvent.asset_event_type.id }, :class_name => "MaintenanceProviderUpdateEvent"
 
   # each asset has zero or more scheduled replacement updates
   has_many   :schedule_replacement_updates, -> {where :asset_event_type_id => ScheduleReplacementUpdateEvent.asset_event_type.id }, :class_name => "ScheduleReplacementUpdateEvent"
@@ -190,7 +193,6 @@ class Asset < ActiveRecord::Base
     :reported_condition_type_id,
     :reported_condition_rating,
     :reported_condition_date,
-    :reported_milage,
     :estimated_condition_type_id,
     :estimated_condition_rating,
     :service_status_type_id,
@@ -358,36 +360,19 @@ class Asset < ActiveRecord::Base
     # can't do this if it is a new record as none of the IDs would be set
     unless new_record?
       update_asset_state(policy)
-      reload
     end
   end
 
-  # Forces an update of an assets mileage. This performs an update on the record. If a policy is passed
-  # that policy is used to update the asset otherwise the default policy is used
-  def update_mileage(policy = nil)
+  # Forces an update of an assets maintenance provider. This performs an update on the record.
+  def update_maintenance_provider
 
-    # can't do this if it is a new record as none of the IDs would be set
+    Rails.logger.info "Updating the recorded maintenance provider for asset = #{object_key}"
+
     unless new_record?
-      update_asset_state(policy)
-      reload
-    end
-  end
-
-  # Forces an update of an assets location. This performs an update on the record.
-  def update_location
-
-    Rails.logger.info "Updating the recorded location for asset = #{object_key}"
-
-    # Make sure we are working with a concrete asset class
-    asset = is_typed? ? self : Asset.get_typed_asset(self)
-
-    unless asset.new_record?
-      unless asset.location_updates.empty?
-        event = asset.location_updates.last
-        asset.location_id = event.location_id
-        asset.location_comments = event.comments
-        asset.save
-        reload
+      unless maintenance_provider_updates.empty?
+        event = maintenance_provider_updates.last
+        self.maintenance_provider_type = event.maintenance_provider_type
+        save
       end
     end
   end
@@ -397,17 +382,13 @@ class Asset < ActiveRecord::Base
 
     Rails.logger.info "Updating the scheduled replacement/rehabilitation for asset = #{object_key}"
 
-    # Make sure we are working with a concrete asset class
-    asset = is_typed? ? self : Asset.get_typed_asset(self)
-
-    unless asset.new_record?
-      unless asset.schedule_replacement_updates.empty?
-        event = asset.schedule_replacement_updates.last
-        asset.scheduled_replacement_year = event.replacement_year unless event.replacement_year.nil?
-        asset.scheduled_rehabilitation_year = event.rebuild_year unless event.rebuild_year.nil?
-        asset.scheduled_by_user = true
-        asset.save
-        reload
+    unless new_record?
+      unless schedule_replacement_updates.empty?
+        event = schedule_replacement_updates.last
+        self.scheduled_replacement_year = event.replacement_year unless event.replacement_year.nil?
+        self.scheduled_rehabilitation_year = event.rebuild_year unless event.rebuild_year.nil?
+        self.scheduled_by_user = true
+        save
       end
     end
   end

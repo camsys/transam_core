@@ -1,11 +1,11 @@
 #------------------------------------------------------------------------------
 #
-# AssetMileageUpdateJob
+# AssetStorageMethodUpdateJob
 #
 # Updates an assets condition
 #
 #------------------------------------------------------------------------------
-class AssetMileageUpdateJob < Job
+class AssetStorageMethodUpdateJob < Job
   
   attr_accessor :object_key
   
@@ -14,14 +14,14 @@ class AssetMileageUpdateJob < Job
     if asset
       # Make sure the asset is typed
       a = Asset.get_typed_asset(asset)
-      a.update_mileage
+      a.update_storage_method
     else
       raise RuntimeError, "Can't find Asset with object_key #{object_key}"
     end
   end
 
   def prepare
-    Rails.logger.debug "Executing AssetMileageUpdateJob at #{Time.now.to_s} for Asset #{object_key}"    
+    Rails.logger.debug "Executing AssetStorageMethodUpdateJob at #{Time.now.to_s} for Asset #{object_key}"    
   end
   
   def check    
