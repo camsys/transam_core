@@ -398,7 +398,7 @@ class AssetsController < AssetAwareController
     values = []
     
     clauses << ['organization_id IN (?)']
-    values << [@organization_list]
+    values << @organization_list
 
     unless @search_text.blank?
       # get the list of searchable fields from the asset class
@@ -563,7 +563,7 @@ class AssetsController < AssetAwareController
   # Overrides the utility method in the base class
   #
   def get_selected_asset(convert=true)
-    selected_asset = params[:id].nil? ? nil : Asset.where('organization_id = ? AND object_key = ?', @organization.id, params[:id]).first
+    selected_asset = params[:id].nil? ? nil : Asset.where('organization_id IN (?) AND object_key = ?', @organization_list, params[:id]).first
     if convert
       asset = get_typed_asset(selected_asset)
     else
