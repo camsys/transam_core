@@ -2,7 +2,7 @@
 #
 # AssetUpdateJob
 #
-# Updates all componetns of an asset
+# Updates all components of an asset
 #
 #------------------------------------------------------------------------------
 class AssetUpdateJob < Job
@@ -12,12 +12,19 @@ class AssetUpdateJob < Job
   def run    
     asset = Asset.find_by_object_key(object_key)
     if asset
-      asset.update_condition
-      asset.update_mileage
-      asset.update_location
-      asset.update_scheduled_replacement
-      asset.update_service_status
-      asset.update_estimated_value
+      # Make sure the asset is typed
+      a = Asset.get_typed_asset(asset)
+      
+      # Enter asset specific types of updates here
+      # if a.type_of :vehicle
+            
+      # generic asset updates
+      a.update_condition
+      a.update_maintenance_provider
+      a.update_service_status
+      a.update_scheduled_replacement
+      a.update_estimated_value
+      
     else
       raise RuntimeError, "Can't find Asset with object_key #{object_key}"
     end

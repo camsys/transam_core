@@ -516,18 +516,6 @@ class Asset < ActiveRecord::Base
       Rails.logger.warn e.message
     end
 
-    # Update the reported mileage
-    begin
-      if asset.mileage_updates.empty?
-        asset.reported_mileage = 0
-      else
-        event = mileage_updates.last
-        asset.reported_mileage = event.current_mileage
-      end
-    rescue Exception => e
-      Rails.logger.warn e.message
-    end
-
     # Update the estimated condition
     begin
       # see what metric we are using to estimate the condition of the asset
