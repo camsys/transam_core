@@ -4,6 +4,9 @@
   
   $(document).ready(function() {
 
+    // force the map to draw
+    invalidateMap();
+    
     transam.make_same_height('.header-part');
 	
     // Manage the tabs
@@ -11,6 +14,10 @@
       // save the latest tab
       var this_tab = $(this).attr('href');
       transam.set_ui_key_value(user_tab_key, this_tab);
+      // If this tab is the map then we need to re-render the maps
+      if (this_tab == '#map') {
+        invalidateMap();
+      }
     });
   });
   $(function() {
