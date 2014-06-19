@@ -5,8 +5,10 @@
 				<%= f.input :subject, :label => 'Description', :placeholder => "Task..." %>
 				<%= f.association :assigned_to, :collection => @organization.users, :label => "Assigned To" %>
 				<%= f.input :complete_by, :wrapper => :horizontal_append, :label => "Complete By" do %>
-					<%= f.input_field :complete_by, :as => :string, :class => 'col-md-11 datepicker form-control', :data => {'behavior' => 'datepicker'}, :value => f.object.complete_by.strftime("%m-%d-%Y") %>
-					<%= content_tag :span, :class => "input-group-addon" do %><i class="fa fa-calendar"></i><% end %>
+					<%= f.input_field :complete_by, :as => :string, :class => 'col-md-11 datepicker form-control', :data => {'behavior' => 'datepicker'}, :value => f.object.complete_by.nil? ? "" : f.object.complete_by.strftime("%m-%d-%Y") %>
+					<span class="input-group-addon">
+						<i class="fa fa-calendar"></i>
+					</span>
 				<% end %>
 				<%= f.input :send_reminder, :label => "Send Reminder" %>
 				<%= f.association :priority_type, :include_blank => false, :label => "Priority Type" %>

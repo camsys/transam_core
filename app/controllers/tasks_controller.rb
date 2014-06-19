@@ -302,9 +302,11 @@ class TasksController < OrganizationAwareController
   end
 
   def reformat_date_field
-    date_str = params[:task][:complete_by]
-    form_date = Date.strptime(date_str, '%m-%d-%Y')
-    params[:task][:complete_by] = form_date.strftime('%Y-%m-%d')
+    unless params[:task][:complete_by].blank?
+      date_str = params[:task][:complete_by]
+      form_date = Date.strptime(date_str, '%m-%d-%Y')
+      params[:task][:complete_by] = form_date.strftime('%Y-%m-%d')
+    end
   end
   
 end
