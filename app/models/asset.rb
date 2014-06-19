@@ -471,6 +471,8 @@ class Asset < ActiveRecord::Base
       # see what metric we are using to determine the service life of the asset
       class_name = policy.service_life_calculation_type.class_name
       asset.policy_replacement_year = calculate(asset, policy, class_name)
+      # automatically flag the replacement year unless the user has set one
+      asset.scheduled_replacement_year = asset.policy_replacement_year unless asset.scheduled_by_user
     rescue Exception => e
       Rails.logger.warn e.message
     end
