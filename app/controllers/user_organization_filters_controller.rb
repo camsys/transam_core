@@ -147,7 +147,7 @@ class UserOrganizationFiltersController < OrganizationAwareController
     @user_organization_filter.destroy
     notify_user(:notice, 'Filter was sucessfully removed.')
     respond_to do |format|
-      format.html { redirect_to user_organization_filters_url }
+      format.html { redirect_to user_user_organization_filters_path(current_user) }
       format.json { head :no_content }
     end
   end
