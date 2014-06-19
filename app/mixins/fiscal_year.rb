@@ -16,6 +16,11 @@ module FiscalYear
   def current_fiscal_year_year
     fiscal_year_year_on_date(Date.today)
   end
+  
+  # Returns the last fiscal year in the planning horizon
+  def last_fiscal_year_year
+    current_fiscal_year_year + MAX_FORECASTING_YEARS
+  end
 
   # Returns the fiscal year on a given date
   def fiscal_year_year_on_date(date)
