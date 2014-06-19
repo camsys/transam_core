@@ -89,8 +89,9 @@ class UserOrganizationFiltersController < OrganizationAwareController
 
     respond_to do |format|
       if @user_organization_filter.save
-        # Add the grantees into the object
-        grantee_list = form_params[:grantee_ids].split(',')
+        # Add the grantees into the object. Make sure that the elements are unique so
+        # the same org is not added more than once.
+        grantee_list = form_params[:grantee_ids].split(',').uniq
         grantee_list.each do |id|
           @user_organization_filter.grantees << Grantee.find(id)
         end
