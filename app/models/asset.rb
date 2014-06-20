@@ -12,6 +12,8 @@ class Asset < ActiveRecord::Base
   include UniqueKey
   # Include the numeric sanitizers mixin
   include NumericSanitizers
+  # Include the fiscal year mixin
+  include FiscalYear
 
   #------------------------------------------------------------------------------
   # Overrides
@@ -472,7 +474,16 @@ class Asset < ActiveRecord::Base
       class_name = policy.service_life_calculation_type.class_name
       asset.policy_replacement_year = calculate(asset, policy, class_name)
       # automatically flag the replacement year unless the user has set one
-      asset.scheduled_replacement_year = asset.policy_replacement_year unless asset.scheduled_by_user
+      unless asset.scheduled_by_user == true
+        # If the asset is in backlog set the scheduled year to the current FY year
+        if asset.policy_replacement_year < current_fiscal_year_year
+          puts "XXX Asset is in backlog. Setting scheduled replacement year to #{current_fiscal_year_year}"
+          asset.scheduled_replacement_year = current_fiscal_year_year
+        else
+          puts "XXX Setting scheduled replacement year to #{asset.policy_replacement_year}"
+          asset.scheduled_replacement_year = asset.policy_replacement_year
+        end
+      end
     rescue Exception => e
       Rails.logger.warn e.message
     end
