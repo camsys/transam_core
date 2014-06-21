@@ -8,8 +8,8 @@
 #------------------------------------------------------------------------------
 class InventoryLoader
   
-  def notes?
-    @notes.count > 0 
+  def comments?
+    @comments.count > 0 
   end  
   
   def warnings?
@@ -18,8 +18,8 @@ class InventoryLoader
   def errors?
     @errors.count > 0 
   end
-  def notes
-    @notes
+  def comments
+    @comments
   end
   
   def warnings
@@ -102,7 +102,7 @@ class InventoryLoader
   def initialize
     @warnings = []
     @errors   = []
-    @notes    = []
+    @comments = []
   end
   
 end
