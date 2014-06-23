@@ -86,7 +86,7 @@ class UserOrganizationFiltersController < OrganizationAwareController
     add_breadcrumb "Organization Filters", user_user_organization_filters_path(current_user)
     add_breadcrumb "New"
 
-    @user_organization_filter = UserOrganizationFilter.new(form_params)
+    @user_organization_filter = UserOrganizationFilter.new(form_params.except(:grantee_ids))
     @user_organization_filter.user = current_user
 
     respond_to do |format|
