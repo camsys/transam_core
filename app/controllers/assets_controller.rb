@@ -331,6 +331,16 @@ class AssetsController < AssetAwareController
     end
     # store it in the session for later
     session[:asset_subtype] = @asset_subtype
+
+    # Check to see if we got an organization to sub select on. 
+    if params[:org_id].nil? 
+      # see if one is stored in the session
+      @org_filter = session[:org_id].nil? ? 0 : session[:org_id].to_i
+    else
+      @org_filter = params[:org_id].to_i
+    end
+    # store it in the session for later
+    session[:org_id] = @org_filter
         
     # Check to see if we got a search text and search param to filter on
     if params[:search_text].nil?
@@ -397,9 +407,14 @@ class AssetsController < AssetAwareController
     clauses = []
     values = []
     
-    clauses << ['organization_id IN (?)']
-    values << @organization_list
-
+    unless @org_filter == 0
+      clauses << ['organization_id = ?']
+      values << @org_filter  
+    else
+      clauses << ['organization_id IN (?)']
+      values << @organization_list  
+    end
+    
     unless @search_text.blank?
       # get the list of searchable fields from the asset class
       searchable_fields = klass.new.searchable_fields
