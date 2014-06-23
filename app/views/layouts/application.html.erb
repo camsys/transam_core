@@ -42,6 +42,11 @@
 						</li>
 					</ul>
 				</div>
+				<% unless session[:user_organization_filter].blank? %>
+					<div class="navbar-header navbar-right navbar-text" style="padding-right: 20px;">
+						<%= "Filter: #{session[:user_organization_filter]}" %>
+					</div>
+				<% end %>
 			</div>
 		</nav>
 		<!-- Main Nav -->
