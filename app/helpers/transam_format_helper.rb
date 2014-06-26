@@ -5,9 +5,13 @@ module TransamFormatHelper
     link_to(url, url, :target => target)
   end      
   
-  # truncates any decimals and returns the number as currency
-  def format_as_currency(val)
-    number_to_currency(val.to_i, :precision => 0)
+  # if no precision is set this truncates any decimals and returns the number as currency
+  def format_as_currency(val, precision = 0)
+    if precision == 0
+      number_to_currency(val.to_i, :precision => 0)
+    else
+      number_to_currency(val, :precision => precision)
+    end
   end
 
   # if the value is a number it is formatted as a decimal or integer
