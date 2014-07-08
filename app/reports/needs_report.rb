@@ -1,5 +1,8 @@
 class NeedsReport < AbstractReport
 
+  # Include the fiscal year mixin
+  include FiscalYear
+
   def initialize(attributes = {})
     super(attributes)
   end    

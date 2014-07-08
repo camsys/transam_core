@@ -16,8 +16,8 @@ class CapitalNeedsReport < NeedsReport
     end
         
     # Asset needs by year
-    analysis_year = Date.today.year
-    last_year = analysis_year + MAX_FORECASTING_YEARS
+    analysis_year = current_fiscal_year_year
+    last_year = last_fiscal_year_year
     a = {}
     report_row = BasicReportRow.new(BACKLOG_KEY)
     a[BACKLOG_KEY] = report_row
