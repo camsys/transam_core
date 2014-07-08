@@ -19,7 +19,7 @@ module FiscalYear
   
   # Returns the last fiscal year in the planning horizon
   def last_fiscal_year_year
-    current_fiscal_year_year + MAX_FORECASTING_YEARS
+    current_fiscal_year_year + MAX_FORECASTING_YEARS - 1
   end
 
   # Returns the fiscal year on a given date
@@ -61,9 +61,8 @@ module FiscalYear
   # Returns a select array of fiscal years
   def get_fiscal_years(date = Date.today)
     current_year = fiscal_year_year_on_date(date)
-    last_year = current_year + MAX_FORECASTING_YEARS
     a = []
-    (current_year..last_year).each do |year|
+    (current_year..last_fiscal_year_year).each do |year|
       a << [fiscal_year(year), year]
     end
     a
