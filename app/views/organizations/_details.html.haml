@@ -1,7 +1,7 @@
 %ul.nav.nav-tabs
   %li
     %a{:href => "#service", :data =>{:toggle => 'tab'}}
-      = "Service Area"
+      = "Services"
   %li
     %a{:href => "#map", :data =>{:toggle => 'tab'}}
       = "Map"
@@ -15,7 +15,7 @@
 .tab-content
   .tab-pane.fade#service
     .tab-content
-      = render 'service_area'
+      = render 'services'
   .tab-pane.fade#map
     .tab-content
       = render 'map'

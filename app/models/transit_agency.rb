@@ -22,8 +22,8 @@ class TransitAgency < Organization
   # every transit agency can have 0 or more policies
   has_many :policies, :foreign_key => 'organization_id'
 
-  # Every transit agency has an urban/rural classification
-  belongs_to  :urban_rural_type
+  # Every transit agency has one or more service types
+  has_and_belongs_to_many  :service_types
     
   #------------------------------------------------------------------------------
   # Scopes
@@ -31,7 +31,7 @@ class TransitAgency < Organization
   
   # List of allowable form param hash keys  
   FORM_PARAMS = [
-    :urban_rural_type_id
+    :service_type_ids => []
   ]
 
   #------------------------------------------------------------------------------
