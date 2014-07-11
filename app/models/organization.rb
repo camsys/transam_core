@@ -122,6 +122,23 @@ class Organization < ActiveRecord::Base
   #
   #------------------------------------------------------------------------------
         
+  # Returns true if the organization is of the specified class or has the specified class as
+  # and ancestor (superclass).
+  #
+  # usage: a.type_of? type
+  # where type can be one of:
+  #    a symbol e.g :grantee
+  #    a class name eg Grantee
+  #    a string eg "grantee"
+  #
+  def type_of?(type)
+    begin
+      self.class.ancestors.include?(type.to_s.classify.constantize)
+    rescue
+      false
+    end
+  end
+        
   def coded_name
     "#{short_name}-#{name}"
   end      
