@@ -23,7 +23,7 @@ class TransitAgency < Organization
   has_many :policies, :foreign_key => 'organization_id'
 
   # Every transit agency has one or more service types
-  has_and_belongs_to_many  :service_types
+  has_and_belongs_to_many  :service_types, :foreign_key => 'organization_id'
     
   #------------------------------------------------------------------------------
   # Scopes
