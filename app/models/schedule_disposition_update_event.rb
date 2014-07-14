@@ -9,7 +9,7 @@ class ScheduleDispositionUpdateEvent < AssetEvent
       
   # Associations
         
-  validates :disposition_date, presence => true
+  validates :disposition_date, :presence => true
       
   #------------------------------------------------------------------------------
   # Scopes
