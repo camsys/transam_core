@@ -401,6 +401,8 @@ class Asset < ActiveRecord::Base
   end
   # Forces an update of an assets sdispositionreplacement
 
+  def update_scheduled_disposition
+
     Rails.logger.info "Updating the scheduled disposition for asset = #{object_key}"
 
     unless new_record?
