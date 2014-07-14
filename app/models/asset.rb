@@ -66,6 +66,9 @@ class Asset < ActiveRecord::Base
   # each asset has zero or more scheduled replacement updates
   has_many   :schedule_replacement_updates, -> {where :asset_event_type_id => ScheduleReplacementUpdateEvent.asset_event_type.id }, :class_name => "ScheduleReplacementUpdateEvent"
 
+  # each asset has zero or more scheduled disposition updates
+  has_many   :schedule_disposition_updates, -> {where :asset_event_type_id => ScheduleDispositionUpdateEvent.asset_event_type.id }, :class_name => "ScheduleDispositionUpdateEvent"
+
   # each asset has zero or more service status updates
   has_many   :service_status_updates, -> {where :asset_event_type_id => ServiceStatusUpdateEvent.asset_event_type.id }, :class_name => "ServiceStatusUpdateEvent"
 
@@ -164,6 +167,7 @@ class Asset < ActiveRecord::Base
     'estimated_replacement_cost',
     'scheduled_replacement_year',
     'scheduled_rehabilitation_year',
+    'scheduled_disposition_date',
     'in_backlog',
     'reported_condition_type_id',
     'reported_condition_rating',
@@ -190,6 +194,7 @@ class Asset < ActiveRecord::Base
     :estimated_replacement_cost,
     :scheduled_replacement_year,
     :scheduled_rehabilitation_year,
+    :scheduled_disposition_date,
     :estimated_value,
     :in_backlog,
     :reported_condition_type_id,
@@ -390,6 +395,18 @@ class Asset < ActiveRecord::Base
         self.scheduled_replacement_year = event.replacement_year unless event.replacement_year.nil?
         self.scheduled_rehabilitation_year = event.rebuild_year unless event.rebuild_year.nil?
         self.scheduled_by_user = true
+        save
+      end
+    end
+  end
+  # Forces an update of an assets sdispositionreplacement
+
+    Rails.logger.info "Updating the scheduled disposition for asset = #{object_key}"
+
+    unless new_record?
+      unless schedule_disposition_updates.empty?
+        event = schedule_disposition_updates.last
+        self.scheduled_disposition_date = event.disposition_date
         save
       end
     end
