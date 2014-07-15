@@ -17,6 +17,8 @@
       // If this tab is the map then we need to re-render the maps
       if (this_tab == '#map') {
         invalidateMap();
+      } else if (this_tab == '#assets') {
+        draw_asset_summary_chart();
       }
     });
   });

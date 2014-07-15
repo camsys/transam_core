@@ -1,0 +1,43 @@
+<script type="text/javascript">
+
+  google.load("visualization", "1", {
+    'packages': ['corechart']
+  });
+  
+
+  // Called when the Visualization API is loaded.
+  function draw_asset_summary_chart() {
+
+    // Create a data table
+    var summary_data = new google.visualization.DataTable();
+    summary_data.addColumn('string', 'Asset Type');
+    summary_data.addColumn('number', 'Count');
+    summary_data.addRows([
+    <% @asset_data[:data].each do |row| %>
+    <%= raw "['#{row[0]}',#{row[1]}]," %>
+    <% end %>
+  	]);
+  
+    // specify options
+    var summary_options = {
+      title: 'Assets by Asset Subtype',
+      chartArea: {left:00,top:0, width:'75%',height:'75%'}
+      //hAxis: {title: 'Fiscal Year'},
+      //vAxis: {title: '$'},
+      //colors: ['green', 'blue', 'red'],
+      //legend: 'none'
+    };
+  
+    // Instantiate our chart object.
+    var summary_chart = new google.visualization.PieChart(document.getElementById('summary_chart_div'));
+  
+    // Draw our chart with the created data and options
+    summary_chart.draw(summary_data, summary_options);
+  };
+  
+  // Set callback to run when API is loaded
+  google.setOnLoadCallback(draw_asset_summary_chart);
+    
+</script>
+
+
