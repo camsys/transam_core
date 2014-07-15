@@ -482,7 +482,7 @@ class Asset < ActiveRecord::Base
 
   # updates the calculated values of an asset
   def update_asset_state(policy = nil)
-    Rails.logger.info "Updating condition for asset = #{object_key}"
+    Rails.logger.info "Updating SOGR for asset = #{object_key}"
 
     # Make sure we are working with a concrete asset class
     asset = is_typed? ? self : Asset.get_typed_asset(self)
