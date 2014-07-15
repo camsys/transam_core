@@ -7,6 +7,11 @@
 #------------------------------------------------------------------------------
 class AssetConditionUpdateJob < AbstractAssetUpdateJob
   
+  # Force an update of the SOGR characteristics based on the new mileage  
+  def requires_sogr_update?  
+    true
+  end  
+  
   def execute_job(asset)    
     asset.update_condition
   end

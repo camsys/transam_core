@@ -215,10 +215,9 @@ class AssetEventsController < AssetAwareController
       begin
         # Run the job
         job.perform
-        # See if the job has a secondary job that needs to be run
-        unless job.secondary_job_name.blank?
-          klass = job.secondary_job_name.constantize
-          next_job = klass.new(asset.object_key)
+        # See if the job also needs to update the assets SOGR
+        if job.requires_sogr_update?
+          next_job = AssetSogrUpdateJob.new(asset.object_key)
           fire_background_job(next_job, priority)
         end
       rescue Exception => e

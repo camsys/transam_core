@@ -1,18 +1,18 @@
 #------------------------------------------------------------------------------
 #
-# AssetSogrStateUpdateJob
+# AssetSogrUpdateJob
 #
 # Updates an assets SOGR state
 #
 #------------------------------------------------------------------------------
-class AssetSogrStateUpdateJob < AbstractAssetUpdateJob
+class AssetSogrUpdateJob < AbstractAssetUpdateJob
   
   def execute_job(asset)       
-    asset.update_asset_state
+    asset.update_sogr
   end
 
   def prepare
-    Rails.logger.debug "Executing AssetSogrStateUpdateJob at #{Time.now.to_s} for Asset #{object_key}"    
+    Rails.logger.debug "Executing AssetSogrUpdateJob at #{Time.now.to_s} for Asset #{object_key}"    
   end
   
 end

@@ -326,7 +326,6 @@ class Asset < ActiveRecord::Base
         asset.disposition_date = event.event_date
         asset.disposition_type = event.disposition_type
         asset.save
-        reload
       end
     end
   end
@@ -345,7 +344,6 @@ class Asset < ActiveRecord::Base
         asset.service_status_date = event.event_date
         asset.service_status_type = event.service_status_type
         asset.save
-        reload
       end
     end
   end
@@ -356,18 +354,25 @@ class Asset < ActiveRecord::Base
     # can't do this if it is a new record as none of the IDs would be set
     unless new_record?
       update_asset_value(policy)
-      reload
     end
   end
 
-  # Forces an update of an assets condition. This performs an update on the record. If a policy is passed
-  # that policy is used to update the asset otherwise the default policy is used
-  def update_condition(policy = nil)
+  # Forces an update of an assets reported condition. This performs an update on the record. 
+  def update_condition
+
+    Rails.logger.info "Updating condition for asset = #{object_key}"
 
     # can't do this if it is a new record as none of the IDs would be set
     unless new_record?
-      update_asset_state(policy)
+      unless condition_updates.empty?
+        event = condition_updates.last
+        self.reported_condition_date = event.event_date
+        self.reported_condition_rating = event.assessed_rating
+        self.reported_condition_type = event.condition_type
+        save
+      end
     end
+
   end
 
   # Forces an update of an assets maintenance provider. This performs an update on the record.
@@ -463,6 +468,11 @@ class Asset < ActiveRecord::Base
     end
   end
 
+  # Update the SOGR for an asset
+  def update_sogr(policy = nil)
+    update_asset_state(policy)
+  end
+  
   #------------------------------------------------------------------------------
   #
   # Protected Methods
@@ -496,10 +506,10 @@ class Asset < ActiveRecord::Base
       unless asset.scheduled_by_user == true
         # If the asset is in backlog set the scheduled year to the current FY year
         if asset.policy_replacement_year < current_fiscal_year_year
-          puts "XXX Asset is in backlog. Setting scheduled replacement year to #{current_fiscal_year_year}"
+          Rails.logger.debug "Asset is in backlog. Setting scheduled replacement year to #{current_fiscal_year_year}"
           asset.scheduled_replacement_year = current_fiscal_year_year
         else
-          puts "XXX Setting scheduled replacement year to #{asset.policy_replacement_year}"
+          Rails.logger.debug "Setting scheduled replacement year to #{asset.policy_replacement_year}"
           asset.scheduled_replacement_year = asset.policy_replacement_year
         end
       end
@@ -528,22 +538,6 @@ class Asset < ActiveRecord::Base
       # Check to see if the asset should have been replaced before this year
       replacement_year = asset.policy_replacement_year
       asset.in_backlog = replacement_year < Date.today.year
-    rescue Exception => e
-      Rails.logger.warn e.message
-    end
-
-    # Update the reported condition
-    begin
-      if asset.condition_updates.empty?
-        asset.reported_condition_date = Date.today
-        asset.reported_condition_rating = 0.0
-        asset.reported_condition_type = ConditionType.find_by_name('Unknown')
-      else
-        event = condition_updates.last
-        asset.reported_condition_date = event.event_date
-        asset.reported_condition_rating = event.assessed_rating
-        asset.reported_condition_type = event.condition_type
-      end
     rescue Exception => e
       Rails.logger.warn e.message
     end
