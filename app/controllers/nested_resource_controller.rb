@@ -10,16 +10,17 @@ class NestedResourceController < OrganizationAwareController
   # controllers which are aliased (eg asset => inventory) get the wrong controller name
   # so we have to deal with those
   def get_resource_url(resource)
-    puts resource.inspect
+    #puts resource.inspect
     controller_name = resource.class.name.underscore
+    #puts controller_name
     if controller_name == 'asset'
       controller_name = 'inventory'
       eval("#{controller_name}_url('#{resource.object_key}')")
     elsif controller_name == 'activity_line_item'
-      controller_name = "capital_project_activity_line_item"
-      eval("#{controller_name}_url('[#{resource.capital_project.object_key},#{resource.object_key}]')")
+      capital_project_activity_line_item_path(resource.capital_project, resource)
+    else
+      eval("#{controller_name}_url('#{resource.object_key}')")
     end
-    eval("#{controller_name}_url('#{resource.object_key}')")
   end
   
   # Get the class and object key of the commentable object we are operating on. There is a special
