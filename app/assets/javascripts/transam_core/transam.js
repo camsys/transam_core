@@ -3,6 +3,15 @@
 //
 var transam = new function() {
 
+	// disable an element
+	this.disable_element = function(id) {
+		$('#' + id).attr('disabled', 'disabled');
+	};
+	// enable an element
+	this.enable_element = function(id) {
+		$('#' + id).removeAttr('disabled');		
+	};
+	
 	// Fix the page footer to the bottom of the page
 	this.fix_page_footer = function(footer_div) {
 

@@ -404,7 +404,7 @@ class Asset < ActiveRecord::Base
       end
     end
   end
-  # Forces an update of an assets sdispositionreplacement
+  # Forces an update of an assets scheduled disposition
 
   def update_scheduled_disposition
 
