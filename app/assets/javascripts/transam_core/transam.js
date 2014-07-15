@@ -11,6 +11,11 @@ var transam = new function() {
 	this.enable_element = function(id) {
 		$('#' + id).removeAttr('disabled');		
 	};
+	// test if an element is blank
+	this.is_blank = function(elem_id) {
+		var len = actual_string_length(elem_id);
+		return len == 0;
+	};
 	
 	// Fix the page footer to the bottom of the page
 	this.fix_page_footer = function(footer_div) {
@@ -216,7 +221,11 @@ var transam = new function() {
 		$("#" + div_id).empty();
         $("#" + div_id).append('<div class="alert alert-error">' + message + '</div>');		
 	};
-
+	var actual_string_length = function(elem_id) {
+		var val = $("#" + elem_id).val();
+		var len = $.trim(val).length;
+		return len;
+	};
 };
 
 
