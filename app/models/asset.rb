@@ -470,7 +470,7 @@ class Asset < ActiveRecord::Base
   #------------------------------------------------------------------------------
   protected
 
-  # updates the calcuated values of an asset
+  # updates the calculated values of an asset
   def update_asset_state(policy = nil)
     Rails.logger.info "Updating condition for asset = #{object_key}"
 

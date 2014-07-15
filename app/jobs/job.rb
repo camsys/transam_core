@@ -3,7 +3,7 @@
 # Job
 #
 # Base class for all jobs. This class represents a generic job that can be run
-# by the background processor. All background jobs should eb derived from this
+# by the background processor. All background jobs should be derived from this
 # class
 #
 #------------------------------------------------------------------------------

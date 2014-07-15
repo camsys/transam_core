@@ -205,13 +205,25 @@ class AssetEventsController < AssetAwareController
   #------------------------------------------------------------------------------
   protected
   
-  # Updates the asset by firing a background job to update the asset. The job is based on the
-  # type of event that was modified
+  # Updates the asset by running the appropriate job. The job is based on the
+  # type of event that was modified. If the job requires the asset SOGR metrics be updated
+  # then the SOGR update job is queued for the asset
   def fire_asset_update_event(asset_event_type, asset, priority = 0)
     if asset_event_type and asset
       klass = asset_event_type.job_name.constantize
       job = klass.new(asset.object_key)
-      fire_background_job(job, priority)
+      begin
+        # Run the job
+        job.perform
+        # See if the job has a secondary job that needs to be run
+        unless job.secondary_job_name.blank?
+          klass = job.secondary_job_name.constantize
+          next_job = klass.new(asset.object_key)
+          fire_background_job(next_job, priority)
+        end
+      rescue Exception => e
+        Rails.logger.warn e.message
+      end
     end
   end
   
