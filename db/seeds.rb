@@ -29,11 +29,11 @@ disposition_types = [
 ]
 
 service_status_types = [
-  {:active => 1, :name => 'Unknown',              :code => 'U', :description => 'Asset service status is unknown.'},
-  {:active => 1, :name => 'Service Started',      :code => 'S', :description => 'Asset first placed into service.'},
-  {:active => 1, :name => 'Service Suspended',    :code => 'H', :description => 'Asset is temporarily out of service.'},
-  {:active => 1, :name => 'In Service',           :code => 'O', :description => 'Asset is in service and operational.'},
-  {:active => 1, :name => 'Service Discontinued', :code => 'X', :description => 'Asset is permanently out of service.'}
+  {:active => 1, :name => 'Unknown',          :code => 'U', :description => 'Asset service status is unknown.'},
+  {:active => 1, :name => 'In Service',       :code => 'I', :description => 'Asset is in service.'},
+  {:active => 1, :name => 'Out of Service',   :code => 'O', :description => 'Asset is temporarily out of service.'},
+  {:active => 1, :name => 'Spare',            :code => 'S', :description => 'Asset has been reprovisioned as a spare.'},
+  {:active => 1, :name => 'Disposed',         :code => 'D', :description => 'Asset has been permanently disposed.'}
 ]
 
 cost_calculation_types = [
