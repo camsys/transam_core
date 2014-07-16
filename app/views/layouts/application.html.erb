@@ -25,36 +25,12 @@
 	</head>
 	<body>
 
-		<!-- Header -->
-		<nav class="navbar navbar-fixed-top navbar-inverse" style="z-index:1033" role="navigation">
-			<div class="container-fluid">
-				<div class="navbar-header">
-					<%= link_to app_title, "/", :class => "navbar-brand" %>
-				</div>
-				<div class="navbar-header navbar-right">
-					<ul class="nav navbar-nav pull-right">
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-								<i class="fa fa-user"></i> <%= current_user.name %>
-								<b class="caret"></b>
-							</a>
-							<%= render '/shared/user_menu' %>
-						</li>
-					</ul>
-				</div>
-				<% unless session[:user_organization_filter].blank? %>
-					<div class="navbar-header navbar-right navbar-text" style="padding-right: 20px;">
-						<%= "Filter: #{session[:user_organization_filter]}" %>
-					</div>
-				<% end %>
-			</div>
-		</nav>
+		<!-- Begin header -->
+		<%= render 'shared/header' %>							
+		
 		<!-- Main Nav -->
-		<nav class="navbar center navbar-default navbar-fixed-top main-nav" style="margin-top:40px;">
-			<div class="container-fluid">
-				<%= render 'shared/nav' %>							
-			</div>
-		</nav>
+		<%= render 'shared/nav' %>							
+		
 		<!-- Begin page content -->
 		<div id="view" class="container-fluid">
 			<!-- Main Page Content -->
@@ -63,9 +39,11 @@
 			<%= yield %>
 		</div>
 
+		<!-- Begin footer content -->
 		<div id="footer" class="footer">
 			<%= render 'shared/footer' %>
 		</div>
+		
 		<!-- push the java script to the bottom so the page loads faster -->
 		<%= render 'shared/javascript' %>
 	</body>

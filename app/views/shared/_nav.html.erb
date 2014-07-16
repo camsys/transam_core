@@ -1,86 +1,90 @@
-<ul class="nav">
+<nav class="navbar center navbar-default navbar-fixed-top main-nav" style="margin-top:40px;">
+	<div class="container-fluid">
+		<ul class="nav navbar-nav">
 	
-  	<li class="nav-item <%= get_nav_link_class('dashboards') %>">
-  		<%= link_to dashboards_path do %>
-  			<i class="fa fa-dashboard fa-2x"></i><br/><span>Dashboard</span>
-  		<% end %>
-  	</li>
+		  	<li class="nav-item <%= get_nav_link_class('dashboards') %>">
+		  		<%= link_to dashboards_path do %>
+		  			<i class="fa fa-dashboard fa-2x"></i><br/><span>Dashboard</span>
+		  		<% end %>
+		  	</li>
   	
-  	<li class="nav-item dropdown <%= get_nav_link_class('inventory') %>">
-  		<%= link_to inventory_index_path, :class => "dropdown-toggle", :data => {"toggle" => "dropdown"} do %>
-  			<i class="fa fa-road fa-2x"></i><br/><span>Inventory</span>
-  			<b class="caret"></b>
-  		<% end %>
-		<ul class="dropdown-menu">
-			<% AssetType.all.each do | at | %>
-				<% if @organization.asset_count(at) > 0 %>
-					<li  class="text-left">												
-						<%= link_to inventory_index_path(:asset_type => at.id)  do %>
-							<i class="<%= at.display_icon_name %> fa-fw"></i> <%= at.name.pluralize(2) %>								
+		  	<li class="nav-item dropdown <%= get_nav_link_class('assets') %>">
+		  		<%= link_to inventory_index_path, :class => "dropdown-toggle", :data => {"toggle" => "dropdown"} do %>
+		  			<i class="fa travelcon-bus travelcon-2x"></i><br/><span>Inventory</span>
+		  			<b class="caret"></b>
+		  		<% end %>
+		  		
+				<ul class="dropdown-menu multi-level" role="menu">
+					<% AssetType.all.each do | at | %>
+						<% if @organization.asset_count(['asset_type_id = ?'], [at.id]) > 0 %>
+							<li class="text-left dropdown-submenu">												
+								<%= link_to inventory_index_path(:asset_type => at.id, :asset_subtype => 0), :tabindex => "-1"  do %>
+									<i class="<%= at.display_icon_name %> fa-fw"></i> <%= at.name.pluralize(2) %>								
+								<% end %>
+								<ul class="dropdown-menu">
+									<% at.asset_subtypes.each do |as| %>
+										<% if @organization.asset_count(['asset_subtype_id = ?'], [as.id]) > 0 %>
+											<li class="text-left">
+												<%= link_to as.name, inventory_index_path(:asset_subtype => as) %>
+											</li>
+										<% end %>
+									<% end %>
+								</ul>
+							</li>
+						<% end %>
+					<% end %>
+					<li class="divider"></li>			
+					<li class="text-left">												
+						<%= link_to new_search_path(:search_type => SearchesController::ASSET_SEARCH_TYPE) do %>
+							<i class="fa fa-search fa-fw"></i> Search
+						<% end %>
+					</li>		
+					<% if can? :create, Asset %>
+						<li class="divider"></li>			
+						<li class="text-left">												
+							<%= link_to new_asset_inventory_index_path do %>
+							<i class="fa fa-plus fa-fw"></i> Add Asset
+							<% end %>
+						</li>
+						<li class="divider"></li>			
+						<li class="text-left">												
+							<%= link_to templates_uploads_path do %>
+							<i class="fa fa-file-excel-o fa-fw"></i> Bulk Update Templates
+							<% end %>
+						</li>
+					<% end %>
+				</ul>
+		  	</li>
+
+		  	<li class="nav-item <%= get_nav_link_class('bpt_policies') %>">
+		  		<%= link_to policies_path do %>
+		  			<i class="fa fa-book fa-2x"></i><br/><span>Policies</span>
+		  		<% end %>
+		  	</li>
+		
+		  	<li class="nav-item dropdown <%= get_nav_link_class('reports') %>">
+		  		<%= link_to reports_path, :class => "dropdown-toggle", :data => {"toggle" => "dropdown"} do %>
+		  			<i class="fa fa-bar-chart-o fa-2x"></i><br/><span>Reports</span>
+		  			<b class="caret"></b>
+		  		<% end %>
+				<ul class="dropdown-menu">
+					<li class="text-left">												
+						<%= link_to reports_path  do %>
+							<i class="fa fa-bar-chart-o fa-fw"></i> All			
 						<% end %>
 					</li>
-				<% end %>
-			<% end %>
-			<li class="divider"></li>			
-			<li class="text-left">												
-				<%= link_to new_search_path(:search_type => SearchesController::ASSET_SEARCH_TYPE) do %>
-					<i class="fa fa-search"></i> Search
-				<% end %>
-			</li>		
-			<li class="divider"></li>			
-			<li class="text-left">												
-				<%= link_to new_asset_inventory_index_path do %>
-				<i class="fa fa-plus"></i> Add Asset
-				<% end %>
-			</li>
-		</ul>
-  	</li>
-
-  	<li class="nav-item <%= get_nav_link_class('inventory') %>">
-  		<%= link_to inventory_index_path(:view_type => AssetsController::VIEW_TYPE_MAP) do %>
-  			<i class="fa fa-globe fa-2x"></i><br/><span>Map View</span>
-  		<% end %>
-  	</li>
-
-  	<li class="nav-item <%= get_nav_link_class('policies') %>">
-  		<%= link_to policies_path do %>
-  			<i class="fa fa-money fa-2x"></i><br/><span>Policies</span>
-  		<% end %>
-  	</li>
-
-  	<li class="nav-item <%= get_nav_link_class('messages') %>">
-  		<%= link_to user_messages_path(current_user) do %>
-  			<i class="fa fa-envelope fa-2x"></i><br/><span>Messages</span>
-  		<% end %>
-  	</li>
-
-  	<li class="nav-item dropdown <%= get_nav_link_class('reports') %>">
-  		<%= link_to reports_path, :class => "dropdown-toggle", :data => {"toggle" => "dropdown"} do %>
-  			<i class="fa fa-bar-chart-o fa-2x"></i><br/><span>Reports</span>
-  			<b class="caret"></b>
-  		<% end %>
-		<ul class="dropdown-menu">
-			<li class="text-left">												
-				<%= link_to reports_path  do %>
-					<i class="fa fa-bar-chart-o fa-fw"></i> All			
-				<% end %>
-			</li>
-			<li class="divider"></li>			
-			<% Report.show_in_nav.each do |report| %>
-				<li  class="text-left">												
-					<%= link_to report_path(report)  do %>
-						<i class="<%= report.report_type.display_icon_name %> fa-fw"></i> <%= report.name %>								
+					<li class="divider"></li>			
+					<% Report.show_in_nav.each do |report| %>
+						<li  class="text-left">												
+							<%= link_to report_path(report)  do %>
+								<i class="<%= report.report_type.display_icon_name %> fa-fw"></i> <%= report.name %>								
+							<% end %>
+						</li>
 					<% end %>
-				</li>
-			<% end %>
+				</ul>
+		  	</li>
+		
 		</ul>
-  	</li>
-</ul>
-<% if current_user.organizations.count > 1 %>
-<ul class="nav pull-right text-left" style="padding-top: 8px;">
-	<%= form_tag set_current_org_user_path(current_user), :id => 'set_org_form', :method => "post", :class => 'navbar-form pull-right form-inline' do %>
-		<%= select("orgs", "org_id", current_user.organizations.collect {|o| [ o.name, o.short_name ] }, {:selected=> @organization.short_name}, {:class => "multiselect text-left"}) %>
-	<% end %>
-</ul>
-<%end %>
-	
+	</div>
+</nav>
+
