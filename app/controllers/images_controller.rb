@@ -8,15 +8,12 @@ class ImagesController < NestedResourceController
     @imagable = find_resource
     @images = @imagable.images
   
-    @page_title = "#{@imagable.name}: Images"
-
   end
 
   # GET /images/new
   def new
     @image = Image.new
     @imagable = find_resource
-    @page_title = "#{@imagable.name}: New image"
     
   end
 
@@ -24,7 +21,6 @@ class ImagesController < NestedResourceController
   def edit
 
     @imagable = @image.documentable
-    @page_title = "#{@imagable.name}: Edit image"
 
   end
 
@@ -47,8 +43,6 @@ class ImagesController < NestedResourceController
     @image = @imagable.images.build(form_params)
     @image.creator = current_user
 
-    @page_title = "#{@imagable.name}: New image"
-    
     respond_to do |format|
       if @image.save
         notify_user(:notice, 'Image was successfully created.')
@@ -66,7 +60,6 @@ class ImagesController < NestedResourceController
   def update
 
     @imagable = @image.imagable
-    @page_title = "#{@imagable.name}: Edit image"
 
     respond_to do |format|
       if @image.update(form_params)
