@@ -41,6 +41,9 @@ class User < ActiveRecord::Base
   
   # every user belongs to a single organizations
   belongs_to :organization
+
+  # Every user has 0 or 1 user organization filter that they are using
+  belongs_to :user_organization_filter
   
   # every user has access to 0 or more organizations for reporting
   has_and_belongs_to_many :organizations, :join_table => 'users_organizations'
@@ -54,8 +57,6 @@ class User < ActiveRecord::Base
   # Every user can have 0 or more files they have uploaded
   has_many   :tasks,        :foreign_key => :assigned_to_user_id
 
-  # Every user has 0 or 1 user organization filter that they are using
-  has_one   :user_organization_filter
   
   # Validations on core attributes
   validates :object_key,    :presence => true, :uniqueness => true
