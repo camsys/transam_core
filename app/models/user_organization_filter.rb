@@ -3,7 +3,6 @@ class UserOrganizationFilter < ActiveRecord::Base
   # Include the unique key mixin
   include UniqueKey
   
-  
   #require rails to use the key as the restful parameter
   def to_param
     object_key

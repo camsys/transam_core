@@ -64,13 +64,11 @@ class User < ActiveRecord::Base
   validates :email,         :presence => true, :uniqueness => true, :format => { :with => /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/, :message => "email address is not valid" }
   validates :phone,         :presence => true
   validates :timezone,      :presence => true
-
+  validates :num_table_rows,:presence => true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 5}
+  
   # default scope
   default_scope { where(:active => true) }
-  
-  # search scope
-  scope :search_query, lambda {|organization, search_text| {:conditions => [User.get_search_query_string(SEARCHABLE_FIELDS), {organization_id => organization.id, :search => search_text }]}}  
-    
+      
   SEARCHABLE_FIELDS = [
     :first_name,
     :last_name,
@@ -93,7 +91,7 @@ class User < ActiveRecord::Base
     :remember_me,
     :external_id,
     :user_organization_filter_id,
-    :display_num_table_rows,
+    :num_table_rows,
     :active
   ]
   
@@ -144,30 +142,5 @@ class User < ActiveRecord::Base
   #
   #------------------------------------------------------------------------------
   private
-
-  # constructs a query string for a search
-  def self.get_search_query_string(searchable_fields)
-    
-    query_str = []
-        
-    query_str << 'organization_id = :agency_id'
-    
-    first = true
-    
-    searchable_fields.each do |field|
-      if first
-        first = false
-        query_str << ' AND ('
-      else
-        query_str << ' OR '
-      end
-      
-      query_str << field
-      query_str << ' LIKE :search'
-    end
-    query_str << ')' unless searchable_fields.empty?
-    
-    return query_str.join      
-  end
     
 end
