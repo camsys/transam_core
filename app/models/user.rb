@@ -54,6 +54,9 @@ class User < ActiveRecord::Base
   # Every user can have 0 or more files they have uploaded
   has_many   :tasks,        :foreign_key => :assigned_to_user_id
 
+  # Every user has 0 or 1 user organization filter that they are using
+  has_one   :user_organization_filter
+  
   # Validations on core attributes
   validates :object_key,    :presence => true, :uniqueness => true
   validates :first_name,    :presence => true
@@ -89,6 +92,8 @@ class User < ActiveRecord::Base
     :password_confirmation,
     :remember_me,
     :external_id,
+    :user_organization_filter_id,
+    :display_num_table_rows,
     :active
   ]
   
