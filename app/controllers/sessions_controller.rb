@@ -19,6 +19,14 @@ class SessionsController < Devise::SessionsController
   def create
     super
     Rails.logger.info "Successful login with email : #{current_user.email} at #{Time.now}"
+    
+    Rails.logger.debug "Configuring session for : #{current_user.name}"
+    
+    # This must be configured in the Application Controller
+    create_user_session
+
+    Rails.logger.debug "Session configured"
+       
   end
 
   protected
