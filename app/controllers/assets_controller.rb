@@ -552,7 +552,7 @@ class AssetsController < AssetAwareController
   end
   # determine number of rows to return
   def per_page
-    params[:iDisplayLength].to_i > 0 ? params[:iDisplayLength].to_i : 10
+    params[:iDisplayLength].to_i > 0 ? params[:iDisplayLength].to_i : current_user.num_table_rows
   end
 
   def sort_column(klass)
