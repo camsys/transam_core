@@ -1,26 +1,27 @@
-.btn-group.pull-right.panel-action
-  %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
-    I want to  
-    %span.caret
-  %ul.dropdown-menu{:role => 'menu'}
-    - if can? :update, @user
-      %li
-        = link_to edit_user_path(@user) do
-          %i.fa.fa-edit.fa-fw
-          - if @user.id == current_user.id
-            = " Modify this user"
-          - else
-            = " Update my settings"
-    - if can? :update, @user
-      %li.divider
-      %li
-        = link_to edit_user_path(@user) do
-          %i.fa.fa-key.fa-fw
-          = " Change password"
-          
-    - if can? :delete, @user
-      %li.divider
-      %li
-        = link_to user_path(@user), :method => :delete, :data => {:confirm => "Are you sure?. The action cannot be undone!."}  do
-          %i.fa.fa-trash-o.fa-fw
-          = " Delete this user"
+- if can? :delete, @user or can? :update, @user
+  .btn-group.pull-right.panel-action
+    %button.btn.btn-primary.btn-sm.dropdown-toggle#test{:data => {:toggle => 'dropdown'}}
+      I want to  
+      %span.caret
+    %ul.dropdown-menu{:role => 'menu'}
+      - if can? :update, @user
+        %li
+          = link_to edit_user_path(@user) do
+            %i.fa.fa-edit.fa-fw
+            - if @user.id == current_user.id
+              = " Modify this user"
+            - else
+              = " Update my settings"
+      - if can? :update, @user
+        %li.divider
+        %li
+          = link_to edit_user_path(@user) do
+            %i.fa.fa-key.fa-fw
+            = " Change password"
+            
+      - if can? :delete, @user
+        %li.divider
+        %li
+          = link_to user_path(@user), :method => :delete, :data => {:confirm => "Are you sure?. The action cannot be undone!."}  do
+            %i.fa.fa-trash-o.fa-fw
+            = " Delete this user"
