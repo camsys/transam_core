@@ -63,6 +63,12 @@ module TransamHelper
     end
   end
   
+  # Returns the system user.
+  def system_user
+    # By convention, the first user is always the system user.
+    User.find_by_id(1)
+  end
+  
   # Returns a list of asset keys as a delimited string
   def list_to_delimited_string(list, delimiter = '|')
     str = ""
