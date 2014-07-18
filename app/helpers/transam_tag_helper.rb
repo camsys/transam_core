@@ -18,7 +18,7 @@ module TransamTagHelper
     html << "'>"
     html << "<div class='thumbnail action-thumbnail' data-action-path='"
     html << options[:path]
-    html << "'>"    
+    html << "'>"
 
     html << content
 
@@ -41,8 +41,8 @@ module TransamTagHelper
     html << "'>"
     html << "<div class='thumbnail action-thumbnail' data-action-path='"
     html << options[:path]
-    html << "'>"    
-    
+    html << "'>"
+
     html << "<div class='well well-small thumbnail-content' style='padding:10px;margin-bottom:0;'>"
 
     html << "<div class='caption' style='padding:0;'>"
@@ -51,16 +51,49 @@ module TransamTagHelper
     html << options[:icon]
     html << " fa-2x'></i> "
     html << options[:title]
-    html << "</h3>"    
+    html << "</h3>"
     html << "</div>"
-      
+
     html << content
 
     html << "</div>"
     html << "</div>"
     html << "</div>"
 
-   
+
+    return html.html_safe
+  end
+
+  def inactive_thumbnail_tag(options={}, &block)
+
+    # Check to see if there is any content in the block
+    content = capture(&block)
+    if content.nil?
+      content = "<p>&nbsp;</p>"
+    end
+
+    html = "<div class='"
+    html << options[:class] unless options[:class].blank?
+    html << "'>"
+    html << "<div class='thumbnail'>"
+
+    html << "<div class='well well-small thumbnail-content' style='padding:10px;margin-bottom:0;'>"
+
+    html << "<div class='caption' style='padding-top:5px;padding-bottom:10px;'>"
+    html << "<h3 style='margin-top:0;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;'>"
+    html << "<i class='"
+    html << options[:icon]
+    html << " fa-2x'></i> "
+    html << options[:title]
+    html << "</h3>"
+    html << "</div>"
+
+    html << content
+
+    html << "</div>"
+    html << "</div>"
+    html << "</div>"
+
     return html.html_safe
   end
 
