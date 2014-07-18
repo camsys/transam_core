@@ -2,14 +2,16 @@
   %li
     %a{:href => "#contact", :data =>{:toggle => 'tab'}}
       = "Contact Info"
-  %li
-    %a{:href => "#activity", :data =>{:toggle => 'tab'}}
-      = "Activity"
+  - if current_user.has_role? :admin
+    %li
+      %a{:href => "#activity", :data =>{:toggle => 'tab'}}
+        = "Activity"
 
 .tab-content
   .tab-pane.fade#contact
     .tab-content
       = render 'contact'
-  .tab-pane.fade#activity
-    .tab-content
-      = render 'activity'
+  - if current_user.has_role? :admin
+    .tab-pane.fade#activity
+      .tab-content
+        = render 'activity'
