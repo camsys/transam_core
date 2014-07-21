@@ -105,6 +105,7 @@ class TasksController < OrganizationAwareController
     @task = Task.new
     @task.from_organization = @organization
     @task.from_user = current_user
+    @task.assigned_to = User.find_by_object_key(params[:assigned_to]) unless params[:assigned_to].nil?
     @task.complete_by = Date.today + 1
     @task.priority_type = PriorityType.default
     
