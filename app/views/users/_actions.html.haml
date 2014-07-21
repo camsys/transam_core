@@ -28,7 +28,7 @@
       - if can? :update, @user
         %li.divider
         %li
-          = link_to edit_user_path(@user) do
+          = link_to change_password_user_path(@user) do
             %i.fa.fa-key.fa-fw
             = " Change password"
             
