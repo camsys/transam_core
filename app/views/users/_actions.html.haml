@@ -1,14 +1,13 @@
-- if can? :delete, @user or can? :update, @user
+- if current_user.organization_users.include? @user and current_user != @user
   .btn-group.pull-right.panel-action
     %button.btn.btn-primary.btn-sm.dropdown-toggle#test{:data => {:toggle => 'dropdown'}}
       I want to  
       %span.caret
     %ul.dropdown-menu{:role => 'menu'}
-      - if current_user != @user
-        %li
-          = link_to new_user_message_path(current_user, to_user: @user) do
-            %i.fa.fa-envelope.fa-fw
-            = " Send #{@user.first_name} a message"
+      %li
+        = link_to new_user_message_path(current_user, to_user: @user) do
+          %i.fa.fa-envelope.fa-fw
+          = " Send #{@user.first_name} a message"
       - if can? :update, @user
         %li
           = link_to edit_user_path(@user) do
