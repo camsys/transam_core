@@ -1,4 +1,4 @@
-- if (current_user.organization_users.include? @user and @user != current_user) or can? :update, @user or can? :delete, @user or can? :create, Task
+- if (current_user.organization.users.include? @user and @user != current_user) or can? :update, @user or can? :delete, @user or can? :create, Task
   .btn-group.pull-right.panel-action
     %button.btn.btn-primary.btn-sm.dropdown-toggle#test{:data => {:toggle => 'dropdown'}}
       I want to  
