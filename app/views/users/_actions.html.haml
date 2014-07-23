@@ -33,7 +33,6 @@
             = "Update #{@user.first_name}'s settings"
           -else
             = " Update my settings"
-    - if can? :update, @user
       %li.divider
       %li
         = link_to change_password_user_path(@user) do
