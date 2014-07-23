@@ -14,13 +14,9 @@ class ReplacementCostPlusInterestCalculator < ReplacementCostCalculator
     initial_cost = super
     Rails.logger.debug "initial_cost #{initial_cost}"
     
-    # Calculate the replacement year with respect to the policy
-    policy_replacement_year = asset.calculate_replacement_year(@policy)
-    Rails.logger.debug "policy replacement_year #{policy_replacement_year}"
-
-    # if we are past the replacement year, the replacement year is the max of the policy year
+    # if we are past the replacement year, the replacement year is the max of the asset replacement year
     # or now
-    replacement_year = [policy_replacement_year, Date.today.year].max
+    replacement_year = [replacement_year(asset), Date.today.year].max
     Rails.logger.debug "actual replacement_year #{replacement_year}"
          
     # Do the math...

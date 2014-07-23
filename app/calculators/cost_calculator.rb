@@ -6,7 +6,13 @@
 class CostCalculator < Calculator
     
   protected
-
+  
+  # Returns the replacement year for the asset. This is either the schedule_replacement_year if set
+  # or the policy_replacement_year otherwise
+  def replacement_year(asset)
+    asset.scheduled_replacement_year.blank? ? asset.policy_replacement_year : asset.scheduled_replacement_year
+  end
+  
   # future cost calculation. calculates cost plus compounded interest over the number of years
   def future_cost(initial_cost, number_of_years)
     initial_cost * (1 + @policy.interest_rate) ** number_of_years
