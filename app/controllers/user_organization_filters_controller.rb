@@ -47,6 +47,10 @@ class UserOrganizationFiltersController < OrganizationAwareController
     # Set the session variable to store the list of organizations for reporting
     set_selected_organization_list(@user_organization_filter.grantees)
 
+    # Save the selection. Next time the user logs in the filter will be reset
+    current_user.user_organization_filter = @user_organization_filter
+    current_user.save
+    
     notify_user(:notice, "Using agency filter #{@user_organization_filter.name}")
     # Set the filter name in the session
     session[:user_organization_filter] = @user_organization_filter.name
