@@ -1,9 +1,9 @@
-- if (current_user.organization.users.include? @user and @user != current_user) or can? :update, @user or can? :delete, @user or can? :create, Task
-  .btn-group.pull-right.panel-action
-    %button.btn.btn-primary.btn-sm.dropdown-toggle#test{:data => {:toggle => 'dropdown'}}
-      I want to  
-      %span.caret
-    %ul.dropdown-menu{:role => 'menu'}
+.btn-group.pull-right.panel-action
+  %button.btn.btn-primary.btn-sm.dropdown-toggle#test{:data => {:toggle => 'dropdown'}}
+    I want to  
+    %span.caret
+  %ul.dropdown-menu{:role => 'menu'}
+    - if current_user.organization_users.include? @user
       - if current_user != @user
         %li
           = link_to new_user_message_path(current_user, to_user: @user) do
@@ -17,24 +17,32 @@
               = " Assign #{@user.first_name} a task"
             - else 
               = " Assign myself a task"
-      - if can? :update, @user
-        %li
-          = link_to edit_user_path(@user) do
-            %i.fa.fa-edit.fa-fw
-            - if @user.id != current_user.id
-              = " Update #{@user.first_name}'s settings"
-            - else
-              = " Update my settings"
-      - if can? :update, @user
-        %li.divider
-        %li
-          = link_to change_password_user_path(@user) do
-            %i.fa.fa-key.fa-fw
-            = " Change password"
-            
-      - if can? :delete, @user
-        %li.divider
-        %li
-          = link_to user_path(@user), :method => :delete, :data => {:confirm => "Are you sure?. The action cannot be undone!."}  do
-            %i.fa.fa-trash-o.fa-fw
-            = " Delete this user"
+    - if can? :update, @user
+      %li
+        = link_to edit_user_path(@user) do
+          %i.fa.fa-edit.fa-fw
+          - if @user.id != current_user.id
+            = " Update #{@user.first_name}'s information"
+          - else
+            = " Update my user"
+    - if current_user == @user or current_user.has_role? :admin
+      %li
+        = link_to settings_user_path(@user) do
+          %i.fa.fa-cog.fa-fw
+          -if @user.id != current_user.id
+            = "Update #{@user.first_name}'s settings"
+          -else
+            = " Update my settings"
+    - if can? :update, @user
+      %li.divider
+      %li
+        = link_to change_password_user_path(@user) do
+          %i.fa.fa-key.fa-fw
+          = " Change password"
+          
+    - if can? :delete, @user
+      %li.divider
+      %li
+        = link_to user_path(@user), :method => :delete, :data => {:confirm => "Are you sure?. The action cannot be undone!."}  do
+          %i.fa.fa-trash-o.fa-fw
+          = " Delete this user"
