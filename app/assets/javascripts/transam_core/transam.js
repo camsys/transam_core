@@ -216,6 +216,15 @@ var transam = new function() {
 		});		
 	};
 
+	// Hides dropdown button if the dropdown is empty
+	this.hide_empty_dropdown = function () {
+		var btn = $("button.btn[data-toggle='dropdown']");
+		var dropdown = btn.siblings("ul");
+		if (dropdown.children().length === 0) {
+			btn.hide();
+		}
+	}
+
 	// Internal functions
 	var show_error_message = function(div_id, message) {
 		$("#" + div_id).empty();

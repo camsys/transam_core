@@ -3,7 +3,7 @@ class UsersController < OrganizationAwareController
   add_breadcrumb "Home",  :root_path
   add_breadcrumb "Users", :users_path
 
-  before_action :set_user, :only => [:show, :edit, :update, :destroy, :set_current_org, :change_password, :update_password]  
+  before_action :set_user, :only => [:show, :edit, :settings, :update, :destroy, :set_current_org, :change_password, :update_password]  
   before_filter :check_for_cancel, :only => [:create, :update, :update_password]
   
   INDEX_KEY_LIST_VAR    = "user_key_list_cache_var"
@@ -149,7 +149,7 @@ class UsersController < OrganizationAwareController
   def edit
 
     if @user.id == current_user.id
-      add_breadcrumb "My Settings", user_path(@user)
+      add_breadcrumb "My User", user_path(@user)
     else
       add_breadcrumb @user.name, user_path(@user)
     end
@@ -178,6 +178,23 @@ class UsersController < OrganizationAwareController
       return
     end
 
+  end
+
+  def settings
+    if @user.id == current_user.id
+      add_breadcrumb "My Settings", user_path(@user)
+    else
+      add_breadcrumb @user.name, user_path(@user)
+    end
+    add_breadcrumb 'Update' 
+
+    # if not found or the object does not belong to the users
+    # send them back to index.html.erb
+    if @user.nil?
+      notify_user(:alert, "Record not found!")
+      redirect_to users_url
+      return
+    end
   end
 
   # POST /users
