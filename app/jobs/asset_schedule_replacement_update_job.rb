@@ -7,6 +7,11 @@
 #------------------------------------------------------------------------------
 class AssetScheduleReplacementUpdateJob < AbstractAssetUpdateJob
   
+  # Force an update of the SOGR characteristics based on the new replacement date  
+  def requires_sogr_update?  
+    true
+  end  
+  
   def execute_job(asset)       
     asset.update_scheduled_replacement
   end
