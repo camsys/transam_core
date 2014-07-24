@@ -17,15 +17,8 @@
               = " Assign #{@user.first_name} a task"
             - else 
               = " Assign myself a task"
-    - if can? :update, @user
-      %li
-        = link_to edit_user_path(@user) do
-          %i.fa.fa-edit.fa-fw
-          - if @user.id != current_user.id
-            = " Update #{@user.first_name}'s information"
-          - else
-            = " Update my user"
     - if current_user == @user or current_user.has_role? :admin
+      %li.divider
       %li
         = link_to settings_user_path(@user) do
           %i.fa.fa-cog.fa-fw
@@ -33,11 +26,21 @@
             = "Update #{@user.first_name}'s settings"
           -else
             = " Update my settings"
-      %li.divider
+      -if can? :update, @user
+        %li
+          = link_to edit_user_path(@user) do
+            %i.fa.fa-edit.fa-fw
+            - if @user.id != current_user.id
+              = " Update #{@user.first_name}'s information"
+            - else
+              = " Update my profile"
       %li
         = link_to change_password_user_path(@user) do
           %i.fa.fa-key.fa-fw
-          = " Change password"
+          - if @user.id != current_user.id
+            = " Update #{@user.first_name}'s password"
+          - else
+            = " Update my password"
           
     - if can? :delete, @user
       %li.divider

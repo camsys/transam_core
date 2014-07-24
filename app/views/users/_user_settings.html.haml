@@ -1,0 +1,6 @@
+.row
+  .col-md-12
+    = format_field("Send Emails", format_as_boolean(@user.notify_via_email) )
+    - if @user.has_role? :manager
+      = format_field("Default Organization Field", @user.user_organization_filter.description)
+    = format_field("Number of table rows to display", @user.num_table_rows)
