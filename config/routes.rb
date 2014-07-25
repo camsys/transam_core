@@ -96,6 +96,7 @@ Rails.application.routes.draw do
       get   'change_password'
       patch 'update_password'
     end
+    resources :images
     resources :messages
     
     resources :tasks do

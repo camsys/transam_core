@@ -1,0 +1,11 @@
+.well.well-sm#user_card
+  .row
+    .col-md-4.text-center
+      -if user.images.length != 0
+        = image_tag user.images.last.image.url(:thumb), alt: user.name
+      -else
+        %i.fa.fa-user
+    .col-md-8
+      .h3= user.name
+      .h4= user.title
+      .h4= user.email

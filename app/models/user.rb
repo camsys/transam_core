@@ -58,6 +58,8 @@ class User < ActiveRecord::Base
   # Every user can have 0 or more files they have uploaded
   has_many   :tasks,        :foreign_key => :assigned_to_user_id
 
+  # Every user can have a profile picture
+  has_many    :images,      :as => :imagable,       :dependent => :destroy
   
   # Validations on core attributes
   validates :object_key,    :presence => true, :uniqueness => true
@@ -87,6 +89,7 @@ class User < ActiveRecord::Base
     :phone,
     :timezone,
     :email,
+    :title,
     :notify_via_email,
     :password,
     :password_confirmation,
