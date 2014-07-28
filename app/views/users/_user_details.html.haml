@@ -5,4 +5,5 @@
   .col-xs-12
     = format_field("Primary Phone", format_as_phone_number(user.phone) )
     = format_field("dotGrants ID", user.external_id )
-    = format_field("Roles", format_as_list(user.roles) )
+    - if current_user.has_role? :admin
+      = format_field("Roles", format_as_list(user.roles) )
