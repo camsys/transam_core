@@ -6,7 +6,8 @@
         .media-body
           %h5.media-heading
             = "#{c.creator.name} at #{format_as_date_time(c.created_at)}"
-            = link_to 'Edit', edit_comment_path(c), :class => "btn btn-primary btn-xs pull-right", :style => "margin-left: 5px;"
-            = link_to 'Destroy', c, :method => :delete, :class => "btn btn-warning btn-xs pull-right", :style => "margin-left: 5px;", :data => { :confirm => 'Are you sure you want to remove this comment?' }
+            - if c.creator.eql? current_user or current_user.has_role? :admin
+              = link_to 'Edit', edit_comment_path(c), :class => "btn btn-primary btn-xs pull-right", :style => "margin-left: 5px;"
+              = link_to 'Destroy', c, :method => :delete, :class => "btn btn-warning btn-xs pull-right", :style => "margin-left: 5px;", :data => { :confirm => 'Are you sure you want to remove this comment?' }
           = c.comment.html_safe
 
