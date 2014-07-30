@@ -6,8 +6,8 @@ class TemplateProxy < Proxy
   # Type of template to generate
   attr_accessor  :file_content_type_id
   
-  # List of asset types to process
-  attr_accessor    :asset_types
+  # Type of asset to process
+  attr_accessor    :asset_type
   
   # Basic validations. Just checking that the form is complete
   validates :file_content_type_id, :presence => true 

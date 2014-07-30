@@ -4,9 +4,7 @@ class UploadsController < OrganizationAwareController
 
   before_action :set_upload, :only => [:show, :destroy, :resubmit]  
   before_filter :check_for_cancel, :only => [:create, :update, :create_template]
-  
-  SESSION_VIEW_TYPE_VAR = 'uploads_subnav_view_type'
-  
+    
   def index
 
     add_breadcrumb "Uploads", uploads_path
@@ -32,9 +30,6 @@ class UploadsController < OrganizationAwareController
 
     @uploads = Upload.where(conditions.join(' AND '), *values).order(:created_at)
         
-    # remember the view type
-    @view_type = get_view_type(SESSION_VIEW_TYPE_VAR)
-    
     respond_to do |format|
       format.html # index.html.erb
       format.json { render :json => @uploads }
@@ -53,7 +48,6 @@ class UploadsController < OrganizationAwareController
     add_breadcrumb "Uploads", uploads_path
     add_breadcrumb @upload.original_filename
         
-    @page_title = "Upload: #{@upload.original_filename}"
     respond_to do |format|
       format.html # show.html.erb
       format.json { render :json => @upload }
@@ -90,10 +84,9 @@ class UploadsController < OrganizationAwareController
 
   def templates
     
-    add_breadcrumb "Templates"
-    
-    @page_title = "Download Template"
-    
+    add_breadcrumb "Templates", templates_uploads_path
+    add_breadcrumb "Download Template"
+        
     #prepare a list of just the asset types of the current organization
     @asset_types = []
     AssetType.all.each do |at|
@@ -106,7 +99,8 @@ class UploadsController < OrganizationAwareController
   
   def create_template
 
-    add_breadcrumb "Templates"
+    add_breadcrumb "Templates", templates_uploads_path
+    add_breadcrumb "Download Template"
     
     template_proxy = TemplateProxy.new(params[:template_proxy])
     file_content_type = FileContentType.find(template_proxy.file_content_type_id)
@@ -114,7 +108,7 @@ class UploadsController < OrganizationAwareController
       # Find out which builder is used to construct the template and create an instance
       builder = file_content_type.builder_name.constantize.new
       builder.organization = @organization
-      builder.asset_types = template_proxy.asset_types
+      builder.asset_types = [template_proxy.asset_type]
       
       # Generate the spreadsheet. This returns a StringIO that has been rewound
       stream = builder.build
@@ -135,7 +129,6 @@ class UploadsController < OrganizationAwareController
     add_breadcrumb "Uploads", uploads_path
     add_breadcrumb "New"
     
-    @page_title = "Upload Spreadsheet"
     @upload = Upload.new
     
   end
