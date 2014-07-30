@@ -1,41 +1,43 @@
 <ul class="dropdown-menu">
-	<li class="text-left">												
+	<li class="text-left">
 		<%= link_to user_tasks_path(current_user, :filter => 0, :select => 0)  do %>
 			<i class="fa fa-calendar fa-fw"></i> My tasks
 		<% end %>
 	</li>
-  	<li class="text-left">
-  		<%= link_to user_messages_path(current_user) do %>
-  			<i class="fa fa-envelope fa-fw"></i> My Messages
-  		<% end %>
-  	</li>
+	<li class="text-left">
+		<%= link_to user_messages_path(current_user) do %>
+			<i class="fa fa-envelope fa-fw"></i> My Messages
+		<% end %>
+	</li>
+  <% if current_user.has_role? :manager %>
   	<li class="text-left">
   		<%= link_to user_user_organization_filters_path(current_user) do %>
   			<i class="fa fa-filter fa-fw"></i> My Filters
   		<% end %>
   	</li>
+  <% end %>
 	<li class="divider text-left"></li>
-	<li class="text-left">												
+	<li class="text-left">
 		<%= link_to organization_path(current_user.organization)  do %>
 			<i class="fa fa-building-o fa-fw"></i> My organization
 		<% end %>
 	</li>
 	<li class="divider text-left"></li>
-	<li class="text-left">												
+	<li class="text-left">
 		<%= link_to user_path(current_user)  do %>
 			<i class="fa fa-cog fa-fw"></i> My settings
 		<% end %>
 	</li>
 	<% if current_user.has_role? :admin %>
 		<li class="divider text-left"></li>
-		<li class="text-left">												
+		<li class="text-left">
 			<%= link_to admin_path do %>
 				<i class="fa fa-wrench fa-fw"></i> Admin
 			<% end %>
 		</li>
 	<% end %>
 	<li class="divider text-left"></li>
-	<li class="text-left">												
+	<li class="text-left">
 		<%= link_to destroy_user_session_path, :method=>'delete' do %>
 			<i class="fa fa-sign-out fa-fw"></i> Logout
 		<% end %>
