@@ -182,20 +182,20 @@ var transam = new function() {
 
 	// Finds all the class elements on a page and sets the min-height css variable
 	// to the maximum height of all the containers
-	this.make_same_height = function(class_name) {
+	this.make_same_height = function(jquery_selector) {
 	
 		// remove any existing min-height attributes
-		$(class_name).css({'height' : ''});
+		$(jquery_selector).css({'height' : ''});
 		
 		// Set the form parts to equal height
 		var max = -1;
-		$(class_name).each(function() {
+		$(jquery_selector).each(function() {
 			var h = $(this).height(); 
 			//alert(h);
 			max = h > max ? h : max;
 		});
 		max += 10;
-		$(class_name).css({'height': max});	
+		$(jquery_selector).css({'height': max});	
 	};
 
 	// Finds all elements marked as info icons and turns them into popups

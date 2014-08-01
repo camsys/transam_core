@@ -148,11 +148,7 @@ class UsersController < OrganizationAwareController
   # GET /users/1/edit
   def edit
 
-    if @user.id == current_user.id
-      add_breadcrumb "My User", user_path(@user)
-    else
-      add_breadcrumb @user.name, user_path(@user)
-    end
+    add_user_breadcrumb
     add_breadcrumb 'Update' 
 
     # if not found or the object does not belong to the users
@@ -167,7 +163,9 @@ class UsersController < OrganizationAwareController
 
   # GET /users/1/edit
   def change_password
+    add_user_breadcrumb
 
+    add_breadcrumb 'Change Password' 
     @page_title = "Change Password"
     
     # if not found or the object does not belong to the users
@@ -181,12 +179,8 @@ class UsersController < OrganizationAwareController
   end
 
   def settings
-    if @user.id == current_user.id
-      add_breadcrumb "My Settings", user_path(@user)
-    else
-      add_breadcrumb @user.name, user_path(@user)
-    end
-    add_breadcrumb 'Update' 
+    add_user_breadcrumb
+    add_breadcrumb 'My Settings' 
 
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
@@ -311,6 +305,14 @@ class UsersController < OrganizationAwareController
   # Callbacks to share common setup or constraints between actions.
   def set_user
     @user = params[:id].nil? ? nil : User.find_by_object_key(params[:id])
+  end
+
+  def add_user_breadcrumb
+    if @user.id == current_user.id
+      add_breadcrumb "My User", user_path(@user)
+    else
+      add_breadcrumb @user.name, user_path(@user)
+    end
   end
   
   def check_for_cancel
