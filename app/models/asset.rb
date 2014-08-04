@@ -121,6 +121,7 @@ class Asset < ActiveRecord::Base
   # Validations on core attributes
   validates       :object_key,        :presence => true, :uniqueness => true
   validates       :asset_tag,         :presence => true
+  validates       :asset_tag,         :length   => {:maximum => 18}
 
   #------------------------------------------------------------------------------
   # Attributes that are used to cache asset condition information.
