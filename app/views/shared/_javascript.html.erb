@@ -14,27 +14,6 @@
 
 		// Enable any date pickers etc
 		transam.enable_date_pickers();
-
-		// Enable the seach concept for fitlers		
-    	$('.search-panel .dropdown-menu').find('a').click(function(e) {
-			e.preventDefault();
-			var param = $(this).attr("href").replace("#","");
-			var concept = $(this).text();
-			$('.search-panel span#search_concept').text(concept);
-			$('.input-group #search_param').val(param);
-		});
-		
-		// Enable the multiselect
-		$('.multiselect').multiselect({
-			onChange: function(element, checked) {
-      			$('#set_org_form').submit();
-      		},
-      		buttonClass: 'btn btn-inverse btn-large',
-      		maxHeight: 600,
-      		//buttonWidth: '300px',
-      		dropRight: true,
-      		enableFiltering: true
-		});
 				
 		// Check for any message divs and fade them out
 		elem = $('#message');
