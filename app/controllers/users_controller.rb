@@ -3,7 +3,7 @@ class UsersController < OrganizationAwareController
   add_breadcrumb "Home",  :root_path
   add_breadcrumb "Users", :users_path
 
-  before_action :set_user, :only => [:show, :edit, :settings, :update, :destroy, :set_current_org, :change_password, :update_password]  
+  before_action :set_user, :only => [:show, :edit, :settings, :update, :destroy, :set_current_org, :change_password, :update_password, :profile_photo]  
   before_filter :check_for_cancel, :only => [:create, :update, :update_password]
   
   INDEX_KEY_LIST_VAR    = "user_key_list_cache_var"
@@ -180,7 +180,7 @@ class UsersController < OrganizationAwareController
 
   def settings
     add_user_breadcrumb
-    add_breadcrumb 'My Settings' 
+    add_breadcrumb 'Settings' 
 
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
@@ -286,6 +286,10 @@ class UsersController < OrganizationAwareController
     end
   end
   
+  def profile_photo
+    add_user_breadcrumb
+    add_breadcrumb 'Profile Photo' 
+  end
   #------------------------------------------------------------------------------
   #
   # Private Methods

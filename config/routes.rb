@@ -95,6 +95,7 @@ Rails.application.routes.draw do
       get   'settings' 
       get   'change_password'
       patch 'update_password'
+      get   'profile_photo'
     end
     resources :images
     resources :messages

@@ -1,0 +1,19 @@
+= render(:partial => 'shared/form_errors', :locals => {:obj => @user}) unless @user.errors.empty?
+
+.col-md-3
+  = dialog_tag("#{@user.name}", {:icon => "fa fa-user", :class => "form_part"}) do
+    = render(:partial => "summary", :locals =>{:user => @user})
+.col-md-6
+  = simple_form_for([@user, Image.new],
+    :url => user_images_path(@user, Image.new),
+    :html => {:multipart => true, :class => 'form-vertical' },
+    :wrapper => :vertical_form,
+    :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}) do |f|
+    = dialog_tag('Profile Photo', {:icon => 'fa fa-cog', :class => "form_part"}) do
+      = f.input :image, :required => true
+      = f.submit "Add Photo", :class => 'btn btn-primary', :id => 'image_submit'
+.col-md-3
+  = dialog_tag("Info", {:icon => "fa fa-question-circle", :class => "form_part"}) do
+    %p= "You may upload any #{ImageUploader.new.extension_white_list.to_sentence(last_word_connector: " or ")} file as your profile"
+
+= render 'scripts'

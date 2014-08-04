@@ -53,7 +53,8 @@ class Image < ActiveRecord::Base
   belongs_to :creator, :class_name => "User", :foreign_key => "created_by_id"
 
   validates :object_key,          :presence => true
-  validates :description,         :presence => true
+  validates :description,         :presence => true, 
+    unless: Proc.new { |i| i.imagable.is_a? User } # User profile photos do not need a description
   validates :original_filename,   :presence => true
   validates :image,               :presence => true, :file_size => { :maximum => MAX_UPLOAD_FILE_SIZE.megabytes.to_i }  
   validates :created_by_id,       :presence => true
