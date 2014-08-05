@@ -114,7 +114,7 @@ class UploadsController < OrganizationAwareController
       stream = builder.build
 
       # Send it to the user
-      filename = "#{@organization.short_name.downcase}_#{file_content_type.class_name.underscore}_#{Date.today}.xls"
+      filename = "#{@organization.short_name.downcase}_#{file_content_type.class_name.underscore}_#{Date.today}.xlsx"
       send_data stream.string, :filename => filename, :type => "application/vnd.ms-excel"
     else
       respond_to do |format|
