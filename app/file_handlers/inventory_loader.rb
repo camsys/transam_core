@@ -50,12 +50,23 @@ class InventoryLoader
     val
   end
   
+  # Roo parses date and datetime formatted cells to the corresponding class
+  # so we check to see if they are already processed otherwise we attempt
+  # to parse the string value
   def as_date(cell_val)
-    #puts "As Date val = #{cell_val.to_s}"
-    begin
-      val = Date.parse(cell_val.to_s)
-    rescue
-      val = Date.today
+    # Check to see if the spreadsheet encoded this as a number
+    if cell_val.is_a?(Date)
+      val = cell_val
+    elsif
+      cell_val.is_a?(DateTime)
+      val = cell_val.date
+    else
+      begin
+        #puts "As Date val = #{cell_val.to_s}"
+        val = Date.parse(cell_val.to_s)
+      rescue
+        val = Date.today
+      end
     end
     val
   end
@@ -76,12 +87,12 @@ class InventoryLoader
   
   def as_string(cell_val)
     # Check to see if the spreadsheet encoded this as a number
-    if cell_val.is_a?(Float)
+    #if cell_val.is_a?(Float)
       # convert it first to an int to remove the decimal point then to the string
-      val = cell_val.to_i.to_s
-    else
-      val = cell_val
-    end
+    #  val = cell_val.to_i.to_s
+    #else
+      val = cell_val.to_s
+    #end
     
     val
   end
