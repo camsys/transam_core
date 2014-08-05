@@ -22,26 +22,26 @@ class TemplateBuilder
     # setup any styles and cache them for later
     style_cache = {}
     styles.each do |s|
-      puts s.inspect
+      Rails.logger.debug s.inspect
       style = wb.styles.add_style(s)
-      puts style.inspect
+      Rails.logger.debug style.inspect
       style_cache[s[:name]] = style
     end
-    puts style_cache.inspect
+    Rails.logger.debug style_cache.inspect
 
     # Add the header rows
     header_rows.each do |header_row|
       sheet.add_row header_row
     end
 
-    # Add the column styles
-    column_styles.each do |col_style|
-      puts col_style.inspect
-      sheet.col_style col_style[:column], style_cache[col_style[:name]]
-    end
-
     # add the rows
     add_rows(sheet)
+
+    # Add the column styles
+    column_styles.each do |col_style|
+      Rails.logger.debug col_style.inspect
+      sheet.col_style col_style[:column], style_cache[col_style[:name]]
+    end
 
     # Perform any additional processing
     post_process(sheet)
@@ -56,10 +56,13 @@ class TemplateBuilder
   # Override with new styles
   def styles
     [
-      {:name => 'general',  :num_fmt => 0},
-      {:name => 'currency', :num_fmt => 5},
-      {:name => 'percent',  :num_fmt => 9},
-      {:name => 'date',     :format_code => "yyyy-mm-dd"}
+      {:name => 'general',      :num_fmt => 0},
+      {:name => 'currency',     :num_fmt => 5},
+      {:name => 'percent',      :num_fmt => 9},
+      {:name => 'date',         :format_code => "yyyy-mm-dd"},
+      {:name => 'text_left',    :alignment => { :horizontal => :left, :vertical => :center , :wrap_text => false}},
+      {:name => 'text_center',  :alignment => { :horizontal => :center, :vertical => :center , :wrap_text => false}},
+      {:name => 'text_right',   :alignment => { :horizontal => :right, :vertical => :center , :wrap_text => false}}
     ]
   end
 
