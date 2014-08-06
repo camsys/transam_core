@@ -50,7 +50,7 @@ class AssetEvent < ActiveRecord::Base
   # default scope
   default_scope { order("event_date") }
   # named scopes
-  
+
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
     :object_key,
@@ -111,6 +111,32 @@ class AssetEvent < ActiveRecord::Base
     # get a typed version of the asset event and return its value
     evt = is_typed? ? self : AssetEvent.as_typed_event(self)
     return evt.get_update unless evt.nil?    
+  end  
+
+  # Get the chronologically next event on this event's asset of the same type as the caller
+  # If one already exists for the same event_date, return the last created
+  # If none exists, returns nil
+  def next_event
+    event = asset.asset_events
+      .where('asset_event_type_id = ?', self.asset_event_type_id)
+      .where('event_date > ? OR (event_date = ? AND created_at > ?)', self.event_date, self.event_date, (self.new_record? ? Time.now : self.created_at )) # Define a window that backs up to this event
+      .order(:event_date, :created_at => :desc).first
+
+    # Return Strongly Typed Asset
+    AssetEvent.as_typed_event(event)
+  end
+
+  # Get the chronologically preceding event on this event's asset of the same type as the caller
+  # If one already exists for the same event_date, return the last created
+  # If none exists, returns nil
+  def previous_event
+    event = asset.asset_events
+      .where("asset_event_type_id = ?", self.asset_event_type_id) # get events of same type
+      .where("event_date < ? OR (event_date = ? AND created_at < ?)", self.event_date, self.event_date, (self.new_record? ? Time.now : self.created_at) ) # Define a window that runs up to this event
+      .order(:event_date, :created_at => :asc).last
+
+    # Return Strongly Typed Asset
+    AssetEvent.as_typed_event(event)
   end
   
   #------------------------------------------------------------------------------
@@ -123,6 +149,5 @@ class AssetEvent < ActiveRecord::Base
   # Set resonable defaults for a new asset event
   def set_defaults
     self.event_date ||= Date.today
-  end    
-  
+  end
 end
