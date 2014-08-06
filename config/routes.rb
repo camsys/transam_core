@@ -79,6 +79,7 @@ Rails.application.routes.draw do
   
   resources :uploads do
     collection do
+      get   'download_file'
       get   'templates'
       post  'create_template'
     end

@@ -87,6 +87,8 @@ class UploadsController < OrganizationAwareController
     add_breadcrumb "Templates", templates_uploads_path
     add_breadcrumb "Download Template"
         
+    @message = "Creating inventory template. This process might take a while."
+        
     #prepare a list of just the asset types of the current organization
     @asset_types = []
     AssetType.all.each do |at|
@@ -97,6 +99,16 @@ class UploadsController < OrganizationAwareController
     end
   end
   
+  def download_file
+
+    # Send it to the user
+    filename = params[:filename]
+    filepath = params[:filepath]
+    data = File.read(filepath)    
+    send_data data, :filename => filename, :type => "application/vnd.ms-excel"
+    
+  end
+
   def create_template
 
     add_breadcrumb "Templates", templates_uploads_path
@@ -113,15 +125,20 @@ class UploadsController < OrganizationAwareController
       # Generate the spreadsheet. This returns a StringIO that has been rewound
       stream = builder.build
 
-      # Send it to the user
+      # Save the template to a temporary file and render a success/download view
       filename = "#{@organization.short_name.downcase}_#{file_content_type.class_name.underscore}_#{Date.today}.xlsx"
-      send_data stream.string, :filename => filename, :type => "application/vnd.ms-excel"
+      file = Tempfile.new(@organization.short_name.downcase)
+      @filepath = file.path     
+      begin
+        file << stream.string
+      ensure
+         file.close
+      end 
+      @filename = filename
     else
-      respond_to do |format|
-        format.html { render :action => "templates" }
-      end
+      render :action => 'templates'   
     end
-        
+              
   end
   
   def new
