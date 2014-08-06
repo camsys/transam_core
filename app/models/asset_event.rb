@@ -113,10 +113,17 @@ class AssetEvent < ActiveRecord::Base
     return evt.get_update unless evt.nil?    
   end  
 
+
+  #------------------------------------------------------------------------------
+  #
+  # Traversal Methods
+  #
+  #------------------------------------------------------------------------------
+
   # Get the chronologically next event on this event's asset of the same type as the caller
   # If one already exists for the same event_date, return the last created
   # If none exists, returns nil
-  def next_event
+  def next_event_of_type
     event = asset.asset_events
       .where('asset_event_type_id = ?', self.asset_event_type_id)
       .where('event_date > ? OR (event_date = ? AND created_at > ?)', self.event_date, self.event_date, (self.new_record? ? Time.now : self.created_at )) # Define a window that backs up to this event
@@ -129,7 +136,7 @@ class AssetEvent < ActiveRecord::Base
   # Get the chronologically preceding event on this event's asset of the same type as the caller
   # If one already exists for the same event_date, return the last created
   # If none exists, returns nil
-  def previous_event
+  def previous_event_of_type
     event = asset.asset_events
       .where("asset_event_type_id = ?", self.asset_event_type_id) # get events of same type
       .where("event_date < ? OR (event_date = ? AND created_at < ?)", self.event_date, self.event_date, (self.new_record? ? Time.now : self.created_at) ) # Define a window that runs up to this event
