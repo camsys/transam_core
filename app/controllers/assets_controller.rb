@@ -98,7 +98,7 @@ class AssetsController < AssetAwareController
     # create a copy of the asset and null out all the fields that are identified as cleansable
     new_asset = @asset.copy(true)
 
-    notify_user(:notice, "Asset #{@asset.name} was successfully updated.")
+    notify_user(:notice, "Asset #{@asset.name} was successfully copied.")
         
     @asset = new_asset
     Rails.logger.debug @asset.inspect
