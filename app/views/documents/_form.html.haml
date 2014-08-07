@@ -7,11 +7,3 @@
       = f.input :document
       = f.input :description, :as => :text, :input_html => { :rows => 3 }, :placeholder => 'Enter a brief description of the document...'
       = f.submit "Add document to project", :class => 'btn btn-primary'
-
-:javascript
-    
-  // Document Ready
-  $(document).ready(function(){
-    $('#document_description').wysihtml5();
-  });
-  
