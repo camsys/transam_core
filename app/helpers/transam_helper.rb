@@ -81,7 +81,7 @@ module TransamHelper
     
   # returns a date as an array of elements suitable for creating a new date in javascript
   def js_date(date)
-    [date.year,date.month,date.day].compact.join(',')
+    [date.year,(date.month) - 1,date.day].compact.join(',')
   end
   
   # returns a year as an array of elements suitable for creating a new date in javascript
