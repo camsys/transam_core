@@ -126,15 +126,16 @@ class UploadsController < OrganizationAwareController
       stream = builder.build
 
       # Save the template to a temporary file and render a success/download view
-      filename = "#{@organization.short_name.downcase}_#{file_content_type.class_name.underscore}_#{Date.today}.xlsx"
-      file = Tempfile.new(@organization.short_name.downcase)
+      file = Tempfile.new ['template', '.tmp'], "#{Rails.root}/tmp"
       @filepath = file.path     
+      @filename = "#{@organization.short_name.downcase}_#{file_content_type.class_name.underscore}_#{Date.today}.xlsx"
       begin
         file << stream.string
+      rescue ex
+        Rails.logger.warn ex
       ensure
-         file.close
+        file.close
       end 
-      @filename = filename
     else
       render :action => 'templates'   
     end
