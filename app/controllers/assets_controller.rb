@@ -415,6 +415,13 @@ class AssetsController < AssetAwareController
       values << @organization_list  
     end
     
+    if @disposition_year.blank?
+      clauses << ['disposition_date IS NULL']
+    else
+      clauses << ['YEAR(disposition_date) = ?']
+      values << @disposition_year  
+    end
+    
     unless @search_text.blank?
       # get the list of searchable fields from the asset class
       searchable_fields = klass.new.searchable_fields
