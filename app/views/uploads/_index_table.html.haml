@@ -4,12 +4,14 @@
     %th File Name
     %th Content
     %th Loaded By
+    %th Status
     %th Loaded On
   %tbody
     - @uploads.each do |f|
       %tr{:data => {:action_path => "#{upload_path(f)}"}}
         %td.left= f.organization.short_name
         %td.left= f.original_filename
+        %td.right= f.file_content_type 
         %td.right= f.user.name
         %td.right= f.file_status_type
         %td.right= format_as_date_time(f.created_at)
