@@ -5,9 +5,12 @@ class UploadsController < OrganizationAwareController
   before_action :set_upload, :only => [:show, :destroy, :resubmit]  
   before_filter :check_for_cancel, :only => [:create, :update, :create_template]
     
+  # Session Variables
+  INDEX_KEY_LIST_VAR        = "uploads_key_list_cache_var"
+    
   def index
 
-    add_breadcrumb "Uploads", uploads_path
+    add_breadcrumb "All Uploads", uploads_path
     
     # Start to set up the query
     conditions  = []
@@ -30,6 +33,9 @@ class UploadsController < OrganizationAwareController
 
     @uploads = Upload.where(conditions.join(' AND '), *values).order(:created_at)
         
+    # cache the set of asset ids in case we need them later
+    cache_list(@uploads, INDEX_KEY_LIST_VAR)
+        
     respond_to do |format|
       format.html # index.html.erb
       format.json { render :json => @uploads }
@@ -45,8 +51,13 @@ class UploadsController < OrganizationAwareController
       return      
     end
 
-    add_breadcrumb "Uploads", uploads_path
+    add_breadcrumb "All Uploads", uploads_path
     add_breadcrumb @upload.original_filename
+        
+    # get the @prev_record_path and @next_record_path view vars
+    get_next_and_prev_object_keys(@upload, INDEX_KEY_LIST_VAR)
+    @prev_record_path = @prev_record_key.nil? ? "#" : upload_path(@prev_record_key)
+    @next_record_path = @next_record_key.nil? ? "#" : upload_path(@next_record_key)
         
     respond_to do |format|
       format.html # show.html.erb
@@ -84,7 +95,7 @@ class UploadsController < OrganizationAwareController
 
   def templates
     
-    add_breadcrumb "Templates", templates_uploads_path
+    add_breadcrumb "All Uploads", uploads_path
     add_breadcrumb "Download Template"
         
     @message = "Creating inventory template. This process might take a while."
@@ -111,7 +122,7 @@ class UploadsController < OrganizationAwareController
 
   def create_template
 
-    add_breadcrumb "Templates", templates_uploads_path
+    add_breadcrumb "All Uploads", uploads_path
     add_breadcrumb "Download Template"
     
     template_proxy = TemplateProxy.new(params[:template_proxy])
@@ -144,7 +155,7 @@ class UploadsController < OrganizationAwareController
   
   def new
 
-    add_breadcrumb "Uploads", uploads_path
+    add_breadcrumb "All Uploads", uploads_path
     add_breadcrumb "New"
     
     @upload = Upload.new
@@ -163,7 +174,7 @@ class UploadsController < OrganizationAwareController
       @upload.organization = @organization
     end
 
-    add_breadcrumb "Uploads", uploads_path
+    add_breadcrumb "All Uploads", uploads_path
     add_breadcrumb "New"
     
     respond_to do |format|
