@@ -12,6 +12,13 @@ Rails.application.routes.draw do
     get code, :to => "errors#show", :code => code
   end
 
+  # Routes for the issues controller
+  resources :issues,    :only => [:new, :create] do
+    member do
+      get 'success'
+    end
+  end
+
   resources :inventory, :controller => 'assets' do
       collection do
         get 'filter'

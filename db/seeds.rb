@@ -116,9 +116,29 @@ location_reference_types = [
   {:active => 1, :name => 'GeoServer',              :format => "GEOSERVER",       :description => 'Location is determined by deriving a location from Geo Server.'}
 ]
 
+issue_types = [
+  {:active => 1, :name => 'Comment',      :description => 'Suggestion'},
+  {:active => 1, :name => 'Enhancement',  :description => 'Public Agency (State DOT).'},
+  {:active => 1, :name => 'Bug',          :description => 'Bug'},
+  {:active => 1, :name => 'Other',        :description => 'Other'}
+]
+
+web_browser_types = [
+  {:active => 1, :name => 'Microsoft IE 8',      :description => 'IE 8'},
+  {:active => 1, :name => 'Microsoft IE 9',      :description => 'IE 9'},
+  {:active => 1, :name => 'Microsoft IE 10',     :description => 'IE 10'},
+  {:active => 1, :name => 'Microsoft IE 11',     :description => 'IE 11'},
+  {:active => 1, :name => 'Apple Safari',        :description => 'Safari'},
+  {:active => 1, :name => 'Google Chrome',       :description => 'Chrome'},
+  {:active => 1, :name => 'Mozilla Firefox',     :description => 'Firefox'},
+  {:active => 1, :name => 'Other',               :description => 'Other'}
+]
+
+
 lookup_tables = %w{condition_types disposition_types cost_calculation_types license_types priority_types
   file_status_types attachment_types district_types report_types location_reference_types service_status_types
   depreciation_calculation_types task_status_types service_life_calculation_types condition_estimation_types
+  issue_types web_browser_types
   }
 
 puts ">>> Loading Core Lookup Tables <<<<"

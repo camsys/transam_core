@@ -1,0 +1,27 @@
+= render(:partial => 'shared/form_errors', :locals => {:obj => @issue}) unless @issue.errors.empty?
+
+.row
+  .col-md-4
+    .panel.panel-default.header-part
+      .panel-heading
+        .row
+          .col-md-12
+            %h3.panel-title
+              %i.fa.fa-volume-up
+              We want to hear from you
+      .panel-body    
+        = render 'instructions'
+        
+  .col-md-8
+    .panel.panel-default.header-part
+      .panel-heading
+        .row
+          .col-md-12
+            %h3.panel-title
+              %i.fa.fa-bug
+              Issue
+                
+      .panel-body
+        = render 'form'
+
+= render 'scripts'
