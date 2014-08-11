@@ -95,6 +95,11 @@ class AssetsController < AssetAwareController
   # and has any identifying chracteristics identified as CLEANSABLE_FIELDS are nilled
   def copy
         
+    add_breadcrumb "#{@asset.asset_type.name}".pluralize(2), inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
+    add_breadcrumb "#{@asset.asset_subtype.name}", inventory_index_path(:asset_subtype => @asset.asset_subtype)
+    add_breadcrumb @asset.asset_tag, inventory_path(@asset)    
+    add_breadcrumb "Copy"    
+        
     # create a copy of the asset and null out all the fields that are identified as cleansable
     new_asset = @asset.copy(true)
 
@@ -147,7 +152,6 @@ class AssetsController < AssetAwareController
   end
 
   def edit
-    @page_title = "Update: #{@asset.name}"
 
     add_breadcrumb "#{@asset.asset_type.name}".pluralize(2), inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
     add_breadcrumb "#{@asset.asset_subtype.name}", inventory_index_path(:asset_subtype => @asset.asset_subtype)
