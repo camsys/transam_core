@@ -227,7 +227,8 @@ class AssetsController < AssetAwareController
     # Use the base class to create an asset of the correct type
     @asset = Asset.new_asset(asset_subtype)
     @asset.organization = @organization
-    @disabled = false
+    # Force the asset to initialize any internal values such as expected_useful_life from the policy
+    @asset.initialize_policy_items @organization.get_policy
     
     respond_to do |format|
       format.html # new.html.erb

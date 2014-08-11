@@ -106,7 +106,8 @@ class Asset < ActiveRecord::Base
   validates     :asset_type_id,       :presence => true
   validates     :asset_subtype_id,    :presence => true
   validates     :created_by_id,       :presence => true
-  validates     :manufacture_year,    :presence => true, :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 1900}
+  validates     :manufacture_year,    :presence => true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 1900}
+  validates     :expected_useful_life,:presence => true, :numericality => {:only_integer => :true, :greater_than => 0}
 
   #------------------------------------------------------------------------------
   # Attributes common to all asset types
@@ -314,6 +315,22 @@ class Asset < ActiveRecord::Base
   def policy
     org = Organization.get_typed_organization(organization)
     return org.get_policy
+  end
+
+  # initialize any policy-related items. THis method should be overridden for each sub class
+  def initialize_policy_items(init_policy = nil)
+    # Set the expected_useful_life
+    if init_policy
+      p = init_policy
+    else
+      p = policy
+    end
+    if p
+      policy_item = p.get_policy_item(self)
+      if policy_item 
+        self.expected_useful_life = policy_item.max_service_life_years
+      end
+    end
   end
 
   # Record that the asset has been disposed. This updates the dispostion date and the disposition_type attributes
@@ -593,6 +610,7 @@ class Asset < ActiveRecord::Base
   # Set resonable defaults for a new asset
   def set_defaults
     self.manufacture_year ||= 2000
+    self.expected_useful_life ||= 0
   end
 
   #------------------------------------------------------------------------------
