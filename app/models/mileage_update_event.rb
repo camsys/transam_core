@@ -42,7 +42,9 @@ class MileageUpdateEvent < AssetEvent
   #------------------------------------------------------------------------------
 
   def current_mileage=(num)
-    self[:current_mileage] = sanitize_to_int(num)
+    unless num.blank?
+      self[:current_mileage] = sanitize_to_int(num)
+    end
   end      
 
   # This must be overriden otherwise a stack error will occur  
