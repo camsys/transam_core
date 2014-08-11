@@ -66,9 +66,11 @@ class AbstractFileHandler
     end
     @log_level = level
     
+    # Log Level 1 is a special case for top-level information.  
+    # All other levels are subordinate to some larger piece (e.g. MileageUpdate processing)
     if level == 1
       @process_log << "<p class='text-#{severity}'>#{text}</p>" 
-    elsif level == 2
+    else
       @process_log << "<li><p class='text-#{severity}'>#{text}</p></li>"
     end
     
