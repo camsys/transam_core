@@ -1,42 +1,53 @@
 <div class="row">
-	<div class="col-md-6">
-		<% Report.show_in_dashboard.each do |report| %>
-			<%= dialog_tag(report.name, {:icon => report.report_type.display_icon_name, :link_text => "View", :link_path => report_path(report)}) do %>
-				<div id='<%= "report_#{report.id}" %>' style="width: 300; height: 200px;"></div>
-			<% end %>
-		<% end %>
+	<div class="col-md-9">
+		<div class="row">
+			<div class="col-md-12">
+				<% Report.show_in_dashboard.each do |report| %>
+					<%= dialog_tag(report.name, {:icon => report.report_type.display_icon_name, :link_text => "View", :link_path => report_path(report)}) do %>
+						<div id='<%= "report_#{report.id}" %>' style="height: 200px;"></div>
+					<% end %>
+				<% end %>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6">
+		
+				<%= dialog_tag("Tasks (#{@tasks.count})", {:icon => "fa fa-calendar", :link_text => "New Task", :link_path => new_user_task_path(current_user)}) do %>
+					<% if @tasks.empty? %>
+						<%= render 'tasks/empty_list' %>
+					<% else %>
+						<div class="dashboard-widget-content">
+							<%= render 'tasks/index_list' %>
+						</div>
+						<%= link_to "Show all...", user_tasks_path(current_user)  %>
+					<% end %>
+				<% end %>
+			</div>		
+			<div class="col-md-6">
+		
+				<%= dialog_tag("New Messages (#{@messages.count})", {:icon => "fa fa-envelope", :link_text => "New Message", :link_path => new_user_message_path(current_user)}) do %>
+					<% if @messages.empty? %>
+						<%= render 'messages/empty_list' %>
+					<% else %>
+						<div class="dashboard-widget-content">
+							<%= render 'messages/message_list' %>
+						</div>
+						<%= link_to "Show all...", user_messages_path(current_user) %>
+					<% end %>
+				<% end %>
+			</div>
+		</div>
 	</div>		
-	<div class="col-md-6">
+	<div class="col-md-3">
 
 		<%= dialog_tag("Quick Links", {:icon => "fa fa-bookmark"}) do %>
 			<div class="col-md-12">
 				<%= render 'shared/quick_links' %>
 			</div>
 		<% end %>
-
-		<%= dialog_tag("Tasks (#{@tasks.count})", {:icon => "fa fa-calendar", :link_text => "New Task", :link_path => new_user_task_path(current_user)}) do %>
-			<% if @tasks.empty? %>
-				<%= render 'tasks/empty_list' %>
-			<% else %>
-				<div class="dashboard-widget-content">
-					<%= render 'tasks/index_list' %>
-				</div>
-				<%= link_to "Show all...", user_tasks_path(current_user)  %>
-			<% end %>
-		<% end %>
-
-		<%= dialog_tag("New Messages (#{@messages.count})", {:icon => "fa fa-envelope", :link_text => "New Message", :link_path => new_user_message_path(current_user)}) do %>
-			<% if @messages.empty? %>
-				<%= render 'messages/empty_list' %>
-			<% else %>
-				<div class="dashboard-widget-content">
-					<%= render 'messages/message_list' %>
-				</div>
-				<%= link_to "Show all...", user_messages_path(current_user) %>
-			<% end %>
-		<% end %>
-			
-	</div>
+	</div>	
+</div>
+<div class="row">	
 </div>
 
 <%= render 'scripts' %>
