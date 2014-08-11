@@ -609,7 +609,7 @@ class Asset < ActiveRecord::Base
 
   # Set resonable defaults for a new asset
   def set_defaults
-    self.manufacture_year ||= 2000
+    self.manufacture_year ||= Date.today.year
     self.expected_useful_life ||= 0
   end
 
