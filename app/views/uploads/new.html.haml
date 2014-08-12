@@ -1,1 +1,15 @@
-= render 'upload_form'
+#form
+  .row
+    .col-md-4
+      .panel.panel-default.header-part
+        .panel-heading
+          .row
+            .col-md-12
+              %h3.panel-title
+                %i.fa.fa-list
+                Bulk Updates
+        .panel-body    
+          = render 'upload_instructions'
+          
+    .col-md-8
+      = render 'upload_form'

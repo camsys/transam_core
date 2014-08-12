@@ -1,3 +1,19 @@
+- if can? :create, Upload
+  .btn-group.pull-right.panel-action
+    %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
+      I want to  
+      %span.caret
+    %ul.dropdown-menu{:role => 'menu'}
+      %li
+        = link_to templates_uploads_path do
+          %i.fa.fa-fw.fa-download
+          = " Download a Spreasheed Template"
+      %li.divider
+      %li
+        = link_to new_upload_path do
+          %i.fa.fa-fw.fa-upload
+          = " Upload a Spreadsheet"
+
 = form_tag uploads_path, :id => 'filter_form', :method => "get", :class => 'navbar-form navbar-right panel-action' do
   .form-group
     = select_tag(:file_status_type_id, options_for_select(FileStatusType.all.collect{|a| [a.name, a.id]}, :selected => @file_status_type_id), :class => "form-control", :prompt => "Any type...")

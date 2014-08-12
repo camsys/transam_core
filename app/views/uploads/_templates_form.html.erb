@@ -4,7 +4,7 @@
 		<div id="asset_type_input">	
 			<%= f.input :asset_type, :collection => @asset_types, :label => "Asset Type", :include_blank => false %>	
 		</div>
-		<div>
+		<div class='col-sm-offset-3 class-sm-9'>
 			<%= f.button :submit, 'Download Template', :class => 'btn btn-primary' %>
 		</div>			
 	<% end %>
