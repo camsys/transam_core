@@ -5,15 +5,18 @@
 		transam.enable_date_pickers();			
 		transam.make_same_height('.form_part');
 
-	    // Hide the spinner div when the form is loaded    
+	    // Page Load Events    
 	    $('#spinner').hide();
 	    
-	    // Show the spinner when the form is submitted
-	    $('#submit_btn').click(function() {
-	      $('#results_table').hide();
-	      $('#spinner').show();
-	      return true;
-	    });
+	    // Search Form AJAX event handling
+	    $("form").on("ajax:send", function(e, data, status, xhr) {
+			  $("#asset_search_form").collapse('hide');
+			  $('#results_table').hide();
+			  $('#spinner').show();
+			}).on("ajax:complete", function(e, xhr, status, error) {
+			  $('#spinner').hide();
+			});
+
 	
 	});
 		

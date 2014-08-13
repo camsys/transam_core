@@ -27,6 +27,10 @@ class BaseSearcher
   def results_view
   end
 
+  def to_s
+    conditions
+  end
+
   protected
 
   # returns a list of PKs from a collection
