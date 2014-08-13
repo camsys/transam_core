@@ -21,7 +21,7 @@
           .row
             .col-md-3
               = dialog_tag('Asset Class', {:icon => 'fa fa-refresh', :class => "form_part"}) do 
-                = f.input :organization_id, :collection => current_user.organizations, :label_method => 'coded_name',  :include_blank => "Any..." unless current_user.organizations.count < 2
+                = f.input :organization_id, :collection => current_user.user_organization_filter.grantees, :label_method => 'coded_name',  :include_blank => "Any..." unless current_user.user_organization_filter.grantees.count < 2
                 = f.input :asset_type_id, :collection => AssetType.all, :include_blank => "Any...", :label => "Asset Type"
                 = f.input :asset_subtype_id, :collection => AssetSubtype.all, :include_blank => "Any...", :label => "Asset Subtype"
             .col-md-3

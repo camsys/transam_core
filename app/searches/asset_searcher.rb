@@ -53,7 +53,7 @@ class AssetSearcher < BaseSearcher
   # Add any new conditions here. The property name must end with _conditions
   def organization_conditions
     if organization_id.blank?
-      ["assets.organization_id in (?)", get_id_list(user.organizations)]
+      ["assets.organization_id in (?)", get_id_list(user.user_organization_filter.grantees)]
     else
       ["assets.organization_id = ?", organization_id]
     end

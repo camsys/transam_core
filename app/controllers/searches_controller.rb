@@ -28,6 +28,7 @@ class SearchesController < OrganizationAwareController
   def new
 
     @searcher = @searcher_klass.constantize.new
+    @searcher.user = current_user
     @data = []
 
     add_breadcrumb "Search"
