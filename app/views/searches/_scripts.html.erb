@@ -8,12 +8,12 @@
 	    // Page Load Events    
 	    $('#spinner').hide();
 	    
-	    // Search Form AJAX event handling
-	    $("form").on("ajax:send", function(e, data, status, xhr) {
+	    // Search Form AJAX event handling // See https://github.com/rails/jquery-ujs/wiki/ajax
+	    $("form").on("ajax:send", function(xhr) {
 			  $("#asset_search_form").collapse('hide');
 			  $('#results_table').hide();
 			  $('#spinner').show();
-			}).on("ajax:complete", function(e, xhr, status, error) {
+			}).on("ajax:complete", function(xhr, status) {
 			  $('#spinner').hide();
 			});
 
