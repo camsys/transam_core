@@ -22,6 +22,16 @@ module FiscalYear
     current_fiscal_year_year + MAX_FORECASTING_YEARS - 1
   end
 
+  # returns the year for a fiscal year string
+  def to_year(fiscal_year)
+    elems = fiscal_year.split('0')
+    if elems.size == 2
+      year = 2000 + elems[0].split(' ').last.to_i
+    else
+      nil
+    end
+  end
+  
   # Returns the fiscal year on a given date
   def fiscal_year_year_on_date(date)
 
