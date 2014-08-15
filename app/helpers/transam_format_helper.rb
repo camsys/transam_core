@@ -1,5 +1,13 @@
 module TransamFormatHelper
+  
+  # Include the fiscal year mixin
+  include FiscalYear
         
+  # formats a year value as a fiscal year string 'FY XX-YY'
+  def format_as_fiscal_year(val)
+    fiscal_year(val)
+  end
+  
   # formats a URL as a link
   def format_as_url(url, target = '_blank')
     link_to(url, url, :target => target)
