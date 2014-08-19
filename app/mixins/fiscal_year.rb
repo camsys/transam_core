@@ -72,7 +72,7 @@ module FiscalYear
 
   # Returns a select array of fiscal years
   def get_fiscal_years(date = Date.today)
-    current_year = fiscal_year_year_on_date(date)
+    current_year = fiscal_year_year_on_date(date) - 4
     a = []
     (current_year..last_fiscal_year_year).each do |year|
       a << [fiscal_year(year), year]
