@@ -65,7 +65,9 @@ module FiscalYear
   # Returns the calendar year formatted as a FY string
   def fiscal_year(year)
     yr = year - 2000
-    "FY #{yr}-#{yr+1}"    
+    first = "%.2d" % yr
+    last = "%.2d" % (yr + 1)
+    "FY #{first}-#{last}"    
   end
 
   # Returns a select array of fiscal years
