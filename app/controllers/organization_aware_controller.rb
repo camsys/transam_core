@@ -52,17 +52,20 @@ class OrganizationAwareController < TransamController
         @organization = org
       end
       
-      # Set the organization list variable. This will be set only if the user has access
-      # to other organizations for reporting
+      # Set the organization list variable. 
+      
+      # Check to see if it is set, This should be set as the session is created
+      # but just in case...
       if session[USER_SELECTED_ORGANIZATION_ID_LIST].nil?
-        @organization_list = [current_user.organization.id]
-      else
-        # not session variable so get the user's default organizations
-        @organization_list = session[USER_SELECTED_ORGANIZATION_ID_LIST]
-        # Make sure the list is not empty
-        if @organization_list.nil? or @organization_list.empty?
-          @organization_list = [current_user.organization.id]        
-        end
+        @organization_list = []
+        session[USER_SELECTED_ORGANIZATION_ID_LIST] = @organization_list
+      end
+      
+      @organization_list = session[USER_SELECTED_ORGANIZATION_ID_LIST]
+      # Make sure the list is not empty. If it is, set it to the list of organizations
+      # for the current user
+      if @organization_list.empty?
+        @organization_list = current_user.organization_ids    
       end
       
     else
