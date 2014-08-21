@@ -121,10 +121,10 @@ module TransamFormatHelper
   def format_field(label, value, popover_text=nil)
  
     html = "<div class='row control-group'>"
-    html << "<div class='col-xs-4 display-label'>"
+    html << "<div class='col-xs-5 display-label'>"
     html << label
     html << "</div>"
-    html << "<div class='col-xs-8 display-value'>"
+    html << "<div class='col-xs-7 display-value'>"
     html << value.to_s unless value.nil?
     unless popover_text.nil?
       html << "<i class='fa fa-info-circle info-icon' data-toggle='popover' data-trigger='hover' title='Information' data-placement='right' data-content='#{popover_text}'></i>"
