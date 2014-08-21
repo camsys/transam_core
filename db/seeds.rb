@@ -134,11 +134,17 @@ web_browser_types = [
   {:active => 1, :name => 'Other',               :description => 'Other'}
 ]
 
+replacement_reason_types = [
+  {:active => 1, :name => 'Reached policy EUL',       :description => 'The asset has reached the end of its useful life according to the policy.'},
+  {:active => 1, :name => 'Damaged beyond repair',    :description => 'The asset has been damanaged and cannot be repaired.'},
+  {:active => 1, :name => 'Substandard due to manufacture defects',      :description => 'The asset is a lemon and is being replaced to defer future maintenance/repair costs.'},
+  {:active => 1, :name => 'Other',     :description => 'The asset is being replaced for other reasons.'}
+]
 
 lookup_tables = %w{condition_types disposition_types cost_calculation_types license_types priority_types
   file_status_types attachment_types district_types report_types location_reference_types service_status_types
   depreciation_calculation_types task_status_types service_life_calculation_types condition_estimation_types
-  issue_types web_browser_types
+  issue_types web_browser_types replacement_reason_types
   }
 
 puts ">>> Loading Core Lookup Tables <<<<"

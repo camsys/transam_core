@@ -8,9 +8,11 @@ class ScheduleReplacementUpdateEvent < AssetEvent
   after_initialize :set_defaults
       
   # Associations
+  belongs_to  :replacement_reason_type      
         
   validates :replacement_year,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => Date.today.year - 10}, :allow_nil => true
   validates :rebuild_year,      :numericality => {:only_integer => :true,   :greater_than_or_equal_to => Date.today.year - 10}, :allow_nil => true
+  validates :replacement_reason_type,  :presence => true
       
   #------------------------------------------------------------------------------
   # Scopes
@@ -20,6 +22,7 @@ class ScheduleReplacementUpdateEvent < AssetEvent
     
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
+    :replacement_reason_type_id,
     :replacement_year,
     :rebuild_year
   ]

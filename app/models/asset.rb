@@ -54,6 +54,9 @@ class Asset < ActiveRecord::Base
   # each asset has a single maintenance provider type
   belongs_to :maintenance_provider_type
 
+  # each asset has a reason why it is being replaced
+  belongs_to :replacement_reason_type
+  
   # Each asset has zero or more asset events. These are all events regardless of event type. Events are deleted when the asset is deleted
   has_many   :asset_events, :dependent => :destroy
 
@@ -172,6 +175,7 @@ class Asset < ActiveRecord::Base
     'scheduled_replacement_year',
     'scheduled_rehabilitation_year',
     'scheduled_disposition_date',
+    'replacement_reason_type_id',
     'in_backlog',
     'reported_condition_type_id',
     'reported_condition_rating',
@@ -199,6 +203,7 @@ class Asset < ActiveRecord::Base
     :scheduled_replacement_year,
     :scheduled_rehabilitation_year,
     :scheduled_disposition_date,
+    :replacement_reason_type_id,
     :estimated_value,
     :in_backlog,
     :reported_condition_type_id,
@@ -418,6 +423,7 @@ class Asset < ActiveRecord::Base
       unless schedule_replacement_updates.empty?
         event = schedule_replacement_updates.last
         self.scheduled_replacement_year = event.replacement_year unless event.replacement_year.nil?
+        self.replacement_reason_type_id = event.replacement_reason_type_id unless event.replacement_reason_type_id.nil?
         self.scheduled_rehabilitation_year = event.rebuild_year unless event.rebuild_year.nil?
         self.scheduled_by_user = true
         save
