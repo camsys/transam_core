@@ -205,7 +205,7 @@ class AssetSearcher < BaseSearcher
 
   def purchase_cost_conditions
     unless purchase_cost.blank?
-      purchase_cost = sanitize_to_float(purchase_cost)
+      purchase_cost_as_float = sanitize_to_float(purchase_cost)
       case purchase_cost_comparator
       when "-1" # Less than X miles
         @klass.where("purchase_cost < ?", purchase_cost) 
