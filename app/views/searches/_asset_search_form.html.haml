@@ -2,10 +2,16 @@
   .col-sm-12
     .panel.panel-default
       .panel-heading
-        .panel-title.clearfix{:data => {:toggle => "collapse", :target => "#asset_search_form"}}
-          %button.btn.btn-primary.pull-right{:data => {:toggle => "collapse", :target => "#asset_search_form"}} Toggle Search Results
-          %i.fa.fa-search.fa-fw
-          %span{:data => {:toggle => "collapse", :target => "#asset_search_form"}}Search
+        .row
+          .col-sm-6
+            .panel-title
+              %h3.panel-title
+                %i.fa.fa-search.fa-fw
+                Search
+          .col-sm-6
+            .btn-group.pull-right.panel-action
+              %button.btn.btn-primary.btn-sm#collapse{:data => {:toggle => "collapse", :target => "#asset_search_form"}}
+                %i.fa.fa-fw.fa-minus
       .panel-body.collapse.in#asset_search_form
         = simple_form_for(@searcher, :as => :searcher, :url => searches_path, :method => 'post', :html => {:class => 'form-vertical'}, :remote => true, :wrapper => :vertical_form,  :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}) do |f|
           = hidden_field_tag :search_type, @search_type
@@ -40,16 +46,14 @@
                 = f.input :purchase_cost, :wrapper => :vertical_prepend do
                   .input-group-btn
                     %button.btn.btn-default.dropdown-toggle{"data-toggle" => "dropdown", :type => "button"}
-                      Equal To
+                      Greater Than
                       %span.caret
                     %ul.dropdown-menu{:role => "menu"}
                       %li
                         %a{:data => {:compare => "-1"}} Less Than
                       %li
-                        %a{:data => {:compare => "0"}} Equal To
-                      %li
                         %a{:data => {:compare => "1"}} Greater Than
-                    = f.input_field :purchase_cost_comparator, :as => :hidden, :value => '0'
+                    = f.input_field :purchase_cost_comparator, :as => :hidden, :value => '1'
                   = f.input_field :purchase_cost, :class => "form-control", :as => :integer, :label => "Original Purchase Cost", input_html: { :min => '0'}
                 = f.input :purchase_date, :wrapper => :vertical_prepend, :label => "Purchase Year" do
                   .input-group-btn
@@ -68,16 +72,14 @@
                 = f.input :estimated_value, :wrapper => :vertical_prepend do
                   .input-group-btn
                     %button.btn.btn-default.dropdown-toggle{"data-toggle" => "dropdown", :type => "button"}
-                      Equal To
+                      Greater Than
                       %span.caret
                     %ul.dropdown-menu{:role => "menu"}
                       %li
                         %a{:data => {:compare => "-1"}} Less Than
                       %li
-                        %a{:data => {:compare => "0"}} Equal To
-                      %li
                         %a{:data => {:compare => "1"}} Greater Than
-                    = f.input_field :estimated_value_comparator, :as => :hidden, :value => '0'
+                    = f.input_field :estimated_value_comparator, :as => :hidden, :value => '1'
                   = f.input_field :estimated_value, :class => "form-control", :label => "Estimated Current Value"
                 = f.input :purchased_new, :as => :boolean, :label => "Purchased New", :label_html => { :class => 'bold' }
             .col-lg-3.col-md-6
@@ -86,16 +88,14 @@
                 = f.input :reported_mileage, :wrapper => :vertical_prepend, :label => "Mileage" do
                   .input-group-btn
                     %button.btn.btn-default.dropdown-toggle{"data-toggle" => "dropdown", :type => "button"}
-                      Equal To
+                      Greater Than
                       %span.caret
                     %ul.dropdown-menu{:role => "menu"}
                       %li
                         %a{:data => {:compare => "-1"}} Less Than
                       %li
-                        %a{:data => {:compare => "0"}} Equal To
-                      %li
                         %a{:data => {:compare => "1"}} Greater Than 
-                    = f.input_field :reported_mileage_comparator, :as => :hidden, :value => '0'
+                    = f.input_field :reported_mileage_comparator, :as => :hidden, :value => '1'
                   = f.input_field :reported_mileage, :class => "form-control"
                 = f.input :scheduled_replacement_year, :wrapper => :vertical_prepend do
                   .input-group-btn
@@ -148,3 +148,13 @@
     $(this).parents("ul").prev("button").text($(this).text());
     $(this).parents("ul").prev("button").append("<span class='caret'></span>");
   });
+
+  // Update the icons in the header based on collapsing the panels
+  $('#asset_search_form').on('hide.bs.collapse', function () {
+    $('#collapse i').removeClass('fa-minus');
+    $('#collapse i').addClass('fa-plus');   
+  });
+  $('#asset_search_form').on('show.bs.collapse', function () {
+    $('#collapse i').removeClass('fa-plus');
+    $('#collapse i').addClass('fa-minus');   
+  });  
