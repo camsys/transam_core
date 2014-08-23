@@ -4,7 +4,8 @@
       Description 
   %li
     %a{:href => "#comm", :data =>{:toggle => 'tab'}}
-      = "Comments (#{@task.comments.count})"
+      %span.badge.pull-right= @task.comments.count
+      = "Comments"
 
 .tab-content
   .tab-pane.fade#desc

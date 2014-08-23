@@ -10,7 +10,8 @@
       = "Asset Summary"
   %li
     %a{:href => "#users", :data =>{:toggle => 'tab'}}
-      = "Users (#{@org.users.count})"
+      %span.badge.pull-right= @org.users.count
+      = "Users"
 
 .tab-content
   .tab-pane.fade#service
