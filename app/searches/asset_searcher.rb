@@ -14,6 +14,7 @@ class AssetSearcher < BaseSearcher
                 :asset_subtype_id, 
                 :manufacturer_id,
                 :location_id,
+                :disposition_date,
                 :keyword,
                 :fta_funding_type_id,
                 :fta_funding_source_type_id,
@@ -261,6 +262,12 @@ class AssetSearcher < BaseSearcher
       @klass.joins(:organization).where(search_str, :keyword => "%#{keyword}%")
     end
   end
-  
-  
+
+  # Equality check but requires type conversion and bounds checking
+  def disposition_date_conditions
+    unless disposition_date.blank?
+      disposition_date_as_date = Date.new(disposition_date.to_i)
+      @klass.where("disposition_date >= ? and disposition_date =< ?", disposition_date_as_date, disposition_date_as_date.end_of_year)
+    end
+  end
 end
