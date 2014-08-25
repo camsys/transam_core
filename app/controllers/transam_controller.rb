@@ -69,10 +69,10 @@ class TransamController < ApplicationController
     @total_rows = 0
     @row_number = 0
     id_list = get_cached_objects(cache_key)
-    # make sure we have a list and an asset to find
+    # make sure we have a list and an object to find
     if id_list && obj
       @total_rows = id_list.size
-      # get the index of the current asset in the array      
+      # get the index of the current object in the array      
       current_index = id_list.index(obj.object_key)
       if current_index
         @row_number = current_index + 1
