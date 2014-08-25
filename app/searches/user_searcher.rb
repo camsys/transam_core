@@ -18,6 +18,10 @@ class UserSearcher < BaseSearcher
   def results_view
     'user_search_results_table'
   end
+
+  def cache_variable_name
+    UsersController::INDEX_KEY_LIST_VAR
+  end
                
   def initialize(attributes = {})
     super(attributes)

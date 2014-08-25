@@ -64,7 +64,10 @@ class AssetSearcher < BaseSearcher
     queries.to_sql
   end
 
-
+  def cache_variable_name
+    AssetsController::INDEX_KEY_LIST_VAR
+  end
+  
   protected
   # Performs the query by assembling the conditions from the set of conditions below.
   def perform_query

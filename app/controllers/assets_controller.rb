@@ -23,7 +23,6 @@ class AssetsController < AssetAwareController
 
   # Session Variables
   INDEX_KEY_LIST_VAR        = "asset_key_list_cache_var"
-  SESSION_VIEW_TYPE_VAR     = 'assets_subnav_view_type'
   
 
   # Sets the spatial filter bounding box  

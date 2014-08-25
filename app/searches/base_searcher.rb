@@ -23,6 +23,11 @@ class BaseSearcher
   def form_view
   end
 
+  # Override this to return a session cache variable for storing the
+  # results set for paging through the result lists
+  def cache_variable_name
+  end
+  
   # Override this to return the name of the results table to display
   def results_view
   end

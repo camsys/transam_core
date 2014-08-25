@@ -21,6 +21,10 @@ class OrganizationSearcher < BaseSearcher
   def results_view
     'organization_search_results_table'
   end
+              
+  def cache_variable_name
+    OrganizationsController::INDEX_KEY_LIST_VAR
+  end
                
   def initialize(attributes = {})
     super(attributes)

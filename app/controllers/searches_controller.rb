@@ -15,7 +15,13 @@ class SearchesController < OrganizationAwareController
     @data = @searcher.data
 
     add_breadcrumb "Search"
+    add_breadcrumb "Results"
             
+    # Cache the result set so the use can page through them
+    unless @searcher.cache_variable_name.blank?
+      cache_list(@data, @searcher.cache_variable_name)
+    end
+              
     respond_to do |format|
       format.html { render 'new' }
       format.js   { render 'new' }
