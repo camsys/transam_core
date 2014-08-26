@@ -80,17 +80,16 @@ class UploadsController < OrganizationAwareController
     # unprocessed
     @upload.reset
     @upload.force_update = true
-    @upload.save
+    @upload.save(:validate => false)
     
-    notify_user(:notice, "File was resubmitted for processing.")        
+    notify_user(:notice, "File was resubmitted for processing.")    
+        
     # create a job to process this file in the background
     create_upload_process_job(@upload)
     
-    respond_to do |format|
-      format.html { render 'show' }
-      format.json { render :json => @upload }
-    end
-    
+    # show the original upload
+    redirect_to(upload_url(@upload))
+        
   end
 
   def templates
