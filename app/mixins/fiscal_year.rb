@@ -19,7 +19,7 @@ module FiscalYear
   
   # Returns the last fiscal year in the planning horizon
   def last_fiscal_year_year
-    current_fiscal_year_year + MAX_FORECASTING_YEARS - 1
+    current_fiscal_year_year + MAX_FORECASTING_YEARS
   end
 
   # returns the year for a fiscal year string
