@@ -141,7 +141,7 @@ class UploadsController < OrganizationAwareController
       @filename = "#{@organization.short_name.downcase}_#{file_content_type.class_name.underscore}_#{Date.today}.xlsx"
       begin
         file << stream.string
-      rescue ex
+      rescue => ex
         Rails.logger.warn ex
       ensure
         file.close
