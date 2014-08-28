@@ -5,6 +5,7 @@
         .col-md-10
           = render_breadcrumbs :builder => ::BootstrapBreadcrumbsBuilder, :separator => "&raquo;"
         .col-md-2
-          = render 'shared/row_pager'
+          #row_pager
+            = render 'shared/row_pager'
     - else
       = render_breadcrumbs :builder => ::BootstrapBreadcrumbsBuilder, :separator => "&raquo;"
