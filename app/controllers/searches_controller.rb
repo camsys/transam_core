@@ -1,10 +1,11 @@
 class SearchesController < OrganizationAwareController
 
-  ASSET_SEARCH_TYPE         = '1'
-  CAPITAL_PLAN_SEARCH_TYPE  = '2'
-  ORGANIZATION_SEARCH_TYPE  = '3'
-  USER_SEARCH_TYPE          = '4'
-  FUNDING_SOURCE_SEARCH_TYPE = '5'
+  ASSET_SEARCH_TYPE             = '1'
+  CAPITAL_PLAN_SEARCH_TYPE      = '2'
+  ORGANIZATION_SEARCH_TYPE      = '3'
+  USER_SEARCH_TYPE              = '4'
+  FUNDING_SOURCE_SEARCH_TYPE    = '5'
+  FUNDING_LINE_ITEM_SEARCH_TYPE = '6'
 
   # Set the view variables form the params @search_type, @searcher_klass
   before_filter :set_view_vars,     :only => [:create, :new]
@@ -67,6 +68,9 @@ class SearchesController < OrganizationAwareController
     elsif @search_type == FUNDING_SOURCE_SEARCH_TYPE
       @searcher_klass = "FundingSourceSearcher"
       add_breadcrumb "Funds", funding_sources_path
+    elsif @search_type == FUNDING_LINE_ITEM_SEARCH_TYPE
+      @searcher_klass = "FundingLineItemSearcher"
+      add_breadcrumb "Appropriations", funding_line_items_path
     else
       notify_user(:alert, "Something went wrong. Can't determine type of search to perform.")
       redirect_to root_path
