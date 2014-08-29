@@ -1,0 +1,49 @@
+.row
+  .col-sm-12
+    .panel.panel-default
+      .panel-heading
+        .row
+          .col-sm-6
+            .panel-title
+              %h3.panel-title
+                %i.fa.fa-search.fa-fw
+                Search
+          .col-sm-6
+            .btn-group.pull-right.panel-action
+              %button.btn.btn-primary.btn-sm#collapse{:data => {:toggle => "collapse", :target => ".search-panel"}}
+                %i.fa.fa-fw.fa-minus
+      .panel-body.collapse.in.search-panel#asset_search_form
+        = simple_form_for(@searcher,
+        :as => :searcher,
+        :url => searches_path,
+        :method => 'post',
+        :html => {:class => 'form-vertical'},
+        :remote => true,
+        :wrapper => :vertical_form,
+        :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :horizontal_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean},
+        :defaults => {:include_blank => "Any...", :required => false} ) do |f|
+          = hidden_field_tag :search_type, @search_type
+          = yield f
+          .row
+            .col-md-12
+              = f.button :submit, 'Search', :class=>"btn btn-primary", :id => 'submit_btn'
+              = button_tag 'Reset', :type => 'reset', :class=> 'btn btn-warning'
+
+:javascript
+  // When selecting from the button-dropdowns, set a hidden field appropriately
+  $(".input-group-btn a").on("click", function() {
+    // Handle btn-dropdown by setting relevant variable in hidden field
+    $(this).parents("ul").siblings("input:hidden").val($(this).attr("data-compare"));
+    $(this).parents("ul").prev("button").text($(this).text());
+    $(this).parents("ul").prev("button").append("<span class='caret'></span>");
+  });
+
+  // Update the icons in the header based on collapsing the panels
+  $('.search-panel').on('hide.bs.collapse', function () {
+    $('#collapse i').removeClass('fa-minus');
+    $('#collapse i').addClass('fa-plus');   
+  });
+  $('.search-panel').on('show.bs.collapse', function () {
+    $('#collapse i').removeClass('fa-plus');
+    $('#collapse i').addClass('fa-minus');   
+  });  
