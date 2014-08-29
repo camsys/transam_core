@@ -27,7 +27,6 @@ class SystemConfig < ActiveRecord::Base
   validates :asset_base_class_name,       :presence => true
   validates :max_rows_returned,           :presence => true
   validates :data_file_path,              :presence => true
-  validates :new_inventory_template_name, :presence => true
       
   def geocoder_bounds
     [[min_lat, min_lon], [max_lat, max_lon]]
