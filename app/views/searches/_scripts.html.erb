@@ -10,10 +10,13 @@
 	    
 	    // Search Form AJAX event handling // See https://github.com/rails/jquery-ujs/wiki/ajax
 	    $("form").on("ajax:send", function(xhr) {
-			  $(".search-panel").collapse('hide');
 			  $('#results_table').hide();
 			  $('#spinner').show();
-			}).on("ajax:complete", function(xhr, status) {
+			})
+			.on("ajax:success", function(xhr) {
+				$(".search-panel").collapse('hide');
+			})
+			.on("ajax:complete", function(xhr, status) {
 			  $('#spinner').hide();
 			});
 
