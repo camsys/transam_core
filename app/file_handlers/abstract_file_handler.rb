@@ -20,7 +20,7 @@ class AbstractFileHandler
       process(@upload)
     rescue => e
       # Record the error message in the processing log
-      @process_log.add_processing_message(1, 'error', "#{e}")
+      add_processing_message(1, 'error', "#{e}")
       @new_status = FileStatusType.find_by_name("Errored")
     ensure
       # update the model with the results of the processing
@@ -40,10 +40,10 @@ class AbstractFileHandler
   
   def can_process?
     if @upload.nil?
-      @process_log.add_processing_message(1, 'error', "Upload is missing or invalid.")
+      add_processing_message(1, 'error', "Upload is missing or invalid.")
     end
     if @upload.file.url.blank?
-      @process_log.add_processing_message(1, 'error', "File URL can't be blank.")
+      add_processing_message(1, 'error', "File URL can't be blank.")
     end
     # return true or false depending on if errors were generated
     @process_log.empty?
