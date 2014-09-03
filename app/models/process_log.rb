@@ -3,7 +3,7 @@
 # ProcessLog
 #
 # Holds all processing messages for a bulk update
-# and the DSL to create them
+# and the DSL to create or view them
 #
 #------------------------------------------------------------------------------
 class ProcessLog
