@@ -20,7 +20,7 @@ class AbstractFileHandler
       process(@upload)
     rescue => e
       # Record the error message in the processing log
-      add_processing_message(1, 'error', "#{e}")
+      @process_log.add_processing_message(1, 'error', "#{e}")
       @new_status = FileStatusType.find_by_name("Errored")
     ensure
       # update the model with the results of the processing
@@ -30,7 +30,7 @@ class AbstractFileHandler
       @upload.num_rows_replaced     = @num_rows_replaced
       @upload.num_rows_failed       = @num_rows_failed
       @upload.num_rows_skipped      = @num_rows_skipped
-      @upload.processing_log        = @process_log.join('')
+      @upload.processing_log        = @process_log
       
       @upload.processing_completed_at = Time.now
       @upload.save
@@ -40,41 +40,20 @@ class AbstractFileHandler
   
   def can_process?
     if @upload.nil?
-      @process_log << add_processing_message(1, 'error', "Upload is missing or invalid.")
+      @process_log.add_processing_message(1, 'error', "Upload is missing or invalid.")
     end
     if @upload.file.url.blank?
-      @process_log << add_processing_message(1, 'error', "File URL can't be blank.")
+      @process_log.add_processing_message(1, 'error', "File URL can't be blank.")
     end
     # return true or false depending on if errors were generated
     @process_log.empty?
   end  
 
-  # Adds a message to the process log
+  # Passthru for backwards compatibility with existing processing
   def add_processing_message(level, severity, text)
-    
-    # See if we are bumping the level up or down
-    if @log_level < level
-      while @log_level < level
-        @process_log << "<ul>"
-        @log_level += 1
-      end
-    elsif @log_level > level
-      while @log_level > level
-        @process_log << "</ul>"
-        @log_level -= 1
-      end
-    end
-    @log_level = level
-    
-    # Log Level 1 is a special case for top-level information.  
-    # All other levels are subordinate to some larger piece (e.g. MileageUpdate processing)
-    if level == 1
-      @process_log << "<p class='text-#{severity}'>#{text}</p>" 
-    else
-      @process_log << "<li><p class='text-#{severity}'>#{text}</p></li>"
-    end
-    
+    @process_log.add_processing_message(level, severity, text)
   end
+  
 
   protected
   def is_number?(val)
@@ -83,8 +62,7 @@ class AbstractFileHandler
   
   private
   def initialize(*args)
-    @process_log = []
-    @log_level = 1
+    @process_log = ProcessLog.new
   end
     
 end
