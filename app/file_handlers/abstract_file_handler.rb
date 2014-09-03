@@ -30,7 +30,7 @@ class AbstractFileHandler
       @upload.num_rows_replaced     = @num_rows_replaced
       @upload.num_rows_failed       = @num_rows_failed
       @upload.num_rows_skipped      = @num_rows_skipped
-      @upload.processing_log        = @process_log
+      @upload.processing_log        = @process_log.to_s
       
       @upload.processing_completed_at = Time.now
       @upload.save
