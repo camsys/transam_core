@@ -550,8 +550,8 @@ class AssetsController < AssetAwareController
         view_context.format_as_currency(a.estimated_value),
         
         view_context.format_as_currency(a.estimated_replacement_cost),
-        a.policy_replacement_year,
-        a.estimated_replacement_year,
+        view_context.format_as_fiscal_year(a.policy_replacement_year),
+        view_context.format_as_fiscal_year(a.estimated_replacement_year),
         render_to_string(:partial => 'asset_info_detail_popup', :formats => ['html'], :locals => {:asset => a}).html_safe
       ]
     end
