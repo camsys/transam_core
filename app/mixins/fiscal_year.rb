@@ -23,10 +23,10 @@ module FiscalYear
   end
 
   # returns the year for a fiscal year string
-  def to_year(fiscal_year)
-    elems = fiscal_year.split('0')
+  def to_year(fy_str, century = 2000)
+    elems = fy_str.split('0')
     if elems.size == 2
-      year = 2000 + elems[0].split(' ').last.to_i
+      year = century + elems[0].split(' ').last.to_i
     else
       nil
     end
@@ -64,7 +64,7 @@ module FiscalYear
   
   # Returns the calendar year formatted as a FY string
   def fiscal_year(year)
-    yr = year - 2000
+    yr = year - fy_century(year)
     first = "%.2d" % yr
     last = "%.2d" % (yr + 1)
     "FY #{first}-#{last}"    
@@ -80,4 +80,9 @@ module FiscalYear
     a
   end
 
+  # Determines the century for the year. Assumes assets are no older than 1900
+  def fy_century(fy)
+    fy < 2000 ? 1900 : 2000
+  end
+  
 end
