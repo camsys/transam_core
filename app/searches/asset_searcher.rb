@@ -163,22 +163,6 @@ class AssetSearcher < BaseSearcher
     end
   end
 
-  # Special handling because this is a Date column in the DB, not an integer
-  def purchase_date_conditions
-    unless purchase_date.blank?
-      year_as_integer = purchase_date.to_i
-      purchase_date = Date.new(year_as_integer)
-      case purchase_date_comparator
-      when "-1" # Before Year X
-        @klass.where("purchase_date < ?", purchase_date )
-      when "0" # During Year X
-        @klass.where("purchase_date >= ? AND purchase_date <= ?", purchase_date, purchase_date.end_of_year) 
-      when "1" # After Year X
-        @klass.where("purchase_date > ?", purchase_date.end_of_year) 
-      end
-    end
-  end
-
   def reported_mileage_conditions
     unless reported_mileage.blank?
       reported_mileage_as_int = sanitize_to_int(reported_mileage)
@@ -217,6 +201,21 @@ class AssetSearcher < BaseSearcher
         @klass.where("purchase_cost = ?", purchase_cost) 
       when "1" # Greater than X miles
         @klass.where("purchase_cost > ?", purchase_cost) 
+      end
+    end
+  end
+
+  # Special handling because this is a Date column in the DB, not an integer
+  def manufacture_date_conditions
+    unless manufacture_date.blank?
+      year_as_integer = manufacture_date.to_i
+      case manufacture_date_comparator
+      when "-1" # Before Year X
+        @klass.where("manufacture_year < ?", year_as_integer )
+      when "0" # During Year X
+        @klass.where("manufacture_year = ?", year_as_integer)
+      when "1" # After Year X
+        @klass.where("manufacture_year > ?", year_as_integer)
       end
     end
   end
@@ -273,4 +272,21 @@ class AssetSearcher < BaseSearcher
       @klass.where("disposition_date >= ? and disposition_date <= ?", disposition_date_as_date, disposition_date_as_date.end_of_year)
     end
   end
+
+  # Special handling because this is a Date column in the DB, not an integer
+  def purchase_date_conditions
+    unless purchase_date.blank?
+      year_as_integer = purchase_date.to_i
+      purchase_date = Date.new(year_as_integer)
+      case purchase_date_comparator
+      when "-1" # Before Year X
+        @klass.where("purchase_date < ?", purchase_date )
+      when "0" # During Year X
+        @klass.where("purchase_date >= ? AND purchase_date <= ?", purchase_date, purchase_date.end_of_year) 
+      when "1" # After Year X
+        @klass.where("purchase_date > ?", purchase_date.end_of_year) 
+      end
+    end
+  end
+
 end
