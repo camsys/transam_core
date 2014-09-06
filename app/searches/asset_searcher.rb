@@ -174,7 +174,7 @@ class AssetSearcher < BaseSearcher
       when "0" # During Year X
         @klass.where("purchase_date >= ? AND purchase_date <= ?", purchase_date, purchase_date.end_of_year) 
       when "1" # After Year X
-        @klass.where("purchase_date > ?", purchase_date) 
+        @klass.where("purchase_date > ?", purchase_date.end_of_year) 
       end
     end
   end
