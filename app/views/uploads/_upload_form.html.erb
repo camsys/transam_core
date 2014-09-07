@@ -18,17 +18,7 @@
 
 	$(document).ready(function() {
     	
-    	transam.make_same_height('.header-part');
-		
-		// Insert a change listener to validate the file size before uploading.
-		$('#upload_file').change(function() {
-			transam.validate_file_size(this, max_file_size_mb);
-		});
-		// Hide the upload_force_update checkbox
-		$('.upload_force_update').hide();
-		// Add a change listener to the upload_file_content_type_id to hide/show the force_update flag
-		$('#upload_file_content_type_id').change(function() {
-			var val = this.value;
+		var set_force_update_visibility = function(val) {
 			if (val == 1) {
 				// Unhide the other input
 				$('.upload_force_update').show();
@@ -38,6 +28,19 @@
 			}
 			// Always leave this unchecked and force the user to manually select it
 			$('#upload_force_update').prop('checked', false);
+		}
+
+  	transam.make_same_height('.header-part');
+  	set_force_update_visibility($("#upload_file_content_type_id").val());
+		
+		// Insert a change listener to validate the file size before uploading.
+		$('#upload_file').change(function() {
+			transam.validate_file_size(this, max_file_size_mb);
+		});
+		// Hide the upload_force_update checkbox
+		// Add a change listener to the upload_file_content_type_id to hide/show the force_update flag
+		$('#upload_file_content_type_id').change(function() {
+			set_force_update_visibility(this.value)
 		});
 				
 	});
