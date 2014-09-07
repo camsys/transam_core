@@ -1,0 +1,18 @@
+.row
+  .col-sm-12
+    .col-sm-6
+      %fieldset
+        %legend.panel-legend Details
+        = format_field("Type", org.organization_type.name )
+        = format_field("Name", org.name )
+        = format_field("Short Name", org.short_name )
+        = format_field("Indian Tribe", format_as_boolean(org.indian_tribe) )
+        = format_field("Subrecipient Number", org.subrecipient_number )
+        = format_field("TEAM Number", org.team_number )
+        = format_field("External ID", org.external_id )
+    .col-sm-6
+      %fieldset
+        %legend.panel-legend Contact
+        = format_field("Address", format_as_address(org) )
+        = format_field("Phone", format_as_phone_number(org.phone) )
+        = format_field("Fax", format_as_phone_number(org.fax) )

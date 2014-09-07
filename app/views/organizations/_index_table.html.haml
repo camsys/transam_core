@@ -22,7 +22,7 @@
         %td= format_as_phone_number(o.fax)
         %td= format_as_url(o.url)
         %td.center
-          %i.fa.fa-info-circle.text-info.popup-details{:data => {:title => "#{o.short_name}", :content => "#{raw render :partial => 'organizations/summary', :locals => {:org => o}}"}}
+          %i.fa.fa-info-circle.text-info.popup-details{:data => {:title => "#{o.short_name}", :content => "#{raw render :partial => 'organizations/table_summary', :locals => {:org => o}}"}}
 
 = render 'shared/datatable_javascript'
 
