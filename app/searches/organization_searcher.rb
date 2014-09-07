@@ -29,35 +29,18 @@ class OrganizationSearcher < BaseSearcher
   def initialize(attributes = {})
     super(attributes)
   end    
-  
+
   private
 
-  # Performs the query by assembling the conditions from the set of conditions below.
-  def perform_query
-    # Create a class instance of the asset type which can be used to perform
-    # active record queries
-    Rails.logger.info conditions
-    Organization.where(conditions).limit(MAX_ROWS_RETURNED)  
-  end
-
   def organization_type_conditions
-    ["organizations.organization_type_id = ?", organization_type_id] unless organization_type_id.blank?
+    unless organization_type_id.blank?
+      Organization.where(organization_type_id: organization_type_id)
+    else
+      Organization.where(id: get_id_list(user.organizations))
+    end
   end
   
   def keyword_conditions
-    ["organizations.name LIKE ?", "%#{keywords}%"] unless keywords.blank?
-  end
-  
-  def minimum_price_conditions
-    #["products.price >= ?", minimum_price] unless minimum_price.blank?
-  end
-  
-  def maximum_price_conditions
-    #["products.price <= ?", maximum_price] unless maximum_price.blank?
-  end
-  
-  def category_conditions
-    #["products.category_id = ?", category_id] unless category_id.blank?
-  end
-  
+    Organization.where("organizations.name LIKE ?", "%#{keywords}%") unless keywords.blank?
+  end  
 end

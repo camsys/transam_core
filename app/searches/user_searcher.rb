@@ -1,7 +1,7 @@
 # Inventory searcher. 
 # Designed to be populated from a search form using a new/create controller model.
 #
-class UserSearcher < BaseSearcher
+class UserSearcher < BaseSearcher # TODO Not Implemented.  Just copied from other models
 
   # From the application config    
   MAX_ROWS_RETURNED         = SystemConfig.instance.max_rows_returned
@@ -28,14 +28,6 @@ class UserSearcher < BaseSearcher
   end    
   
   private
-
-  # Performs the query by assembling the conditions from the set of conditions below.
-  def perform_query
-    # Create a class instance of the asset type which can be used to perform
-    # active record queries
-    Rails.logger.info conditions
-    User.where(conditions).limit(MAX_ROWS_RETURNED)  
-  end
 
   # Add any new conditions here. The property name must end with _conditions
   def organization_conditions

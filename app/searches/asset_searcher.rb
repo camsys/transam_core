@@ -68,27 +68,7 @@ class AssetSearcher < BaseSearcher
     AssetsController::INDEX_KEY_LIST_VAR
   end
   
-  protected
-  # Performs the query by assembling the conditions from the set of conditions below.
-  def perform_query
-    # Create a class instance of the asset type which can be used to perform
-    # active record queries
-    Rails.logger.info queries.to_sql
-    queries.limit(MAX_ROWS_RETURNED)  
-  end
-
-  # Take a series of methods which return AR queries and reduce them down to a single LARGE query
-  def queries
-    condition_parts.reduce(:merge)
-  end
-
-  def condition_parts
-    private_methods(false).grep(/_conditions$/).map { |m| send(m) }.compact
-  end
-
-
   private
-
 
   #---------------------------------------------------
   # Simple Equality Queries
