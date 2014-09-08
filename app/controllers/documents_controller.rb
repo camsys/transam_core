@@ -35,8 +35,10 @@ class DocumentsController < NestedResourceController
       redirect_to( root_path )
       return            
     end
-    # send the attachment    
-    send_data @document.document, :filename => @document.original_filename
+    # read the attachment 
+    content = open(@document.document.url, "User-Agent" => "Ruby/#{RUBY_VERSION}") {|f| f.read}
+    # Send to the client
+    send_data content, :filename => @document.original_filename
 
   end
 
