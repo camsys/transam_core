@@ -29,11 +29,15 @@
 		<Column ss:AutoFitWidth="1" ss:Width="81"/>
 		<Column ss:AutoFitWidth="1" ss:Width="81"/>
 		
-		<Column ss:AutoFitWidth="1" ss:Width="81"/>
-		<Column ss:AutoFitWidth="1" ss:Width="81"/>
-		<Column ss:AutoFitWidth="1" ss:Width="81"/>
-		<Column ss:AutoFitWidth="1" ss:Width="81"/>
-		
+    <Column ss:AutoFitWidth="1" ss:Width="81"/>
+    <Column ss:AutoFitWidth="1" ss:Width="81"/>
+    <Column ss:AutoFitWidth="1" ss:Width="81"/>
+    <Column ss:AutoFitWidth="1" ss:Width="81"/>
+
+    <Column ss:AutoFitWidth="1" ss:Width="81"/>
+    <Column ss:AutoFitWidth="1" ss:Width="81"/>
+    <Column ss:AutoFitWidth="1" ss:Width="81"/>
+
 		<Column ss:AutoFitWidth="1" ss:Width="81"/>
 		<Column ss:AutoFitWidth="1" ss:Width="81"/>
 		<Column ss:AutoFitWidth="1" ss:Width="81"/>
@@ -53,6 +57,10 @@
         <Cell><Data ss:Type="String">Reported on</Data></Cell>
         <Cell><Data ss:Type="String">Est. rating</Data></Cell>
         <Cell><Data ss:Type="String">Est. condition</Data></Cell>
+
+        <Cell><Data ss:Type="String">FTA Funding Type</Data></Cell>
+        <Cell><Data ss:Type="String">FTA Funding Source Type</Data></Cell>        
+        <Cell><Data ss:Type="String">Pcnt Federal Funding</Data></Cell>
 		
         <Cell><Data ss:Type="String">Age</Data></Cell>
         <Cell><Data ss:Type="String">Policy year</Data></Cell>
@@ -72,9 +80,13 @@
         <Cell><Data ss:Type="Number"><%= a.manufacture_year %></Data></Cell>
 
         <Cell><Data ss:Type="String"><%= a.reported_condition_type.nil? ? 'Unknown' : a.reported_condition_type.name %></Data></Cell>
-		<Cell><Data ss:Type="String"><%= format_as_date(a.reported_condition_date)  %></Data></Cell>
-		<Cell><Data ss:Type="Number"><%= format_as_decimal(a.estimated_condition_rating, 1)  %></Data></Cell>
-		<Cell><Data ss:Type="String"><%= a.estimated_condition_type.nil? ? 'Unknown' : a.estimated_condition_type.name  %></Data></Cell>
+    		<Cell><Data ss:Type="String"><%= format_as_date(a.reported_condition_date)  %></Data></Cell>
+    		<Cell><Data ss:Type="Number"><%= format_as_decimal(a.estimated_condition_rating, 1)  %></Data></Cell>
+    		<Cell><Data ss:Type="String"><%= a.estimated_condition_type.nil? ? 'Unknown' : a.estimated_condition_type.name  %></Data></Cell>
+
+        <Cell><Data ss:Type="String"><%= a.fta_funding_source_type.nil? ? 'Unknown' : a.fta_funding_source_type.name %></Data></Cell>
+        <Cell><Data ss:Type="String"><%= a.fta_funding_type.nil? ? 'Unknown' : a.fta_funding_type.name %></Data></Cell>
+        <Cell><Data ss:Type="Number"><%= format_as_decimal(a.pcnt_federal_funding, 1)  %></Data></Cell>
 
         <Cell><Data ss:Type="Number"><%= a.age %></Data></Cell>
         <Cell><Data ss:Type="Number"><%= a.policy_replacement_year %></Data></Cell>
