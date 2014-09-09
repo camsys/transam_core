@@ -44,4 +44,8 @@ class ProcessLog
   def to_s
     @process_log.join('')
   end
+
+  def empty?
+    @process_log.empty?
+  end
 end
