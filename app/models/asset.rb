@@ -250,6 +250,17 @@ class Asset < ActiveRecord::Base
     end
   end
 
+  # Returns an array of asset event classes that this asset can process
+  def self.event_classes
+    a = []
+    # Use reflection to return the list of has many associatiopns and filter those which are
+    # events
+    self.reflect_on_all_associations(:has_many).each do |assoc|
+      a << assoc.klass if assoc.klass.to_s.end_with? 'UpdateEvent'
+    end
+    a
+  end
+
   #------------------------------------------------------------------------------
   #
   # Instance Methods
@@ -278,6 +289,17 @@ class Asset < ActiveRecord::Base
     self[:manufacture_year] = sanitize_to_int(num)
   end
 
+  # Returns true if this asset participates in one or more events
+  def has_events?
+    event_classes.size > 0
+  end
+  
+  # Returns an array of asset event classes that this asset can process
+  def event_classes
+    # get a typed version of the asset
+    asset = is_typed? ? self : Asset.get_typed_asset(self)
+    asset.class.event_classes
+  end
 
   # Returns the initial cost of the asset. Derived classes should override this to
   # handle asset-class specific caluclations where needed
