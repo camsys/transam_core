@@ -5,7 +5,7 @@ module TransamFormatHelper
         
   # formats a year value as a fiscal year string 'FY XX-YY'
   def format_as_fiscal_year(val)
-    fiscal_year(val)
+    fiscal_year(val) unless val.nil?
   end
   
   # formats a URL as a link
