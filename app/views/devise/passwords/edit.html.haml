@@ -1,0 +1,25 @@
+.row
+  .col-md-4
+    .panel.panel-default.header-part
+      .panel-heading
+        .row
+          .col-md-12
+            %h3.panel-title
+              %i.fa.fa-list
+              Instructions
+      .panel-body    
+        = render 'edit_instructions'
+        
+  .col-md-8
+    .panel.panel-default.header-part
+      .panel-heading
+        .row
+          .col-md-12
+            %h3.panel-title
+              %i.fa.fa-key
+              Change Your Password
+                
+      .panel-body
+        = render 'edit_form'
+
+= render 'scripts'

@@ -1,0 +1,3 @@
+= simple_form_for(resource, :as => resource_name, :url => user_password_path, :html => {:method => :post, :class => 'form-vertical' }) do |f|
+  = f.input :email, :required => true, :autofocus => true
+  = f.button :submit, "Send me reset password instructions", :class => 'btn-primary'

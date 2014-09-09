@@ -8,8 +8,8 @@ class PasswordsController < Devise::PasswordsController
     if user_signed_in?
       "application"
     else
-      "unauthorized"
+      "password"
     end
   end       
- 
+
 end

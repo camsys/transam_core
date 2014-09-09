@@ -10,11 +10,7 @@
 		<label class="sr-only" for="user_password">Password</label>
 		<input type="password" class="form-control" id="user_password" name="user[password]" placeholder="Password">
 	</div>
-	<div class="checkbox">
-		<label style="color:#FFF;">
-  			<input type="checkbox" name="user[remember_me]"> Remember me
-  		</label>
-	</div>
 	<button type="submit" class="btn btn-primary">Sign in</button>
 
 </form>
+<%= link_to "Forgot Your Password?", new_password_path(resource_name), :class => 'navbar-right navbar-text' %>

@@ -1,0 +1,25 @@
+.row
+  .col-md-4
+    .panel.panel-default.header-part
+      .panel-heading
+        .row
+          .col-md-12
+            %h3.panel-title
+              %i.fa.fa-list
+              Instructions
+      .panel-body    
+        = render 'new_instructions'
+        
+  .col-md-8
+    .panel.panel-default.header-part
+      .panel-heading
+        .row
+          .col-md-12
+            %h3.panel-title
+              %i.fa.fa-key
+              Forgotten Password
+                
+      .panel-body
+        = render 'new_form'
+
+= render 'scripts'

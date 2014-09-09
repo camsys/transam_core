@@ -1,4 +1,5 @@
 class SessionsController < Devise::SessionsController
+  
   after_filter  :log_failed_login, :only => :new
   after_filter  :clear_flash_messages, :only => [:create, :destroy]  
   before_filter :log_logout, :only => :destroy 
