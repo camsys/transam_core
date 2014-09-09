@@ -2,7 +2,7 @@ class UploadsController < OrganizationAwareController
 
   add_breadcrumb "Home", :root_path
 
-  before_action :set_upload, :only => [:show, :destroy, :resubmit, :undo]  
+  before_action :set_upload, :only => [:show, :destroy, :resubmit, :undo, :download]  
   before_filter :check_for_cancel, :only => [:create, :update, :create_template]
     
   # Session Variables
@@ -40,6 +40,20 @@ class UploadsController < OrganizationAwareController
       format.html # index.html.erb
       format.json { render :json => @uploads }
     end
+
+  end
+
+  def download
+    
+    if @upload.nil?
+      notify_user(:alert, 'Record not found!')
+      redirect_to( root_path )
+      return            
+    end
+    # read the attachment 
+    content = open(@upload.file.url, "User-Agent" => "Ruby/#{RUBY_VERSION}") {|f| f.read}
+    # Send to the client
+    send_data content, :filename => @upload.original_filename
 
   end
 
