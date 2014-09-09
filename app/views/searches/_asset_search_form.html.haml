@@ -7,7 +7,7 @@
         = f.input :keyword, :placeholder => "Enter A Search Term"
         = f.input :asset_type_id, :collection => AssetType.all, :label => "Type"
         = f.input :asset_subtype_id, :collection => AssetSubtype.all, :label => "Subtype"
-        = f.input :location_id, :collection => Asset.where(asset_type_id: [4,5,6]).where(organization_id: @searcher.user.organization_ids)
+        = f.input :location_id, :collection => @organization.assets.where('asset_type_id = ?', 5)
         = f.input :disposition_date, :collection => get_fiscal_years
         = f.input :in_backlog, :as => :boolean, :label => "In Backlog"
     .col-lg-3.col-md-6
