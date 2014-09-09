@@ -75,7 +75,8 @@ file_status_types = [
   {:active => 1, :name => 'Unprocessed',  :description => 'Unprocessed.'},
   {:active => 1, :name => 'In Progress',  :description => 'In Progress.'},
   {:active => 1, :name => 'Complete',     :description => 'Complete.'},
-  {:active => 1, :name => 'Errored',      :description => 'Errored.'}
+  {:active => 1, :name => 'Errored',      :description => 'Errored.'},
+  {:active => 1, :name => 'Reverted',     :description => 'Changes have been undone and assets reverted to their previous state.'}
 ]
 
 task_status_types = [

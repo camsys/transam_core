@@ -92,6 +92,7 @@ Rails.application.routes.draw do
     end
     member do
       get   'resubmit'
+      get   'undo'
     end
   end 
   
