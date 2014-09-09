@@ -15,12 +15,12 @@ class TemplateBuilder
     # Create a new workbook
     p = Axlsx::Package.new
     wb = p.workbook
-
-    # Call back to setup any implementation specific options needed
-    setup_workbook(wb)
     
     # Add the worksheet
     sheet = wb.add_worksheet(:name => worksheet_name)
+
+    # Call back to setup any implementation specific options needed
+    setup_workbook(wb)
 
     # setup any styles and cache them for later
     style_cache = {}
