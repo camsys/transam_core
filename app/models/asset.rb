@@ -393,7 +393,7 @@ class Asset < ActiveRecord::Base
         event = condition_updates.last
         self.reported_condition_date = event.event_date
         self.reported_condition_rating = event.assessed_rating
-        self.reported_condition_type = event.condition_type
+        self.reported_condition_type = ConditionType.from_rating(event.assessed_rating)
         save
       end
     end
