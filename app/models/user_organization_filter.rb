@@ -15,7 +15,7 @@ class UserOrganizationFilter < ActiveRecord::Base
 
   # Callbacks
   after_initialize :set_defaults
-  after_save       :require_at_least_one_grantee     # validate model for HABTM relationships
+  after_save       :require_at_least_one_organization     # validate model for HABTM relationships
   
   # Clean up any HABTM associations before the asset is destroyed
   before_destroy { :clean_habtm_relationships }
@@ -24,7 +24,7 @@ class UserOrganizationFilter < ActiveRecord::Base
   belongs_to  :user
 
   # Each filter can have a list of organizations that are included
-  has_and_belongs_to_many :grantees,  :association_foreign_key => 'organization_id', :join_table => 'user_organization_filters_organizations'
+  has_and_belongs_to_many :organizations, :join_table => 'user_organization_filters_organizations'
   
   validates   :user_id,       :presence => :true
   validates   :name,          :presence => :true
@@ -42,7 +42,7 @@ class UserOrganizationFilter < ActiveRecord::Base
     :user_id,
     :name,
     :description,
-    :grantee_ids
+    :organization_ids => []
   ]
   
   #------------------------------------------------------------------------------
@@ -57,15 +57,15 @@ class UserOrganizationFilter < ActiveRecord::Base
   
   protected
 
-  def require_at_least_one_grantee
-    if grantees.count == 0
-      errors.add(:grantees, "must be selected.")
+  def require_at_least_one_organization
+    if organizations.count == 0
+      errors.add(:organizations, "must be selected.")
       return false
     end
   end
 
   def clean_habtm_relationships
-    grantees.clear
+    organizations.clear
   end
 
   private  
