@@ -11,6 +11,8 @@ is_mysql = (ActiveRecord::Base.configurations[Rails.env]['adapter'] == 'mysql2')
 #
 #------------------------------------------------------------------------------
 
+puts "======= Processing TransAM CORE Seeds  ======="
+
 condition_types = [
   {:active => 1, :name => 'Unknown',        :rating => 0.0, :description => 'Asset condition is unknown.'},
   {:active => 1, :name => 'Poor',           :rating => 1.0, :description => 'Asset is past its useful life and is in immediate need of repair or replacement. May have critically damaged components.'},
@@ -148,7 +150,6 @@ lookup_tables = %w{condition_types disposition_types cost_calculation_types lice
   issue_types web_browser_types replacement_reason_types
   }
 
-puts ">>> Loading Core Lookup Tables <<<<"
 lookup_tables.each do |table_name|
   puts "  Processing #{table_name}"
   if is_mysql
