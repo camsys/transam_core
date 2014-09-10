@@ -31,8 +31,9 @@ Gem::Specification.new do |s|
   # for running background processes
   s.add_dependency 'daemons'
   
-  #s.add_development_dependency "rolify", '~> 3.4'
-  #s.add_development_dependency "devise", '~> 3.2.2'
+  s.add_development_dependency "rolify", '~> 3.4'
+  s.add_development_dependency "devise", '~> 3.2.2'
+  s.add_development_dependency 'devise_security_extension'
   s.add_development_dependency "rspec-rails"
   s.add_development_dependency "sqlite3"  
 
