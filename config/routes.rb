@@ -1,7 +1,5 @@
 Rails.application.routes.draw do
 
-  mount RailsAdmin::Engine => '/admin', :as => 'admin'
-
   devise_for :users, :controllers => { :sessions => "sessions", :unlocks => "unlocks", :passwords => "passwords" }
 
   # server static pages

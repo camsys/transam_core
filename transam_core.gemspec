@@ -16,10 +16,12 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
 
-  s.add_dependency "rails"
+
+# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+  s.add_dependency 'rails', '~> 4.0.2'
   s.add_dependency "cancan"
-  s.add_dependency "devise"
-  s.add_dependency "rolify"
+  s.add_dependency "devise", '~> 3.2.2'
+  s.add_dependency "rolify", '~> 3.4'
   s.add_dependency "georuby"
   s.add_dependency "high_voltage"
   s.add_dependency "fullcalendar-rails"
@@ -29,4 +31,10 @@ Gem::Specification.new do |s|
   # for running background processes
   s.add_dependency 'daemons'
   
+  s.add_development_dependency "rolify", '~> 3.4'
+  s.add_development_dependency "devise", '~> 3.2.2'
+  s.add_development_dependency 'devise_security_extension'
+  s.add_development_dependency "rspec-rails"
+  s.add_development_dependency "sqlite3"  
+
 end
