@@ -50,7 +50,7 @@ class ServiceStatusUpdateEvent < AssetEvent
   #------------------------------------------------------------------------------
   
   def get_update
-    service_status_type.name unless service_status_type.nil?
+    "Service status changed to #{service_status_type}." unless service_status_type.nil?
   end
 
   # Set resonable defaults for a new condition update event

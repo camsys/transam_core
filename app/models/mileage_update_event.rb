@@ -49,7 +49,7 @@ class MileageUpdateEvent < AssetEvent
 
   # This must be overriden otherwise a stack error will occur  
   def get_update
-    current_mileage unless current_mileage.nil?
+    "Mileage recorded as #{helper.number_with_delimiter(current_mileage)}." unless current_mileage.nil?
   end
   
   protected

@@ -1,15 +1,13 @@
 #
-# Schedule Disposition update event. This is event type is required for
+# Schedule Rehabilitation update event. This is event type is required for
 # all implementations
 #
-class ScheduleDispositionUpdateEvent < AssetEvent
+class ScheduleRehabilitationUpdateEvent < AssetEvent
       
   # Callbacks
   after_initialize :set_defaults
-      
-  # Associations
-        
-  validates :disposition_year, :presence => true
+              
+  validates :rebuild_year,      :numericality => {:only_integer => :true,   :greater_than_or_equal_to => Date.today.year - 10}, :allow_nil => true
       
   #------------------------------------------------------------------------------
   # Scopes
@@ -19,7 +17,7 @@ class ScheduleDispositionUpdateEvent < AssetEvent
     
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
-    :disposition_year
+    :rebuild_year
   ]
   
   #------------------------------------------------------------------------------
@@ -45,15 +43,16 @@ class ScheduleDispositionUpdateEvent < AssetEvent
 
   # This must be overriden otherwise a stack error will occur  
   def get_update
-    "Scheduled for disposition in #{fiscal_year(disposition_year)}"
+    "Scheduled for rehabilitation in #{fiscal_year(replacement_year)}."
   end
   
   protected
 
-  # Set resonable defaults for a new schedule disposition update event
+  # Set resonable defaults for a new condition update event
   def set_defaults
     super
-    self.disposition_year ||= current_fiscal_year_year
+    self.rebuild_year ||= current_fiscal_year_year
+    self.asset_event_type ||= AssetEventType.find_by_class_name(self.name)
   end    
   
 end
