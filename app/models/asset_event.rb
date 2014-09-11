@@ -8,6 +8,8 @@ class AssetEvent < ActiveRecord::Base
   include UniqueKey
   # Include the numeric sanitizers mixin
   include NumericSanitizers
+  # Include the fiscal year mixin
+  include FiscalYear
 
   #------------------------------------------------------------------------------
   # Overrides

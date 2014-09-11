@@ -11,7 +11,6 @@ class ScheduleReplacementUpdateEvent < AssetEvent
   belongs_to  :replacement_reason_type      
         
   validates :replacement_year,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => Date.today.year - 10}, :allow_nil => true
-  validates :rebuild_year,      :numericality => {:only_integer => :true,   :greater_than_or_equal_to => Date.today.year - 10}, :allow_nil => true
   validates :replacement_reason_type,  :presence => true
       
   #------------------------------------------------------------------------------
@@ -23,8 +22,7 @@ class ScheduleReplacementUpdateEvent < AssetEvent
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
     :replacement_reason_type_id,
-    :replacement_year,
-    :rebuild_year
+    :replacement_year
   ]
   
   #------------------------------------------------------------------------------
@@ -50,14 +48,7 @@ class ScheduleReplacementUpdateEvent < AssetEvent
 
   # This must be overriden otherwise a stack error will occur  
   def get_update
-    elems = []
-    if replacement_year
-      elems << "Replace #{replacement_year}"
-    end
-    if rebuild_year
-      elems << "Rebuild #{rebuild_year}"
-    end
-    elems.compact.join(', ')   
+    "Scheduled for replacement in #{fiscal_year(replacement_year)}. Reason: #{replacement_reason_type}."
   end
   
   protected
@@ -65,7 +56,7 @@ class ScheduleReplacementUpdateEvent < AssetEvent
   # Set resonable defaults for a new condition update event
   def set_defaults
     super
-    self.replacement_year ||= Date.today.year
+    self.replacement_year ||= current_fiscal_year_year
     self.asset_event_type ||= AssetEventType.find_by_class_name(self.name)
   end    
   

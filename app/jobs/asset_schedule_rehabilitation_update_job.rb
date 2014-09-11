@@ -1,11 +1,11 @@
 #------------------------------------------------------------------------------
 #
-# AssetScheduleReplacementUpdateJob
+# AssetScheduleRehabilitationUpdateJob
 #
-# Updates an assets scheduled replacement year
+# Updates an assets scheduled rehabilitation year
 #
 #------------------------------------------------------------------------------
-class AssetScheduleReplacementUpdateJob < AbstractAssetUpdateJob
+class AssetScheduleRehabilitationUpdateJob < AbstractAssetUpdateJob
   
   # Force an update of the SOGR characteristics based on the new replacement date  
   def requires_sogr_update?  
@@ -13,11 +13,11 @@ class AssetScheduleReplacementUpdateJob < AbstractAssetUpdateJob
   end  
   
   def execute_job(asset)       
-    asset.update_scheduled_replacement
+    asset.update_scheduled_rehabilitation
   end
 
   def prepare
-    Rails.logger.debug "Executing AssetScheduleReplacementUpdateJob at #{Time.now.to_s} for Asset #{object_key}"    
+    Rails.logger.debug "Executing AssetScheduleRehabilitationUpdateJob at #{Time.now.to_s} for Asset #{object_key}"    
   end
  
 end

@@ -69,6 +69,9 @@ class Asset < ActiveRecord::Base
   # each asset has zero or more scheduled replacement updates
   has_many   :schedule_replacement_updates, -> {where :asset_event_type_id => ScheduleReplacementUpdateEvent.asset_event_type.id }, :class_name => "ScheduleReplacementUpdateEvent"
 
+  # each asset has zero or more scheduled rehabilitation updates
+  has_many   :schedule_rehabilitation_updates, -> {where :asset_event_type_id => ScheduleRehabilitationUpdateEvent.asset_event_type.id }, :class_name => "ScheduleRehabilitationUpdateEvent"
+
   # each asset has zero or more scheduled disposition updates
   has_many   :schedule_disposition_updates, -> {where :asset_event_type_id => ScheduleDispositionUpdateEvent.asset_event_type.id }, :class_name => "ScheduleDispositionUpdateEvent"
 
@@ -174,7 +177,7 @@ class Asset < ActiveRecord::Base
     'estimated_replacement_cost',
     'scheduled_replacement_year',
     'scheduled_rehabilitation_year',
-    'scheduled_disposition_date',
+    'scheduled_disposition_year',
     'replacement_reason_type_id',
     'in_backlog',
     'reported_condition_type_id',
@@ -202,7 +205,7 @@ class Asset < ActiveRecord::Base
     :estimated_replacement_cost,
     :scheduled_replacement_year,
     :scheduled_rehabilitation_year,
-    :scheduled_disposition_date,
+    :scheduled_disposition_year,
     :replacement_reason_type_id,
     :estimated_value,
     :in_backlog,
@@ -446,19 +449,33 @@ class Asset < ActiveRecord::Base
   # Forces an update of an assets scheduled replacement. This performs an update on the record.
   def update_scheduled_replacement
 
-    Rails.logger.info "Updating the scheduled replacement/rehabilitation for asset = #{object_key}"
+    Rails.logger.info "Updating the scheduled replacement year for asset = #{object_key}"
 
     unless new_record?
       unless schedule_replacement_updates.empty?
         event = schedule_replacement_updates.last
         self.scheduled_replacement_year = event.replacement_year unless event.replacement_year.nil?
         self.replacement_reason_type_id = event.replacement_reason_type_id unless event.replacement_reason_type_id.nil?
-        self.scheduled_rehabilitation_year = event.rebuild_year unless event.rebuild_year.nil?
         self.scheduled_by_user = true
         save
       end
     end
   end
+
+  # Forces an update of an assets scheduled replacement. This performs an update on the record.
+  def update_scheduled_rehabilitation
+
+    Rails.logger.info "Updating the scheduled rehabilitation year for asset = #{object_key}"
+
+    unless new_record?
+      unless schedule_rehabilitation_updates.empty?
+        event = schedule_rehabilitation_updates.last
+        self.scheduled_rehabilitation_year = event.rebuild_year
+        save
+      end
+    end
+  end
+
   # Forces an update of an assets scheduled disposition
 
   def update_scheduled_disposition
@@ -468,7 +485,7 @@ class Asset < ActiveRecord::Base
     unless new_record?
       unless schedule_disposition_updates.empty?
         event = schedule_disposition_updates.last
-        self.scheduled_disposition_date = event.disposition_date
+        self.scheduled_disposition_year = event.disposition_year
         save
       end
     end
