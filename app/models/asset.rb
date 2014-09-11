@@ -267,6 +267,13 @@ class Asset < ActiveRecord::Base
   #
   #------------------------------------------------------------------------------
 
+  # Returns true if an asset has been disposed. This is the canonical method for checking
+  # if an asset has been disposed. Always use this method rather than checking the
+  # attributes as the data model might change
+  def disposed?
+    disposition_date.present?
+  end
+  
   # Returns true if the asset is of the specified class or has the specified class as
   # and ancestor (superclass).
   #
