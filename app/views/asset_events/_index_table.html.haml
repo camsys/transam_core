@@ -1,0 +1,20 @@
+.row
+  .col-md-12
+    %table.table.table-condensed.table-striped.table-hover.table-bordered{:id => 'datatable'}
+      %thead
+        %tr
+          %th Event
+          %th Date
+          %th Update
+          %th Notes
+      %tbody
+        - @events.each do |evt|
+          %tr{:data => {:action_path => "#{inventory_asset_event_path(@asset, evt)}"}}
+            %td
+              = evt.asset_event_type.name
+            %td
+              = format_as_date(evt.event_date)
+            %td
+              = evt.get_update
+            %td
+              = evt.comments.blank? ? " " : evt.comments.html_safe

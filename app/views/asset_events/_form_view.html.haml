@@ -1,0 +1,14 @@
+= render(:partial => 'shared/form_errors', :locals => {:obj => @asset_event}) unless @asset_event.errors.empty?	
+
+.row
+  .col-md-3
+    = dialog_tag('Asset', {:icon => "fa fa-list", :class => "header-part"}) do
+      = render 'assets/summary'
+  .col-md-6
+    = dialog_tag(@asset_event.asset_event_type.name, {:icon => @asset_event.asset_event_type.display_icon_name, :class => "header-part"}) do
+      = render "#{@asset_event.class.name.underscore}_form"
+  .col-md-3
+    = dialog_tag('Notes', {:icon => 'fa fa-book', :class => "header-part"}) do
+      = render "#{@asset_event.class.name.underscore}_notes"
+
+= render 'scripts'
