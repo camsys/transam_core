@@ -14,10 +14,12 @@ class AssetUpdateJob < AbstractAssetUpdateJob
   def execute_job(asset)     
 
     # generic asset updates
+    asset.update_service_status
     asset.update_condition
     asset.update_maintenance_provider
-    asset.update_service_status
     asset.update_scheduled_replacement
+    asset.update_scheduled_rehabilitation
+    asset.update_scheduled_disposition
     asset.update_estimated_value
       
   end
