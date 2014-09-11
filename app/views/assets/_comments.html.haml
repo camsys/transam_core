@@ -1,0 +1,16 @@
+.row
+  .col-md-12{:style => 'height:200px;overflow-y:auto;'}
+    - if @asset.comments.empty?
+      %p There are no comments for this asset.
+    - else
+      = render :partial => 'shared/comments', :locals => {:comments => @asset.comments}
+
+.row
+  .col-md-12
+    %fieldset
+      %legend Add Comment
+      = form_for [@asset, Comment.new], :url => inventory_comments_path(@asset, Comment.new), :role => 'form' do |f|
+        .form-group
+          = f.text_area :comment, :class => 'form-control', :placeholder => 'Enter a new comment...', :required => true, :minlength => 10
+        = f.submit :class => 'btn btn-primary', :id => 'comment_submit'
+  

@@ -3,14 +3,13 @@
 		<%= dialog_tag('New Asset', {:icon => 'fa fa-plus', :class => 'form_part'}) do %>
 			<div class="col-md-6">							
 				<%= form_tag new_inventory_path, :id => 'asset_subtype_form', :method => "get", :class => 'form-horizontal', :role => 'form' do %>
-					<%= hidden_field_tag :asset_subtype, @asset_subtype  %>
 					<div class="form-group">
 						<label class="col-sm-4 control-label string required" for="filter">
 							<abbr title="required">*</abbr>
 							Asset Type
 						</label>
 						<div class="col-sm-8">
-							<%= text_field_tag :filter, @filter, :autocomplete => "off", :class => "form-control ajax-typeahead string required", :data => {:link => filter_inventory_index_path, :provide => "typeahead"} %>
+							<%= select_tag(:asset_subtype, option_groups_from_collection_for_select(@asset_types, :asset_subtypes, :name, :id, :name), :class => 'form-control string required', :prompt => 'Select asset type...', :id => 'asset_subtype_filter') %>
 						</div>
 					</div>
 					<div class="col-sm-8 col-sm-offset-4">
@@ -28,83 +27,22 @@
 <script type="text/javascript" charset="utf-8">
 
   	// Configure UI behaviors
-  	var typeahead_delay = <%= Rails.application.config.ui_typeahead_delay %>
-  	var typeahead_min_chars = <%= Rails.application.config.ui_typeahead_min_chars %>
-  	var typeahead_list_length = <%= Rails.application.config.ui_typeahead_list_length %>
-  	var timeout;
   	
 	$(document).ready(function() {  	
   		// Disable the submit button
   		$('#submit_button').attr("disabled", "disabled");
+  		// Add an event listener on the selector
+  		$('#asset_subtype_filter').change(function() {
+  			var val = $('#asset_subtype_filter').val();
+  			if (val) {
+				$('#submit_button').removeAttr("disabled");    
+		        var url = '/inventory/details/?asset_subtype=' + val;
+		        transam.ajax_render_action(url, 'get');  			
+  			} else {
+  				$('#submit_button').attr("disabled", "disabled");
+				$('#subtype_details').html("");
+  			}
+  		});
 	});
 	
-	  // Enable typeahead for the filter
-	  $('#filter').typeahead({
-	      items: typeahead_list_length,
-	      minLength: typeahead_min_chars,
-	      source: function(query, process) {
-	          if (timeout) {
-	            clearTimeout(timeout);
-	            $('#submit_button').attr("disabled", "disabled");
-	          }
-	          timeout = setTimeout(function() {
-	            return $.ajax({
-	                url: $('#filter').data('link'),
-	                type: 'get',
-	                data: {
-	                  query: query
-	                },
-	                dataType: 'json',
-	                success: function(result) {
-	  
-	                  var resultList = result.map(function (item) {
-	                      var aItem = { id: item.id, name: item.name };
-	                      return JSON.stringify(aItem);
-	                  });
-	  
-	                  return process(resultList);
-	                }
-	            });
-	          }, typeahead_delay);
-	      },
-	    matcher: function (obj) {
-	        var item = JSON.parse(obj);
-	        return ~item.name.toLowerCase().indexOf(this.query.toLowerCase())
-	    },
-	
-	    sorter: function (items) {          
-	       var beginswith = [], caseSensitive = [], caseInsensitive = [], item;
-	        while (aItem = items.shift()) {
-	            var item = JSON.parse(aItem);
-	            if (!item.name.toLowerCase().indexOf(this.query.toLowerCase())) beginswith.push(JSON.stringify(item));
-	            else if (~item.name.indexOf(this.query)) caseSensitive.push(JSON.stringify(item));
-	            else caseInsensitive.push(JSON.stringify(item));
-	        }
-	
-	        return beginswith.concat(caseSensitive, caseInsensitive)
-	
-	    },
-	
-	
-	    highlighter: function (obj) {
-	        var item = JSON.parse(obj);
-	        var query = this.query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
-	        return item.name.replace(new RegExp('(' + query + ')', 'ig'), function ($1, match) {
-	            return '<strong>' + match + '</strong>'
-	        })
-	    },
-	
-	    updater: function (obj) {
-	        var item = JSON.parse(obj);
-	        	        
-	        // Update the UI
-	        $('#filter').attr('value', item.name);
-	        $('#asset_subtype').attr('value', item.id);
-			$('#submit_button').removeAttr("disabled");    
-	        var url = '/inventory/details/?asset_subtype=' + item.id
-	        transam.ajax_render_action(url, 'get');
-	        return item.name;
-	    }  
-	  });  
-
 </script>

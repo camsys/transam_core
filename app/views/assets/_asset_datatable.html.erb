@@ -24,7 +24,7 @@
 			<th class="center">Cost</th>
 			<th class="center">Policy</th>
 			<th class="center">Est.</th>
-			
+			<th></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -48,7 +48,20 @@
 				<td class="right"><%= a.policy_replacement_year %></td>
 				<td class="right"><%= a.estimated_replacement_year %></td>
 				
+				<td class="center"><%= render :partial => 'assets/asset_info_detail_popup', :locals => {:asset => a} %>
 			</tr>
 		<% end %>
 	</tbody>
 </table>	
+
+<script type="text/javascript" charset="utf-8">
+
+  $('.popup-details').popover({
+    trigger: 'hover',
+    container: 'body',
+    placement: 'left',
+    animation: 'true',
+    html: 'true'    
+  });  
+
+</script>

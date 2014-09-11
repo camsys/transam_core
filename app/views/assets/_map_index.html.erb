@@ -1,5 +1,6 @@
 <div class="row">
 	<div id="results" class="col-md-6">
+		<%= render :partial => 'asset_map_server_datatable', :locals => {:assets => @assets} %>
 	</div>
 	<div class="col-md-6">
 		<%= LeafletMap({ :mapid => 'lmap', :markers => @markers, :tile_provider => get_map_tile_provider, :min_zoom => 10, :max_zoom => 18, :class => "map", :style => "height:600px;" }) %>
@@ -9,25 +10,25 @@
 <%= yield :scripts %>
 
 <script type="text/javascript" charset="utf-8">
+  // Install a hover event handler for my places. When hovering,
+  // the map icon is panned to and the popup shown
+  $('.place-select').hover(function() {
+    var id = $(this).data('id');
+    selectMarkerById(id);
+  });
+
 
 	var locationFilter = new L.LocationFilter().addTo(LMmap);
 	var url = '<%= spatial_filter_inventory_index_path %>';
-
-	// Document Ready
-	$(document).ready(function(){
-		// populate the table
-	    update_selection(null);
-  	});
-
-	
-	// Apply the spatial filter
-	function update_selection(new_bounds) {
+  	
+  	// Apply the spatial filter
+  	function update_selection(new_bounds) {
 		var bbox = null;
 		if (new_bounds) {
 			bbox = new_bounds.toBBoxString();
 			LMmap.fitBounds(new_bounds, {padding: []})
 		}
-		var data = {spatial_filter: bbox}
+  		var data = {spatial_filter: bbox}
 		$.ajax({
 	    	type: 'get',
 	      	url: url,
@@ -44,15 +45,15 @@
 	      		show_alert("We are sorry but something went wrong. Please try again.");                
 	      	}
 	   	});  
-		
-	}
-	
+  		
+  	}
+
 	// Change the spatial filter
 	locationFilter.on("change", function (e) {
 		var new_bounds = e.bounds;
 		update_selection(new_bounds);
 	});
-	
+
 	// Enable the spatial filter	
 	locationFilter.on("enabled", function () {
 	});
