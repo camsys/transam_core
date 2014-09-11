@@ -1,0 +1,17 @@
+= simple_form_for([@asset, @asset_event],
+    :as => :asset_event,
+    :url => @asset_event.new_record? ? inventory_asset_events_path(@asset) : inventory_asset_event_path(@asset, @asset_event),
+    :method => @asset_event.new_record? ? 'post' : 'put',
+    :html => {:class => 'form-vertical' },
+    :wrapper => :vertical_form,
+    :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}) do |f|
+  = hidden_field_tag :event_type, @asset_event.asset_event_type.id
+  = f.association :maintenance_provider_type, :label => "Maintenance Provider Type"
+
+  = f.input :event_date, :label => 'Date of Report', :wrapper => :vertical_append do
+    = f.input_field :event_date, :as => :string, :class => 'form-control datepicker', :data => {'behavior' => 'datepicker'}, :value => f.object.event_date.strftime("%m-%d-%Y")
+    %span.input-group-addon
+      %i.fa.fa-calendar
+  = f.input :comments, :input_html => { :rows => 6 }, :placeholder => "Enter any additional comments..."
+  .form-group
+    = f.button :submit, "Update maintenance provider", :class => 'btn btn-primary'

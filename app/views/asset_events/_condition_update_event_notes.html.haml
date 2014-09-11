@@ -1,0 +1,12 @@
+%p
+  Use the following scale to determine the correct rating for the asset. You
+  can enter fractional values such as <strong>4.5</strong> or <strong>2.75</strong> .
+  
+%dl.dl-horizontal
+  - ConditionType.all.reverse.each do |x|
+    %dt{:style => 'width:60px;margin-bottom:10px;'}= "#{x.rating}"
+    %dd{:style => 'margin-left:80px;;margin-bottom:5px;'}= "#{x.description}"
+
+%p
+  Note that the FTA ranks any asset with a condition rating <strong>&lt 2.5</strong> as in need of replacement.
+  
