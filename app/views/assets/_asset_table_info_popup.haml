@@ -1,0 +1,8 @@
+.row
+  .col-sm-12
+    .col-sm-4
+      = render partial: "assets/asset_condition_details", locals: {asset:asset}
+    .col-sm-4
+      = render partial: "assets/asset_cost_details", locals: {asset:asset}
+    .col-sm-4
+      = render partial: "assets/asset_rehab_details", locals: {asset:asset}

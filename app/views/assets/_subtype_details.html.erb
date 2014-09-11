@@ -1,9 +1,0 @@
-<div class="media">
-  <a class="pull-left" href="#">
-	<%= image_tag(@asset_subtype.image, :class => "media-object", :style => 'height:100px;') unless @asset_subtype.nil? %>
-  </a>
-  <div class="media-body">
-    <h4 class="media-heading"><%= @asset_subtype.name unless @asset_subtype.nil? %></h4>
-    <%= @asset_subtype.description unless @asset_subtype.nil?%>
-  </div>
-</div>

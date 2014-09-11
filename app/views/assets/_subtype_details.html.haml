@@ -1,0 +1,8 @@
+.media
+  %a.pull-left
+    = image_tag(@asset_subtype.image, :class => "media-object", :style => 'height:100px;') unless @asset_subtype.nil?
+  .media-body
+    - if @asset_subtype
+      %h4.media-heading 
+        = @asset_subtype.name 
+      = @asset_subtype.description 

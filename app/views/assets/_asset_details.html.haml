@@ -1,0 +1,8 @@
+%fieldset
+  %legend.panel-legend Asset
+  = format_field("Owner", link_to(asset.organization.short_name, organization_path(asset.organization)) )
+  = format_field("Asset Tag", asset.asset_tag )
+  = format_field("Class", asset.asset_type )
+  = format_field("Type", asset.asset_subtype )
+  = format_field("Description", asset.description )
+  = format_field("Status",  asset.service_status_type.nil? ? 'Unknown' : asset.service_status_type.name )

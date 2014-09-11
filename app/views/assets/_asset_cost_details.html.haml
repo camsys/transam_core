@@ -1,0 +1,6 @@
+%fieldset
+  %legend.panel-legend Cost & Value
+  = format_field("Original Cost", format_as_currency(asset.purchase_cost))
+  = format_field("Purchase Date", format_as_date(asset.purchase_date))
+  = format_field("Purchased New", format_as_boolean(asset.purchased_new))
+  = format_field("Est. Value", format_as_currency(asset.estimated_value))
