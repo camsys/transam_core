@@ -30,6 +30,17 @@
               = button_tag 'Reset', :type => 'reset', :class=> 'btn btn-warning'
 
 :javascript
+  $(document).ready(function() {
+    // Set btn-dropdown text from set values in the hidden fields
+    var hidden_fields = $(".input-group-btn input[type='hidden']");
+    hidden_fields.each(function(selector) {
+      var selected_link = $(this).prev("ul").find("a[data-compare=" + this.value+ "]");
+      var text = selected_link.html();
+      var btn = $(this).prevAll("button");
+      btn.html(text).append("<span class='caret'></span>");
+    });
+  });
+
   // When selecting from the button-dropdowns, set a hidden field appropriately
   $(".input-group-btn a").on("click", function() {
     // Handle btn-dropdown by setting relevant variable in hidden field
