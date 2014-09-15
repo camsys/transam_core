@@ -17,8 +17,7 @@ Gem::Specification.new do |s|
   s.test_files = Dir["test/**/*"]
 
 
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-  s.add_dependency 'rails', '~> 4.0.2'
+  s.add_dependency 'rails', '>=4.0.9'
   s.add_dependency "cancan"
   s.add_dependency "devise", '~> 3.2.2'
   s.add_dependency "rolify", '~> 3.4'
