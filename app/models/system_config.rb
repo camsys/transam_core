@@ -46,10 +46,10 @@ class SystemConfig < ActiveRecord::Base
   # of the engine can be passsed as a string 'core' or symbol :transit
   #
   def self.transam_module_loaded? (engine_name, version = nil)
-    if ver.blank?
+    if version.blank?
       Gem::Specification::find_all_by_name("transam_#{engine_name.to_s}").any?
     else
-      Gem::Specification::find_all_by_name("transam_#{engine_name.to_s}", ver).any?
+      Gem::Specification::find_all_by_name("transam_#{engine_name.to_s}", version).any?
     end
   end
   
