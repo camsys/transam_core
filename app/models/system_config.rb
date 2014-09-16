@@ -34,4 +34,35 @@ class SystemConfig < ActiveRecord::Base
   def map_bounds
     [[min_lat, min_lon], [max_lat, max_lon]]
   end    
+  
+  #
+  # Queries the gemspec to see if the transam extension has been loaded.
+  # examples:
+  # if SystemConfig.transam_engine_loaded? 'transit'
+  # SystemConfig.transam_engine_loaded? :cpt
+  # if SystemConfig.transam_engine_loaded? ('core', '>= 0.4.0')
+  #
+  # By convention all transam engines are named 'transam_xxx'. The name
+  # of the engine can be passsed as a string 'core' or symbol :transit
+  #
+  def self.transam_module_loaded? (engine_name, version = nil)
+    if ver.blank?
+      Gem::Specification::find_all_by_name("transam_#{engine_name.to_s}").any?
+    else
+      Gem::Specification::find_all_by_name("transam_#{engine_name.to_s}", ver).any?
+    end
+  end
+  
+  #
+  # Queries the gemspec and returns an array of transam modules that have been loaded
+  #
+  def self.transam_modules
+    a = []
+    Gem::Specification::each do |gem|
+      if gem.full_name.starts_with('transam_')
+        a << gem
+      end
+    end
+    a
+  end
 end
