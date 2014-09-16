@@ -43,7 +43,7 @@ class ScheduleRehabilitationUpdateEvent < AssetEvent
 
   # This must be overriden otherwise a stack error will occur  
   def get_update
-    "Scheduled for rehabilitation in #{fiscal_year(replacement_year)}."
+    "Scheduled for rehabilitation in #{fiscal_year(rebuild_year)}."
   end
   
   protected
