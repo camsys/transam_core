@@ -59,7 +59,7 @@ class SystemConfig < ActiveRecord::Base
   def self.transam_modules
     a = []
     Gem::Specification::each do |gem|
-      if gem.full_name.starts_with('transam_')
+      if gem.full_name.start_with? 'transam_'
         a << gem
       end
     end
