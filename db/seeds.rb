@@ -11,7 +11,7 @@ is_mysql = (ActiveRecord::Base.configurations[Rails.env]['adapter'] == 'mysql2')
 #
 #------------------------------------------------------------------------------
 
-puts "======= Processing TransAM CORE Seeds  ======="
+puts "======= Processing TransAM CORE Lookup Tables  ======="
 
 condition_types = [
   {:active => 1, :name => 'Unknown',        :rating => 0.0, :description => 'Asset condition is unknown.'},
@@ -108,7 +108,8 @@ district_types = [
 report_types = [
   {:active => 1, :name => 'Inventory Report',     :display_icon_name => "fa fa-bar-chart-o",  :description => 'Inventory Report.'},
   {:active => 1, :name => 'Capital Needs Report', :display_icon_name => "fa fa-usd",          :description => 'Capital Needs Report.'},
-  {:active => 1, :name => 'Database Query',       :display_icon_name => "fa fa-database",     :description => 'Custom SQL Report.'}
+  {:active => 1, :name => 'Database Query',       :display_icon_name => "fa fa-database",     :description => 'Custom SQL Report.'},
+  {:active => 1, :name => 'System Report',        :display_icon_name => "fa fa-cog",          :description => 'System Report.'}
 ]
 
 location_reference_types = [
@@ -144,10 +145,17 @@ replacement_reason_types = [
   {:active => 1, :name => 'Other',     :description => 'The asset is being replaced for other reasons.'}
 ]
 
+roles = [
+  {:name => 'guest'},
+  {:name => 'user'},
+  {:name => 'manager'},
+  {:name => 'admin'}
+]
+
 lookup_tables = %w{condition_types disposition_types cost_calculation_types license_types priority_types
   file_status_types attachment_types district_types report_types location_reference_types service_status_types
   depreciation_calculation_types task_status_types service_life_calculation_types condition_estimation_types
-  issue_types web_browser_types replacement_reason_types
+  issue_types web_browser_types replacement_reason_types roles
   }
 
 lookup_tables.each do |table_name|
@@ -164,3 +172,47 @@ lookup_tables.each do |table_name|
     x.save!
   end
 end
+
+puts "======= Processing TransAM CORE Reports  ======="
+
+reports = [
+  {
+    :active => 1, 
+    :belongs_to => 'report_type', :type => "System Report",
+    :name => 'User Login Report',
+    :class_name => "CustomSqlReport",
+    :view_name => "generic_report_table",
+    :show_in_nav => 0,
+    :show_in_dashboard => 0,
+    :roles => 'manager',
+    :description => 'Displays a summary of user logins by organization.',
+    :custom_sql => "SELECT b.short_name AS 'ORGANIZATION',a.first_name AS 'FIRST NAME',a.last_name AS 'LAST NAME',a.sign_in_count AS 'NUM SIGNINS',a.last_sign_in_at AS 'LAST SIGN IN',a.locked_at AS 'ACCT LOCKED ON' FROM users a LEFT JOIN organizations b ON a.organization_id=b.id WHERE a.last_sign_in_at IS NOT NULL ORDER BY organization_id, first_name"
+  },
+  {
+    :active => 1, 
+    :belongs_to => 'report_type', :type => "System Report",
+    :name => 'Issues Report',
+    :class_name => "CustomSqlReport",
+    :view_name => "generic_report_table",
+    :show_in_nav => 0,
+    :show_in_dashboard => 0,
+    :roles => 'manager',
+    :description => 'Displays a list of reported user issues.',
+    :custom_sql => "SELECT d.short_name AS 'ORGANIZATION', b.name AS 'TYPE', a.created_at AS 'DATE/TIME', a.comments AS 'COMMENTS', e.name AS 'BROWSER TYPE', c.first_name AS 'FIRST NAME', c.last_name AS 'LAST NAME', c.phone AS 'PHONE' FROM issues a LEFT JOIN issue_types b ON a.issue_type_id=b.id LEFT JOIN users c ON a.created_by_id=c.id LEFT JOIN organizations d ON c.organization_id=d.id LEFT JOIN web_browser_types e ON a.web_browser_type_id=e.id ORDER BY a.created_at"
+  }
+]
+
+table_name = 'reports'
+puts "  Processing #{table_name}"
+if is_mysql
+  ActiveRecord::Base.connection.execute("TRUNCATE TABLE #{table_name};")
+else
+  ActiveRecord::Base.connection.execute("TRUNCATE #{table_name} RESTART IDENTITY;")
+end
+data = eval(table_name)
+data.each do |row|
+  x = Report.new(row.except(:belongs_to, :type))
+  x.report_type = ReportType.where(:name => row[:type]).first
+  x.save!
+end
+

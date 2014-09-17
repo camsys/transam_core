@@ -61,29 +61,8 @@
 		  			<i class="fa fa-book fa-2x"></i><br/><span>Policies</span>
 		  		<% end %>
 		  	</li>
-		
-		  	<li class="nav-item dropdown <%= get_nav_link_class('reports') %>">
-		  		<%= link_to reports_path, :class => "dropdown-toggle", :data => {"toggle" => "dropdown"} do %>
-		  			<i class="fa fa-bar-chart-o fa-2x"></i><br/><span>Reports</span>
-		  			<b class="caret"></b>
-		  		<% end %>
-				<ul class="dropdown-menu">
-					<li class="text-left">												
-						<%= link_to reports_path  do %>
-							<i class="fa fa-bar-chart-o fa-fw"></i> All			
-						<% end %>
-					</li>
-					<li class="divider"></li>			
-					<% Report.show_in_nav.each do |report| %>
-						<li  class="text-left">												
-							<%= link_to report_path(report)  do %>
-								<i class="<%= report.report_type.display_icon_name %> fa-fw"></i> <%= report.name %>								
-							<% end %>
-						</li>
-					<% end %>
-				</ul>
-		  	</li>
-		
+
+			<%= render 'shared/reports_nav' %>		
 		</ul>
 	</div>
 </nav>

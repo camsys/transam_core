@@ -5,6 +5,8 @@ class ReportType < ActiveRecord::Base
   # default scope
   default_scope { where(:active => true) }
 
+  has_many :reports
+  
   def to_s
     name
   end

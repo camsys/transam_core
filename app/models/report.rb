@@ -14,5 +14,10 @@ class Report < ActiveRecord::Base
   def to_s
     name
   end
-
+  
+  # Return an array of role anmes allowed to access this report
+  def role_names
+    roles.split(',')
+  end
+  
 end
