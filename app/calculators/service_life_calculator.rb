@@ -14,34 +14,6 @@ class ServiceLifeCalculator < Calculator
   def by_age(asset)
     asset.manufacture_year + @policy.get_policy_item(asset).max_service_life_years
   end
-
-  # Calculate the service life based on the minimum miles if the
-  # asset has a maximum number of miles set
-  def by_mileage(asset)
-
-    # Set the default maximum
-    year = 9999
-    unless asset.type_of? :vehicle
-      # Iterate over all the mileage update events from earliest to latest
-      # and find the first year (if any) that the  policy replacement became
-      # effective
-      policy_item = @policy.get_policy_item(asset)
-      if policy_item.max_service_life_miles
-        events = asset.mileage_updates(true)
-        Rails.logger.debug "Found #{events.count} events."
-        Rails.logger.debug "max_service_life_miles = #{policy_item.max_service_life_miles}."
-        events.each do |event|
-          Rails.logger.debug "Event date = #{event.event_date}, Mileage = #{event.current_mileage}"
-          if event.current_mileage >= policy_item.max_service_life_miles
-            Rails.logger.debug "returning #{event.event_date.year}"
-            year = event.event_date.year
-            break
-          end
-        end
-      end
-    end    
-    year
-  end  
   
   # Calculate the service life based on the minimum of condition
   def by_condition(asset)

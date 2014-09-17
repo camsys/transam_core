@@ -52,13 +52,11 @@ depreciation_calculation_types = [
 service_life_calculation_types = [
   {:active => 1, :name => 'Age Only',          :class_name => 'ServiceLifeAgeOnly',         :description => 'Calculate the replacement year based on the age of the asset.'},
   {:active => 1, :name => 'Condition Only',    :class_name => 'ServiceLifeConditionOnly',   :description => 'Calculate the replacement year based on the condition of the asset.'},
-  {:active => 1, :name => 'Age and Condition', :class_name => 'ServiceLifeAgeAndCondition', :description => 'Calculate the replacement year based on the age of the asset or condition whichever minimizes asset life.'},
-  {:active => 1, :name => 'Age and Mileage',   :class_name => 'ServiceLifeAgeAndMileage',   :description => 'Calculate the replacement year based on the age of the asset or mileage whichever minimizes asset life.'}
+  {:active => 1, :name => 'Age and Condition', :class_name => 'ServiceLifeAgeAndCondition', :description => 'Calculate the replacement year based on the age of the asset or condition whichever minimizes asset life.'}
 ]
 
 condition_estimation_types = [
-  {:active => 1, :name => 'Straight Line',  :class_name => 'StraightLineEstimationCalculator',  :description => 'Asset condition is estimated using a straight-line approximation.'},
-  {:active => 1, :name => 'TERM',           :class_name => 'TermEstimationCalculator',          :description => 'Asset condition is estimated using FTA TERM approximations.'}
+  {:active => 1, :name => 'Straight Line',  :class_name => 'StraightLineEstimationCalculator',  :description => 'Asset condition is estimated using a straight-line approximation.'}
 ]
 
 license_types = [
@@ -122,7 +120,7 @@ location_reference_types = [
 
 issue_types = [
   {:active => 1, :name => 'Comment',      :description => 'Suggestion'},
-  {:active => 1, :name => 'Enhancement',  :description => 'Public Agency (State DOT).'},
+  {:active => 1, :name => 'Enhancement',  :description => 'Enhancement.'},
   {:active => 1, :name => 'Bug',          :description => 'Bug'},
   {:active => 1, :name => 'Other',        :description => 'Other'}
 ]
