@@ -157,7 +157,7 @@ lookup_tables = %w{condition_types disposition_types cost_calculation_types lice
   }
 
 lookup_tables.each do |table_name|
-  puts "  Processing #{table_name}"
+  puts "  Loading #{table_name}"
   if is_mysql
     ActiveRecord::Base.connection.execute("TRUNCATE TABLE #{table_name};")
   else
@@ -201,7 +201,7 @@ reports = [
 ]
 
 table_name = 'reports'
-puts "  Processing #{table_name}"
+puts "  Loading #{table_name}"
 if is_mysql
   ActiveRecord::Base.connection.execute("TRUNCATE TABLE #{table_name};")
 else
