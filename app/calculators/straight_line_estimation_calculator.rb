@@ -163,7 +163,7 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
     end
     # return the last year that the asset is viable
     Rails.logger.debug "years_policy = #{years_policy}, years_mileage = #{years_mileage}, years_condition = #{years_condition}"
-    asset.manufacture_year + [years_policy, years_mileage, years_condition].min
+    asset.in_service_year + [years_policy, years_mileage, years_condition].min
   end  
 
 end

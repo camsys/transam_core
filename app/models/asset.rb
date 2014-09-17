@@ -129,6 +129,7 @@ class Asset < ActiveRecord::Base
   validates       :object_key,        :presence => true, :uniqueness => true
   validates       :asset_tag,         :presence => true
   validates       :asset_tag,         :length   => {:maximum => 12}
+  validates       :in_service_date,   :presence => true
 
   validates_uniqueness_of :asset_tag, scope: :organization
 
@@ -200,6 +201,7 @@ class Asset < ActiveRecord::Base
     :asset_subtype_id,
     :asset_tag,
     :manufacture_year,
+    :in_service_date,
     :policy_replacement_year,
     :estimated_replacement_year,
     :estimated_replacement_cost,
@@ -342,6 +344,11 @@ class Asset < ActiveRecord::Base
     [on_date.year - manufacture_year, 0].max
   end
 
+  # Returns the year that the asset was placed in service
+  def in_service_year
+    in_service_date.year unless in_service_date.nil?
+  end
+  
   # returns the list of events associated with this asset ordered by date, newest first
   def history
     AssetEvent.unscoped.where('asset_id = ?', id).order('event_date DESC')
@@ -661,6 +668,7 @@ class Asset < ActiveRecord::Base
 
   # Set resonable defaults for a new asset
   def set_defaults
+    self.in_service_date ||= Date.today
     self.manufacture_year ||= Date.today.year
     self.expected_useful_life ||= 0
   end
