@@ -8,11 +8,15 @@ capybara-*.html
 /vendor/bundle
 /log/*
 /tmp/*
-/db/*.sqlite3
 /public/system/*
 /coverage/
 /spec/tmp/*
+/spec/log/*
+spec/dummy/log/*
+spec/dummy/tmp/*
+Gemfile.lock
 **.orig
+**.sqlite3
 rerun.txt
 pickle-email-*.html
 .project
