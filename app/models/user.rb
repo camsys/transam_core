@@ -121,6 +121,16 @@ class User < ActiveRecord::Base
     ! roles.find(role_id).nil?
   end
       
+  # Returns true if the user has at least one of the roles
+  def is_in_roles?(roles_to_test)
+    roles_to_test.each do |name|
+      if roles_name.include? name
+        return true
+      end
+    end
+    false
+  end
+  
   def to_s
     name
   end
