@@ -1,42 +1,46 @@
 <table id="datatable" class="table table-hover table-condensed", width="100%">
 	<thead>
 		<tr>
-			<th colspan="2" class="center">Asset</th>
+			<th colspan="2" class="center">Asset Type</th>
 			<th colspan="2" class="center">Service Life</th>
-			<th colspan="2" class="center">Rehab/Rebuild</th>
-			<th colspan="3" class="center">Costs</th>
+			<th colspan="3" class="center">Replace</th>
+			<th colspan="4" class="center">Rehabilitate</th>
 		</tr>
 		<tr>
 			<th class="left">Class</th>
 			<th class="left">Subclass</th>
 
 			<th class="right">Years</th>
-			<th class="right">Miles</th>
-
-			<th class="right">Years</th>
-			<th class="right">Miles</th>
-
-			<th class="right">Rep.</th>
-			<th class="right">Reh.</th>
 			<th class="right">% Resid</th>
-			
+
+			<th class="center">ALI Code</th>
+			<th class="left">With</th>
+			<th class="right">Avg. Cost</th>			
+
+			<th class="right">In Year</th>
+			<th class="right">Ext Years</th>
+			<th class="center">ALI Code</th>
+			<th class="right">Avg. Cost</th>
+
 		</tr>
 	</thead>
 	<tbody>
 		<% @policy.policy_items.each do |pi| %>
 		<tr>
-			<td class="left"><%= pi.asset_subtype.asset_type.name %></td>
-			<td class="left"><%= pi.asset_subtype.name %></td>
+			<td class="left"><%= pi.asset_subtype.asset_type %></td>
+			<td class="left"><%= pi.asset_subtype %></td>
 
-			<td class="right"><%= pi.max_service_life_years %></td>
-			<td class="right"><%= format_as_integer(pi.max_service_life_miles) %></td>
-
-			<td class="right"><%= pi.extended_service_life_years %></td>
-			<td class="right"><%= format_as_integer(pi.extended_service_life_miles) %></td>
-
-			<td class="right"><%= format_as_currency(pi.replacement_cost) %></td>
-			<td class="right"><%= format_as_currency(pi.rehabilitation_cost) %></td>
+			<td class="right"><%= format_as_integer(pi.max_service_life_years) %></td>
 			<td class="right"><%= format_as_percentage(pi.pcnt_residual_value) %></td>
+
+			<td class="center"><%= pi.replacement_ali_code %></td>
+			<td class="left"><%= pi.replace_asset_subtype %></td>
+			<td class="right"><%= format_as_currency(pi.replacement_cost) %></td>
+
+			<td class="right"><%= format_as_integer(pi.rehabilitation_year) %></td>
+			<td class="right"><%= format_as_integer(pi.extended_service_life_years) %></td>
+			<td class="center"><%= pi.rehabilitation_ali_code %></td>
+			<td class="right"><%= format_as_currency(pi.rehabilitation_cost) %></td>
 		</tr>
 		<% end %>
 	</tbody>

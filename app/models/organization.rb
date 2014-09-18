@@ -156,6 +156,13 @@ class Organization < ActiveRecord::Base
     false
   end   
             
+  # Returns a policy for this org. This must be overriden for concrete classes
+  def get_policy
+    # get a typed version of the organization and return its value
+    org = is_typed? ? self : Organization.get_typed_organization(self)
+    return org.get_policy unless org.nil?    
+  end
+            
   # returns true if the organization instance is strongly typed, i.e., a concrete class
   # false otherwise.
   # true

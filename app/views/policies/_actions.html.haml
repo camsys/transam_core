@@ -9,9 +9,13 @@
           = link_to edit_policy_path(@policy) do
             %i.fa.fa-edit.fa-fw
             = " Modify this policy"
+        %li
+          = link_to make_current_policy_path(@policy) do
+            %i.fa.fa-check-square-o.fa-fw
+            = " Set as current"
+          %li.divider
             
       - if can? :create, @policy
-        %li.divider
         %li
           = link_to copy_policy_path(@policy) do
             %i.fa.fa-copy.fa-fw

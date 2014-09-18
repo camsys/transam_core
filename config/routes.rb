@@ -126,6 +126,7 @@ Rails.application.routes.draw do
   resources :policies do
     member do
       get   'copy'
+      get   'make_current'
     end
   end
   

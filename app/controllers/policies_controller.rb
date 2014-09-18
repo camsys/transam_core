@@ -45,6 +45,27 @@ class PoliciesController < OrganizationAwareController
     #right now, no blank policies can be created - just copying existing policies
   end
 
+  # Sets the current policy for an organization
+  def make_current
+
+    # Get the concrete class for the organization
+    org = Organization.get_typed_organization(@policy.organization)
+    
+    # Make sure that any other policies including the selected ones
+    # are not current
+    org.policies.each do |pol|
+      pol.current = false
+      pol.save
+    end
+    # make the selected policy current
+    @policy.current = true
+    @policy.save
+    
+    notify_user(:notice, "Policy #{@policy.name} is now set as the current policy.")
+    redirect_to policy_url(@policy)    
+        
+  end
+
   def edit
     
     add_breadcrumb "Policies", policies_path
@@ -65,10 +86,6 @@ class PoliciesController < OrganizationAwareController
     new_policy.current = false
     
     new_policy.policy_items.clear
-    @policy.policy_items.each do |pi|
-      new_pi = pi.dup
-      new_policy.policy_items << new_pi
-    end
 
     new_policy.save
 
