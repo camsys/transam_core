@@ -1,9 +1,10 @@
-= form_tag users_path, :id => 'filter_form', :method => "get", :class => 'navbar-form navbar-right panel-action' do
-  .form-group
-    = select_tag(:organization_id, options_for_select(Organization.all.collect{|a| [a.coded_name, a.id]}, :selected => @organization_id), :class => "form-control", :prompt => "Any organization...")
-  - if current_user.has_role? :admin
+- if @organization_list.count > 1
+  = form_tag users_path, :id => 'filter_form', :method => "get", :class => 'navbar-form navbar-right panel-action' do
     .form-group
-      = select_tag(:role, options_for_select(Role.all, :selected => @role), :class => "form-control", :prompt => "Any role...")
+      = select_tag(:organization_id, options_for_select(Organization.all.collect{|a| [a.coded_name, a.id]}, :selected => @organization_id), :class => "form-control", :prompt => "Any organization...")
+    - if current_user.has_role? :admin
+      .form-group
+        = select_tag(:role, options_for_select(Role.all, :selected => @role), :class => "form-control", :prompt => "Any role...")
 
 
 :javascript
@@ -13,4 +14,5 @@
       $('#filter_form').submit();
     });
     
-  });  
+  });
+    
