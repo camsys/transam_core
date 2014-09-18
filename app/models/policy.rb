@@ -120,20 +120,16 @@ class Policy < ActiveRecord::Base
     self[:condition_threshold] = sanitize_to_float(num)
   end      
 
-  def get_policy_item(asset)
+  def get_rule(asset)
     policy_items.where(:asset_subtype => asset.asset_subtype).first
   end
+  
   #------------------------------------------------------------------------------
   #
   # Protected Methods
   #
   #------------------------------------------------------------------------------
   protected 
-
-  # Strip extraneous non-numeric characters from an input number and return a float
-  def sanitize_number(num)
-    num.to_s.scan(/\b-?[\d.]+/).join.to_f
-  end
 
   # Set resonable defaults for a new policy
   def set_defaults
