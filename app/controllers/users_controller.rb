@@ -39,10 +39,13 @@ class UsersController < OrganizationAwareController
         
     # See if we got an organization id
     @organization_id = params[:organization_id]
-    unless @organization_id.blank?
+    if @organization_id.present?
       @organization_id = @organization_id.to_i
       conditions << 'organization_id = ?'
       values << @organization_id
+    else
+      conditions << 'organization_id IN (?)'
+      values << @organization_list      
     end
 
     # See if we got a search string
