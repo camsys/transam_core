@@ -354,6 +354,13 @@ class Asset < ActiveRecord::Base
     AssetEvent.unscoped.where('asset_id = ?', id).order('event_date DESC')
   end
 
+  # Returns the policy rule that this asset uses for replacement and rehabilitation
+  def policy_rule
+    # get a typed version of the asset
+    asset = is_typed? ? self : Asset.get_typed_asset(self)
+    policy.get_rule(asset)
+  end
+
   # returns the the organizations's policy that governs the replacement of this asset. This needs to upcast
   # the organization type to a class that owns assets
   def policy
@@ -361,7 +368,7 @@ class Asset < ActiveRecord::Base
     return org.get_policy
   end
 
-  # initialize any policy-related items. THis method should be overridden for each sub class
+  # initialize any policy-related items. This method should be overridden for each sub class
   def initialize_policy_items(init_policy = nil)
     # Set the expected_useful_life
     if init_policy
@@ -370,7 +377,7 @@ class Asset < ActiveRecord::Base
       p = policy
     end
     if p
-      policy_item = p.get_policy_item(self)
+      policy_item = p.get_rule(self)
       if policy_item 
         self.expected_useful_life = policy_item.max_service_life_years
       end
