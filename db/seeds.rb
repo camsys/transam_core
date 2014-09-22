@@ -2,7 +2,7 @@
 
 # determine if we are using postgres or mysql
 is_mysql = (ActiveRecord::Base.configurations[Rails.env]['adapter'] == 'mysql2')
-
+is_sqlite =  (ActiveRecord::Base.configurations[Rails.env]['adapter'] == 'sqlite3')
 #------------------------------------------------------------------------------
 #
 # Lookup Tables
@@ -170,6 +170,8 @@ lookup_tables.each do |table_name|
   puts "  Loading #{table_name}"
   if is_mysql
     ActiveRecord::Base.connection.execute("TRUNCATE TABLE #{table_name};")
+  elsif is_sqlite
+    ActiveRecord::Base.connection.execute("DELETE FROM #{table_name};")
   else
     ActiveRecord::Base.connection.execute("TRUNCATE #{table_name} RESTART IDENTITY;")
   end
@@ -214,6 +216,8 @@ table_name = 'reports'
 puts "  Loading #{table_name}"
 if is_mysql
   ActiveRecord::Base.connection.execute("TRUNCATE TABLE #{table_name};")
+elsif is_sqlite
+  ActiveRecord::Base.connection.execute("DELETE FROM #{table_name};")
 else
   ActiveRecord::Base.connection.execute("TRUNCATE #{table_name} RESTART IDENTITY;")
 end
