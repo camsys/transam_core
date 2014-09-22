@@ -12,7 +12,7 @@ class ConditionUpdateEvent < AssetEvent
   # Condition of the asset
   belongs_to  :condition_type
       
-  validates :condition_type_id, :presence => true
+  validates :condition_type, :presence => true
   validates :assessed_rating,   :numericality => {:greater_than_or_equal_to => 0, :less_than_or_equal_to => 5}, :allow_nil => :true
   
   before_validation do
