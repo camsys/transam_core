@@ -69,6 +69,7 @@ class User < ActiveRecord::Base
   validates :phone,         :presence => true
   validates :timezone,      :presence => true
   validates :num_table_rows,:presence => true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 5}
+  validates :organization,  :presence => true
   
   # default scope
   default_scope { where(:active => true) }
