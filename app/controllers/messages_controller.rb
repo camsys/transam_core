@@ -23,9 +23,6 @@ class MessagesController < OrganizationAwareController
     # Start to set up the query
     conditions  = []
     values      = []
-    # every query is bounded by the user's organization
-    conditions << 'organization_id = ?'
-    values << @organization.id
     
     if @filter == MESSAGE_TYPE_NEW
       @page_title = 'New Messages'
