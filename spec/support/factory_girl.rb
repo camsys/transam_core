@@ -1,7 +1,7 @@
 RSpec.configure do |config|
   # additional factory_girl configuration
   
-  DatabaseCleaner.strategy = :truncation, {:only => %w[assets asset_events asset_types organizations]}
+  DatabaseCleaner.strategy = :truncation, {:only => %w[assets asset_events asset_types organizations messages users]}
   config.before(:suite) do
     begin
       DatabaseCleaner.start

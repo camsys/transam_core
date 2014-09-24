@@ -34,8 +34,8 @@ class Message < ActiveRecord::Base
   # Validations on core attributes
   validates :object_key,        :presence => true, :uniqueness => true
   validates :organization_id,   :presence => true
-  validates :user_id,           :presence => true
-  validates :to_user_id,        :presence => true
+  validates :user,              :presence => true
+  validates :to_user,           :presence => true
   validates :priority_type_id,  :presence => true
   validates :subject,           :presence => true
   validates :body,              :presence => true
