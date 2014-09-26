@@ -76,13 +76,7 @@ RSpec.describe Asset, :type => :model do
     end
   end
 
-  describe "#cost" do
-    it 'returns the correct cost' do
-    pending 'move to transam_transit'
-      expect(buslike_asset.cost).to eql(buslike_asset.purchase_cost)
-    end
-  end
-  
+ 
   describe '#history' do
     it 'holds events of all types' do
       buslike_asset.condition_updates.create(attributes_for :condition_update_event)
@@ -105,14 +99,7 @@ RSpec.describe Asset, :type => :model do
     end
   end
 
-  describe "#name" do
-    it 'returns the correct default name for an asset' do
-      pending 'move to transam_transit (missing asset_subtype)'
-      persisted_buslike_asset.update_attributes(asset_tag: "TEST") # Need a defined asset_tag for this test
-      expect(persisted_buslike_asset.name).to eql("buslike_asset Std 40 FT - TEST")
-    end
-  end
-
+  
   describe "#searchable_fields" do
     it 'inherits down the tree' do
       asset_searchables = [ 'object_key', 'asset_tag', 'manufacture_year']
@@ -135,39 +122,6 @@ RSpec.describe Asset, :type => :model do
 
   describe "#initialize_policy_items" do #pending
     pending "Need some specs"
-  end
-
-  describe "#record_disposition" do
-    it 'works for an abstract Asset' do
-      pending 'move to transam_transit'
-      buslike_asset.disposition_updates.create(attributes_for(:disposition_update_event))
-      buslike_asset.record_disposition
-
-      expect(buslike_asset.disposition_date).to eq(Date.today)
-      expect(buslike_asset.disposition_type_id).to eq(2)
-    end
-  end
-
-  describe "#update_service_status" do
-    it 'works for an abstract type' do
-    pending 'move to transam_transit'
-      buslike_asset.service_status_updates.build(attributes_for(:service_status_update_event))
-      buslike_asset.update_service_status
-
-      expect(buslike_asset.service_status_date).to eq(Date.today)
-      expect(buslike_asset.service_status_type_id).to eq(2)
-    end
-  end
-
-  describe "#update_condition" do
-    it 'works for an abstract type' do
-    pending 'move to transam_transit'
-      buslike_asset.service_status_updates.build(attributes_for(:service_status_update_event))
-      buslike_asset.update_service_status
-
-      expect(buslike_asset.service_status_date).to eq(Date.today)
-      expect(buslike_asset.service_status_type_id).to eq(2)
-    end
   end
 
   describe '#copy' do
