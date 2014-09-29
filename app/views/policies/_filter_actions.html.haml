@@ -1,7 +1,6 @@
-= form_tag policy_path(@policy), :id => 'filter_form', :method => "get", :class => 'navbar-form navbar-right panel-action' do
+= form_tag policy_path(@policy), :id => 'filter_form', :method => "get", :remote => true, :class => 'navbar-form navbar-right panel-action' do
   .form-group
     = select_tag(:asset_type, options_for_select(AssetType.all.collect{|a| [a.name, a.id]}, :selected => @asset_type), :class => "form-control", :style => "width: 200px;", :prompt => "Any Asset Type...")
-
 
 :javascript
   $(document).ready(function() {

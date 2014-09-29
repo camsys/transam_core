@@ -124,6 +124,7 @@ Rails.application.routes.draw do
   end
       
   resources :policies do
+    resources :policy_items
     member do
       get   'copy'
       get   'make_current'

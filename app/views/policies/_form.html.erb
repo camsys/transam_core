@@ -5,14 +5,14 @@
 		:wrapper_mappings => {:check_boxes => :horizontal_radio_and_checkboxes, :radio_buttons => :horizontal_radio_and_checkboxes, :file => :horizontal_file_input, :boolean => :horizontal_boolean}
 		) do |f| %>
 		<div class="col-md-6">
-			<%= dialog_tag('Policy', {:icon => 'fa fa-book', :class => "form_part"}) do %>
+			<%= dialog_tag('Policy', {:icon => 'fa fa-book', :class => "form-part"}) do %>
 				<%= f.input :name, :placeholder => "Enter a name for this policy..." %>
-				<%= f.input :year, :label => 'Effective Fiscal Year', :collection => @year_list, :prompt => "Select an effective year..." %>
+				<%= f.input :year, :label => 'Effective Fiscal Year', :collection => @policy.get_fiscal_years, :prompt => "Select the effective fiscal year..." %>
 				<%= f.input :description, :input_html => { :rows => 6 }, :placeholder => "Enter a description for the policy..." %>
 			<% end %>
 		</div>
 		<div class="col-md-6">
-			<%= dialog_tag('Calculators', {:icon => 'fa fa-usd', :class => "form_part"}) do %>
+			<%= dialog_tag('Calculators', {:icon => 'fa fa-usd', :class => "form-part"}) do %>
 				<%= f.input :interest_rate, :label => "Interest Rate" %>
 				<%= f.association :service_life_calculation_type, :label => "Service Life Calculator", :prompt => "Select..." %>
 				<%= f.association :cost_calculation_type, :label => "Cost Calculator", :prompt => "Select..." %>
@@ -23,7 +23,6 @@
 		</div>
 		<div class="col-md-12">
 			<%= f.button :submit, :class => "btn btn-primary" %>
-			<%= submit_tag 'Cancel', :name => 'cancel', :class=>"btn btn-warning" %>
 		</div>
 	<% end %>
 </div>

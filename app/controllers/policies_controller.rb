@@ -45,6 +45,7 @@ class PoliciesController < OrganizationAwareController
     
     respond_to do |format|
       format.html # show.html.erb
+      format.js
       format.json { render :json => @policy }
     end
   end
@@ -89,15 +90,16 @@ class PoliciesController < OrganizationAwareController
     
     old_policy_name = @policy.name
     new_policy = @policy.dup
+    new_policy.parent = @policy
     new_policy.organization = @organization
     new_policy.name = "Copy of " + @policy.name
     new_policy.description = "Copy of " + @policy.description
     new_policy.current = false
-    new_policy.parent = @policy
-    
+    new_policy.active = true
+        
     new_policy.policy_items.clear
 
-    new_policy.save
+    new_policy.save!
 
     # now attempt to load the newly created record
     @policy = Policy.find(new_policy.id)
@@ -180,16 +182,7 @@ class PoliciesController < OrganizationAwareController
     end
     
   end
-  
-  def create_year_list
-    a = []
-    year = Date.today.year
-    (0..12).each do |y|
-      a << year + y
-    end
-    return a
-  end
-  
+    
   def check_for_cancel
     unless params[:cancel].blank?
       # get the policy, if one was being edited

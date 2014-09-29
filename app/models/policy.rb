@@ -9,6 +9,8 @@ class Policy < ActiveRecord::Base
   include UniqueKey
   # Include the numeric sanitizers mixin
   include NumericSanitizers
+  # Include the fiscal year mixin
+  include FiscalYear
 
   #------------------------------------------------------------------------------
   # Overrides
@@ -65,7 +67,7 @@ class Policy < ActiveRecord::Base
   validates :condition_estimation_type_id,      :presence => true
 
   validates :year,                              :presence => true, :numericality => {:only_integer => true, :greater_than_or_equal_to => Date.today.year }
-  validates :name,                              :presence => true, :uniqueness => true
+  validates :name,                              :presence => true
   validates :description,                       :presence => true
   validates :interest_rate,                     :presence => true, :numericality => {:greater_than_or_equal_to => 0.0, :less_than_or_equal_to => 100.0 }
   validates :condition_threshold,               :presence => true, :numericality => {:greater_than_or_equal_to => 0.0, :less_than_or_equal_to => 5.0 }
