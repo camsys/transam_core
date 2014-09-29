@@ -25,7 +25,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<% @policy.policy_items.each do |pi| %>
+		<% @rules.each do |pi| %>
 		<tr>
 			<td class="left"><%= pi.asset_subtype.asset_type %></td>
 			<td class="left"><%= pi.asset_subtype %></td>

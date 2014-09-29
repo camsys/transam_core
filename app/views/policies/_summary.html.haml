@@ -1,9 +1,9 @@
 %fieldset
-  %legend.panel-legend Policy
   = format_field("Policy Owner", @policy.organization.name )
   = format_field("Effective Year", @policy.year )
   = format_field("Description", @policy.description )
-  = format_field("Current", format_as_boolean(@policy.current) ) 
+  = format_field("Parent Policy", @policy.parent.name ) unless @policy.parent.blank?
+  = format_field("Current", format_as_boolean(@policy.current) ) unless @policy.current == false
 	
 %fieldset
   %legend.panel-legend Calculators

@@ -34,6 +34,15 @@ class PoliciesController < OrganizationAwareController
     add_breadcrumb "Policies", policies_path
     add_breadcrumb @policy.name, policy_path(@policy)
 
+    # See if the user wants to filter on an asset type
+    @asset_type = params[:asset_type]
+    if @asset_type.blank?
+      @rules = @policy.policy_items
+    else
+      asset_type = AssetType.find(@asset_type)
+      @rules = @policy.policy_items.where('asset_subtype_id IN (?)', asset_type.asset_subtype_ids)
+    end
+    
     respond_to do |format|
       format.html # show.html.erb
       format.json { render :json => @policy }
