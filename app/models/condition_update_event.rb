@@ -12,7 +12,7 @@ class ConditionUpdateEvent < AssetEvent
   # Condition of the asset
   belongs_to  :condition_type
       
-  validates :condition_type_id, :presence => true
+  validates :condition_type, :presence => true
   validates :assessed_rating,   :numericality => {:greater_than_or_equal_to => 0, :less_than_or_equal_to => 5}, :allow_nil => :true
   
   before_validation do
@@ -23,7 +23,7 @@ class ConditionUpdateEvent < AssetEvent
   # Scopes
   #------------------------------------------------------------------------------
   # set the default scope
-  default_scope { where(:asset_event_type_id => AssetEventType.find_by_class_name(self.name).id).order(:event_date, :created_at) }
+  default_scope { where(:asset_event_type => asset_event_type).order(:event_date, :created_at) }
     
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [

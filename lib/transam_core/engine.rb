@@ -1,3 +1,8 @@
+require 'devise'
+require 'rolify'
+require 'geocoder'
+require 'ruby-units'
+
 module TransamCore
   class Engine < ::Rails::Engine
     # Add a load path for this specific Engine
@@ -18,6 +23,12 @@ module TransamCore
         end
       end
     end
-        
+
+    config.generators do |g|
+      g.test_framework      :rspec,        :fixture => false
+      g.fixture_replacement :factory_girl, :dir => 'spec/factories'
+      g.assets false
+      g.helper false
+    end
   end
 end

@@ -21,18 +21,20 @@ Gem::Specification.new do |s|
   s.add_dependency "cancan"
   s.add_dependency "devise", '~> 3.2.2'
   s.add_dependency "rolify", '~> 3.4'
+  s.add_dependency "geocoder"
   s.add_dependency "georuby"
   s.add_dependency "high_voltage"
   s.add_dependency "fullcalendar-rails"
+  s.add_dependency 'ruby-units'
   
   # for background processing jobs  
   s.add_dependency 'delayed_job_active_record'
   # for running background processes
   s.add_dependency 'daemons'
   
-  #s.add_development_dependency "rolify", '~> 3.4'
-  #s.add_development_dependency "devise", '~> 3.2.2'
   s.add_development_dependency "rspec-rails"
-  s.add_development_dependency "sqlite3"  
+  s.add_development_dependency "factory_girl_rails"
+  s.add_development_dependency "database_cleaner"  
+  s.add_development_dependency "sqlite3"
 
 end

@@ -2,7 +2,7 @@
 
 # determine if we are using postgres or mysql
 is_mysql = (ActiveRecord::Base.configurations[Rails.env]['adapter'] == 'mysql2')
-
+is_sqlite =  (ActiveRecord::Base.configurations[Rails.env]['adapter'] == 'sqlite3')
 #------------------------------------------------------------------------------
 #
 # Lookup Tables
@@ -12,6 +12,16 @@ is_mysql = (ActiveRecord::Base.configurations[Rails.env]['adapter'] == 'mysql2')
 #------------------------------------------------------------------------------
 
 puts "======= Processing TransAM CORE Lookup Tables  ======="
+
+asset_event_types = [
+  {:active => 1, :name => 'Update the condition',       :display_icon_name => "fa fa-star-half-o",       :description => 'Condition',       :class_name => 'ConditionUpdateEvent',      :job_name => 'AssetConditionUpdateJob'},
+  {:active => 1, :name => 'Update the maintenance provider type',       :display_icon_name => "fa fa-cog",       :description => 'Maintenance Provider',       :class_name => 'MaintenanceProviderUpdateEvent',      :job_name => 'AssetMaintenanceProviderUpdateJob'},
+  {:active => 1, :name => 'Schedule replacement',       :display_icon_name => "fa fa-refresh",       :description => 'Scheduled replacement',       :class_name => 'ScheduleReplacementUpdateEvent',      :job_name => 'AssetScheduleReplacementUpdateJob'},
+  {:active => 1, :name => 'Schedule rehabilitation',       :display_icon_name => "fa fa-wrench",       :description => 'Scheduled rehabilitation',       :class_name => 'ScheduleRehabilitationUpdateEvent',      :job_name => 'AssetScheduleRehabilitationUpdateJob'},
+  {:active => 1, :name => 'Schedule disposition',       :display_icon_name => "fa fa-times-circle",       :description => 'Scheduled disposition',       :class_name => 'ScheduleDispositionUpdateEvent',      :job_name => 'AssetScheduleDispositionUpdateJob'},
+  {:active => 1, :name => 'Update the service status',  :display_icon_name => "fa fa-bell",  :description => 'Service Status Update',  :class_name => 'ServiceStatusUpdateEvent',  :job_name => 'AssetServiceStatusUpdateJob'},
+  {:active => 1, :name => 'Record final disposition',     :display_icon_name => "fa fa-ban",      :description => 'Disposition Update',     :class_name => 'DispositionUpdateEvent',    :job_name => 'AssetDispositionUpdateJob'}
+]
 
 condition_types = [
   {:active => 1, :name => 'Unknown',        :rating => 0.0, :description => 'Asset condition is unknown.'},
@@ -150,7 +160,7 @@ roles = [
   {:name => 'admin'}
 ]
 
-lookup_tables = %w{condition_types disposition_types cost_calculation_types license_types priority_types
+lookup_tables = %w{asset_event_types condition_types disposition_types cost_calculation_types license_types priority_types
   file_status_types attachment_types district_types report_types location_reference_types service_status_types
   depreciation_calculation_types task_status_types service_life_calculation_types condition_estimation_types
   issue_types web_browser_types replacement_reason_types roles
@@ -160,6 +170,8 @@ lookup_tables.each do |table_name|
   puts "  Loading #{table_name}"
   if is_mysql
     ActiveRecord::Base.connection.execute("TRUNCATE TABLE #{table_name};")
+  elsif is_sqlite
+    ActiveRecord::Base.connection.execute("DELETE FROM #{table_name};")
   else
     ActiveRecord::Base.connection.execute("TRUNCATE #{table_name} RESTART IDENTITY;")
   end
@@ -204,6 +216,8 @@ table_name = 'reports'
 puts "  Loading #{table_name}"
 if is_mysql
   ActiveRecord::Base.connection.execute("TRUNCATE TABLE #{table_name};")
+elsif is_sqlite
+  ActiveRecord::Base.connection.execute("DELETE FROM #{table_name};")
 else
   ActiveRecord::Base.connection.execute("TRUNCATE #{table_name} RESTART IDENTITY;")
 end

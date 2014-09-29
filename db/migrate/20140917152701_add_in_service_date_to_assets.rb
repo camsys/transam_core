@@ -4,6 +4,6 @@ class AddInServiceDateToAssets < ActiveRecord::Migration
     # to view the report
     add_column    :assets, :in_service_date, :date, :after => :purchase_date
 
-    Asset.connection.execute('UDPATE `assets` SET `in_service_date` = `purchase_date`')    
+    Asset.connection.execute('UPDATE `assets` SET `in_service_date` = `purchase_date`')    
   end
 end

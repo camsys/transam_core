@@ -17,6 +17,7 @@ class Message < ActiveRecord::Base
   # Callbacks
   #------------------------------------------------------------------------------
   after_initialize  :set_defaults
+  after_create      :send_email
 
   # Always generate a unique asset key before saving to the database
   before_validation(:on => :create) do
@@ -33,8 +34,8 @@ class Message < ActiveRecord::Base
   # Validations on core attributes
   validates :object_key,        :presence => true, :uniqueness => true
   validates :organization_id,   :presence => true
-  validates :user_id,           :presence => true
-  validates :to_user_id,        :presence => true
+  validates :user,              :presence => true
+  validates :to_user,           :presence => true
   validates :priority_type_id,  :presence => true
   validates :subject,           :presence => true
   validates :body,              :presence => true
@@ -70,5 +71,12 @@ class Message < ActiveRecord::Base
   # Set resonable defaults for a new message
   def set_defaults
   end    
+
+  # If the to_user has elected to receive emails, send them upon message creation
+  def send_email
+    if to_user.notify_via_email
+      Delayed::Job.enqueue SendMessageAsEmailJob.new(object_key), :priority => 0
+    end
+  end
    
 end
