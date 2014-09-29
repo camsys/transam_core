@@ -71,7 +71,7 @@ class ServiceLifeConsumedReport < AbstractReport
     num_assets = 0
     assets.each do |asset|
       # Only on age right now
-      useful_life = policy.get_policy_item(asset)
+      useful_life = policy.get_rule(asset)
       pcnt_consumed = (asset.age / useful_life.max_service_life_years.to_f) * 100.0
       # Get the column for this asset type, if we only have one it is the first column
       col = report_filter_type > 0 ? 1 : asset_cols[asset.asset_type_id - 1]

@@ -9,7 +9,7 @@ class DecliningBalanceDepreciationCalculator < DepreciationCalculator
   def calculate(asset)
 
     # depreciation time
-    num_years = @policy.get_policy_item(asset).max_service_life_years
+    num_years = @policy.get_rule(asset).max_service_life_years
     # Age of the asset
     asset_age = asset.age
     Rails.logger.debug "Age = #{asset.age}, max service life = #{num_years}"

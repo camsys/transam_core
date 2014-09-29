@@ -84,6 +84,7 @@ class PoliciesController < OrganizationAwareController
     new_policy.name = "Copy of " + @policy.name
     new_policy.description = "Copy of " + @policy.description
     new_policy.current = false
+    new_policy.parent = @policy
     
     new_policy.policy_items.clear
 

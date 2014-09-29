@@ -25,7 +25,7 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
     #                  the policy if we dont
 
     # Get what we need from the policy    
-    policy_item = @policy.get_policy_item(asset)
+    policy_item = @policy.get_rule(asset)
     Rails.logger.debug policy_item.inspect
 
     # this is the rating that indicates the asset is at the end of its useful life. Usually 2.5 for FTA applications
@@ -103,7 +103,7 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
 
     Rails.logger.debug "StraightLineEstimationCalculator.last_servicable_year(asset)"
         
-    policy_item     = @policy.get_policy_item(asset)
+    policy_item     = @policy.get_rule(asset)
     years_policy    = policy_item.max_service_life_years
     years_mileage   = 9999
     years_condition = 9999

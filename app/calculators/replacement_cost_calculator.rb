@@ -9,7 +9,7 @@ class ReplacementCostCalculator < CostCalculator
   def calculate(asset)
   
     # The default behavior is to return the replacement cost of the asset from the schedule
-    @policy.get_policy_item(asset).replacement_cost
+    asset.get_rule.replacement_cost
 
   end
   

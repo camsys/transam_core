@@ -36,6 +36,9 @@ class Policy < ActiveRecord::Base
   # Every policy belongs to an organization
   belongs_to  :organization
 
+  # Every policy can have a parent policy
+  belongs_to  :parent, :class_name => 'Policy', :foreign_key => :parent_id
+  
   # Has a single method for calculating costs
   belongs_to  :cost_calculation_type
 
@@ -120,8 +123,20 @@ class Policy < ActiveRecord::Base
     self[:condition_threshold] = sanitize_to_float(num)
   end      
 
+  # Get the matching policy rule for this asset. If the rule is not found the query goes up the chain
+  # so the parent policy is checked. This allows organiåtions to derive a policy and override only those
+  # rules which are different from the parent rule
   def get_rule(asset)
-    policy_items.where(:asset_subtype => asset.asset_subtype).first
+    p = self
+    while p
+      rule = p.policy_items.where(:asset_subtype => asset.asset_subtype).first
+      if rule
+        break
+      else
+        p = p.parent
+      end
+    end
+    rule
   end
   
   #------------------------------------------------------------------------------

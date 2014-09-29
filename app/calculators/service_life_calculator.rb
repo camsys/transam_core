@@ -12,7 +12,7 @@ class ServiceLifeCalculator < Calculator
   # calculate the service life based on the in_service_year plus
   # the average asset life based on the policy
   def by_age(asset)
-    asset.in_service_year + @policy.get_policy_item(asset).max_service_life_years
+    asset.in_service_year + @policy.get_rule(asset).max_service_life_years
   end
   
   # Calculate the service life based on the minimum of condition
@@ -21,7 +21,7 @@ class ServiceLifeCalculator < Calculator
     # Iterate over all the condition update events from earliest to latest
     # and find the first year (if any) that the  policy replacement became
     # effective
-    policy_item = @policy.get_policy_item(asset)
+    policy_item = @policy.get_rule(asset)
     events = asset.condition_updates(true)
     Rails.logger.debug "Found #{events.count} events."
     Rails.logger.debug "Condition threshold = #{@policy.condition_threshold}."
