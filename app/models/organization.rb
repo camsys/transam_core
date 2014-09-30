@@ -44,7 +44,10 @@ class Organization < ActiveRecord::Base
 
   # Every organization can have a set of uploads
   has_many  :uploads
-        
+
+  # Every organization can have 0 or more asset groups
+  has_many  :asset_groups
+          
   # Validations for associations  
   validates :customer_id,           :presence => true
   validates :organization_type_id,  :presence => true

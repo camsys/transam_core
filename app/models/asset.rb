@@ -37,6 +37,7 @@ class Asset < ActiveRecord::Base
 
   # Clean up any HABTM associations before the asset is destroyed
   before_destroy { districts.clear }
+  before_destroy { asset_groups.clear }
 
   #------------------------------------------------------------------------------
   # Associations common to all asset types
@@ -99,6 +100,9 @@ class Asset < ActiveRecord::Base
   
   # Each asset can be associated with 0 or more districts
   has_and_belongs_to_many :districts
+
+  # Each asset can be associated with 0 or more asset groups
+  has_and_belongs_to_many :asset_groups
 
   # Each asset was created and updated by a user
   belongs_to :creator, :class_name => "User", :foreign_key => "created_by_id"
