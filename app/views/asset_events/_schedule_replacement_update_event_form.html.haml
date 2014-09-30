@@ -7,7 +7,7 @@
     :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}) do |f|
   = hidden_field_tag :event_type, @asset_event.asset_event_type.id
   = f.input :event_date, :as => :hidden, :input_html => { :value => Date.today.strftime('%m-%d-%Y') }
-  = f.input :replacement_year, :label => 'Replacement year', :as => :select, :collection => @asset.get_fiscal_years
+  = f.input :replacement_year, :label => 'Replacement year', :as => :select, :collection => @asset.get_fiscal_years, :required => true, :include_blank => false
   = f.association :replacement_reason_type, :label => 'Reason for replacing'
   = f.input :comments, :input_html => { :rows => 6 }, :placeholder => "Enter any additional comments..."
   .form-group

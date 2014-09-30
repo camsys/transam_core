@@ -56,7 +56,7 @@ class ScheduleReplacementUpdateEvent < AssetEvent
   # Set resonable defaults for a new condition update event
   def set_defaults
     super
-    self.replacement_year ||= current_fiscal_year_year
+    self.replacement_year ||= current_planning_year_year
     self.asset_event_type ||= AssetEventType.find_by_class_name(self.name)
   end    
   
