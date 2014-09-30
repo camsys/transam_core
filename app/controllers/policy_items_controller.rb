@@ -3,11 +3,13 @@ class PolicyItemsController < OrganizationAwareController
   add_breadcrumb "Home", :root_path
 
   # set the @policy variable before any actions are invoked
-  before_filter :get_policy,            :only => [:index, :edit, :update, :destroy]  
+  before_filter :get_policy
+  # Set the @policy_item variable
   before_filter :get_policy_item,       :only => [:edit, :update, :destroy]  
-  before_filter :check_for_cancel,      :only => [:create, :update]
   
   def index
+
+    add_breadcrumb @policy.name, policy_path(@policy)
         
     # See if the user wants to filter on an asset type
     @asset_type = params[:asset_type]
@@ -27,7 +29,11 @@ class PolicyItemsController < OrganizationAwareController
   end
   
   def new
-            
+    
+    add_breadcrumb @policy.name, policy_path(@policy)
+    add_breadcrumb "New rule"
+    
+    @policy_item = PolicyItem.new
   end
 
   def edit
@@ -38,8 +44,8 @@ class PolicyItemsController < OrganizationAwareController
       return
     end
 
-    add_breadcrumb @policy_item.asset_subtype.name
-    add_breadcrumb "Update"
+    add_breadcrumb @policy.name, policy_path(@policy)
+    add_breadcrumb "#{@policy_item} Update"
    
   end
   
@@ -51,57 +57,45 @@ class PolicyItemsController < OrganizationAwareController
       return
     end
 
-    add_breadcrumb @asset.asset_type.name.pluralize(2), inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
-    add_breadcrumb @asset.asset_subtype.name.pluralize(2), inventory_index_path(:asset_subtype => @asset.asset_subtype)
-    add_breadcrumb @asset.asset_tag, inventory_path(@asset)
-    add_breadcrumb @asset_event.asset_event_type.name, edit_inventory_asset_event_path(@asset, @asset_event)
+    add_breadcrumb @policy.name, policy_path(@policy)
+    add_breadcrumb @policy_item.asset_subtype, policy_path(@policy)
     add_breadcrumb "Update"
 
     respond_to do |format|
-      if @asset_event.update_attributes(form_params)
+      if @policy_item.update_attributes(form_params)
 
-        notify_user(:notice, "Event was successfully updated.")   
+        notify_user(:notice, "Rule was successfully updated.")   
 
-        # The event was updated so we need to update the asset.
-        fire_asset_update_event(@asset_event.asset_event_type, @asset)
-             
-        format.html { redirect_to inventory_url(@asset) }
+        format.html { redirect_to policy_url(@policy) }
         format.json { head :no_content }
       else
         format.html { render "edit" }
-        format.json { render :json => @asset_event.errors, :status => :unprocessable_entity }
+        format.json { render :json => @policy_item.errors, :status => :unprocessable_entity }
       end
     end
   end
 
   def create
 
-    # we need to know what the event type was for this event
-    asset_event_type = AssetEventType.find(params[:event_type])
-    # get the class name for this asset event type
-    class_name = asset_event_type.class_name
-    klass = Object.const_get class_name    
-    @asset_event = klass.new(form_params)
-    @asset_event.asset = @asset
-    
-    Rails.logger.debug @asset_event.inspect
+    add_breadcrumb @policy.name, policy_path(@policy)
+    add_breadcrumb "New rule"
+
+    @policy_item = PolicyItem.new(form_params)
+    @policy_item.policy = @policy
+    @policy_item.active = true
     
     respond_to do |format|
-      if @asset_event.save
-        
-        notify_user(:notice, "Event was successfully created.")   
-
-        # The event was removed so we need to update the asset 
-        fire_asset_update_event(@asset_event.asset_event_type, @asset)
-                
-        format.html { redirect_to inventory_url(@asset) }
-        format.json { render :json => @asset_event, :status => :created, :location => @asset_event }
+      if @policy_item.save
+        notify_user(:notice, "Rule was sucessfully saved.")
+        format.html { redirect_to policy_path(@policy) }
+        format.json { render :json => @policy_item, :status => :created }
       else
-        Rails.logger.debug @asset_event.errors.inspect
         format.html { render :action => "new" }
-        format.json { render :json => @asset_event.errors, :status => :unprocessable_entity }
+        format.json { render :json => @policy_item.errors, :status => :unprocessable_entity }
       end
     end
+    
+
   end
 
   def destroy
@@ -142,7 +136,7 @@ class PolicyItemsController < OrganizationAwareController
   end
 
   def get_policy_item
-    @policy_item = @policy.policy_items.find_by_object_key(params[:id]) unless params[:id].nil?
+    @policy_item = @policy.policy_items.find(params[:id]) unless params[:id].nil?
   end
 
   #------------------------------------------------------------------------------
@@ -152,22 +146,10 @@ class PolicyItemsController < OrganizationAwareController
   #------------------------------------------------------------------------------
   private
 
-  def reformat_date_field
-    date_str = params[:asset_event][:event_date]
-    form_date = Date.strptime(date_str, '%m-%d-%Y')
-    params[:asset_event][:event_date] = form_date.strftime('%Y-%m-%d')
-  end
   
   # Never trust parameters from the scary internet, only allow the white list through.
   def form_params
-    params.require(:asset_event).permit(asset_event_allowable_params)
+    params.require(:policy_item).permit(policy_item_allowable_params)
   end
   
-  def check_for_cancel
-    # go back to the asset view
-    unless params[:cancel].blank?
-      redirect_to(inventory_url(@asset))
-    end    
-  end
-    
 end

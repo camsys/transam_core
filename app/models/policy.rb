@@ -129,15 +129,9 @@ class Policy < ActiveRecord::Base
   # so the parent policy is checked. This allows organiåtions to derive a policy and override only those
   # rules which are different from the parent rule
   def get_rule(asset)
-    p = self
-    while p
-      rule = p.policy_items.where(:asset_subtype => asset.asset_subtype).first
-      if rule
-        break
-      else
-        p = p.parent
-      end
-    end
+    matcher = PolicyRuleService.new
+    rule = matcher.match(self, asset)
+    # Return this rule
     rule
   end
   
@@ -151,7 +145,7 @@ class Policy < ActiveRecord::Base
   # Set resonable defaults for a new policy
   def set_defaults
     self.year ||= Date.today.year
-    self.interest_rate ||= 0.025
+    self.interest_rate ||= 0.01
     self.condition_threshold ||= 2.5 
     self.active ||= true
   end    

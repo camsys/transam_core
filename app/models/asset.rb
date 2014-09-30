@@ -356,9 +356,7 @@ class Asset < ActiveRecord::Base
 
   # Returns the policy rule that this asset uses for replacement and rehabilitation
   def policy_rule
-    # get a typed version of the asset
-    asset = is_typed? ? self : Asset.get_typed_asset(self)
-    policy.get_rule(asset)
+    policy.get_rule(self)
   end
 
   # returns the the organizations's policy that governs the replacement of this asset. This needs to upcast

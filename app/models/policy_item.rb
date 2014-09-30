@@ -65,6 +65,10 @@ class PolicyItem < ActiveRecord::Base
   #
   #------------------------------------------------------------------------------
 
+  def to_s
+    "#{asset_subtype}"
+  end
+
   # Override setters to remove any extraneous formats from the number strings eg $, etc.      
   def max_service_life_years=(num)
     self[:max_service_life_years] = sanitize_to_int(num)
