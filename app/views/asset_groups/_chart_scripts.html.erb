@@ -13,7 +13,7 @@
     summary_data.addColumn('string', 'Asset Type');
     summary_data.addColumn('number', 'Count');
     summary_data.addRows([
-    <% @asset_data[:data].each do |row| %>
+    <% @data[:data].each do |row| %>
     <%= raw "['#{row[0]}',#{row[1]}]," %>
     <% end %>
   	]);

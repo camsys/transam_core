@@ -1,0 +1,29 @@
+.row
+  .col-md-6
+    #summary_chart_div{:style => "height:350px;"}
+      
+  .col-md-6
+    %table.table
+      %thead
+        %tr
+          %th Type
+          %th Count
+          %th %
+      %tbody
+        - sum_assets = 0
+        - sum_pcnt = 0.0
+        - @data[:data].each do |row|
+          - sum_assets += row[1]
+          - pcnt = row[1].to_f / @total_assets.to_f * 100.0
+          - sum_pcnt += pcnt
+          %tr
+            %td= row[0]
+            %td= format_as_integer(row[1])
+            %td= format_as_percentage(pcnt)
+      %tfoot
+        %tr
+          %td
+          %td= format_as_integer(sum_assets)
+          %td= format_as_percentage(sum_pcnt)
+        
+= render 'chart_scripts'

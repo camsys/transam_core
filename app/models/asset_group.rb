@@ -39,6 +39,7 @@ class AssetGroup < ActiveRecord::Base
   validates :object_key,            :presence => true, :uniqueness => true
   validates :organization,          :presence => true
   validates :name,                  :presence => true
+  validates :code,                  :presence => true
   validates :description,           :presence => true
   
   # List of hash parameters allowed by the controller
@@ -46,6 +47,7 @@ class AssetGroup < ActiveRecord::Base
     :object_key,
     :organization_id,
     :name, 
+    :code, 
     :description, 
     :active 
   ]
