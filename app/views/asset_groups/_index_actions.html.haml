@@ -1,0 +1,10 @@
+.btn-group.pull-right.panel-action
+  %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
+    I want to  
+    %span.caret
+  %ul.dropdown-menu{:role => 'menu'}
+    - if can? :create, AssetGroup
+      %li
+        = link_to new_asset_group_path do
+          %i.fa.fa-plus.fa-fw
+          = " Create new grouop";  

@@ -1,0 +1,41 @@
+- if can? :update, @asset or can? :delete, @asset
+  .btn-group.pull-right.panel-action
+    %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
+      I want to  
+      %span.caret
+    %ul.dropdown-menu{:role => 'menu'}
+
+      - if can? :update, @asset
+
+        - @asset.event_classes.each do |klass|
+          - unless klass.name == 'DispositionUpdateEvent'
+            %li
+              = link_to new_inventory_asset_event_path(@asset, :event_type => klass.asset_event_type.id) do
+                %i.fa.fa-fw{:class => klass.asset_event_type.display_icon_name}
+                = klass.asset_event_type.name
+
+      - if can? :update, @asset
+        %li.divider
+        %li
+          = link_to edit_inventory_path(@asset) do
+            %i.fa.fa-fw.fa-edit
+            = " Update the master record"
+
+        %li.divider      
+        %li
+          = link_to copy_inventory_path(@asset) do
+            %i.fa.fa-fw.fa-copy
+            = " Make a copy"
+
+        %li.divider
+        %li
+          = link_to new_inventory_asset_event_path(@asset, :event_type => DispositionUpdateEvent.asset_event_type.id) do
+            %i.fa.fa-fw{:class => DispositionUpdateEvent.asset_event_type.display_icon_name}
+            = " Record final dispostion"
+
+      - if can? :delete, @asset
+        %li.divider
+        %li
+          = link_to inventory_path(@asset), :method => :delete, :data => {:confirm => "Are you sure you want to remove this asset?. The action can't be undone."} do
+            %i.fa.fa-fw.fa-trash-o
+            = " Remove this asset"

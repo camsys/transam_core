@@ -4,6 +4,7 @@ class AddAssetGroups < ActiveRecord::Migration
       t.string    :object_key,      :limit => 12, :null => :false
       t.integer   :organization_id,               :null => :false
       t.string    :name,            :limit => 64, :null => :false
+      t.string    :code,            :limit =>  8, :null => :false
       t.text      :description,                   :null => :false
       t.boolean   :active
       t.timestamps

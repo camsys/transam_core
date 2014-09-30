@@ -1,0 +1,27 @@
+.row
+  .col-md-4
+    .panel.panel-default.header-part
+      .panel-heading
+        .row
+          .col-md-6
+            %h3.panel-title
+              %i.fa.fa-list
+              Asset Group
+          .col-md-6
+            = render 'actions'
+      .panel-body    
+        = render :partial => 'summary', :locals => {:asset_group => @asset_group} 
+        
+  .col-md-8
+    .panel.panel-default.header-part
+      .panel-heading
+        .row
+          .col-md-12
+            %h3.panel-title
+              %i.fa.fa-folder-open
+              Details
+                
+      .panel-body
+        = render 'details'
+
+= render 'scripts'

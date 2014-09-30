@@ -3,6 +3,22 @@ module TransamFormatHelper
   # Include the fiscal year mixin
   include FiscalYear
         
+  # formats a list of labels/tags. By default labels are displayed
+  # using label-info but can be controlled using the optional style param
+  def format_as_labels(coll, style = 'info')
+    html = ''
+    coll.each do |e|
+      if e.respond_to? :code 
+        txt = e.code
+      else
+        txt = e.to_s
+      end
+      html << "<span class='label label-#{style}'>"
+      html << txt
+      html << "</span>"
+    end    
+    html.html_safe
+  end
   # formats a year value as a fiscal year string 'FY XX-YY'
   def format_as_fiscal_year(val)
     fiscal_year(val) unless val.nil?

@@ -1,0 +1,15 @@
+.row
+  = simple_form_for(@asset_group,
+  :html => {:class => 'form-vertical'},
+  :wrapper => :vertical_form,
+  :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes,
+    :radio_buttons => :vertical_radio_and_checkboxes,
+    :file => :vertical_file_input,
+    :boolean => :vertical_boolean}) do |f|
+    .col-md-6.col-md-offset-3
+      %fieldset
+        %legend New Group
+        = f.input :name
+        = f.input :code
+        = f.input :description
+        = f.button :submit, :class => 'btn btn-primary'

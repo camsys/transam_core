@@ -1,0 +1,17 @@
+%table.table.table-hover#datatable
+  %thead
+    %tr
+      %th.left Name
+      %th.left Code
+      %th.left Description
+      %th.right Num Assets
+      				
+  %tbody
+    - @asset_groups.each do |a|      
+      %tr.popup-details{:data => {:action_path => asset_group_path(a)}}
+        %td.left= a.name
+        %td.left= a.code
+        %td.left= a.description
+        %td.right= format_as_integer(a.assets.count)
+
+= render 'shared/datatable_javascript'

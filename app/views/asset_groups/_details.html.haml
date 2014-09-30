@@ -1,0 +1,17 @@
+%ul.nav.nav-tabs
+  %li
+    %a{:href => "#table", :data =>{:toggle => 'tab'}}
+      = "Assets"
+  - unless @asset_group.assets.empty?
+    %li
+      %a{:href => "#summary", :data =>{:toggle => 'tab'}}
+        = "Asset Summary"
+
+.tab-content
+  .tab-pane.fade#table
+    .tab-content
+      = render 'assets'
+  - unless @asset_group.assets.empty?
+    .tab-pane.fade#summary
+      .tab-content
+        = render 'asset_summary'

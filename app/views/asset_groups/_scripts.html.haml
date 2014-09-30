@@ -1,0 +1,28 @@
+:javascript
+  
+  var user_tab_key = 'asset_group_tab_key';
+  
+  $(document).ready(function() {
+
+    transam.make_same_height('.header-part');
+
+    // Manage the tabs
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+      // save the latest tab
+      var this_tab = $(this).attr('href');
+      transam.set_ui_key_value(user_tab_key, this_tab);
+      // If this tab is the map then we need to re-render the maps
+      if (this_tab == '#summary') {
+        draw_asset_summary_chart();
+      }
+    });
+  });
+  $(function() {
+    var last_tab = transam.get_ui_key_value(user_tab_key);
+    if (last_tab) {
+      $('a[href='+last_tab+']').tab('show');
+    } else {
+      // Default to the first tab if no tab is stored
+      $('a[data-toggle="tab"]:first').tab('show');
+    }   
+  }); 

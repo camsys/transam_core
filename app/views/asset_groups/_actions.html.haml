@@ -1,0 +1,16 @@
+.btn-group.pull-right.panel-action
+  %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
+    I want to  
+    %span.caret
+  %ul.dropdown-menu{:role => 'menu'}
+    - if can? :update, @asset_group
+      %li
+        = link_to edit_asset_group_path(@asset_group) do
+          %i.fa.fa-edit.fa-fw
+          = " Update this group"
+    - if can? :delete, @asset_group
+      %li.divider
+      %li
+        = link_to asset_group_path(@asset_group), :method => :destroy do
+          %i.fa.fa-times.fa-fw
+          = " Remove this group"          

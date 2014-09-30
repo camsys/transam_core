@@ -29,7 +29,9 @@ Rails.application.routes.draw do
       member do
         get 'update_status'
         get 'copy'
+        get 'tag'
       end
+      
     resources :asset_events    
         
     resources :comments,    :only => [:create, :update, :edit, :new, :destroy]
@@ -68,6 +70,8 @@ Rails.application.routes.draw do
       get 'download'
     end
   end
+  
+  resources :asset_groups
   
   resources :tasks do
     resources :comments

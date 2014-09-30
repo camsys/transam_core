@@ -71,7 +71,11 @@ class AssetsController < AssetAwareController
     # disable any spatial filters for this view
     @spatial_filter = nil
     @assets = get_assets
-    if @asset_subtype == 0
+    if @asset_group.present?
+      asset_group = AssetGroup.find_by_object_key(@asset_group)
+      add_breadcrumb asset_group
+            
+    elsif @asset_subtype == 0
       add_breadcrumb @asset_class.underscore.humanize.titleize.pluralize(2), inventory_index_path(:asset_type => @asset_type, :asset_subtype => 0)
     else
       subtype = AssetSubtype.find(@asset_subtype)
@@ -315,6 +319,18 @@ class AssetsController < AssetAwareController
   #
   def set_view_vars
 
+    # Check to see if we got an asset group to sub select on. This occurs when the user
+    # selects an asset group from the menu selector
+    if params[:asset_group].nil? 
+      # see if one is stored in the session
+      @asset_group = session[:asset_group].nil? ? '' : session[:asset_group]
+    else
+      @asset_group = params[:asset_group]
+    end
+    # store it in the session for later
+    session[:asset_group] = @asset_group
+    
+
     # Check to see if we got an asset type to sub select on. This occurs when the user
     # selects an asset type from the drop down
     if params[:asset_type].nil? 
@@ -471,6 +487,15 @@ class AssetsController < AssetAwareController
       clauses << ['MBRContains(GeomFromText("' + wkt + '"), geometry) = ?']
       values << [1]
     end
+    
+    # See if we got an asset group. If we did then we can 
+    # use the asset group collection to filter on instead of creating
+    # a new query. This is kind of a hack but works!
+    unless @asset_group.blank?
+      asset_group = AssetGroup.find_by_object_key(@asset_group)
+      klass = asset_group.assets unless asset_group.nil?
+    end
+    
     # send the query
     @row_count = klass.where(clauses.join(' AND '), *values).count
     if @fmt == 'xls' 

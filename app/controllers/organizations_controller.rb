@@ -53,7 +53,7 @@ class OrganizationsController < OrganizationAwareController
     @users = @org.users
     
     rep = AssetSubtypeReport.new
-    @data = rep.get_data(@org, {})
+    @data = rep.get_data_from_collection(@org.assets)
     @total_assets = @org.assets.count
 
     respond_to do |format|
