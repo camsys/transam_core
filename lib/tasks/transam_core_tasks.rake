@@ -4,10 +4,16 @@
 # end
 desc "Prepare the dummy app for rspec and capybara"
 task :prepare_rspec => ["app:test:set_test_env", :environment] do
-  Rake::Task["db:create"].invoke
-  Rake::Task["db:reset"].invoke
-  Rake::Task["db:migrate"].invoke
-  Rake::Task["db:seed"].invoke
+  puts "\n\n\nSTART######################"
+  %w(db:create).each do |cmd|
+    puts "Running #{cmd}"
+    Rake::Task[cmd].invoke
+  end
+  puts "\n\n\nMIDDLE######################"
+  %w(db:migrate db:seed).each do |cmd|
+    puts "Running #{cmd}"
+    Rake::Task[cmd].invoke
+  end
 end
 
 namespace :test do
