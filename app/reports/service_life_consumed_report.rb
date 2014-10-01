@@ -65,14 +65,11 @@ class ServiceLifeConsumedReport < AbstractReport
     else
       assets = Asset.where("assets.organization_id IN (?)", organization_id_list)
     end
-    # get the current policy so we can deduce useful life
-    policy = Policy.first #organization.get_policy
     # count the number of assets so we can normalize ther report
     num_assets = 0
     assets.each do |asset|
       # Only on age right now
-      useful_life = policy.get_rule(asset)
-      pcnt_consumed = (asset.age / useful_life.max_service_life_years.to_f) * 100.0
+      pcnt_consumed = (asset.age / asset.policy_rule.max_service_life_years.to_f) * 100.0
       # Get the column for this asset type, if we only have one it is the first column
       col = report_filter_type > 0 ? 1 : asset_cols[asset.asset_type_id - 1]
       row = [(pcnt_consumed / BUCKET_SIZE).to_i - 1, num_buckets].min
