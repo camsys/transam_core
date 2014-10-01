@@ -4,4 +4,4 @@
 = format_field("Type", asset.asset_subtype )
 = format_field("Description", asset.description )
 = format_field("Status",  asset.service_status_type.nil? ? 'Unknown' : asset.service_status_type.name )
-= format_field("Groups",  format_as_labels(asset.asset_groups)) unless asset.asset_groups.empty?
+= format_field("Groups",  format_asset_groups(asset)) unless asset.asset_groups.empty?

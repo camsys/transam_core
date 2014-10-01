@@ -29,7 +29,8 @@ Rails.application.routes.draw do
       member do
         get 'update_status'
         get 'copy'
-        get 'tag'
+        get 'add_to_group'
+        get 'remove_from_group'
       end
       
     resources :asset_events    

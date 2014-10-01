@@ -11,6 +11,6 @@
     - if can? :delete, @asset_group
       %li.divider
       %li
-        = link_to asset_group_path(@asset_group), :method => :destroy do
-          %i.fa.fa-times.fa-fw
+        = link_to asset_group_path(@asset_group), :method => :delete, :data => {:confirm => "Are you sure you want to remove this group? The action can't be undone."} do
+          %i.fa.fa-trash-o.fa-fw
           = " Remove this group"          

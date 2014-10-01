@@ -2,7 +2,20 @@ module TransamFormatHelper
   
   # Include the fiscal year mixin
   include FiscalYear
-        
+                
+                
+  # formats an assets list of asset groups with remove option
+  def format_asset_groups(asset, style = 'info')
+    html = ''
+    asset.asset_groups.each do |grp|
+      html << "<span class='label label-#{style}'>"
+      html << grp.code
+      html << "<span data-role='remove' data-action-path='#{remove_from_group_inventory_path(asset, :asset_group => grp)}'></span>"
+      html << "</span>"
+    end    
+    html.html_safe
+  end
+                
   # formats a list of labels/tags. By default labels are displayed
   # using label-info but can be controlled using the optional style param
   def format_as_labels(coll, style = 'info')
@@ -19,6 +32,7 @@ module TransamFormatHelper
     end    
     html.html_safe
   end
+  
   # formats a year value as a fiscal year string 'FY XX-YY'
   def format_as_fiscal_year(val)
     fiscal_year(val) unless val.nil?

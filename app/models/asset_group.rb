@@ -19,22 +19,39 @@ class AssetGroup < ActiveRecord::Base
   def to_param
     object_key
   end
+
+  #------------------------------------------------------------------------------
+  # Callbacks
+  #------------------------------------------------------------------------------
       
   # Always generate a unique asset key before saving to the database
   before_validation(:on => :create) do
     generate_unique_key(:object_key)
   end
           
+  # Clear the mapping table when the group is destroyed
+  before_destroy { assets.clear }
+          
+  #------------------------------------------------------------------------------
   # Associations
-  
+  #------------------------------------------------------------------------------
+
   # Every asset group is owned by an organization
   belongs_to :organization
     
   # Every asset grouop has zero or more assets
   has_and_belongs_to_many :assets
 
+  #------------------------------------------------------------------------------
+  # Scopes
+  #------------------------------------------------------------------------------
+
   # default scope
   default_scope { where(:active => true) }
+
+  #------------------------------------------------------------------------------
+  # Validations
+  #------------------------------------------------------------------------------
   
   validates :object_key,            :presence => true, :uniqueness => true
   validates :organization,          :presence => true

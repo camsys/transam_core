@@ -3,23 +3,34 @@
     %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
       I want to  
       %span.caret
-    %ul.dropdown-menu{:role => 'menu'}
+    %ul.dropdown-menu.multi-level{:role => 'menu'}
 
       - if can? :update, @asset
-
-        - @asset.event_classes.each do |klass|
-          - unless klass.name == 'DispositionUpdateEvent'
-            %li
-              = link_to new_inventory_asset_event_path(@asset, :event_type => klass.asset_event_type.id) do
-                %i.fa.fa-fw{:class => klass.asset_event_type.display_icon_name}
-                = klass.asset_event_type.name
-
-      - if can? :update, @asset
-        %li.divider
-        %li
-          = link_to edit_inventory_path(@asset) do
+        %li.text-left.dropdown-submenu
+          = link_to '#' do
             %i.fa.fa-fw.fa-edit
-            = " Update the master record"
+            = " Update"
+          %ul.dropdown-menu
+            - @asset.event_classes.each do |klass|
+              - unless klass.name == 'DispositionUpdateEvent'
+                %li.text-left
+                  = link_to new_inventory_asset_event_path(@asset, :event_type => klass.asset_event_type.id) do
+                    %i.fa.fa-fw{:class => klass.asset_event_type.display_icon_name}
+                    = klass.asset_event_type.name
+        - if @organization.asset_groups.count > 0
+          %li.divider
+          %li.text-left.dropdown-submenu
+            = link_to '#' do
+              %i.fa.fa-fw.fa-tags
+              = " Add to group"
+            %ul.dropdown-menu
+              - @organization.asset_groups.each do |grp|
+                %li.text-left
+                  = link_to add_to_group_inventory_path(@asset, :asset_group => grp) do
+                    %i.fa.fa-fw.fa-tag
+                    = grp.name
+
+      - if can? :update, @asset
         %li.divider
         %li
           = link_to edit_inventory_path(@asset) do

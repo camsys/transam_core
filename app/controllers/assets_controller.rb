@@ -10,7 +10,7 @@ class AssetsController < AssetAwareController
   # Don't process cancel buttons  
   before_filter :check_for_cancel,  :only => [:create, :update]
   # set the @asset variable before any actions are invoked
-  before_filter :get_asset,         :only => [:show, :edit, :copy, :update, :destroy]
+  before_filter :get_asset,         :only => [:show, :edit, :copy, :update, :destroy, :add_to_group, :remove_from_group]
   before_filter :reformat_date_field, :only => [:create, :update]
 
   # From the application config    
@@ -24,6 +24,40 @@ class AssetsController < AssetAwareController
   # Session Variables
   INDEX_KEY_LIST_VAR        = "asset_key_list_cache_var"
   
+  # Adds the asset to the specified group
+  def add_to_group
+    asset_group = AssetGroup.find_by_object_key(params[:asset_group])
+    if asset_group.nil?
+      notify_user(:alert, "Can't find the asset group selected.")      
+    else
+      if @asset.asset_groups.exists? asset_group        
+        notify_user(:alert, "Asset #{@asset.name} is already a member of '#{asset_group}'.")
+      else
+        @asset.asset_groups << asset_group
+        notify_user(:notice, "Asset #{@asset.name} was added to '#{asset_group}'.")
+      end
+    end
+    
+    # Always display the last view
+    redirect_to :back
+  end
+  # Removes the asset from the specified group
+  def remove_from_group
+    asset_group = AssetGroup.find_by_object_key(params[:asset_group])
+    if asset_group.nil?
+      notify_user(:alert, "Can't find the asset group selected.")      
+    else
+      if @asset.asset_groups.exists? asset_group  
+        @asset.asset_groups.delete asset_group   
+        notify_user(:notice, "Asset #{@asset.name} was removed from '#{asset_group}'.")
+      else
+        notify_user(:alert, "Asset #{@asset.name} is not a member of '#{asset_group}'.")
+      end
+    end
+    
+    # Always display the last view
+    redirect_to :back
+  end
 
   # Sets the spatial filter bounding box  
   def spatial_filter
