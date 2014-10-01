@@ -17,11 +17,10 @@ module FiscalYear
     fiscal_year_year_on_date(Date.today)
   end
   #
-  # Returns the current planning year as a calendar year (integer). Each fiscal year is represented as the year in which
-  # the fiscal year started, so FY 13-14 would return 2013 as a numeric
+  # Returns the current planning year which is always the next fiscal year
   #
   def current_planning_year_year
-    fiscal_year_year_on_date(Date.today + 1.year)
+    current_fiscal_year_year + 1
   end
   
   # Returns the last fiscal year in the planning horizon
