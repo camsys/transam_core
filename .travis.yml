@@ -1,0 +1,7 @@
+language: ruby
+rvm:
+  - 2.1.1
+# uncomment this line if your project needs to run something other than `rake`:
+script: 
+  - bundle exec rake app:prepare_rspec
+  - bundle exec rspec spec
