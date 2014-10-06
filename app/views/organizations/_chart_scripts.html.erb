@@ -12,12 +12,16 @@
     var summary_data = new google.visualization.DataTable();
     summary_data.addColumn('string', 'Asset Type');
     summary_data.addColumn('number', 'Count');
+    
     summary_data.addRows([
-    <% @asset_data[:data].each do |row| %>
-    <%= raw "['#{row[0]}',#{row[1]}]," %>
-    <% end %>
-  	]);
-  
+    <% @asset_data[:data].each_with_index do |row, idx| %>
+  	<% if idx > 0 %>
+		<%= raw "," %>
+    <% end %> 
+    <%= raw "['#{row[0]}',#{row[1]}]" %>
+  	<% end %>
+    ]);
+      
     // specify options
     var summary_options = {
       title: 'Assets by Asset Subtype',
