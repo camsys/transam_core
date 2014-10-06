@@ -9,6 +9,14 @@ module FiscalYear
 
   MAX_FORECASTING_YEARS = SystemConfig.instance.num_forecasting_years   
 
+  # returns the fiscal year epoch -- the first allowable fiscal year for the application
+  def fiscal_year_epoch_year
+    2010
+  end
+  
+  def fiscal_year_epoch
+    fiscal_year(fiscal_year_epoch_year)
+  end
   #
   # Returns the current fiscal year as a calendar year (integer). Each fiscal year is represented as the year in which
   # the fiscal year started, so FY 13-14 would return 2013 as a numeric
@@ -82,9 +90,19 @@ module FiscalYear
     "FY #{first}-#{last}"    
   end
 
+  # Returns a select array of fiscal years that includes fiscal years that
+  # are before the current fiscal year
+  def get_all_fiscal_years
+    get_fiscal_years(Date.today - 4.years)
+  end  
+  
   # Returns a select array of fiscal years
-  def get_fiscal_years(date = Date.today)
-    current_year = fiscal_year_year_on_date(date) - 4
+  def get_fiscal_years(date = nil)
+    if date
+      current_year = date.year
+    else
+      current_year = current_planning_year_year
+    end
     a = []
     (current_year..last_fiscal_year_year).each do |year|
       a << [fiscal_year(year), year]
