@@ -42,10 +42,10 @@ class UserOrganizationFiltersController < OrganizationAwareController
       return
     end
     
-    Rails.logger.debug "Setting agency filter to: #{@user_organization_filter.grantees.inspect}"
+    Rails.logger.debug "Setting agency filter to: #{@user_organization_filter.organizations.inspect}"
     
     # Set the session variable to store the list of organizations for reporting
-    set_selected_organization_list(@user_organization_filter.grantees)
+    set_selected_organization_list(@user_organization_filter.organizations)
 
     # Save the selection. Next time the user logs in the filter will be reset
     current_user.user_organization_filter = @user_organization_filter
