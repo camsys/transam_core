@@ -276,6 +276,19 @@ class Asset < ActiveRecord::Base
   #
   #------------------------------------------------------------------------------
 
+
+
+  # Instantiate an asset event of the appropriate type.
+  def create_typed_event(asset_event_type_class)
+    # Could also add:  raise ArgumentError 'Asset Must be strongly typed' unless is_typed?
+
+    # DO NOT cast to concrete type.  Want to enforce that client has a concrete asset
+    unless self.class.event_classes.include? asset_event_type_class
+      raise ArgumentError, 'Invalid Asset Event Type' 
+    end
+    asset_event_type_class.new(:asset => self)
+  end
+
   # Returns true if an asset has been disposed. This is the canonical method for checking
   # if an asset has been disposed. Always use this method rather than checking the
   # attributes as the data model might change

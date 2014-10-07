@@ -34,6 +34,12 @@ RSpec.describe Asset, :type => :model do
   #   end
   # end
 
+  describe ".event_classes" do
+    it 'returns the right event classes for an asset' do
+      expect(Asset.event_classes.count).to eq(7) # should enumerate those tests...
+    end
+  end
+
 
   #------------------------------------------------------------------------------
   #
@@ -73,6 +79,20 @@ RSpec.describe Asset, :type => :model do
 
       on_date = Date.today - 10.years
       expect(buslike_asset.age(on_date)).to eql(0)
+    end
+  end
+
+  describe '#create_typed_event' do
+
+    it 'raises an ArgumentError when creating an event which is not defined for the asset class' do
+      class ABCUpdateEvent; end
+      expect(buslike_asset.create_typed_event(ABCUpdateEvent)).to raise_error(ArgumentError)
+    end
+    
+    describe "for abstract Asset class" do
+      it 'returns only for the asset events defined on the asset class' do
+        expect(buslike_asset.create_typed_event(ConditionUpdateEvent).class).to eq(ConditionUpdateEvent)
+      end
     end
   end
 
