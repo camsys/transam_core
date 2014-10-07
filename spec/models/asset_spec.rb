@@ -158,11 +158,11 @@ RSpec.describe Asset, :type => :model do
         expect(copied_bus.license_plate).not_to be_blank
       end
 
-      it 'does not keep attached objects when passed a False' do
+      it 'keeps attached objects when passed a False' do
         persisted_buslike_asset.comments.create(:comment => "Test Comment")
         copied_bus = persisted_buslike_asset.copy(false)
 
-        expect(copied_bus.comments.length).to eq(0)
+        expect(copied_bus.comments.length).to eq(1)
       end
     end
   end

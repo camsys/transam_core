@@ -10,7 +10,7 @@
     :file => :vertical_file_input,
     :boolean => :vertical_boolean}) do |f|
     .col-md-4
-      = dialog_tag('Corporate', {:icon => 'fa fa-book', :class => "form_part"}) do
+      = dialog_tag('Corporate', {:icon => 'fa fa-book', :class => "header-part"}) do
         = f.input :name
         = f.association :fta_agency_type, :label => "FTA Agency Type"
         = f.input :short_name, :label => "Short Name"
@@ -19,7 +19,7 @@
         = f.input :team_number, :label => "Team Number"
         = f.input :external_id, :label => "External ID"
     .col-md-4
-      = dialog_tag('Contact', {:icon => 'fa fa-book', :class => "form_part"}) do
+      = dialog_tag('Contact', {:icon => 'fa fa-book', :class => "header-part"}) do
         = f.input :phone, :as => :tel
         = f.input :fax, :as => :tel
         = f.input :url, :as => :url
@@ -33,7 +33,7 @@
           .col-sm-3
             = f.input :zip
     .col-md-4
-      = dialog_tag('Services', {:icon => 'fa fa-book', :class => "form_part"}) do
+      = dialog_tag('Services', {:icon => 'fa fa-book', :class => "header-part"}) do
         = f.association :fta_service_area_type, :label => "FTA Service Area Type"
         = f.association :districts
 
