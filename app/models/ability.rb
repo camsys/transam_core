@@ -15,6 +15,8 @@ class Ability
       can :manage, :all
     elsif user.has_role? :user
       can :manage, :all
+    elsif user.has_role? :manager
+      can :manage, :all
     else
       can :read, :all
     end
