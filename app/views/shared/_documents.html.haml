@@ -6,7 +6,9 @@
         .media-body
           %h5.media-heading
             = "#{d.creator.name} at #{format_as_date_time(d.created_at)}"
-            = link_to 'Remove', d, :method => :delete, :class => "btn btn-warning btn-xs pull-right", :style => "margin-left: 5px;", :data => { :confirm => 'Are you sure you want to remove this document?' }
-            = link_to 'Download', download_document_path(d), :class => "btn btn-success btn-xs pull-right", :style => "margin-left: 5px;"
+            - if can? :delete, d
+              = link_to 'Remove', d, :method => :delete, :class => "btn btn-warning btn-xs pull-right", :style => "margin-left: 5px;", :data => { :confirm => 'Are you sure you want to remove this document?' }
+            - if can? :read, d
+              = link_to 'Download', download_document_path(d), :class => "btn btn-success btn-xs pull-right", :style => "margin-left: 5px;"
           = d.description.html_safe
 
