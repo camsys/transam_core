@@ -9,13 +9,6 @@
 			<i class="fa fa-envelope fa-fw"></i> My messages
 		<% end %>
 	</li>
-  <% if current_user.has_role? :manager %>
-  	<li class="text-left">
-  		<%= link_to user_user_organization_filters_path(current_user) do %>
-  			<i class="fa fa-filter fa-fw"></i> My filters
-  		<% end %>
-  	</li>
-  <% end %>
 	<li class="divider text-left"></li>
 	<li class="text-left">
 		<%= link_to organization_path(current_user.organization)  do %>
