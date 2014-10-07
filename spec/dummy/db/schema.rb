@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140930121508) do
+ActiveRecord::Schema.define(version: 20141001143555) do
 
   create_table "activity_line_items", force: true do |t|
     t.string   "object_key",         limit: 12
@@ -242,6 +242,9 @@ ActiveRecord::Schema.define(version: 20140930121508) do
     t.integer  "updated_by_id"
     t.datetime "created_at",                                                              null: false
     t.datetime "updated_at",                                                              null: false
+    t.integer  "scheduled_replacement_cost"
+    t.boolean  "scheduled_replace_with_new"
+    t.integer  "scheduled_rehabilitation_cost"
   end
 
   add_index "assets", ["asset_subtype_id"], name: "assets_idx4"

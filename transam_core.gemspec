@@ -26,13 +26,14 @@ Gem::Specification.new do |s|
   s.add_dependency "high_voltage"
   s.add_dependency "fullcalendar-rails"
   s.add_dependency 'ruby-units'
-  s.add_dependency 'mail', '2.5.4'
+  #s.add_dependency 'mail', '2.5.4'
   
   # for background processing jobs  
   s.add_dependency 'delayed_job_active_record'
   # for running background processes
   s.add_dependency 'daemons'
   
+  s.add_development_dependency 'mail', '2.5.4'
   s.add_development_dependency "rspec-rails"
   s.add_development_dependency "factory_girl_rails"
   s.add_development_dependency "database_cleaner"  
