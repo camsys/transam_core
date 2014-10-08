@@ -77,13 +77,7 @@ class AssetAwareController < OrganizationAwareController
   
   # returns the typed version of the asset
   def get_typed_asset(asset)
-    if asset
-      class_name = asset.asset_type.class_name
-      klass = Object.const_get class_name
-      o = klass.find(asset.id)
-      # puts o.inspect
-      return o
-    end
+    Asset.get_typed_asset(asset)
   end
     
   def get_asset
