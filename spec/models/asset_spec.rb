@@ -85,8 +85,8 @@ RSpec.describe Asset, :type => :model do
   describe '#create_typed_event' do
 
     it 'raises an ArgumentError when creating an event which is not defined for the asset class' do
-      class ABCUpdateEvent; end
-      expect(buslike_asset.create_typed_event(ABCUpdateEvent)).to raise_error(ArgumentError)
+      class ABCUpdateEvent < AssetEvent; end
+      expect{ buslike_asset.create_typed_event(ABCUpdateEvent) }.to raise_error(ArgumentError)
     end
     
     describe "for abstract Asset class" do
