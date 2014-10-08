@@ -14,27 +14,12 @@
 #------------------------------------------------------------------------------
 class WorkflowEvent < ActiveRecord::Base
 
-  # Include the unique key mixin
-  include UniqueKey
+  # Include the object key mixin
+  include TransamObjectKey
 
-  #------------------------------------------------------------------------------
-  # Overrides
-  #------------------------------------------------------------------------------
-  
-  #require rails to use the asset key as the restful parameter. All URLS will be of the form
-  # /workflow_event/{object_key}/...
-  def to_param
-    object_key
-  end
-      
   # Callbacks
   after_initialize  :set_defaults
 
-  # Always generate a unique asset key before saving to the database
-  before_validation(:on => :create) do
-    generate_unique_key(:object_key)
-  end
-            
   # Associations
   belongs_to :accountable,  :polymorphic => true
 
@@ -43,13 +28,11 @@ class WorkflowEvent < ActiveRecord::Base
   # default scope
   default_scope { order(:created_at) }
        
-  validates :object_key,          :presence => true
   validates :event_type,          :presence => true
   validates :creator,             :presence => true
 
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
-    :object_key,
     :event_type,
     :accountable_id,
     :accountable_type,
