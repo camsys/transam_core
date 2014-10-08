@@ -19,7 +19,7 @@ FactoryGirl.define do
     code
   end
 
-  factory :test_asset_group, :class => :asset_group do
+  factory :asset_group, :class => :asset_group do
     basic_asset_group_attributes
   end
 
