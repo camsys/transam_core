@@ -7,7 +7,7 @@ class ScheduleRehabilitationUpdateEvent < AssetEvent
   # Callbacks
   after_initialize :set_defaults
               
-  validates :rebuild_year,      :numericality => {:only_integer => :true,   :greater_than_or_equal_to => Date.today.year - 10}
+  validates :rebuild_year, :presence => true, :numericality => { :only_integer => :true,  :greater_than_or_equal_to => Date.today.year - 10 }
       
   #------------------------------------------------------------------------------
   # Scopes
@@ -51,8 +51,9 @@ class ScheduleRehabilitationUpdateEvent < AssetEvent
   # Set resonable defaults for a new condition update event
   def set_defaults
     super
-    self.rebuild_year ||= current_fiscal_year_year
+    self.rebuild_year ||= current_planning_year_year
     self.asset_event_type ||= AssetEventType.find_by_class_name(self.name)
   end    
+
   
 end

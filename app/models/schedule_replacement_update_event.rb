@@ -58,6 +58,7 @@ class ScheduleReplacementUpdateEvent < AssetEvent
     super
     self.replacement_year ||= current_planning_year_year
     self.asset_event_type ||= AssetEventType.find_by_class_name(self.name)
+    self.replacement_reason_type ||= ReplacementReasonType.find_by(:name => "Reached policy EUL")
   end    
   
 end

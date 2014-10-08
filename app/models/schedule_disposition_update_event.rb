@@ -53,7 +53,6 @@ class ScheduleDispositionUpdateEvent < AssetEvent
   # Set resonable defaults for a new schedule disposition update event
   def set_defaults
     super
-    self.disposition_year ||= current_fiscal_year_year
+    self.disposition_year ||= current_planning_year_year
   end    
-  
 end
