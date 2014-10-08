@@ -13,7 +13,7 @@ class DispositionUpdateEvent < AssetEvent
   belongs_to  :disposition_type
         
   validates :disposition_type_id, :presence => true
-  validates :sales_proceeds,      :numericality => {:only_integer => true, :greater_than_or_equal_to => 0}, :allow_nil => true 
+  validates :sales_proceeds,      :presence => true, :numericality => {:only_integer => true, :greater_than_or_equal_to => 0}
   validates :new_owner_name,      :presence => true
    
   #------------------------------------------------------------------------------
@@ -75,6 +75,7 @@ class DispositionUpdateEvent < AssetEvent
   # Set resonable defaults for a new condition update event
   def set_defaults
     super
+    self.disposition_type = asset.disposition_type
     self.asset_event_type ||= AssetEventType.find_by_class_name(self.name)
   end    
   

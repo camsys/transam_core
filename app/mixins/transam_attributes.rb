@@ -14,7 +14,11 @@ module TransamAttributes
   end
   
   def asset_event_allowable_params
-    AssetEvent.allowable_params + ConditionUpdateEvent.allowable_params + ServiceStatusUpdateEvent.allowable_params + DispositionUpdateEvent.allowable_params
+    AssetEvent.allowable_params + 
+    ConditionUpdateEvent.allowable_params + 
+    ServiceStatusUpdateEvent.allowable_params + 
+    ScheduleRehabilitationUpdateEvent.allowable_params + 
+    DispositionUpdateEvent.allowable_params
   end
 
   def attachment_allowable_params

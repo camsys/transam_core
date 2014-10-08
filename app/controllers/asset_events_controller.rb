@@ -54,8 +54,8 @@ class AssetEventsController < AssetAwareController
         
     # get the asset event type
     asset_event_type = AssetEventType.find(params[:event_type])
-    if asset_event_type
-      @asset_event = AssetEvent.get_new_typed_event(asset_event_type)
+    unless asset_event_type.blank?
+      @asset_event = @asset.create_typed_event(asset_event_type.class_name.constantize)
     end
 
     add_new_show_create_breadcrumbs
@@ -132,17 +132,15 @@ class AssetEventsController < AssetAwareController
 
     # we need to know what the event type was for this event
     asset_event_type = AssetEventType.find(params[:event_type])
-    # get the class name for this asset event type
-    class_name = asset_event_type.class_name
-    klass = Object.const_get class_name    
-    @asset_event = klass.new(form_params)
-    @asset_event.asset = @asset
-    
-    Rails.logger.debug @asset_event.inspect
+    unless asset_event_type.blank?
+      @asset_event = @asset.create_typed_event(asset_event_type.class_name.constantize)
+    end
+
     add_new_show_create_breadcrumbs
     
     respond_to do |format|
-      if @asset_event.save
+      if @asset_event.update(form_params)
+        Rails.logger.debug @asset_event.inspect
         
         notify_user(:notice, "Event was successfully created.")   
 

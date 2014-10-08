@@ -13,7 +13,14 @@ class ConditionUpdateEvent < AssetEvent
   belongs_to  :condition_type
       
   validates :condition_type, :presence => true
-  validates :assessed_rating,   :numericality => {:greater_than_or_equal_to => 0, :less_than_or_equal_to => 5}, :allow_nil => :true
+  validates :assessed_rating, 
+      :presence     => true,
+      :numericality => {
+      :greater_than_or_equal_to => ConditionType.minimum(:rating), 
+      :less_than_or_equal_to    => ConditionType.maximum(:rating)
+      },
+      :allow_nil    => :true
+  # validates :comments, :length => {:maximum => ???} # There is no limit in the Database/Schema
   
   before_validation do
     self.condition_type ||= ConditionType.from_rating(assessed_rating) unless assessed_rating.blank?
@@ -54,8 +61,8 @@ class ConditionUpdateEvent < AssetEvent
 
   # Override numeric setters to remove any extraneous formats from the number strings eg $, etc.      
   def assessed_rating=(num)
-    self[:assessed_rating] = sanitize_to_float(num)
-  end      
+    self[:assessed_rating] = sanitize_to_float(num) unless num.blank?
+  end
 
   # This must be overriden otherwise a stack error will occur  
   def get_update
@@ -65,8 +72,10 @@ class ConditionUpdateEvent < AssetEvent
   protected
 
   # Set resonable defaults for a new condition update event
+  # Should be overridden by any form fields during save
   def set_defaults
     super
+    self.assessed_rating ||= (asset.reported_condition_rating || ConditionType.maximum(:rating))
     self.asset_event_type ||= AssetEventType.find_by_class_name(self.name)
   end    
   

@@ -153,6 +153,14 @@ replacement_reason_types = [
   {:active => 1, :name => 'Other',     :description => 'The asset is being replaced for other reasons.'}
 ]
 
+maintenance_provider_types = [
+  {:active => 1,  :name => 'Unknown',         :code => 'XX', :description => 'Maintenance provider not supplied.'},
+  {:active => 1,  :name => 'Self Maintained', :code => 'SM', :description => 'Self Maintained.'},
+  {:active => 1,  :name => 'County',          :code => 'CO', :description => 'County.'},
+  {:active => 1,  :name => 'Public Agency',   :code => 'PA', :description => 'Public Agency.'},
+  {:active => 1,  :name => 'Private Entity',  :code => 'PE', :description => 'Private Entity.'}
+]
+
 roles = [
   {:name => 'guest'},
   {:name => 'user'},
@@ -163,7 +171,7 @@ roles = [
 lookup_tables = %w{asset_event_types condition_types disposition_types cost_calculation_types license_types priority_types
   file_status_types attachment_types district_types report_types location_reference_types service_status_types
   depreciation_calculation_types task_status_types service_life_calculation_types condition_estimation_types
-  issue_types web_browser_types replacement_reason_types roles
+  issue_types web_browser_types replacement_reason_types roles maintenance_provider_types
   }
 
 lookup_tables.each do |table_name|

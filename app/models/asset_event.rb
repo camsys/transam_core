@@ -65,16 +65,6 @@ class AssetEvent < ActiveRecord::Base
     FORM_PARAMS
   end
   
-  # Factory method to return a strongly typed subclass of a new asset event
-  # based on the asset event type
-  def self.get_new_typed_event(asset_event_type)
-    
-    class_name = asset_event_type.class_name
-    asset_event = class_name.constantize.new({:asset_event_type_id => asset_event_type.id})
-    return asset_event
-   
-  end
-  
   # Returns a typed version of itself. Every asset has a type and this will
   # return a specific asset type based on the AssetType attribute
   def self.as_typed_event(asset_event)

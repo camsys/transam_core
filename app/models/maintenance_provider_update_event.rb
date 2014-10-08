@@ -1,31 +1,26 @@
 #
-# Service Status Update Event. This is event type is required for
-# all implementations and represents envets that change the service
-# status of an asset: START SERVICE, SUSPEND SERVICE etc.
-# 
+# Maintenance Provider update event. This event records the current operations for a BPT asset
 #
-class ServiceStatusUpdateEvent < AssetEvent
+class MaintenanceProviderUpdateEvent < AssetEvent
       
   # Callbacks
   after_initialize :set_defaults
       
-  # Associations
-  
-  # Service Status of the asset
-  belongs_to  :service_status_type
-
+  # Associations  
+  belongs_to  :maintenance_provider_type
       
-  validates :service_status_type_id, :presence => true
+  # Validations
+  validates   :maintenance_provider_type_id,    :presence => true
       
   #------------------------------------------------------------------------------
   # Scopes
   #------------------------------------------------------------------------------
   # set the default scope
-  default_scope { where(:asset_event_type_id => AssetEventType.find_by_class_name(self.name).id).order(:event_date, :created_at) }
+  default_scope { where(:asset_event_type_id => AssetEventType.find_by_class_name(self.name).id).order(:event_date) }
     
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
-    :service_status_type_id
+    :maintenance_provider_type_id
   ]
   
   #------------------------------------------------------------------------------
@@ -33,7 +28,7 @@ class ServiceStatusUpdateEvent < AssetEvent
   # Class Methods
   #
   #------------------------------------------------------------------------------
-    
+
   def self.allowable_params
     FORM_PARAMS
   end
@@ -42,22 +37,25 @@ class ServiceStatusUpdateEvent < AssetEvent
   def self.asset_event_type
     AssetEventType.find_by_class_name(self.name)
   end
-    
+
   #------------------------------------------------------------------------------
   #
   # Instance Methods
   #
   #------------------------------------------------------------------------------
-  
+    
+  # This must be overriden otherwise a stack error will occur  
   def get_update
-    "Service status changed to #{service_status_type}." unless service_status_type.nil?
+    maintenance_provider_type unless maintenance_provider_type.nil?
   end
+  
+  protected
 
   # Set resonable defaults for a new condition update event
   def set_defaults
     super
-    self.service_status_type ||= asset.service_status_type
     self.asset_event_type ||= AssetEventType.find_by_class_name(self.name)
+    self.maintenance_provider_type = asset.maintenance_provider_type
   end    
   
 end
