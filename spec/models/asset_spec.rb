@@ -245,7 +245,8 @@ RSpec.describe Asset, :type => :model do
       test_asset_event_id = test_asset_event.id
       test_asset_event.destroy
 
-      expect(test_asset.asset_event_ids.include? test_asset_event_id).to be false
+      expect(buslike_asset.asset_event_ids.include? test_asset_event_id).to be false
     end
+  end
 
 end
