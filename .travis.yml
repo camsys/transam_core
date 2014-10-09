@@ -1,7 +1,12 @@
 language: ruby
 rvm:
   - 2.1.1
+
+env:
+  - TEST_SUITE=rspec
+  - TEST_SUITE=cucumber
+
 # uncomment this line if your project needs to run something other than `rake`:
 script: 
-  - bundle exec rake app:prepare_rspec
-  - bundle exec rspec spec
+  - bundle exec rake app:prepare_rspec # prepare the database for testing
+  - bundle exec $TEST_SUITE

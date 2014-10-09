@@ -4,7 +4,7 @@ RSpec.describe Asset, :type => :model do
     # policy = build_stubbed(:policy)
     let(:buslike_asset) { build_stubbed(:buslike_asset) }
     let(:persisted_buslike_asset) { create(:buslike_asset) }
-  
+
 
   #------------------------------------------------------------------------------
   #
@@ -15,7 +15,7 @@ RSpec.describe Asset, :type => :model do
   #   it "returns a typed asset" do
   #     pending "There is a coupling here. Do we need to test the seed data?"
   #     a = Asset.new_asset(FactoryGirl.build(:asset_subtype))
-      
+
   #     expect(a.class).to eq("AssetType")
   #   end
   # end
@@ -96,12 +96,12 @@ RSpec.describe Asset, :type => :model do
     end
   end
 
- 
+
   describe '#history' do
     it 'holds events of all types' do
       buslike_asset.condition_updates.create(attributes_for :condition_update_event)
       buslike_asset.service_status_updates.create(attributes_for :service_status_update_event)
-      
+
       expect(buslike_asset.history.count).to eq(2)
     end
 
@@ -119,7 +119,7 @@ RSpec.describe Asset, :type => :model do
     end
   end
 
-  
+
   describe "#searchable_fields" do
     it 'inherits down the tree' do
       asset_searchables = [ 'object_key', 'asset_tag', 'manufacture_year']
@@ -149,20 +149,20 @@ RSpec.describe Asset, :type => :model do
       it 'copies all (non-cleansed) fields for an abstract type' do
         copied_bus = buslike_asset.copy
 
-        %w(class organization_id asset_type_id asset_subtype_id manufacturer_id manufacturer_model manufacture_year 
+        %w(class organization_id asset_type_id asset_subtype_id manufacturer_id manufacturer_model manufacture_year
           purchase_date expected_useful_miles fuel_type_id).each do |attribute_name|
-          expect(copied_bus.send(attribute_name)).to eq(buslike_asset.send(attribute_name)), 
+          expect(copied_bus.send(attribute_name)).to eq(buslike_asset.send(attribute_name)),
           "#{attribute_name} expected: #{persisted_buslike_asset.send(attribute_name)}\n         got: #{copied_bus.send(attribute_name)}"
         end
       end
-      
+
       it 'clears out cleansable_fields' do
         copied_bus = persisted_buslike_asset.copy
 
-        %w(asset_tag policy_replacement_year estimated_replacement_year estimated_replacement_cost 
-          scheduled_replacement_year scheduled_rehabilitation_year scheduled_disposition_year replacement_reason_type_id 
-          in_backlog reported_condition_type_id reported_condition_rating reported_condition_date reported_mileage 
-          estimated_condition_type_id estimated_condition_rating service_status_type_id estimated_value 
+        %w(asset_tag policy_replacement_year estimated_replacement_year estimated_replacement_cost
+          scheduled_replacement_year scheduled_rehabilitation_year scheduled_disposition_year replacement_reason_type_id
+          in_backlog reported_condition_type_id reported_condition_rating reported_condition_date reported_mileage
+          estimated_condition_type_id estimated_condition_rating service_status_type_id estimated_value
           disposition_type_id disposition_date license_plate).each do |attribute_name|
           expect(copied_bus.send(attribute_name)).to be_blank,
           "expected '#{attribute_name}' to be blank, got #{copied_bus.send(attribute_name)}"
@@ -198,4 +198,33 @@ RSpec.describe Asset, :type => :model do
   describe '#update_sogr' do
     pending "I need to learn about policies"
   end
+
+  ################ TESTS THAT ASSOCIATIONS HOLD ON CRUD METHODS ################
+  ### Four relationships to check: ###
+  # asset_group belongs_to asset      asset.asset_groups.include? asset_group
+  # asset has_many asset_groups
+  # asset belongs_to asset_group      asset_group.assets.include? asset
+  # asset_group has_many assets
+
+  describe '#asset_groups' do
+    let(:test_asset_group) { create(:asset_group, :assets => [persisted_buslike_asset]) }
+    # Asset group with no assets
+    it 'can have none' do
+      expect(persisted_buslike_asset.asset_groups.count).to eq(0)
+    end
+
+    it 'associations hold on asset_group create' do
+      expect(persisted_buslike_asset.asset_groups.include? test_asset_group).to be true
+      expect(test_asset_group.assets.include? persisted_buslike_asset).to be true
+    end
+
+    it 'associations hold on asset_group destroy' do
+      test_asset_group_id = test_asset_group.id
+      test_asset_group.destroy
+
+      expect(test_asset_group.assets.length).to eq(0)
+      expect(persisted_buslike_asset.asset_group_ids.include? test_asset_group_id).to be false
+    end
+  end
+
 end
