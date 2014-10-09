@@ -88,7 +88,7 @@ RSpec.describe Asset, :type => :model do
       class ABCUpdateEvent < AssetEvent; end
       expect{ buslike_asset.create_typed_event(ABCUpdateEvent) }.to raise_error(ArgumentError)
     end
-    
+
     describe "for abstract Asset class" do
       it 'returns only for the asset events defined on the asset class' do
         expect(buslike_asset.create_typed_event(ConditionUpdateEvent).class).to eq(ConditionUpdateEvent)
@@ -206,6 +206,7 @@ RSpec.describe Asset, :type => :model do
   # asset belongs_to asset_group      asset_group.assets.include? asset
   # asset_group has_many assets
 
+  ### Associations with asset_groups
   describe '#asset_groups' do
     let(:test_asset_group) { create(:asset_group, :assets => [persisted_buslike_asset]) }
     # Asset group with no assets
@@ -226,5 +227,25 @@ RSpec.describe Asset, :type => :model do
       expect(persisted_buslike_asset.asset_group_ids.include? test_asset_group_id).to be false
     end
   end
+
+  ### Associations with asset_events
+  describe '#asset_events' do
+    let(:test_asset_event) { create(:asset_event, :asset => persisted_buslike_asset) }
+
+    it 'can have none' do
+      expect(buslike_asset.asset_events.count).to eq(0)
+    end
+
+    it 'associations hold on asset_event create' do
+      expect(persisted_buslike_asset.asset_events.include? test_asset_event).to be true
+      expect(test_asset_event.asset == persisted_buslike_asset).to be true
+    end
+
+    it 'associations hold on asset_event delete' do
+      test_asset_event_id = test_asset_event.id
+      test_asset_event.destroy
+
+      expect(test_asset.asset_event_ids.include? test_asset_event_id).to be false
+    end
 
 end

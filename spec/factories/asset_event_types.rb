@@ -1,11 +1,11 @@
 FactoryGirl.define do
 
   factory :asset_event_type do
-    name "Mileage"
-    class_name "Mileage"
-    job_name "Mileage"
+    name "Update the mileage"
+    class_name "MileageUpdateEvent"
+    job_name "AssetMileageUpdateJob"
     display_icon_name "fa fa-road"
-    description "Mileage"
+    description "Mileage Update"
     active true
   end
 end
