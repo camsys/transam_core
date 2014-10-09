@@ -1,0 +1,11 @@
+%li.nav-item{:class => get_nav_link_class(['policies', 'accounting'])}
+  = link_to "#", :class => "dropdown-toggle", :data => {"toggle" => "dropdown"} do
+    %i.fa.fa-usd.fa-2x
+    %br
+    Accounting
+    %b.caret
+  %ul.dropdown-menu.multi-level{:role => 'menu'}      
+    %li.text-left
+      = link_to policies_path do
+        %i.fa.fa-book.fa-fw
+        Policies

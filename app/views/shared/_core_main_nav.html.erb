@@ -1,0 +1,53 @@
+<li class="nav-item dropdown <%= get_nav_link_class('assets') %>">
+	<%= link_to inventory_index_path, :class => "dropdown-toggle", :data => {"toggle" => "dropdown"} do %>
+		<i class="fa travelcon-bus travelcon-2x"></i><br/><span>Inventory</span>
+		<b class="caret"></b>
+	<% end %>
+	
+	<ul class="dropdown-menu multi-level" role="menu">
+		<% AssetType.all.each do | at | %>
+			<% if @organization.asset_count(['asset_type_id = ?'], [at.id]) > 0 %>
+				<li class="text-left dropdown-submenu">												
+					<%= link_to inventory_index_path(:asset_type => at.id, :asset_subtype => 0), :tabindex => "-1"  do %>
+						<i class="<%= at.display_icon_name %> fa-fw"></i> <%= at.name.pluralize(2) %>								
+					<% end %>
+					<ul class="dropdown-menu">
+						<% at.asset_subtypes.each do |as| %>
+							<% if @organization.asset_count(['asset_subtype_id = ?'], [as.id]) > 0 %>
+								<li class="text-left">
+									<%= link_to as.name, inventory_index_path(:asset_subtype => as) %>
+								</li>
+							<% end %>
+						<% end %>
+					</ul>
+				</li>
+			<% end %>
+		<% end %>
+		<li class="divider"></li>			
+		<li class="text-left">												
+			<%= link_to new_search_path(:search_type => SearchesController::ASSET_SEARCH_TYPE) do %>
+				<i class="fa fa-search fa-fw"></i> Search
+			<% end %>
+		</li>		
+		<% if can? :create, Asset %>
+			<li class="divider"></li>			
+			<li class="text-left">												
+				<%= link_to new_asset_inventory_index_path do %>
+				<i class="fa fa-plus fa-fw"></i> Add Asset
+				<% end %>
+			</li>
+			<li class="divider"></li>			
+			<li class="text-left">												
+				<%= link_to asset_groups_path do %>
+				<i class="fa fa-tags fa-fw"></i> Manage Groups
+				<% end %>
+			</li>
+			<li class="divider"></li>			
+			<li class="text-left">												
+				<%= link_to templates_uploads_path do %>
+				<i class="fa fa-file-excel-o fa-fw"></i> Bulk Update Templates
+				<% end %>
+			</li>
+		<% end %>
+	</ul>
+</li>

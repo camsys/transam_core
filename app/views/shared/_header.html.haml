@@ -1,0 +1,20 @@
+%nav.navbar.navbar-fixed-top.navbar-inverse{:role => 'navigation', :style => 'z-index:1033'}
+  .container-fluid
+    .navbar-header
+      = link_to app_title, "/", :class => 'navbar-brand'
+    .navbar-header.navbar-right
+      %ul.nav.navbar-nav.pull-right
+        %li.dropdown
+          = link_to "#", :class => 'dropdown-toggle', :data => {:toggle => 'dropdown'} do
+            %i.fa.fa-user
+            = current_user.name
+            %b.caret
+          %ul.dropdown-menu
+            - SystemConfig.transam_module_names.each do |mod|
+              = render :partial => "shared/#{mod}_user_menu" rescue nil
+              
+            %li.divider
+            %li.text-left
+              = link_to destroy_user_session_path, :method => 'delete' do
+                %i.fa.fa-sign-out
+                = " Logout"

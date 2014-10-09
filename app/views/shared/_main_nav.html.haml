@@ -1,0 +1,14 @@
+%nav.navbar.navbar-default.navbar-fixed-top.main-nav.center{:style => 'margin-top: 40px;'}
+  .container-fluid
+    %ul.nav.navbar-nav
+      %li.nav-item{:class => get_nav_link_class('dashboards') }
+        = link_to dashboards_path do
+          %i.fa.fa-home.fa-2x
+          %br
+          Home
+
+      - SystemConfig.transam_module_names.each do |mod|
+        = render :partial => "shared/#{mod}_main_nav" rescue nil
+
+      = render 'shared/accounting_nav'
+      = render 'shared/reports_nav'

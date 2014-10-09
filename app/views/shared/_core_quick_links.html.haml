@@ -1,0 +1,3 @@
+- if can? :create, Asset
+  = render :partial => 'quick_link', :locals => {:action_title => 'New Asset', :action_path => new_asset_inventory_index_path, :action_icon => 'fa fa-plus'}
+= render :partial => 'quick_link', :locals => {:action_title => 'Assets', :action_path => new_search_path(:search_type => SearchesController::ASSET_SEARCH_TYPE), :action_icon => 'fa fa-search'}
