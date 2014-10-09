@@ -65,4 +65,16 @@ class SystemConfig < ActiveRecord::Base
     end
     a
   end
+  #
+  # Returns an array of module names
+  #
+  def self.transam_module_names
+    a = []
+    Gem::Specification::each do |gem|
+      if gem.full_name.start_with? 'transam_'
+        a << gem.name.split('_').last
+      end
+    end
+    a
+  end
 end
