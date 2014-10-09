@@ -118,6 +118,7 @@ class Asset < ActiveRecord::Base
   validates     :created_by_id,       :presence => true
   validates     :manufacture_year,    :presence => true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 1900}
   validates     :expected_useful_life,:presence => true, :numericality => {:only_integer => :true, :greater_than => 0}
+  validates_inclusion_of :purchased_new, :in => [true, false]
 
   #------------------------------------------------------------------------------
   # Attributes common to all asset types
@@ -693,6 +694,7 @@ class Asset < ActiveRecord::Base
     self.in_service_date ||= Date.today
     self.manufacture_year ||= Date.today.year
     self.expected_useful_life ||= 0
+    self.purchased_new = self.purchased_new.nil? ? true : self.purchased_new
   end
 
   #------------------------------------------------------------------------------
