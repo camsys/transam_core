@@ -8,17 +8,21 @@
   = hidden_field_tag :event_type, @asset_event.asset_event_type.id
   = yield f # The event-specific form gets injected here
 
+-#  Put any event-specific javascript in the relevant form view.  It will be
+-#   inserted below this javascript.
 :javascript
+  // Override placement of validator msg on .input-groups
+  $.validator.setDefaults({errorPlacement: function(error, element) {
+        console.log(element);
+        if(element.parents('.input-group').length) {
+          error.insertAfter(element.parents('.input-group'));
+        } else {
+          error.insertAfter(element);
+        }
+    }
+  });
   $('#new_asset_event_form').validate({
     submitHandler: function(form) {
       form.submit();
     }
   });
-  // Must place after the input-group instead of default (adjacent to input)
-  $.validator.setDefaults({errorPlacement: function(error, element) {
-        if(element.parents('.input-group').length) {
-            error.insertAfter(element.parents('.input-group'));
-        } else {
-            error.insertAfter(element);
-        }
-    }});
