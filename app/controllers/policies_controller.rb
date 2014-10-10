@@ -160,6 +160,48 @@ class PoliciesController < OrganizationAwareController
       format.json { head :no_content }
     end
   end
+
+  def updater
+    add_breadcrumb "Asset Updater", updater_policy_path(@policy)   
+
+    @builder_proxy = AssetUpdaterProxy.new(:policy => @policy)
+    @message = "Updating selected assets. This process might take a while."
+  end
+
+  def update_assets
+    add_breadcrumb "Asset Updater", updater_policy_path(@policy)
+
+    @builder_proxy = AssetUpdaterProxy.new(params[:asset_updater_proxy])
+    if @builder_proxy.valid?
+      # Sleep for a couple of seconds so that the screen can display the waiting 
+      # message and the user can read it.
+      sleep 2
+      
+      # Run the builder
+      options = {}
+      options[:asset_type_ids] = @builder_proxy.asset_types
+      
+      builder = AssetUpdateJobBuilder.new
+      num_to_update = builder.build(@organization, options)
+  
+      # Let the user know the results
+      if num_to_update > 0
+        msg = "#{num_to_update} assets will be updated."
+        notify_user(:notice, msg)
+        # Add a row into the activity table
+        ActivityLog.create({:organization_id => @organization.id, :user_id => current_user.id, :item_type => "AssetUpdateJobBuilder", :activity => msg, :activity_time => Time.now})
+      else
+        notify_user(:notice, "No assets were updated.")
+      end
+      redirect_to policies_path
+      return      
+    else
+      respond_to do |format|
+        format.html { render :action => "updater" }
+      end
+    end
+    
+  end
   
   private
   # Never trust parameters from the scary internet, only allow the white list through.

@@ -1,0 +1,10 @@
+= simple_form_for(@builder_proxy,
+  :html => {:class => 'form-vertical' },
+  :url => update_assets_policy_path(@policy),
+  :wrapper => :horizontal_form,
+  :wrapper_mappings => {:check_boxes => :horizontal_radio_and_checkboxes, :radio_buttons => :horizontal_radio_and_checkboxes, :file => :horizontal_file_input, :boolean => :horizontal_boolean}) do |f|
+
+  = f.input :asset_types, :collection => AssetType.all, :prompt => 'All...', :as => :check_boxes
+  .col-sm-9.col-sm-offset-3
+    = f.submit "Run...", :class => "btn btn-primary", :id => "submit_button"
+
