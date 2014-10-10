@@ -412,8 +412,11 @@ class Asset < ActiveRecord::Base
         event = asset.disposition_updates.last
         asset.disposition_date = event.event_date
         asset.disposition_type = event.disposition_type
-        asset.save
+      else
+        asset.disposition_type = nil
+        asset.disposition_date = nil
       end
+      asset.save
     end
   end
 
