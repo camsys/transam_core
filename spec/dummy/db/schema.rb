@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141001143555) do
+ActiveRecord::Schema.define(version: 20141010150310) do
 
   create_table "activity_line_items", force: true do |t|
     t.string   "object_key",         limit: 12
@@ -180,7 +180,7 @@ ActiveRecord::Schema.define(version: 20141001143555) do
     t.integer  "replacement_reason_type_id"
     t.boolean  "in_backlog"
     t.integer  "reported_condition_type_id"
-    t.decimal  "reported_condition_rating",                      precision: 10, scale: 0
+    t.decimal  "reported_condition_rating",                      precision: 10, scale: 1
     t.integer  "reported_mileage"
     t.date     "reported_condition_date"
     t.integer  "estimated_condition_type_id"
