@@ -14,3 +14,11 @@
       form.submit();
     }
   });
+  // Must place after the input-group instead of default (adjacent to input)
+  $.validator.setDefaults({errorPlacement: function(error, element) {
+        if(element.parents('.input-group').length) {
+            error.insertAfter(element.parents('.input-group'));
+        } else {
+            error.insertAfter(element);
+        }
+    }});

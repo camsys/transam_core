@@ -15,6 +15,11 @@ class DispositionUpdateEvent < AssetEvent
   validates :disposition_type_id, :presence => true
   validates :sales_proceeds,      :presence => true, :numericality => {:only_integer => true, :greater_than_or_equal_to => 0}
   validates :new_owner_name,      :presence => true
+  validates :address1,            :presence => true
+  validates :city,                :presence => true
+  validates :state,               :presence => true
+  validates :zip,                 :presence => true
+  validates_format_of :zip,       :with => /\A\d{5}([\-]?\d{4})?\z/
    
   #------------------------------------------------------------------------------
   # Scopes
