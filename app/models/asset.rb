@@ -8,8 +8,8 @@
 #------------------------------------------------------------------------------
 class Asset < ActiveRecord::Base
 
-  # Include the unique key mixin
-  include UniqueKey
+  # Include the object key mixin
+  include TransamObjectKey
   # Include the numeric sanitizers mixin
   include NumericSanitizers
   # Include the fiscal year mixin
@@ -19,21 +19,12 @@ class Asset < ActiveRecord::Base
   # Overrides
   #------------------------------------------------------------------------------
 
-  #require rails to use the asset key as the restful parameter. All URLS will be of the form
-  # /inventory/{object_key}/...
-  def to_param
-    object_key
-  end
 
   #------------------------------------------------------------------------------
   # Callbacks
   #------------------------------------------------------------------------------
   after_initialize  :set_defaults
 
-  # Always generate a unique asset key before saving to the database
-  before_validation(:on => :create) do
-    generate_unique_key(:object_key)
-  end
 
   # Clean up any HABTM associations before the asset is destroyed
   before_destroy { districts.clear }
@@ -131,7 +122,6 @@ class Asset < ActiveRecord::Base
   #attr_accessible :asset_tag
 
   # Validations on core attributes
-  validates       :object_key,        :presence => true, :uniqueness => true
   validates       :asset_tag,         :presence => true
   validates       :asset_tag,         :length   => {:maximum => 12}
   validates       :in_service_date,   :presence => true
@@ -200,7 +190,6 @@ class Asset < ActiveRecord::Base
 
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
-    :object_key,
     :organization_id,
     :asset_type_id,
     :asset_subtype_id,
