@@ -17,7 +17,8 @@ FactoryGirl.define do
   factory :buslike_asset, :class => :asset do # An untyped asset which looks like a bus
     basic_asset_attributes
     association :asset_type
-    asset_subtype_id 1
+    association :asset_subtype
+    purchase_cost 2000.0
     expected_useful_life 10
   end
 

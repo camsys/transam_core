@@ -1,21 +1,17 @@
 #------------------------------------------------------------------------------
 #
-# Base class for all TransAM calculators. Each instance of this class must provide 
+# Base class for all TransAM calculators. Each instance of this class must provide
 # a calculate(asset) method.
 #
 #------------------------------------------------------------------------------
 
 class Calculator
-  
-  INFINITY = 999999999.9
-  
-  def initialize(policy)
-    @policy = policy
-  end
 
-  # All class instances should override this method to return a calculated value for the asset 
+  INFINITY = 999999999.9
+
+  # All class instances should override this method to return a calculated value for the asset
   def calculate(asset)
     nil
-  end  
- 
+  end
+
 end

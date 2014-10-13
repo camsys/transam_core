@@ -48,7 +48,7 @@ class Asset < ActiveRecord::Base
 
   # each asset has a reason why it is being replaced
   belongs_to :replacement_reason_type
-  
+
   # Each asset has zero or more asset events. These are all events regardless of event type. Events are deleted when the asset is deleted
   has_many   :asset_events, :dependent => :destroy
 
@@ -88,7 +88,7 @@ class Asset < ActiveRecord::Base
 
   # Each asset can have 0 or more dependents
   has_many    :dependents,  :class_name => 'Asset', :foreign_key => 'location_id', :dependent => :nullify
-  
+
   # Each asset can be associated with 0 or more districts
   has_and_belongs_to_many :districts
 
@@ -274,7 +274,7 @@ class Asset < ActiveRecord::Base
 
     # DO NOT cast to concrete type.  Want to enforce that client has a concrete asset
     unless self.class.event_classes.include? asset_event_type_class
-      raise ArgumentError, 'Invalid Asset Event Type' 
+      raise ArgumentError, 'Invalid Asset Event Type'
     end
     asset_event_type_class.new(:asset => self)
   end
@@ -285,7 +285,7 @@ class Asset < ActiveRecord::Base
   def disposed?
     disposition_date.present?
   end
-  
+
   # Returns true if the asset is of the specified class or has the specified class as
   # and ancestor (superclass).
   #
@@ -312,7 +312,7 @@ class Asset < ActiveRecord::Base
   def has_events?
     event_classes.size > 0
   end
-  
+
   # Returns an array of asset event classes that this asset can process
   def event_classes
     # get a typed version of the asset
@@ -355,7 +355,7 @@ class Asset < ActiveRecord::Base
   def in_service_year
     in_service_date.year unless in_service_date.nil?
   end
-  
+
   # returns the list of events associated with this asset ordered by date, newest first
   def history
     AssetEvent.unscoped.where('asset_id = ?', id).order('event_date DESC')
@@ -383,7 +383,7 @@ class Asset < ActiveRecord::Base
     end
     if p
       policy_item = p.get_rule(self)
-      if policy_item 
+      if policy_item
         self.expected_useful_life = policy_item.max_service_life_years
       end
     end
@@ -436,7 +436,7 @@ class Asset < ActiveRecord::Base
     end
   end
 
-  # Forces an update of an assets reported condition. This performs an update on the record. 
+  # Forces an update of an assets reported condition. This performs an update on the record.
   def update_condition
 
     Rails.logger.info "Updating condition for asset = #{object_key}"
@@ -566,7 +566,7 @@ class Asset < ActiveRecord::Base
   def update_sogr(policy = nil)
     update_asset_state(policy)
   end
-  
+
   #------------------------------------------------------------------------------
   #
   # Protected Methods
@@ -703,7 +703,7 @@ class Asset < ActiveRecord::Base
     begin
       Rails.logger.debug "#{class_name}, #{target_method}"
       # create an instance of this class and call the method
-      calculator_instance = class_name.constantize.new(policy)
+      calculator_instance = class_name.constantize.new
       Rails.logger.debug "Instance created #{calculator_instance}"
       method_object = calculator_instance.method(target_method)
       Rails.logger.debug "Instance method created #{method_object}"

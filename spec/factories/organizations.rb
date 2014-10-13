@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  
+
   factory :organization do
     customer_id 1
     address1 '100 Main St'
@@ -9,7 +9,7 @@ FactoryGirl.define do
     url 'http://www.example.com'
     phone '9999999999'
     grantor_id 1
-    organization_type_id 2
+    association :organization_type, :factory => :organization_type
     sequence(:name) { |n| "Org #{n}" }
     short_name {name}
     license_holder true

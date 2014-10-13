@@ -4,12 +4,12 @@
 #
 #------------------------------------------------------------------------------
 class DecliningBalanceDepreciationCalculator < DepreciationCalculator
-  
-  # Determines the estimated value for an asset. 
+
+  # Determines the estimated value for an asset.
   def calculate(asset)
 
     # depreciation time
-    num_years = @policy.get_rule(asset).max_service_life_years
+    num_years = asset.policy_rule.max_service_life_years
     # Age of the asset
     asset_age = asset.age
     Rails.logger.debug "Age = #{asset.age}, max service life = #{num_years}"
@@ -18,11 +18,11 @@ class DecliningBalanceDepreciationCalculator < DepreciationCalculator
     rv = residual_value(asset)
     v  = purchase_cost(asset)
     Rails.logger.debug "purchase cost = #{v}, residual value = #{rv} depreciation_rate = #{depreciation_rate}"
-    
+
     if asset_age < 1
       return v
     end
-    
+
     # calculate the value of the asset at the end of each year
     (1..asset.age).each do |year|
       v -= (v * depreciation_rate)
@@ -33,5 +33,5 @@ class DecliningBalanceDepreciationCalculator < DepreciationCalculator
     # return the max of the residual value and the depreciated value
     [v, rv].max.to_i
   end
-  
+
 end
