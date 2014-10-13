@@ -4,11 +4,19 @@
     %br
     Admin
     %b.caret
-  %ul.dropdown-menu.multi-level{:role => 'menu'}      
+  %ul.dropdown-menu{:role => 'menu'}      
     %li.text-left
       = link_to policies_path do
         %i.fa.fa-thumb-tack.fa-fw
         Notices
+    %li.text-left
+      = link_to organizations_path do
+        %i.fa.fa-building.fa-fw
+        Organizations
+    %li.text-left
+      = link_to users_path do
+        %i.fa.fa-users.fa-fw
+        Users
     %li.divider        
     %li.text-left
       = link_to admin_path do
