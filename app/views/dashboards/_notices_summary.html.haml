@@ -1,0 +1,16 @@
+:ruby
+  now = Time.now
+  notices = Notice.where("organization_type_id IN (?) AND display_datetime < ? AND end_datetime > ?", [0, @organization.organization_type.id], now, now).order(:display_datetime)
+  
+.panel.panel-primary{:style => "height: 200px;overflow-y: auto;"}
+  .panel-heading 
+    .pull-right
+      %span.badge= notices.count
+    Notices
+  - if notices.empty?
+    .panel-body
+      %p= "No notices"
+  - else
+    %ul.list-group.media-list
+      - notices.each do |notice|
+        = render :partial => 'notice_repeater', :locals => {:notice => notice}
