@@ -1,0 +1,23 @@
+= render(:partial => 'shared/form_errors', :locals => {:obj => @notice}) unless @notice.errors.empty?
+
+.row
+  .col-md-3
+    = dialog_tag('Overview', {:icon => 'fa fa-info-circle', :class => "form-part"}) do
+      = render :partial => 'summary', :locals => {:ali => @notice}
+
+  .col-md-6
+    = render 'form'
+
+  .col-md-3
+    = dialog_tag('Instructions', {:icon => 'fa fa-info-circle', :class => "form-part"}) do
+      %ol
+        %li
+          Enter a descriptive <strong>name</strong> for the activity line item. This should be a name that makes it easy to understand what the ALI if for, for example "Purchase Replacement 30Ft Buses" or "Lease Expansion Dual Mode Buses".
+        %li
+          Select the <strong>TEAM sub-category</strong> for your ALI.
+        %li
+          Enter the cost estimate for the ALI to the nearest $100
+        %li
+          Describe how the cost estimate was created, for example, "Quote from vendor" or "Estimate from contractor". 
+          
+= render 'scripts'

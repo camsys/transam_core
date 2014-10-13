@@ -1,0 +1,9 @@
+%ul.nav.nav-tabs
+  %li
+    %a{:href => "#info", :data =>{:toggle => 'tab'}}
+      = "Notice"
+
+.tab-content
+  .tab-pane.fade#info
+    .tab-content
+      = render 'notice_info'
