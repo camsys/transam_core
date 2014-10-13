@@ -5,24 +5,24 @@
 	<% end %>
 	
 	<ul class="dropdown-menu multi-level" role="menu">
-		<% AssetType.all.each do | at | %>
-			<% if @organization.asset_count(['asset_type_id = ?'], [at.id]) > 0 %>
-				<li class="text-left dropdown-submenu">												
-					<%= link_to inventory_index_path(:asset_type => at.id, :asset_subtype => 0), :tabindex => "-1"  do %>
-						<i class="<%= at.display_icon_name %> fa-fw"></i> <%= at.name.pluralize(2) %>								
+
+		<% @organization.asset_type_counts.each do | at, count | %>
+			<% asset_type = AssetType.find(at) %>
+			<li class="text-left dropdown-submenu">												
+				<%= link_to inventory_index_path(:asset_type => asset_type, :asset_subtype => 0)  do %>
+					<i class="<%= asset_type.display_icon_name %> fa-fw"></i> <%= asset_type.name.pluralize(2) %>								
+				<% end %>
+				<ul class="dropdown-menu">
+					<% @organization.asset_subtype_counts(at).each do |as, count | %>
+						<% asset_subtype = AssetSubtype.find(as) %>
+						<li class="text-left">
+							<%= link_to asset_subtype.name, inventory_index_path(:asset_subtype => asset_subtype) %>
+						</li>
 					<% end %>
-					<ul class="dropdown-menu">
-						<% at.asset_subtypes.each do |as| %>
-							<% if @organization.asset_count(['asset_subtype_id = ?'], [as.id]) > 0 %>
-								<li class="text-left">
-									<%= link_to as.name, inventory_index_path(:asset_subtype => as) %>
-								</li>
-							<% end %>
-						<% end %>
-					</ul>
-				</li>
-			<% end %>
+				</ul>
+			</li>
 		<% end %>
+
 		<li class="divider"></li>			
 		<li class="text-left dropdown-submenu">												
 			<%= link_to asset_groups_path do %>
