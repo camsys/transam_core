@@ -24,6 +24,27 @@
 			<% end %>
 		<% end %>
 		<li class="divider"></li>			
+		<li class="text-left dropdown-submenu">												
+			<%= link_to asset_groups_path do %>
+			<i class="fa fa-tags fa-fw"></i> Groups
+			<% end %>
+			<ul class="dropdown-menu">
+				<% @organization.asset_groups.each do |grp| %>	
+					<li class="text-left">
+						<%= link_to inventory_index_path(:asset_type => 0, :asset_subtype => 0, :asset_group => grp) do %>
+							<i class="fa fa-tag fa-fw"></i> <%= grp.name %>
+						<% end %>
+					</li>						
+				<% end %>
+				<li class="divider"></li>			
+				<li class="text-left">												
+					<%= link_to asset_groups_path do %>
+						<i class="fa fa-tags fa-fw"></i> Manage Groups
+					<% end %>
+				</li>		
+			</ul>
+		</li>
+		<li class="divider"></li>			
 		<li class="text-left">												
 			<%= link_to new_search_path(:search_type => SearchesController::ASSET_SEARCH_TYPE) do %>
 				<i class="fa fa-search fa-fw"></i> Search
@@ -34,12 +55,6 @@
 			<li class="text-left">												
 				<%= link_to new_asset_inventory_index_path do %>
 				<i class="fa fa-plus fa-fw"></i> Add Asset
-				<% end %>
-			</li>
-			<li class="divider"></li>			
-			<li class="text-left">												
-				<%= link_to asset_groups_path do %>
-				<i class="fa fa-tags fa-fw"></i> Manage Groups
 				<% end %>
 			</li>
 			<li class="divider"></li>			
