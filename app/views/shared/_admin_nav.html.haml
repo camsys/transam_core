@@ -1,0 +1,17 @@
+%li.nav-item{:class => get_nav_link_class(['admin'])}
+  = link_to "#", :class => "dropdown-toggle", :data => {"toggle" => "dropdown"} do
+    %i.fa.fa-cog.fa-2x
+    %br
+    Admin
+    %b.caret
+  %ul.dropdown-menu.multi-level{:role => 'menu'}      
+    %li.text-left
+      = link_to policies_path do
+        %i.fa.fa-thumb-tack.fa-fw
+        Notices
+    %li.divider        
+    %li.text-left
+      = link_to admin_path do
+        %i.fa.fa-cogs.fa-fw
+        Admin Interface
+

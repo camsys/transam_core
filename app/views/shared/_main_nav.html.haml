@@ -12,3 +12,7 @@
 
       = render 'shared/accounting_nav'
       = render 'shared/reports_nav'
+      
+    - if current_user.has_role? :admin
+      %ul.nav.navbar-nav.pull-right
+        = render 'shared/admin_nav'

@@ -26,11 +26,3 @@
 		<i class="fa fa-bug fa-fw"></i> Report an issue
 	<% end %>
 </li>
-<% if current_user.has_role? :admin %>
-	<li class="divider text-left"></li>
-	<li class="text-left">
-		<%= link_to admin_path do %>
-			<i class="fa fa-wrench fa-fw"></i> Admin
-		<% end %>
-	</li>
-<% end %>
