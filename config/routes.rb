@@ -131,6 +131,8 @@ Rails.application.routes.draw do
   resources :policies do
     resources :policy_items
     member do
+      get   'updater'
+      post  'update_assets'
       get   'copy'
       get   'make_current'
     end

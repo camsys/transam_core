@@ -4,8 +4,8 @@
 #
 class AssetEvent < ActiveRecord::Base
       
-  # Include the unique key mixin
-  include UniqueKey
+  # Include the object key mixin
+  include TransamObjectKey
   # Include the numeric sanitizers mixin
   include NumericSanitizers
   # Include the fiscal year mixin
@@ -15,20 +15,10 @@ class AssetEvent < ActiveRecord::Base
   # Overrides
   #------------------------------------------------------------------------------
   
-  #require rails to use the asset key as the restful parameter. All URLS will be of the form
-  # /asset_event/{object_key}/...
-  def to_param
-    object_key
-  end
       
   # Callbacks
   after_initialize :set_defaults
 
-  # Always generate a unique asset key before saving to the database
-  before_validation(:on => :create) do
-    generate_unique_key(:object_key)
-  end
-      
   # Associations
   
   # Every event belongs to an asset
@@ -36,7 +26,6 @@ class AssetEvent < ActiveRecord::Base
   # Every event is of a type
   belongs_to  :asset_event_type
   
-  validates :object_key,          :presence => true, :uniqueness => true
   validates :asset_id,            :presence => true
   validates :asset_event_type_id, :presence => true
   validates :event_date,          :presence => true
@@ -47,7 +36,6 @@ class AssetEvent < ActiveRecord::Base
 
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
-    :object_key,
     :asset_id,
     :asset_event_type_id, 
     :asset_type_id, 

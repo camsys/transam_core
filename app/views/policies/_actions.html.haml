@@ -19,6 +19,10 @@
             = link_to make_current_policy_path(@policy) do
               %i.fa.fa-check-square-o.fa-fw
               = " Set as current"
+        %li
+          = link_to updater_policy_path(@policy) do
+            %i.fa.fa-fw.fa-cogs
+            = " Apply This Policy"
         %li.divider
         %li
           = link_to new_policy_policy_item_path(@policy) do
