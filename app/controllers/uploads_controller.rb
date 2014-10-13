@@ -18,7 +18,7 @@ class UploadsController < OrganizationAwareController
     
     # Add the organization clause
     conditions << 'organization_id IN (?)'
-    values << get_id_array(current_user.organizations)
+    values << @organization_list
     
     # See if we got an organization type id
     @file_status_type_id = params[:file_status_type_id]
@@ -145,7 +145,7 @@ class UploadsController < OrganizationAwareController
     #prepare a list of just the asset types of the current organization
     @asset_types = []
     AssetType.all.each do |at|
-      count = Asset.where('organization_id in (?) AND asset_type_id = ?', get_id_array(current_user.organizations), at.id).count
+      count = Asset.where('organization_id in (?) AND asset_type_id = ?', @organization_list, at.id).count
       if count > 0 
         @asset_types << at
       end

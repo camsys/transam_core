@@ -25,7 +25,7 @@ class TasksController < OrganizationAwareController
       values << [current_user.id]
     else
       clauses << ['for_organization_id = ?']
-      values << [current_user.organization.id]
+      values << [@organization.id]
     end
     if @filter.to_i > 0
       clauses << ['task_status_type_id = ?']

@@ -10,7 +10,6 @@ class PoliciesController < OrganizationAwareController
     
   def index
 
-    @page_title = 'Policies'
     add_breadcrumb "Policies", policies_path
    
     # get the policies for this agency 
@@ -30,7 +29,6 @@ class PoliciesController < OrganizationAwareController
 
   def show
 
-    @page_title = @policy.name
     add_breadcrumb "Policies", policies_path
     add_breadcrumb @policy.name, policy_path(@policy)
 

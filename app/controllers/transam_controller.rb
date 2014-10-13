@@ -103,19 +103,6 @@ class TransamController < ApplicationController
     end  
     val  
   end
-
-  # Returns an array of object PKs that can be passsed to an IN query. Null safe and checks for an
-  # empty collection
-  def get_id_array(coll)
-    a = []
-    if coll.nil? || coll.empty? 
-      return a
-    end
-    coll.each do |elem|
-      a << elem.id
-    end
-    return a
-  end
   
   # Queues a job to be executed in the background
   def fire_background_job(job, priority = 0)
