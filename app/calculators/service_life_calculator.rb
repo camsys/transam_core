@@ -24,7 +24,7 @@ class ServiceLifeCalculator < Calculator
     policy_item = asset.policy_rule
     events = asset.condition_updates(true)
     Rails.logger.debug "Found #{events.count} events."
-    Rails.logger.debug "Condition threshold = #{@policy.condition_threshold}."
+    Rails.logger.debug "Condition threshold = #{asset.policy.condition_threshold}."
     events.each do |event|
       Rails.logger.debug "Event date = #{event.event_date}, Rating = #{event.assessed_rating}."
       if event.assessed_rating <= asset.policy.condition_threshold
