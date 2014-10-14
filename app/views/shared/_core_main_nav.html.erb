@@ -9,14 +9,14 @@
 		<% @organization.asset_type_counts.each do | at, count | %>
 			<% asset_type = AssetType.find(at) %>
 			<li class="text-left dropdown-submenu">												
-				<%= link_to inventory_index_path(:asset_type => asset_type, :asset_subtype => 0)  do %>
+				<%= link_to inventory_index_path(:asset_type => asset_type, :asset_subtype => 0, :asset_group => 0)  do %>
 					<i class="<%= asset_type.display_icon_name %> fa-fw"></i> <%= asset_type.name.pluralize(2) %>								
 				<% end %>
 				<ul class="dropdown-menu">
 					<% @organization.asset_subtype_counts(at).each do |as, count | %>
 						<% asset_subtype = AssetSubtype.find(as) %>
 						<li class="text-left">
-							<%= link_to asset_subtype.name, inventory_index_path(:asset_subtype => asset_subtype) %>
+							<%= link_to asset_subtype.name, inventory_index_path(:asset_subtype => asset_subtype, :asset_group => 0) %>
 						</li>
 					<% end %>
 				</ul>
