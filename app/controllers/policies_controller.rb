@@ -178,6 +178,7 @@ class PoliciesController < OrganizationAwareController
       # Run the builder
       options = {}
       options[:asset_type_ids] = @builder_proxy.asset_types
+      options[:asset_group_ids] = @builder_proxy.asset_groups
       
       builder = AssetUpdateJobBuilder.new
       num_to_update = builder.build(@organization, options)

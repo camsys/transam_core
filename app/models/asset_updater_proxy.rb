@@ -3,7 +3,7 @@ class AssetUpdaterProxy < Proxy
   # General state variables
  
   # Type of asset type to process
-  attr_accessor     :asset_types, :policy
+  attr_accessor     :asset_types, :asset_groups, :policy
   
   # Basic validations. Just checking that the form is complete
   validates :asset_types, :presence => true 
