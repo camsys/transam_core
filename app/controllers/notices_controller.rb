@@ -40,6 +40,7 @@ class NoticesController < OrganizationAwareController
   def new
 
     add_breadcrumb "New"
+    @notice = Notice.new
 
   end
 
