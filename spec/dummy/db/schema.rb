@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141010150310) do
+ActiveRecord::Schema.define(version: 20141010153341) do
 
   create_table "activity_line_items", force: true do |t|
     t.string   "object_key",         limit: 12
@@ -799,6 +799,28 @@ ActiveRecord::Schema.define(version: 20141010150310) do
 
   add_index "notes", ["asset_id"], name: "notes_idx2"
   add_index "notes", ["object_key"], name: "notes_idx1"
+
+  create_table "notice_types", force: true do |t|
+    t.string  "name",          limit: 64
+    t.string  "description",   limit: 254
+    t.string  "display_icon",  limit: 64
+    t.string  "display_class", limit: 64
+    t.boolean "active"
+  end
+
+  create_table "notices", force: true do |t|
+    t.string   "object_key",           limit: 12
+    t.integer  "organization_type_id"
+    t.string   "subject",              limit: 64
+    t.string   "summmary",             limit: 128
+    t.text     "details"
+    t.integer  "notice_type_id"
+    t.datetime "display_datetime"
+    t.datetime "end_datetime"
+    t.boolean  "active"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "organization_types", force: true do |t|
     t.string  "name",              limit: 64,  null: false

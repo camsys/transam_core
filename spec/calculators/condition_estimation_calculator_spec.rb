@@ -2,8 +2,7 @@ require 'rails_helper'
 
 RSpec.describe ConditionEstimationCalculator, :type => :calculator do
 
-  let(:test_calculator) { ConditionEstimationCalculator.new(:policy => build_stubbed(:policy)) }
-  let(:test_asset) { build_stubbed(:buslike_asset) }
+  let(:test_calculator) { ConditionEstimationCalculator.new }
 
   describe '#slope' do
     it 'calculates positive slopes' do
@@ -35,7 +34,7 @@ RSpec.describe ConditionEstimationCalculator, :type => :calculator do
     end
 
     it 'can handle a single point' do
-      expect(test_calculator.slope(1,1,1,1)).to eq(-1) #HMM
+      expect(test_calculator.slope(1,1,1,1)).to eq(0) #HMM
     end
   end
 
