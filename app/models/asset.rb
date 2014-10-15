@@ -82,10 +82,6 @@ class Asset < ActiveRecord::Base
   # Each asset has zero or more comments. Comments are deleted when the asset is deleted
   has_many    :comments,    :as => :commentable, :dependent => :destroy
 
-  # Each asset has zero or more notes. Notes are deleted when the asset is destroyed
-  # Notes are deprecated and will be removed. Only use comments going forward
-  has_many   :notes,        :dependent => :destroy
-
   # Each asset can have 0 or more dependents
   has_many    :dependents,  :class_name => 'Asset', :foreign_key => 'location_id', :dependent => :nullify
 
