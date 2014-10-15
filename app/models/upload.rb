@@ -6,29 +6,14 @@ class Upload < ActiveRecord::Base
   # From system config
   MAX_UPLOAD_FILE_SIZE = Rails.application.config.max_upload_file_size
   
-  # Include the unique key mixin
-  include UniqueKey
-  
-  #------------------------------------------------------------------------------
-  # Overrides
-  #------------------------------------------------------------------------------
-  
-  #require rails to use the object  key as the restful parameter. All URLS will be of the form
-  # /upload/{object_key}/...
-  def to_param
-    object_key
-  end
+  # Include the object key mixin
+  include TransamObjectKey
   
   #------------------------------------------------------------------------------
   # Callbacks
   #------------------------------------------------------------------------------
   after_initialize  :set_defaults
 
-  # Always generate a unique asset key before saving to the database
-  before_validation(:on => :create) do
-    generate_unique_key(:object_key)
-  end
-    
   # Associations
   belongs_to :user
   belongs_to :organization
@@ -38,7 +23,6 @@ class Upload < ActiveRecord::Base
   # uploader
   mount_uploader :file, ExcelUploader      
     
-  validates :object_key,            :presence => true, :uniqueness => true
   validates :organization_id,       :presence => true
   validates :user_id,               :presence => true
   validates :file_status_type_id,   :presence => true
@@ -52,7 +36,6 @@ class Upload < ActiveRecord::Base
   
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
-    :object_key,
     :organization_id, 
     :user_id, 
     :file_status_type_id, 

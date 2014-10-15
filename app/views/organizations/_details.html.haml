@@ -6,9 +6,10 @@
     %li
       %a{:href => "#assets", :data =>{:toggle => 'tab'}}
         = "Asset Summary"
-  %li
-    %a{:href => "#map", :data =>{:toggle => 'tab'}}
-      = "Map"
+  - if SystemConfig.transam_module_loaded? :spatial
+    %li
+      %a{:href => "#map", :data =>{:toggle => 'tab'}}
+        = "Map"
   %li
     %a{:href => "#users", :data =>{:toggle => 'tab'}}
       %span.badge.pull-right= @org.users.count
@@ -22,9 +23,10 @@
     .tab-pane.fade#assets
       .tab-content
         = render 'asset_summary'
-  .tab-pane.fade#map
-    .tab-content
-      = render 'map'
+  - if SystemConfig.transam_module_loaded? :spatial
+    .tab-pane.fade#map
+      .tab-content
+        = render 'map'
   .tab-pane.fade#users
     .tab-content
       = render 'users/index_table'

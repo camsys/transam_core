@@ -6,37 +6,18 @@ class Attachment < ActiveRecord::Base
   # From system config
   MAX_UPLOAD_FILE_SIZE = Rails.application.config.max_upload_file_size
   
-  # Include the unique key mixin
-  include UniqueKey
-
   # uploader
   mount_uploader :image,      ImageUploader      
-
-  #------------------------------------------------------------------------------
-  # Overrides
-  #------------------------------------------------------------------------------
-  
-  #require rails to use the asset key as the restful parameter. All URLS will be of the form
-  # /asset_event/{object_key}/...
-  def to_param
-    object_key
-  end
       
   # Callbacks
   after_initialize  :set_defaults
   before_save       :update_file_attributes  
 
-  # Always generate a unique asset key before saving to the database
-  before_validation(:on => :create) do
-    generate_unique_key(:object_key)
-  end
-            
   # Associations
   belongs_to :asset
   belongs_to :attachment_type
   belongs_to :creator, :class_name => "User", :foreign_key => "created_by_id"
   
-  validates :object_key,          :presence => true, :uniqueness => true
   validates :asset_id,            :presence => true
   validates :attachment_type_id,  :presence => true
   validates :name,                :presence => true

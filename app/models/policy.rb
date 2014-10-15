@@ -5,33 +5,18 @@
 #------------------------------------------------------------------------------
 class Policy < ActiveRecord::Base
   
-  # Include the unique key mixin
-  include UniqueKey
+  # Include the object key mixin
+  include TransamObjectKey
   # Include the numeric sanitizers mixin
   include NumericSanitizers
   # Include the fiscal year mixin
   include FiscalYear
 
   #------------------------------------------------------------------------------
-  # Overrides
-  #------------------------------------------------------------------------------
-  
-  #require rails to use the asset key as the restful parameter. All URLS will be of the form
-  # /policy/{object_key}/...
-  def to_param
-    object_key
-  end
-  
-  #------------------------------------------------------------------------------
   # Callbacks
   #------------------------------------------------------------------------------
   after_initialize :set_defaults
-  
-  # Always generate a unique object key before saving to the database
-  before_validation(:on => :create) do
-    generate_unique_key(:object_key)
-  end
-  
+    
   #------------------------------------------------------------------------------
   # Associations
   #------------------------------------------------------------------------------
@@ -59,7 +44,6 @@ class Policy < ActiveRecord::Base
   #------------------------------------------------------------------------------
   # Validations
   #------------------------------------------------------------------------------
-  validates :object_key,                        :presence => true, :uniqueness => true
   validates :organization_id,                   :presence => true
   validates :service_life_calculation_type_id,  :presence => true
   validates :cost_calculation_type_id,          :presence => true
@@ -84,7 +68,6 @@ class Policy < ActiveRecord::Base
 
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
-    :object_key,
     :organization_id,
     :service_life_calculation_type_id, 
     :cost_calculation_type_id, 

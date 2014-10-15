@@ -3,8 +3,6 @@ class DispositionType < ActiveRecord::Base
   # associations
   has_many :assets
   
-  #attr_accessible :name, :description, :code, :active
-        
   # default scope
   default_scope { where(:active => true) }
 

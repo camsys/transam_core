@@ -21,38 +21,22 @@ class Document < ActiveRecord::Base
   # From system config. This is the maximum document size that can be uploaded
   MAX_UPLOAD_FILE_SIZE = Rails.application.config.max_upload_file_size
 
-  # Include the unique key mixin
-  include UniqueKey
+  # Include the object key mixin
+  include TransamObjectKey
   
   # Use the carrierway uploader
   mount_uploader :document,   DocumentUploader      
-
-  #------------------------------------------------------------------------------
-  # Overrides
-  #------------------------------------------------------------------------------
-  
-  #require rails to use the asset key as the restful parameter. All URLS will be of the form
-  # /asset_event/{object_key}/...
-  def to_param
-    object_key
-  end
       
   # Callbacks
   after_initialize  :set_defaults
   before_save       :update_file_attributes  
 
-  # Always generate a unique asset key before saving to the database
-  before_validation(:on => :create) do
-    generate_unique_key(:object_key)
-  end
-            
   # Associations
   belongs_to :documentable,  :polymorphic => true
   
   # Each comment was created by a user
   belongs_to :creator, :class_name => "User", :foreign_key => "created_by_id"
 
-  validates :object_key,          :presence => true
   validates :description,         :presence => true
   validates :original_filename,   :presence => true
   validates :document,            :presence => true, :file_size => { :maximum => MAX_UPLOAD_FILE_SIZE.megabytes.to_i }  
@@ -60,7 +44,6 @@ class Document < ActiveRecord::Base
 
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
-    :object_key,
     :documentable_id,
     :documentable_type,
     :document, 

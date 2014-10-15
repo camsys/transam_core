@@ -1,17 +1,7 @@
 class Message < ActiveRecord::Base
   
-  # Include the unique key mixin
-  include UniqueKey
-
-  #------------------------------------------------------------------------------
-  # Overrides
-  #------------------------------------------------------------------------------
-  
-  #require rails to use the key as the restful parameter. All URLS will be of the form
-  # /message/{object_key}/...
-  def to_param
-    object_key
-  end
+  # Include the object key mixin
+  include TransamObjectKey
   
   #------------------------------------------------------------------------------
   # Callbacks
@@ -19,11 +9,6 @@ class Message < ActiveRecord::Base
   after_initialize  :set_defaults
   after_create      :send_email
 
-  # Always generate a unique asset key before saving to the database
-  before_validation(:on => :create) do
-    generate_unique_key(:object_key)
-  end
-  
   # Associations
   belongs_to :organization
   belongs_to :user
@@ -32,7 +17,6 @@ class Message < ActiveRecord::Base
   has_many   :responses, :class_name => "Message", :foreign_key => "thread_message_id"
   
   # Validations on core attributes
-  validates :object_key,        :presence => true, :uniqueness => true
   validates :organization_id,   :presence => true
   validates :user,              :presence => true
   validates :to_user,           :presence => true
@@ -44,7 +28,6 @@ class Message < ActiveRecord::Base
       
   # List of allowable form param hash keys  
   FORM_PARAMS = [
-    :object_key,
     :organization_id,
     :user_id,
     :to_user_id,

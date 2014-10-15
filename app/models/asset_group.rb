@@ -7,27 +7,12 @@
 #------------------------------------------------------------------------------
 class AssetGroup < ActiveRecord::Base
 
-  # Include the unique key mixin
-  include UniqueKey
-
-  #------------------------------------------------------------------------------
-  # Overrides
-  #------------------------------------------------------------------------------
-
-  #require rails to use the asset key as the restful parameter. All URLS will be of the form
-  # /asset_event/{object_key}/...
-  def to_param
-    object_key
-  end
+  # Include the object key mixin
+  include TransamObjectKey
 
   #------------------------------------------------------------------------------
   # Callbacks
   #------------------------------------------------------------------------------
-
-  # Always generate a unique asset key before saving to the database
-  before_validation(:on => :create) do
-    generate_unique_key(:object_key)
-  end
 
   # Clear the mapping table when the group is destroyed
   before_destroy { assets.clear }
@@ -52,8 +37,6 @@ class AssetGroup < ActiveRecord::Base
   #------------------------------------------------------------------------------
   # Validations
   #------------------------------------------------------------------------------
-
-  validates :object_key,            :presence => true, :uniqueness => true
   validates :organization,          :presence => true
   validates :name,                  :presence => true, :length => { maximum: 64 }
   validates :code,                  :presence => true, :length => { maximum: 8 }

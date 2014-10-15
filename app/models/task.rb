@@ -1,27 +1,12 @@
 class Task < ActiveRecord::Base
   
-  # Include the unique key mixin
-  include UniqueKey
-
-  #------------------------------------------------------------------------------
-  # Overrides
-  #------------------------------------------------------------------------------
-  
-  #require rails to use the asset key as the restful parameter. All URLS will be of the form
-  # /task/{task_key}/...
-  def to_param
-    object_key
-  end
+  # Include the object key mixin
+  include TransamObjectKey
   
   #------------------------------------------------------------------------------
   # Callbacks
   #------------------------------------------------------------------------------
   after_initialize  :set_defaults
-
-  # Always generate a unique asset key before saving to the database
-  before_validation(:on => :create) do
-    generate_unique_key(:object_key)
-  end
   
   # Associations
   belongs_to :from_organization, :class_name => "Organization", :foreign_key => "from_organization_id"  
@@ -40,7 +25,6 @@ class Task < ActiveRecord::Base
   has_many    :comments,  :as => :commentable, :dependent => :destroy
     
   # Validations on core attributes
-  validates :object_key,            :presence => true, :uniqueness => true
   validates :from_user_id,          :presence => true
   validates :from_organization_id,  :presence => true
   validates :priority_type_id,      :presence => true
@@ -54,7 +38,6 @@ class Task < ActiveRecord::Base
 
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
-    :object_key,
     :from_user_id,
     :from_organization_id, 
     :priority_type_id, 
