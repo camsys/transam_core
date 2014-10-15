@@ -120,14 +120,6 @@ report_types = [
   {:active => 1, :name => 'System Report',        :display_icon_name => "fa fa-cog",          :description => 'System Report.'}
 ]
 
-location_reference_types = [
-  {:active => 1, :name => 'Well Known Text',        :format => "WELL_KNOWN_TEXT", :description => 'Location is determined by a well known text (WKT) string.'},
-  {:active => 1, :name => 'Route/Milepost/Offset',  :format => "LRS",             :description => 'Location is determined by a route milepost and offset.'},
-  {:active => 1, :name => 'Street Address',         :format => "ADDRESS",         :description => 'Location is determined by a geocoded street address.'},
-  {:active => 1, :name => 'Map Location',           :format => "COORDINATE",      :description => 'Location is determined by deriving a location from a map.'},
-  {:active => 1, :name => 'GeoServer',              :format => "GEOSERVER",       :description => 'Location is determined by deriving a location from Geo Server.'}
-]
-
 issue_types = [
   {:active => 1, :name => 'Comment',      :description => 'Suggestion'},
   {:active => 1, :name => 'Enhancement',  :description => 'Enhancement.'},
@@ -174,7 +166,7 @@ notice_types = [
 ]
 
 lookup_tables = %w{asset_event_types condition_types disposition_types cost_calculation_types license_types priority_types
-  file_status_types attachment_types district_types report_types location_reference_types service_status_types
+  file_status_types attachment_types district_types report_types service_status_types
   depreciation_calculation_types task_status_types service_life_calculation_types condition_estimation_types
   issue_types web_browser_types replacement_reason_types roles maintenance_provider_types notice_types
   }
