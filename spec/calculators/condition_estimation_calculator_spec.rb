@@ -37,7 +37,13 @@ RSpec.describe ConditionEstimationCalculator, :type => :calculator do
       expect(test_calculator.slope(1,1,1,1)).to eq(0) #HMM
     end
 
-    # check half integer half float
+    it 'can handle mixed types (point 1)' do
+      expect(test_calculator.slope(0,0,0.5,2.5)).to eq(5.0)
+    end
+
+    it 'can handle mixed types (point 2)' do
+      expect(test_calculator.slope(0.5,0.5,1,2)).to eq(3)
+    end
   end
 
 
