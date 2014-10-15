@@ -1,10 +1,7 @@
 class AssetsController < AssetAwareController
  
   add_breadcrumb "Home", :root_path
-    
-  # Include map helpers into this class
-  include TransamMapMarkers
-  
+      
   # Set the view variabless form the params @asset_type, @asset_subtype, @search_text, @spatial_filter, @view
   before_filter :set_view_vars,     :only => [:index, :map]
   # Don't process cancel buttons  
@@ -143,12 +140,6 @@ class AssetsController < AssetAwareController
     notify_user(:notice, "Asset #{@asset.name} was successfully copied.")
         
     @asset = new_asset
-    Rails.logger.debug @asset.inspect
-    if @asset.geo_locatable? and @asset.mappable?
-      markers = []
-      markers << get_map_marker(@asset, 'asset', true) # make the marker draggable
-      @markers = markers.to_json
-    end
     
     # render the edit view
     respond_to do |format|
@@ -163,19 +154,7 @@ class AssetsController < AssetAwareController
     add_breadcrumb "#{@asset.asset_type.name}".pluralize(2), inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
     add_breadcrumb "#{@asset.asset_subtype.name}", inventory_index_path(:asset_subtype => @asset.asset_subtype)
     add_breadcrumb @asset.asset_tag, inventory_path(@asset)    
-    
-    @page_title = @asset.name
-    @disabled = true
-    markers = []
-    if @asset.geo_locatable? and @asset.mappable?
-      @asset.find_close(DEFAULT_SEARCH_RADIUS, DEFAULT_SEARCH_UNITS).each do |a|
-        markers << get_map_marker(a, a.object_key, false, 0, 'purpleIcon')
-      end
-      # Add the current marker with a high Z index so it shows on top
-      markers << get_map_marker(@asset, 'asset', false, 100) # not draggable
-    end
-    @markers = markers.to_json
-        
+            
     # get the @prev_record_path and @next_record_path view vars
     get_next_and_prev_object_keys(@asset, INDEX_KEY_LIST_VAR)
     @prev_record_path = @prev_record_key.nil? ? "#" : inventory_path(@prev_record_key)
@@ -194,23 +173,12 @@ class AssetsController < AssetAwareController
     add_breadcrumb "#{@asset.asset_subtype.name}", inventory_index_path(:asset_subtype => @asset.asset_subtype)
     add_breadcrumb @asset.asset_tag, inventory_path(@asset)    
     add_breadcrumb "Update master record", edit_inventory_path(@asset)    
-    
-    if @asset.geo_locatable? and @asset.mappable?
-      markers = []
-      markers << get_map_marker(@asset, 'asset', true) # make the marker draggable
-      @markers = markers.to_json
-    end
-    
+        
   end
 
   def update
 
     @asset.updator = current_user
-    if @asset.geo_locatable? and @asset.mappable?
-      markers = []
-      markers << get_map_marker(@asset, 'asset', true) # make the marker draggable
-      @markers = markers.to_json
-    end
 
     add_breadcrumb "#{@asset.asset_type.name}".pluralize(2), inventory_index_path
     add_breadcrumb @asset.name, inventory_path(@asset)    

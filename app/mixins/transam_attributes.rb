@@ -10,7 +10,7 @@
 module TransamAttributes
 
   def asset_allowable_params
-    Asset.allowable_params + GeolocatableAsset.allowable_params
+    Asset.allowable_params
   end
   
   def asset_event_allowable_params

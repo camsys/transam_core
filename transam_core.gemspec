@@ -25,8 +25,6 @@ Gem::Specification.new do |s|
   s.add_dependency "georuby"
   s.add_dependency "high_voltage"
   s.add_dependency "fullcalendar-rails"
-  s.add_dependency 'ruby-units'
-  s.add_dependency 'state_machine'
   #s.add_dependency 'mail', '2.5.4'
   
   # for background processing jobs  

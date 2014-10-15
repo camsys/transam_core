@@ -27,7 +27,12 @@
   %li
     %a{:href => "#chrt", :data =>{:toggle => 'tab'}}
       Charts
-
+      
+  - if SystemConfig.transam_module_loaded? :spatial and @asset.mappable?
+    %li
+      %a{:href => "#map", :data =>{:toggle => 'tab'}}
+        Map
+  
 .tab-content
   .tab-pane.fade#conf
     .tab-content
@@ -53,4 +58,8 @@
   .tab-pane.fade#chrt
     .tab-content
       = render 'charts'
+  - if SystemConfig.transam_module_loaded? :spatial and @asset.mappable?
+    .tab-pane.fade#map
+      .tab-content
+        = render 'map'
             

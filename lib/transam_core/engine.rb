@@ -1,8 +1,5 @@
 require 'devise'
 require 'rolify'
-require 'geocoder'
-require 'ruby-units'
-require 'state_machine'
 
 module TransamCore
   class Engine < ::Rails::Engine
