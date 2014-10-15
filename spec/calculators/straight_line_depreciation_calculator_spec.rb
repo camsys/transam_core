@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe DecliningBalanceDepreciationCalculator, :type => :calculator do
+RSpec.describe StraightLineDepreciationCalculator, :type => :calculator do
 
   class TestOrg < Organization
     def get_policy
@@ -17,11 +17,15 @@ RSpec.describe DecliningBalanceDepreciationCalculator, :type => :calculator do
     @policy_item = create(:policy_item, :policy => @policy, :asset_subtype => @test_asset.asset_subtype)
   end
 
-  let(:test_calculator) { DecliningBalanceDepreciationCalculator.new }
+  let(:test_calculator) { StraightLineDepreciationCalculator.new }
 
   describe '#calculate' do
     it 'calculates' do
-      expect(test_calculator.calculate(@test_asset)).to eq(155)
+      # set percent residual value so easy to predict
+      @policy_item.pcnt_residual_value = 25
+      @policy_item.save
+
+      expect(test_calculator.calculate(@test_asset)).to eq(500)
     end
 
     it 'returns purchase cost if asset is new' do

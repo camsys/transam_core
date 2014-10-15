@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe ServiceLifeCalculator, :type => :calculator do
+  # before(:all) do
+  #   create_list(:condition_type, 5)
+  # end
 
   class TestOrg < Organization
     def get_policy

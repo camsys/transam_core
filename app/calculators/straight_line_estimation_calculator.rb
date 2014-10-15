@@ -35,7 +35,6 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
     scale_factor = (max_rating - condition_threshold) / policy_item.max_service_life_miles
 
     min_slope = [slopes[:condition_slope],slopes[:mileage_slope]*scale_factor].min
-
     est_rating = max_rating + (min_slope * asset.age)
     Rails.logger.debug "est rating = #{est_rating}"
     # make sure we don't go below the minimum. This is possible as the slope can extend infinitely for extreme cases

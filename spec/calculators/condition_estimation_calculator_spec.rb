@@ -36,6 +36,8 @@ RSpec.describe ConditionEstimationCalculator, :type => :calculator do
     it 'can handle a single point' do
       expect(test_calculator.slope(1,1,1,1)).to eq(0) #HMM
     end
+
+    # check half integer half float
   end
 
 

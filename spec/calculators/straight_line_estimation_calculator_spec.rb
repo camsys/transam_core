@@ -2,9 +2,9 @@ require 'rails_helper'
 
 RSpec.describe StraightLineEstimationCalculator, :type => :calculator do
 
-  before(:all) do
-    create_list(:condition_type, 5)
-  end
+  #before(:all) do
+    # FactoryGirl.create_list(:condition_type, 5)
+  #end
 
   class TestOrg < Organization
     def get_policy

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141010153341) do
+ActiveRecord::Schema.define(version: 20141014210236) do
 
   create_table "activity_line_items", force: true do |t|
     t.string   "object_key",         limit: 12
@@ -812,7 +812,7 @@ ActiveRecord::Schema.define(version: 20141010153341) do
     t.string   "object_key",           limit: 12
     t.integer  "organization_type_id"
     t.string   "subject",              limit: 64
-    t.string   "summmary",             limit: 128
+    t.string   "summary",              limit: 128
     t.text     "details"
     t.integer  "notice_type_id"
     t.datetime "display_datetime"
