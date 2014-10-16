@@ -30,7 +30,7 @@ RSpec.describe Uom, :type => :model do
       expect(Uom.convert(1, Uom::METER, Uom::MILE)).to eq(0.0006213699494949495)
     end
     it 'fails to convert' do
-      #expect(Uom.convert(1, Uom::METER, 'monkeys')).to raise_error(ArgumentError)
+      expect { Uom.convert(1, Uom::METER, 'monkeys')}.to raise_error(ArgumentError)
     end
 
   end
