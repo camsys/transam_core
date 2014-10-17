@@ -43,6 +43,7 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
 
   # Estimates the last servicable year for the asset based on the last reported condition. If no
   # condition has been reported, the policy year is returned
+  # returned in FY
   def last_servicable_year(asset)
 
     Rails.logger.debug "StraightLineEstimationCalculator.last_servicable_year(asset)"
@@ -91,7 +92,7 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
 
     # return the last year that the asset is viable
     Rails.logger.debug "years_policy = #{years_policy}, years_mileage = #{years_mileage}, years_condition = #{years_condition}"
-    asset.in_service_date.year + [years_policy, years_mileage, years_condition].min
+    fiscal_year_year_on_date(asset.in_service_date) + [years_policy, years_mileage, years_condition].min
   end
 
   protected
@@ -114,10 +115,7 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
       # reach the condition_threshold value
       years_policy = policy_item.max_service_life_years
 
-      # Age of the asset in years
-      asset_age = asset.age
-
-      Rails.logger.debug "asset_age=#{asset_age}, threshold=#{condition_threshold}, min_rating=#{min_rating}, max_rating=#{max_rating}"
+      Rails.logger.debug "asset.age=#{asset.age}, threshold=#{condition_threshold}, min_rating=#{min_rating}, max_rating=#{max_rating}"
 
       # Assets always rated at the max value when they are new
       x1 = 0
