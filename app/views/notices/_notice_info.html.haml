@@ -1,0 +1,6 @@
+%i.fa.fa-fw.fa-2x.pull-left.media-object{:class => @notice.notice_type.display_icon}
+.media-body
+  = notice_endpoints(@notice)
+  %h4.media-heading{:class => @notice.notice_type.display_class}= notice_title(@notice)
+  %p= @notice.summary.html_safe
+  %p= @notice.details

@@ -138,7 +138,12 @@ Rails.application.routes.draw do
     end
   end
   
-  resources :notices
+  resources :notices do
+    member do
+      get 'reactivate'
+      get 'deactivate'
+    end
+  end
   
   # default root for the site -- will be /org/:organization_id/dashboards
   root :to => 'dashboards#index'

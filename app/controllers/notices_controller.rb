@@ -22,7 +22,7 @@ class NoticesController < OrganizationAwareController
 
   def show
 
-    add_breadcrumb @notice.name, notice_path(@notice)
+    add_breadcrumb @notice.subject, notice_path(@notice)
 
     # get the @prev_record_path and @next_record_path view vars
     get_next_and_prev_object_keys(@notice, INDEX_KEY_LIST_VAR)
@@ -44,15 +44,28 @@ class NoticesController < OrganizationAwareController
 
   end
 
+  # @notice set in before_filter
+  def reactivate
+    add_breadcrumb @notice.subject, notice_path(@notice)
+    add_breadcrumb "Reactivate"
+
+    # shift dates forward but maintain duration.  Set active
+    duration = @notice.duration_in_hours
+    @notice.display_datetime = DateTime.now.beginning_of_hour
+    @notice.end_datetime = @notice.display_datetime.advance(:hours => duration)
+    @notice.active = true
+
+    render "new"
+  end
+
   def edit
     
-    add_breadcrumb @notice.name, notice_path(@notice)
+    add_breadcrumb @notice.object_key, notice_path(@notice)
     add_breadcrumb "Update"
     
   end
   
   def create
-
     @notice = Notice.new(form_params)
 
     respond_to do |format|
@@ -69,8 +82,8 @@ class NoticesController < OrganizationAwareController
 
   def update
 
-    add_breadcrumb @notice.name, notice_path(@notice)
-    add_breadcrumb "Update"
+    add_breadcrumb @notice.object_key, notice_path(@notice)
+    add_breadcrumb "Notice"
 
     respond_to do |format|
       if @notice.update_attributes(form_params)
@@ -79,6 +92,23 @@ class NoticesController < OrganizationAwareController
         format.json { head :no_content }
       else
         format.html { render :action => "edit" }
+        format.json { render :json => @notice.errors, :status => :unprocessable_entity }
+      end
+    end
+  end
+
+  def deactivate
+    
+    add_breadcrumb @notice.subject, notice_path(@notice)
+    add_breadcrumb "Notice"
+
+    respond_to do |format|
+      if @notice.update_attributes(:active => false)
+        notify_user(:notice, "Notice was successfully deactivated.")
+        format.html { redirect_to notice_path(@notice) }
+        format.json { head :no_content }
+      else
+        format.html { render :action => "edit"}
         format.json { render :json => @notice.errors, :status => :unprocessable_entity }
       end
     end

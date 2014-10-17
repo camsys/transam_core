@@ -13,7 +13,9 @@
         - if @notices.empty?
           %p No matching notices found
         - else
-          .col-md-12                
-            = render 'index_table'
+          .col-md-6.col-md-offset-3                
+            %ul.list-group
+              - @notices.each do |n|
+                = render :partial => "dashboards/notice_repeater", :locals => {:notice => n}
 
 = render 'index_scripts'

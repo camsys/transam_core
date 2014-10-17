@@ -1,0 +1,4 @@
+%ul.media-list
+  - notices.each do |n|
+    %li.media
+      = render :partial => "dashboards/notice_repeater", locals: {:notice => n}

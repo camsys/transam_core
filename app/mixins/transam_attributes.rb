@@ -29,6 +29,10 @@ module TransamAttributes
     Message.allowable_params
   end
 
+  def notice_allowable_params
+    Notice.allowable_params
+  end
+
   def organization_allowable_params
     Organization.allowable_params + TransitAgency.allowable_params
   end

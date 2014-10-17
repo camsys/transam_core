@@ -13,7 +13,14 @@
 		  <i class="fa fa-desktop fa-stack-1x fa-inverse"></i>
 		</span>									
 		<p class="lead">System Status</p>
-		<p class="content-body"><i class="fa fa-thumbs-up"></i> System is up and running.<br/>There are no scheduled maintenance windows for this application.</p>
+		<p class="content-body">
+			<% Notice.system_level_notices.each do |notice|%>
+				<%= render :partial => "shared/short_notice", :locals => {:notice => notice} %>
+			<% end %>
+		</p>
+		<% if Notice.system_level_notices.blank? %>
+			<p class="content-body"><i class="fa fa-thumbs-up"></i> System is up and running. There are no scheduled maintenance windows for this application.</p>
+		<% end %>
 	</div>
 	<div class="col-md-4 text-center", style="padding:20px;">
 		<span class="fa-stack fa-5x">

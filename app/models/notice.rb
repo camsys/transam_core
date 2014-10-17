@@ -3,24 +3,61 @@
 # Notice
 #
 # Represents a business activity that is requried to be completed
-#
+# Needs standardizing between active vs end_datetime.  Views use end_datetime
 #------------------------------------------------------------------------------
 class Notice < ActiveRecord::Base
   
   # Include the object key mixin
   include TransamObjectKey
-  
+
   #------------------------------------------------------------------------------
   # Callbacks
   #------------------------------------------------------------------------------
   after_initialize  :set_defaults
+  before_validation :calculate_datetimes_from_virtual_attributes
+  
+  #------------------------------------------------------------------------------
+  # 
+  # Virtual Attributes
+  # 
+  # Build the datetimes from a date and an hour, passed as strings
+  #------------------------------------------------------------------------------
+  def display_datetime_date
+    display_datetime.to_date if display_datetime
+  end
+  def display_datetime_hour
+    display_datetime.hour if display_datetime
+  end
+  def display_datetime_date=(date_str)
+    puts "calling display_datetime_date=(#{date_str})"
+    display_datetime_date = Chronic.parse(date_str).to_date
+  end
+  def display_datetime_hour=(hr_str)
+    puts "display_datetime_hour=(#{hr_str})"
+    display_datetime_hour = hr_str
+  end
+
+  def end_datetime_date
+    end_datetime.to_date if end_datetime
+  end
+  def end_datetime_hour
+    end_datetime.hour if end_datetime
+  end
+  def end_datetime_date=(date_str)
+    end_datetime_date = Chronic.parse(date_str).to_date
+  end
+  def end_datetime_hour=(hr_str)
+    end_datetime_hour = hr_str
+  end
+
 
   #------------------------------------------------------------------------------
   # Associations
   #------------------------------------------------------------------------------
 
   # Every notice has an optional organizatiopn type that that can see the notice
-  belongs_to :organization_type
+  belongs_to :organization
+  belongs_to :notice_type
 
   # Every notice must have a defined type
   belongs_to :notice_type
@@ -29,25 +66,43 @@ class Notice < ActiveRecord::Base
   # Validations
   #------------------------------------------------------------------------------
     
-  validates :organization_type, :presence => true
-  validates :subject,           :presence => true
-  validates :details,           :presence => true
-  validates :display_icon_name, :presence => true
+  validates :subject,           :presence => true, :length => {:maximum => 64}
+  validates :summary,           :presence => true, :length => {:maximum => 254}
   validates :display_datetime,  :presence => true
   validates :end_datetime,      :presence => true
-  validates :event_datetime,    :presence => true
+  validates :notice_type,       :presence => true
+  validate  :validate_end_after_start
 
   # List of allowable form param hash keys  
   FORM_PARAMS = [
-    :organization_type_id,
+    :organization_id,
     :subject,
+    :summary,
     :details,
     :display_icon_name,
-    :display_datetime,
-    :end_datetime,
-    :event_datetime,
+    :display_datetime_date,
+    :display_datetime_hour,
+    :end_datetime_date,
+    :end_datetime_hour,
+    :notice_type_id,
     :active
   ]
+
+  #------------------------------------------------------------------------------
+  #
+  # Scopes
+  #
+  #------------------------------------------------------------------------------
+
+  scope :system_level_notices   , -> { where("organization_id is null")
+                                      .where("end_datetime > ?", DateTime.now)
+                                      .where(:active => true)
+                                     }
+  scope :active_for_organization, -> (org) { where("organization_id is null or organization_id = ?", org.id)
+                                            .where("end_datetime > ?", DateTime.now) 
+                                            .where(:active => true)
+                                           }
+  scope :active, -> { where(:active => true) }                                       
 
   #------------------------------------------------------------------------------
   #
@@ -64,7 +119,13 @@ class Notice < ActiveRecord::Base
   # Instance Methods
   #
   #------------------------------------------------------------------------------
-        
+
+  # Return the duration of a notice's display in hours
+  def duration_in_hours
+    float_duration = (end_datetime - display_datetime)/60/60
+    float_duration.ceil # Round up to nearest hour
+  end
+
   def to_s
     subject
   end
@@ -76,10 +137,43 @@ class Notice < ActiveRecord::Base
   #------------------------------------------------------------------------------
   protected
 
-  # Set resonable defaults for a new organization
+  # Set resonable defaults for a new notice
+  # Datetime attributes are set in the following order
+  # 1. Stored DB datetime
+  # 2. Parsed from form_params
+  # 3. Set as defaults (beginning of the next hour, end of today)
   def set_defaults
-    self.active ||= true
+    self.active = true if self.active.nil?
+    self.display_datetime ||= parsed_display_datetime_from_virtual_attributes || (DateTime.now.beginning_of_hour + 1.hour)
+    self.end_datetime ||= parsed_end_datetime_from_virtual_attributes || display_datetime.end_of_day
   end    
+
+  # Before validating, ensure that we have converted from virtual attributes
+  # to native ones
+  def calculate_datetimes_from_virtual_attributes
+    self.display_datetime = parsed_display_datetime_from_virtual_attributes
+    self.end_datetime     = parsed_end_datetime_from_virtual_attributes
+  end
+
+  # Returns nil if a bad parse
+  def parsed_display_datetime_from_virtual_attributes
+    puts "Parsed Display Datetime with #{display_datetime_date.to_s} #{display_datetime_hour.to_s}"
+    dt = Chronic.parse("#{display_datetime_date} #{display_datetime_hour}")
+    return dt
+  end
+
+  # Returns nil if a bad parse
+  def parsed_end_datetime_from_virtual_attributes
+    dt = Chronic.parse("#{end_datetime_date} #{end_datetime_hour}")
+    puts "Parsed End Datetime with #{end_datetime_date} #{end_datetime_hour}"
+    return dt
+  end
+
+  def validate_end_after_start
+    if end_datetime < display_datetime
+      errors.add(:end_datetime, "must be after start time")
+    end
+  end
   
 end
       
