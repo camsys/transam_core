@@ -27,7 +27,8 @@ Gem::Specification.new do |s|
   s.add_dependency "fullcalendar-rails"
   #s.add_dependency 'mail', '2.5.4'
   s.add_dependency 'unitwise'
-  
+  s.add_dependency 'chronic'
+    
   # for background processing jobs  
   s.add_dependency 'delayed_job_active_record'
   # for running background processes
