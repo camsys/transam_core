@@ -19,10 +19,12 @@ class Notice < ActiveRecord::Base
   # Associations
   #------------------------------------------------------------------------------
 
-  # Every activity has 0 or more orgasnization types that are required to
-  # complete them
+  # Every notice has an optional organizatiopn type that that can see the notice
   belongs_to :organization_type
 
+  # Every notice must have a defined type
+  belongs_to :notice_type
+  
   #------------------------------------------------------------------------------
   # Validations
   #------------------------------------------------------------------------------
