@@ -2,4 +2,87 @@ require 'rails_helper'
 
 RSpec.describe Notice, :type => :model do
   pending "add some examples to (or delete) #{__FILE__}"
+  let(:notice)        {build_stubbed(:notice)}
+  let(:organization)  {build_stubbed(:organization)}
+  #------------------------------------------------------------------------------
+  #
+  # Class Methods
+  #
+  #------------------------------------------------------------------------------
+  
+  describe '.new' do
+    it 'validates the correct fields' do
+      n = Notice.new(subject: nil, details: nil, notice_type: nil, display_datetime: nil, end_datetime: nil, organization: nil)
+      # presence validators
+      expect(n).not_to be_valid
+      expect(n.errors.count).to be(3) # display- and end_datetime have defaults set.  Organization allows nil.
+    end
+
+    it 'accepts valid virtual attributes' do
+      n = Notice.new(subject: "Test", summary: "Summary", notice_type: NoticeType.first, 
+        display_datetime_date: "10-17-2014", display_datetime_hour: "15",
+        end_datetime_date: "10-17-2014", end_datetime_hour: "16")
+
+      expect(n).to be_valid
+      expect(n.display_datetime).to be(DateTime.new(2014, 10, 17, 15))
+      expect(n.end_datetime).to be(DateTime.new(2014, 10, 17, 16))
+    end
+  end
+
+  #------------------------------------------------------------------------------
+  #
+  # Scope Methods
+  #
+  #------------------------------------------------------------------------------
+  
+  # Scopes are tested by changes, since they require changes to the DB
+  describe '.system_level_notices' do
+    it 'returns notices with no organization set' do
+      expect{
+        FactoryGirl.create(:system_notice)
+        }.to change{Notice.system_level_notices.count}.by(1)
+    end
+  end
+
+  describe '.active_for_organization' do
+    it 'returns system notices and organization-specific notices' do
+      expect{
+        FactoryGirl.create(:system_notice)
+        FactoryGirl.create(:notice, organization: organization)
+      }.to change{Notice.active_for_organization(organization).count}.by(2) # 1 for system, 1 for organization
+    end
+  end
+
+  #------------------------------------------------------------------------------
+  #
+  # Instance Methods
+  #
+  #------------------------------------------------------------------------------
+  
+  describe '#duration_in_hours' do
+    it 'returns a whole number' do
+      notice.display_datetime = DateTime.new(2014, 10, 17, 0)
+      notice.end_datetime     = DateTime.new(2014, 10, 17, 10, 30) # 10.5 hours later
+
+      expect(notice.duration_in_hours).to be(11)
+    end
+
+    it 'can handle simultaneous start and end' do
+      notice.display_datetime = DateTime.new(2014, 10, 17, 0)
+      notice.end_datetime     = DateTime.new(2014, 10, 17, 0)
+
+      expect(notice.duration_in_hours).to be(0)
+    end
+  end
+
+  describe '#set_defaults' do
+    it 'sets the active, start and stop attributes' do
+      n = Notice.new
+
+      expect(n.active).to be(true)
+      expect(n.display_datetime).to be(DateTime.now.beginning_of_hour)
+      expect(n.end_datetime).to be(DateTime.now.end_of_day)
+    end
+  end
+
 end

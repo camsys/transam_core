@@ -29,11 +29,9 @@ class Notice < ActiveRecord::Base
     display_datetime.hour if display_datetime
   end
   def display_datetime_date=(date_str)
-    puts "calling display_datetime_date=(#{date_str})"
     display_datetime_date = Chronic.parse(date_str).to_date
   end
   def display_datetime_hour=(hr_str)
-    puts "display_datetime_hour=(#{hr_str})"
     display_datetime_hour = hr_str
   end
 
@@ -94,13 +92,13 @@ class Notice < ActiveRecord::Base
   #
   #------------------------------------------------------------------------------
 
-  scope :system_level_notices   , -> { where("organization_id is null")
+  scope :system_level_notices   , -> { active.where("organization_id is null")
                                       .where("end_datetime > ?", DateTime.now)
-                                      .where(:active => true)
+                                      
                                      }
-  scope :active_for_organization, -> (org) { where("organization_id is null or organization_id = ?", org.id)
+  scope :active_for_organization, -> (org) { active.where("organization_id is null or organization_id = ?", org.id)
                                             .where("end_datetime > ?", DateTime.now) 
-                                            .where(:active => true)
+                                            
                                            }
   scope :active, -> { where(:active => true) }                                       
 
@@ -157,7 +155,6 @@ class Notice < ActiveRecord::Base
 
   # Returns nil if a bad parse
   def parsed_display_datetime_from_virtual_attributes
-    puts "Parsed Display Datetime with #{display_datetime_date.to_s} #{display_datetime_hour.to_s}"
     dt = Chronic.parse("#{display_datetime_date} #{display_datetime_hour}")
     return dt
   end
@@ -165,7 +162,6 @@ class Notice < ActiveRecord::Base
   # Returns nil if a bad parse
   def parsed_end_datetime_from_virtual_attributes
     dt = Chronic.parse("#{end_datetime_date} #{end_datetime_hour}")
-    puts "Parsed End Datetime with #{end_datetime_date} #{end_datetime_hour}"
     return dt
   end
 
