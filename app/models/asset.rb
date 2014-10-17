@@ -342,9 +342,23 @@ class Asset < ActiveRecord::Base
     false
   end
 
-  # return the number of years since the asset was manufactured. It can't be less than 0
+  # returns the number of years since the asset was manufactured. It can't be less than 0
+  # returns in fiscal year
+  # need to rethink as manufacture year is not by fiscal year
   def age(on_date=Date.today)
-    [on_date.year - manufacture_year, 0].max
+    [fiscal_year_year_on_date(on_date) - manufacture_year, 0].max
+  end
+
+  # returns the number of years since the asset was owned. It can't be less than 0
+  # years_owned is currently calculated based off fiscal year
+  def years_owned(on_date=Date.today)
+    [fiscal_year_on_date(on_date) - fiscal_year_on_date(purchase_date), 0].max
+  end
+
+  # returns the number of years the asset is in service. It can't be less than 0
+  # years_in_service is currently calculated based off fiscal year
+  def years_in_service(on_date=Date.today)
+    [fiscal_year_on_date(on_date) - fiscal_year_on_date(in_service_date), 0].max
   end
 
   # Returns the year that the asset was placed in service
