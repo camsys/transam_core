@@ -1,6 +1,7 @@
 require 'devise'
 require 'rolify'
 require 'unitwise'
+require 'chronic'
 
 module TransamCore
   class Engine < ::Rails::Engine
