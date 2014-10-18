@@ -361,9 +361,9 @@ class Asset < ActiveRecord::Base
     [fiscal_year_on_date(on_date) - fiscal_year_on_date(in_service_date), 0].max
   end
 
-  # Returns the year that the asset was placed in service
+  # Returns the fiscal year that the asset was placed in service
   def in_service_year
-    in_service_date.year unless in_service_date.nil?
+    fiscal_year_on_date(in_service_date) unless in_service_date.nil?
   end
 
   # returns the list of events associated with this asset ordered by date, newest first
