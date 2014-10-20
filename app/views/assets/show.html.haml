@@ -24,5 +24,8 @@
       .panel-body
         = render 'details'
         
-= render 'show_scripts'
-= render 'scripts'
+:javascript
+  
+  $(document).ready(function() {            
+    transam.make_same_height('.header-part');    
+  });

@@ -1,65 +1,15 @@
 %ul.nav.nav-tabs
-  %li
-    %a{:href => "#conf", :data =>{:toggle => 'tab'}}
-      Configuration
-  %li
-    %a{:href => "#purc", :data =>{:toggle => 'tab'}}
-      Purchase
-  %li
-    %a{:href => "#fta", :data =>{:toggle => 'tab'}}
-      FTA Reporting
-  %li
-    %a{:href => "#hist", :data =>{:toggle => 'tab'}}
-      %span.badge.pull-right= @asset.asset_events.count
-      = "History"
-  %li
-    %a{:href => "#comm", :data =>{:toggle => 'tab'}}
-      %span.badge.pull-right= @asset.comments.count
-      = "Comments"
-  %li
-    %a{:href => "#docs", :data =>{:toggle => 'tab'}}
-      %span.badge.pull-right= @asset.documents.count
-      = "Documents"
-  %li
-    %a{:href => "#imag", :data =>{:toggle => 'tab'}}
-      %span.badge.pull-right= @asset.images.count
-      = "Photos"
-  %li
-    %a{:href => "#chrt", :data =>{:toggle => 'tab'}}
-      Charts
-      
-  - if SystemConfig.transam_module_loaded? :spatial and @asset.mappable?
-    %li
-      %a{:href => "#map", :data =>{:toggle => 'tab'}}
-        Map
+  - # Load module specific tabs if they exist
+  - SystemConfig.transam_module_names.each do |mod|
+    = render :partial => "assets/#{mod}_detail_tabs" rescue nil
   
 .tab-content
-  .tab-pane.fade#conf
-    .tab-content
-      = render "#{@asset.class.name.underscore}_configuration"
-  .tab-pane.fade#purc
-    .tab-content
-      = render "#{@asset.class.name.underscore}_purchase"
-  .tab-pane.fade#fta
-    .tab-content
-      = render "#{@asset.class.name.underscore}_fta"
-  .tab-pane.fade#hist
-    .tab-content
-      = render 'history'
-  .tab-pane.fade#comm
-    .tab-content
-      = render 'comments'
-  .tab-pane.fade#docs
-    .tab-content
-      = render 'documents'
-  .tab-pane.fade#imag
-    .tab-content
-      = render 'photos'
-  .tab-pane.fade#chrt
-    .tab-content
-      = render 'charts'
-  - if SystemConfig.transam_module_loaded? :spatial and @asset.mappable?
-    .tab-pane.fade#map
-      .tab-content
-        = render 'map'
-            
+  - # Load module specific tab content if they exist
+  - SystemConfig.transam_module_names.each do |mod|
+    = render :partial => "assets/#{mod}_detail_tabs_content" rescue nil
+
+= render 'detail_scripts'
+
+- # Load module specific tab if they exist
+- SystemConfig.transam_module_names.each do |mod|
+  = render :partial => "assets/#{mod}_detail_tabs_scripts" rescue nil

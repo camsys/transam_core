@@ -1,0 +1,56 @@
+<script type="text/javascript">
+
+  ///////// CHART RELATED FUNCTIONS ////////////////////////////////
+  var condition_chart;
+
+  // Set callback to run when API is loaded
+  google.setOnLoadCallback(draw_condition_chart);
+
+  // Capture the show event and re-render the chart
+  $("a[href='#chrt']").on('shown.bs.tab', function(e) {
+    draw_condition_chart();
+  });
+
+  // Called when the Visualization API is loaded.
+  function draw_condition_chart() {
+
+    // Create a data table
+    var condition_data = new google.visualization.DataTable();
+    condition_data.addColumn('date', 'Date');
+    condition_data.addColumn('number', 'Rating');
+    condition_data.addRows([
+  <% @asset.condition_updates.each_with_index do |x, idx| %>
+  	<% if idx > 0 %>
+		<%= raw "," %>
+    <% end %> 
+    <%= raw "[new Date(#{js_date(x.event_date)}), #{x.assessed_rating}]" %> 
+  <% end %>
+    ]);
+  
+    // specify options
+    var condition_options = {
+      title: 'Condition History',
+      hAxis: {title: 'Year'},
+      vAxis: {title: 'Rating', minValue: 1.0, maxValue: 5.0},
+      colors: ['blue'],
+      legend: 'none',
+      trendlines: { 0: {
+        color: 'blue',
+        lineWidth: 5,
+        opacity: 0.25
+      } }    // Draw a trendline for data series 0.      
+    };
+  
+    // Instantiate our chart object.
+    condition_chart = new google.visualization.ScatterChart(document.getElementById('condition_chart_div'));
+  
+    // Draw our chart with the created data and options
+    condition_chart.draw(condition_data, condition_options);
+  };
+  
+
+  ///////// END OF CHART RELATED FUNCTIONS /////////////////////////
+    
+</script>
+
+

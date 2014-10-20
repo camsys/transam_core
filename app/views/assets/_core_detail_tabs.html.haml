@@ -1,0 +1,25 @@
+%li
+  %a{:href => "#conf", :data =>{:toggle => 'tab'}}
+    Configuration
+%li
+  %a{:href => "#purc", :data =>{:toggle => 'tab'}}
+    Purchase
+%li
+  %a{:href => "#hist", :data =>{:toggle => 'tab'}}
+    %span.badge.pull-right= @asset.asset_events.count
+    = "History"
+%li
+  %a{:href => "#comm", :data =>{:toggle => 'tab'}}
+    %span.badge.pull-right= @asset.comments.count
+    = "Comments"
+%li
+  %a{:href => "#docs", :data =>{:toggle => 'tab'}}
+    %span.badge.pull-right= @asset.documents.count
+    = "Documents"
+%li
+  %a{:href => "#imag", :data =>{:toggle => 'tab'}}
+    %span.badge.pull-right= @asset.images.count
+    = "Photos"
+%li
+  %a{:href => "#chrt", :data =>{:toggle => 'tab'}}
+    Charts

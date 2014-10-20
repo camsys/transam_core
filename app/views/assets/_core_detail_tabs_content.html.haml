@@ -1,0 +1,22 @@
+.tab-pane.fade#conf
+  .tab-content
+    = render "#{@asset.class.name.underscore}_configuration"
+.tab-pane.fade#purc
+  .tab-content
+    = render "#{@asset.class.name.underscore}_purchase"
+.tab-pane.fade#hist
+  .tab-content
+    = render 'history'
+.tab-pane.fade#comm
+  .tab-content
+    = render 'comments'
+.tab-pane.fade#docs
+  .tab-content
+    = render 'documents'
+.tab-pane.fade#imag
+  .tab-content
+    = render 'photos'
+.tab-pane.fade#chrt
+  .tab-content
+    = render 'charts'
+            

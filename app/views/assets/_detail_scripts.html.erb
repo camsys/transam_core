@@ -1,0 +1,26 @@
+<script type="text/javascript">
+  
+  var user_tab_key = 'assets_tab_key';
+  
+  $(document).ready(function() {
+
+    // Manage the tabs
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+      // save the latest tab
+      var this_tab = $(this).attr('href');
+      transam.set_ui_key_value(user_tab_key, this_tab);
+    });
+  });
+  
+  $(function() {
+    // Find the previously selected tab
+    var selected_tab = $('a[href='+transam.get_ui_key_value(user_tab_key)+']');
+    // Default to the first tab if no tab is stored or stored tab isn't available to current user
+    if (selected_tab.length) {
+      selected_tab.tab('show');
+    } else {
+      $('a[data-toggle="tab"]:first').tab('show');
+    }   
+  }); 
+  
+</script>

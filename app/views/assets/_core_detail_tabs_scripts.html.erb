@@ -1,0 +1,59 @@
+<script type="text/javascript">
+
+  // Laod the google visualizations
+  google.load("visualization", "1", {
+    'packages': ['corechart']
+  });
+
+  // Core page loading functions
+  $(document).ready(function() {
+
+    // Form Validations
+    $.validator.setDefaults({
+        highlight: function(element) {
+            $(element).closest('.form-group').addClass('has-error');
+        },
+        unhighlight: function(element) {
+            $(element).closest('.form-group').removeClass('has-error');
+        },
+        errorElement: 'span',
+        errorClass: 'help-block',
+        errorPlacement: function(error, element) {
+            if(element.parent('.input-group').length) {
+                error.insertAfter(element.parent());
+            } else {
+                error.insertAfter(element);
+            }
+        }
+    }); 
+  
+
+	// Use validation plugin to validate the forms before submittal
+	$('#new_comment').validate({
+	  submitHandler: function(form) {
+	    $(form).submit();
+	  }
+	});
+	$('#new_image').validate({
+	  submitHandler: function(form) {
+	    $(form).submit();
+	  }
+	});
+	$('#new_document').validate({
+	  submitHandler: function(form) {
+	    $(form).submit();
+	  }
+	});
+	
+	// Enable the lightbox
+	$('[data-lightbox]').simpleLightbox();
+
+  });
+    
+</script>
+
+<%= render 'timeline_scripts' %>
+<%= render 'chart_scripts' %>
+
+
+
