@@ -21,3 +21,4 @@ rerun.txt
 pickle-email-*.html
 .project
 config/initializers/secret_token.rb
+spec/dummy/db/schema.rb

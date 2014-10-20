@@ -1,14 +1,15 @@
 language: ruby
 rvm:
-  - 2.1.1
+- 2.1.1
 branches:
   only:
-    - master
+  - master
 env:
-  - TEST_SUITE=rspec
-  - TEST_SUITE=cucumber
-
-# uncomment this line if your project needs to run something other than `rake`:
-script: 
-  - bundle exec rake app:prepare_rspec # prepare the database for testing
-  - bundle exec $TEST_SUITE
+- TEST_SUITE=rspec
+- TEST_SUITE=cucumber
+script:
+- bundle exec rake app:prepare_rspec
+- bundle exec $TEST_SUITE
+before_install:
+- openssl aes-256-cbc -K $encrypted_1ed3e5c11482_key -iv $encrypted_1ed3e5c11482_iv
+  -in schema.rb.enc -out spec/dummy/db/schema.rb -d
