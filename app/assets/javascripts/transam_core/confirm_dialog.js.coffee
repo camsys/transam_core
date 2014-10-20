@@ -10,10 +10,11 @@ $.rails.allowAction = (element) ->
   $link = element.clone()
     # We don't necessarily want the same styling as the original link/button.
     .removeAttr('class')
+    .removeAttr('style')
     # We don't want to pop up another confirmation (recursion)
     .removeAttr('data-confirm')
     # We want a button
-    .addClass('btn').addClass('btn-danger')
+    .addClass('btn').addClass('btn-success')
     # We want it to sound confirmy
     .html("Yes")
 
@@ -26,7 +27,7 @@ $.rails.allowAction = (element) ->
                         <h3>#{message}</h3>
                      </div>
                     <div class="modal-footer">
-                      <a data-dismiss="modal" class="btn btn-success">Cancel</a>
+                      <a data-dismiss="modal" class="btn btn-default">Cancel</a>
                     </div>
                   </div>
                </div>
