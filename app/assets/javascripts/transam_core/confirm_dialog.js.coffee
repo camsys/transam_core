@@ -19,7 +19,7 @@ $.rails.allowAction = (element) ->
 
   # Create the modal box with the message
   modal_html = """
-               <div class="modal" id="myModal">
+               <div class="modal" id="confirm_dialog_modal">
                  <div class="modal-dialog">
                    <div class='modal-content'>
                      <div class='modal-body'>
@@ -35,6 +35,7 @@ $.rails.allowAction = (element) ->
   $modal_html = $(modal_html)
   # Add the new button to the modal box
   $modal_html.find('.modal-footer').append($link)
+  element.after($modal_html)
   # Pop it up
   $modal_html.modal()
   # Prevent the original link from working

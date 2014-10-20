@@ -44,7 +44,7 @@ var transam = new function() {
 	  	});	 
 	};
 	// Show a popup message in the UI
-	var show_popup_message = function(title, message, type) {
+	this.show_popup_message = function(title, message, type) {
 		var class_name = 'alert alert-info';
 		if (type == 'error') {
 			class_name = 'alert alert-danger';
