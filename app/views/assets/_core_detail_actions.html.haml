@@ -1,0 +1,28 @@
+- if can? :update, @asset
+  - # Add in event actions. These are discovered from the asset
+  %li.text-left.dropdown-submenu
+    = link_to '#' do
+      %i.fa.fa-fw.fa-edit
+      = " Update"
+    %ul.dropdown-menu
+      - @asset.event_classes.each do |klass|
+        - unless klass.name == 'DispositionUpdateEvent'
+          %li.text-left
+            = link_to new_inventory_asset_event_path(@asset, :event_type => klass.asset_event_type.id) do
+              %i.fa.fa-fw{:class => klass.asset_event_type.display_icon_name}
+              = klass.asset_event_type.name
+
+  - # Add in asset groups if 1 or more asset groups are defined for this org              
+  - if @organization.asset_groups.count > 0
+    %li.divider
+    %li.text-left.dropdown-submenu
+      = link_to '#' do
+        %i.fa.fa-fw.fa-tags
+        = " Add to group"
+      %ul.dropdown-menu
+        - @organization.asset_groups.each do |grp|
+          - unless @asset.asset_groups.include? grp
+            %li.text-left
+              = link_to add_to_group_inventory_path(@asset, :asset_group => grp) do
+                %i.fa.fa-fw.fa-tag
+                = grp.name
