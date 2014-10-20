@@ -10,7 +10,8 @@ class NoticesController < OrganizationAwareController
       
   def index
 
-    @notices = Notice.all   
+    @notices = Notice.all.order(:display_datetime) 
+      
     # cache the set of asset ids in case we need them later
     cache_list(@notices, INDEX_KEY_LIST_VAR)
 
@@ -22,7 +23,7 @@ class NoticesController < OrganizationAwareController
 
   def show
 
-    add_breadcrumb @notice.subject, notice_path(@notice)
+    add_breadcrumb @notice
 
     # get the @prev_record_path and @next_record_path view vars
     get_next_and_prev_object_keys(@notice, INDEX_KEY_LIST_VAR)
@@ -46,7 +47,7 @@ class NoticesController < OrganizationAwareController
 
   # @notice set in before_filter
   def reactivate
-    add_breadcrumb @notice.subject, notice_path(@notice)
+    add_breadcrumb @notice, notice_path(@notice)
     add_breadcrumb "Reactivate"
 
     # shift dates forward but maintain duration.  Set active
@@ -60,12 +61,14 @@ class NoticesController < OrganizationAwareController
 
   def edit
     
-    add_breadcrumb @notice.object_key, notice_path(@notice)
+    add_breadcrumb @notice, notice_path(@notice)
     add_breadcrumb "Update"
     
   end
   
   def create
+
+    add_breadcrumb "New"
     @notice = Notice.new(form_params)
 
     respond_to do |format|
@@ -82,7 +85,7 @@ class NoticesController < OrganizationAwareController
 
   def update
 
-    add_breadcrumb @notice.object_key, notice_path(@notice)
+    add_breadcrumb @notice, notice_path(@notice)
     add_breadcrumb "Notice"
 
     respond_to do |format|
@@ -99,7 +102,7 @@ class NoticesController < OrganizationAwareController
 
   def deactivate
     
-    add_breadcrumb @notice.subject, notice_path(@notice)
+    add_breadcrumb @notice, notice_path(@notice)
     add_breadcrumb "Notice"
 
     respond_to do |format|
@@ -127,7 +130,7 @@ class NoticesController < OrganizationAwareController
   private
   # Never trust parameters from the scary internet, only allow the white list through.
   def form_params
-    params.require(:notice).permit(notice_allowable_params)
+    params.require(:notice).permit(Notice.allowable_params)
   end
 
   def get_notice
