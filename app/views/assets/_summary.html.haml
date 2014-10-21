@@ -1,1 +1,3 @@
-= render :partial => 'assets/asset_info_detail', :locals => {:asset => @asset}
+- # Load module specific details if they exist
+- SystemConfig.transam_module_names.each do |mod|
+  = render :partial => "assets/#{mod}_asset_info_detail", locals: {:asset => @asset} rescue nil
