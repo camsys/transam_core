@@ -10,6 +10,11 @@ class Notice < ActiveRecord::Base
   # Include the object key mixin
   include TransamObjectKey
 
+  attr_accessor :display_date
+  attr_accessor :display_hour
+  attr_accessor :end_date
+  attr_accessor :end_hour
+
   #------------------------------------------------------------------------------
   # Callbacks
   #------------------------------------------------------------------------------
@@ -29,10 +34,12 @@ class Notice < ActiveRecord::Base
     display_datetime.hour if display_datetime
   end
   def display_datetime_date=(date_str)
-    display_datetime_date = Chronic.parse(date_str).to_date
+    Rails.logger.debug "in display_datetime_date #{date_str}"
+    self.display_date = Chronic.parse(date_str).to_date
   end
   def display_datetime_hour=(hr_str)
-    display_datetime_hour = hr_str
+    Rails.logger.debug "in display_datetime_hour #{hr_str}"
+    self.display_hour = hr_str
   end
 
   def end_datetime_date
@@ -41,11 +48,14 @@ class Notice < ActiveRecord::Base
   def end_datetime_hour
     end_datetime.hour if end_datetime
   end
+  
   def end_datetime_date=(date_str)
-    end_datetime_date = Chronic.parse(date_str).to_date
+    Rails.logger.debug "in end_datetime_date #{date_str}"
+    self.end_date = Chronic.parse(date_str).to_date
   end
   def end_datetime_hour=(hr_str)
-    end_datetime_hour = hr_str
+    Rails.logger.debug "in end_datetime_hour #{hr_str}"
+    self.end_hour = hr_str
   end
 
 
@@ -92,14 +102,8 @@ class Notice < ActiveRecord::Base
   #
   #------------------------------------------------------------------------------
 
-  scope :system_level_notices   , -> { active.where("organization_id is null")
-                                      .where("end_datetime > ?", DateTime.now)
-                                      
-                                     }
-  scope :active_for_organization, -> (org) { active.where("organization_id is null or organization_id = ?", org.id)
-                                            .where("end_datetime > ?", DateTime.now) 
-                                            
-                                           }
+  scope :system_level_notices, -> { active.where("organization_id IS null").where("end_datetime > ?", DateTime.now) }
+  scope :active_for_organization, -> (org) { active.where("organization_id IS null OR organization_id = ?", org.id).where("end_datetime > ?", DateTime.now) }
   scope :active, -> { where(:active => true) }                                       
 
   #------------------------------------------------------------------------------
@@ -120,7 +124,7 @@ class Notice < ActiveRecord::Base
 
   # Return the duration of a notice's display in hours
   def duration_in_hours
-    float_duration = (end_datetime - display_datetime)/60/60
+    float_duration = (end_datetime - display_datetime)/3600
     float_duration.ceil # Round up to nearest hour
   end
 
@@ -155,13 +159,17 @@ class Notice < ActiveRecord::Base
 
   # Returns nil if a bad parse
   def parsed_display_datetime_from_virtual_attributes
-    dt = Chronic.parse("#{display_datetime_date} #{display_datetime_hour}")
+    Rails.logger.debug "in parsed_display_datetime_from_virtual_attributes: #{display_date} #{display_hour}"
+    dt = Chronic.parse("#{display_date} #{display_hour}")
+    Rails.logger.debug "parsed value = #{dt}"
     return dt
   end
 
   # Returns nil if a bad parse
   def parsed_end_datetime_from_virtual_attributes
-    dt = Chronic.parse("#{end_datetime_date} #{end_datetime_hour}")
+    Rails.logger.debug "in parsed_end_datetime_from_virtual_attributes #{end_date} #{end_hour}"
+    dt = Chronic.parse("#{end_date} #{end_hour}")
+    Rails.logger.debug "parsed value = #{dt}"
     return dt
   end
 
