@@ -1,4 +1,4 @@
-= link_to notice_path(notice), :class => 'list-group-item' do
+= link_to notices_path, :class => 'list-group-item' do
   %i.fa.fa-fw.fa-2x.pull-left.media-object{:class => notice.notice_type.display_icon}
   .media-body
     %h4.media-heading{:class => notice.notice_type.display_class}= notice.subject

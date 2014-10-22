@@ -1,4 +1,16 @@
-%ul.media-list
-  - notices.each do |n|
-    %li.media
-      = render :partial => "dashboards/notice_repeater", locals: {:notice => n}
+:ruby
+  notices = Notice.active_for_organization(@organization).order(:display_datetime)
+
+.panel.panel-primary{:style => 'height: 200px;overflow-y: auto;'}  
+  .panel-heading
+    .pull-right
+      %span.badge= notices.count
+    Notices
+  - if notices.empty?
+    .panel-body
+      %p= "No notices."
+  - else
+    %ul.media-list
+      - notices.each do |n|
+        %li.media
+          = render :partial => "shared/notice_detail", locals: {:notice => n}

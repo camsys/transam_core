@@ -73,6 +73,7 @@ Rails.application.routes.draw do
   end
   
   resources :asset_groups
+  resources :general_ledger_accounts
   
   resources :tasks do
     resources :comments
@@ -138,7 +139,7 @@ Rails.application.routes.draw do
     end
   end
   
-  resources :notices do
+  resources :notices, :only => [:index, :create, :update, :edit, :new, :destroy] do
     member do
       get 'reactivate'
       get 'deactivate'

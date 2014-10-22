@@ -13,30 +13,13 @@ class NoticesController < OrganizationAwareController
     @notices = Notice.all.order(:display_datetime) 
       
     # cache the set of asset ids in case we need them later
-    cache_list(@notices, INDEX_KEY_LIST_VAR)
+    #cache_list(@notices, INDEX_KEY_LIST_VAR)
 
     respond_to do |format|
       format.html # index.html.erb
       format.json { render :json => @notices }
     end
   end
-
-  def show
-
-    add_breadcrumb @notice
-
-    # get the @prev_record_path and @next_record_path view vars
-    get_next_and_prev_object_keys(@notice, INDEX_KEY_LIST_VAR)
-    @prev_record_path = @prev_record_key.nil? ? "#" : notice_path(@prev_record_key)
-    @next_record_path = @next_record_key.nil? ? "#" : notice_path(@next_record_key)
-    
-    respond_to do |format|
-      format.html # show.html.erb
-      format.js
-      format.json { render :json => @notice }
-    end
-  end
-
   
   def new
 
@@ -74,7 +57,7 @@ class NoticesController < OrganizationAwareController
     respond_to do |format|
       if @notice.save
         notify_user(:notice, "Notice was successfully created.")
-        format.html { redirect_to notice_url(@notice) }
+        format.html { redirect_to notices_url }
         format.json { render :json => @notice, :status => :created, :location => @notice }
       else
         format.html { render :action => "new" }
@@ -91,7 +74,7 @@ class NoticesController < OrganizationAwareController
     respond_to do |format|
       if @notice.update_attributes(form_params)
         notify_user(:notice, "Notice was successfully updated.")
-        format.html { redirect_to notice_url(@notice) }
+        format.html { redirect_to notices_url }
         format.json { head :no_content }
       else
         format.html { render :action => "edit" }
