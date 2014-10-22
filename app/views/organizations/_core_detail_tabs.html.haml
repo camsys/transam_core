@@ -1,0 +1,11 @@
+%li
+  %a{:href => "#service", :data =>{:toggle => 'tab'}}
+    = "Services"
+- unless @org.assets.empty?
+  %li
+    %a{:href => "#assets", :data =>{:toggle => 'tab'}}
+      = "Asset Summary"
+%li
+  %a{:href => "#users", :data =>{:toggle => 'tab'}}
+    %span.badge.pull-right= @org.users.count
+    = "Users"

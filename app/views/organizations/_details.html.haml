@@ -1,32 +1,13 @@
 %ul.nav.nav-tabs
-  %li
-    %a{:href => "#service", :data =>{:toggle => 'tab'}}
-      = "Services"
-  - unless @org.assets.empty?
-    %li
-      %a{:href => "#assets", :data =>{:toggle => 'tab'}}
-        = "Asset Summary"
-  - if SystemConfig.transam_module_loaded? :spatial
-    %li
-      %a{:href => "#map", :data =>{:toggle => 'tab'}}
-        = "Map"
-  %li
-    %a{:href => "#users", :data =>{:toggle => 'tab'}}
-      %span.badge.pull-right= @org.users.count
-      = "Users"
-
+  - # Load module specific tabs if they exist
+  - SystemConfig.transam_module_names.each do |mod|
+    = render :partial => "organizations/#{mod}_detail_tabs" rescue nil
 .tab-content
-  .tab-pane.fade#service
-    .tab-content
-      = render 'services'
-  - unless @org.assets.empty?
-    .tab-pane.fade#assets
-      .tab-content
-        = render 'asset_summary'
-  - if SystemConfig.transam_module_loaded? :spatial
-    .tab-pane.fade#map
-      .tab-content
-        = render 'map'
-  .tab-pane.fade#users
-    .tab-content
-      = render 'users/index_table'
+  - # Load module specific tab content if they exist
+  - SystemConfig.transam_module_names.each do |mod|
+    = render :partial => "organizations/#{mod}_detail_tabs_content" rescue nil
+
+= render 'detail_scripts'
+- # Load module specific tab if they exist
+- SystemConfig.transam_module_names.each do |mod|
+  = render :partial => "organizations/#{mod}_detail_tabs_scripts" rescue nil

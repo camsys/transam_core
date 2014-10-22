@@ -12,3 +12,6 @@
     = format_field("Address", format_as_address(org) )
     = format_field("Phone", format_as_phone_number(org.phone) )
     = format_field("Fax", format_as_phone_number(org.fax) )
+  - # Load module specific details if they exist
+  - SystemConfig.transam_module_names.each do |mod|
+    = render :partial => "organizations/#{mod}_organization_summary", locals: {:asset => @asset} rescue nil
