@@ -5,7 +5,7 @@ module NoticesHelper
 
   def notice_title(notice)
     notice_title = notice.subject
-    if notice.end_datetime < DateTime.now or not notice.active
+    if notice.end_datetime < DateTime.current or not notice.active
       notice_title << "<small class='text-danger'> (Inactive)</small>"
     end
     return notice_title.html_safe

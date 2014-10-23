@@ -80,8 +80,8 @@ RSpec.describe Notice, :type => :model do
       n = Notice.new
 
       expect(n.active).to be(true)
-      expect(n.display_datetime).to eq(DateTime.now.beginning_of_hour)
-      expect(n.end_datetime).to eq(DateTime.now.end_of_day.in_time_zone)
+      expect(n.display_datetime).to eq(DateTime.current.beginning_of_hour)
+      expect(n.end_datetime).to eq(DateTime.current.end_of_day)
     end
   end
 

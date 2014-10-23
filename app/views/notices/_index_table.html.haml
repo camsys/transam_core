@@ -15,13 +15,13 @@
         %td.right= format_as_date_time(notice.end_datetime)
         - if can? :update, notice
           %td.center
-            - if notice and notice.end_datetime > DateTime.now and notice.active
+            - if notice and notice.end_datetime > DateTime.current and notice.active
               = link_to edit_notice_path(notice) do
                 %i.fa.fa-fw.fa-edit.action-icon.text-info
-            - if notice.end_datetime > DateTime.now and notice.active
+            - if notice.end_datetime > DateTime.current and notice.active
               = link_to deactivate_notice_path(notice) do
                 %i.fa.fa-fw.fa-ban.action-icon.text-warning
-            - if notice.end_datetime < DateTime.now or not notice.active
+            - if notice.end_datetime < DateTime.current or not notice.active
               = link_to reactivate_notice_path(notice) do
                 %i.fa.fa-fw.fa-check.action-icon.text-success
             - if can? :delete, notice
