@@ -102,8 +102,8 @@ class Notice < ActiveRecord::Base
   #
   #------------------------------------------------------------------------------
 
-  scope :system_level_notices, -> { active.where("organization_id IS null").where("end_datetime > ?", DateTime.now) }
-  scope :active_for_organization, -> (org) { active.where("organization_id IS null OR organization_id = ?", org.id).where("end_datetime > ?", DateTime.now) }
+  scope :system_level_notices, -> { active.where("organization_id IS null").where("end_datetime > ?", DateTime.current) }
+  scope :active_for_organization, -> (org) { active.where("organization_id IS null OR organization_id = ?", org.id).where("end_datetime > ?", DateTime.current) }
   scope :active, -> { where(:active => true) }                                       
 
   #------------------------------------------------------------------------------
@@ -146,15 +146,15 @@ class Notice < ActiveRecord::Base
   # 3. Set as defaults (beginning of the next hour, end of today)
   def set_defaults
     self.active = true if self.active.nil?
-    self.display_datetime ||= parsed_display_datetime_from_virtual_attributes || (DateTime.now.beginning_of_hour + 1.hour)
+    self.display_datetime ||= parsed_display_datetime_from_virtual_attributes || (DateTime.current.beginning_of_hour)
     self.end_datetime ||= parsed_end_datetime_from_virtual_attributes || display_datetime.end_of_day
   end    
 
   # Before validating, ensure that we have converted from virtual attributes
   # to native ones
   def calculate_datetimes_from_virtual_attributes
-    self.display_datetime = parsed_display_datetime_from_virtual_attributes
-    self.end_datetime     = parsed_end_datetime_from_virtual_attributes
+    self.display_datetime ||= parsed_display_datetime_from_virtual_attributes
+    self.end_datetime     ||= parsed_end_datetime_from_virtual_attributes
   end
 
   # Returns nil if a bad parse

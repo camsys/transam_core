@@ -35,7 +35,7 @@ class NoticesController < OrganizationAwareController
 
     # shift dates forward but maintain duration.  Set active
     duration = @notice.duration_in_hours
-    @notice.display_datetime = DateTime.now.beginning_of_hour
+    @notice.display_datetime = DateTime.current.beginning_of_hour
     @notice.end_datetime = @notice.display_datetime.advance(:hours => duration)
     @notice.active = true
 

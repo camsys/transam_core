@@ -5,17 +5,17 @@
       %span.caret
     %ul.dropdown-menu{:role => 'menu'}
 
-      - if can? :update, @notice and @notice.end_datetime > DateTime.now and @notice.active
+      - if can? :update, @notice and @notice.end_datetime > DateTime.current and @notice.active
         %li
           = link_to edit_notice_path(@notice) do
             %i.fa.fa-fw.fa-edit
             = " Update this notice"
-      - if can? :update, @notice and @notice.end_datetime > DateTime.now and @notice.active
+      - if can? :update, @notice and @notice.end_datetime > DateTime.current and @notice.active
         %li
           = link_to deactivate_notice_path(@notice) do
             %i.fa.fa-fw.fa-ban
             = " Deactivate this notice"
-      - if can? :update, Notice and (@notice.end_datetime < DateTime.now or not @notice.active)
+      - if can? :update, Notice and (@notice.end_datetime < DateTime.current or not @notice.active)
         %li
           = link_to reactivate_notice_path(@notice) do
             %i.fa.fa-fw.fa-check
