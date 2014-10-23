@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe Notice, :type => :model do
-  pending "add some examples to (or delete) #{__FILE__}"
   let(:notice)        {build_stubbed(:notice)}
   let(:organization)  {build_stubbed(:organization)}
   #------------------------------------------------------------------------------
@@ -15,7 +14,8 @@ RSpec.describe Notice, :type => :model do
       n = Notice.new(subject: nil, details: nil, notice_type: nil, display_datetime: nil, end_datetime: nil, organization: nil)
       # presence validators
       expect(n).not_to be_valid
-      expect(n.errors.count).to be(3) # display- and end_datetime have defaults set.  Organization allows nil.
+      # display- and end_datetime have defaults set, and organization allows nil.  Leaves three invalid fields
+      expect(n.errors.count).to be(3) 
     end
 
     it 'accepts valid virtual attributes' do
@@ -24,8 +24,8 @@ RSpec.describe Notice, :type => :model do
         end_datetime_date: "10-17-2014", end_datetime_hour: "16")
 
       expect(n).to be_valid
-      expect(n.display_datetime).to be(DateTime.new(2014, 10, 17, 15))
-      expect(n.end_datetime).to be(DateTime.new(2014, 10, 17, 16))
+      expect(n.display_datetime).to eq(Time.new(2014, 10, 17, 15))
+      expect(n.end_datetime).to eq(Time.new(2014, 10, 17, 16))
     end
   end
 
@@ -80,8 +80,8 @@ RSpec.describe Notice, :type => :model do
       n = Notice.new
 
       expect(n.active).to be(true)
-      expect(n.display_datetime).to be(DateTime.now.beginning_of_hour)
-      expect(n.end_datetime).to be(DateTime.now.end_of_day)
+      expect(n.display_datetime).to eq(DateTime.now.beginning_of_hour)
+      expect(n.end_datetime).to eq(DateTime.now.end_of_day.in_time_zone)
     end
   end
 
