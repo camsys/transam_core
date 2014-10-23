@@ -1,16 +1,15 @@
-- if can? :update, @org
-  .btn-group.pull-right.panel-action
-    %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
-      I want to  
-      %span.caret
-    %ul.dropdown-menu{:role => 'menu'}
-    
-      - # Load module specific actions if they exist
-      - SystemConfig.transam_module_names.each do |mod|
-        = render :partial => "organizations/#{mod}_detail_actions" rescue nil
+.btn-group.pull-right.panel-action
+  %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
+    I want to  
+    %span.caret
+  %ul.dropdown-menu{:role => 'menu'}
+  
+    - # Load module specific actions if they exist
+    - SystemConfig.transam_module_names.each do |mod|
+      = render :partial => "organizations/#{mod}_detail_actions" rescue nil
 
-      - if can? :update, @org
-        %li
-          = link_to edit_organization_path(@org) do
-            %i.fa.fa-edit.fa-fw
-            = " Update this organization"
+    - if can? :update, @org
+      %li
+        = link_to edit_organization_path(@org) do
+          %i.fa.fa-edit.fa-fw
+          = " Update this organization"
