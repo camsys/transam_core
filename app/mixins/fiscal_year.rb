@@ -7,13 +7,13 @@
 #------------------------------------------------------------------------------
 module FiscalYear
 
-  MAX_FORECASTING_YEARS = SystemConfig.instance.num_forecasting_years   
+  MAX_FORECASTING_YEARS = SystemConfig.instance.num_forecasting_years
 
   # returns the fiscal year epoch -- the first allowable fiscal year for the application
   def fiscal_year_epoch_year
     2010
   end
-  
+
   def fiscal_year_epoch
     fiscal_year(fiscal_year_epoch_year)
   end
@@ -30,7 +30,7 @@ module FiscalYear
   def current_planning_year_year
     current_fiscal_year_year + 1
   end
-  
+
   # Returns the last fiscal year in the planning horizon
   def last_fiscal_year_year
     current_fiscal_year_year + MAX_FORECASTING_YEARS
@@ -45,27 +45,33 @@ module FiscalYear
       nil
     end
   end
-  
+
   # Returns the fiscal year on a given date
-  def fiscal_year_year_on_date(date)
+  def fiscal_year_year_on_date(date, end_fiscal_year_date=nil)
 
     if date.nil?
       date = Date.today
     end
     date_year = date.year
-    
+
     # System Config provides a string giving the start day of the fiscal year as "mm-dd" eg 07-01 for July 1st. We can
     # append the date year to this and generate the date of the fiscal year starting in the date calendar year
     date_str = "#{SystemConfig.instance.start_of_fiscal_year}-#{date_year}"
-    
-    start_of_fiscal_year = Date.strptime(date_str, "%m-%d-%Y")
-    
+
+    if end_fiscal_year_date.nil?
+      start_of_fiscal_year = Date.strptime(date_str, "%m-%d-%Y")
+    else
+      # get end of last fiscal year and then next day for start of this fiscal year
+      start_of_fiscal_year = end_fiscal_year_date - 1.years + 1.days
+    end
+
+
     # If the start of the fiscal year in the calendar year is before date, we are in the fiscal year that starts in this
     # calendar years, otherwise the date is in the fiscal year that started the previous calendar year
     date < start_of_fiscal_year ? date_year - 1 : date_year
-    
-  end  
-  
+
+  end
+
   # Returns the current fiscal year as a formatted FY string
   def current_fiscal_year
     fiscal_year(current_fiscal_year_year)
@@ -81,21 +87,21 @@ module FiscalYear
   def fiscal_year_on_date(date)
     fiscal_year(fiscal_year_year_on_date(date))
   end
-  
+
   # Returns the calendar year formatted as a FY string
   def fiscal_year(year)
     yr = year - fy_century(year)
     first = "%.2d" % yr
     last = "%.2d" % (yr + 1)
-    "FY #{first}-#{last}"    
+    "FY #{first}-#{last}"
   end
 
   # Returns a select array of fiscal years that includes fiscal years that
   # are before the current fiscal year
   def get_all_fiscal_years
     get_fiscal_years(Date.today - 4.years)
-  end  
-  
+  end
+
   # Returns a select array of fiscal years
   def get_fiscal_years(date = nil)
     if date
@@ -124,5 +130,5 @@ module FiscalYear
   def fy_century(fy)
     fy < 2000 ? 1900 : 2000
   end
-  
+
 end

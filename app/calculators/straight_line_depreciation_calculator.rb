@@ -20,4 +20,8 @@ class StraightLineDepreciationCalculator < DepreciationCalculator
     [depreciated_value, residual_value(asset)].max
   end
 
+  def depreciated_value(asset)
+    purchase_cost(asset) - calculate(asset)
+  end
+
 end

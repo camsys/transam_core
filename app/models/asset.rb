@@ -341,19 +341,19 @@ class Asset < ActiveRecord::Base
   # returns in fiscal year
   # need to rethink as manufacture year is not by fiscal year
   def age(on_date=Date.today)
-    [fiscal_year_year_on_date(on_date) - manufacture_year, 0].max
+    [fiscal_year_year_on_date(on_date,current_depreciation_date) - manufacture_year, 0].max
   end
 
   # returns the number of years since the asset was owned. It can't be less than 0
   # years_owned is currently calculated based off fiscal year
   def years_owned(on_date=Date.today)
-    [fiscal_year_on_date(on_date) - fiscal_year_on_date(purchase_date), 0].max
+    [fiscal_year_on_date(on_date,current_depreciation_date) - fiscal_year_on_date(purchase_date), 0].max
   end
 
   # returns the number of years the asset is in service. It can't be less than 0
   # years_in_service is currently calculated based off fiscal year
   def years_in_service(on_date=Date.today)
-    [fiscal_year_on_date(on_date) - fiscal_year_on_date(in_service_date), 0].max
+    [fiscal_year_on_date(on_date,current_depreciation_date) - fiscal_year_on_date(in_service_date), 0].max
   end
 
   # Returns the fiscal year that the asset was placed in service
@@ -651,6 +651,16 @@ class Asset < ActiveRecord::Base
       Rails.logger.warn e.message
     end
 
+    # Update the depreciated and salvage value
+    begin
+      # see what metric we are using for the depreciated value of the asset
+      class_name = policy.depreciation_calculation_type.class_name
+      asset.book_value = calculate(asset, policy, class_name, depreciated_value)
+      asset.salvage_value = calculate(asset, policy, class_name)
+    rescue Exception => e
+      Rails.logger.warn e.message
+    end
+
     # save changes to this asset
     asset.save
   end
@@ -692,6 +702,13 @@ class Asset < ActiveRecord::Base
     self.manufacture_year ||= Date.today.year
     self.expected_useful_life ||= 0
     self.purchased_new = self.purchased_new.nil? ? true : self.purchased_new
+
+    self.property_type ||= "depreciable"
+    self.depreciation_start_date ||= self.in_service_date
+
+    # default is last day of today's fiscal year
+    end_calendar_year = (fiscal_year_year_on_date(Date.today)+1).to_s
+    self.current_depreciation_date ||= Date.strptime("#{SystemConfig.instance.start_of_fiscal_year}-#{end_calendar_year}", '%m-%d-%Y') - 1.days
   end
 
   #------------------------------------------------------------------------------
