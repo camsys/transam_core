@@ -48,9 +48,6 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
 
     Rails.logger.debug "StraightLineEstimationCalculator.last_servicable_year(asset)"
 
-    # default last day of fiscal year
-    current_depreciation_date = asset.current_depreciation_date
-
     # get the maximum and minimum rating for a new asset
     max_rating = ConditionType.max_rating  # Usually 5.0 for FTA applicaitons
     min_rating = ConditionType.min_rating  # Usually 1.0 for FTA applications

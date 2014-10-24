@@ -341,6 +341,7 @@ class Asset < ActiveRecord::Base
   # returns in fiscal year
   # need to rethink as manufacture year is not by fiscal year
   def age(on_date=Date.today)
+    # TODO: determine what is age is w/r/t and its relation to current_depreciation_date
     [fiscal_year_year_on_date(on_date) - manufacture_year, 0].max
   end
 
