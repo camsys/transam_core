@@ -2,8 +2,12 @@
 #
 # Activity
 #
-# Represents a business activity that is requried to be completed
+# Represents a business activity that is required to be completed. This represents
+# a user view of the activity which is translated into a job that can be executed
+# on a schedule.
 #
+#
+# 
 #------------------------------------------------------------------------------
 class Activity < ActiveRecord::Base
   
@@ -46,9 +50,13 @@ class Activity < ActiveRecord::Base
     :schedule,
     :due,
     :notify,
+    :notify_complete,
     :warn,
+    :warn_complete,
     :alert,
+    :alert_complete,
     :escalate,
+    :escalate_complete,
     :job_name,
     :active
   ]
@@ -72,6 +80,7 @@ class Activity < ActiveRecord::Base
   def due_datetime
     Chronic.parse(due)
   end
+  
   def to_s
     name
   end
