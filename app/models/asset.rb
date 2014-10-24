@@ -694,7 +694,6 @@ class Asset < ActiveRecord::Base
     self.expected_useful_life ||= 0
     self.purchased_new = self.purchased_new.nil? ? true : self.purchased_new
 
-    self.property_type ||= "depreciable"
     self.depreciation_start_date ||= self.in_service_date
 
     # default is last day of today's fiscal year
