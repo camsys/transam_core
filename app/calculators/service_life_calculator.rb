@@ -18,7 +18,7 @@ class ServiceLifeCalculator < Calculator
     # default last day of fiscal year
     current_depreciation_date = asset.current_depreciation_date
 
-    fiscal_year_year_on_date(asset.in_service_date,current_depreciation_date) + asset.policy_rule.max_service_life_years
+    fiscal_year_year_on_date(asset.in_service_date) + asset.policy_rule.max_service_life_years
   end
 
   # Calculate the service life based on the minimum of condition
@@ -38,8 +38,8 @@ class ServiceLifeCalculator < Calculator
     events.each do |event|
       Rails.logger.debug "Event date = #{event.event_date}, Rating = #{event.assessed_rating}."
       if event.assessed_rating <= asset.policy.condition_threshold
-        Rails.logger.debug "returning #{fiscal_year_year_on_date(event.event_date,current_depreciation_date)}"
-        return fiscal_year_year_on_date(event.event_date,current_depreciation_date)
+        Rails.logger.debug "returning #{fiscal_year_year_on_date(event.event_date)}"
+        return fiscal_year_year_on_date(event.event_date)
       end
     end
     # if we didn't find a condition event that would make the policy effective

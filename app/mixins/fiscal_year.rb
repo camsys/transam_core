@@ -47,7 +47,7 @@ module FiscalYear
   end
 
   # Returns the fiscal year on a given date
-  def fiscal_year_year_on_date(date, end_fiscal_year_date=nil)
+  def fiscal_year_year_on_date(date)
 
     if date.nil?
       date = Date.today
@@ -58,13 +58,7 @@ module FiscalYear
     # append the date year to this and generate the date of the fiscal year starting in the date calendar year
     date_str = "#{SystemConfig.instance.start_of_fiscal_year}-#{date_year}"
 
-    if end_fiscal_year_date.nil?
-      start_of_fiscal_year = Date.strptime(date_str, "%m-%d-%Y")
-    else
-      # get end of last fiscal year and then next day for start of this fiscal year
-      start_of_fiscal_year = end_fiscal_year_date - 1.years + 1.days
-    end
-
+    start_of_fiscal_year = Date.strptime(date_str, "%m-%d-%Y")
 
     # If the start of the fiscal year in the calendar year is before date, we are in the fiscal year that starts in this
     # calendar years, otherwise the date is in the fiscal year that started the previous calendar year
