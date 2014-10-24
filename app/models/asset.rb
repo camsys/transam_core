@@ -337,11 +337,6 @@ class Asset < ActiveRecord::Base
     return "#{asset_subtype.name} - #{asset_tag}"
   end
 
-  # returns true if this instance can be geo_located. Always false for base class
-  def geo_locatable?
-    false
-  end
-
   # returns the number of years since the asset was manufactured. It can't be less than 0
   # returns in fiscal year
   # need to rethink as manufacture year is not by fiscal year
