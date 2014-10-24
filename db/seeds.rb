@@ -54,11 +54,6 @@ cost_calculation_types = [
   {:active => 1, :name => 'Purchase Price + Interest',    :class_name => "PurchasePricePlusInterestCalculator",   :description => 'Calculate the replacement cost using the initial purchase price with accrued interest until the replacement year.'}
 ]
 
-depreciation_calculation_types = [
-  {:active => 1, :name => 'Straight Line',      :class_name => "StraightLineDepreciationCalculator",      :description => 'Calculates the value of an asset using a straight line depreciation method.'},
-  {:active => 1, :name => 'Declining Balance',  :class_name => "DecliningBalanceDepreciationCalculator",  :description => 'Calculates the value of an asset using a double declining balance depreciation method.'}
-]
-
 service_life_calculation_types = [
   {:active => 1, :name => 'Age Only',          :class_name => 'ServiceLifeAgeOnly',         :description => 'Calculate the replacement year based on the age of the asset.'},
   {:active => 1, :name => 'Condition Only',    :class_name => 'ServiceLifeConditionOnly',   :description => 'Calculate the replacement year based on the condition of the asset.'},
@@ -167,7 +162,7 @@ notice_types = [
 
 lookup_tables = %w{asset_event_types condition_types disposition_types cost_calculation_types license_types priority_types
   file_status_types attachment_types district_types report_types service_status_types
-  depreciation_calculation_types task_status_types service_life_calculation_types condition_estimation_types
+  task_status_types service_life_calculation_types condition_estimation_types
   issue_types web_browser_types replacement_reason_types roles maintenance_provider_types notice_types
   }
 
