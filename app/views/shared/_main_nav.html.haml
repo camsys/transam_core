@@ -10,7 +10,7 @@
       - SystemConfig.transam_module_names.each do |mod|
         = render :partial => "shared/#{mod}_main_nav" rescue nil
 
-      = render 'shared/accounting_nav'
+      = render 'shared/policy_nav'
       = render 'shared/reports_nav'
       
     - if current_user.has_role? :admin
