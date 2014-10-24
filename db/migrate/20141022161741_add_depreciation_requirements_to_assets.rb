@@ -10,10 +10,10 @@ class AddDepreciationRequirementsToAssets < ActiveRecord::Migration
     add_column    :assets, :current_depreciation_date, :date, :after => :depreciation_start_date
 
     # depreciated value of the asset on the asset
-    add_column    :assets, :book_value, :decimal, :after => :current_depreciation_date
+    add_column    :assets, :book_value, :integer, :after => :current_depreciation_date
 
     # salvage value of the asset
-    add_column    :assets, :salvage_value, :decimal, :after => :book_value
+    add_column    :assets, :salvage_value, :integer, :after => :book_value
 
   end
 end
