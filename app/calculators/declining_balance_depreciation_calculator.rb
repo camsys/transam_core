@@ -34,8 +34,4 @@ class DecliningBalanceDepreciationCalculator < DepreciationCalculator
     [v, rv].max.to_i
   end
 
-  def depreciated_value(asset)
-    purchase_cost(asset) - calculate(asset)
-  end
-
 end

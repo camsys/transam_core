@@ -19,4 +19,8 @@ class DepreciationCalculator < Calculator
     asset.purchase_cost
   end
 
+  def depreciated_value(asset)
+    purchase_cost(asset) - calculate(asset)
+  end
+
 end
