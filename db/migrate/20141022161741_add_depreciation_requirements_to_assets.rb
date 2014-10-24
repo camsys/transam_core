@@ -1,7 +1,7 @@
 class AddDepreciationRequirementsToAssets < ActiveRecord::Migration
   def change
     # an asset is depreciable or not
-    add_column    :assets, :is_depreciable, :boolean, :default => true, :after => :estimated_value
+    add_column    :assets, :property_type, :boolean, :default => true, :after => :estimated_value
 
     # start date of depreciation (usually same as in_service_date)
     add_column    :assets, :depreciation_start_date, :date, :after => :is_depreciable

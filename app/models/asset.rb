@@ -652,20 +652,6 @@ class Asset < ActiveRecord::Base
       Rails.logger.warn e.message
     end
 
-    # Update the depreciated and salvage value
-    begin
-      # see what metric we are using for the depreciated value of the asset
-      class_name = policy.depreciation_calculation_type.class_name
-
-      # caches depreciated value as an integer
-      asset.book_value = calculate(asset, policy, class_name, depreciated_value).round(0)
-
-      # caches residual value as an integer
-      asset.salvage_value = calculate(asset, policy, class_name).round(0)
-    rescue Exception => e
-      Rails.logger.warn e.message
-    end
-
     # save changes to this asset
     asset.save
   end
