@@ -13,7 +13,7 @@ require 'database_cleaner'
 # run twice. It is recommended that you do not name files matching this glob to
 # end with _spec.rb. You can configure this pattern with the --pattern
 # option on the command line or in ~/.rspec, .rspec or `.rspec-local`.
-Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
+Dir[TransamCore::Engine.root.join("spec/support/**/*.rb")].each { |f| require f }
 
 ActiveRecord::Migration.maintain_test_schema!
 
