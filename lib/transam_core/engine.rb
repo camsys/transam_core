@@ -2,6 +2,7 @@ require 'devise'
 require 'rolify'
 require 'unitwise'
 require 'chronic'
+require 'breadcrumbs_on_rails'
 
 module TransamCore
   class Engine < ::Rails::Engine
