@@ -16,7 +16,6 @@ class AssetUpdateJob < AbstractAssetUpdateJob
     # generic asset updates
     asset.update_service_status
     asset.update_condition
-    asset.update_maintenance_provider
     asset.update_scheduled_replacement
     asset.update_scheduled_rehabilitation
     asset.update_scheduled_disposition

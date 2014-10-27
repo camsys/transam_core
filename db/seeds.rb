@@ -97,17 +97,6 @@ attachment_types = [
   {:active => 1, :name => 'Document', :display_icon_name => "fa fa-file-text-o",  :description => 'Scanned document.'}
 ]
 
-district_types = [
-  {:active => 1, :name => 'State',        :description => 'State.'},
-  {:active => 1, :name => 'District',     :description => 'Engineering District.'},
-  {:active => 1, :name => 'MSA',          :description => 'Metropolitan Statistical Area.'},
-  {:active => 1, :name => 'County',       :description => 'County.'},
-  {:active => 1, :name => 'City',         :description => 'City.'},
-  {:active => 1, :name => 'Borough',      :description => 'Borough.'},
-  {:active => 1, :name => 'MPO/RPO',      :description => 'MPO or RPO planning area.'},
-  {:active => 1, :name => 'Postal Code',  :description => 'ZIP Code or Postal Area.'}
-]
-
 report_types = [
   {:active => 1, :name => 'Inventory Report',     :display_icon_name => "fa fa-bar-chart-o",  :description => 'Inventory Report.'},
   {:active => 1, :name => 'Capital Needs Report', :display_icon_name => "fa fa-usd",          :description => 'Capital Needs Report.'},
@@ -140,14 +129,6 @@ replacement_reason_types = [
   {:active => 1, :name => 'Other',     :description => 'The asset is being replaced for other reasons.'}
 ]
 
-maintenance_provider_types = [
-  {:active => 1,  :name => 'Unknown',         :code => 'XX', :description => 'Maintenance provider not supplied.'},
-  {:active => 1,  :name => 'Self Maintained', :code => 'SM', :description => 'Self Maintained.'},
-  {:active => 1,  :name => 'County',          :code => 'CO', :description => 'County.'},
-  {:active => 1,  :name => 'Public Agency',   :code => 'PA', :description => 'Public Agency.'},
-  {:active => 1,  :name => 'Private Entity',  :code => 'PE', :description => 'Private Entity.'}
-]
-
 roles = [
   {:name => 'guest'},
   {:name => 'user'},
@@ -161,9 +142,9 @@ notice_types = [
 ]
 
 lookup_tables = %w{asset_event_types condition_types disposition_types cost_calculation_types license_types priority_types
-  file_status_types attachment_types district_types report_types service_status_types
+  file_status_types attachment_types report_types service_status_types
   task_status_types service_life_calculation_types condition_estimation_types
-  issue_types web_browser_types replacement_reason_types roles maintenance_provider_types notice_types
+  issue_types web_browser_types replacement_reason_types roles notice_types
   }
 
 lookup_tables.each do |table_name|
