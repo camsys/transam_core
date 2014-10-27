@@ -93,7 +93,6 @@ class Asset < ActiveRecord::Base
   validates     :purchase_cost,       :presence => :true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0}
   validates     :purchase_date,       :presence => :true
   validates     :in_service_date,     :presence => :true
-    :expected_useful_life,
 
   #------------------------------------------------------------------------------
   # Attributes common to all asset types
@@ -101,7 +100,6 @@ class Asset < ActiveRecord::Base
 
   # Validations on core attributes
   validates       :asset_tag,         :presence => true, :length => { :maximum => 12 }
-  validates       :in_service_date,   :presence => true
 
   validates_uniqueness_of :asset_tag, scope: :organization
 
@@ -347,7 +345,7 @@ class Asset < ActiveRecord::Base
   end
 
   # Returns the fiscal year that the asset was placed in service
-  def in_service_year
+  def in_service_fiscal_year
     fiscal_year_on_date(in_service_date) unless in_service_date.nil?
   end
 
@@ -631,33 +629,6 @@ class Asset < ActiveRecord::Base
     asset.save
   end
 
-  # updates the estimated value of an asset
-  def update_asset_value(policy = nil)
-    Rails.logger.info "Updating estimated value for asset = #{object_key}"
-
-    # Make sure we are working with a concrete asset class
-    asset = is_typed? ? self : Asset.get_typed_asset(self)
-
-    # Get the policy to use
-    policy = policy.nil? ? asset.policy : policy
-
-    # exit if we can find a policy to work on
-    if policy.nil?
-      Rails.logger.warn "Can't find a policy for asset = #{object_key}"
-      return
-    end
-
-    begin
-      # see what metric we are using to determine the service life of the asset
-      class_name = policy.depreciation_calculation_type.class_name
-      asset.estimated_value = calculate(asset, policy, class_name)
-      # save changes to this asset
-      asset.save
-    rescue Exception => e
-      Rails.logger.warn e.message
-    end
-  end
-
   def cleansable_fields
     CLEANSABLE_FIELDS
   end
@@ -669,11 +640,8 @@ class Asset < ActiveRecord::Base
     self.expected_useful_life ||= 0
     self.purchased_new = self.purchased_new.nil? ? true : self.purchased_new
 
-    self.depreciation_start_date ||= self.in_service_date
-
     # default is last day of today's fiscal year
     end_calendar_year = (fiscal_year_year_on_date(Date.today)+1).to_s
-    self.current_depreciation_date ||= Date.strptime("#{SystemConfig.instance.start_of_fiscal_year}-#{end_calendar_year}", '%m-%d-%Y') - 1.days
   end
 
   #------------------------------------------------------------------------------
@@ -700,5 +668,4 @@ class Asset < ActiveRecord::Base
       raise RuntimeError.new "#{class_name} calculation failed for asset #{asset.object_key} and policy #{policy.name}"
     end
   end
-
 end
