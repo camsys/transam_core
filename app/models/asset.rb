@@ -330,6 +330,7 @@ class Asset < ActiveRecord::Base
   # returns in fiscal year
   # need to rethink as manufacture year is not by fiscal year
   def age(on_date=Date.today)
+    # TODO: determine what is age is w/r/t and its relation to current_depreciation_date
     [fiscal_year_year_on_date(on_date) - manufacture_year, 0].max
   end
 
@@ -342,7 +343,7 @@ class Asset < ActiveRecord::Base
   # returns the number of years the asset is in service. It can't be less than 0
   # years_in_service is currently calculated based off fiscal year
   def years_in_service(on_date=Date.today)
-    [fiscal_year_on_date(on_date) - fiscal_year_on_date(in_service_date), 0].max
+    [fiscal_year_on_date(on_date,current_depreciation_date) - fiscal_year_on_date(in_service_date), 0].max
   end
 
   # Returns the fiscal year that the asset was placed in service
@@ -667,6 +668,12 @@ class Asset < ActiveRecord::Base
     self.manufacture_year ||= Date.today.year
     self.expected_useful_life ||= 0
     self.purchased_new = self.purchased_new.nil? ? true : self.purchased_new
+
+    self.depreciation_start_date ||= self.in_service_date
+
+    # default is last day of today's fiscal year
+    end_calendar_year = (fiscal_year_year_on_date(Date.today)+1).to_s
+    self.current_depreciation_date ||= Date.strptime("#{SystemConfig.instance.start_of_fiscal_year}-#{end_calendar_year}", '%m-%d-%Y') - 1.days
   end
 
   #------------------------------------------------------------------------------

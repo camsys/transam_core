@@ -23,7 +23,7 @@ class PurchasePricePlusInterestCalculator < CostCalculator
 
     # Do the math...
     # if past replacement year, return 0
-    num_years_to_replacement = [replacement_year - fiscal_year_year_on_date(asset.in_service_date), 0].max
+    num_years_to_replacement = [replacement_year - fiscal_year_year_on_date(asset.depreciation_start_date), 0].max
     Rails.logger.debug "num_years_to_replacement #{num_years_to_replacement}"
 
     # interest rate
