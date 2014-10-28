@@ -36,7 +36,7 @@ RSpec.describe Asset, :type => :model do
 
   describe ".event_classes" do
     it 'returns the right event classes for an asset' do
-      expect(Asset.event_classes.count).to eq(7) # should enumerate those tests...
+      expect(Asset.event_classes.count).to eq(6) # should enumerate those tests...
     end
   end
 
