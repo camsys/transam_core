@@ -7,8 +7,6 @@
 #------------------------------------------------------------------------------
 module FiscalYear
 
-  MAX_FORECASTING_YEARS = SystemConfig.instance.num_forecasting_years
-
   # returns the fiscal year epoch -- the first allowable fiscal year for the application
   def fiscal_year_epoch_year
     2010
@@ -33,7 +31,7 @@ module FiscalYear
 
   # Returns the last fiscal year in the planning horizon
   def last_fiscal_year_year
-    current_fiscal_year_year + MAX_FORECASTING_YEARS
+    current_fiscal_year_year + SystemConfig.instance.num_forecasting_years
   end
 
   # returns the year for a fiscal year string
