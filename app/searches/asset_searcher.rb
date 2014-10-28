@@ -17,7 +17,6 @@ class AssetSearcher < BaseSearcher
                 :disposition_date,
                 :keyword,
                 :fta_funding_type_id,
-                :fta_funding_source_type_id,
                 :fta_ownership_type_id,
                 :fta_vehicle_type_id,
                 :condition_type_ids,
@@ -80,10 +79,6 @@ class AssetSearcher < BaseSearcher
 
   def fta_funding_type_conditions
     @klass.where(fta_funding_type_id: fta_funding_type_id) unless fta_funding_type_id.blank?
-  end
-
-  def fta_funding_source_type_conditions
-    @klass.where(fta_funding_source_type_id: fta_funding_source_type_id) unless fta_funding_source_type_id.blank?
   end
 
   def fta_ownership_type_conditions
