@@ -28,9 +28,6 @@ class Policy < ActiveRecord::Base
   
   # Has a single method for calculating costs
   belongs_to  :cost_calculation_type
-
-  # Has a single method for calculating asset depreciation
-  belongs_to  :depreciation_calculation_type
   
   # Has a single method for calculating service life
   belongs_to  :service_life_calculation_type
@@ -44,11 +41,10 @@ class Policy < ActiveRecord::Base
   #------------------------------------------------------------------------------
   # Validations
   #------------------------------------------------------------------------------
-  validates :organization_id,                   :presence => true
-  validates :service_life_calculation_type_id,  :presence => true
-  validates :cost_calculation_type_id,          :presence => true
-  validates :depreciation_calculation_type_id,  :presence => true
-  validates :condition_estimation_type_id,      :presence => true
+  validates :organization,                      :presence => true
+  validates :service_life_calculation_type,     :presence => true
+  validates :cost_calculation_type,             :presence => true
+  validates :condition_estimation_type,         :presence => true
 
   validates :year,                              :presence => true, :numericality => {:only_integer => true, :greater_than_or_equal_to => Date.today.year }
   validates :name,                              :presence => true
@@ -72,7 +68,6 @@ class Policy < ActiveRecord::Base
     :service_life_calculation_type_id, 
     :cost_calculation_type_id, 
     :condition_estimation_type_id, 
-    :depreciation_calculation_type_id,
     :year,
     :name,
     :description,

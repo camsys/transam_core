@@ -241,8 +241,6 @@ class Asset < ActiveRecord::Base
   #
   #------------------------------------------------------------------------------
 
-
-
   # Instantiate an asset event of the appropriate type.
   def create_typed_event(asset_event_type_class)
     # Could also add:  raise ArgumentError 'Asset Must be strongly typed' unless is_typed?
