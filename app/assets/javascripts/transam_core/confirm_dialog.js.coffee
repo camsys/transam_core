@@ -36,7 +36,10 @@ $.rails.allowAction = (element) ->
   $modal_html = $(modal_html)
   # Add the new button to the modal box
   $modal_html.find('.modal-footer').append($link)
-  element.after($modal_html)
+  attach = element.data('attach')
+  attach = $(attach)
+  # If they didn't specify where to attach, this just attaches at bottom of doc
+  attach.after($modal_html)
   # Pop it up
   $modal_html.modal()
   # Prevent the original link from working
