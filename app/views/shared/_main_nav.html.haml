@@ -7,9 +7,13 @@
           %br
           Home
 
+      -# render the engine main nav components if there are any
       - SystemConfig.transam_module_names.each do |mod|
         = render :partial => "shared/#{mod}_main_nav" rescue nil
-
+      
+      -# render the application main nav components if there are any
+      = render :partial => 'shared/app_main_nav' rescue nil
+      
       = render 'shared/policy_nav'
       = render 'shared/reports_nav'
       
