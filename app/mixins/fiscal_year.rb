@@ -64,8 +64,8 @@ module FiscalYear
 
   end
 
-  # Returns the last date of the fiscal year of a given date
-  def fiscal_year_last_date(date)
+  # Returns the end date of the fiscal year of a given date
+  def fiscal_year_end_date(date)
     if date.nil?
       date = Date.today
     end
