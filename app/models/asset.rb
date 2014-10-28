@@ -280,14 +280,14 @@ class Asset < ActiveRecord::Base
   def manufacture_year=(num)
     self[:manufacture_year] = sanitize_to_int(num)
   end
-  
+
   def purchase_cost=(num)
     self[:purchase_cost] = sanitize_to_int(num)
-  end      
+  end
 
   def expected_useful_life=(num)
     self[:expected_useful_life] = sanitize_to_int(num)
-  end      
+  end
 
   # Returns true if this asset participates in one or more events
   def has_events?
@@ -637,9 +637,6 @@ class Asset < ActiveRecord::Base
     self.manufacture_year ||= Date.today.year
     self.expected_useful_life ||= 0
     self.purchased_new = self.purchased_new.nil? ? true : self.purchased_new
-
-    # default is last day of today's fiscal year
-    end_calendar_year = (fiscal_year_year_on_date(Date.today)+1).to_s
   end
 
   #------------------------------------------------------------------------------

@@ -64,6 +64,24 @@ module FiscalYear
 
   end
 
+  # Returns the last date of the fiscal year of a given date
+  def fiscal_year_last_date(date)
+    if date.nil?
+      date = Date.today
+    end
+    date_year = date.year
+
+    # System Config provides a string giving the start day of the fiscal year as "mm-dd" eg 07-01 for July 1st. We can
+    # append the date year to this and generate the date of the fiscal year starting in the date calendar year
+    date_str = "#{SystemConfig.instance.start_of_fiscal_year}-#{date_year}"
+
+    start_of_fiscal_year = Date.strptime(date_str, "%m-%d-%Y")
+
+    # get end of last fiscal year and add a year for current fiscal year
+    start_of_fiscal_year - 1.days + 1.years
+
+  end
+
   # Returns the current fiscal year as a formatted FY string
   def current_fiscal_year
     fiscal_year(current_fiscal_year_year)
