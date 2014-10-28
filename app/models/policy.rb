@@ -8,7 +8,7 @@ class Policy < ActiveRecord::Base
   # Include the object key mixin
   include TransamObjectKey
   # Include the numeric sanitizers mixin
-  include NumericSanitizers
+  include TransamNumericSanitizers
   # Include the fiscal year mixin
   include FiscalYear
 

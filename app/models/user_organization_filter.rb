@@ -1,18 +1,8 @@
 class UserOrganizationFilter < ActiveRecord::Base
   
   # Include the unique key mixin
-  include UniqueKey
+  include TransamObjectKey
   
-  #require rails to use the key as the restful parameter
-  def to_param
-    object_key
-  end
-  
-  # Always generate a unique asset key before saving to the database
-  before_validation(:on => :create) do
-    generate_unique_key(:object_key)
-  end
-
   # Callbacks
   after_initialize :set_defaults
   after_save       :require_at_least_one_organization     # validate model for HABTM relationships
@@ -38,7 +28,6 @@ class UserOrganizationFilter < ActiveRecord::Base
 
   # List of allowable form param hash keys  
   FORM_PARAMS = [
-    :object_key,
     :user_id,
     :name,
     :description,

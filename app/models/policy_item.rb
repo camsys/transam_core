@@ -6,7 +6,7 @@
 class PolicyItem < ActiveRecord::Base
   
   # Include the numeric sanitizers mixin
-  include NumericSanitizers
+  include TransamNumericSanitizers
   
   #------------------------------------------------------------------------------
   # Associations
