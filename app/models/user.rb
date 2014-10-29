@@ -22,7 +22,12 @@ class User < ActiveRecord::Base
   #------------------------------------------------------------------------------
   after_initialize  :set_defaults
   
+  # Clean up any HABTM associations before the user is destroyed
+  before_destroy { :clean_habtm_relationships }
+  
+  #------------------------------------------------------------------------------
   # Associations
+  #------------------------------------------------------------------------------
   
   # every user belongs to a single organizations
   belongs_to :organization
@@ -36,18 +41,19 @@ class User < ActiveRecord::Base
   
   # Every user can have 0 or more messages
   has_many   :messages
-
-  # Every user can have 0 or more tasks
-  has_many   :messages
   
-  # Every user can have 0 or more files they have uploaded
+  # Every user can have 0 or tasks assigned to them
   has_many   :tasks,        :foreign_key => :assigned_to_user_id
 
   # Every user can have a profile picture
   has_many    :images,      :as => :imagable,       :dependent => :destroy
   
-  # Validations on core attributes
-  validates :object_key,    :presence => true, :uniqueness => true
+  # Every user can have 0 or more organization filters they have created
+  has_many   :organization_filters,   :class_name => 'UserOrganizationFilter', :dependent => :destroy
+  
+  #------------------------------------------------------------------------------
+  # Validations
+  #------------------------------------------------------------------------------  
   validates :first_name,    :presence => true
   validates :last_name,     :presence => true
   validates :email,         :presence => true, :uniqueness => true, :format => { :with => /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/, :message => "email address is not valid" }
@@ -57,7 +63,7 @@ class User < ActiveRecord::Base
   validates :organization,  :presence => true
   
   # default scope
-  default_scope { where(:active => true) }
+  default_scope { where(:active => true).order(:last_name) }
       
   SEARCHABLE_FIELDS = [
     :first_name,
@@ -101,6 +107,24 @@ class User < ActiveRecord::Base
   #
   #------------------------------------------------------------------------------
           
+  # Devise overrides for logging account locks/unlocks
+  def lock_access!
+    super
+    # Send a message to the admins that the account has been locked
+    Delayed::Job.enqueue LockedAccountInformerJob.new(object_key) unless new_record?
+    # Log it
+    Rails.logger.info "Locking account for user with email #{email} at #{Time.now}"    
+  end        
+  def unlock_access!
+    super
+    Rails.logger.info "Unlocking account for user with email #{email} at #{Time.now}"    
+  end        
+  
+  def initials
+    "#{first_name[0]}#{last_name[0]}"
+  end
+          
+          
   # Returns true if the user is in a specified role, false otherwise
   def is_in_role(role_id)
     ! roles.find(role_id).nil?
@@ -121,7 +145,7 @@ class User < ActiveRecord::Base
   end
   
   def name
-    return first_name + " " + last_name unless new_record?
+    "#{first_name} #{last_name}"
   end
 
   #------------------------------------------------------------------------------
@@ -135,6 +159,10 @@ class User < ActiveRecord::Base
   def set_defaults
     self.timezone ||= 'Eastern Time (US & Canada)'
   end    
+
+  def clean_habtm_relationships
+    organizations.clear
+  end
 
   #------------------------------------------------------------------------------
   #
