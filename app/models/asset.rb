@@ -633,7 +633,6 @@ class Asset < ActiveRecord::Base
 
   # Set resonable defaults for a new asset
   def set_defaults
-    puts "hello"
     self.purchase_date ||= Date.today
     self.in_service_date ||= self.purchase_date
     self.manufacture_year ||= Date.today.year
