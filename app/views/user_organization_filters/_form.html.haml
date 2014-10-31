@@ -4,7 +4,7 @@
       = dialog_tag('Details', {:icon => 'fa fa-list', :class => "form-part"}) do
         = f.input :name, :placeholder => "Enter a name for this filter"
         = f.input :description, :as => :text, :placeholder => "Enter a description for this filter.", :rows => 3
-        = f.input :grantee_ids, :as => :hidden
+        = f.input :organization_ids, :as => :hidden
 
     .col-md-6
       = dialog_tag('Organizations Filter', {:icon => 'fa fa-list', :class => "form-part"}) do

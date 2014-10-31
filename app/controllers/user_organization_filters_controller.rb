@@ -167,6 +167,6 @@ class UserOrganizationFiltersController < OrganizationAwareController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def form_params
-      params.require(:user_organization_filter).permit(user_organization_filter_allowable_params)
+      params.require(:user_organization_filter).permit(UserOrganizationFilter.allowable_params)
     end
 end

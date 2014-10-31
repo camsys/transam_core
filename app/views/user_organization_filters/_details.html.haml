@@ -11,7 +11,7 @@
       %th.center
               
   %tbody
-    - @user_organization_filter.grantees.each do |o|      
+    - @user_organization_filter.organizations.each do |o|      
       %tr.popup-details{:data => {:action_path => organization_path(o)}}
         %td= o.short_name
         %td= o.name

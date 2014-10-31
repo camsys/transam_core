@@ -31,7 +31,7 @@ class UserOrganizationFilter < ActiveRecord::Base
     :user_id,
     :name,
     :description,
-    :organization_ids => []
+    :organization_ids
   ]
   
   #------------------------------------------------------------------------------
