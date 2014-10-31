@@ -633,7 +633,9 @@ class Asset < ActiveRecord::Base
 
   # Set resonable defaults for a new asset
   def set_defaults
-    self.in_service_date ||= Date.today
+    puts "hello"
+    self.purchase_date ||= Date.today
+    self.in_service_date ||= self.purchase_date
     self.manufacture_year ||= Date.today.year
     self.expected_useful_life ||= 0
     self.purchased_new = self.purchased_new.nil? ? true : self.purchased_new
