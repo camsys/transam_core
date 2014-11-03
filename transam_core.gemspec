@@ -29,6 +29,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'unitwise'
   s.add_dependency 'chronic'
   s.add_dependency "breadcrumbs_on_rails"
+  s.add_dependency 'state_machine'
 
     
   # for background processing jobs  

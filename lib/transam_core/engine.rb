@@ -3,6 +3,7 @@ require 'rolify'
 require 'unitwise'
 require 'chronic'
 require 'breadcrumbs_on_rails'
+require 'state_machine'
 
 module TransamCore
   class Engine < ::Rails::Engine
