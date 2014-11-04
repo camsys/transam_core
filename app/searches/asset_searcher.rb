@@ -2,7 +2,9 @@
 # Designed to be populated from a search form using a new/create controller model.
 #
 class AssetSearcher < BaseSearcher
-  include NumericSanitizers
+  
+  # Include the numeric sanitizers mixin
+  include TransamNumericSanitizers
 
   # From the application config    
   ASSET_BASE_CLASS_NAME     = SystemConfig.instance.asset_base_class_name   
