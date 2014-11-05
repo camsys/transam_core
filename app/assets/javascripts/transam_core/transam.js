@@ -223,7 +223,7 @@ var transam = new function() {
 		if (dropdown.children().length === 0) {
 			btn.hide();
 		}
-	}
+	};
 
 	// Internal functions
 	var show_error_message = function(div_id, message) {
