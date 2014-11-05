@@ -1,0 +1,10 @@
+- title ||= 'Loading...'
+.modal-dialog
+  .modal-content
+    .modal-header
+      %a.close{href: "#", 'data-dismiss' => 'modal'} &times;
+      %h4.modal-title= title
+    #modal-body.modal-body      
+      Loading...        
+    .modal-footer
+      %button.btn.btn-warning.btn-xs{"aria-hidden" => "true", "data-dismiss" => "modal", :id => 'cancel-btn'} Cancel
