@@ -1,5 +1,6 @@
 require 'devise'
 require 'rolify'
+require 'cancan'
 require 'unitwise'
 require 'chronic'
 require 'breadcrumbs_on_rails'
