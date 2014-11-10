@@ -1,13 +1,17 @@
 class OrganizationsController < OrganizationAwareController
+
+  add_breadcrumb "Home",  :root_path
+  add_breadcrumb "Organizations", :organizations_path
+
   before_filter :get_org, :only => [:show, :map, :edit, :update]
   before_filter :check_for_cancel, :only => [:create, :update]
-  
+
   # include the transam markers mixin
   include TransamMapMarkers
-  
+
   INDEX_KEY_LIST_VAR    = "organization_key_list_cache_var"
   SESSION_VIEW_TYPE_VAR = 'organization_subnav_view_type'
-    
+
   # GET /asset
   # GET /asset.json
   def index
@@ -18,7 +22,7 @@ class OrganizationsController < OrganizationAwareController
 
     # remember the view type
     @view_type = get_view_type(SESSION_VIEW_TYPE_VAR)
-    
+
     # If we are building a map, make sure we get the map artifacts
     if @view_type == VIEW_TYPE_MAP
       @markers = generate_map_markers(@organizations)
@@ -28,30 +32,30 @@ class OrganizationsController < OrganizationAwareController
       format.json { render :json => @organizations }
     end
   end
-  
+
   def show
-    
+
     if @org.nil?
       notify_user(:alert, "Record not found.")
-      redirect_to organizations_url 
+      redirect_to organizations_url
       return
     end
 
     add_breadcrumb @org.organization_type.name.pluralize(2), organizations_path(:organization_type_id => @org.organization_type.id)
-    add_breadcrumb @org.short_name  
-    
+    add_breadcrumb @org.short_name
+
     # get the @prev_record_path and @next_record_path view vars
     get_next_and_prev_object_keys(@org, INDEX_KEY_LIST_VAR)
     @prev_record_path = @prev_record_key.nil? ? "#" : organization_path(@prev_record_key)
     @next_record_path = @next_record_key.nil? ? "#" : organization_path(@next_record_key)
-    
+
     @organizations = []
     @organizations << @org
     @markers = generate_map_markers(@organizations, true)
 
     # get the data for the tabs
     @users = @org.users
-    
+
     rep = AssetSubtypeReport.new
     @data = rep.get_data_from_collection(@org.assets)
     @total_assets = @org.assets.count
@@ -59,34 +63,34 @@ class OrganizationsController < OrganizationAwareController
     respond_to do |format|
       format.html # show.html.erb
       format.json { render :json => @org }
-    end    
+    end
   end
 
-  
+
   # Edit simply returns the selected organization
   def edit
     if @org.nil?
       notify_user(:alert, "Record not found.")
-      redirect_to organizations_url 
+      redirect_to organizations_url
       return
     end
-    
+
     add_breadcrumb @org.organization_type.name.pluralize(2), organizations_path(:organization_type_id => @org.organization_type.id)
-    add_breadcrumb @org.short_name, organization_path(@org)  
+    add_breadcrumb @org.short_name, organization_path(@org)
     add_breadcrumb "Update"
-        
-    @page_title = "Update: #{@org.name}"    
+
+    @page_title = "Update: #{@org.name}"
   end
 
   def update
-    
+
     if @org.nil?
       notify_user(:alert, "Record not found.")
-      redirect_to organizations_url 
+      redirect_to organizations_url
       return
     end
 
-    add_breadcrumb @org.short_name, organization_path(@org)  
+    add_breadcrumb @org.short_name, organization_path(@org)
     add_breadcrumb "Update"
 
     respond_to do |format|
@@ -115,7 +119,7 @@ class OrganizationsController < OrganizationAwareController
     organizations_array.each do |org|
       objs << get_organization_marker(org, render_open) unless org.latitude.nil?
     end
-    return objs.to_json    
+    return objs.to_json
   end
 
   #------------------------------------------------------------------------------
@@ -124,9 +128,9 @@ class OrganizationsController < OrganizationAwareController
   #
   #------------------------------------------------------------------------------
   private
-      
+
   # Returns the agency that has been selected by the user. The agency must
-  # be user's agency or one of its member agencies. 
+  # be user's agency or one of its member agencies.
   def get_org
     if params[:id].nil?
       org = current_user.organization
@@ -142,12 +146,12 @@ class OrganizationsController < OrganizationAwareController
   def form_params
     params.require(:organization).permit(organization_allowable_params)
   end
-  
+
   def check_for_cancel
     unless params[:cancel].blank?
       @org = get_organization
       redirect_to organization_url(@org)
     end
   end
-  
+
 end
