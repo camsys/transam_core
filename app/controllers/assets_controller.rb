@@ -498,7 +498,7 @@ class AssetsController < AssetAwareController
 
     # send the query
     @row_count = klass.where(clauses.join(' AND '), *values).count
-    if @fmt == 'xls'
+    if @fmt == 'js'
       # if it is an xls export get all the rows
       assets = klass.where(clauses.join(' AND '), *values)
     else
