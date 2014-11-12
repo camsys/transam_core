@@ -17,4 +17,10 @@ namespace :transam do
       a.update_estimated_value
     end
   end
+  desc "Updates the estimated value of every asset"
+  task update_disposition: :environment do
+    Asset.all.each do |a|
+      a.record_disposition
+    end
+  end
 end
