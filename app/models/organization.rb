@@ -14,8 +14,8 @@ class Organization < ActiveRecord::Base
   after_initialize  :set_defaults
 
   # Enable automatic geocoding using the Geocoder gem
-  #geocoded_by       :full_address
-  #after_validation  :geocode  
+  geocoded_by       :full_address
+  after_validation  :geocode  
 
   #------------------------------------------------------------------------------
   # Overrides
