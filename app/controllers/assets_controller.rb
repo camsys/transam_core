@@ -112,9 +112,11 @@ class AssetsController < AssetAwareController
       add_breadcrumb subtype.name, inventory_index_path(:asset_subtype =>subtype)
     end
 
-    # cache the set of asset ids in case we need them later
-    cache_list(@assets, INDEX_KEY_LIST_VAR)
-
+    unless @fmt == 'xls'
+      # cache the set of asset ids in case we need them later
+      cache_list(@assets, INDEX_KEY_LIST_VAR)
+    end
+    
     respond_to do |format|
       format.html
       format.js
@@ -499,10 +501,11 @@ class AssetsController < AssetAwareController
     # send the query
     @row_count = klass.where(clauses.join(' AND '), *values).count
     if @fmt == 'js'
-      # if it is an xls export get all the rows
-      assets = klass.where(clauses.join(' AND '), *values)
-    else
+      # if it is an JS query page the rows
       assets = klass.where(clauses.join(' AND '), *values).order("#{sort_column(klass)} #{sort_direction}").page(page).per_page(per_page)
+    else
+      # Otherwise get everything
+      assets = klass.where(clauses.join(' AND '), *values)
     end
     return assets
   end
