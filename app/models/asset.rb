@@ -234,10 +234,7 @@ class Asset < ActiveRecord::Base
     # Use reflection to return the list of has many associatiopns and filter those which are
     # events
     self.reflect_on_all_associations(:has_many).each do |assoc|
-      begin
-        a << assoc.klass if assoc.class_name.end_with? 'UpdateEvent'
-      rescue
-      end
+      a << assoc.klass if assoc.class_name.end_with? 'UpdateEvent'
     end
     a
   end
