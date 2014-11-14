@@ -2,4 +2,7 @@
 
 = render "#{@asset.class.name.underscore}_form"
 
-= render 'scripts'
+:javascript
+  $(document).ready(function() {
+    transam.make_same_height('.form_part');
+    });
