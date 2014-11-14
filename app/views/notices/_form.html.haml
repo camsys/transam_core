@@ -22,7 +22,7 @@
                 %span.input-group-addon
                   %i.fa.fa-calendar
           .col-sm-3
-            = f.input :display_datetime_hour, :as => :select, :collection => 0..23, :label_method => lambda { |hr| Time.now.change(:hour => hr).strftime("%l:%M %p")}, :label => "Hour"
+            = f.input :display_datetime_hour, :as => :select, :collection => 0..23, :label_method => lambda { |hr| Time.current.change(:hour => hr).strftime("%l:%M %p")}, :label => "Hour"
         .row
           .col-sm-9
             .form-group
@@ -31,7 +31,7 @@
                 %span.input-group-addon
                   %i.fa.fa-calendar
           .col-sm-3
-            = f.input :end_datetime_hour, :as => :select, :collection => 0..23, :label_method => lambda { |hr| Time.now.change(:hour => hr).strftime("%l:%M %p")}, :requred => true, :label => "Hour"
+            = f.input :end_datetime_hour, :as => :select, :collection => 0..23, :label_method => lambda { |hr| Time.current.change(:hour => hr).strftime("%l:%M %p")}, :requred => true, :label => "Hour"
         = f.association :notice_type, :include_blank => false
       = f.button :submit, :class => 'btn btn-primary'
 

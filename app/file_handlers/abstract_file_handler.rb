@@ -11,7 +11,7 @@ class AbstractFileHandler
   def execute
     
     # Indicate that processing is starting
-    @upload.processing_started_at = Time.now
+    @upload.processing_started_at = Time.current
     @upload.file_status_type      = FileStatusType.find_by_name("In Progress")
     @upload.save
     
@@ -32,7 +32,7 @@ class AbstractFileHandler
       @upload.num_rows_skipped      = @num_rows_skipped
       @upload.processing_log        = @process_log.to_s
       
-      @upload.processing_completed_at = Time.now
+      @upload.processing_completed_at = Time.current
       @upload.save
     end
     

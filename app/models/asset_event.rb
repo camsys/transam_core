@@ -98,7 +98,7 @@ class AssetEvent < ActiveRecord::Base
   def next_event_of_type
     event = asset.asset_events
       .where('asset_event_type_id = ?', self.asset_event_type_id)
-      .where('event_date > ? OR (event_date = ? AND created_at > ?)', self.event_date, self.event_date, (self.new_record? ? Time.now : self.created_at )) # Define a window that backs up to this event
+      .where('event_date > ? OR (event_date = ? AND created_at > ?)', self.event_date, self.event_date, (self.new_record? ? Time.current : self.created_at )) # Define a window that backs up to this event
       .order(:event_date, :created_at => :desc).first
 
     # Return Strongly Typed Asset
@@ -111,7 +111,7 @@ class AssetEvent < ActiveRecord::Base
   def previous_event_of_type
     event = asset.asset_events
       .where("asset_event_type_id = ?", self.asset_event_type_id) # get events of same type
-      .where("event_date < ? OR (event_date = ? AND created_at < ?)", self.event_date, self.event_date, (self.new_record? ? Time.now : self.created_at) ) # Define a window that runs up to this event
+      .where("event_date < ? OR (event_date = ? AND created_at < ?)", self.event_date, self.event_date, (self.new_record? ? Time.current : self.created_at) ) # Define a window that runs up to this event
       .order(:event_date, :created_at => :asc).last
 
     # Return Strongly Typed Asset

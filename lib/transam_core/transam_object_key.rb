@@ -19,6 +19,7 @@ module TransamObjectKey
 
   def generate_object_key(column)
     begin
+      # Note Time.now.to_f converts to seconds since Epoch, which is correct
       self[column] = (Time.now.to_f * 10000000).to_i.to_s(24).upcase
     end #while self.exists?(column => self[column])
   end

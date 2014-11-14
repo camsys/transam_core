@@ -188,7 +188,7 @@ class PoliciesController < OrganizationAwareController
         msg = "#{num_to_update} assets will be updated."
         notify_user(:notice, msg)
         # Add a row into the activity table
-        ActivityLog.create({:organization_id => @organization.id, :user_id => current_user.id, :item_type => "AssetUpdateJobBuilder", :activity => msg, :activity_time => Time.now})
+        ActivityLog.create({:organization_id => @organization.id, :user_id => current_user.id, :item_type => "AssetUpdateJobBuilder", :activity => msg, :activity_time => Time.current})
       else
         notify_user(:notice, "No assets were updated.")
       end

@@ -85,7 +85,7 @@ class MessagesController < OrganizationAwareController
     
     # Mark this message as opened if not opened previously
     if @message.opened_at.nil?
-      @message.opened_at = Time.now
+      @message.opened_at = Time.current
       @message.save
     end
         

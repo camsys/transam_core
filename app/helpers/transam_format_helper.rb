@@ -122,7 +122,7 @@ module TransamFormatHelper
   # formats a date/time as a distance in words. e.g. 6 days ago
   def format_as_date_time_distance(datetime)
     dist = distance_of_time_in_words_to_now(datetime)
-    if Time.now > datetime
+    if Time.current > datetime
       dist = dist + " ago"
     end  
     return dist
