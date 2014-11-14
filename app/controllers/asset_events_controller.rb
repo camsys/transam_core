@@ -55,7 +55,7 @@ class AssetEventsController < AssetAwareController
     # get the asset event type
     asset_event_type = AssetEventType.find(params[:event_type])
     unless asset_event_type.blank?
-      @asset_event = @asset.create_typed_event(asset_event_type.class_name.constantize)
+      @asset_event = @asset.build_typed_event(asset_event_type.class_name.constantize)
     end
 
     add_new_show_create_breadcrumbs
@@ -133,7 +133,7 @@ class AssetEventsController < AssetAwareController
     # we need to know what the event type was for this event
     asset_event_type = AssetEventType.find(params[:event_type])
     unless asset_event_type.blank?
-      @asset_event = @asset.create_typed_event(asset_event_type.class_name.constantize)
+      @asset_event = @asset.build_typed_event(asset_event_type.class_name.constantize)
     end
 
     add_new_show_create_breadcrumbs
