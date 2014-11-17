@@ -1,5 +1,5 @@
-:javascript	
+- id = "datatable" if id.blank?
+:javascript
 	$(document).ready(function() {
-		transam.render_data_table("datatable", false);
+		transam.render_data_table("#{id}", false);
 	});
-	  		
