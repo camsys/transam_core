@@ -42,6 +42,9 @@ class Asset < ActiveRecord::Base
   # each asset has a reason why it is being replaced
   belongs_to :replacement_reason_type
 
+  # each was puchased from a vendor
+  belongs_to :vendor
+
   # Each asset has zero or more asset events. These are all events regardless of event type. Events are deleted when the asset is deleted
   has_many   :asset_events, :dependent => :destroy
 
@@ -170,6 +173,7 @@ class Asset < ActiveRecord::Base
     :asset_subtype_id,
     :asset_tag,
     :manufacture_year,
+    :vendor_id,
     :purchase_cost,
     :purchase_date,
     :purchased_new,
