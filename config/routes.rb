@@ -17,6 +17,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :vendors
+  
   resources :inventory, :controller => 'assets' do
       collection do
         get 'filter'
