@@ -7,7 +7,27 @@
 #
 #
 class Uom
+
+  # Other units
+  UNIT                = 'unit'
   
+  # Pre-defined weight quantities
+  KILOGRAM            = 'kilogram'
+  POUND               = "pound"  
+  SHORT_TON           = 'short_ton'
+  TON                 = SHORT_TON
+  TONNE               = "tonne"  
+    
+  # Pre-defined area measurements
+  SQUARE_YARD         = "square yard"
+  SQUARE_METER        = "square meter"
+  SQUARE_MILE         = "square mile"
+  ACRE                = "acre"
+  
+  # Predefined volumes
+  LITRE               = "litre"  
+  GALLON              = "gallon"  
+
   # Pre-defined distance metrics that can be used to define linear distances
   INCH                = 'inch'
   FEET                = 'foot'
@@ -15,7 +35,13 @@ class Uom
   MILE                = 'mile'
   METER               = 'meter'
   KILOMETER           = 'kilometer'
-  
+
+  AREA_UNITS      = [SQUARE_YARD, SQUARE_METER, SQUARE_MILE, ACRE]
+  DISTANCE_UNITS  = [INCH, FEET, YARD, MILE, METER, KILOMETER]
+  VOLUME_UNITS    = [LITRE, GALLON]
+  WEIGHT_UNITS    = [KILOGRAM, POUND, TONNE, SHORT_TON, TON]
+  OTHER_UNITS     = [UNIT]
+      
   # Check to see if a measurement unit is valid
   def self.valid? uom
     Unitwise.valid? uom
