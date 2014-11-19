@@ -3,7 +3,16 @@ module TransamFormatHelper
   # Include the fiscal year mixin
   include FiscalYear
                 
-                
+
+  # Formats a quantity
+  def format_as_quantity(count, unit_type = 'unit')
+    unless unit_type.blank?
+      pluralize(count, unit_type)
+    else
+      "#{count}"
+    end
+  end
+                  
   # formats an assets list of asset groups with remove option
   def format_asset_groups(asset, style = 'info')
     html = ''
