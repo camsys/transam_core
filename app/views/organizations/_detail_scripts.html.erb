@@ -5,7 +5,6 @@
   $(document).ready(function() {
 
     transam.make_same_height('.header-part');
-    transam.hide_empty_dropdown();
     
     var previous_tab = transam.get_ui_key_value(user_tab_key);
     if (previous_tab) {
@@ -20,9 +19,7 @@
       // save the latest tab
       var this_tab = $(this).attr('href');
       transam.set_ui_key_value(user_tab_key, this_tab);
-      if (this_tab == '#assets') {
-        draw_asset_summary_chart();
-      }
     });    
   }); 
+  
 </script>

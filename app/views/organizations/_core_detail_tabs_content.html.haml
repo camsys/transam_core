@@ -1,10 +1,8 @@
-.tab-pane.fade#service
-  .tab-content
-    = render 'services'
 - unless @org.assets.empty?
   .tab-pane.fade#assets
     .tab-content
       = render 'asset_summary'
+      
 .tab-pane.fade#users
   .tab-content
     = render 'users/index_table'

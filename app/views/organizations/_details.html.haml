@@ -2,12 +2,14 @@
   - # Load module specific tabs if they exist
   - SystemConfig.transam_module_names.each do |mod|
     = render :partial => "organizations/#{mod}_detail_tabs" rescue nil
+
 .tab-content
   - # Load module specific tab content if they exist
   - SystemConfig.transam_module_names.each do |mod|
-    = render :partial => "organizations/#{mod}_detail_tabs_content" rescue nil
+    = render :partial => "organizations/#{mod}_detail_tabs_content" 
 
 = render 'detail_scripts'
+
 - # Load module specific tab if they exist
 - SystemConfig.transam_module_names.each do |mod|
   = render :partial => "organizations/#{mod}_detail_tabs_scripts" rescue nil

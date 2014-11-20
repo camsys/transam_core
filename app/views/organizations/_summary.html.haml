@@ -1,12 +1,9 @@
   %fieldset
-    %legend.panel-legend Details
     = format_field("Type", org.organization_type.name )
     = format_field("Name", org.name )
     = format_field("Short Name", org.short_name )
     = format_field("Indian Tribe", format_as_boolean(org.indian_tribe) )
     = format_field("Subrecipient Number", org.subrecipient_number )
-    = format_field("TEAM Number", org.team_number )
-    = format_field("External ID", org.external_id )
   %fieldset
     %legend.panel-legend Contact
     = format_field("Address", format_as_address(org) )
