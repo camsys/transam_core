@@ -141,10 +141,15 @@ notice_types = [
   {:active => 1,  :name => 'Informational Notice',  :description => 'Informational notices.', :display_icon => 'fa-exclamation', :display_class => 'text-info'}
 ]
 
+contact_types = [
+  {:name => 'TransAM Technical Contact', :code => 'TC'}
+]
+
 lookup_tables = %w{asset_event_types condition_types disposition_types cost_calculation_types license_types priority_types
   file_status_types attachment_types report_types service_status_types
   task_status_types service_life_calculation_types condition_estimation_types
   issue_types web_browser_types replacement_reason_types roles notice_types
+  contact_types
   }
 
 lookup_tables.each do |table_name|
