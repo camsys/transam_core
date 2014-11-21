@@ -2,7 +2,7 @@
 	<thead>
 		<tr>
 			<th colspan="2" class="center">Asset Type</th>
-			<th colspan="2" class="center">Service Life</th>
+			<th colspan="2" class="center">Service Life (yrs.)</th>
 			<th colspan="3" class="center">Replace</th>
 			<th colspan="4" class="center">Rehabilitate</th>
 			<th class="center"></th>
@@ -34,7 +34,7 @@
 			<td class="left"><%= pi.asset_subtype.asset_type %></td>
 			<td class="left"><%= pi.asset_subtype %></td>
 
-			<td class="right"><%= format_as_integer(pi.max_service_life_years) %></td>
+			<td class="right"><%= format_as_decimal(pi.max_service_life_years) %></td>
 			<td class="right"><%= format_as_percentage(pi.pcnt_residual_value) %></td>
 
 			<td class="center"><%= pi.replacement_ali_code %></td>
@@ -44,7 +44,7 @@
 			<td class="right"><%= format_as_integer(pi.rehabilitation_year) %></td>
 			<td class="center"><%= pi.rehabilitation_ali_code %></td>
 			<td class="right"><%= format_as_currency(pi.rehabilitation_cost) %></td>
-			<td class="right"><%= format_as_integer(pi.extended_service_life_years) %></td>
+			<td class="right"><%= format_as_decimal(pi.extended_service_life_years) %></td>
 
             <td class="center">
             	<% if can? :update, @policy %>

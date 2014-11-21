@@ -383,7 +383,7 @@ class Asset < ActiveRecord::Base
     if p
       policy_item = p.get_rule(self)
       if policy_item
-        self.expected_useful_life = policy_item.max_service_life_years
+        self.expected_useful_life = policy_item.max_service_life_months # Asset life is in months, policy in years
       end
     end
   end
