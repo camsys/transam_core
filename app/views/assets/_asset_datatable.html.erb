@@ -8,18 +8,18 @@
 		<tr>
 			<th class="center">Agcy</th>
 			<th class="center">Type</th>
-			<th class="center">Tag</th>					
+			<th class="center">Tag</th>
 			<th class="center">Description</th>
 			<th class="center">Stat</th>
 			<th class="center">Cost</th>
-			
+
 			<th class="center">Age</th>
 			<th class="center">Backlog</th>
 			<th class="center">Rating</th>
 			<th class="center">Rep.</th>
 			<th class="center">Est.</th>
 			<th class="center">Value</th>
-			
+
 
 			<th class="center">Cost</th>
 			<th class="center">Policy</th>
@@ -28,7 +28,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<% @assets.each do |a| %>
+		<% assets.each do |a| %>
 			<tr data-action-path = '<%= inventory_path(a) %>'>
 				<td class="left"><%= a.organization.short_name %></td>
 				<td class="left"><%= a.asset_subtype.name %></td>
@@ -43,16 +43,16 @@
 				<td class="center"><%= a.reported_condition_type.name unless a.reported_condition_type.nil? %>
 				<td class="center"><%= a.estimated_condition_type.name unless a.estimated_condition_type.nil? %>
 				<td class="right"><%= format_as_currency(a.estimated_value) %></td>
-				
+
 				<td class="right"><%= format_as_currency(a.estimated_replacement_cost) %></td>
 				<td class="right"><%= a.policy_replacement_year %></td>
 				<td class="right"><%= a.estimated_replacement_year %></td>
-				
+
 				<td class="center"><%= render :partial => 'assets/asset_info_detail_popup', :locals => {:asset => a} %>
 			</tr>
 		<% end %>
 	</tbody>
-</table>	
+</table>
 
 <%= render 'shared/datatable_javascript' %>
 
@@ -63,7 +63,7 @@
     container: 'body',
     placement: 'left',
     animation: 'true',
-    html: 'true'    
-  });  
+    html: 'true'
+  });
 
 </script>
