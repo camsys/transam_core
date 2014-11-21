@@ -23,15 +23,19 @@ class Vendor < ActiveRecord::Base
   # Associations common to all vendors
   #------------------------------------------------------------------------------
 
+  # Every vendor is owned by an organization
+  belongs_to :organization
+
   #------------------------------------------------------------------------------
   # Validations common to all vendors
   #------------------------------------------------------------------------------
   validates :name,           :presence => true  
-
+  validates :organization,   :presence => true
+  
   # List of allowable form param hash keys  
   FORM_PARAMS = [
     :name,
-    :organization_type_id,
+    :organization_id,
     :address1,
     :address2,
     :city,
@@ -53,16 +57,6 @@ class Vendor < ActiveRecord::Base
       
   def self.allowable_params
     FORM_PARAMS
-  end
-      
-  # returns a typed value of the organization if one exists
-  def self.get_typed_organization(org)
-    if org
-      class_name = org.organization_type.class_name
-      klass = Object.const_get class_name
-      o = klass.find(org.id)
-      return o
-    end
   end
       
   #------------------------------------------------------------------------------
