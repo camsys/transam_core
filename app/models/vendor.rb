@@ -26,6 +26,9 @@ class Vendor < ActiveRecord::Base
   # Every vendor is owned by an organization
   belongs_to :organization
 
+  # Every vendor has 0 or more assets
+  has_many   :assets
+  
   #------------------------------------------------------------------------------
   # Validations common to all vendors
   #------------------------------------------------------------------------------

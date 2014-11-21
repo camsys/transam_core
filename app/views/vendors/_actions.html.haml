@@ -1,0 +1,16 @@
+.btn-group.pull-right.panel-action
+  %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
+    I want to  
+    %span.caret
+  %ul.dropdown-menu{:role => 'menu'}
+    - if can? :update, @expenditure
+      %li
+        = link_to edit_expenditure_path(@expenditure) do
+          %i.fa.fa-edit.fa-fw
+          = " Update this expense"
+    - if can? :delete, @expenditure
+      %li.divider
+      %li
+        = link_to expenditure_path(@expenditure), :method => :delete, :data => {:confirm => "Are you sure you want to remove this expense? The action can't be undone."} do
+          %i.fa.fa-trash-o.fa-fw
+          = " Remove this expense"          

@@ -1,0 +1,17 @@
+.row
+  .col-md-12
+    .panel.panel-default.header-part
+      .panel-heading
+        .row
+          .col-md-4
+            %h3.panel-title
+              %i.fa.fa-list
+              Vendors
+          .col-md-8
+            = render 'index_actions'
+      .panel-body
+        - if @vendors.empty?
+          %p No vendors found
+        - else
+          .col-md-12
+            = render 'index_table'
