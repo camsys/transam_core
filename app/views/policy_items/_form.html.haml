@@ -10,7 +10,7 @@
   .col-md-3
     %fieldset
       %legend Service Life
-      = f.input :max_service_life_months, :collection => [4, 6, 10, 12, 25, 40], :label_method => {|years| "#{years} yrs"}, :value_method => lambda {|years| years * 12 }
+      = f.input :max_service_life_months, :collection => [4, 6, 10, 12, 25, 40], :label_method => {|years| "#{years} yrs"}, :value_method => lambda {|years| years * 12 }, :label => "Max Service Life"
       = f.input :pcnt_residual_value
 
   .col-md-3  
@@ -26,7 +26,7 @@
       = f.input :rehabilitation_cost
       = f.input :rehabilitation_ali_code
       = f.input :rehabilitation_year
-      = f.input :extended_service_life_months
+      = f.input :extended_service_life_months, :collection => [4, 6, 10, 12, 25, 40], :label_method => {|years| "#{years} yrs"}, :value_method => lambda {|years| years * 12 }, :label => "Extended Service Life"
 
   .col-md-12  
     = f.button :submit, :class => 'btn btn-primary'
