@@ -10,10 +10,6 @@ class AssetsController < AssetAwareController
   before_filter :get_asset,         :only => [:show, :edit, :copy, :update, :destroy, :add_to_group, :remove_from_group]
   before_filter :reformat_date_field, :only => [:create, :update]
 
-  # From the application config
-  ASSET_BASE_CLASS_NAME     = SystemConfig.instance.asset_base_class_name
-  MAX_ROWS_RETURNED         = SystemConfig.instance.max_rows_returned
-
   STRING_TOKENIZER          = '|'
 
   # Session Variables
@@ -116,7 +112,7 @@ class AssetsController < AssetAwareController
       # cache the set of asset ids in case we need them later
       cache_list(@assets, INDEX_KEY_LIST_VAR)
     end
-    
+
     respond_to do |format|
       format.html
       format.js
@@ -402,7 +398,7 @@ class AssetsController < AssetAwareController
 
     # If the asset type and subtypes are not set we default to the asset base class
     if @id_filter_list or (@asset_type == 0 and @asset_subtype == 0)
-      @asset_class_name = ASSET_BASE_CLASS_NAME
+      @asset_class_name = SystemConfig.instance.asset_base_class_name
     elsif @asset_subtype > 0
       # we have an asset subtype so get it and get the asset type from it. We also set the filter form
       # to the name of the selected subtype
