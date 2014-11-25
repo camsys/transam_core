@@ -205,7 +205,7 @@ class PoliciesController < OrganizationAwareController
   private
   # Never trust parameters from the scary internet, only allow the white list through.
   def form_params
-    params.require(:policy).permit(policy_allowable_params)
+    params.require(:policy).permit(Policy.allowable_params)
   end
 
   def get_policy

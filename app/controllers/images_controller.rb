@@ -96,7 +96,7 @@ class ImagesController < NestedResourceController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def form_params
-    params.require(:image).permit(image_allowable_params)
+    params.require(:image).permit(Image.allowable_params)
   end
 
 end

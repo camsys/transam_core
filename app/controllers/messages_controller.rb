@@ -178,7 +178,7 @@ class MessagesController < OrganizationAwareController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def form_params
-    params.require(:message).permit(message_allowable_params)
+    params.require(:message).permit(Message.allowable_params)
   end
   
   # Callbacks to share common setup or constraints between actions.

@@ -299,7 +299,7 @@ class TasksController < OrganizationAwareController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def form_params
-    params.require(:task).permit(task_allowable_params)
+    params.require(:task).permit(Task.allowable_params)
   end
 
   def reformat_date_field

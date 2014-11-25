@@ -86,6 +86,6 @@ class AssetGroupsController < OrganizationAwareController
 
     # Only allow a trusted parameter "white list" through.
     def form_params
-      params.require(:asset_group).permit(asset_group_allowable_params)
+      params.require(:asset_group).permit(AssetGroup.allowable_params)
     end
 end

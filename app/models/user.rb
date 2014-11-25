@@ -87,6 +87,7 @@ class User < ActiveRecord::Base
     :notify_via_email,
     :password,
     :password_confirmation,
+    :current_password,
     :remember_me,
     :external_id,
     :user_organization_filter_id,

@@ -66,6 +66,6 @@ class IssuesController < OrganizationAwareController
 
     # Only allow a trusted parameter "white list" through.
     def issue_params
-      params.require(:issue).permit(issue_allowable_params)
+      params.require(:issue).permit(Issue.allowable_params)
     end
 end

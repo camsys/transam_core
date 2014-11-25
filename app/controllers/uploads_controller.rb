@@ -263,7 +263,7 @@ class UploadsController < OrganizationAwareController
   
   # Never trust parameters from the scary internet, only allow the white list through.
   def form_params
-    params.require(:upload).permit(upload_allowable_params)
+    params.require(:upload).permit(Upload.allowable_params)
   end
   
   # Callbacks to share common setup or constraints between actions.

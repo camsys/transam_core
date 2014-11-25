@@ -105,7 +105,7 @@ class DocumentsController < NestedResourceController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def document_params
-    params.require(:document).permit(document_allowable_params)
+    params.require(:document).permit(Document.allowable_params)
   end
 
 end

@@ -94,7 +94,7 @@ class CommentsController < NestedResourceController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def comment_params
-    params.require(:comment).permit(comment_allowable_params)
+    params.require(:comment).permit(Comment.allowable_params)
   end
 
 end
