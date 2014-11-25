@@ -32,6 +32,7 @@ class AssetsController < AssetAwareController
     # Always display the last view
     redirect_to :back
   end
+  
   # Removes the asset from the specified group
   def remove_from_group
     asset_group = AssetGroup.find_by_object_key(params[:asset_group])
@@ -48,43 +49,6 @@ class AssetsController < AssetAwareController
 
     # Always display the last view
     redirect_to :back
-  end
-
-  # Sets the spatial filter bounding box
-  def spatial_filter
-
-    # Check to see if we got spatial filter. If it is nil then spatial fitlering has been
-    # diabled
-    @spatial_filter = params[:spatial_filter]
-    # store it in the session for later
-    session[:spatial_filter] = @spatial_filter
-
-  end
-
-  # Implements a map view which includes spatial filtering
-  def map
-
-    @assets = get_assets
-    @page_title = "#{@asset_class.underscore.humanize.titleize}".pluralize(2)
-
-    markers = []
-    @assets.each do |asset|
-      if asset.mappable?
-        markers << get_map_marker(asset, asset.object_key, false) # not draggable
-      end
-    end
-    @markers = markers.to_json
-
-    # cache the set of asset ids in case we need them later
-    cache_list(@assets, INDEX_KEY_LIST_VAR)
-
-    respond_to do |format|
-      format.html
-      format.js
-      format.json { render :json => get_as_json(@assets, @row_count) }
-      format.xls
-    end
-
   end
 
   # renders either a table or map view of a selected list of assets

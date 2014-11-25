@@ -25,8 +25,6 @@ Rails.application.routes.draw do
         get 'details'
         get 'new_asset'
         get 'export'
-        get 'map'
-        get 'spatial_filter'
       end
       member do
         get 'update_status'
