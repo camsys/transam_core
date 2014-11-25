@@ -10,12 +10,12 @@ class ServiceLifeCalculator < Calculator
   protected
 
   # calculate the service life based on the in_service_date FY plus
-  # the average asset life based on the policy
+  # the average asset life based on the asset's expected useful life or policy item
   # age is in relation to in_service_date NOT an asset's date based off its manufacture_year
   # this is used to get the derived field asset.policy_replacement_year
   # returns in FY
   def by_age(asset)
-    fiscal_year_year_on_date(asset.in_service_date) + asset.policy_rule.max_service_life_months.months
+    fiscal_year_year_on_date(asset.in_service_date) + asset.expected_useful_life_months.months
   end
 
   # Calculate the service life based on the minimum of condition
