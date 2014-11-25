@@ -13,6 +13,6 @@
         - if @assets.empty?
           %p No matching assets found
         - else    
-          = render 'table_index'
+          = render :partial => 'table_index', :locals => {:assets => @assets}
 
 
