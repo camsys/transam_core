@@ -1,23 +1,23 @@
 class PoliciesController < OrganizationAwareController
-  
+
   add_breadcrumb "Home", :root_path
-  
+
   #before_filter :authorize_admin
   before_filter :check_for_cancel, :only => [:create, :update]
   before_filter :get_policy, :except => [:index, :create, :new]
-  
+
   SESSION_VIEW_TYPE_VAR = 'policies_subnav_view_type'
-    
+
   def index
 
     add_breadcrumb "Policies", policies_path
-   
-    # get the policies for this agency 
+
+    # get the policies for this agency
     @policies = []
     @organization.policies.each do |p|
       @policies << p
-    end   
-    
+    end
+
     # remember the view type
     @view_type = get_view_type(SESSION_VIEW_TYPE_VAR)
 
@@ -40,7 +40,7 @@ class PoliciesController < OrganizationAwareController
       asset_type = AssetType.find(@asset_type)
       @rules = @policy.policy_items.where('asset_subtype_id IN (?)', asset_type.asset_subtype_ids)
     end
-    
+
     respond_to do |format|
       format.html # show.html.erb
       format.js
@@ -48,7 +48,7 @@ class PoliciesController < OrganizationAwareController
     end
   end
 
-  
+
   def new
     #right now, no blank policies can be created - just copying existing policies
   end
@@ -58,7 +58,7 @@ class PoliciesController < OrganizationAwareController
 
     # Get the concrete class for the organization
     org = Organization.get_typed_organization(@policy.organization)
-    
+
     # Make sure that any other policies including the selected ones
     # are not current
     org.policies.each do |pol|
@@ -68,24 +68,24 @@ class PoliciesController < OrganizationAwareController
     # make the selected policy current
     @policy.current = true
     @policy.save
-    
+
     notify_user(:notice, "Policy #{@policy.name} is now set as the current policy.")
-    redirect_to policy_url(@policy)    
-        
+    redirect_to policy_url(@policy)
+
   end
 
   def edit
-    
+
     add_breadcrumb "Policies", policies_path
     add_breadcrumb @policy.name, policy_path(@policy)
     add_breadcrumb 'Modify', edit_policy_path(@policy)
-    
+
   end
 
   # Copy a policy to a new policy. This could be copying from a parent agency to a member agency or
   # vis versa
   def copy
-    
+
     old_policy_name = @policy.name
     new_policy = @policy.dup
     new_policy.parent = @policy
@@ -94,7 +94,7 @@ class PoliciesController < OrganizationAwareController
     new_policy.description = "Copy of " + @policy.description
     new_policy.current = false
     new_policy.active = true
-        
+
     new_policy.policy_items.clear
 
     new_policy.save!
@@ -111,9 +111,9 @@ class PoliciesController < OrganizationAwareController
         format.json { render :json => @policy.errors, :status => :unprocessable_entity }
       end
     end
-                          
+
   end
-  
+
   def create
 
     @policy = Policy.new(form_params)
@@ -160,7 +160,7 @@ class PoliciesController < OrganizationAwareController
   end
 
   def updater
-    add_breadcrumb "Asset Updater", updater_policy_path(@policy)   
+    add_breadcrumb "Asset Updater", updater_policy_path(@policy)
 
     @builder_proxy = AssetUpdaterProxy.new(:policy => @policy)
     @message = "Updating selected assets. This process might take a while."
@@ -171,18 +171,18 @@ class PoliciesController < OrganizationAwareController
 
     @builder_proxy = AssetUpdaterProxy.new(params[:asset_updater_proxy])
     if @builder_proxy.valid?
-      # Sleep for a couple of seconds so that the screen can display the waiting 
+      # Sleep for a couple of seconds so that the screen can display the waiting
       # message and the user can read it.
       sleep 2
-      
+
       # Run the builder
       options = {}
       options[:asset_type_ids] = @builder_proxy.asset_types
       options[:asset_group_ids] = @builder_proxy.asset_groups
-      
+
       builder = AssetUpdateJobBuilder.new
       num_to_update = builder.build(@organization, options)
-  
+
       # Let the user know the results
       if num_to_update > 0
         msg = "#{num_to_update} assets will be updated."
@@ -193,19 +193,19 @@ class PoliciesController < OrganizationAwareController
         notify_user(:notice, "No assets were updated.")
       end
       redirect_to policies_path
-      return      
+      return
     else
       respond_to do |format|
         format.html { render :action => "updater" }
       end
     end
-    
+
   end
-  
+
   private
   # Never trust parameters from the scary internet, only allow the white list through.
   def form_params
-    params.require(:policy).permit(Policy.allowable_params)
+    params.require(:policy).permit(policy_allowable_params)
   end
 
   def get_policy
@@ -221,9 +221,9 @@ class PoliciesController < OrganizationAwareController
       redirect_to(policies_url)
       return
     end
-    
+
   end
-    
+
   def check_for_cancel
     unless params[:cancel].blank?
       # get the policy, if one was being edited
