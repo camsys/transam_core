@@ -331,12 +331,16 @@ class Asset < ActiveRecord::Base
     return "#{asset_subtype.name} - #{asset_tag}"
   end
 
+  # returns the number of months an asset has been in service
+  def months_in_service(on_date=Date.today)
+    (on_date.year * 12 + on_date.month) - (in_service_date.year * 12 + in_service_date.month)
+  end
+
   # returns the number of years since the asset was manufactured. It can't be less than 0
   # returns in fiscal year
   # need to rethink as manufacture year is not by fiscal year
   def age(on_date=Date.today)
-    # TODO: determine what is age is w/r/t and its relation to current_depreciation_date
-    [fiscal_year_year_on_date(on_date) - manufacture_year, 0].max
+    [(months_in_service(on_date)/12.0).floor, 0].max
   end
 
   # returns the number of years since the asset was owned. It can't be less than 0
