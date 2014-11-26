@@ -9,3 +9,8 @@
       = format_field("Roles", format_as_list(user.roles) )
     - unless user.contact_types.empty?
       = format_field("Contact Types", format_as_list(user.contact_types))
+    = format_field("Address", user.address1) if user.address1
+    = format_field("", user.address2) if user.address2
+    = format_field("City", user.city) if user.city
+    = format_field("State", user.state) if user.state
+    = format_field("ZIP Code", user.zip) if user.zip

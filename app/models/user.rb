@@ -92,7 +92,12 @@ class User < ActiveRecord::Base
     :external_id,
     :user_organization_filter_id,
     :num_table_rows,
-    :active
+    :active,
+    :address1,
+    :address2,
+    :city,
+    :state,
+    :zip
   ]
   
   #------------------------------------------------------------------------------

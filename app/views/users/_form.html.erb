@@ -13,6 +13,19 @@
 				<%= f.input :title, :placeholder => "User's public title" %>
 				<%= f.input :phone, :as => :tel, :placeholder => "Users primary phone number..." %>
 				<%= f.input :external_id, :placeholder => "External ID..." %>
+				<%= f.input :address1 %>
+				<%= f.input :address2 %>
+			  <div class="row">
+			    <div class="col-sm-6">
+			      <%= f.input :city %>
+		      </div>
+			    <div class="col-sm-3">
+			      <%= f.input :state, :as => :select, :collection => Country['US'].states, :include_blank => false, :selected => "PA" %>
+		      </div>
+			    <div class="col-sm-3">
+			      <%= f.input :zip %>
+		      </div>
+	      </div>
 				<%= f.input :timezone, :as => :time_zone, priority: /US/, :prompt => "Select timezone..." %>
 				<div class="col-md-12">
 					<%= f.button :submit, :class => "btn btn-primary" %>
