@@ -102,7 +102,7 @@ module FiscalYear
   def fiscal_year(year)
     yr = year - fy_century(year)
     first = "%.2d" % yr
-    last = "%.2d" % (yr + 1)
+    last = "%.2d" % ((yr + 1) % 100)
     "FY #{first}-#{last}"
   end
 
