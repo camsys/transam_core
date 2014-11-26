@@ -44,8 +44,10 @@
     // Instantiate our chart object.
     condition_chart = new google.visualization.ScatterChart(document.getElementById('condition_chart_div'));
   
-    // Draw our chart with the created data and options
-    condition_chart.draw(condition_data, condition_options);
+    <% if @asset.condition_updates.present? %>
+      // Draw our chart with the created data and options
+      condition_chart.draw(condition_data, condition_options);
+    <% end %>
   };
   
 
