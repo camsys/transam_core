@@ -437,15 +437,6 @@ class Asset < ActiveRecord::Base
     end
   end
 
-  # Forces an update of an assets estimated value. This performs an update on the record
-  def update_estimated_value(policy = nil)
-
-    # can't do this if it is a new record as none of the IDs would be set
-    unless new_record?
-      update_asset_value(policy)
-    end
-  end
-
   # Forces an update of an assets reported condition. This performs an update on the record.
   def update_condition
 

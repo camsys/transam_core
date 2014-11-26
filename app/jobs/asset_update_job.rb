@@ -6,12 +6,12 @@
 #
 #------------------------------------------------------------------------------
 class AssetUpdateJob < AbstractAssetUpdateJob
-  
-  def requires_sogr_update?  
+
+  def requires_sogr_update?
     true
-  end  
-  
-  def execute_job(asset)     
+  end
+
+  def execute_job(asset)
 
     # generic asset updates
     asset.update_service_status
@@ -19,12 +19,11 @@ class AssetUpdateJob < AbstractAssetUpdateJob
     asset.update_scheduled_replacement
     asset.update_scheduled_rehabilitation
     asset.update_scheduled_disposition
-    asset.update_estimated_value
-      
+
   end
 
   def prepare
-    Rails.logger.debug "Executing AssetUpdateJob at #{Time.now.to_s} for Asset #{object_key}"    
+    Rails.logger.debug "Executing AssetUpdateJob at #{Time.now.to_s} for Asset #{object_key}"
   end
-  
+
 end
