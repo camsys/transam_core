@@ -19,8 +19,6 @@
 			<th class="center">Rating</th>
 			<th class="center">Rep.</th>
 			<th class="center">Est.</th>
-			<th class="center">Value</th>
-
 
 			<th class="center">Cost</th>
 			<th class="center">Policy</th>
@@ -44,7 +42,6 @@
 				<td class="center"><%= format_as_decimal(a.reported_condition_rating, 1) %></td>
 				<td class="center"><%= a.reported_condition_type.name unless a.reported_condition_type.nil? %>
 				<td class="center"><%= a.estimated_condition_type.name unless a.estimated_condition_type.nil? %>
-				<td class="right"><%= format_as_currency(a.estimated_value) %></td>
 
 				<td class="right"><%= format_as_currency(a.estimated_replacement_cost) %></td>
 				<td class="right"><%= a.policy_replacement_year %></td>

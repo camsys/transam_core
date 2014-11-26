@@ -162,7 +162,7 @@ RSpec.describe Asset, :type => :model do
         %w(asset_tag policy_replacement_year estimated_replacement_year estimated_replacement_cost
           scheduled_replacement_year scheduled_rehabilitation_year scheduled_disposition_year replacement_reason_type_id
           in_backlog reported_condition_type_id reported_condition_rating reported_condition_date reported_mileage
-          estimated_condition_type_id estimated_condition_rating service_status_type_id estimated_value
+          estimated_condition_type_id estimated_condition_rating service_status_type_id
           disposition_type_id disposition_date license_plate).each do |attribute_name|
           expect(copied_bus.send(attribute_name)).to be_blank,
           "expected '#{attribute_name}' to be blank, got #{copied_bus.send(attribute_name)}"

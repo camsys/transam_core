@@ -5,4 +5,3 @@
   = format_field("Reported On", format_as_date(asset.reported_condition_date) )
   = format_field("Est. Rating", format_as_decimal(asset.estimated_condition_rating, 1))
   = format_field("Est. Condition", asset.estimated_condition_type.nil? ? 'Unknown' : asset.estimated_condition_type.name )
-  = format_field("Est. Value", format_as_currency(asset.estimated_value))

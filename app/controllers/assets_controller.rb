@@ -32,7 +32,7 @@ class AssetsController < AssetAwareController
     # Always display the last view
     redirect_to :back
   end
-  
+
   # Removes the asset from the specified group
   def remove_from_group
     asset_group = AssetGroup.find_by_object_key(params[:asset_group])
@@ -536,7 +536,6 @@ class AssetsController < AssetAwareController
         view_context.format_as_decimal(a.reported_condition_rating, 1),
         a.reported_condition_type.blank? ?  "" : a.reported_condition_type.name,
         a.estimated_condition_type.blank? ? "" : a.estimated_condition_type.name,
-        view_context.format_as_currency(a.estimated_value),
 
         view_context.format_as_currency(a.estimated_replacement_cost),
         view_context.format_as_fiscal_year(a.policy_replacement_year),

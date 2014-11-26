@@ -161,7 +161,6 @@ class Asset < ActiveRecord::Base
     'estimated_condition_type_id',
     'estimated_condition_rating',
     'service_status_type_id',
-    'estimated_value',
     'disposition_type_id',
     'disposition_date'
  ]
@@ -186,7 +185,6 @@ class Asset < ActiveRecord::Base
     :scheduled_rehabilitation_year,
     :scheduled_disposition_year,
     :replacement_reason_type_id,
-    :estimated_value,
     :in_backlog,
     :reported_condition_type_id,
     :reported_condition_rating,
