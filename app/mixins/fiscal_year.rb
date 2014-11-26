@@ -102,7 +102,12 @@ module FiscalYear
   def fiscal_year(year)
     yr = year - fy_century(year)
     first = "%.2d" % yr
-    last = "%.2d" % ((yr + 1) % 100)
+    if yr == 99 # when yr == 99, yr + 1 would be 100, which causes: "FY 99-100"
+      next_yr = 00 
+    else
+      next_yr = (yr + 1)
+    end
+    last = "%.2d" % next_yr
     "FY #{first}-#{last}"
   end
 
