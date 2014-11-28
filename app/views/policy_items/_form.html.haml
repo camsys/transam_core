@@ -10,7 +10,7 @@
   .col-md-3
     %fieldset
       %legend Service Life
-      = f.input :max_service_life_months, :collection => [4, 6, 10, 12, 25, 40], :label_method => {|years| "#{years} yrs"}, :value_method => lambda {|years| years * 12 }, :label => "Max Service Life"
+      = f.input :max_service_life_months
       = f.input :pcnt_residual_value
 
   .col-md-3  
