@@ -8,7 +8,7 @@ class AssetsController < AssetAwareController
   before_filter :check_for_cancel,  :only => [:create, :update]
   # set the @asset variable before any actions are invoked
   before_filter :get_asset,         :only => [:show, :edit, :copy, :update, :destroy, :add_to_group, :remove_from_group]
-  before_filter :reformat_date_field, :only => [:create, :update]
+  before_filter :reformat_date_fields,  :only => [:create, :update]
 
   STRING_TOKENIZER          = '|'
 
@@ -137,7 +137,6 @@ class AssetsController < AssetAwareController
   end
 
   def update
-
     @asset.updator = current_user
 
     add_breadcrumb "#{@asset.asset_type.name}".pluralize(2), inventory_index_path
@@ -597,9 +596,14 @@ class AssetsController < AssetAwareController
     end
   end
 
-  def reformat_date_field
-    date_str = params[:asset][:purchase_date]
+  def reformat_date(date_str)
     form_date = Date.strptime(date_str, '%m-%d-%Y')
-    params[:asset][:purchase_date] = form_date.strftime('%Y-%m-%d')
+    return form_date.strftime('%Y-%m-%d')
   end
+
+  def reformat_date_fields
+    params[:asset][:purchase_date] = reformat_date(params[:asset][:purchase_date])
+    params[:asset][:in_service_date] = reformat_date(params[:asset][:in_service_date])
+  end
+
 end
