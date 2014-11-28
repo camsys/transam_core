@@ -3,11 +3,11 @@
     %tr
       %th.left Name
       %th.left Address
-      				
+
   %tbody
-    - @vendors.each do |v|      
+    - @vendors.each do |v|
       %tr.popup-details{:data => {:action_path => vendor_path(v)}}
         %td.left= v.name
-        %td.left= format_as_address(v)
+        %td.left= format_as_address(v) if v.address1
 
 = render 'shared/datatable_javascript'

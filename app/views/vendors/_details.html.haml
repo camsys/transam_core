@@ -1,17 +1,12 @@
 %ul.nav.nav-tabs
   %li
-    %a{:href => "#expenses", :data =>{:toggle => 'tab'}}
+    %a{:href => "#assets", :data =>{:toggle => 'tab'}}
       = "Assets"
-  - unless @vendor.assets.empty?
-    %li
-      %a{:href => "#assets", :data =>{:toggle => 'tab'}}
-        = "Assets"
 
 .tab-content
-  .tab-pane.fade#table
+  .tab-pane.fade#assets
     .tab-content
-      = render 'assets'
-  - unless @expenditure.assets.empty?
-    .tab-pane.fade#assets
-      .tab-content
+      - if @vendor.assets.empty?
+        %p There are no assets associated with this vendor.
+      - else
         = render 'assets'

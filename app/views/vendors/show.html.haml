@@ -3,15 +3,13 @@
     .panel.panel-default.header-part
       .panel-heading
         .row
-          .col-md-6
+          .col-md-12
             %h3.panel-title
               %i.fa.fa-list
               Vendor
-          .col-md-6
-            = render 'actions'
-      .panel-body    
-        = render :partial => 'summary', :locals => {:vendor => @vendor} 
-        
+      .panel-body
+        = render :partial => 'summary', :locals => {:vendor => @vendor}
+
   .col-md-8
     .panel.panel-default.header-part
       .panel-heading
@@ -20,7 +18,7 @@
             %h3.panel-title
               %i.fa.fa-folder-open
               Details
-                
+
       .panel-body
         = render 'details'
 

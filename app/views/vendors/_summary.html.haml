@@ -1,1 +1,8 @@
-= format_field("Name", vendor.name )
+%fieldset
+  = format_field("Name", vendor.name )
+%fieldset
+  %legend.panel-legend Contact
+  = format_field("Address", format_as_address(vendor) ) if vendor.address1 
+  = format_field("Phone", format_as_phone_number(vendor.phone) )
+  = format_field("Fax", format_as_phone_number(vendor.fax) )
+  = format_field("Url", format_as_url(vendor.url) )

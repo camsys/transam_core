@@ -1,8 +1,8 @@
 class VendorsController < OrganizationAwareController
-  
+
   add_breadcrumb "Home", :root_path
   add_breadcrumb "Vendors", :vendors_path
-  
+
   before_action :set_vendor, only: [:show]
 
   # Session Variables
@@ -14,12 +14,12 @@ class VendorsController < OrganizationAwareController
     # Start to set up the query
     conditions  = []
     values      = []
-    
+
     # Limit to the org
     conditions << 'organization_id = ?'
     values << @organization.id
-        
-    @vendors = Vendor.where(conditions.join(' AND '), *values) 
+
+    @vendors = Vendor.where(conditions.join(' AND '), *values)
 
     # cache the expenditure ids in case we need them later
     cache_list(@vendors, INDEX_KEY_LIST_VAR)
@@ -35,7 +35,7 @@ class VendorsController < OrganizationAwareController
     get_next_and_prev_object_keys(@vendor, INDEX_KEY_LIST_VAR)
     @prev_record_path = @prev_record_key.nil? ? "#" : vendor_path(@prev_record_key)
     @next_record_path = @next_record_key.nil? ? "#" : vendor_path(@next_record_key)
-    
+
   end
 
   private
@@ -43,9 +43,5 @@ class VendorsController < OrganizationAwareController
     def set_vendor
       @vendor = Vendor.find_by(:object_key => params[:id])
     end
-
-    # Only allow a trusted parameter "white list" through.
-    def expenditure_params
-      params.require(:vendor).permit(Vendor.allowable_params)
-    end
+    
 end
