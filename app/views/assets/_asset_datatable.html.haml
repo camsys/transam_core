@@ -1,43 +1,17 @@
 %table.table.table-hover#assets_datatable
   %thead
     %tr
-      %th.left Agency
-      %th.left Type
-      %th.left Asset Tag
-      %th.left External ID
-      %th.left Description
+      - SystemConfig.transam_module_names.each do |mod|
+        = render :partial => "#{mod}_asset_dt_head" rescue nil
       %th.left Manufacturer
-      
-      %th.left Location
-      %th.right In Service
-      %th.right Age
-      %th.center Condition
-      %th.center Status
-
-      %th.center Rehab
-      %th.center Replace
-      
       %th.center
       
   %tbody
     - assets.each do |a|
       %tr{:data => {:action_path => inventory_path(a)}}
-        %td.left= a.organization
-        %td.left= a.asset_subtype
-        %td.left= a.asset_tag
-        %td.left= a.external_id
-        %td.left= a.description
+        - SystemConfig.transam_module_names.each do |mod|
+          = render :partial => "#{mod}_asset_dt_columns", :locals => {:a => a } rescue nil
         %td.left= a.manufacturer
-        
-        %td.left= a.location
-        %td.right= format_as_date(a.in_service_date)
-        %td.right= format_as_integer(a.age)
-        %td.center= format_as_decimal(a.reported_condition_rating, 1)
-        %td.center= a.service_status_type.code unless a.service_status_type.nil?
-
-        %td.center= format_as_fiscal_year(a.scheduled_rehabilitation_year)
-        %td.center= format_as_fiscal_year(a.scheduled_rehabilitation_year)
-
         %td.center= render :partial => 'assets/asset_info_detail_popup', :locals => {:asset => a}
                 
 = render :partial => 'shared/datatable_javascript', :locals => {:id => 'assets_datatable'}
