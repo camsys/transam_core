@@ -6,7 +6,7 @@
           .col-md-12
             %h3.panel-title
               %i.fa.fa-list
-              Vendor
+              = @vendor.name
       .panel-body
         = render :partial => 'summary', :locals => {:vendor => @vendor}
 

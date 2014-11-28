@@ -1,9 +1,9 @@
 = format_field("Owner", link_to(asset.organization.short_name, organization_path(asset.organization)) )
+= format_field("Description", asset.description )
 = format_field("Asset Tag", asset.asset_tag )
 = format_field("External ID", asset.external_id ) if asset.external_id
+= format_field("Manufacturer", Manufacturer.find(asset.manufacturer_id) ) unless asset.manufacturer_id.blank?
 = format_field("Class", asset.asset_type )
 = format_field("Type", asset.asset_subtype )
-= format_field("Description", asset.description )
-= format_field("Vendor", link_to(asset.vendor.name, vendor_path(asset.vendor)) ) unless asset.vendor.nil?
 = format_field("Status",  asset.service_status_type.nil? ? 'Unknown' : asset.service_status_type.name )
 = format_field("Groups",  format_asset_groups(asset)) unless asset.asset_groups.empty?

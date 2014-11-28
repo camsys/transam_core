@@ -1,7 +1,3 @@
-%fieldset
-  %legend.panel-legend Condition
-  = format_field("Age", asset.age.to_s + " yrs")
-  = format_field("Reported Condition", asset.reported_condition_type.nil? ? 'Unknown' : asset.reported_condition_type.name )
-  = format_field("Reported On", format_as_date(asset.reported_condition_date) )
-  = format_field("Est. Rating", format_as_decimal(asset.estimated_condition_rating, 1))
-  = format_field("Est. Condition", asset.estimated_condition_type.nil? ? 'Unknown' : asset.estimated_condition_type.name )
+= format_field("In Service Date", format_as_date(asset.in_service_date))
+= format_field("Age", pluralize(asset.age, "yr")
+= format_field("Condition", asset.reported_condition_type.nil? ? 'Unknown' : asset.reported_condition_type.name )
