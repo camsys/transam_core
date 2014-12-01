@@ -8,8 +8,6 @@ class CommentsController < NestedResourceController
     @commentable = find_resource
     @comments = @commentable.comments
   
-    @page_title = "#{@commentable.name}: Comments"
-
   end
 
   # GET /comments/1
@@ -21,14 +19,12 @@ class CommentsController < NestedResourceController
   def new
     @comment = Comment.new
     @commentable = find_resource
-    @page_title = "#{@commentable.name}: New comment"
   end
 
   # GET /comments/1/edit
   def edit
 
     @commentable = @comment.commentable
-    @page_title = "#{@commentable.name}: Edit comment"
 
   end
 
@@ -38,7 +34,6 @@ class CommentsController < NestedResourceController
     @commentable = find_resource
     @comment = @commentable.comments.build(comment_params)
     @comment.creator = current_user
-    @page_title = "#{@commentable.name}: New comment"
     
     respond_to do |format|
       if @comment.save
@@ -57,7 +52,6 @@ class CommentsController < NestedResourceController
   def update
 
     @commentable = @comment.commentable
-    @page_title = "#{@commentable.name}: Edit comment"
 
     respond_to do |format|
       if @comment.update(comment_params)

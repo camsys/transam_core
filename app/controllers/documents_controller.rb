@@ -8,23 +8,18 @@ class DocumentsController < NestedResourceController
     @documentable = find_resource
     @documents = @documentable.documents
   
-    @page_title = "#{@documentable.name}: Documents"
-
   end
 
   # GET /documents/new
   def new
     @document = Document.new
     @documentable = find_resource
-    @page_title = "#{@documentable.name}: New document"
-    
   end
 
   # GET /documents/1/edit
   def edit
 
     @documentable = @document.documentable
-    @page_title = "#{@documentable.name}: Edit document"
 
   end
 
@@ -49,8 +44,6 @@ class DocumentsController < NestedResourceController
     @document = @documentable.documents.build(document_params)
     @document.creator = current_user
 
-    @page_title = "#{@documentable.name}: New document"
-    
     respond_to do |format|
       if @document.save
         notify_user(:notice, 'Document was successfully created.')
@@ -68,7 +61,6 @@ class DocumentsController < NestedResourceController
   def update
 
     @documentable = @document.documentable
-    @page_title = "#{@documentable.name}: Edit document"
 
     respond_to do |format|
       if @document.update(document_params)
