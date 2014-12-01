@@ -45,6 +45,9 @@ class Asset < ActiveRecord::Base
   # each was puchased from a vendor
   belongs_to :vendor
 
+  # each belongs to a single manufacturer
+  belongs_to                  :manufacturer
+
   # Each asset has zero or more asset events. These are all events regardless of event type. Events are deleted when the asset is deleted
   has_many   :asset_events, :dependent => :destroy
 
@@ -139,7 +142,8 @@ class Asset < ActiveRecord::Base
   SEARCHABLE_FIELDS = [
     'object_key',
     'asset_tag',
-    'manufacture_year'
+    'manufacture_year',
+    'manufacturer_model'
   ]
 
   # List of fields that should be nilled when a copy is made
@@ -173,6 +177,8 @@ class Asset < ActiveRecord::Base
     :asset_tag,
     :manufacture_year,
     :vendor_id,
+    :manufacturer_id,
+    :manufacturer_model,
     :purchase_cost,
     :purchase_date,
     :purchased_new,
