@@ -11,15 +11,18 @@ class AssetUpdateJob < AbstractAssetUpdateJob
     true
   end
 
-  def execute_job(asset)
-
-    # generic asset updates
-    asset.update_service_status
-    asset.update_condition
-    asset.update_scheduled_replacement
-    asset.update_scheduled_rehabilitation
-    asset.update_scheduled_disposition
-
+  # If a generic Asset is passed, we run an incomplete list of update methods
+  def execute_job(typed_asset)
+    update_methods = typed_asset.update_methods
+    
+    # Is SOGR status expensive to update?
+    unless perform_sogr_update
+      update_methods.remove(:update_sogr)
+    end
+    
+    update_methods.each do |method|
+      typed_asset.send(method)
+    end
   end
 
   def prepare

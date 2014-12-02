@@ -169,6 +169,16 @@ class Asset < ActiveRecord::Base
     'disposition_date'
  ]
 
+  UPDATE_METHODS = [
+    :update_service_status,
+    :update_condition,
+    :update_scheduled_replacement,
+    :update_scheduled_rehabilitation,
+    :update_scheduled_disposition,
+    :update_asset_state,
+    :update_sogr
+  ]
+
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
     :organization_id,
@@ -538,6 +548,15 @@ class Asset < ActiveRecord::Base
 
   def searchable_fields
     SEARCHABLE_FIELDS
+  end
+
+  def update_methods
+    a = []
+    a << super rescue nil # Must call super in case an engine includes updates above Asset
+    UPDATE_METHODS.each do |method|
+      a << method
+    end
+    a.flatten
   end
 
   # nils out all fields identified to be cleansed
