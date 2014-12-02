@@ -23,4 +23,14 @@ namespace :transam do
       a.record_disposition
     end
   end
+
+  desc "Updates all updateable attributes of every asset"
+  task update_all: :environment do
+    Asset.all.each do |a|
+      typed_asset = Asset.get_typed_asset(a)
+      typed_asset.update_methods.each do |m|
+        typed_asset.send(m)
+      end
+    end
+  end
 end
