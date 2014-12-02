@@ -29,7 +29,7 @@ class ReplacementCostPlusInterestCalculator < ReplacementCostCalculator
     Rails.logger.debug "num_years_to_replacement #{num_years_to_replacement}"
 
     # interest rate
-    interest_rate = asset.policy_rule.interest_rate
+    interest_rate = asset.policy_rule.policy.interest_rate
 
     future_cost(initial_cost, num_years_to_replacement, interest_rate)
   end
