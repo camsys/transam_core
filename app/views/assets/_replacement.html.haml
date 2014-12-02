@@ -1,0 +1,5 @@
+%fieldset
+  = format_field("Policy Replacement Year", @asset.policy_replacement_year)
+  = format_field("Scheduled Replacement Year", @asset.scheduled_replacement_year)
+  = format_field("Policy Rehabiliation Year", @asset.policy_rule.rehabilitation_year) unless @asset.policy_rule.rehabilitation_year.nil?
+  = format_field("Scheduled Rehabiliation Year", @asset.scheduled_rehabilitation_year) unless @asset.scheduled_rehabilitation_year.nil?

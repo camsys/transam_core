@@ -9,6 +9,9 @@
     %span.badge.pull-right= @asset.asset_events.count
     = "History"
 %li
+  %a{:href => "#replace", :data =>{:toggle => 'tab'}}
+    Replacement
+%li
   %a{:href => "#comm", :data =>{:toggle => 'tab'}}
     %span.badge.pull-right= @asset.comments.count
     = "Comments"
