@@ -55,7 +55,7 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
     # this is the rating that indicates the asset is at the end of its useful life. Usually 2.5 for FTA applications
     condition_threshold = asset.policy.condition_threshold
 
-    years_policy    = asset.asset_or_policy_useful_life_months / 12.0
+    years_policy    = asset.expected_useful_life.nil? asset.policy_rule.max_service_life_months / 12.0 : asset.expected_useful_life / 12.0
     years_mileage   = INFINITY
     years_condition = INFINITY
 
@@ -111,7 +111,7 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
 
       # this is the max number of years for the asset, i.e. the number of years before the asset's rating is expected to
       # reach the condition_threshold value
-      years_policy = asset.asset_or_policy_useful_life_months / 12.0
+      years_policy = asset.expected_useful_life.nil? asset.policy_rule.max_service_life_months / 12.0 : asset.expected_useful_life / 12.0
 
       Rails.logger.debug "asset.age=#{asset.age}, threshold=#{condition_threshold}, min_rating=#{min_rating}, max_rating=#{max_rating}"
 

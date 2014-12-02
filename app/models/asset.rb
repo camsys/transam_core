@@ -397,12 +397,6 @@ class Asset < ActiveRecord::Base
     end
   end
 
-  # If we have a useful life stamped in the asset, the policy rules can change withou
-  # affecting the calculations for an asset
-  def asset_or_policy_useful_life_months
-    expected_useful_life || policy_rule.max_service_life_months
-  end
-
   # Record that the asset has been disposed. This updates the dispostion date and the disposition_type attributes
   def record_disposition
     Rails.logger.info "Recording final disposition for asset = #{object_key}"
