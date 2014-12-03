@@ -35,6 +35,8 @@ Gem::Specification.new do |s|
   s.add_dependency 'delayed_job_active_record'
   # for running background processes
   s.add_dependency 'daemons'
+  s.add_dependency 'haml-rails'
+
   s.add_dependency 'simple_form'
   
   s.add_development_dependency 'mail', '2.5.4'

@@ -8,6 +8,7 @@ require 'state_machine'
 require 'kaminari'
 require 'delayed_job'
 require 'high_voltage'
+require 'haml-rails'
 require 'simple_form'
 require 'carrierwave'
 
