@@ -8,7 +8,7 @@ CarrierWave.configure do |config|
     :aws_secret_access_key  => ENV['AWS_SECRET_KEY'],
     :region                 => ENV['AWS_S3_REGION'],
     :path_style            => true      
-  }
+  } unless Rails.env.test? # no tests depend on this right now.  Just turn off fog
 
   # For testing, upload files to local `tmp` folder.
   if Rails.env.test? || Rails.env.cucumber?

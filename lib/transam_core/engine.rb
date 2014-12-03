@@ -5,6 +5,11 @@ require 'unitwise'
 require 'chronic'
 require 'breadcrumbs_on_rails'
 require 'state_machine'
+require 'kaminari'
+require 'delayed_job'
+require 'high_voltage'
+require 'simple_form'
+require 'carrierwave'
 
 module TransamCore
   class Engine < ::Rails::Engine

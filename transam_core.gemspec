@@ -28,18 +28,21 @@ Gem::Specification.new do |s|
   s.add_dependency 'chronic'
   s.add_dependency "breadcrumbs_on_rails"
   s.add_dependency 'state_machine'
-
-    
+  s.add_dependency 'fog'
+  s.add_dependency 'carrierwave'
+  s.add_dependency 'kaminari'
   # for background processing jobs  
   s.add_dependency 'delayed_job_active_record'
   # for running background processes
   s.add_dependency 'daemons'
+  s.add_dependency 'simple_form'
   
   s.add_development_dependency 'mail', '2.5.4'
   s.add_development_dependency "rspec-rails"
   s.add_development_dependency "factory_girl_rails"
   s.add_development_dependency "database_cleaner"  
   s.add_development_dependency "sqlite3"
+  s.add_development_dependency "mysql2"
   s.add_development_dependency "cucumber-rails"
 
 end
