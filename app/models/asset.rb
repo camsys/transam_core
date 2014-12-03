@@ -175,7 +175,6 @@ class Asset < ActiveRecord::Base
     :update_scheduled_replacement,
     :update_scheduled_rehabilitation,
     :update_scheduled_disposition,
-    :update_asset_state,
     :update_sogr
   ]
 
