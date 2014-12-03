@@ -11,7 +11,6 @@
       %tr{:data => {:action_path => inventory_path(a)}}
         - SystemConfig.transam_module_names.each do |mod|
           = render :partial => "#{mod}_asset_dt_columns", :locals => {:a => a } rescue nil
-        %td.left= a.manufacturer
         %td.center= render :partial => 'assets/asset_info_detail_popup', :locals => {:asset => a}
                 
 = render :partial => 'shared/datatable_javascript', :locals => {:id => 'assets_datatable'}

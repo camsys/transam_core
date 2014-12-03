@@ -42,7 +42,7 @@ module TransamFormatHelper
     html.html_safe
   end
 
-  # formats a list of labels/tags. By default labels are displayed
+  # formats an element as a label. By default labels are displayed
   # using label-info but can be controlled using the optional style param
   def format_as_label(elem, style = 'info')
     html = "<span class='label label-#{style}'>"
