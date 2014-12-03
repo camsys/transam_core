@@ -13,9 +13,6 @@ class Organization < ActiveRecord::Base
   #------------------------------------------------------------------------------
   after_initialize  :set_defaults
 
-  # Enable automatic geocoding using the Geocoder gem
-  geocoded_by       :full_address
-  after_validation  :geocode  
 
   #------------------------------------------------------------------------------
   # Overrides
@@ -182,16 +179,6 @@ class Organization < ActiveRecord::Base
     self.class.to_s == organization_type.class_name
   end
               
-  def full_address
-    elems = []
-    elems << address1 unless address1.blank?
-    elems << address2 unless address2.blank?
-    elems << city unless city.blank?
-    elems << state unless state.blank?
-    elems << zip unless zip.blank?
-    elems.compact.join(', ')    
-  end
-    
   #------------------------------------------------------------------------------
   #
   # Protected Methods
