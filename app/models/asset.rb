@@ -428,7 +428,7 @@ class Asset < ActiveRecord::Base
 
   # Forces an update of an assets service status. This performs an update on the record
   def update_service_status
-    Rails.logger.info "Updating service status for asset = #{object_key}"
+    Rails.logger.debug "Updating service status for asset = #{object_key}"
 
     # Make sure we are working with a concrete asset class
     asset = is_typed? ? self : Asset.get_typed_asset(self)
@@ -447,7 +447,7 @@ class Asset < ActiveRecord::Base
   # Forces an update of an assets reported condition. This performs an update on the record.
   def update_condition
 
-    Rails.logger.info "Updating condition for asset = #{object_key}"
+    Rails.logger.debug "Updating condition for asset = #{object_key}"
 
     # can't do this if it is a new record as none of the IDs would be set
     unless new_record?
@@ -465,7 +465,7 @@ class Asset < ActiveRecord::Base
   # Forces an update of an assets scheduled replacement. This performs an update on the record.
   def update_scheduled_replacement
 
-    Rails.logger.info "Updating the scheduled replacement year for asset = #{object_key}"
+    Rails.logger.debug "Updating the scheduled replacement year for asset = #{object_key}"
 
     unless new_record?
       unless schedule_replacement_updates.empty?
@@ -481,7 +481,7 @@ class Asset < ActiveRecord::Base
   # Forces an update of an assets scheduled replacement. This performs an update on the record.
   def update_scheduled_rehabilitation
 
-    Rails.logger.info "Updating the scheduled rehabilitation year for asset = #{object_key}"
+    Rails.logger.debug "Updating the scheduled rehabilitation year for asset = #{object_key}"
 
     unless new_record?
       unless schedule_rehabilitation_updates.empty?
@@ -496,7 +496,7 @@ class Asset < ActiveRecord::Base
 
   def update_scheduled_disposition
 
-    Rails.logger.info "Updating the scheduled disposition for asset = #{object_key}"
+    Rails.logger.debug "Updating the scheduled disposition for asset = #{object_key}"
 
     unless new_record?
       unless schedule_disposition_updates.empty?
@@ -579,7 +579,7 @@ class Asset < ActiveRecord::Base
 
   # updates the calculated values of an asset
   def update_asset_state(policy = nil)
-    Rails.logger.info "Updating SOGR for asset = #{object_key}"
+    Rails.logger.debug "Updating SOGR for asset = #{object_key}"
 
     # Make sure we are working with a concrete asset class
     asset = is_typed? ? self : Asset.get_typed_asset(self)
