@@ -79,8 +79,8 @@ class PolicyItem < ActiveRecord::Base
   def rehabilitation_cost=(num)
     self[:rehabilitation_cost] = sanitize_to_int(num)
   end      
-  def extended_service_life_years=(num)
-    self[:extended_service_life_years] = sanitize_to_int(num)
+  def extended_service_life_months=(num)
+    self[:extended_service_life_months] = sanitize_to_int(num)
   end      
   def pcnt_residual_value=(num)
     self[:pcnt_residual_value] = sanitize_to_int(num)

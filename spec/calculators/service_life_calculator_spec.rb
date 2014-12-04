@@ -18,7 +18,6 @@ RSpec.describe ServiceLifeCalculator, :type => :calculator do
     @condition_update_event = ConditionUpdateEvent.create(:asset => @test_asset)
   end
 
-
   let(:test_calculator) { ServiceLifeCalculator.new }
 
   describe '#by_age' do
