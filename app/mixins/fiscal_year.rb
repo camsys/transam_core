@@ -65,11 +65,8 @@ module FiscalYear
   end
 
   # Returns the end date of the fiscal year of a given date
-  def fiscal_year_end_date(date)
-    if date.nil?
-      date = Date.today
-    end
-    date_year = date.year
+  def fiscal_year_end_date(date=Date.today)
+    date_year = fiscal_year_year_on_date(date)
 
     # System Config provides a string giving the start day of the fiscal year as "mm-dd" eg 07-01 for July 1st. We can
     # append the date year to this and generate the date of the fiscal year starting in the date calendar year
@@ -103,7 +100,7 @@ module FiscalYear
     yr = year - fy_century(year)
     first = "%.2d" % yr
     if yr == 99 # when yr == 99, yr + 1 would be 100, which causes: "FY 99-100"
-      next_yr = 00 
+      next_yr = 00
     else
       next_yr = (yr + 1)
     end
