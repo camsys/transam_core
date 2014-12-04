@@ -2,7 +2,7 @@ FactoryGirl.define do
 
   factory :policy_item do
     association :asset_subtype
-    max_service_life_years 12
+    max_service_life_months 144
     max_service_life_miles 500000
     replacement_cost 395500
     rehabilitation_cost 100000
