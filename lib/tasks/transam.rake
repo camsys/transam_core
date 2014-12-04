@@ -24,9 +24,18 @@ namespace :transam do
     end
   end
 
-  desc "Updates all updateable attributes of every asset"
-  task update_all: :environment do
-    Asset.all.each do |a|
+  desc "Updates all updateable attributes.  Can accept a sql fragment to restrict"
+  task :update_all, [:sql_frag] => [:environment] do |t, args|
+
+    # `rake transam:update_all['organization_id is null']` becomes 
+    # Asset.where("organization_id is null")
+    if args[:sql_frag]
+      asset_set = Asset.where(args[:sql_frag])
+    else
+      asset_set = Asset.all
+    end
+
+    asset_set.each do |a|
       typed_asset = Asset.get_typed_asset(a)
       typed_asset.update_methods.each do |m|
         typed_asset.send(m)
