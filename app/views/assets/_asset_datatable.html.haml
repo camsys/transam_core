@@ -3,7 +3,6 @@
     %tr
       - SystemConfig.transam_module_names.each do |mod|
         = render :partial => "#{mod}_asset_dt_head" rescue nil
-      %th.left Manufacturer
       %th.center
       
   %tbody
