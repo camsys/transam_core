@@ -5,4 +5,4 @@ test:
   pool: 5
   timeout: 5000
   host: localhost
-  database: transam_marta_testing
+  database: transam_core_testing
