@@ -16,10 +16,23 @@
 = render :partial => 'shared/datatable_javascript', :locals => {:id => 'assets_datatable'}
 
 :javascript
-  $('.popup-details').popover({
-    trigger: 'hover',
-    container: 'body',
-    placement: 'left',
-    animation: 'true',
-    html: 'true'
+$(document).ready(function() {
+  $('.popup-details').bind({
+    mouseenter: function() {
+      var el=$(this);  
+      $.ajax({
+        type: "GET",
+        url: el.attr("data-url"),
+        dataType: "html",
+        success: function(data) {
+          el.attr("data-content", data);
+          el.popover('show');
+        }
+      });
+    },
+    mouseleave: function() {
+      var el=$(this);
+      el.popover('hide');
+    }
   });
+});

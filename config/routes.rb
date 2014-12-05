@@ -27,6 +27,7 @@ Rails.application.routes.draw do
         get 'export'
       end
       member do
+        get 'summary_info'
         get 'update_status'
         get 'copy'
         get 'add_to_group'

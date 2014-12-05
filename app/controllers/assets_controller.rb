@@ -7,7 +7,7 @@ class AssetsController < AssetAwareController
   # Don't process cancel buttons
   before_filter :check_for_cancel,  :only => [:create, :update]
   # set the @asset variable before any actions are invoked
-  before_filter :get_asset,         :only => [:show, :edit, :copy, :update, :destroy, :add_to_group, :remove_from_group]
+  before_filter :get_asset,         :only => [:show, :edit, :copy, :update, :destroy, :summary_info, :add_to_group, :remove_from_group]
   before_filter :reformat_date_fields,  :only => [:create, :update]
 
   STRING_TOKENIZER          = '|'
@@ -104,6 +104,15 @@ class AssetsController < AssetAwareController
     # render the edit view
     respond_to do |format|
       format.html { render :action => "edit" }
+      format.json { render :json => @asset }
+    end
+
+  end
+
+  def summary_info
+
+    respond_to do |format|
+      format.js # show.html.erb
       format.json { render :json => @asset }
     end
 

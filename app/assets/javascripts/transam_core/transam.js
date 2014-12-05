@@ -75,7 +75,7 @@ var transam = new function() {
 		} );		
 	};
 	
-	// Draws a google char based on the chart data and chart options passed in
+	// Draws a google chart based on the chart data and chart options passed in
 	this.draw_chart = function(div_id, chart_type, chart_options, chart_data) {
 
 		var container = document.getElementById(div_id);
