@@ -1,17 +1,17 @@
 class MessagesController < OrganizationAwareController
-  
+
   add_breadcrumb "Home", :root_path
-  
-  before_action :set_message, :only => [:show, :edit, :update, :destroy]  
-  before_filter :check_for_cancel, :only => [:create] 
+
+  before_action :set_message, :only => [:show, :edit, :update, :destroy]
+  before_filter :check_for_cancel, :only => [:create]
 
   # Enumerables for message filters
-  MESSAGE_TYPE_NEW    = 1 
+  MESSAGE_TYPE_NEW    = 1
   MESSAGE_TYPE_OLD    = 2
   MESSAGE_TYPE_SENT   = 3
-    
+
   SESSION_FILTER_TYPE_VAR = 'messages_filter_type'
-    
+
   def index
 
     add_breadcrumb "My Messages", user_messages_path(current_user)
@@ -19,14 +19,14 @@ class MessagesController < OrganizationAwareController
     # Get the filter
     @filter = get_filter_type(SESSION_FILTER_TYPE_VAR)
     #puts @filter
-    
+
     # Start to set up the query
     conditions  = []
     values      = []
     # every query is bounded by the user's organization
     conditions << 'organization_id = ?'
     values << @organization.id
-    
+
     if @filter == MESSAGE_TYPE_NEW
       @page_title = 'New Messages'
       # New messages must be for the current user
@@ -34,29 +34,29 @@ class MessagesController < OrganizationAwareController
       values << current_user.id
       # ad not have been previously opened
       conditions << 'opened_at IS NULL'
-      
+
     elsif @filter == MESSAGE_TYPE_SENT
-      
+
       @page_title = 'New Messages'
-      # New messages must be from the current user    
+      # New messages must be from the current user
       conditions << 'user_id = ?'
       values << current_user.id
- 
+
     else
       # Already read messages
-      @page_title = 'Messages'            
+      @page_title = 'Messages'
       # All others must be for the current user
       conditions << 'to_user_id = ?'
       values << current_user.id
       # and have been previously opened
       conditions << 'opened_at IS NOT NULL'
-    end    
- 
+    end
+
     # Get the messages
     @messages = Message.where(conditions.join(' AND '), *values).order("created_at DESC")
-    
+
     #puts "Filter Val = '#{session[SESSION_FILTER_TYPE_VAR]}'"
-    
+
     respond_to do |format|
       format.html # index.html.erb
       format.json { render :json => @messages }
@@ -68,7 +68,7 @@ class MessagesController < OrganizationAwareController
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
     if @message.nil?
-      notify_user(:alert, 'Record not found!')      
+      notify_user(:alert, 'Record not found!')
       redirect_to(user_messages_url(current_user))
       return
     end
@@ -80,15 +80,15 @@ class MessagesController < OrganizationAwareController
     @response.organization = @organization
     @response.user = current_user
     @response.priority_type = @message.priority_type
- 
+
     @page_title = 'Message'
-    
+
     # Mark this message as opened if not opened previously
     if @message.opened_at.nil?
       @message.opened_at = Time.current
       @message.save
     end
-        
+
     respond_to do |format|
       format.js # show.html.erb
       format.html # show.html.erb
@@ -99,9 +99,9 @@ class MessagesController < OrganizationAwareController
   def new
 
     @page_title = 'New Message'
-    
+
     add_breadcrumb "My Messages", user_messages_path(current_user)
-    add_breadcrumb "New Message"
+    add_breadcrumb "New"
 
     @message = Message.new
     @message.organization = @organization
@@ -121,12 +121,12 @@ class MessagesController < OrganizationAwareController
   def create
 
     add_breadcrumb "My Messages", user_messages_path(current_user)
-    add_breadcrumb "New Message"
+    add_breadcrumb "New"
 
     @message = Message.new(form_params)
     @message.organization = @organization
     @message.user = current_user
-    
+
     # See if we got a message id posted, if so then the post is a response
     if params[:message_id]
       parent_message = @organization.messages.find(params[:message_id])
@@ -148,7 +148,7 @@ class MessagesController < OrganizationAwareController
       end
     end
   end
-  
+
   #------------------------------------------------------------------------------
   #
   # Private Methods
@@ -164,11 +164,11 @@ class MessagesController < OrganizationAwareController
       filter_type = MESSAGE_TYPE_NEW
     end
     # remember the view type in the session
-    session[session_var] = filter_type   
-    return filter_type 
+    session[session_var] = filter_type
+    return filter_type
   end
 
-  def check_for_cancel 
+  def check_for_cancel
     unless params[:cancel].blank?
       # check that the user has access to this agency
       redirect_to(user_messages_url(current_user))
@@ -180,10 +180,10 @@ class MessagesController < OrganizationAwareController
   def form_params
     params.require(:message).permit(Message.allowable_params)
   end
-  
+
   # Callbacks to share common setup or constraints between actions.
   def set_message
     @message = Message.find_by_object_key(params[:id]) unless params[:id].nil?
   end
-  
+
 end

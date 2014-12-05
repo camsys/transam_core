@@ -5,12 +5,12 @@ class PolicyItemsController < OrganizationAwareController
   # set the @policy variable before any actions are invoked
   before_filter :get_policy
   # Set the @policy_item variable
-  before_filter :get_policy_item,       :only => [:edit, :update, :destroy]  
-  
+  before_filter :get_policy_item,       :only => [:edit, :update, :destroy]
+
   def index
 
     add_breadcrumb @policy.name, policy_path(@policy)
-        
+
     # See if the user wants to filter on an asset type
     @asset_type = params[:asset_type]
     if @asset_type.blank?
@@ -19,20 +19,20 @@ class PolicyItemsController < OrganizationAwareController
       asset_type = AssetType.find(@asset_type)
       @rules = @policy.policy_items.where('asset_subtype_id IN (?)', asset_type.asset_subtype_ids)
     end
-    
+
     respond_to do |format|
-      format.html 
+      format.html
       format.json
-      format.xls      
+      format.xls
     end
-    
+
   end
-  
+
   def new
-    
+
     add_breadcrumb @policy.name, policy_path(@policy)
-    add_breadcrumb "New rule"
-    
+    add_breadcrumb "New"
+
     @policy_item = PolicyItem.new
   end
 
@@ -46,9 +46,9 @@ class PolicyItemsController < OrganizationAwareController
 
     add_breadcrumb @policy.name, policy_path(@policy)
     add_breadcrumb "#{@policy_item} Update"
-   
+
   end
-  
+
   def update
 
     if @policy_item.nil?
@@ -64,7 +64,7 @@ class PolicyItemsController < OrganizationAwareController
     respond_to do |format|
       if @policy_item.update_attributes(form_params)
 
-        notify_user(:notice, "Rule was successfully updated.")   
+        notify_user(:notice, "Rule was successfully updated.")
 
         format.html { redirect_to policy_url(@policy) }
         format.json { head :no_content }
@@ -78,12 +78,12 @@ class PolicyItemsController < OrganizationAwareController
   def create
 
     add_breadcrumb @policy.name, policy_path(@policy)
-    add_breadcrumb "New rule"
+    add_breadcrumb "New"
 
     @policy_item = PolicyItem.new(form_params)
     @policy_item.policy = @policy
     @policy_item.active = true
-    
+
     respond_to do |format|
       if @policy_item.save
         notify_user(:notice, "Rule was sucessfully saved.")
@@ -94,7 +94,7 @@ class PolicyItemsController < OrganizationAwareController
         format.json { render :json => @policy_item.errors, :status => :unprocessable_entity }
       end
     end
-    
+
 
   end
 
@@ -108,21 +108,21 @@ class PolicyItemsController < OrganizationAwareController
 
     @policy_item.destroy
 
-    notify_user(:notice, "Rule was successfully removed.")   
+    notify_user(:notice, "Rule was successfully removed.")
 
     respond_to do |format|
-      format.html { redirect_to(policy_url(@policy)) } 
+      format.html { redirect_to(policy_url(@policy)) }
       format.json { head :no_content }
     end
   end
-  
+
   #------------------------------------------------------------------------------
   #
   # Protected Methods
   #
   #------------------------------------------------------------------------------
   protected
-    
+
   def get_policy
 
     @policy = Policy.find_by_object_key(params[:policy_id]) unless params[:policy_id].nil?
@@ -146,10 +146,10 @@ class PolicyItemsController < OrganizationAwareController
   #------------------------------------------------------------------------------
   private
 
-  
+
   # Never trust parameters from the scary internet, only allow the white list through.
   def form_params
     params.require(:policy_item).permit(policy_item_allowable_params)
   end
-  
+
 end

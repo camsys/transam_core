@@ -1,22 +1,22 @@
 class TasksController < OrganizationAwareController
-  
+
   add_breadcrumb "Home", :root_path
-  
-  before_action :set_task, :only => [:show, :edit, :update, :destroy, :update_status]  
-  before_filter :check_for_cancel, :only => [:create, :update] 
+
+  before_action :set_task, :only => [:show, :edit, :update, :destroy, :update_status]
+  before_filter :check_for_cancel, :only => [:create, :update]
   before_filter :reformat_date_field, :only => [:create, :update]
 
   SESSION_VIEW_TYPE_VAR   = 'tasks_subnav_view_type'
   SESSION_FILTER_TYPE_VAR = 'tasks_subnav_filter_type'
   SESSION_SELECT_TYPE_VAR = 'tasks_subnav_select_type'
-  
+
   # Ajax callback returning a list of tasks as JSON calendar events
   def filter
     filter_start_time = DateTime.strptime(params[:start], '%s')
     filter_end_time   = DateTime.strptime(params[:end], '%s')
     @filter = get_filter_type(SESSION_FILTER_TYPE_VAR)
     @select = get_select_type(SESSION_SELECT_TYPE_VAR)
-    
+
     # here we build the query one clause at a time based on the input params
     clauses = []
     values = []
@@ -29,12 +29,12 @@ class TasksController < OrganizationAwareController
     end
     if @filter.to_i > 0
       clauses << ['task_status_type_id = ?']
-      values << [@filter]      
+      values << [@filter]
     end
     clauses << ['complete_by BETWEEN ? AND ?']
     values << [filter_start_time]
     values << [filter_end_time]
-    
+
     tasks = Task.where(clauses.join(' AND '), *values).order("complete_by")
 
     events = []
@@ -53,7 +53,7 @@ class TasksController < OrganizationAwareController
       format.json { render :json => events }
     end
   end
-  
+
   def index
 
     @page_title = 'My Tasks'
@@ -61,10 +61,10 @@ class TasksController < OrganizationAwareController
 
     @filter = get_filter_type(SESSION_FILTER_TYPE_VAR)
     @select = get_select_type(SESSION_SELECT_TYPE_VAR)
-    
+
     # Select tasks for this user or ones that are for the agency as a whole
     @tasks = Task.where("for_organization_id = ? AND completed_on IS NULL AND (assigned_to_user_id IS NULL OR assigned_to_user_id = ?)", @organization.id, current_user.id).order("complete_by")
-    
+
     # remember the view type
     @view_type = get_view_type(SESSION_VIEW_TYPE_VAR)
 
@@ -86,9 +86,9 @@ class TasksController < OrganizationAwareController
 
     add_breadcrumb "My Tasks", tasks_path
     add_breadcrumb @task.subject, task_path(@task)
- 
+
     @page_title = 'Task'
-    
+
     respond_to do |format|
       format.html # show.html.erb
       format.json { render :json => @task }
@@ -100,15 +100,15 @@ class TasksController < OrganizationAwareController
     @page_title = 'New Task'
 
     add_breadcrumb "My Tasks", tasks_path
-    add_breadcrumb 'New Task'
-    
+    add_breadcrumb 'New'
+
     @task = Task.new
     @task.from_organization = @organization
     @task.from_user = current_user
     @task.assigned_to = User.find_by_object_key(params[:assigned_to]) unless params[:assigned_to].nil?
     @task.complete_by = Date.today + 1
     @task.priority_type = PriorityType.default
-    
+
     respond_to do |format|
       format.html # new.html.erb
       format.json { render :json => @task }
@@ -139,12 +139,12 @@ class TasksController < OrganizationAwareController
     # Simple form doesn't process mapped assoacitions very well
     @task.assigned_to = User.find(params[:task][:assigned_to_user_id]) unless params[:task][:assigned_to_user_id].blank?
     @task.for_organization = @task.assigned_to.organization unless @task.assigned_to.nil?
-    
+
     @task.from_organization = @organization
     @task.from_user = current_user
 
     add_breadcrumb "My Tasks", tasks_path
-    add_breadcrumb 'New Task'
+    add_breadcrumb 'New'
 
     respond_to do |format|
       if @task.save
@@ -172,10 +172,10 @@ class TasksController < OrganizationAwareController
     @task.task_status_type = TaskStatusType.find(params[:task_status])
     if @task.task_status_type.name == 'Complete'
       @task.completed_on = Date.today
-    else 
+    else
       @task.completed_on = nil
     end
-    
+
     respond_to do |format|
       if @task.save
         notify_user(:notice, "Task was successfully updated.")
@@ -197,7 +197,7 @@ class TasksController < OrganizationAwareController
       redirect_to user_tasks_url
       return
     end
-    
+
     add_breadcrumb "My Tasks", tasks_path
     add_breadcrumb @task.subject, task_path(@task)
     add_breadcrumb 'Update', edit_task_path(@task)
@@ -220,7 +220,7 @@ class TasksController < OrganizationAwareController
   #
   #------------------------------------------------------------------------------
   protected
-  
+
   # returns the filter type for the current controller and sets the session variable
   # to store any change in fitler type for the controller
   def get_filter_type(session_var)
@@ -229,8 +229,8 @@ class TasksController < OrganizationAwareController
       filter_type = 0
     end
     # remember the view type in the session
-    session[session_var] = filter_type   
-    return filter_type 
+    session[session_var] = filter_type
+    return filter_type
   end
   # returns the select type for the current controller and sets the session variable
   # to store any change in select type for the controller
@@ -240,10 +240,10 @@ class TasksController < OrganizationAwareController
       select_type = 0
     end
     # remember the view type in the session
-    session[session_var] = select_type   
-    return select_type 
+    session[session_var] = select_type
+    return select_type
   end
-  
+
   def get_event_color(task)
     if task.task_status_type_id == 1      # New
       color = '#FF0000'
@@ -272,7 +272,7 @@ class TasksController < OrganizationAwareController
     end
     classname
   end
-  
+
   #------------------------------------------------------------------------------
   #
   # Private Methods
@@ -285,8 +285,8 @@ class TasksController < OrganizationAwareController
       # check that the user has access to this agency
       redirect_to(user_tasks_url(current_user))
     end
-  end 
-  
+  end
+
   # Callbacks to share common setup or constraints between actions.
   def set_task
     @task = params[:id].nil? ? nil : Task.find_by_object_key(params[:id])
@@ -309,5 +309,5 @@ class TasksController < OrganizationAwareController
       params[:task][:complete_by] = form_date.strftime('%Y-%m-%d')
     end
   end
-  
+
 end
