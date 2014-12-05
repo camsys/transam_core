@@ -10,7 +10,7 @@
 			<% end %>
 		</li>
 		<li class="divider"></li>			
-		<% ReportType.all.each do | rt | %>
+		<% ReportType.all.includes(:reports).each do | rt | %>
 			<% if rt.reports.count > 0 %>
 				<li class="text-left dropdown-submenu">												
 					<%= link_to reports_path(:report_type => rt.id)  do %>

@@ -3,7 +3,6 @@
     %tr
       - SystemConfig.transam_module_names.each do |mod|
         = render :partial => "#{mod}_asset_dt_head" rescue nil
-      %th.left Manufacturer
       %th.center
       
   %tbody
@@ -13,26 +12,6 @@
           = render :partial => "#{mod}_asset_dt_columns", :locals => {:a => a } rescue nil
         %td.center= render :partial => 'assets/asset_info_detail_popup', :locals => {:asset => a}
                 
+-# Popover js first, otherwise, it fails to bind elements on second Datatable Page
+= render :partial => 'shared/popover_javascript'
 = render :partial => 'shared/datatable_javascript', :locals => {:id => 'assets_datatable'}
-
-:javascript
-$(document).ready(function() {
-  $('.popup-details').bind({
-    mouseenter: function() {
-      var el=$(this);  
-      $.ajax({
-        type: "GET",
-        url: el.attr("data-url"),
-        dataType: "html",
-        success: function(data) {
-          el.attr("data-content", data);
-          el.popover('show');
-        }
-      });
-    },
-    mouseleave: function() {
-      var el=$(this);
-      el.popover('hide');
-    }
-  });
-});
