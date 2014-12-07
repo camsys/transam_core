@@ -27,6 +27,10 @@
         }
     }); 
   
+	// Capture the show event for the dependents tab
+	$("a[href='#depd']").on('shown.bs.tab', function(e) {
+		transam.activate_info_popups('.info-popup');
+	});
 
 	// Use validation plugin to validate the forms before submittal
 	$('#new_comment').validate({

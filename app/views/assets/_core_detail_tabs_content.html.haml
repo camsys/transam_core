@@ -8,7 +8,7 @@
   .tab-content
     = render 'history'
 - unless @asset.dependents.empty?
-  .tab-pane.fade#related
+  .tab-pane.fade#depd
     .tab-content
       = render :partial => 'asset_compact_datatable', :locals => {:assets => @asset.dependents}
 .tab-pane.fade#comm
