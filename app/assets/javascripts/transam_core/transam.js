@@ -17,6 +17,38 @@ var transam = new function() {
 		return len == 0;
 	};
 	
+	// Finds all elements marked as info icons and turns them into popups
+	this.enable_info_popups = function(class_name) {
+		$(class_name).popover({
+			trigger: 'hover',
+			container: 'body',
+    		animation: 'true',
+    		html: 'true'    
+		});
+	};
+
+	// Activate server side processing of info popups
+	this.activate_info_popups = function(class_name) {
+		$(class_name).bind({
+	    	mouseenter: function() {
+	        	var el=$(this);  
+	        		$.ajax({
+	          			type: "GET",
+	          			url: el.attr("data-url"),
+	          			dataType: "html",
+	          			success: function(data) {
+	            			el.attr("data-content", data);
+	            			el.popover('show');
+	          			}
+	        		});
+	   		},
+	      	mouseleave: function() {
+	        	var el=$(this);
+	        	el.popover('hide');
+	   		}
+		});	
+	};
+	
 	// Fix the page footer to the bottom of the page
 	this.fix_page_footer = function(footer_div) {
 
@@ -196,16 +228,6 @@ var transam = new function() {
 		});
 		max += 10;
 		$(jquery_selector).css({'height': max});	
-	};
-
-	// Finds all elements marked as info icons and turns them into popups
-	this.enable_info_popups = function(class_name) {
-		$(class_name).popover({
-			trigger: 'hover',
-			container: 'body',
-    		animation: 'true',
-    		html: 'true'    
-		});
 	};
 
 	this.install_quick_link_handlers = function() {
