@@ -7,9 +7,10 @@
 .tab-pane.fade#hist
   .tab-content
     = render 'history'
-.tab-pane.fade#replace
-  .tab-content
-    = render 'replacement'
+- unless @asset.dependents.empty?
+  .tab-pane.fade#related
+    .tab-content
+      = render :partial => 'asset_compact_datatable', :locals => {:assets => @asset.dependents}
 .tab-pane.fade#comm
   .tab-content
     = render 'comments'
