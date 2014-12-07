@@ -11,6 +11,7 @@
 - unless @asset.dependents.empty?    
   %li
     %a{:href => "#related", :data =>{:toggle => 'tab'}}
+      %span.badge.pull-right= @asset.dependents.count
       Dependents
 %li
   %a{:href => "#comm", :data =>{:toggle => 'tab'}}
