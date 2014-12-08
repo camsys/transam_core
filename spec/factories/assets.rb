@@ -19,7 +19,7 @@ FactoryGirl.define do
     association :asset_type
     association :asset_subtype
     purchase_cost 2000.0
-    expected_useful_life 10
+    expected_useful_life 120
     reported_condition_rating 2.0
   end
 

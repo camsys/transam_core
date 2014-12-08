@@ -22,7 +22,7 @@ RSpec.describe ServiceLifeCalculator, :type => :calculator do
 
   describe '#by_age' do
     it 'calculates' do
-      expect(test_calculator.send(:by_age,@test_asset)).to eq(2026)
+      expect(test_calculator.send(:by_age,@test_asset)).to eq(2024)
     end
 
     it 'is equal to in service year if max life is 0' do
