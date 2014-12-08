@@ -28,25 +28,28 @@ class Asset < ActiveRecord::Base
   #------------------------------------------------------------------------------
 
   # each asset belongs to a single organization
-  belongs_to :organization
+  belongs_to  :organization
 
   # each asset has a single asset type
-  belongs_to :asset_type
+  belongs_to  :asset_type
 
   # each asset has a single asset subtype
-  belongs_to :asset_subtype
+  belongs_to  :asset_subtype
 
   # each asset has a single maintenance provider type
-  belongs_to :maintenance_provider_type
+  belongs_to  :maintenance_provider_type
 
   # each asset has a reason why it is being replaced
-  belongs_to :replacement_reason_type
+  belongs_to  :replacement_reason_type
 
   # each was puchased from a vendor
-  belongs_to :vendor
+  belongs_to  :vendor
 
   # each belongs to a single manufacturer
-  belongs_to                  :manufacturer
+  belongs_to  :manufacturer
+
+  # each can belong to a parent
+  belongs_to  :parent, :class_name => "Asset",  :foreign_key => :location_id
 
   # Each asset has zero or more asset events. These are all events regardless of event type. Events are deleted when the asset is deleted
   has_many   :asset_events, :dependent => :destroy
@@ -68,6 +71,9 @@ class Asset < ActiveRecord::Base
 
   # each asset has zero or more disposition updates
   has_many   :disposition_updates, -> {where :asset_event_type_id => DispositionUpdateEvent.asset_event_type.id }, :class_name => "DispositionUpdateEvent"
+
+  # each asset has zero or more location updates.
+  has_many   :location_updates, -> {where :asset_event_type_id => LocationUpdateEvent.asset_event_type.id }, :class_name => "LocationUpdateEvent"
 
   # Each asset has zero or more images. Images are deleted when the asset is deleted
   has_many    :images,      :as => :imagable,       :dependent => :destroy
@@ -106,8 +112,8 @@ class Asset < ActiveRecord::Base
 
   # Validations on core attributes
   validates       :asset_tag,         :presence => true, :length => { :maximum => 12 }
-
-  #validates_uniqueness_of :asset_tag, scope: :organization
+  # Asset tags must be unique within an organization
+  validates_uniqueness_of :asset_tag, :scope => :organization
 
   #------------------------------------------------------------------------------
   # Attributes that are used to cache asset condition information.
@@ -175,6 +181,7 @@ class Asset < ActiveRecord::Base
     :update_scheduled_replacement,
     :update_scheduled_rehabilitation,
     :update_scheduled_disposition,
+    :update_location,
     :update_sogr
   ]
 
@@ -210,6 +217,7 @@ class Asset < ActiveRecord::Base
     :service_status_date,
     :disposition_date,
     :disposition_type_id,
+    :location_id,
     :created_by_id,
     :updated_by_id
   ]
@@ -426,6 +434,21 @@ class Asset < ActiveRecord::Base
     end
   end
 
+  # Forces an update of an assets location. This performs an update on the record.
+  def update_location
+
+    Rails.logger.debug "Updating the recorded location for asset = #{object_key}"
+
+    unless new_record?
+      unless location_updates.empty?
+        event = location_updates.last
+        self.location_id = event.location_id
+        self.location_comments = event.comments
+        save
+      end
+    end
+  end
+
   # Forces an update of an assets service status. This performs an update on the record
   def update_service_status
     Rails.logger.debug "Updating service status for asset = #{object_key}"
@@ -493,7 +516,6 @@ class Asset < ActiveRecord::Base
   end
 
   # Forces an update of an assets scheduled disposition
-
   def update_scheduled_disposition
 
     Rails.logger.debug "Updating the scheduled disposition for asset = #{object_key}"

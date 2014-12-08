@@ -13,7 +13,6 @@ class Organization < ActiveRecord::Base
   #------------------------------------------------------------------------------
   after_initialize  :set_defaults
 
-
   #------------------------------------------------------------------------------
   # Overrides
   #------------------------------------------------------------------------------
@@ -52,18 +51,6 @@ class Organization < ActiveRecord::Base
   #------------------------------------------------------------------------------
   # Attributes common to all organization types
   #------------------------------------------------------------------------------
-  # true if this organization holds the license for TransAM
-  #attr_accessible :license_holder
-  # names for the org. The short name must be unique
-  #attr_accessible :name, :short_name
-  # address and contact info
-  #attr_accessible :address1, :address2, :city, :state, :zip, 
-  #                :phone, :fax, :url 
-  # other derived attributes                
-  #attr_accessible :active
-  
-  # geocoded location for the organization
-  #attr_accessible :latitude, :longitude  
 
   validates :name,                  :presence => true
   validates :short_name,            :presence => true, :uniqueness => true
@@ -91,9 +78,7 @@ class Organization < ActiveRecord::Base
     :phone,
     :fax,
     :url,
-    :active,
-    :latitude,
-    :longitude
+    :active
   ]
 
   #------------------------------------------------------------------------------

@@ -1,0 +1,56 @@
+.row
+  = simple_form_for(@asset,
+  :as => :asset,
+  :url => @asset.new_record? ? inventory_index_path : inventory_path,
+  :method => @asset.new_record? ? 'post' : 'put',
+  :html => {:class => 'form-vertical'},
+  :wrapper => :vertical_form,
+  :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes,
+    :radio_buttons => :vertical_radio_and_checkboxes,
+    :file => :vertical_file_input,
+    :boolean => :vertical_boolean}) do |f|
+    = f.input :asset_type_id, :as => :hidden
+    = f.input :asset_subtype_id, :as => :hidden
+
+    .col-md-4
+      = dialog_tag('Equipment', {:icon => 'fa fa-refresh', :class => "form_part"}) do
+        = f.input :asset_tag, :prompt => "Enter the asset tag...", :label => "Asset Tag"
+        = f.input :description
+        = f.input :quantity
+        = f.input :quantity_units
+        = f.association :location, :collection => SupportFacility.where('organization_id = ?', @asset.organization_id)
+        = f.input :location_comments, :label => "Location Comments"
+    .col-md-4
+      = dialog_tag('Purchase', {:icon => 'fa fa-refresh', :class => "form_part"}) do
+        = f.input :purchase_cost, :wrapper => :vertical_append, :label => "Purchase Cost" do
+          %span.input-group-addon
+            %i.fa.fa-usd
+          = f.input_field :purchase_cost, :class => "form-control"
+
+        = f.input :purchase_date, :wrapper => :vertical_append, :label => "Purchase Date" do
+          = f.input_field :purchase_date, :as => :string, :class => 'form-control datepicker', :data => {'behavior' => 'datepicker'}, :value => f.object.purchase_date.strftime("%m-%d-%Y")
+          %span.input-group-addon
+            %i.fa.fa-calendar
+        = f.input :in_service_date, :wrapper => :vertical_append, :label => "In Service Date" do
+          = f.input_field :in_service_date, :as => :string, :class => 'form-control datepicker', :data => {'behavior' => 'datepicker'}, :value => f.object.in_service_date.strftime("%m-%d-%Y")
+          %span.input-group-addon
+            %i.fa.fa-calendar
+        = f.input :purchased_new, :as => :radio_buttons, :label => "Purchased New?"
+        = f.association :vendor
+        = f.association :fta_funding_type, :prompt => "Select funding type...", :label => "FTA Funding Type"
+        = f.input :expected_useful_life, :label => "Expected Useful Life (Months)"
+    .col-md-4
+      = dialog_tag('FTA Reporting', {:icon => 'fa fa-refresh', :class => "form_part"}) do
+        = f.association :fta_funding_type, :prompt => "Select funding type...", :label => "FTA Funding Type"
+
+    .col-md-12
+      = f.button :submit, :class => 'btn btn-primary'
+
+:javascript
+
+  // Document Ready
+  $(document).ready(function(){
+    $('[data-behavior~=datepicker]').datepicker({
+      format: "mm-dd-yyyy"
+    });
+  });

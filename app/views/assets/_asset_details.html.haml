@@ -7,3 +7,4 @@
 = format_field("Type", asset.asset_subtype )
 = format_field("Status",  asset.service_status_type.nil? ? 'Unknown' : asset.service_status_type.name )
 = format_field("Groups",  format_asset_groups(asset)) unless asset.asset_groups.empty?
+= format_field("Parent",  link_to(asset.parent.name, inventory_path(asset.parent))) unless asset.parent.nil?
