@@ -1,7 +1,7 @@
 //
 // Transam specific javascript
 //
-var transam = function() {
+var transam = new function() {
 
 	// disable an element
 	this.disable_element = function(id) {
@@ -258,4 +258,4 @@ var transam = function() {
 		var len = $.trim(val).length;
 		return len;
 	};
-};
+}();
