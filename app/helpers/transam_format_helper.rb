@@ -1,8 +1,8 @@
 module TransamFormatHelper
-  
+
   # Include the fiscal year mixin
   include FiscalYear
-                
+
 
   # Formats a quantity
   def format_as_quantity(count, unit_type = 'unit')
@@ -12,7 +12,7 @@ module TransamFormatHelper
       "#{count}"
     end
   end
-                  
+
   # formats an assets list of asset groups with remove option
   def format_asset_groups(asset, style = 'info')
     html = ''
@@ -21,16 +21,16 @@ module TransamFormatHelper
       html << grp.code
       html << "<span data-role='remove' data-action-path='#{remove_from_group_inventory_path(asset, :asset_group => grp)}'></span>"
       html << "</span>"
-    end    
+    end
     html.html_safe
   end
-                
+
   # formats a list of labels/tags. By default labels are displayed
   # using label-info but can be controlled using the optional style param
   def format_as_labels(coll, style = 'info')
     html = ''
     coll.each do |e|
-      if e.respond_to? :code 
+      if e.respond_to? :code
         txt = e.code
       else
         txt = e.to_s
@@ -38,7 +38,7 @@ module TransamFormatHelper
       html << "<span class='label label-#{style}'>"
       html << txt
       html << "</span>"
-    end    
+    end
     html.html_safe
   end
 
@@ -50,20 +50,21 @@ module TransamFormatHelper
     html << "</span>"
     html.html_safe
   end
-  
+
   # formats a year value as a fiscal year string 'FY XX-YY'
   def format_as_fiscal_year(val)
     fiscal_year(val) unless val.nil?
   end
-  
+
   # formats a URL as a link
   def format_as_url(url, target = '_blank')
     link_to(url, url, :target => target)
-  end      
-  
+  end
+
   # if no precision is set this truncates any decimals and returns the number as currency
   def format_as_currency(val, precision = 0)
     if precision == 0
+      val = val + 0.5
       number_to_currency(val.to_i, :precision => 0)
     else
       number_to_currency(val, :precision => precision)
@@ -77,7 +78,7 @@ module TransamFormatHelper
       Float(val)
       number_with_precision(val, :precision => precision, :delimiter => ",")
     rescue
-      val      
+      val
     end
   end
 
@@ -100,7 +101,7 @@ module TransamFormatHelper
   def format_as_phone_number(val, area_code = true)
     number_to_phone(val, :area_code => area_code)
   end
-  
+
   # returns a collection as a formatted list
   def format_as_list(coll)
     html = "<ul class='list-unstyled'>"
@@ -111,7 +112,7 @@ module TransamFormatHelper
     end
     html << "</ul>"
     html.html_safe
-  end    
+  end
 
   # formats a boolean field using a check if the value is true
   def format_as_boolean(val)
@@ -127,29 +128,29 @@ module TransamFormatHelper
       return "No"
     end
   end
-        
+
   # formats a date/time as a distance in words. e.g. 6 days ago
   def format_as_date_time_distance(datetime)
     dist = distance_of_time_in_words_to_now(datetime)
     if Time.current > datetime
       dist = dist + " ago"
-    end  
+    end
     return dist
   end
-  
+
   # Standard formats for dates and times
   def format_as_date_time(datetime)
     return datetime.strftime("%I:%M %p %b %d %Y") unless datetime.nil?
   end
-  
+
   def format_as_date(date)
     return date.strftime("%b %d %Y") unless date.nil?
   end
-  
+
   def format_as_time(time)
     return time.strftime("%I:%M") unless time.nil?
   end
-  
+
   # formats an address
   def format_as_address(m)
     html = m.address1
@@ -161,13 +162,13 @@ module TransamFormatHelper
     html << m.state
     html << ", "
     html << m.zip
-    html << "<br/>"    
+    html << "<br/>"
     return html.html_safe
   end
-    
+
   # format for a field
   def format_field(label, value, popover_text=nil)
- 
+
     html = "<div class='row control-group'>"
     html << "<div class='col-xs-5 display-label'>"
     html << label
@@ -179,9 +180,9 @@ module TransamFormatHelper
     end
     html << "</div>"
     html << "</div>"
-    
-    return html.html_safe    
-    
+
+    return html.html_safe
+
   end
- 
+
 end
