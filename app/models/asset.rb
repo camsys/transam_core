@@ -361,7 +361,8 @@ class Asset < ActiveRecord::Base
   # returns in fiscal year
   # need to rethink as manufacture year is not by fiscal year
   def age(on_date=Date.today)
-    [(months_in_service(on_date)/12.0).floor, 0].max
+    age_in_years = months_in_service(on_date)/12.0
+    [(age_in_years).floor, 0].max
   end
 
   # returns the number of years since the asset was owned. It can't be less than 0
@@ -408,6 +409,7 @@ class Asset < ActiveRecord::Base
     end
     if p
       policy_item = p.get_rule(self)
+      Rails.logger.debug("p.get_rule(self)#{policy_item.to_yaml}")
       if policy_item
         self.expected_useful_life = policy_item.max_service_life_months # Asset life is in months, policy in years
       end
@@ -679,7 +681,7 @@ class Asset < ActiveRecord::Base
     CLEANSABLE_FIELDS
   end
 
-  # Set resonable defaults for a new asset
+  # Set reasonable defaults for a new asset
   def set_defaults
     self.purchase_date ||= Date.today
     self.in_service_date ||= self.purchase_date
