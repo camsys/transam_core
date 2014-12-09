@@ -49,7 +49,7 @@ class Asset < ActiveRecord::Base
   belongs_to  :manufacturer
 
   # each can belong to a parent
-  belongs_to  :parent, :class_name => "Asset",  :foreign_key => :location_id
+  belongs_to  :parent, :class_name => "Asset",  :foreign_key => :parent_id
 
   # Each asset has zero or more asset events. These are all events regardless of event type. Events are deleted when the asset is deleted
   has_many   :asset_events, :dependent => :destroy

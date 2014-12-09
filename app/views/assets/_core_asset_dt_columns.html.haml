@@ -3,7 +3,7 @@
 %td.left= a.asset_tag
 %td.left= a.description
 
-%td.left= link_to(a.parent, inventory_path(a.parent) ) unless a.parent.nil?
+%td.left= link_to(a.parent.name, inventory_path(a.parent) ) unless a.parent.nil?
 %td.right= format_as_date(a.in_service_date)
 %td.right= format_as_integer(a.age)
 %td.center= format_as_decimal(a.reported_condition_rating, 1)

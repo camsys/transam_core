@@ -14,7 +14,7 @@ var transam = new function() {
 	// test if an element is blank
 	this.is_blank = function(elem_id) {
 		var len = actual_string_length(elem_id);
-		return len == 0;
+		return len === 0;
 	};
 	
 	// Finds all elements marked as info icons and turns them into popups
@@ -103,6 +103,7 @@ var transam = new function() {
 			},
 			"fnDrawCallback": function( oSettings ) {
 	      		transam.install_quick_link_handlers();
+	      		transam.activate_info_popups('.info-popup');
 	    	}		
 		} );		
 	};
@@ -111,7 +112,7 @@ var transam = new function() {
 	this.draw_chart = function(div_id, chart_type, chart_options, chart_data) {
 
 		var container = document.getElementById(div_id);
-		if (container == null) {
+		if (container === null) {
 			return;
 		} 		
 		var chart = null;
@@ -257,7 +258,4 @@ var transam = new function() {
 		var len = $.trim(val).length;
 		return len;
 	};
-};
-
-
-
+}();
