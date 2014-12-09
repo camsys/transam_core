@@ -1,4 +1,4 @@
-<% cache "core_main_navigation" do %>
+
 <li class="nav-item dropdown <%= get_nav_link_class('assets') %>">
 	<%= link_to inventory_index_path, :class => "dropdown-toggle", :data => {"toggle" => "dropdown"} do %>
 		<i class="fa travelcon-bus travelcon-2x"></i><br/><span>Inventory</span>
@@ -8,7 +8,7 @@
 	<ul class="dropdown-menu multi-level" role="menu">
 
 		<% @organization.asset_type_counts.each do | at, count | %>
-			<% asset_type = AssetType.find(at) %>
+			<% asset_type = AssetType.find(at) %> 
 			<li class="text-left dropdown-submenu">												
 				<%= link_to inventory_index_path(:asset_type => asset_type, :asset_subtype => 0, :asset_group => 0)  do %>
 					<i class="<%= asset_type.display_icon_name %> fa-fw"></i> <%= asset_type.name.pluralize(2) %>								
@@ -67,4 +67,3 @@
 		<% end %>
 	</ul>
 </li>
-<% end %>
