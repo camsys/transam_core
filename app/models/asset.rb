@@ -85,7 +85,7 @@ class Asset < ActiveRecord::Base
   has_many    :comments,    :as => :commentable, :dependent => :destroy
 
   # Each asset can have 0 or more dependents
-  has_many    :dependents,  :class_name => 'Asset', :foreign_key => :location_id, :dependent => :nullify
+  has_many    :dependents,  :class_name => 'Asset', :foreign_key => :parent_id, :dependent => :nullify
 
   # Each asset can be associated with 0 or more asset groups
   has_and_belongs_to_many :asset_groups
