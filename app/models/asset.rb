@@ -585,7 +585,7 @@ class Asset < ActiveRecord::Base
   # nils out all fields identified to be cleansed
   def cleanse
     cleansable_fields.each do |field|
-      self[field] = nil
+      send(:"#{field}=", nil) # Rather than set methods directly, delegate to setters.  This supports aliased attributes
     end
   end
 
