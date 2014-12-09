@@ -1,14 +1,4 @@
-  %fieldset
-    = format_field("Type", org.organization_type.name )
-    = format_field("Name", org.name )
-    = format_field("Short Name", org.short_name )
-    = format_field("Indian Tribe", format_as_boolean(org.indian_tribe) )
-    = format_field("Subrecipient Number", org.subrecipient_number )
-  %fieldset
-    %legend.panel-legend Contact
-    = format_field("Address", format_as_address(org) )
-    = format_field("Phone", format_as_phone_number(org.phone) )
-    = format_field("Fax", format_as_phone_number(org.fax) )
-  - # Load module specific details if they exist
-  - SystemConfig.transam_module_names.each do |mod|
-    = render :partial => "organizations/#{mod}_organization_summary", locals: {:asset => @asset} rescue nil
+- # Load module specific details if they exist
+- SystemConfig.transam_module_names.each do |mod|
+  = render :partial => "organizations/#{mod}_organization_summary", locals: {:org => org} rescue nil
+    
