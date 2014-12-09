@@ -156,7 +156,7 @@ class AssetsController < AssetAwareController
       if @asset.update_attributes(form_params)
 
         # If the asset was successfully updated, schedule update the condition and disposition asynchronously
-        Delayed::Job.enqueue AssetUpdateJob.new(@asset.object_key, true), :priority => 0
+        Delayed::Job.enqueue AssetUpdateJob.new(@asset.object_key), :priority => 0
         # See if this asset has any dependents that use its spatial reference
         if @asset.geometry and @asset.dependents.count > 0
           # schedule an update to the spatial references of the dependent assets
