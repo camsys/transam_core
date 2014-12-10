@@ -41,7 +41,7 @@ FactoryGirl.define do
   factory :location_update_event do
     basic_event_traits
     asset_event_type_id 2
-    association :location, :factory => :administration_building
+    association :parent, :factory => :administration_building
   end
 
   factory :mileage_update_event do
