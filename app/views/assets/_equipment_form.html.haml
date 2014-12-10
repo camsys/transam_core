@@ -18,7 +18,7 @@
         = f.input :description
         = f.input :quantity
         = f.input :quantity_units
-        = f.association :location, :collection => SupportFacility.where('organization_id = ?', @asset.organization_id)
+        = f.association :parent, :collection => SupportFacility.where('organization_id = ?', @asset.organization_id)
         = f.input :location_comments, :label => "Location Comments"
     .col-md-4
       = dialog_tag('Purchase', {:icon => 'fa fa-refresh', :class => "form_part"}) do

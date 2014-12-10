@@ -15,7 +15,7 @@ class AssetSearcher < BaseSearcher
                 :asset_type_id, 
                 :asset_subtype_id, 
                 :manufacturer_id,
-                :location_id,
+                :parent_id,
                 :disposition_date,
                 :keyword,
                 :fta_funding_type_id,
@@ -108,7 +108,7 @@ class AssetSearcher < BaseSearcher
   end
 
   def location_id_conditions
-    @klass.where(location_id: location_id) unless location_id.blank?
+    @klass.where(parent_id: parent_id) unless parent_id.blank?
   end
 
   #---------------------------------------------------

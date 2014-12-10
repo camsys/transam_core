@@ -217,7 +217,7 @@ class Asset < ActiveRecord::Base
     :service_status_date,
     :disposition_date,
     :disposition_type_id,
-    :location_id,
+    :parent_id,
     :created_by_id,
     :updated_by_id
   ]
@@ -444,7 +444,7 @@ class Asset < ActiveRecord::Base
     unless new_record?
       unless location_updates.empty?
         event = location_updates.last
-        self.location_id = event.location_id
+        self.parent_id = event.parent_id
         self.location_comments = event.comments
         save
       end

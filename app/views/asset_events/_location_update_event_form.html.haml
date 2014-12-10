@@ -1,5 +1,5 @@
 = render :layout => "update_event_form" do |f|
-  = f.association :location, :collection => Asset.where('organization_id = ?', @asset.organization_id)
+  = f.association :parent, :collection => Asset.where('organization_id = ?', @asset.organization_id)
   = f.input :event_date, :label => 'Date of Report', :wrapper => :vertical_append do
     = f.input_field :event_date, :class => "form-control", :as => :string, :data => {'behavior' => 'datepicker'}, :value => f.object.event_date.strftime("%m-%d-%Y")
     %span.input-group-addon

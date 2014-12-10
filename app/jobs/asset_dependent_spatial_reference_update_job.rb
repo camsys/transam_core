@@ -13,13 +13,13 @@ class AssetDependentSpatialReferenceUpdateJob < AbstractAssetUpdateJob
     # get their geometry set to null       
     geom = asset.geometry
     count = 0
-    assets = Asset.where('location_id = ?', asset.id)
+    assets = Asset.where('parent_id = ?', asset.id)
     assets.each do |a|
       a.geometry = geom
       a.save
       count += 1
     end
-    Rails.logger.info "Updated #{count} asset locations."    
+    Rails.logger.info "Updated #{count} asset parents."    
   end
 
   def prepare

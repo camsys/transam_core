@@ -10,9 +10,9 @@ class LocationUpdateEvent < AssetEvent
   # Associations
   
   # Each event has a location_id and a location description 
-  belongs_to  :location,  :class_name => 'Asset', :foreign_key => :location_id
+  belongs_to  :parent,  :class_name => 'Asset', :foreign_key => :parent_id
       
-  validates   :location_id, :presence => true
+  validates   :parent, :presence => true
       
   #------------------------------------------------------------------------------
   # Scopes
@@ -22,7 +22,7 @@ class LocationUpdateEvent < AssetEvent
     
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
-    :location_id
+    :parent_id
   ]
   
   #------------------------------------------------------------------------------
@@ -48,7 +48,7 @@ class LocationUpdateEvent < AssetEvent
 
   # This must be overriden otherwise a stack error will occur  
   def get_update
-    location.name unless location.nil?
+    parent.object_key unless parent.nil?
   end
 
   protected
@@ -57,7 +57,7 @@ class LocationUpdateEvent < AssetEvent
   def set_defaults
     super
     typed_asset = Asset.get_typed_asset(asset)
-    self.location ||= typed_asset.location
+    self.parent ||= typed_asset.parent
     self.asset_event_type ||= AssetEventType.find_by_class_name(self.name)
   end    
   
