@@ -7,10 +7,10 @@
 #
 #------------------------------------------------------------------------------
 class UploadProcessorJob < Job
-  
+
   attr_accessor :object_key
-  
-  def run    
+
+  def run
     upload = Upload.find_by_object_key(object_key)
     if upload
       # Get the handler for the upload. This is defined via the file_content_type class
@@ -29,13 +29,13 @@ class UploadProcessorJob < Job
   end
 
   def prepare
-    Rails.logger.debug "Executing UploadProcessorJob at #{Time.now.to_s} for Upload #{object_key}"    
+    Rails.logger.debug "Executing UploadProcessorJob at #{Time.now.to_s} for Upload #{object_key}"
   end
-  
-  def check    
+
+  def check
     raise ArgumentError, "object_key can't be blank " if object_key.blank?
   end
-  
+
   def initialize(object_key)
     super
     self.object_key = object_key
