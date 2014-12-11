@@ -14,7 +14,7 @@ class Equipment < Asset
   # Scopes
   #------------------------------------------------------------------------------
   # set the default scope
-  default_scope { where(:asset_type_id => AssetType.find_by_class_name(self.name).id) }
+  #default_scope { where(:asset_type_id => AssetType.find_by_class_name(self.name).id) }
       
   #------------------------------------------------------------------------------
   # Lists. These lists are used by derived classes to make up lists of attributes
@@ -88,7 +88,6 @@ class Equipment < Asset
   # Set resonable defaults for a suppoert facility
   def set_defaults
     super
-    self.asset_type ||= AssetType.find_by_class_name(self.name)
   end    
   
 end
