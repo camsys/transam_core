@@ -237,7 +237,7 @@ class Asset < ActiveRecord::Base
   def self.new_asset(asset_subtype)
 
     asset_class_name = asset_subtype.asset_type.class_name
-    asset = asset_class_name.constantize.new({:asset_subtype_id => asset_subtype.id})
+    asset = asset_class_name.constantize.new({:asset_subtype_id => asset_subtype.id, :asset_type_id => asset_subtype.asset_type.id})
     return asset
 
   end
