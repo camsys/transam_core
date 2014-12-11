@@ -32,7 +32,11 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
     slopes = calculate_slope(asset, min_rating, max_rating)
 
     # determine the scale factor to make the mileage in the same interval as condition
-    scale_factor = (max_rating - condition_threshold) / policy_item.max_service_life_miles
+    if policy_item.max_service_life_miles.nil?
+      scale_factor = 1.0
+    else
+      scale_factor = (max_rating - condition_threshold) / policy_item.max_service_life_miles
+    end
 
     min_slope = [slopes[:condition_slope],slopes[:mileage_slope]*scale_factor].min
     est_rating = max_rating + (min_slope * asset.age)
@@ -134,10 +138,9 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
       else
         # We determine the new slope from the last data point reported
         condition_report = asset.condition_updates.last
-        Rails.logger.debug condition_report.inspect
 
+        #Rails.logger.debug condition_report.inspect
         last_rating   = condition_report.assessed_rating
-        last_mileage  = condition_report.current_mileage
         age_at_report = asset.age(condition_report.event_date)
 
         # Determine the current slope
@@ -148,11 +151,11 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
         Rails.logger.debug "Slope = #{condition_slope}."
 
         # See if we can do a mileage calculation
-        if last_mileage && policy_item.max_service_life_miles && age_at_report > 0
+        if policy_item.max_service_life_miles && age_at_report > 0
           # Here the slope is based on the number of miles remaining. This keeps the
           # slope in the same direction
           y1 = policy_item.max_service_life_miles
-          y2 = policy_item.max_service_life_miles - last_mileage
+          y2 = policy_item.max_service_life_miles - (a.reported_mileage.nil? ? 0 : a.reported_mileage)
           # get the slope
           mileage_slope = slope(x1, y1, x2, y2)
         end
