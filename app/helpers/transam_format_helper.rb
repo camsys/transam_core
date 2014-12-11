@@ -153,17 +153,20 @@ module TransamFormatHelper
 
   # formats an address
   def format_as_address(m)
-    html = m.address1
-    html << "<br/>"
-    html << m.address2 unless m.address2.blank?
-    html << "<br/>" unless m.address2.blank?
-    html << m.city
-    html << ", "
-    html << m.state
-    html << ", "
-    html << m.zip
-    html << "<br/>"
-    return html.html_safe
+    full_address = []
+    full_address << m.address1 unless m.address1.blank?
+    full_address << m.address2 unless m.address2.blank?
+
+    address3 = []
+    address3 << m.city unless m.city.blank?
+    address3 << m.state unless m.state.blank?
+    address3 << m.zip unless m.zip.blank?
+    address3 = address3.compact.join(', ')
+
+    full_address << address3
+    full_address = full_address.compact.join('<br/>')
+
+    return full_address.html_safe
   end
 
   # format for a field
