@@ -690,6 +690,7 @@ class Asset < ActiveRecord::Base
   end
 
   def is_revenue_vehicle
+    #Not going to work as it needs to work with items down the chain.  Will revisit in the AM.
     self.class.name == "Vehicle"
   end
 
