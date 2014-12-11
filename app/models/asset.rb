@@ -594,6 +594,10 @@ class Asset < ActiveRecord::Base
     update_asset_state(policy)
   end
 
+  def is_revenue_vehicle?
+    self.class.name == "Vehicle"
+  end
+
   #------------------------------------------------------------------------------
   #
   # Protected Methods
@@ -687,11 +691,6 @@ class Asset < ActiveRecord::Base
     self.in_service_date ||= self.purchase_date
     self.manufacture_year ||= Date.today.year
     self.purchased_new = self.purchased_new.nil? ? true : self.purchased_new
-  end
-
-  def is_revenue_vehicle
-    #Not going to work as it needs to work with items down the chain.  Will revisit in the AM.
-    self.class.name == "Vehicle"
   end
 
   #------------------------------------------------------------------------------
