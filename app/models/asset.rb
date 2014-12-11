@@ -689,6 +689,10 @@ class Asset < ActiveRecord::Base
     self.purchased_new = self.purchased_new.nil? ? true : self.purchased_new
   end
 
+  def is_revenue_vehicle
+    self.class.name == "Vehicle"
+  end
+
   #------------------------------------------------------------------------------
   #
   # Private Methods
