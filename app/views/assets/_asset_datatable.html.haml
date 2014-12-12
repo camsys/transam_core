@@ -6,7 +6,7 @@
       %th.center
       
   %tbody
-    - assets.each do |a|
+    - assets.includes(:organization, :asset_subtype).each do |a|
       %tr{:data => {:action_path => inventory_path(a)}}
         - SystemConfig.transam_module_names.each do |mod|
           = render :partial => "assets/#{mod}_asset_dt_columns", :locals => {:a => a } rescue nil
