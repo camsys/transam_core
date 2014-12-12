@@ -3,10 +3,12 @@
     .panel.panel-default.header-part
       .panel-heading
         .row
-          .col-md-12
+          .col-md-6
             %h3.panel-title
               %i.fa.fa-list
-              = @vendor.name
+                = @vendor.name
+          .col-md-6
+            = render 'actions'
       .panel-body
         = render :partial => 'summary', :locals => {:vendor => @vendor}
 

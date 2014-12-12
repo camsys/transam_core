@@ -1,0 +1,16 @@
+.btn-group.pull-right.panel-action
+  %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
+    I want to
+    %span.caret
+  %ul.dropdown-menu{:role => 'menu'}
+    - if can? :update, @vender
+      %li
+        = link_to edit_vendor_path(@vendor) do
+          %i.fa.fa-edit.fa-fw
+          = " Update this vendor"
+    - if can? :delete, @expenditure
+      %li.divider
+      %li
+        = link_to vendor_path(@vendor), :method => :delete, :data => {:confirm => "Are you sure you want to remove this vendor? The action can't be undone."} do
+          %i.fa.fa-trash-o.fa-fw
+          = " Remove this vendor"

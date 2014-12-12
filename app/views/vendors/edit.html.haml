@@ -1,0 +1,9 @@
+.row
+  .col-md-6.col-md-offset-3
+    %fieldset
+      %legend Update Vendor
+      = render(:partial => 'shared/form_errors', :locals => {:obj => @vendor}) unless @vendor.errors.empty?
+
+      = render 'form'
+
+= render 'scripts'
