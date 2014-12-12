@@ -1,12 +1,13 @@
 %ul.nav.nav-tabs
-  %li
-    %a{:href => "#assets", :data =>{:toggle => 'tab'}}
-      = "Assets"
+  - # Load module specific tabs if they exist
+  - SystemConfig.transam_module_names.each do |mod|
+    = render :partial => "vendors/#{mod}_detail_tabs" rescue nil
 
 .tab-content
-  .tab-pane.fade#assets
-    .tab-content
-      - if @vendor.assets.empty?
-        %p There are no assets associated with this vendor.
-      - else
-        = render 'assets'
+  - # Load module specific tab content if they exist
+  - SystemConfig.transam_module_names.each do |mod|
+    = render :partial => "vendors/#{mod}_detail_tabs_content" rescue nil
+
+- # Load module specific tab if they exist
+- SystemConfig.transam_module_names.each do |mod|
+  = render :partial => "vendors/#{mod}_detail_tabs_scripts" rescue nil

@@ -5,6 +5,9 @@ class VendorsController < OrganizationAwareController
 
   before_action :set_vendor, only: [:show, :edit, :update, :destroy]
 
+  # include the transam markers mixin
+  include TransamMapMarkers
+
   # Session Variables
   INDEX_KEY_LIST_VAR        = "vendors_list_cache_var"
 
@@ -30,6 +33,10 @@ class VendorsController < OrganizationAwareController
   def show
 
     add_breadcrumb @vendor
+
+    @vendors = []
+    @vendors << @vendor
+    @markers = generate_map_markers(@vendors, true)
 
     # get the @prev_record_path and @next_record_path view vars
     get_next_and_prev_object_keys(@vendor, INDEX_KEY_LIST_VAR)
@@ -105,6 +112,17 @@ class VendorsController < OrganizationAwareController
   end
 
   private
+    #
+    # generate an array of map markers for use with the leaflet plugin
+    #
+    def generate_map_markers(vendors_array, render_open = false)
+      objs = []
+      vendors_array.each do |org|
+        objs << get_geocoded_marker(org, render_open) unless org.latitude.nil?
+      end
+      return objs.to_json
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_vendor
       @vendor = Vendor.find_by(:object_key => params[:id])
