@@ -1,17 +1,17 @@
 = simple_form_for(@vendor,
-  :html => {:class => 'form-horizontal' },
-  :wrapper => :horizontal_form,
-  :wrapper_mappings => {:check_boxes => :horizontal_radio_and_checkboxes, :radio_buttons => :horizontal_radio_and_checkboxes, :file => :horizontal_file_input, :boolean => :horizontal_boolean}) do |f|
+  :html => {:class => 'form-vertical' },
+  :wrapper => :vertical_form,
+  :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}) do |f|
 
   = f.input :name
   = f.input :address1, :label => "Address 1"
   = f.input :address2, :label => "Address 2"
   .row
-    .col-sm-4.col-sm-offset-2
+    .col-sm-4
       = f.input :city
-    .col-sm-3
+    .col-sm-4
       = f.input :state, :as => :select, :collection => Country['US'].states
-    .col-sm-3
+    .col-sm-4
       = f.input :zip
 
   = f.input :phone, :as => :tel

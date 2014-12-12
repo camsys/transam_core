@@ -8,7 +8,7 @@
         = link_to edit_vendor_path(@vendor) do
           %i.fa.fa-edit.fa-fw
           = " Update this vendor"
-    - if can? :delete, @expenditure
+    - if can? :delete, @vendor
       %li.divider
       %li
         = link_to vendor_path(@vendor), :method => :delete, :data => {:confirm => "Are you sure you want to remove this vendor? The action can't be undone."} do
