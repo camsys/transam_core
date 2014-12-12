@@ -3,7 +3,7 @@
     I want to
     %span.caret
   %ul.dropdown-menu{:role => 'menu'}
-    - if can? :update, @vender
+    - if can? :update, @vendor
       %li
         = link_to edit_vendor_path(@vendor) do
           %i.fa.fa-edit.fa-fw
