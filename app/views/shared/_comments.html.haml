@@ -1,11 +1,12 @@
 %ul.media-list
   - comments.each do |c|
     %li.media
-      .well.well-small
-        %i.fa.fa-comment.fa-3x.pull-left
-        .media-body
+      .well.well-small.col-lg-12
+        .media-body.col-lg-12
+          %i.fa.fa-comment.fa-3x.pull-left
           %h5.media-heading
             = "#{c.creator.name} at #{format_as_date_time(c.created_at)}"
+          .pull-right
             - if can? :update, c
               = link_to 'Edit', edit_comment_path(c), :class => "btn btn-primary btn-xs pull-right", :style => "margin-left: 5px;"
             - if can? :delete, c
