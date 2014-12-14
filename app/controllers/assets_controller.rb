@@ -59,6 +59,7 @@ class AssetsController < AssetAwareController
 
     # disable any spatial filters for this view
     @spatial_filter = nil
+
     @assets = get_assets
     if ! @asset_group == "0"
       asset_group = AssetGroup.find_by_object_key(@asset_group)
@@ -405,6 +406,11 @@ class AssetsController < AssetAwareController
     else
       clauses << ['organization_id IN (?)']
       values << @organization_list
+    end
+
+    if params["filter"].present? && params["filter"] == "manufacturer"
+      clauses << ['manufacturer_id = ?']
+      values << params["manufacturer_id"]
     end
 
     if @disposition_year.blank?
