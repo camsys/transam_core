@@ -594,6 +594,10 @@ class Asset < ActiveRecord::Base
     update_asset_state(policy)
   end
 
+  def is_revenue_vehicle?
+    self.class.name == "Vehicle"
+  end
+
   #------------------------------------------------------------------------------
   #
   # Protected Methods
