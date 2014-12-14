@@ -185,4 +185,25 @@ module TransamFormatHelper
 
   end
 
+    # format for manufacturer field
+    # could perhaps be abstracted but need to avoid regression testing right now
+  def format_manufacturer_field(label, value, popover_text=nil)
+
+    html = "<div class='row control-group'>"
+    html << "<div class='col-xs-5 display-label'>"
+    html << label
+    html << "</div>"
+    html << "<div class='col-xs-7 display-value'><a href=\"/inventory?filter=manufacturer&manufacturer_id=#{value.id}\">"
+    html << value.to_s unless value.nil?
+    unless popover_text.nil?
+      html << "<i class='fa fa-info-circle info-icon' data-toggle='popover' data-trigger='hover' title='Information' data-placement='right' data-content='#{popover_text}'></i>"
+    end
+    html << "</a>"
+    html << "</div>"
+    html << "</div>"
+
+    return html.html_safe
+
+  end
+
 end
