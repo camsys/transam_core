@@ -391,14 +391,23 @@ class Asset < ActiveRecord::Base
 
   # Returns the policy rule that this asset uses for replacement and rehabilitation
   def policy_rule
-    policy.get_rule(self)
+    cached_policy_rule = get_cached_object("policy_rule")
+    if cached_policy_rule.blank?
+      cached_policy_rule = policy.get_rule(self)
+      cache_object("policy_rule", cached_policy_rule)
+    end
+    cached_policy_rule
   end
 
   # returns the the organizations's policy that governs the replacement of this asset. This needs to upcast
   # the organization type to a class that owns assets
   def policy
-    org = Organization.get_typed_organization(organization)
-    return org.get_policy
+    cached_policy = get_cached_object("policy")
+    if cached_policy_rule.blank?
+      cached_policy = Organization.get_typed_organization(organization).get_policy
+      cache_object("policy_rule", cached_policy)
+    end
+    cached_policy
   end
 
   # initialize any policy-related items. This method should be overridden for each sub class
