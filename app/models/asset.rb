@@ -392,7 +392,7 @@ class Asset < ActiveRecord::Base
   # Returns the policy rule that this asset uses for replacement and rehabilitation
   def policy_rule
     cached_policy_rule = get_cached_object("policy_rule")
-    if !cached_policy_rule.present?
+    if !cached_policy_rule.blank?
       cached_policy_rule = policy.get_rule(self)
       cache_object("policy_rule", cached_policy_rule)
     end
@@ -403,7 +403,7 @@ class Asset < ActiveRecord::Base
   # the organization type to a class that owns assets
   def policy
     cached_policy = get_cached_object("policy")
-    if !cached_policy_rule.present?
+    if cached_policy_rule.blank?
       cached_policy = Organization.get_typed_organization(organization).get_policy
       cache_object("policy_rule", cached_policy)
     end
