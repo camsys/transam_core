@@ -15,6 +15,8 @@ class Asset < ActiveRecord::Base
   # Include the fiscal year mixin
   include FiscalYear
 
+  OBJECT_CACHE_EXPIRE_SECONDS = Rails.application.config.object_cache_expire_seconds
+  
   #------------------------------------------------------------------------------
   # Callbacks
   #------------------------------------------------------------------------------
@@ -600,6 +602,21 @@ class Asset < ActiveRecord::Base
   #
   #------------------------------------------------------------------------------
   protected
+
+  # Return an object that has been cached against this asset
+  def get_cached_object(key)
+    Rails.cache.read(get_cache_key(key))
+  end
+
+  # Cache an object against the asset
+  def cache_object(key, obj, expires_in = OBJECT_CACHE_EXPIRE_SECONDS)
+    Rails.cache.write(get_cache_key(key), obj, :expires_in => expires_in)
+  end
+
+  # Cache key for this asset
+  def get_cache_key(key)
+    "#{object_key}:#{key}"
+  end
 
   # updates the calculated values of an asset
   def update_asset_state(policy = nil)
