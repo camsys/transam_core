@@ -1,33 +1,37 @@
 class Equipment < Asset
-  
+
   # Enable auditing of this model type. Only monitor uodate and destroy events
   has_paper_trail :on => [:update, :destroy]
-  
+
   # Callbacks
   after_initialize :set_defaults
-  
+
   #------------------------------------------------------------------------------
-  # Associations common to all equiopment assets
+  # Associations common to all equipment assets
   #------------------------------------------------------------------------------
-  
+
+  validates :quantity,        :presence => :true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 1}
+  validates :quantity_units,  :presence => true
+  validates :description,     :presence => true
+
   #------------------------------------------------------------------------------
   # Scopes
   #------------------------------------------------------------------------------
   # set the default scope
-  #default_scope { where(:asset_type_id => AssetType.find_by_class_name(self.name).id) }
-      
+  default_scope { where(:asset_type_id => AssetType.where(:class_name => self.name).pluck(:id)) }
+
   #------------------------------------------------------------------------------
   # Lists. These lists are used by derived classes to make up lists of attributes
   # that can be used for operations like full text search etc. Each derived class
   # can add their own fields to the list
   #------------------------------------------------------------------------------
-    
+
   SEARCHABLE_FIELDS = [
     :quantity
-  ] 
+  ]
   CLEANSABLE_FIELDS = [
     :quantity
-  ] 
+  ]
   # List of hash parameters specific to this class that are allowed by the controller
   FORM_PARAMS = [
     :quantity
@@ -63,7 +67,7 @@ class Equipment < Asset
     end
     a.flatten
   end
-  
+
   def cleansable_fields
     a = []
     a << super
@@ -77,17 +81,17 @@ class Equipment < Asset
     purchase_cost
   end
 
-    
+
   #------------------------------------------------------------------------------
   #
   # Protected Methods
   #
   #------------------------------------------------------------------------------
   protected
-  
+
   # Set resonable defaults for a suppoert facility
   def set_defaults
     super
-  end    
-  
+  end
+
 end
