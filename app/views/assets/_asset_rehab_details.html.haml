@@ -1,5 +1,5 @@
 = format_field("Scheduled Year", format_as_fiscal_year(asset.scheduled_replacement_year)) unless asset.scheduled_replacement_year.blank?
 = format_field("Scheduled Rehabilitation", format_as_fiscal_year(asset.scheduled_rehabilitation_year)) unless asset.scheduled_rehabilitation_year.blank?
 = format_field("Scheduled Disposition", format_as_fiscal_year(asset.scheduled_disposition_year)) unless asset.scheduled_disposition_year.blank?
-+- if !asset.is_revenue_vehicle
-+  = format_field("Policy Year", format_as_fiscal_year(asset.policy_replacement_year))
+= format_field("Policy Year", format_as_fiscal_year(asset.policy_replacement_year)) unless asset.is_revenue_vehicle?
+
