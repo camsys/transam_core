@@ -7,7 +7,7 @@ module TransamFormatHelper
   # Formats a quantity
   def format_as_quantity(count, unit_type = 'unit')
     unless unit_type.blank?
-      pluralize(count, unit_type)
+      "#{format_as_integer(count)} #{unit_type}"
     else
       "#{count}"
     end
