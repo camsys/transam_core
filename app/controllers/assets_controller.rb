@@ -60,16 +60,16 @@ class AssetsController < AssetAwareController
     # disable any spatial filters for this view
     @spatial_filter = nil
     @assets = get_assets
-    if @asset_group.present?
+    if ! @asset_group == "0"
       asset_group = AssetGroup.find_by_object_key(@asset_group)
       add_breadcrumb asset_group
-
-    elsif @asset_subtype == 0
-      add_breadcrumb @asset_class.underscore.humanize.titleize.pluralize(2), inventory_index_path(:asset_type => @asset_type, :asset_subtype => 0)
-    else
+    elsif @asset_subtype > 0
       subtype = AssetSubtype.find(@asset_subtype)
       add_breadcrumb subtype.asset_type.name.pluralize(2), inventory_index_path(:asset_type => subtype.asset_type, :asset_subtype => 0)
-      add_breadcrumb subtype.name, inventory_index_path(:asset_subtype =>subtype)
+      add_breadcrumb subtype.name
+    else
+      asset_type = AssetType.find(@asset_type)
+      add_breadcrumb asset_type.name.titleize.pluralize(2)
     end
 
     unless @fmt == 'xls'
@@ -375,6 +375,7 @@ class AssetsController < AssetAwareController
       # we have an asset subtype so get it and get the asset type from it. We also set the filter form
       # to the name of the selected subtype
       subtype = AssetSubtype.find(@asset_subtype)
+      @asset_type = subtype.asset_type.id
       @asset_class_name = subtype.asset_type.class_name
       @filter = subtype.name
     else
@@ -448,6 +449,11 @@ class AssetsController < AssetAwareController
     unless @asset_subtype == 0
       clauses << ['asset_subtype_id = ?']
       values << [@asset_subtype]
+    end
+
+    unless @asset_type == 0
+      clauses << ['asset_type_id = ?']
+      values << [@asset_type]
     end
 
     unless @spatial_filter.blank?
@@ -532,23 +538,22 @@ class AssetsController < AssetAwareController
     assets.map do |a|
       [
         inventory_path(a),
-        a.organization.short_name,
-        a.asset_subtype.name,
+        a.organization,
+        a.asset_subtype,
         a.asset_tag,
         a.description,
-        a.service_status_type.blank? ?  "" : a.service_status_type.code,
-        view_context.format_as_currency(a.cost),
+        a.parent.nil? ? "" : view_context.link_to(a.parent.name, inventory_path(a.parent)),
 
-        a.age,
-        view_context.format_as_boolean(a.in_backlog),
+        view_context.format_as_fiscal_year(a.in_service_date.year),
+        view_context.format_as_integer(a.age),
         view_context.format_as_decimal(a.reported_condition_rating, 1),
-        a.reported_condition_type.blank? ?  "" : a.reported_condition_type.name,
-        a.estimated_condition_type.blank? ? "" : a.estimated_condition_type.name,
+        a.service_status_type,
 
-        view_context.format_as_currency(a.estimated_replacement_cost),
-        view_context.format_as_fiscal_year(a.policy_replacement_year),
-        view_context.format_as_fiscal_year(a.estimated_replacement_year),
-        render_to_string(:partial => 'asset_info_detail_popup', :formats => ['html'], :locals => {:asset => a}).html_safe
+        view_context.format_as_fiscal_year(a.scheduled_rehabilitation_year),
+        view_context.format_as_fiscal_year(a.scheduled_replacement_year),
+
+        view_context.format_as_boolean(a.depreciable),
+        view_context.format_as_currency(a.book_value)
       ]
     end
   end
