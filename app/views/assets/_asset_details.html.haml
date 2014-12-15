@@ -2,7 +2,7 @@
 = format_field("Description", asset.description )
 = format_field("Asset Tag", asset.asset_tag )
 = format_field("External ID", asset.external_id ) if asset.external_id
-= format_field("Manufacturer", Manufacturer.find(asset.manufacturer_id) ) unless asset.manufacturer_id.blank?
+= format_manufacturer_field("Manufacturer", Manufacturer.find(asset.manufacturer_id) ) unless asset.manufacturer_id.blank?
 = format_field("Class", asset.asset_type )
 = format_field("Type", asset.asset_subtype )
 = format_field("Status",  asset.service_status_type.nil? ? 'Unknown' : asset.service_status_type.name )
