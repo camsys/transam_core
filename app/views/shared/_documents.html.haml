@@ -1,14 +1,14 @@
 %ul.media-list
   - documents.each do |d|
     %li.media
-      .well.well-small
-        %i.fa.fa-3x.pull-left{:class => get_file_icon_for_filename(d.original_filename)}
-        .media-body
+      .well.well-small.col-lg-12
+        .media-body.col-lg-12
+          %i.fa.fa-3x.pull-left{:class => get_file_icon_for_filename(d.original_filename)}
           %h5.media-heading
             = "#{d.creator.name} at #{format_as_date_time(d.created_at)}"
+          .pull-right
             - if can? :delete, d
               = link_to 'Remove', d, :method => :delete, :class => "btn btn-warning btn-xs pull-right", :style => "margin-left: 5px;", :data => { :confirm => 'Are you sure you want to remove this document?' }
             - if can? :read, d
               = link_to 'Download', download_document_path(d), :class => "btn btn-success btn-xs pull-right", :style => "margin-left: 5px;"
           = d.description.html_safe
-
