@@ -31,6 +31,7 @@ var transam = new function() {
 	this.activate_info_popups = function(class_name) {
 		$(class_name).bind({
 	    	mouseenter: function() {
+	    			$(".popover").popover("hide");
 	        	var el=$(this);
 	        		$.ajax({
 	          			type: "GET",
