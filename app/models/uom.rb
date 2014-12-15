@@ -1,5 +1,5 @@
 #
-# Simple lookup class for distance metrics. Maybe used to add different 
+# Simple lookup class for distance metrics. Maybe used to add different
 # measurement units as needed.
 #
 # This implementation wraps Unitwise but always extend this model rather
@@ -10,23 +10,24 @@ class Uom
 
   # Other units
   UNIT                = 'unit'
-  
+
   # Pre-defined weight quantities
   KILOGRAM            = 'kilogram'
-  POUND               = "pound"  
+  POUND               = "pound"
   SHORT_TON           = 'short_ton'
   TON                 = SHORT_TON
-  TONNE               = "tonne"  
-    
+  TONNE               = "tonne"
+
   # Pre-defined area measurements
+  SQUARE_FOOT         = "square foot"
   SQUARE_YARD         = "square yard"
   SQUARE_METER        = "square meter"
   SQUARE_MILE         = "square mile"
   ACRE                = "acre"
-  
+
   # Predefined volumes
-  LITRE               = "litre"  
-  GALLON              = "gallon"  
+  LITRE               = "litre"
+  GALLON              = "gallon"
 
   # Pre-defined distance metrics that can be used to define linear distances
   INCH                = 'inch'
@@ -36,17 +37,17 @@ class Uom
   METER               = 'meter'
   KILOMETER           = 'kilometer'
 
-  AREA_UNITS      = [SQUARE_YARD, SQUARE_METER, SQUARE_MILE, ACRE]
+  AREA_UNITS      = [SQUARE_FOOT, SQUARE_YARD, SQUARE_METER, SQUARE_MILE, ACRE]
   DISTANCE_UNITS  = [INCH, FEET, YARD, MILE, METER, KILOMETER]
   VOLUME_UNITS    = [LITRE, GALLON]
   WEIGHT_UNITS    = [KILOGRAM, POUND, TONNE, SHORT_TON, TON]
   OTHER_UNITS     = [UNIT]
-      
+
   # Check to see if a measurement unit is valid
   def self.valid? uom
     Unitwise.valid? uom
   end
-  
+
   # Convert a quantity from one unit to another
   def self.convert(quantity, from_uom, to_uom)
     begin
@@ -55,5 +56,5 @@ class Uom
       raise ArgumentError.new('invalid argument')
     end
   end
-  
+
 end
