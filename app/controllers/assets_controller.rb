@@ -473,7 +473,7 @@ class AssetsController < AssetAwareController
       assets = klass.where(clauses.join(' AND '), *values).order("#{sort_column(klass)} #{sort_direction}").page(page).per_page(per_page)
     else
       # Otherwise get everything
-      assets = klass.where(clauses.join(' AND '), *values)
+      assets = klass.where(clauses.join(' AND '), *values).limit(250)
     end
     return assets
   end
