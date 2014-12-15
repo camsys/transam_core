@@ -408,7 +408,7 @@ class AssetsController < AssetAwareController
       values << @organization_list
     end
 
-    if params["filter"].present? && params["filter"] == "manufacturer"
+    if params["manufacturer_id"].present?
       clauses << ['manufacturer_id = ?']
       values << params["manufacturer_id"]
     end

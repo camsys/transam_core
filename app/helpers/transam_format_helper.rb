@@ -196,7 +196,7 @@ module TransamFormatHelper
     html << "<div class='col-xs-5 display-label'>"
     html << label
     html << "</div>"
-    html << "<div class='col-xs-7 display-value'><a href=\"/inventory?filter=manufacturer&manufacturer_id=#{value.id}\">"
+    html << "<div class='col-xs-7 display-value'><a href=\"/inventory?manufacturer_id=#{value.id}\">"
     html << value.to_s unless value.nil?
     unless popover_text.nil?
       html << "<i class='fa fa-info-circle info-icon' data-toggle='popover' data-trigger='hover' title='Information' data-placement='right' data-content='#{popover_text}'></i>"
