@@ -9,21 +9,21 @@ var transam = new function() {
 	};
 	// enable an element
 	this.enable_element = function(id) {
-		$('#' + id).removeAttr('disabled');		
+		$('#' + id).removeAttr('disabled');
 	};
 	// test if an element is blank
 	this.is_blank = function(elem_id) {
 		var len = actual_string_length(elem_id);
 		return len === 0;
 	};
-	
+
 	// Finds all elements marked as info icons and turns them into popups
 	this.enable_info_popups = function(class_name) {
 		$(class_name).popover({
 			trigger: 'hover',
 			container: 'body',
     		animation: 'true',
-    		html: 'true'    
+    		html: 'true'
 		});
 	};
 
@@ -31,7 +31,7 @@ var transam = new function() {
 	this.activate_info_popups = function(class_name) {
 		$(class_name).bind({
 	    	mouseenter: function() {
-	        	var el=$(this);  
+	        	var el=$(this);
 	        		$.ajax({
 	          			type: "GET",
 	          			url: el.attr("data-url"),
@@ -46,9 +46,9 @@ var transam = new function() {
 	        	var el=$(this);
 	        	el.popover('hide');
 	   		}
-		});	
+		});
 	};
-	
+
 	// Fix the page footer to the bottom of the page
 	this.fix_page_footer = function(footer_div) {
 
@@ -59,9 +59,9 @@ var transam = new function() {
    		if (footerTop < docHeight) {
     		$(footer_div).css('margin-top', (docHeight - footerTop) + 'px');
    			//alert("Adjusted: " + docHeight + "," + footerHeight + "," + footerTop);
-   		}	
+   		}
 	};
-		
+
 	// validate a file size
 	this.validate_file_size = function(inputFile, max_file_size_mb) {
 		var warning_message = "This file exceeds the maximum allowed file size (" + max_file_size_mb + " MB). Please select a smaller file.";
@@ -73,7 +73,7 @@ var transam = new function() {
 		    	show_popup_message('Warning', warning_message, 'warning');
 		    	$(inputFile).val('');
 	  		}
-	  	});	 
+	  	});
 	};
 	// Show a popup message in the UI
 	this.show_popup_message = function(title, message, type) {
@@ -81,7 +81,7 @@ var transam = new function() {
 		if (type == 'error') {
 			class_name = 'alert alert-danger';
 		} else if (type == 'warning') {
-			class_name = 'alert alert-warning';			
+			class_name = 'alert alert-warning';
 		}
 		$.gritter.add({
 			title: title,
@@ -91,11 +91,12 @@ var transam = new function() {
 	};
 
 	// Converts a table to a datatable
-	this.render_data_table = function(div_id, filter) {
+	this.render_data_table = function(div_id, filter, sorting) {
 		$("#" + div_id).dataTable( {
 			"bFilter" : filter,
 			"bLengthChange" : true,
 			"bProcessing" : true,
+			"bSort" : sorting,
 			"sDom": "<'row'<'col-xs-6'l><'col-xs-6'f>r>t<'row'<'col-xs-6'i><'col-xs-6'p>>",
 			"sPaginationType": "bootstrap",
 			"oLanguage": {
@@ -104,17 +105,17 @@ var transam = new function() {
 			"fnDrawCallback": function( oSettings ) {
 	      		transam.install_quick_link_handlers();
 	      		transam.activate_info_popups('.info-popup');
-	    	}		
-		} );		
+	    	}
+		} );
 	};
-	
+
 	// Draws a google chart based on the chart data and chart options passed in
 	this.draw_chart = function(div_id, chart_type, chart_options, chart_data) {
 
 		var container = document.getElementById(div_id);
 		if (container === null) {
 			return;
-		} 		
+		}
 		var chart = null;
 		if (chart_type === 'area') {
 			chart = new google.visualization.AreaChart(container);
@@ -148,13 +149,13 @@ var transam = new function() {
           		if (loader_panel) {
             		$("#" + div_id).html(loader_panel);
           		}
-        	},       
+        	},
         	//success: function(html) {
           	//	$("#" + div_id).empty();
           	//	$("#" + div_id).append(html);
         	//},
 			error: function (data) {
-	      		show_error_message(div_id, "We are sorry but something went wrong. Please try again.");                
+	      		show_error_message(div_id, "We are sorry but something went wrong. Please try again.");
 	      	}
     	});
   	};
@@ -175,26 +176,26 @@ var transam = new function() {
 			    //});
 			},
 			error: function (data) {
-	      		show_alert("We are sorry but something went wrong. Please try again.");                
+	      		show_alert("We are sorry but something went wrong. Please try again.");
 	      	}
-	   	});  
+	   	});
 	};
 
 	//
 	// session based variable storage for UI key/value pairs
 	//
-	// get a key value, if the key does not exist the default value is returned  
+	// get a key value, if the key does not exist the default value is returned
 	this.get_ui_key_value = function(key, default_val) {
 	    var value;
 	    try {
 	        value = window.sessionStorage.getItem(key);
 	    } catch(e) {
 	        value = default_val;
-	    }    
+	    }
 		//alert('getting value for ' + key + '; val = ' + value);
 	    return value;
 	};
-	
+
 	// Set a key value. Keys must be unique strings
 	this.set_ui_key_value = function(key, value) {
 		//alert('setting value for ' + key + ' to ' + value);
@@ -216,19 +217,19 @@ var transam = new function() {
 	// Finds all the class elements on a page and sets the min-height css variable
 	// to the maximum height of all the containers
 	this.make_same_height = function(jquery_selector) {
-	
+
 		// remove any existing min-height attributes
 		$(jquery_selector).css({'height' : ''});
-		
+
 		// Set the form parts to equal height
 		var max = -1;
 		$(jquery_selector).each(function() {
-			var h = $(this).height(); 
+			var h = $(this).height();
 			//alert(h);
 			max = h > max ? h : max;
 		});
 		max += 10;
-		$(jquery_selector).css({'height': max});	
+		$(jquery_selector).css({'height': max});
 	};
 
 	this.install_quick_link_handlers = function() {
@@ -236,7 +237,7 @@ var transam = new function() {
 		$('[data-action-path]').click(function() {
 			var url = $(this).data('action-path');
 			document.location.href = url;
-		});		
+		});
 	};
 
 	// Hides dropdown button if the dropdown is empty
@@ -251,7 +252,7 @@ var transam = new function() {
 	// Internal functions
 	var show_error_message = function(div_id, message) {
 		$("#" + div_id).empty();
-        $("#" + div_id).append('<div class="alert alert-error">' + message + '</div>');		
+        $("#" + div_id).append('<div class="alert alert-error">' + message + '</div>');
 	};
 	var actual_string_length = function(elem_id) {
 		var val = $("#" + elem_id).val();
