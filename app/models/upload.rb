@@ -19,6 +19,8 @@ class Upload < ActiveRecord::Base
   belongs_to :organization
   belongs_to :file_status_type
   belongs_to :file_content_type
+  # Asset events can be created by bulk update
+  has_many   :asset_events
   
   # uploader
   mount_uploader :file, ExcelUploader      
