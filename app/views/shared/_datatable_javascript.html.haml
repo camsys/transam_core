@@ -1,6 +1,9 @@
-- id = "datatable" if id.blank?
-- sorting = "true" if sorting.blank?
+:ruby
+	id ||= "datatable"
+	sorting ||= 'true'
+	filter ||= false
+
 :javascript
 	$(document).ready(function() {
-		transam.render_data_table("#{id}", false, "#{sorting}");
+		transam.render_data_table("#{id}", #{filter == true}, #{sorting == true});
 	});
