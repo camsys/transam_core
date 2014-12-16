@@ -155,7 +155,7 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
           # Here the slope is based on the number of miles remaining. This keeps the
           # slope in the same direction
           y1 = policy_item.max_service_life_miles
-          y2 = policy_item.max_service_life_miles - (a.reported_mileage.nil? ? 0 : a.reported_mileage)
+          y2 = policy_item.max_service_life_miles - (asset.reported_mileage.nil? ? 0 : asset.reported_mileage)
           # get the slope
           mileage_slope = slope(x1, y1, x2, y2)
         end
