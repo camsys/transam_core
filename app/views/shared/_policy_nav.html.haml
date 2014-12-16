@@ -1,11 +1,11 @@
 %li.nav-item{:class => get_nav_link_class(['policies'])}
   = link_to "#", :class => "dropdown-toggle", :data => {"toggle" => "dropdown"} do
-    %i.fa.fa-book.fa-2x
+    %i.fa.fa-line-chart.fa-2x
     %br
-    Policies
+    Planning
     %b.caret
-  %ul.dropdown-menu.multi-level{:role => 'menu'}      
+  %ul.dropdown-menu.multi-level{:role => 'menu'}
     %li.text-left
       = link_to policies_path do
         %i.fa.fa-book.fa-fw
-        Policies   
+        Policies
