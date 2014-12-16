@@ -7,7 +7,7 @@
 #
 #------------------------------------------------------------------------------
 class Organization < ActiveRecord::Base
-  
+
   #------------------------------------------------------------------------------
   # Callbacks
   #------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ class Organization < ActiveRecord::Base
 
   # Every organization can have a set of users
   has_many  :users
-    
+
   # Every organization can have messages
   has_many  :messages
 
@@ -43,11 +43,14 @@ class Organization < ActiveRecord::Base
 
   # Every organization can have 0 or more asset groups
   has_many  :asset_groups
-          
-  # Validations for associations  
+
+  # Every organization can have 0 or more vendors
+  has_many  :vendors
+
+  # Validations for associations
   validates :customer_id,           :presence => true
   validates :organization_type_id,  :presence => true
-  
+
   #------------------------------------------------------------------------------
   # Attributes common to all organization types
   #------------------------------------------------------------------------------
@@ -62,7 +65,7 @@ class Organization < ActiveRecord::Base
   validates :phone,                 :presence => true
   validates :url,                   :presence => true
 
-  # List of allowable form param hash keys  
+  # List of allowable form param hash keys
   FORM_PARAMS = [
     :customer_id,
     :organization_type_id,
@@ -86,11 +89,11 @@ class Organization < ActiveRecord::Base
   # Class Methods
   #
   #------------------------------------------------------------------------------
-      
+
   def self.allowable_params
     FORM_PARAMS
   end
-      
+
   # returns a typed value of the organization if one exists
   def self.get_typed_organization(org)
     if org
@@ -100,22 +103,22 @@ class Organization < ActiveRecord::Base
       return o
     end
   end
-      
+
   #------------------------------------------------------------------------------
   #
   # Instance Methods
   #
   #------------------------------------------------------------------------------
-        
+
   # Returns a hash of asset-type_ids and the counts per non-zero type
   def asset_type_counts
     Asset.where(:organization_id => id).group(:asset_type_id).count
   end
-  
+
   def asset_subtype_counts(asset_type_id)
     Asset.where(:organization_id => id, :asset_type_id => asset_type_id).group(:asset_subtype_id).count
   end
-  
+
   # Returns true if the organization is of the specified class or has the specified class as
   # and ancestor (superclass).
   #
@@ -132,38 +135,38 @@ class Organization < ActiveRecord::Base
       false
     end
   end
-        
+
   def coded_name
     "#{short_name}-#{name}"
-  end      
-  
+  end
+
   def object_key
     "#{id}"
   end
-  
+
   def to_s
     short_name
   end
-  
+
   # Generic organizations do not own transit assets
   def has_assets?
     false
-  end   
-            
+  end
+
   # Returns a policy for this org. This must be overriden for concrete classes
   def get_policy
     # get a typed version of the organization and return its value
     org = is_typed? ? self : Organization.get_typed_organization(self)
-    return org.get_policy unless org.nil?    
+    return org.get_policy unless org.nil?
   end
-            
+
   # returns true if the organization instance is strongly typed, i.e., a concrete class
   # false otherwise.
   # true
   def is_typed?
     self.class.to_s == organization_type.class_name
   end
-              
+
   #------------------------------------------------------------------------------
   #
   # Protected Methods
@@ -174,7 +177,6 @@ class Organization < ActiveRecord::Base
   # Set resonable defaults for a new organization
   def set_defaults
     self.active ||= true
-  end    
-  
+  end
+
 end
-      
