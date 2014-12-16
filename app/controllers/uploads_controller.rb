@@ -80,35 +80,6 @@ class UploadsController < OrganizationAwareController
     
   end
 
-  # Undo changes from the worksheet. 
-  def undo
-    
-    if @upload.nil?
-      notify_user(:alert, "Record not found!")
-      redirect_to uploads_url
-      return      
-    end
-    
-    # Iterate over the list of asset events and remove each of them in turn
-    @upload.asset_events.each do |event|
-      event.destroy
-    end
-    # Make sure the force flag is set and that the model is set back to
-    # unprocessed
-    @upload.reset
-    @upload.force_update = true
-    @upload.save(:validate => false)
-    
-    notify_user(:notice, "File was resubmitted for processing.")    
-        
-    # create a job to process this file in the background
-    create_upload_process_job(@upload)
-    
-    # show the original upload
-    redirect_to(upload_url(@upload))
-        
-  end
-
   # Reload the worksheet. This action pushes the spreadsheet back into the queue
   # to be processed
   def resubmit
@@ -120,7 +91,7 @@ class UploadsController < OrganizationAwareController
     end
     
     # Make sure the force flag is set and that the model is set back to
-    # unprocessed
+    # unprocessed.  reset destroys dependent asset_events
     @upload.reset
     @upload.force_update = true
     @upload.save(:validate => false)
