@@ -4,20 +4,22 @@
       I want to  
       %span.caret
     %ul.dropdown-menu{:role => 'menu'}
-      %li
-        = link_to resubmit_upload_path(@upload), :data => {:confirm => "Are you sure you want to resubmit this file for processing?"} do
-          %i.fa.fa-repeat.fa-fw
-          = " Resubmit this file"
-      %li.divider
-      %li
-        = link_to download_upload_path(@upload) do
-          %i.fa.fa-download.fa-fw
-          = " Download this file"
-      %li.divider
-      %li
-        = link_to resubmit_upload_path(@upload), :data => {:confirm => "Are you sure you want to undo changes from this file?"}  do
-          %i.fa.fa-undo.fa-fw
-          = " Undo changes"
+      -if current_user.has_role? :admin
+        %li
+          = link_to resubmit_upload_path(@upload), :data => {:confirm => "Are you sure you want to resubmit this file for processing?"} do
+            %i.fa.fa-repeat.fa-fw
+            = " Resubmit this file"
+        %li.divider
+      - if can? :create, Upload
+        %li
+          = link_to download_upload_path(@upload) do
+            %i.fa.fa-download.fa-fw
+            = " Download this file"
+        %li.divider
+        %li
+          = link_to undo_upload_path(@upload), :data => {:confirm => "Are you sure you want to undo changes from this file?"}  do
+            %i.fa.fa-undo.fa-fw
+            = " Undo changes"
       %li.divider
       - if can? :delete, @upload
         %li
