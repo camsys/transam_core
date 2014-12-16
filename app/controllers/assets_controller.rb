@@ -61,14 +61,14 @@ class AssetsController < AssetAwareController
     @spatial_filter = nil
 
     @assets = get_assets
-    if ! @asset_group == "0"
+    if @asset_group.present?
       asset_group = AssetGroup.find_by_object_key(@asset_group)
       add_breadcrumb asset_group
     elsif @asset_subtype > 0
       subtype = AssetSubtype.find(@asset_subtype)
       add_breadcrumb subtype.asset_type.name.pluralize(2), inventory_index_path(:asset_type => subtype.asset_type, :asset_subtype => 0)
       add_breadcrumb subtype.name
-    else
+    elsif @asset_type > 0
       asset_type = AssetType.find(@asset_type)
       add_breadcrumb asset_type.name.titleize.pluralize(2)
     end
@@ -292,47 +292,34 @@ class AssetsController < AssetAwareController
 
     # Check to see if we got an asset group to sub select on. This occurs when the user
     # selects an asset group from the menu selector
-    if params[:asset_group].nil?
-      # see if one is stored in the session
-      @asset_group = session[:asset_group].nil? ? '' : session[:asset_group]
+    if params[:asset_group].nil? or params[:asset_group] == '0'
+      @asset_group = ''
     else
       @asset_group = params[:asset_group]
     end
-    # store it in the session for later
-    session[:asset_group] = @asset_group
-
 
     # Check to see if we got an asset type to sub select on. This occurs when the user
     # selects an asset type from the drop down
     if params[:asset_type].nil?
-      # see if one is stored in the session
-      @asset_type = session[:asset_type].nil? ? 0 : session[:asset_type].to_i
+      @asset_type =  0
     else
       @asset_type = params[:asset_type].to_i
     end
-    # store it in the session for later
-    session[:asset_type] = @asset_type
 
     # Check to see if we got an asset subtype to sub select on. This will happen if an asset type is selected
     # already and the user selected a subtype from the dropdown.
     if params[:asset_subtype].nil?
-      # see if one is stored in the session
-      @asset_subtype = session[:asset_subtype].nil? ? 0 : session[:asset_subtype].to_i
+      @asset_subtype = 0
     else
       @asset_subtype = params[:asset_subtype].to_i
     end
-    # store it in the session for later
-    session[:asset_subtype] = @asset_subtype
 
     # Check to see if we got an organization to sub select on.
     if params[:org_id].nil?
-      # see if one is stored in the session
-      @org_filter = session[:org_id].nil? ? 0 : session[:org_id].to_i
+      @org_filter = 0
     else
       @org_filter = params[:org_id].to_i
     end
-    # store it in the session for later
-    session[:org_id] = @org_filter
 
     # Check to see if we got a search text and search param to filter on
     if params[:search_text].nil?
@@ -343,9 +330,6 @@ class AssetsController < AssetAwareController
       @search_text  = params[:search_text]
       @search_param = params[:search_param]
     end
-    # store it in the session for later
-    session[:search_text]   = @search_text
-    session[:search_param]  = @search_param
 
     # Check to see if we got list of assets to filter on
     if params[:ids]
