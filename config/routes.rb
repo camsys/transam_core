@@ -96,6 +96,7 @@ Rails.application.routes.draw do
       post  'create_template'
     end
     member do
+      get   'undo'
       get   'resubmit'
       get   'download'
     end

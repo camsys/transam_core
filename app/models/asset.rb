@@ -453,12 +453,15 @@ class Asset < ActiveRecord::Base
     Rails.logger.debug "Updating the recorded location for asset = #{object_key}"
 
     unless new_record?
-      unless location_updates.empty?
+      if location_updates.empty?
+        self.parent_id = nil
+        self.location_comments = nil
+      else
         event = location_updates.last
         self.parent_id = event.parent_id
         self.location_comments = event.comments
-        save
       end
+      save
     end
   end
 
@@ -471,12 +474,15 @@ class Asset < ActiveRecord::Base
 
     # can't do this if it is a new record as none of the IDs would be set
     unless asset.new_record?
-      unless asset.service_status_updates.empty?
+      if asset.service_status_updates.empty?
+        service_status_type = nil
+        service_status_date = nil
+      else
         event = asset.service_status_updates.last
         asset.service_status_date = event.event_date
         asset.service_status_type = event.service_status_type
-        asset.save
       end
+      asset.save
     end
   end
 
@@ -487,13 +493,17 @@ class Asset < ActiveRecord::Base
 
     # can't do this if it is a new record as none of the IDs would be set
     unless new_record?
-      unless condition_updates.empty?
+      if condition_updates.empty?
+        self.reported_condition_date = nil
+        self.reported_condition_rating = nil
+        self.reported_condition_type = ConditionType.find_by(:name => "Unknown")
+      else
         event = condition_updates.last
         self.reported_condition_date = event.event_date
         self.reported_condition_rating = event.assessed_rating
         self.reported_condition_type = ConditionType.from_rating(event.assessed_rating)
-        save
       end
+      save
     end
 
   end
@@ -504,13 +514,17 @@ class Asset < ActiveRecord::Base
     Rails.logger.debug "Updating the scheduled replacement year for asset = #{object_key}"
 
     unless new_record?
-      unless schedule_replacement_updates.empty?
+      if schedule_replacement_updates.empty?
+        self.scheduled_replacement_year = nil
+        self.replacement_reason_type_id = nil
+        self.scheduled_by_user = false
+      else
         event = schedule_replacement_updates.last
         self.scheduled_replacement_year = event.replacement_year unless event.replacement_year.nil?
         self.replacement_reason_type_id = event.replacement_reason_type_id unless event.replacement_reason_type_id.nil?
         self.scheduled_by_user = true
-        save
       end
+      save
     end
   end
 
@@ -520,11 +534,13 @@ class Asset < ActiveRecord::Base
     Rails.logger.debug "Updating the scheduled rehabilitation year for asset = #{object_key}"
 
     unless new_record?
-      unless schedule_rehabilitation_updates.empty?
+      if schedule_rehabilitation_updates.empty?
+        self.scheduled_rehabilitation_year = nil
+      else
         event = schedule_rehabilitation_updates.last
         self.scheduled_rehabilitation_year = event.rebuild_year
-        save
       end
+      save
     end
   end
 
@@ -534,11 +550,13 @@ class Asset < ActiveRecord::Base
     Rails.logger.debug "Updating the scheduled disposition for asset = #{object_key}"
 
     unless new_record?
-      unless schedule_disposition_updates.empty?
+      if schedule_disposition_updates.empty?
+        self.scheduled_disposition_year = nil
+      else
         event = schedule_disposition_updates.last
         self.scheduled_disposition_year = event.disposition_year
-        save
       end
+      save
     end
   end
 

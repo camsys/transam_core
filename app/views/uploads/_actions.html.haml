@@ -17,7 +17,7 @@
             = " Download this file"
         %li.divider
         %li
-          = link_to resubmit_upload_path(@upload), :data => {:confirm => "Are you sure you want to undo changes from this file?"}  do
+          = link_to undo_upload_path(@upload), :data => {:confirm => "Are you sure you want to undo changes from this file?"}  do
             %i.fa.fa-undo.fa-fw
             = " Undo changes"
       %li.divider

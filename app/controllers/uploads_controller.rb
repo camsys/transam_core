@@ -80,6 +80,28 @@ class UploadsController < OrganizationAwareController
     
   end
 
+  # Undo events created from the worksheet. 
+  def undo
+    
+    if @upload.nil?
+      notify_user(:alert, "Record not found!")
+      redirect_to uploads_url
+      return      
+    end
+    
+    @upload.reset
+    @upload.update(force_update: true, file_status_type: FileStatusType.find_by(name: "Reverted"))
+    
+    notify_user(:notice, "Upload has been reverted.")    
+        
+    # create a job to process this file in the background
+    create_upload_process_job(@upload)
+    
+    # show the original upload
+    redirect_to(upload_url(@upload))
+        
+  end
+
   # Reload the worksheet. This action pushes the spreadsheet back into the queue
   # to be processed
   def resubmit
