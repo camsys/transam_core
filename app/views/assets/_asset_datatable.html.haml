@@ -3,7 +3,7 @@
     %tr
       - SystemConfig.transam_module_names.each do |mod|
         = render :partial => "assets/#{mod}_asset_dt_head" rescue nil
-      %th.center
+      %th.sorting_disabled
       
   %tbody
     - assets.includes(:organization, :asset_subtype).each do |a|
