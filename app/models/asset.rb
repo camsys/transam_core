@@ -16,7 +16,7 @@ class Asset < ActiveRecord::Base
   include FiscalYear
 
   OBJECT_CACHE_EXPIRE_SECONDS = Rails.application.config.object_cache_expire_seconds
-  
+
   #------------------------------------------------------------------------------
   # Callbacks
   #------------------------------------------------------------------------------
@@ -403,7 +403,7 @@ class Asset < ActiveRecord::Base
   # the organization type to a class that owns assets
   def policy
     cached_policy = get_cached_object("policy")
-    if cached_policy_rule.blank?
+    if cached_policy.blank?
       cached_policy = Organization.get_typed_organization(organization).get_policy
       cache_object("policy_rule", cached_policy)
     end
@@ -420,8 +420,8 @@ class Asset < ActiveRecord::Base
     end
     if p
       policy_item = p.get_rule(self)
-      Rails.logger.debug("p.get_rule(self)#{policy_item.to_yaml}")
       if policy_item
+        Rails.logger.debug("p.get_rule(self)#{policy_item.to_yaml}")
         self.expected_useful_life = policy_item.max_service_life_months # Asset life is in months, policy in years
       end
     end
