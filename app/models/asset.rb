@@ -618,6 +618,10 @@ class Asset < ActiveRecord::Base
     Rails.cache.read(get_cache_key(key))
   end
 
+  def delete_cached_object(key)
+    Rails.cache.delete(get_cache_key(key))
+  end
+
   # Cache an object against the asset
   def cache_object(key, obj, expires_in = OBJECT_CACHE_EXPIRE_SECONDS)
     Rails.cache.write(get_cache_key(key), obj, :expires_in => expires_in)
@@ -626,6 +630,11 @@ class Asset < ActiveRecord::Base
   # Cache key for this asset
   def get_cache_key(key)
     "#{object_key}:#{key}"
+  end
+
+    # Cache key for this asset
+  def clear_cache
+    attributes.each { |attribute| delete_cached_object(attribute[0])}
   end
 
   # updates the calculated values of an asset
