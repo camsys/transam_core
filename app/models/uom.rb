@@ -43,6 +43,11 @@ class Uom
   WEIGHT_UNITS    = [KILOGRAM, POUND, TONNE, SHORT_TON, TON]
   OTHER_UNITS     = [UNIT]
 
+  # Returns an array of units
+  def self.units
+    OTHER_UNITS + AREA_UNITS + DISTANCE_UNITS + VOLUME_UNITS + WEIGHT_UNITS
+  end
+  
   # Check to see if a measurement unit is valid
   def self.valid? uom
     Unitwise.valid? uom
