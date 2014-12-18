@@ -193,6 +193,7 @@ class Asset < ActiveRecord::Base
     :asset_type_id,
     :asset_subtype_id,
     :asset_tag,
+    :external_id,
     :manufacture_year,
     :vendor_id,
     :manufacturer_id,
