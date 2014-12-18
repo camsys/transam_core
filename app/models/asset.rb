@@ -1,3 +1,4 @@
+require 'elasticsearch/model'
 #------------------------------------------------------------------------------
 #
 # Asset
@@ -7,6 +8,9 @@
 #
 #------------------------------------------------------------------------------
 class Asset < ActiveRecord::Base
+
+  include Elasticsearch::Model
+  include Elasticsearch::Model::Callbacks
 
   # Include the object key mixin
   include TransamObjectKey
@@ -740,3 +744,4 @@ class Asset < ActiveRecord::Base
     end
   end
 end
+Asset.import # for auto sync model with elastic search
