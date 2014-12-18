@@ -7,11 +7,11 @@
   = f.input :address1, :label => "Address 1"
   = f.input :address2, :label => "Address 2"
   .row
-    .col-sm-4
+    .col-sm-7
       = f.input :city
-    .col-sm-4
+    .col-sm-2
       = f.input :state, :as => :select, :collection => Country['US'].states
-    .col-sm-4
+    .col-sm-3
       = f.input :zip
 
   = f.input :phone, :as => :tel
