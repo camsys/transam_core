@@ -28,15 +28,14 @@ namespace :transam_core do
 
     Asset.find_in_batches(:batch_size => 100) do |assets|
       documents = assets.map do |asset|
-        url = Rails.application.routes.url_helpers.asset_url(asset)
-        {:external_id => post.id,
-         :fields => [{:name => 'title', :value => post.title, :type => 'string'},
-                     {:name => 'body', :value => post.body, :type => 'text'},
-                     {:name => 'url', :value => url, :type => 'enum'},
-                     {:name => 'created_at', :value => post.created_at.iso8601, :type => 'date'}]}
+        url = Rails.application.routes.url_helpers.asset_path(asset)
+        {:external_id => asset.id,
+         :fields => [{:name => 'object_key', :value => asset.object_key, :type => 'string'},
+                     {:name => 'manufacturer_model', :value => asset.manufacturer_model, :type => 'string'},
+                     {:name => 'license_plate', :value => asset.license_plate, :type => 'string'}]}
       end
 
-      results = client.create_or_update_documents(ENV['SWIFTYPE_ENGINE_SLUG'], Asset.model_name.downcase, documents)
+      results = client.create_or_update_documents("engine", "asset", documents)
 
       results.each_with_index do |result, index|
         puts "Could not create #{assets[index].title} (##{assets[index].id})" if result == false
