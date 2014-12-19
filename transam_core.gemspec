@@ -38,6 +38,8 @@ Gem::Specification.new do |s|
   s.add_dependency 'haml-rails'
 
   s.add_dependency 'simple_form'
+
+  s.add_dependency 'swiftype'
   
   s.add_development_dependency 'mail', '2.5.4'
   s.add_development_dependency "rspec-rails"
