@@ -12,7 +12,7 @@
     = f.input :asset_type_id, :as => :hidden
     = f.input :asset_subtype_id, :as => :hidden
 
-    .col-md-4
+    .col-md-6
       = dialog_tag('Equipment', {:icon => 'fa fa-refresh', :class => "form_part"}) do
         = f.input :asset_tag, :prompt => "Enter the asset tag...", :label => "Asset Tag"
         = f.input :external_id, :prompt => "Enter any external ID...", :label => "External ID"
@@ -24,7 +24,7 @@
         = f.input :serial_number
         = f.input :manufacture_year, :label => "Manufacture Year"
 
-    .col-md-4
+    .col-md-6
       = dialog_tag('Purchase', {:icon => 'fa fa-refresh', :class => "form_part"}) do
         = f.input :purchase_cost, :wrapper => :vertical_append, :label => "Purchase Cost" do
           %span.input-group-addon
@@ -42,9 +42,6 @@
         = f.input :purchased_new, :as => :radio_buttons, :label => "Purchased New?"
         = f.association :vendor
         = f.input :expected_useful_life, :label => "Expected Useful Life (Months)"
-    .col-md-4
-      = dialog_tag('FTA Reporting', {:icon => 'fa fa-refresh', :class => "form_part"}) do
-        = f.association :fta_funding_type, :prompt => "Select funding type...", :label => "FTA Funding Type"
 
     .col-md-12
       = f.button :submit, :class => 'btn btn-primary'
