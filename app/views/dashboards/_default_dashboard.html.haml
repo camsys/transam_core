@@ -21,6 +21,18 @@
         
         = render :partial => 'shared/notices'
 
+.row
+  .col-md-12
+    .page-header
+      Searched Assets
+    = @searched_assets.to_yaml
+
+.row
+  .col-md-12
+    .page-header
+      Searched Customers
+    = @searched_customers.to_yaml
+
   .col-md-1
     = render 'shared/quick_links'
 
