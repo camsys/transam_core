@@ -8,6 +8,9 @@
 #------------------------------------------------------------------------------
 class AssetDispositionService
 
+  # Include the fiscal year mixin
+  include FiscalYear
+
   #------------------------------------------------------------------------------
   #
   # Disposition List
@@ -16,7 +19,7 @@ class AssetDispositionService
   #
   #------------------------------------------------------------------------------
 
-  def disposition_list(org, fiscal_year=current_planning_year_year, asset_type_id=nil, asset_subtype_id=nil)
+  def disposition_list(org, fy_year=current_planning_year_year, asset_type_id=nil, asset_subtype_id=nil)
 
     Rails.logger.debug "AssetDispositionService:  disposition_list()"
     #
@@ -38,8 +41,8 @@ class AssetDispositionService
 
     # Scheduled replacement year, defaults to the next planning year unless
     # specified
-    conditions << "scheduled_replacement_year >= ?"
-    values << fiscal_year
+    conditions << "scheduled_replacement_year = ?"
+    values << fy_year
 
     # Limit by asset type
     unless asset_type_id.nil?
