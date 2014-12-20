@@ -160,6 +160,7 @@ class Asset < ActiveRecord::Base
   CLEANSABLE_FIELDS = [
     'object_key',
     'asset_tag',
+    'external_id',
     'policy_replacement_year',
     'estimated_replacement_year',
     'estimated_replacement_cost',
