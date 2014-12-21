@@ -1,3 +1,4 @@
+20141215112140
 class AddUploadToAssetEvents < ActiveRecord::Migration
   def change
     add_reference :asset_events, :upload, :after => :asset_event_type_id

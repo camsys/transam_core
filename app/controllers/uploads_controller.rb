@@ -89,13 +89,19 @@ class UploadsController < OrganizationAwareController
       return      
     end
     
+    # cache affected assets
+    affected_assets = @upload.asset_events.map(&:asset).uniq
+
     @upload.reset
     @upload.update(force_update: true, file_status_type: FileStatusType.find_by(name: "Reverted"))
-    
+
+    # re-update the assets which previously had events
+    affected_assets.each do |affected|
+      job = AssetUpdateJob.new(affected.object_key)
+      fire_background_job(job)
+    end
+
     notify_user(:notice, "Upload has been reverted.")    
-        
-    # create a job to process this file in the background
-    create_upload_process_job(@upload)
     
     # show the original upload
     redirect_to(upload_url(@upload))
@@ -177,6 +183,7 @@ class UploadsController < OrganizationAwareController
       @filename = "#{@organization.short_name.downcase}_#{file_content_type.class_name.underscore}_#{Date.today}.xlsx"
       begin
         file << stream.string
+        send_data File.read(@filepath), :filename => @filename, :type => "application/vnd.ms-excel"
       rescue => ex
         Rails.logger.warn ex
       ensure
