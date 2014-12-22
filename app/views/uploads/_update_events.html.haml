@@ -1,0 +1,23 @@
+.row
+  .col-md-12{:style => 'overflow-y:auto'}
+    %table.table.table-hover{:id => 'datatable'}
+      %thead
+        %tr
+          %th Asset
+          %th Event
+          %th Date
+          %th Update
+          %th Notes
+      %tbody
+        - @upload.asset_events.each do |evt|
+          %tr
+            %td
+              = link_to evt.asset.object_key, inventory_path(evt.asset)
+            %td
+              = link_to evt.asset_event_type.description, inventory_asset_event_path(evt.asset, evt)
+            %td
+              = format_as_date(evt.event_date)
+            %td
+              = evt.get_update
+            %td
+              = evt.comments.blank? ? " " : evt.comments.html_safe

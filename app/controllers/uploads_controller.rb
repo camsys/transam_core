@@ -80,7 +80,7 @@ class UploadsController < OrganizationAwareController
     
   end
 
-  # Undo changes from the worksheet. 
+  # Undo events created from the worksheet. 
   def undo
     
     if @upload.nil?
@@ -89,20 +89,19 @@ class UploadsController < OrganizationAwareController
       return      
     end
     
-    # Iterate over the list of asset events and remove each of them in turn
-    @upload.asset_events.each do |event|
-      event.destroy
-    end
-    # Make sure the force flag is set and that the model is set back to
-    # unprocessed
+    # cache affected assets
+    affected_assets = @upload.asset_events.map(&:asset).uniq
+
     @upload.reset
-    @upload.force_update = true
-    @upload.save(:validate => false)
-    
-    notify_user(:notice, "File was resubmitted for processing.")    
-        
-    # create a job to process this file in the background
-    create_upload_process_job(@upload)
+    @upload.update(force_update: true, file_status_type: FileStatusType.find_by(name: "Reverted"))
+
+    # re-update the assets which previously had events
+    affected_assets.each do |affected|
+      job = AssetUpdateJob.new(affected.object_key)
+      fire_background_job(job)
+    end
+
+    notify_user(:notice, "Upload has been reverted.")    
     
     # show the original upload
     redirect_to(upload_url(@upload))
@@ -120,7 +119,7 @@ class UploadsController < OrganizationAwareController
     end
     
     # Make sure the force flag is set and that the model is set back to
-    # unprocessed
+    # unprocessed.  reset destroys dependent asset_events
     @upload.reset
     @upload.force_update = true
     @upload.save(:validate => false)
@@ -184,6 +183,7 @@ class UploadsController < OrganizationAwareController
       @filename = "#{@organization.short_name.downcase}_#{file_content_type.class_name.underscore}_#{Date.today}.xlsx"
       begin
         file << stream.string
+        send_data File.read(@filepath), :filename => @filename, :type => "application/vnd.ms-excel"
       rescue => ex
         Rails.logger.warn ex
       ensure

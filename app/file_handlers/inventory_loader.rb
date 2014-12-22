@@ -7,6 +7,8 @@
 #
 #------------------------------------------------------------------------------
 class InventoryLoader
+
+  attr_accessor :upload
   
   def comments?
     @comments.count > 0 
