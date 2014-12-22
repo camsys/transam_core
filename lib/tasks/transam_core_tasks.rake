@@ -35,7 +35,7 @@ namespace :transam_core do
                      {:name => 'license_plate', :value => asset.license_plate, :type => 'string'}]}
       end
 
-      results = client.create_or_update_documents("engine", "asset", documents)
+      results = client.create_or_update_documents("engine", "assets", documents)
 
       results.each_with_index do |result, index|
         puts "Could not create #{assets[index].title} (##{assets[index].id})" if result == false
@@ -44,6 +44,15 @@ namespace :transam_core do
   end
 
 end
+
+# Code for creating a document type with Swiftype.  
+# Convert to rake task if we move forward with product.
+# curl -XPOST 'https://api.swiftype.com/api/v1/engines/bookstore/document_types.json' \
+#   -H 'Content-Type: application/json' \
+#   -d '{
+#         "auth_token":"S7wLwDXpRHyj-RJrzqAC",
+#         "document_type":{"name":"books"}
+#       }'
 
 namespace :test do
   desc "Custom dependency to set test environment"
