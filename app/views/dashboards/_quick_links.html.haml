@@ -1,0 +1,7 @@
+.col-md-4.col-sm-4
+	.panel.panel-default
+		.panel-heading
+			Quick Links
+		.panel-body
+			- SystemConfig.transam_module_names.each do |mod|
+				= render :partial => "shared/#{mod}_quick_links" rescue nil

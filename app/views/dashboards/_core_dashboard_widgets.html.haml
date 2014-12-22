@@ -1,0 +1,13 @@
+- Report.show_in_dashboard.each do |report|
+  = dialog_tag(report.name, {:icon => report.report_type.display_icon_name, :link_text => "View", :link_path => report_path(report)}) do
+    %div{:id => "report_#{report.id}", :style => 'height: 200px;'}
+
+= render :partial => 'activities_summary'
+
+= render :partial => 'new_messages_summary'
+
+= render :partial => 'tasks_summary'
+
+= render 'quick_links'
+
+= render :partial => 'shared/notices'
