@@ -26,25 +26,34 @@ namespace :transam_core do
 
     client = Swiftype::Client.new
 
-    Asset.find_in_batches(:batch_size => 100) do |assets|
+    puts "Processing Assets"
+
+    asset_array = []
+
+    Asset.limit(250) do |assets|
       documents = assets.map do |asset|
 
         url = Rails.application.routes.url_helpers.asset_path(asset)
 
-        asset_array = []
-        asset_hash = {}
+        #puts asset.to_yaml
+        
         asset.attributes.each { |asset_attribute|
+
+            asset_hash = {}
+            
             if asset_attribute[1].present?
               asset_hash["name"] = asset_attribute[0]
-              asset_hash["value"] = asset_attribute[1]
+              asset_hash["value"] = asset_attribute[1].to_s
               asset_hash["type"] = "string"
               asset_array.push(asset_hash)
+            else
+              puts "Blank attribute?  To_Yaml:" + asset_attribute.to_yaml
             end
         }
 
         {
           :external_id => asset.id,
-          :fields => asset_hash
+          :fields => asset_array[1..200]
         }
          # :fields => [{:name => 'object_key', :value => asset.object_key, :type => 'string'},
          #             {:name => 'asset_tag', :value => asset.asset_tag, :type => 'string'},
@@ -54,6 +63,8 @@ namespace :transam_core do
          #             {:name => 'license_plate', :value => asset.license_plate, :type => 'string'}]}
       end
 
+      binding.pry
+
       results = client.create_or_update_documents("engine", "assets", documents)
 
       results.each_with_index do |result, index|
@@ -62,26 +73,38 @@ namespace :transam_core do
 
     end
 
-    AssetEvent.find_in_batches(:batch_size => 100) do |asset_events|
-      documents = asset_events.map do |asset_event|
+    puts "Processing asset events."
 
-        asset_event_array = []
+    asset_event_array = []
+
+    AssetEvent.limit(750) do |asset_events|
+
+        documents = asset_events.map do |asset_event|
+
         asset_event_hash = {}
+        asset_event
         asset_event = AssetEvent.as_typed_event(asset_event)
+
         asset_event.attributes.each { |asset_event_attribute|
+
+          puts asset_event_attribute.to_yaml
           if asset_event_attribute[1].present?
             asset_event_hash["name"] = asset_event_attribute[0]
-            asset_event_hash["value"] = asset_event_attribute[1]
+            asset_event_hash["value"] = asset_event_attribute[1].to_s
             asset_event_hash["type"] = "string"
             asset_event_array.push(asset_event_hash)
+          else
+              puts "Blank attribute?  To_Yaml:" + asset_attribute.to_yaml
           end
         }
         #url = Rails.application.routes.url_helpers.inventory_asset_event_path(asset_event) if asset_event["id"].present?
 
         {:external_id => asset_event.id,
-         :fields => asset_event_hash
+         :fields => asset_event_array[1..200]
         }
     end
+
+      binding.pry
 
       results = client.create_or_update_documents("engine", "asset_event", documents)
 
