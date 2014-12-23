@@ -19,11 +19,11 @@ class AssetDispositionService
   #
   #------------------------------------------------------------------------------
 
-  def disposition_list(org, fy_year=current_planning_year_year, asset_type_id=nil, asset_subtype_id=nil)
+  def disposition_list(org_id_list, fy_year=current_planning_year_year, asset_type_id=nil, asset_subtype_id=nil)
 
     Rails.logger.debug "AssetDispositionService:  disposition_list()"
     #
-    if org.nil?
+    if org_id_list.blank?
       Rails.logger.warn "AssetDispositionService:  disposition list: Org ID cannot be null"
       return []
     end
@@ -33,11 +33,11 @@ class AssetDispositionService
     values      = []
 
     # Filter for the selected org
-    conditions << "organization_id = ?"
-    values << org.id
+    conditions << "organization_id IN (?)"
+    values << org_id_list
 
     # Can't already be marked as disposed
-    conditions << "disposition_date IS NOT NULL"
+    conditions << "disposition_date IS NULL"
 
     # Scheduled replacement year, defaults to the next planning year unless
     # specified
