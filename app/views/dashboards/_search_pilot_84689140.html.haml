@@ -1,1 +1,2 @@
-= @dashboard_search_results.records.assets.each {|record| record.to_yaml + "<br>"}
+- @dashboard_search_results.records["assets"].each do |asset|
+	= render :partial => 'search_result', locals: {asset: asset}
