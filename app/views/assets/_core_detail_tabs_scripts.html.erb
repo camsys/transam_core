@@ -19,14 +19,14 @@
         errorElement: 'span',
         errorClass: 'help-block',
         errorPlacement: function(error, element) {
-            if(element.parent('.input-group').length) {
+            if(element.parents('.input-group').length) {
                 error.insertAfter(element.parent());
             } else {
                 error.insertAfter(element);
             }
         }
-    }); 
-  
+    });
+
 	// Capture the show event for the dependents tab
 	$("a[href='#depd']").on('shown.bs.tab', function(e) {
 		transam.activate_info_popups('.info-popup');
@@ -48,16 +48,13 @@
 	    $(form).submit();
 	  }
 	});
-	
+
 	// Enable the lightbox
 	$('[data-lightbox]').simpleLightbox();
 
   });
-    
+
 </script>
 
 <%= render 'timeline_scripts' %>
 <%= render 'chart_scripts' %>
-
-
-

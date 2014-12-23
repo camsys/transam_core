@@ -34,7 +34,8 @@ class Equipment < Asset
   ]
   # List of hash parameters specific to this class that are allowed by the controller
   FORM_PARAMS = [
-    :quantity
+    :quantity,
+    :quantity_units
   ]
 
   #------------------------------------------------------------------------------

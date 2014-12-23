@@ -12,6 +12,7 @@ require 'high_voltage'
 require 'haml-rails'
 require 'simple_form'
 require 'carrierwave'
+require 'swiftype'
 
 module TransamCore
   class Engine < ::Rails::Engine

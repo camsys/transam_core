@@ -29,6 +29,8 @@ class Asset < ActiveRecord::Base
   # Clean up any HABTM associations before the asset is destroyed
   before_destroy { asset_groups.clear }
 
+  before_update :clear_cache
+
   #------------------------------------------------------------------------------
   # Associations common to all asset types
   #------------------------------------------------------------------------------
@@ -197,6 +199,7 @@ class Asset < ActiveRecord::Base
     :asset_type_id,
     :asset_subtype_id,
     :asset_tag,
+    :external_id,
     :manufacture_year,
     :vendor_id,
     :manufacturer_id,
@@ -621,6 +624,10 @@ class Asset < ActiveRecord::Base
     Rails.cache.read(get_cache_key(key))
   end
 
+  def delete_cached_object(key)
+    Rails.cache.delete(get_cache_key(key))
+  end
+
   # Cache an object against the asset
   def cache_object(key, obj, expires_in = OBJECT_CACHE_EXPIRE_SECONDS)
     Rails.cache.write(get_cache_key(key), obj, :expires_in => expires_in)
@@ -629,6 +636,15 @@ class Asset < ActiveRecord::Base
   # Cache key for this asset
   def get_cache_key(key)
     "#{object_key}:#{key}"
+  end
+
+    # Cache key for this asset
+  def clear_cache
+    attributes.each { |attribute| delete_cached_object(attribute[0])}
+
+    # clear cache for other cached objects that are not attributes
+    # hard-coded temporarily
+    delete_cached_object('policy_rule')
   end
 
   # updates the calculated values of an asset

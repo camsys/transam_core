@@ -39,8 +39,12 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'simple_form'
 
+<<<<<<< HEAD
   s.add_dependency 'elasticsearch-rails'
   s.add_dependency 'elasticsearch-model'
+=======
+  s.add_dependency 'swiftype'
+>>>>>>> pilot_swiftype_84689140
   
   s.add_development_dependency 'mail', '2.5.4'
   s.add_development_dependency "rspec-rails"
