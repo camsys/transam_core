@@ -129,7 +129,7 @@ module FiscalYear
   end
 
   # Returns a select array of fiscal years remaining in the planning period
-  def get_remaining_fiscal_years(date = Date.today)
+  def get_planning_fiscal_years(date = Date.today)
     current_year = fiscal_year_year_on_date(date)
     a = []
     (current_year..last_fiscal_year_year).each do |year|
