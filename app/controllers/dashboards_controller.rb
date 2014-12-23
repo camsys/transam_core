@@ -2,7 +2,8 @@ class DashboardsController < OrganizationAwareController
  
    add_breadcrumb "Home", :root_path
        
-  def index
+  def index 
+    binding.pry
   	if params["search_text"].present?
   		search_text = params["search_text"]
 		  @searched_assets = Asset.search(search_text).records

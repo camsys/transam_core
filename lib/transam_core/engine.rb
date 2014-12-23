@@ -12,7 +12,8 @@ require 'high_voltage'
 require 'haml-rails'
 require 'simple_form'
 require 'carrierwave'
-require 'swiftype'
+require 'elasticsearch-rails'
+require 'elasticsearch-model'
 
 module TransamCore
   class Engine < ::Rails::Engine
