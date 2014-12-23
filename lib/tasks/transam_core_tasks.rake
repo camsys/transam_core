@@ -1,7 +1,5 @@
-# desc "Explaining what the task does"
-# task :transam_core do
-#   # Task goes here
-# end
+#notes: we can index up to 1000 documents on the free plan
+
 namespace :transam_core do
 
   desc "Prepare the dummy app for rspec and capybara"
@@ -30,7 +28,8 @@ namespace :transam_core do
 
     asset_array = []
 
-    Asset.limit(250) do |assets|
+    Asset.limit(200) do |assets|
+
       documents = assets.map do |asset|
 
         url = Rails.application.routes.url_helpers.asset_path(asset)
@@ -53,7 +52,7 @@ namespace :transam_core do
 
         {
           :external_id => asset.id,
-          :fields => asset_array[1..200]
+          :fields => asset_array
         }
          # :fields => [{:name => 'object_key', :value => asset.object_key, :type => 'string'},
          #             {:name => 'asset_tag', :value => asset.asset_tag, :type => 'string'},
@@ -62,8 +61,7 @@ namespace :transam_core do
          #             {:name => 'in_service', :value => asset.in_service_date, :type => 'string'},
          #             {:name => 'license_plate', :value => asset.license_plate, :type => 'string'}]}
       end
-
-      binding.pry
+      #end documents = assets.map
 
       results = client.create_or_update_documents("engine", "assets", documents)
 
@@ -72,45 +70,44 @@ namespace :transam_core do
       end
 
     end
+    #end Asset.limit
 
     puts "Processing asset events."
 
     asset_event_array = []
 
-    AssetEvent.limit(750) do |asset_events|
+    asset_events = AssetEvent.limit(200)
 
-        documents = asset_events.map do |asset_event|
+      documents = asset_events.map do |asset_event|
 
-        asset_event_hash = {}
-        asset_event
         asset_event = AssetEvent.as_typed_event(asset_event)
 
         asset_event.attributes.each { |asset_event_attribute|
 
-          puts asset_event_attribute.to_yaml
+          asset_event_hash = {}
+
           if asset_event_attribute[1].present?
             asset_event_hash["name"] = asset_event_attribute[0]
             asset_event_hash["value"] = asset_event_attribute[1].to_s
             asset_event_hash["type"] = "string"
             asset_event_array.push(asset_event_hash)
           else
-              puts "Blank attribute?  To_Yaml:" + asset_attribute.to_yaml
+              puts "Blank attribute?  To_Yaml:" + asset_event_attribute.to_yaml
           end
         }
         #url = Rails.application.routes.url_helpers.inventory_asset_event_path(asset_event) if asset_event["id"].present?
 
         {:external_id => asset_event.id,
-         :fields => asset_event_array[1..200]
+         :fields => asset_event_array
         }
-    end
 
-      binding.pry
-
-      results = client.create_or_update_documents("engine", "asset_event", documents)
-
-      results.each_with_index do |result, index|
-        puts "Could not create #{assets[index].title} (##{assets[index].id})" if result == false
       end
+
+    results = client.create_documents("engine", "assets", documents)
+    #results = client.create_or_update_documents("engine", "asset_event", documents)
+
+    results.each_with_index do |result, index|
+      puts "Could not create (#{asset_events[index].id})" if result == false
     end
 
   end
@@ -119,11 +116,11 @@ end
 
 # Code for creating a document type with Swiftype.  
 # Convert to rake task if we move forward with product.
-# curl -XPOST 'https://api.swiftype.com/api/v1/engines/bookstore/document_types.json' \
+# curl -XPOST 'https://api.swiftype.com/api/v1/engines/engine/document_types.json' \
 #   -H 'Content-Type: application/json' \
 #   -d '{
 #         "auth_token":"S7wLwDXpRHyj-RJrzqAC",
-#         "document_type":{"name":"books"}
+#         "document_type":{"name":"assets"}
 #       }'
 
 namespace :test do
