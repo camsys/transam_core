@@ -1,0 +1,10 @@
+%table.table.table-hover
+	%thead
+		%tr
+			- @data[:labels].each do |label|
+				%th.right= label
+		%tbody
+			- @data[:data].each do |row|
+				%tr
+				- row.each do |col|
+					%td.right= format_as_general(col)
