@@ -6,8 +6,6 @@ class DashboardsController < OrganizationAwareController
   	if params["search_text"]
   		client = Swiftype::Client.new
 		@dashboard_search_results = client.search("engine", params["search_text"])
-		binding.pry
-		x = 1
 	end
   end
 

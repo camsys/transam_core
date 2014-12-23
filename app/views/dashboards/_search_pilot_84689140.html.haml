@@ -1,2 +1,3 @@
-- @dashboard_search_results.records["assets"].each do |asset|
-	= render :partial => 'search_result', locals: {asset: asset}
+- if @dashboard_search_results.present?
+	- @dashboard_search_results.records["assets"].each do |asset| 
+		= render :partial => 'search_result', locals: {asset: asset}
