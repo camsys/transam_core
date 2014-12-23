@@ -1,0 +1,13 @@
+<Cell><Data ss:Type="String"><%= a.organization %></Data></Cell>
+<Cell><Data ss:Type="String"><%= a.asset_subtype %></Data></Cell>
+<Cell><Data ss:Type="String"><%= a.asset_tag %></Data></Cell>
+<Cell><Data ss:Type="String"><%= a.description %></Data></Cell>
+
+<Cell><Data ss:Type="String"><%= a.parent.name unless a.parent.nil? %></Data></Cell>
+<Cell><Data ss:Type="String"><%= format_as_fiscal_year(a.in_service_date.year)  %></Data></Cell>
+<Cell><Data ss:Type="Number"><%= format_as_integer(a.age) %></Data></Cell>
+<Cell><Data ss:Type="String"><%= format_as_decimal(a.reported_condition_rating, 1) %></Data></Cell>
+<Cell><Data ss:Type="String"><%= a.service_status_type.code unless a.service_status_type.nil? %></Data></Cell>
+
+<Cell><Data ss:Type="String"><%= format_as_fiscal_year(a.scheduled_rehabilitation_year) %></Data></Cell>
+<Cell><Data ss:Type="String"><%= format_as_fiscal_year(a.scheduled_replacement_year) %></Data></Cell>
