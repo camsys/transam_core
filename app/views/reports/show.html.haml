@@ -1,14 +1,14 @@
 .row
-  .col-md-3
-    .panel.panel-default.header-part
-      .panel-heading
-        .row
-          .col-md-12
-            %h3.panel-title
-              %i.fa.fa-list
-              Report
-      .panel-body
-        = render 'actions'
+  .col-md-12
+    .page-header
+      %h1= @report.name
 
-  .col-md-9
+- if lookup_context.template_exists?("#{@report_view}_actions", 'reports', true)
+  %nav.navbar.navbar-default
+    .container-fluid
+      .collapse.navbar-collapse
+        = render :partial => "#{@report_view}_actions"
+
+.row
+  .col-md-12
     = render @report_view
