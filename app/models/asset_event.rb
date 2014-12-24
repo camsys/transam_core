@@ -36,6 +36,12 @@ class AssetEvent < ActiveRecord::Base
   default_scope { order("event_date") }
   # named scopes
 
+  searchable do
+
+    text :object_key
+
+  end
+
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
     :asset_id,
