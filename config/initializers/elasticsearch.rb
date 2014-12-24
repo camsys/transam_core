@@ -1,0 +1,1 @@
+Elasticsearch::Model.client = Elasticsearch::Client.new host: 'http://paas:a54d78f2458af3372114880c941d04a3@bofur-us-east-1.searchly.com'

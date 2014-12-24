@@ -1,4 +1,8 @@
+require 'elasticsearch/model'
 class Customer < ActiveRecord::Base
+
+  include Elasticsearch::Model
+  include Elasticsearch::Model::Callbacks
 
   #associations
   belongs_to  :license_type
@@ -17,3 +21,4 @@ class Customer < ActiveRecord::Base
   
 end
       
+Customer.import  # for auto sync model with elastic search

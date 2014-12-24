@@ -1,4 +1,3 @@
-require 'elasticsearch/model'
 #------------------------------------------------------------------------------
 #
 # Asset
@@ -8,9 +7,6 @@ require 'elasticsearch/model'
 #
 #------------------------------------------------------------------------------
 class Asset < ActiveRecord::Base
-
-  include Elasticsearch::Model
-  include Elasticsearch::Model::Callbacks
 
   # Include the object key mixin
   include TransamObjectKey
@@ -145,6 +141,16 @@ class Asset < ActiveRecord::Base
   # Scopes
   #------------------------------------------------------------------------------
   default_scope { order("assets.asset_subtype_id") }
+
+  searchable do
+
+    text :object_key, :asset_tag
+
+    text :comments do
+      comments.map { |comment| comment.body }
+    end
+
+  end
 
   #------------------------------------------------------------------------------
   # Lists. These lists are used by derived classes to make up lists of attributes
@@ -760,4 +766,3 @@ class Asset < ActiveRecord::Base
     end
   end
 end
-Asset.import # for auto sync model with elastic search
