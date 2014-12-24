@@ -1,6 +1,6 @@
 #------------------------------------------------------------------------------
 #
-# AssetUpdater
+# AssetUpdateJobBuilder
 #
 # Searches through an organization's assets and creates update jobs
 # for each asset in given types.

@@ -1,12 +1,14 @@
-<div class="row">
-	<div class="col-md-12" id="accordion">
+<div class="col-md-6">
+	<div id="accordion">
 		<div class="well well-small collapse in" id="chart-div">
 			<div id='<%= "chart_#{@report.id}" %>'></div>
 		</div>
 	</div>
 </div>
 
-<%= render 'generic_report_table' %>
+<div class="col-md-6">
+	<%= render 'generic_report_table' %>
+</div>
 
 <script type="text/javascript">
 
@@ -16,11 +18,11 @@
 	});
 
 	function <%= "chart_func_#{@report.id}" %>() {
-		
+
 		var div_id = '<%= "chart_#{@report.id}" %>';
 		var chart_type = '<%= @report.chart_type %>';
  		var report_chart_options = <%= raw(@report.chart_options) %>;
-		var chart_options = $.extend({}, report_chart_options, {height: 300}); 
+		var chart_options = $.extend({}, report_chart_options, {height: 300});
 
 		var chart_data = new google.visualization.DataTable();
 		chart_data.addColumn('string', '<%= @data[:labels].first %>');
@@ -30,9 +32,9 @@
 		<% @data[:data].each do |row| %>
 		chart_data.addRow(<%= raw row.to_json %>);
 		<% end %>
-		
+
 		// Draw it
-		transam.draw_chart(div_id, chart_type, chart_options, chart_data);		
+		transam.draw_chart(div_id, chart_type, chart_options, chart_data);
 	};
 	// Set a callback to run when the Google Visualization API is loaded.
 	google.setOnLoadCallback(<%= "chart_func_#{@report.id}" %>);
@@ -43,4 +45,3 @@
 	};
 
 </script>
-
