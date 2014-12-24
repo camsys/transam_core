@@ -1,5 +1,11 @@
 = render :layout => "update_event_form" do |f|
-  = f.association :parent, :collection => Asset.where('organization_id = ?', @asset.organization_id)
+  = f.input :parent_id, :wrapper => :vertical_append, :label => "Parent (ID)" do
+    = f.input_field :parent_id, :class => "form-control", :as => :string
+    %span.input-group-addon.popover_anchor{ :tabindex => 0 }
+      %a.btn-default#find_asset
+        ="Find"
+  #spinner
+    = image_tag('ajax-loader.gif') 
   = f.input :event_date, :label => 'Date of Report', :wrapper => :vertical_append do
     = f.input_field :event_date, :class => "form-control", :as => :string, :data => {'behavior' => 'datepicker'}, :value => f.object.event_date.strftime("%m-%d-%Y")
     %span.input-group-addon
@@ -7,3 +13,34 @@
   = f.input :comments, :input_html => { :rows => 6 }, :placeholder => "Enter any location comments..."
   .form-group
     = f.button :submit, "Update the storage location", :class => 'btn btn-primary'
+:javascript
+  $(document).ready(function() {
+    $("#spinner").hide();
+
+    $("#find_asset").on('click', function() {
+      var parent_id = $("#asset_event_parent_id").val();
+      $(".popover_anchor").popover({
+        toggle: "popover",
+        container: "body",
+        trigger: "focus",
+        html: true
+      });
+
+      $.ajax({
+        type: "GET",
+        url: "#{parent_inventory_index_path}",
+        data: {parent_id: parent_id },
+        dataType: "html",
+        beforeSend: function() {
+          $("#spinner").show()
+        },
+        success:    function(data) {
+          $(".popover_anchor").data("bs.popover").options.content = data;
+          $(".popover_anchor").popover("show");
+        },
+        complete:   function() {
+          $("#spinner").hide()
+        }
+      })
+    })
+  })

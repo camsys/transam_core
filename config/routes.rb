@@ -25,6 +25,7 @@ Rails.application.routes.draw do
         get 'details'
         get 'new_asset'
         get 'export'
+        get 'parent'
       end
       member do
         get 'summary_info'

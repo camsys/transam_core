@@ -51,6 +51,13 @@ class AssetsController < AssetAwareController
     redirect_to :back
   end
 
+  def parent
+    parent_asset = @organization.assets.find_by_object_key(params[:parent_id])
+    respond_to do |format|
+      format.js   {render :partial => 'assets/asset_details', :locals => { :asset => parent_asset} }
+    end
+  end
+
   # renders either a table or map view of a selected list of assets
   #
   # Parameters include asset_type, asset_subtype, id_list, box, or search_text
