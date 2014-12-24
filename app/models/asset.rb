@@ -146,9 +146,9 @@ class Asset < ActiveRecord::Base
 
     text :object_key, :asset_tag
 
-    text :comments do
-      comments.map { |comment| comment.body }
-    end
+    # text :comments do
+    #   comments.map { |comment| comment.body }
+    # end
 
   end
 

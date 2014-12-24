@@ -38,11 +38,7 @@ class AssetEvent < ActiveRecord::Base
 
   searchable do
 
-    text :object_key, :asset_tag
-
-    text :comments do
-      comments.map { |comment| comment.body }
-    end
+    text :object_key
 
   end
 
