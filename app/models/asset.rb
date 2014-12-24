@@ -142,6 +142,16 @@ class Asset < ActiveRecord::Base
   #------------------------------------------------------------------------------
   default_scope { order("assets.asset_subtype_id") }
 
+  searchable do
+
+    text :object_key, :asset_tag
+
+    text :comments do
+      comments.map { |comment| comment.body }
+    end
+
+  end
+
   #------------------------------------------------------------------------------
   # Lists. These lists are used by derived classes to make up lists of attributes
   # that can be used for operations like full text search etc. Each derived class

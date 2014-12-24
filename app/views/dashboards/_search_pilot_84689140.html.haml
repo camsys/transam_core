@@ -1,0 +1,3 @@
+- if @searched_assets.present?
+	- @searched_assets.each do |asset| 
+		= render :partial => 'search_result', locals: {asset: asset}

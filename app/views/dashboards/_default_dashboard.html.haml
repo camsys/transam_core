@@ -3,8 +3,12 @@
     .page-header{:style => 'margin-top: -20px;'}
       %h1 Dashboard
 .row
-  .col-md-10.col-sm-10
+   .col-md-10.col-sm-10
     - SystemConfig.transam_module_names.each do |mod|
       = render :partial => "dashboards/#{mod}_dashboard_widgets" rescue nil
+
+.row
+  .col-md-12
+    = render :partial => 'search_pilot_84689140'   
 
 = render 'index_scripts'

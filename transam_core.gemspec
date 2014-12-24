@@ -16,7 +16,6 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
 
-
   s.add_dependency 'rails', '>=4.0.9'
   s.add_dependency "cancan"
   s.add_dependency "devise", '~> 3.2.2'
@@ -38,6 +37,12 @@ Gem::Specification.new do |s|
   s.add_dependency 'haml-rails'
 
   s.add_dependency 'simple_form'
+
+  s.add_dependency 'elasticsearch-rails'
+  s.add_dependency 'elasticsearch-model'
+
+  s.add_dependency 'sunspot_rails'
+  s.add_dependency 'sunspot_solr'
   
   s.add_development_dependency 'mail', '2.5.4'
   s.add_development_dependency "rspec-rails"

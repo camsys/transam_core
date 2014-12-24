@@ -28,3 +28,5 @@ TODO: Write usage instructions here
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
              
+## Start ElasticSearch
+1.  elasticsearch --config=/usr/local/opt/elasticsearch/config/elasticsearch.yml
