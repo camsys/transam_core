@@ -1,42 +1,14 @@
 .row
-  .col-md-12
+  .col-md-12.col-sm-12
     .page-header{:style => 'margin-top: -20px;'}
-      %h1 Transit Agency Dashboard
+      %h1 Dashboard
 .row
-  .col-md-11
-    .col-md-12
-      - Report.show_in_dashboard.each do |report|
-        = dialog_tag(report.name, {:icon => report.report_type.display_icon_name, :link_text => "View", :link_path => report_path(report)}) do
-          %div{:id => "report_#{report.id}", :style => 'height: 200px;'}
-
-    .row
-      .col-md-6
-        .row
-          .col-md-12
-            = render :partial => 'activities_summary'
-          .col-md-12
-            = render :partial => 'new_messages_summary'
-      .col-md-3
-        = render :partial => 'tasks_summary'
-        
-        = render :partial => 'shared/notices'
-    .row
-      .col-md-12
-        = render :partial => 'search_pilot_84689140'    
+   .col-md-10.col-sm-10
+    - SystemConfig.transam_module_names.each do |mod|
+      = render :partial => "dashboards/#{mod}_dashboard_widgets" rescue nil
 
 .row
   .col-md-12
-    .page-header
-      Searched Assets
-    = @searched_assets.to_yaml
-
-.row
-  .col-md-12
-    .page-header
-      Searched Customers
-    = @searched_customers.to_yaml
-
-  .col-md-1
-    = render 'shared/quick_links'
+    = render :partial => 'search_pilot_84689140'   
 
 = render 'index_scripts'

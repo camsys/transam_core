@@ -25,6 +25,8 @@ class AssetEvent < ActiveRecord::Base
   belongs_to  :asset
   # Every event is of a type
   belongs_to  :asset_event_type
+  # Assets can be associated with Uploads
+  belongs_to  :upload
   
   validates :asset_id,            :presence => true
   validates :asset_event_type_id, :presence => true

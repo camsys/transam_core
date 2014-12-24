@@ -5,6 +5,9 @@
   %li
     %a{:href => "#log", :data =>{:toggle => 'tab'}}
       = "Process Log"
+  %li
+    %a{:href => "#events", :data =>{:toggle => 'tab'}}
+      = "Updates"
 
 .tab-content
   .tab-pane.fade#history
@@ -13,3 +16,6 @@
   .tab-pane.fade#log
     .tab-content{:style => "overflow-y:scroll;height:400px;"}
       = render 'process_log'
+  .tab-pane.fade#events
+    .tab-content{:style => "overflow-y:scroll;height:400px;"}
+      = render 'update_events'

@@ -2,4 +2,4 @@
 = format_field("Name", link_to(org.name, organization_path(org)) )
 = format_field("Short Name", org.short_name )
 = format_field("External ID", org.external_id )
-    
+= format_field("Address", format_as_address(org) ) unless org.full_address.blank? 
