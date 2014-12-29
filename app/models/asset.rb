@@ -637,6 +637,14 @@ class Asset < ActiveRecord::Base
     update_asset_state(policy)
   end
 
+  # External method for managing an object's local cache
+  def cache_clear(key)
+    delete_cached_object(key)
+  end
+  def cache_clear_all
+    clear_cache
+  end
+
   #------------------------------------------------------------------------------
   #
   # Protected Methods
@@ -663,10 +671,9 @@ class Asset < ActiveRecord::Base
     "#{object_key}:#{key}"
   end
 
-    # Cache key for this asset
+  # Cache key for this asset
   def clear_cache
-    attributes.each { |attribute| delete_cached_object(attribute[0])}
-
+    attributes.each { |attribute| delete_cached_object(attribute[0]) }
     # clear cache for other cached objects that are not attributes
     # hard-coded temporarily
     delete_cached_object('policy_rule')
