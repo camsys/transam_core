@@ -179,6 +179,8 @@ class UploadsController < OrganizationAwareController
 
       # Save the template to a temporary file and render a success/download view
       file = Tempfile.new ['template', '.tmp'], "#{Rails.root}/tmp"
+      #ObjectSpace.undefine_finalizer(file)
+      #You can uncomment this line when debugging locally to prevent Tempfile from disappearing before download.
       @filepath = file.path     
       @filename = "#{@organization.short_name.downcase}_#{file_content_type.class_name.underscore}_#{Date.today}.xlsx"
       begin
