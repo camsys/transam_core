@@ -13,6 +13,8 @@ Gem::Specification.new do |s|
   s.summary     = "TransAM Asset Management Platform."
   s.description = "TransAM Asset Management Platform."
 
+  s.metadata = { "load_order" => "1" }
+
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
 
@@ -31,7 +33,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'fog'
   s.add_dependency 'carrierwave'
   s.add_dependency 'kaminari'
-  # for background processing jobs  
+  # for background processing jobs
   s.add_dependency 'delayed_job_active_record'
   # for running background processes
   s.add_dependency 'daemons'
@@ -45,7 +47,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'mail', '2.5.4'
   s.add_development_dependency "rspec-rails"
   s.add_development_dependency "factory_girl_rails"
-  s.add_development_dependency "database_cleaner"  
+  s.add_development_dependency "database_cleaner"
   s.add_development_dependency "mysql2"
   s.add_development_dependency "cucumber-rails"
 

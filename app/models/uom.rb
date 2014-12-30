@@ -15,7 +15,7 @@ class Uom
   KILOGRAM            = 'kilogram'
   POUND               = "pound"
   SHORT_TON           = 'short_ton'
-  TON                 = SHORT_TON
+  #TON                 = SHORT_TON
   TONNE               = "tonne"
 
   # Pre-defined area measurements
@@ -47,7 +47,7 @@ class Uom
   def self.units
     OTHER_UNITS + AREA_UNITS + DISTANCE_UNITS + VOLUME_UNITS + WEIGHT_UNITS
   end
-  
+
   # Check to see if a measurement unit is valid
   def self.valid? uom
     Unitwise.valid? uom

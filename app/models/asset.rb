@@ -162,8 +162,9 @@ class Asset < ActiveRecord::Base
   SEARCHABLE_FIELDS = [
     'object_key',
     'asset_tag',
-    'manufacture_year',
-    'manufacturer_model'
+    'manufacturer_model',
+    'external_id'
+
   ]
 
   # List of fields that should be nilled when a copy is made
@@ -244,6 +245,24 @@ class Asset < ActiveRecord::Base
   #
   #------------------------------------------------------------------------------
 
+  # Returns an array of classes which are descendents of Asset, this includes classes
+  # that are both direct and in-direct assendents.
+  #
+  # Example
+  #
+  #  class Truck < Asset
+  #  end
+  #
+  #  class PickupTruck < Truck
+  #  end
+  #
+  # Asset.descendents returns [Truck, PickupTruck]
+  #
+  def self.descendents
+    ObjectSpace.each_object(Class).select { |klass| klass < self }
+  end
+
+  # Returns the list or allowable form parameters for this class
   def self.allowable_params
     FORM_PARAMS
   end
@@ -637,6 +656,14 @@ class Asset < ActiveRecord::Base
     update_asset_state(policy)
   end
 
+  # External method for managing an object's local cache
+  def cache_clear(key)
+    delete_cached_object(key)
+  end
+  def cache_clear_all
+    clear_cache
+  end
+
   #------------------------------------------------------------------------------
   #
   # Protected Methods
@@ -663,10 +690,9 @@ class Asset < ActiveRecord::Base
     "#{object_key}:#{key}"
   end
 
-    # Cache key for this asset
+  # Cache key for this asset
   def clear_cache
-    attributes.each { |attribute| delete_cached_object(attribute[0])}
-
+    attributes.each { |attribute| delete_cached_object(attribute[0]) }
     # clear cache for other cached objects that are not attributes
     # hard-coded temporarily
     delete_cached_object('policy_rule')

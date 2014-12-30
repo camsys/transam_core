@@ -1,14 +1,14 @@
 class SystemConfig < ActiveRecord::Base
-  
+
   #------------------------------------------------------------------------------
   # Overrides
   #------------------------------------------------------------------------------
-  
+
   def self.instance
     # there will be only one row, and its ID must be '1'
     find(1)
   end
-      
+
   # Validations on core attributes
   validates :customer_id,                 :presence => true, :uniqueness => true
   validates :start_of_fiscal_year,        :presence => true
@@ -27,14 +27,14 @@ class SystemConfig < ActiveRecord::Base
   validates :asset_base_class_name,       :presence => true
   validates :max_rows_returned,           :presence => true
   validates :data_file_path,              :presence => true
-      
+
   def geocoder_bounds
     [[min_lat, min_lon], [max_lat, max_lon]]
-  end    
+  end
   def map_bounds
     [[min_lat, min_lon], [max_lat, max_lon]]
-  end    
-  
+  end
+
   #
   # Queries the gemspec to see if the transam extension has been loaded.
   # examples:
@@ -52,28 +52,40 @@ class SystemConfig < ActiveRecord::Base
       Gem::Specification::find_all_by_name("transam_#{engine_name.to_s}", version).any?
     end
   end
-  
+
   #
-  # Queries the gemspec and returns an array of transam modules that have been loaded
+  # Queries the gemspec and returns an array of transam modules that have been loaded.
+  # The array is ordered by the load order that should be specified in the gemspec.
+  #
+  # Load orders are sorted lowest to highest, ties broken abitarily.
+  # To specifiy the load order in a module use the following in the gemspec
+  #
+  #   s.metadata = { "load_order" => "10" }
+  #
+  # which will denote a load order of 10. Core is specified as load order 1
+  # as it should always be loaded first.
   #
   def self.transam_modules
     a = []
     Gem::Specification::each do |gem|
       if gem.full_name.start_with? 'transam_'
-        a << gem
+        a << [gem, gem.metadata['load_order'].to_i]
       end
     end
-    a
+    a.sort! { |a,b| a[1] <=> b[1] }
+    modules = []
+    a.each do |gemspec|
+      modules << gemspec[0]
+    end
+    modules
   end
   #
   # Returns an array of module names
   #
   def self.transam_module_names
     a = []
-    Gem::Specification::each do |gem|
-      if gem.full_name.start_with? 'transam_'
-        a << gem.name.split('_').last
-      end
+    self.transam_modules.each do |gem|
+      a << gem.name.split('_').last
     end
     a
   end
