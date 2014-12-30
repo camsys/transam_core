@@ -9,6 +9,8 @@ class Vendor < ActiveRecord::Base
 
   # Include the object key mixin
   include TransamObjectKey
+
+  include Address
   
   #------------------------------------------------------------------------------
   # Callbacks
