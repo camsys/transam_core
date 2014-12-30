@@ -13,8 +13,8 @@ Gem::Specification.new do |s|
   s.summary     = "TransAM Asset Management Platform."
   s.description = "TransAM Asset Management Platform."
 
-  s.metadata = { "load_order" => "0" }
-  
+  s.metadata = { "load_order" => "1" }
+
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
 

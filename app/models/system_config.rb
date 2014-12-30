@@ -54,7 +54,16 @@ class SystemConfig < ActiveRecord::Base
   end
 
   #
-  # Queries the gemspec and returns an array of transam modules that have been loaded
+  # Queries the gemspec and returns an array of transam modules that have been loaded.
+  # The array is ordered by the load order that should be specified in the gemspec.
+  #
+  # Load orders are sorted lowest to highest, ties broken abitarily.
+  # To specifiy the load order in a module use the following in the gemspec
+  #
+  #   s.metadata = { "load_order" => "10" }
+  #
+  # which will denote a load order of 10. Core is specified as load order 1
+  # as it should always be loaded first.
   #
   def self.transam_modules
     a = []
