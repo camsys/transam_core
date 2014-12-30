@@ -43,6 +43,8 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'sunspot_rails'
 
+  s.add_dependency 'seedbank'
+
   s.add_development_dependency 'sunspot_solr'
   s.add_development_dependency 'mail', '2.5.4'
   s.add_development_dependency "rspec-rails"
