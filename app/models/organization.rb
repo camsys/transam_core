@@ -115,8 +115,14 @@ class Organization < ActiveRecord::Base
     Asset.where(:organization_id => id).group(:asset_type_id).count
   end
 
+  # Returns a hash of asset subtype ids and the counts per non-zero type
   def asset_subtype_counts(asset_type_id)
     Asset.where(:organization_id => id, :asset_type_id => asset_type_id).group(:asset_subtype_id).count
+  end
+
+  # Returns an array of manufacturers in use by this organization
+  def manufacturer_counts
+    Asset.where('organization_id = ? AND manufacturer_id IS NOT NULL', id).group(:manufacturer_id).count
   end
 
   # Returns true if the organization is of the specified class or has the specified class as

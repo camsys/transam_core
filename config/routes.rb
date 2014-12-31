@@ -4,7 +4,7 @@ Rails.application.routes.draw do
 
   # server static pages
   get "/pages/*id" => 'pages#show', :as => :page, :format => false
-  
+
   # route errors to the appropriate pages
   %w( 404 403 500 ).each do |code|
     get code, :to => "errors#show", :code => code
@@ -18,7 +18,8 @@ Rails.application.routes.draw do
   end
 
   resources :vendors
-  
+  resources :manufacturers, :only => [:index]
+
   resources :inventory, :controller => 'assets' do
       collection do
         get 'filter'
@@ -34,35 +35,35 @@ Rails.application.routes.draw do
         get 'add_to_group'
         get 'remove_from_group'
       end
-      
-    resources :asset_events    
-        
+
+    resources :asset_events
+
     resources :comments,    :only => [:create, :update, :edit, :new, :destroy]
-    
+
     resources :images,      :only => [:create, :update, :edit, :new, :destroy] do
       member do
         get 'download'
       end
     end
-    
+
     resources :documents,   :only => [:create, :update, :edit, :new, :destroy] do
       member do
         get 'download'
       end
-    end    
+    end
   end
-      
-  # Provide an alias for asset paths which are discovered by form helpers such as 
+
+  # Provide an alias for asset paths which are discovered by form helpers such as
   # commentable, documentable, and imagable controllers
   resources :assets, :path => :inventory do
     resources :comments
     resources :documents
     resources :images
   end
-      
-  resources :organizations, :path => "org", :only => [:index, :show, :edit, :update] 
-  
-  resources :comments,    :only => [:create, :update, :edit, :new, :destroy]    
+
+  resources :organizations, :path => "org", :only => [:index, :show, :edit, :update]
+
+  resources :comments,    :only => [:create, :update, :edit, :new, :destroy]
   resources :documents,   :only => [:create, :update, :edit, :new, :destroy] do
     member do
       get 'download'
@@ -73,14 +74,14 @@ Rails.application.routes.draw do
       get 'download'
     end
   end
-  
+
   resources :asset_groups
   resources :general_ledger_accounts
-  
+
   resources :tasks do
     resources :comments
   end
-  
+
   resources :dashboards,    :only => [:index, :show]
   resources :activity_logs, :only => [:index]
   resources :searches,      :only => [:new, :create]
@@ -89,7 +90,7 @@ Rails.application.routes.draw do
       get 'load'  # load a report using ajax
     end
   end
-  
+
   resources :uploads do
     collection do
       get   'download_file'
@@ -101,21 +102,21 @@ Rails.application.routes.draw do
       get   'resubmit'
       get   'download'
     end
-  end 
-  
+  end
+
   resources :users do
     collection do
     end
     member do
       post  'set_current_org'
-      get   'settings' 
+      get   'settings'
       get   'change_password'
       patch 'update_password'
       get   'profile_photo'
     end
     resources :images
     resources :messages
-    
+
     resources :tasks do
       resources :comments,    :only => [:create, :update, :edit, :new, :destroy]
       collection do
@@ -130,7 +131,7 @@ Rails.application.routes.draw do
       get 'use'
     end
   end
-      
+
   resources :policies do
     resources :policy_items
     member do
@@ -140,15 +141,15 @@ Rails.application.routes.draw do
       get   'make_current'
     end
   end
-  
+
   resources :notices, :only => [:index, :create, :update, :edit, :new, :destroy] do
     member do
       get 'reactivate'
       get 'deactivate'
     end
   end
-  
+
   # default root for the site -- will be /org/:organization_id/dashboards
   root :to => 'dashboards#index'
-  
+
 end

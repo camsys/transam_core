@@ -76,6 +76,7 @@ class AssetsController < AssetAwareController
       add_breadcrumb subtype.asset_type.name.pluralize(2), inventory_index_path(:asset_type => subtype.asset_type, :asset_subtype => 0)
       add_breadcrumb subtype.name
     elsif @manufacturer_id > 0
+      add_breadcrumb "Manufacturers", manufacturers_path
       manufacturer = Manufacturer.find(@manufacturer_id)
       add_breadcrumb manufacturer.name
     elsif @asset_type > 0
