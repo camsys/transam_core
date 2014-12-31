@@ -9,8 +9,6 @@ class Vendor < ActiveRecord::Base
 
   # Include the object key mixin
   include TransamObjectKey
-
-  include Address
   
   #------------------------------------------------------------------------------
   # Callbacks
@@ -26,14 +24,14 @@ class Vendor < ActiveRecord::Base
 
   # Every vendor has 0 or more assets
   has_many   :assets
-  
+
   #------------------------------------------------------------------------------
   # Validations common to all vendors
   #------------------------------------------------------------------------------
-  validates :name,           :presence => true  
+  validates :name,           :presence => true
   validates :organization,   :presence => true
-  
-  # List of allowable form param hash keys  
+
+  # List of allowable form param hash keys
   FORM_PARAMS = [
     :name,
     :organization_id,
@@ -55,21 +53,21 @@ class Vendor < ActiveRecord::Base
   # Class Methods
   #
   #------------------------------------------------------------------------------
-      
+
   def self.allowable_params
     FORM_PARAMS
   end
-      
+
   #------------------------------------------------------------------------------
   #
   # Instance Methods
   #
   #------------------------------------------------------------------------------
-          
+
   def to_s
     name
   end
-  
+
   #------------------------------------------------------------------------------
   #
   # Protected Methods
@@ -80,7 +78,6 @@ class Vendor < ActiveRecord::Base
   # Set resonable defaults for a new organization
   def set_defaults
     self.active ||= true
-  end    
-  
+  end
+
 end
-      
