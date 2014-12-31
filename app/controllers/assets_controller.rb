@@ -71,6 +71,8 @@ class AssetsController < AssetAwareController
     if @asset_group.present?
       asset_group = AssetGroup.find_by_object_key(@asset_group)
       add_breadcrumb asset_group
+    elsif @search_text.present?
+      add_breadcrumb "Search '#{@search_text}'"
     elsif @asset_subtype > 0
       subtype = AssetSubtype.find(@asset_subtype)
       add_breadcrumb subtype.asset_type.name.pluralize(2), inventory_index_path(:asset_type => subtype.asset_type, :asset_subtype => 0)
