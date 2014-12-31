@@ -1,0 +1,17 @@
+%table.table.table-hover#manufacturers_datatable
+  %thead
+    %tr
+      %th.left Name
+      %th.left Code
+      %th.left Type
+      %th.right Count
+
+  %tbody
+    - @manufacturers.each do |m|
+      %tr{:data => {:action_path => inventory_index_path(:manufacturer_id => m.id)}}
+        %td.left= m.name
+        %td.left= m.code
+        %td.left= m.filter
+        %td.right= format_as_integer(m.asset_count(@organization))
+
+= render :partial => 'shared/datatable_javascript', :locals => {:id => 'manufacturers_datatable'}

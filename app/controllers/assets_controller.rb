@@ -71,10 +71,16 @@ class AssetsController < AssetAwareController
     if @asset_group.present?
       asset_group = AssetGroup.find_by_object_key(@asset_group)
       add_breadcrumb asset_group
+    elsif @search_text.present?
+      add_breadcrumb "Search '#{@search_text}'"
     elsif @asset_subtype > 0
       subtype = AssetSubtype.find(@asset_subtype)
       add_breadcrumb subtype.asset_type.name.pluralize(2), inventory_index_path(:asset_type => subtype.asset_type, :asset_subtype => 0)
       add_breadcrumb subtype.name
+    elsif @manufacturer_id > 0
+      add_breadcrumb "Manufacturers", manufacturers_path
+      manufacturer = Manufacturer.find(@manufacturer_id)
+      add_breadcrumb manufacturer.name
     elsif @asset_type > 0
       asset_type = AssetType.find(@asset_type)
       add_breadcrumb asset_type.name.titleize.pluralize(2)
@@ -328,6 +334,13 @@ class AssetsController < AssetAwareController
       @org_filter = params[:org_id].to_i
     end
 
+    # Check to see if we got a manufacturer to sub select on.
+    if params[:manufacturer_id].nil?
+      @manufacturer_id = 0
+    else
+      @manufacturer_id = params[:manufacturer_id].to_i
+    end
+
     # Check to see if we got a search text and search param to filter on
     if params[:search_text].nil?
       # See if one is stored in the session
@@ -399,9 +412,9 @@ class AssetsController < AssetAwareController
       values << @organization_list
     end
 
-    if params["manufacturer_id"].present?
+    unless @manufacturer_id == 0
       clauses << ['manufacturer_id = ?']
-      values << params["manufacturer_id"]
+      values << @manufacturer_id
     end
 
     if @disposition_year.blank?
