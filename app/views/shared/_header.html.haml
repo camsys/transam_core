@@ -15,7 +15,7 @@
           %i.fa.fa-user
           = current_user.name
           %b.caret
-        %ul.dropdown-menu
+        %ul.dropdown-menu.dropdown-menu-right
           - SystemConfig.transam_module_names.each do |mod|
             = render :partial => "shared/#{mod}_user_menu" rescue nil
 
