@@ -46,7 +46,8 @@ class Policy < ActiveRecord::Base
   validates :cost_calculation_type,             :presence => true
   validates :condition_estimation_type,         :presence => true
 
-  validates :year,                              :presence => true, :numericality => {:only_integer => true, :greater_than_or_equal_to => Date.today.year }
+  validates :year,                              :presence => true, :numericality => {:only_integer => true}
+  validate                                      lambda { self.year >= current_fiscal_year_year }
   validates :name,                              :presence => true
   validates :description,                       :presence => true
   validates :interest_rate,                     :presence => true, :numericality => {:greater_than_or_equal_to => 0.0, :less_than_or_equal_to => 100.0 }
