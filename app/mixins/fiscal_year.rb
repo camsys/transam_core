@@ -115,14 +115,22 @@ module FiscalYear
   end
 
   # Returns a select array of fiscal years
-  def get_fiscal_years(date = nil)
+  def get_fiscal_years(date = nil, num_forecasting_years = nil)
     if date
       current_year = date.year
     else
       current_year = current_planning_year_year
     end
     a = []
-    (current_year..last_fiscal_year_year).each do |year|
+
+    # get last fiscal year from current year and num of forecasting years
+    if num_forecasting_years.nil?
+      last_year = last_fiscal_year_year
+    else
+      last_year = current_fiscal_year_year + num_forecasting_years
+    end
+
+    (current_year..last_year).each do |year|
       a << [fiscal_year(year), year]
     end
     a
