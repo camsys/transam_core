@@ -93,11 +93,6 @@ task_status_types = [
   {:active => 1, :name => 'Cancelled',    :description => 'Cancelled.'}
 ]
 
-attachment_types = [
-  {:active => 1, :name => 'Photo',    :display_icon_name => "fa fa-picture-o",    :description => 'Photo.'},
-  {:active => 1, :name => 'Document', :display_icon_name => "fa fa-file-text-o",  :description => 'Scanned document.'}
-]
-
 report_types = [
   {:active => 1, :name => 'Inventory Report',     :display_icon_name => "fa fa-bar-chart-o",  :description => 'Inventory Report.'},
   {:active => 1, :name => 'Capital Needs Report', :display_icon_name => "fa fa-usd",          :description => 'Capital Needs Report.'},
@@ -147,7 +142,7 @@ contact_types = [
 ]
 
 lookup_tables = %w{asset_event_types condition_types disposition_types cost_calculation_types license_types priority_types
-  file_status_types attachment_types report_types service_status_types
+  file_status_types report_types service_status_types
   task_status_types service_life_calculation_types condition_estimation_types
   issue_types web_browser_types replacement_reason_types roles notice_types
   contact_types
@@ -174,7 +169,7 @@ puts "======= Processing TransAM CORE Reports  ======="
 
 reports = [
   {
-    :active => 1, 
+    :active => 1,
     :belongs_to => 'report_type', :type => "System Report",
     :name => 'User Login Report',
     :class_name => "CustomSqlReport",
@@ -186,7 +181,7 @@ reports = [
     :custom_sql => "SELECT b.short_name AS 'ORGANIZATION',a.first_name AS 'FIRST NAME',a.last_name AS 'LAST NAME',a.sign_in_count AS 'NUM SIGNINS',a.last_sign_in_at AS 'LAST SIGN IN',a.locked_at AS 'ACCT LOCKED ON' FROM users a LEFT JOIN organizations b ON a.organization_id=b.id WHERE a.last_sign_in_at IS NOT NULL ORDER BY organization_id, first_name"
   },
   {
-    :active => 1, 
+    :active => 1,
     :belongs_to => 'report_type', :type => "System Report",
     :name => 'Issues Report',
     :class_name => "CustomSqlReport",
@@ -214,4 +209,3 @@ data.each do |row|
   x.report_type = ReportType.where(:name => row[:type]).first
   x.save!
 end
-

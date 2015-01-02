@@ -1,5 +1,5 @@
 module DatatablesHelper
-  
+
   def datatable(columns, opts={})
     sort_by = opts[:sort_by] || nil
     additional_data = opts[:additional_data] || {}
@@ -25,8 +25,8 @@ module DatatablesHelper
     end
 
     %Q{
-    <script type="text/javascript">
-    $(function() {
+      <script type="text/javascript">
+      $(function() {
         oTable = $('#{table_dom_id}').dataTable({
           "oLanguage": {
             "sLengthMenu": "_MENU_ records per page",
@@ -37,54 +37,58 @@ module DatatablesHelper
           "iDisplayLength": #{per_page},
           "bProcessing": true,
           "bServerSide": #{server_side},
-          "bLengthChange": true,
+          "bLengthChange": false,
           "bStateSave": #{persist_state},
           "bFilter": #{search},
           "bAutoWidth": #{auto_width},
           "aoColumns": [
             #{formatted_columns(columns)}
-              ],          
+          ],
           #{"'sAjaxSource': '#{ajax_source}'," if ajax_source}
           "fnDrawCallback": function( oSettings ) {
-                transam.install_quick_link_handlers();
-            },
+            transam.enable_info_popups('.popup-details');
+            transam.install_quick_link_handlers();
+          },
           "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
-              var url = aData[0];
-              $(nRow).attr("data-action-path", url);
-              return nRow;
+            var url = aData[0];
+            $(nRow).attr("data-action-path", url);
+            return nRow;
           },
           "fnServerData": function ( sSource, aoData, fnCallback ) {
             aoData.push( #{additional_data_string} );
             $.getJSON( sSource, aoData, function (json) {
               fnCallback(json);
-            } );
-          }            
-        })#{append};
-        oTable.fnSetColumnVis( 0, false );
-    });
-    </script>
-    }
-  end
-
-  private
-    def formatted_columns(columns)
-      i = 0
-      columns.map {|c|
-        i += 1
-        if c.nil? or c.empty?
-          "null"
-        else
-          searchable = c[:searchable].to_s.present? ? c[:searchable].to_s : "true"
-          sortable = c[:sortable].to_s.present? ? c[:sortable].to_s : "true"
-
-          "{
-          'sType': '#{c[:type] || "string"}',
-          'bSortable':#{sortable},
-          'bSearchable':#{searchable}
-          #{",'sClass':'#{c[:class]}'" if c[:class]}
-          }"
+              } );
+            }
+            })#{append};
+            });
+            </script>
+          }
         end
-      }.join(",")
-    end
-  
-end
+
+        private
+        def formatted_columns(columns)
+          i = 0
+          columns.map {|c|
+            i += 1
+            if c.nil? or c.empty?
+              "null"
+            else
+              searchable = c[:searchable].to_s.present? ? c[:searchable].to_s : "true"
+              sortable = c[:sortable].to_s.present? ? c[:sortable].to_s : "true"
+              visible = c[:visible].to_s.present? ? c[:visible].to_s : "true"
+
+              "{
+              'sType': '#{c[:type] || "string"}',
+              'bSortable':#{sortable},
+              'bSearchable':#{searchable},
+              'bVisible': #{visible}
+              #{",'sClass':'#{c[:class]}'" if c[:class]}
+              }"
+            end
+          }.join(",")
+        end
+
+      end
+
+      

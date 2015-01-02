@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<title><%= app_title %></title>
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">		
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<%= csrf_meta_tags %>
 
@@ -12,26 +12,26 @@
 			<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4/leaflet.ie.css" />
 		<![endif]-->
 
-      	<%= javascript_include_tag "http://cdn.leafletjs.com/leaflet-0.4/leaflet.js" %>
-      	<%= javascript_include_tag "http://maps.google.com/maps/api/js?v=3.2&sensor=false" %>
-      	<%= javascript_include_tag "https://www.google.com/jsapi" %>
+  	<%= javascript_include_tag "http://cdn.leafletjs.com/leaflet-0.4/leaflet.js" %>
+  	<%= javascript_include_tag "http://maps.google.com/maps/api/js?v=3.2&sensor=false" %>
+  	<%= javascript_include_tag "https://www.google.com/jsapi" %>
 		<%= javascript_include_tag "application" %>
 
 		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!--[if lt IE 9]>
 			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>		
+			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 		<![endif]-->
 
 	</head>
 	<body>
 
 		<!-- Begin header -->
-		<%= render 'shared/header' %>							
-		
+		<%= render 'shared/header' %>
+
 		<!-- Main Nav -->
-		<%= render 'shared/main_nav' %>							
-		
+		<%= render 'shared/main_nav' %>
+
 		<!-- Begin page content -->
 		<div id="view" class="container-fluid">
 			<!-- Main Page Content -->
@@ -44,7 +44,7 @@
 		<div id="footer" class="footer">
 			<%= render 'shared/footer' %>
 		</div>
-		
+
 		<!-- push the java script to the bottom so the page loads faster -->
 		<%= render 'shared/javascript' %>
 	</body>
