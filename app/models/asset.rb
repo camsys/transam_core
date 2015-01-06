@@ -157,7 +157,6 @@ class Asset < ActiveRecord::Base
     'asset_tag',
     'manufacturer_model',
     'external_id'
-
   ]
 
   # List of fields that should be nilled when a copy is made
@@ -655,6 +654,19 @@ class Asset < ActiveRecord::Base
   end
   def cache_clear_all
     clear_cache
+  end
+
+
+  def write_to_full_text_search_index
+    index_blob = ""
+    separator = " "
+    searchable_fields.each { |searchable_field|
+      index_blob += self[searchable_field].to_s
+      index_blob += separator
+    }
+    sql = "INSERT INTO asset_indexes(object_key, search_text) VALUES('#{self.object_key}','#{index_blob}')"
+    result = ActiveRecord::Base.connection.execute(sql)
+    puts "Result of index insert: " + result.to_s
   end
 
   #------------------------------------------------------------------------------
