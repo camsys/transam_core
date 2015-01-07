@@ -1,7 +1,5 @@
 Rails.application.routes.draw do
 
-  resources :full_text_search_indices
-
   devise_for :users, :controllers => { :sessions => "sessions", :unlocks => "unlocks", :passwords => "passwords" }
 
   # server static pages
@@ -98,7 +96,7 @@ Rails.application.routes.draw do
 
   resources :dashboards,    :only => [:index, :show]
   resources :activity_logs, :only => [:index]
-  resources :searches,      :only => [:new, :create]
+  resources :searches,      :only => [:new, :create, :full_text_search]
   resources :reports,       :only => [:index, :show] do
     member do
       get 'load'  # load a report using ajax

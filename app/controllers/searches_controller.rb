@@ -78,6 +78,11 @@ class SearchesController < OrganizationAwareController
     end
     
   end
-   
+
+  def full_text_search
+
+    FullTextSearchIndex.where("orders_count = ?", params[:orders])
+
+  end
 
 end
