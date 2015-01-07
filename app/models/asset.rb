@@ -8,12 +8,11 @@
 #------------------------------------------------------------------------------
 class Asset < ActiveRecord::Base
 
-  # Include the object key mixin
+  # Mixins
   include TransamObjectKey
-  # Include the numeric sanitizers mixin
   include TransamNumericSanitizers
-  # Include the fiscal year mixin
   include FiscalYear
+  include FullTextSearchable
 
   OBJECT_CACHE_EXPIRE_SECONDS = Rails.application.config.object_cache_expire_seconds
 
@@ -654,23 +653,6 @@ class Asset < ActiveRecord::Base
   end
   def cache_clear_all
     clear_cache
-  end
-
-
-  def write_to_full_text_search_index
-    index_blob = ""
-    separator = " "
-    searchable_fields.each { |searchable_field|
-      index_blob += self[searchable_field].to_s
-      index_blob += separator
-    }
-    sql = "INSERT INTO asset_indexes(object_key, search_text) VALUES('#{self.object_key}','#{index_blob}')"
-    result = ActiveRecord::Base.connection.execute(sql)
-    puts "Result of index insert: " + result.to_s
-  end
-
-  def full_text_search
-
   end
 
   #------------------------------------------------------------------------------
