@@ -1,0 +1,20 @@
+.row
+  .col-md-12
+    - if @task.history.empty?
+      %p There are no workflow events associated with this task.
+    -else
+      %table.table.table-hover#history_datatable
+        %thead
+          %tr
+            %th Date
+            %th Event
+            %th User
+        %tbody
+          - @task.history.each do |wfe|
+            %tr
+              %td= format_as_date_time(wfe.created_at)
+              %td= wfe.event_type.humanize
+              %td= wfe.creator.name
+
+
+      = render :partial => 'shared/datatable_javascript', :locals => {:id => 'history_datatable'}

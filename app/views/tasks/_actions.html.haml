@@ -1,22 +1,22 @@
-- unless @task.complete?
+- unless @task.completed? or @task.cancelled?
   .btn-group.pull-right.panel-action
     %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
-      I want to  
+      I want to
       %span.caret
     %ul.dropdown-menu{:role => 'menu'}
-      - if current_user == @task.from_user or current_user.has_role? :admin
+      - if current_user == @task.user or current_user.has_role? :admin
         %li
           = link_to edit_user_task_path(current_user, @task) do
             %i.fa.fa-fw.fa-edit
             = " Update this task"
         %li.divider
-      
+
       %li.dropdown-submenu
         = link_to "#" do
           %i.fa.fa-fw.fa-edit
           = " Update this status..."
         %ul.dropdown-menu
-          - TaskStatusType.all.each do |t|
+          - @task.allowable_events.each do |evt|
             %li
-              = link_to update_status_user_task_path(current_user, @task, :task_status => t.id), :method => "patch" do
-                = t.name
+              = link_to fire_workflow_event_task_path( @task, :event => evt), :method => "patch" do
+                = evt.humanize

@@ -1,0 +1,23 @@
+%ul.media-list
+  - tasks.each do |task|
+    %li.media
+      .well.well-small
+        .row
+          .media-body.col-md-12
+            .row
+              .col-xs-1
+                %i.fa.fa-calendar.fa-3x
+              .col-xs-11
+                .col-xs-9
+                  %span.pull-left= format_as_label(task.state.humanize)
+                  %h5.media-heading.pull-left
+                    = "Complete By: #{format_as_date(task.complete_by)}"
+                .col-xs-3
+                  .pull-right
+                    - if can? :update, task
+                      = link_to edit_task_path(task), :class => "btn btn-primary btn-xs pull-right", :style => "margin-left: 5px;" do
+                        %i.fa.fa-edit
+                        Edit
+
+                .col-xs-12
+                  %p= task.subject.html_safe

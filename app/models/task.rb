@@ -1,65 +1,157 @@
+#------------------------------------------------------------------------------
+#
+# Task
+#
+# A task that has been associated with another class such as a Task etc. This is a
+# polymorphic class that can store comments against any class that includes a
+# commentable association
+#
+# To use this class as an association with another class include the following line into
+# the model
+#
+# has_many    :tasks,  :as => :taskable, :dependent => :destroy
+#
+#------------------------------------------------------------------------------
 class Task < ActiveRecord::Base
-  
+
   # Include the object key mixin
   include TransamObjectKey
-  
+
+  # Include the Workflow module
+  include TransamWorkflow
+
   #------------------------------------------------------------------------------
   # Callbacks
   #------------------------------------------------------------------------------
   after_initialize  :set_defaults
-  
+
+  #------------------------------------------------------------------------------
   # Associations
-  belongs_to :from_organization, :class_name => "Organization", :foreign_key => "from_organization_id"  
-  belongs_to :for_organization, :class_name => "Organization", :foreign_key => "for_organization_id"  
-  belongs_to :from_user, :class_name => "User", :foreign_key => "from_user_id"  
-  belongs_to :assigned_to, :class_name => "User", :foreign_key => "assigned_to_user_id"  
-  belongs_to :priority_type
-  
-  belongs_to :agency
+  #------------------------------------------------------------------------------
+  belongs_to :taskable,  :polymorphic => true
+
+  # Every task is created by a user
   belongs_to :user
-  belongs_to :to_user
+
+  # Every task is owned by an organization. This is the
+  # organization that the task has been assigned to
+  belongs_to :organization
+
+  # Every task can be assigned to a user. This can be null
+  # in which case the task will be available for everyone
+  # in the :organization to take on
+  belongs_to :assigned_to_user, :class_name => "User", :foreign_key => "assigned_to_user_id"
+
+  # Every task is assigned a priority
   belongs_to :priority_type
-  belongs_to :task_status_type
-  
+
   # Each task can have notes associated with it. Comments are destroyed when the task is destroyed
   has_many    :comments,  :as => :commentable, :dependent => :destroy
-    
-  # Validations on core attributes
-  validates :from_user_id,          :presence => true
-  validates :from_organization_id,  :presence => true
-  validates :priority_type_id,      :presence => true
-  validates :assigned_to_user_id,   :presence => true
-  validates :for_organization_id,   :presence => true
+
+  #------------------------------------------------------------------------------
+  # Validations
+  #------------------------------------------------------------------------------
+  validates :user,                  :presence => true
+  validates :priority_type,         :presence => true
+  validates :organization,          :presence => true
   validates :subject,               :presence => true
   validates :body,                  :presence => true
   validates :complete_by,           :presence => true
-   
+
   default_scope { order('complete_by') }
 
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
-    :from_user_id,
-    :from_organization_id, 
-    :priority_type_id, 
-    :tastk_sttaus_type_id,
-    :assigned_to_user_id, 
-    :for_organization_id,
+    :user_id,
+    :organization_id,
+    :priority_type_id,
+    :assigned_to_user_id,
     :subject,
+    :state,
     :body,
     :send_reminder,
     :complete_by
   ]
-  
+
+  #------------------------------------------------------------------------------
+  #
+  # State Machine
+  #
+  # Used to track the state of a task order through the completion process
+  #
+  #------------------------------------------------------------------------------
+  state_machine :state, :initial => :new do
+
+    #-------------------------------
+    # List of allowable states
+    #-------------------------------
+
+    # initial state. All tasks are created in this state
+    state :new
+
+    # state used to signify it has been started but not completed
+    state :started
+
+    # state used to signify it has been completed
+    state :completed
+
+    # state used to signify that work has been halted pending input
+    state :halted
+
+    # state used to indicate the task has been cancelled
+    state :cancelled
+
+    #---------------------------------------------------------------------------
+    # List of allowable events. Events transition a task from one state to another
+    #---------------------------------------------------------------------------
+
+    # Retract the task from the shop. This is a terminal transition
+    event :cancel do
+      transition [:new, :started, :halted] => :cancelled
+    end
+
+    # start a task
+    event :start do
+      transition :new => :started
+    end
+
+    # re-start a task
+    event :re_start do
+      transition :halted => :started
+    end
+
+    # Mark a task as being complete
+    event :complete do
+      transition [:new, :started, :halted] => :completed
+    end
+
+    # The workorder has been started
+    event :halt do
+      transition [:new, :started] => :halted
+    end
+
+    # Callbacks
+    before_transition do |task, transition|
+      Rails.logger.debug "Transitioning #{task.name} from #{transition.from_name} to #{transition.to_name} using #{transition.event}"
+    end
+  end
+
   #------------------------------------------------------------------------------
   #
   # Class Methods
   #
   #------------------------------------------------------------------------------
-    
+
   def self.allowable_params
     FORM_PARAMS
   end
 
+  def self.active_states
+    ["new", "started", "halted"]
+  end
+  def self.terminal_states
+    ["cancelled", "completed"]
+  end
   #------------------------------------------------------------------------------
   #
   # Instance Methods
@@ -69,35 +161,19 @@ class Task < ActiveRecord::Base
   def name
     subject
   end
-  
-  def cancelled?
-    (task_status_type_id == 5)
-  end
-  def complete?
-    (task_status_type_id == 3)
-  end
-  def on_hold?
-    (task_status_type_id == 4)
-  end
-  def in_progress?
-    (task_status_type_id == 2)
-  end
-  def not_started?
-    (task_status_type_id == 1)
-  end
-  
+
   #------------------------------------------------------------------------------
   #
   # Private Methods
   #
   #------------------------------------------------------------------------------
   private
-        
+
   # Set resonable defaults for a new asset
   def set_defaults
-    self.task_status_type_id ||= TaskStatusType.find_by_name('Not Started').id    
-    self.send_reminder ||= true   
-    self.complete_by ||= Date.today + 1.day
-  end    
-      
+    self.state ||= :new
+    self.send_reminder ||= true
+    self.complete_by ||= Date.today + 1.week
+  end
+
 end

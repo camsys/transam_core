@@ -88,6 +88,9 @@ class Asset < ActiveRecord::Base
   # Each asset has zero or more comments. Comments are deleted when the asset is deleted
   has_many    :comments,    :as => :commentable, :dependent => :destroy
 
+  # Each asset has zero or more tasks. Tasks are deleted when the asset is deleted
+  has_many    :tasks,       :as => :taskable, :dependent => :destroy
+
   # Each asset can have 0 or more dependents
   has_many    :dependents,  :class_name => 'Asset', :foreign_key => :parent_id, :dependent => :nullify
 

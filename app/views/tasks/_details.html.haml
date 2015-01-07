@@ -1,16 +1,24 @@
 %ul.nav.nav-tabs
   %li
     %a{:href => "#desc", :data =>{:toggle => 'tab'}}
-      Description 
+      Description
   %li
     %a{:href => "#comm", :data =>{:toggle => 'tab'}}
       %span.badge.pull-right= @task.comments.count
       = "Comments"
+  %li
+    %a{:href => "#hist", :data =>{:toggle => 'tab'}}
+      = "History"
 
 .tab-content
   .tab-pane.fade#desc
     .tab-content
       %p= @task.body.html_safe
+
   .tab-pane.fade#comm
     .tab-content
       = render 'comments'
+
+  .tab-pane.fade#hist
+    .tab-content
+      = render 'history'

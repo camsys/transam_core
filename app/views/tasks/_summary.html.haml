@@ -1,13 +1,7 @@
-%fieldset
-  %legend.panel-legend Summary
-  = format_field("Status", @task.task_status_type )
-  = format_field("Due", format_as_date(@task.complete_by))
-  = format_field("Priority", @task.priority_type )
-  = format_field("From", @task.from_user.name )
-%fieldset
-  %legend.panel-legend Updates
-  = format_field("Assigned On", format_as_date(@task.created_at) )
-  - if @task.updated_at > @task.created_at
-    = format_field("Last Updated On", format_as_date_time(@task.updated_at))
-  - if @task.completed_on
-    = format_field("Completed On", format_as_date(@task.completed_on))
+= format_field("Status", @task.state.humanize )
+= format_field("Due", format_as_date(@task.complete_by))
+= format_field("Priority", @task.priority_type )
+= format_field("From", @task.user.name )
+= format_field("Assigned On", format_as_date(@task.created_at) )
+- if @task.updated_at > @task.created_at
+  = format_field("Last Updated On", format_as_date_time(@task.updated_at))

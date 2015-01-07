@@ -8,11 +8,15 @@
   %a{:href => "#hist", :data =>{:toggle => 'tab'}}
     %span.badge.pull-right= @asset.asset_events.count
     = "History"
-- unless @asset.dependents.empty?    
+- unless @asset.dependents.empty?
   %li
     %a{:href => "#depd", :data =>{:toggle => 'tab'}}
       %span.badge.pull-right= @asset.dependents.count
       Dependents
+%li
+  %a{:href => "#task", :data =>{:toggle => 'tab'}}
+    %span.badge.pull-right= @asset.tasks.count
+    Tasks
 %li
   %a{:href => "#comm", :data =>{:toggle => 'tab'}}
     %span.badge.pull-right= @asset.comments.count

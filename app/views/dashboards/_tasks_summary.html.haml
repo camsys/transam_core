@@ -1,15 +1,12 @@
 :ruby
   # Get the task status types to search for
-  pending_status = TaskStatusType.find_by_name('Not Started')
-  in_progress_status = TaskStatusType.find_by_name('In Progress')
-  on_hold_status = TaskStatusType.find_by_name('Halted Pending Input')
-  tasks = Task.where("assigned_to_user_id = ? AND task_status_type_id IN(?)", current_user.id, [pending_status, in_progress_status, on_hold_status]).order(:complete_by)
-  pending = tasks.where(:task_status_type => pending_status)
-  in_progress = tasks.where(:task_status_type => in_progress_status)
-  on_hold = tasks.where(:task_status_type => on_hold_status)
+  tasks = Task.where("assigned_to_user_id = ? AND state IN (?)", current_user.id, ["new", "started", "halted"]).order(:complete_by)
+  new_tasks = tasks.where(:state => "new")
+  started_tasks = tasks.where(:state => "started")
+  on_hold = tasks.where(:state => "halted")
 
-  pending_pcnt = pending.count > 0 ? pending.count / tasks.count.to_f * 100.0 : 0
-  in_progress_pcnt = in_progress.count > 0 ? in_progress.count / tasks.count.to_f * 100.0 : 0
+  new_pcnt = new_tasks.count > 0 ? new_tasks.count / tasks.count.to_f * 100.0 : 0
+  started_pcnt = started_tasks.count > 0 ? started_tasks.count / tasks.count.to_f * 100.0 : 0
   on_hold_pcnt = on_hold.count > 0 ? on_hold.count / tasks.count.to_f * 100.0 : 0
 
 .col-md-2.col-sm-2
@@ -22,6 +19,6 @@
       - if tasks.empty?
         %p= "No tasks due"
       - else
-        = render :partial => 'task_summary_detail', :locals => {:label => 'Pending', :count => pending.count, :pcnt => pending_pcnt, :display_class => 'info'}
-        = render :partial => 'task_summary_detail', :locals => {:label => 'Started', :count => in_progress.count, :pcnt => in_progress_pcnt, :display_class => 'warning'}
+        = render :partial => 'task_summary_detail', :locals => {:label => 'New', :count => new_tasks.count, :pcnt => new_pcnt, :display_class => 'info'}
+        = render :partial => 'task_summary_detail', :locals => {:label => 'Started', :count => started_tasks.count, :pcnt => started_pcnt, :display_class => 'warning'}
         = render :partial => 'task_summary_detail', :locals => {:label => 'On Hold', :count => on_hold.count, :pcnt => on_hold_pcnt, :display_class => 'danger'}

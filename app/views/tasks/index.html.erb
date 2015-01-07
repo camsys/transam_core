@@ -12,51 +12,50 @@
 </div>
 
 <%= form_tag user_tasks_path(current_user), :id => 'select_action_form', :method => "get" do %>
-	<%= hidden_field_tag 'filter', @filter %>
+	<%= hidden_field_tag 'state', @state %>
 	<%= hidden_field_tag 'select', @select %>
 <% end %>
 
 <script type="text/javascript">
 
   var events_url = '<%= filter_user_tasks_path(current_user.id) %>';
-  var filter = <%= @filter.nil? ? 0 : @filter %>;
-  var select = <%= @select.nil? ? 0 : @select %>;
-  
+  var state = '<%= @state.blank? ? "all" : @state %>';
+  var select = '<%= @select.blank? ? "0" : @select %>';
+
   $(document).ready(function() {
-  	
+
   	// Set the button toggle
-  	if (select === 0) {
+  	if (select === '0') {
   		$('#my_tasks_btn').addClass('active');
   	} else {
   		$('#all_tasks_btn').addClass('active');
   	}
-  	
+
   	// Install event handlers for the button
   	$('#my_tasks_btn').click(function() {
-  		$('#select').val(0);
-		$('#select_action_form').submit();	
+  		$('#select').val('0');
+		$('#select_action_form').submit();
   	});
   	$('#all_tasks_btn').click(function() {
-  		$('#select').val(1);
-		$('#select_action_form').submit();	
+  		$('#select').val('1');
+		$('#select_action_form').submit();
   	});
-  	
+
     // page is now ready, initialize the calendar...
     $('#calendar').fullCalendar({
       weekMode: 'variable',
-      weekends: false,
+      weekends: true,
       events: {
         url: events_url,
         data: {
-        	filter: filter,
+        	state: state,
         	select: select
         },
         error: function() {
             alert('there was an error while fetching events!');
         }
-      }      
+      }
     });
   });
 
 </script>
-

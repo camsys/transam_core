@@ -1,51 +1,50 @@
-class TasksController < OrganizationAwareController
+class TasksController < NestedResourceController
 
   add_breadcrumb "Home", :root_path
 
-  before_action :set_task, :only => [:show, :edit, :update, :destroy, :update_status]
-  before_filter :check_for_cancel, :only => [:create, :update]
+  before_action :set_view_vars, :only => [:index, :filter]
+  before_action :set_task, :only => [:show, :edit, :update, :destroy, :fire_workflow_event]
   before_filter :reformat_date_field, :only => [:create, :update]
-
-  SESSION_VIEW_TYPE_VAR   = 'tasks_subnav_view_type'
-  SESSION_FILTER_TYPE_VAR = 'tasks_subnav_filter_type'
-  SESSION_SELECT_TYPE_VAR = 'tasks_subnav_select_type'
 
   # Ajax callback returning a list of tasks as JSON calendar events
   def filter
-    filter_start_time = DateTime.strptime(params[:start], '%s')
-    filter_end_time   = DateTime.strptime(params[:end], '%s')
-    @filter = get_filter_type(SESSION_FILTER_TYPE_VAR)
-    @select = get_select_type(SESSION_SELECT_TYPE_VAR)
+    filter_start_time = DateTime.parse(params[:start])
+    filter_end_time   = DateTime.parse(params[:end])
 
     # here we build the query one clause at a time based on the input params
     clauses = []
     values = []
-    if @select == 0
+    if @select == "0"
       clauses << ['assigned_to_user_id = ?']
-      values << [current_user.id]
+      values << current_user.id
     else
-      clauses << ['for_organization_id = ?']
-      values << [@organization.id]
+      clauses << ['organization_id = ?']
+      values << @organization.id
     end
-    if @filter.to_i > 0
-      clauses << ['task_status_type_id = ?']
-      values << [@filter]
-    end
+
+    clauses << ['state IN (?)']
+    values << @states
+
     clauses << ['complete_by BETWEEN ? AND ?']
-    values << [filter_start_time]
-    values << [filter_end_time]
+    values << filter_start_time
+    values << filter_end_time
 
     tasks = Task.where(clauses.join(' AND '), *values).order("complete_by")
 
     events = []
     tasks.each do |t|
+      if t.assigned_to_user.nil?
+        task_title = t.subject
+      else
+        task_title = "(#{t.assigned_to_user.initials}) #{t.subject}"
+      end
       events << {
         :id => t.id,
-        :title => @select == 0 ? t.subject : "(#{t.assigned_to.initials}) #{t.subject}",
+        :title => task_title,
         :allDay => false,
         :start => t.complete_by,
         :url => user_task_path(current_user, t),
-        :className => get_css_class_name(t)
+        :className => get_state_css_class_name(t.state)
       }
     end
 
@@ -54,19 +53,34 @@ class TasksController < OrganizationAwareController
     end
   end
 
+  def fire_workflow_event
+
+    # Check that this is a valid event name for the state machines
+    if @task.class.event_names.include? params[:event]
+      event_name = params[:event]
+      if @task.fire_state_event(event_name)
+        event = WorkflowEvent.new
+        event.creator = current_user
+        event.accountable = @task
+        event.event_type = event_name
+        event.save
+      else
+        notify_user(:alert, "Could not #{event_name.humanize} task #{@task}")
+      end
+    else
+      notify_user(:alert, "#{params[:event_name]} is not a valid event for a #{@task.class.name}")
+    end
+
+    redirect_to :back
+
+  end
+
   def index
 
-    @page_title = 'My Tasks'
     add_breadcrumb "My Tasks", tasks_path
 
-    @filter = get_filter_type(SESSION_FILTER_TYPE_VAR)
-    @select = get_select_type(SESSION_SELECT_TYPE_VAR)
-
     # Select tasks for this user or ones that are for the agency as a whole
-    @tasks = Task.where("for_organization_id = ? AND completed_on IS NULL AND (assigned_to_user_id IS NULL OR assigned_to_user_id = ?)", @organization.id, current_user.id).order("complete_by")
-
-    # remember the view type
-    @view_type = get_view_type(SESSION_VIEW_TYPE_VAR)
+    @tasks = Task.where("organization_id = ? AND state IN (?) AND (assigned_to_user_id IS NULL OR assigned_to_user_id = ?)", @organization.id, @states, current_user.id).order("complete_by")
 
     respond_to do |format|
       format.html # index.html.erb
@@ -87,8 +101,6 @@ class TasksController < OrganizationAwareController
     add_breadcrumb "My Tasks", tasks_path
     add_breadcrumb @task.subject, task_path(@task)
 
-    @page_title = 'Task'
-
     respond_to do |format|
       format.html # show.html.erb
       format.json { render :json => @task }
@@ -97,16 +109,14 @@ class TasksController < OrganizationAwareController
 
   def new
 
-    @page_title = 'New Task'
-
     add_breadcrumb "My Tasks", tasks_path
     add_breadcrumb 'New'
 
+    @taskable = find_resource
+
     @task = Task.new
-    @task.from_organization = @organization
-    @task.from_user = current_user
+    @task.user = current_user
     @task.assigned_to = User.find_by_object_key(params[:assigned_to]) unless params[:assigned_to].nil?
-    @task.complete_by = Date.today + 1
     @task.priority_type = PriorityType.default
 
     respond_to do |format|
@@ -117,9 +127,10 @@ class TasksController < OrganizationAwareController
 
   def edit
 
+    @taskable = find_resource
+
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
-    @page_title = 'Edit Task'
 
     add_breadcrumb "My Tasks", tasks_path
     add_breadcrumb @task.subject, task_path(@task)
@@ -135,13 +146,17 @@ class TasksController < OrganizationAwareController
 
   def create
 
-    @task = Task.new(form_params)
-    # Simple form doesn't process mapped assoacitions very well
-    @task.assigned_to = User.find(params[:task][:assigned_to_user_id]) unless params[:task][:assigned_to_user_id].blank?
-    @task.for_organization = @task.assigned_to.organization unless @task.assigned_to.nil?
+    @taskable = find_resource
+    if @taskable.nil?
+      @task = Task.new(form_params)
+    else
+      @task = @taskable.tasks.build(form_params)
+    end
 
-    @task.from_organization = @organization
-    @task.from_user = current_user
+    # Simple form doesn't process mapped associations very well
+    #@task.assigned_to_user = User.find(params[:task][:assigned_to_user_id]) unless params[:task][:assigned_to_user_id].blank?
+    @task.organization = @task.assigned_to_user.organization unless @task.assigned_to_user.nil?
+    @task.user = current_user
 
     add_breadcrumb "My Tasks", tasks_path
     add_breadcrumb 'New'
@@ -159,36 +174,9 @@ class TasksController < OrganizationAwareController
 
   end
 
-  def update_status
-
-    # if not found or the object does not belong to the users
-    # send them back to index.html.erb
-    if @task.nil?
-      notify_user(:alert, "Record not found!")
-      redirect_to user_tasks_url
-      return
-    end
-
-    @task.task_status_type = TaskStatusType.find(params[:task_status])
-    if @task.task_status_type.name == 'Complete'
-      @task.completed_on = Date.today
-    else
-      @task.completed_on = nil
-    end
-
-    respond_to do |format|
-      if @task.save
-        notify_user(:notice, "Task was successfully updated.")
-        format.html { redirect_to user_task_url(current_user, @task) }
-        format.json { head :no_content }
-      else
-        format.html { render :action => "edit" }
-        format.json { render :json => @task.errors, :status => :unprocessable_entity }
-      end
-    end
-  end
-
   def update
+
+    @taskable = @task.taskable
 
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
@@ -221,54 +209,37 @@ class TasksController < OrganizationAwareController
   #------------------------------------------------------------------------------
   protected
 
-  # returns the filter type for the current controller and sets the session variable
-  # to store any change in fitler type for the controller
-  def get_filter_type(session_var)
-    filter_type = params[:filter].nil? ? session[session_var].to_i : params[:filter].to_i
-    if filter_type.nil?
-      filter_type = 0
+  # Sets the view variables
+  #   @state    - the state filter input in the request
+  #   @states   - an array of state names based on the @state
+  #   @select   - "0" = assigned to the user, "1" = assigned to the organization
+  def set_view_vars
+    if params[:state].blank? or params[:state] == "all"
+      @state = "all"
+      @states = Task.active_states
+    else
+      @state = params[:state]
+      @states = [@state]
     end
-    # remember the view type in the session
-    session[session_var] = filter_type
-    return filter_type
-  end
-  # returns the select type for the current controller and sets the session variable
-  # to store any change in select type for the controller
-  def get_select_type(session_var)
-    select_type = params[:select].nil? ? session[session_var].to_i : params[:select].to_i
-    if select_type.nil?
-      select_type = 0
+
+    if params[:select].blank?
+      @select = "0"
+    else
+      @select = params[:select]
     end
-    # remember the view type in the session
-    session[session_var] = select_type
-    return select_type
   end
 
-  def get_event_color(task)
-    if task.task_status_type_id == 1      # New
-      color = '#FF0000'
-    elsif task.task_status_type_id == 2   # In Progress
-      color = '#00FF00'
-    elsif task.task_status_type_id == 3   # Complete
-      color = '#0000FF'
-    elsif task.task_status_type_id == 4   # On Hold
-      color = '#00FFFF'
-    else
-      color = 'FF00FF'                    # Cancelled
-    end
-    color
-  end
-  def get_css_class_name(task)
-    if task.task_status_type_id == 1      # New
+  def get_state_css_class_name(state)
+    if state == "new"
       classname = 'alert alert-error'
-    elsif task.task_status_type_id == 2   # In Progress
+    elsif state == "started"
       classname = 'alert alert-info'
-    elsif task.task_status_type_id == 3   # Complete
+    elsif state == "complete"
       classname = 'alert alert-success'
-    elsif task.task_status_type_id == 4   # On Hold
+    elsif state == "halted"
       classname = 'alert'
     else
-      classname = 'btn'                    # Cancelled
+      classname = 'btn'
     end
     classname
   end
@@ -280,21 +251,9 @@ class TasksController < OrganizationAwareController
   #------------------------------------------------------------------------------
   private
 
-  def check_for_cancel
-    unless params[:cancel].blank?
-      # check that the user has access to this agency
-      redirect_to(user_tasks_url(current_user))
-    end
-  end
-
   # Callbacks to share common setup or constraints between actions.
   def set_task
-    @task = params[:id].nil? ? nil : Task.find_by_object_key(params[:id])
-  end
-
-  # make sure that only tasks for this user or unassigned tasks for this agency are viewed or edited
-  def find_task(task_id)
-    Task.where("id = ? AND for_organization_id = ? AND (assigned_to_user_id IS NULL OR assigned_to_user_id = ?)", task_id, @organization.id, current_user.id).first
+    @task = params[:id].nil? ? nil : Task.find_by(:object_key => params[:id])
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.

@@ -11,6 +11,9 @@
   .tab-pane.fade#depd
     .tab-content
       = render :partial => 'asset_compact_datatable', :locals => {:assets => @asset.dependents}
+.tab-pane.fade#task
+  .tab-content
+    = render 'tasks'
 .tab-pane.fade#comm
   .tab-content
     = render 'comments'
