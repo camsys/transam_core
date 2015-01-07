@@ -26,7 +26,7 @@
               = " Logout"
 
     .col-sm-3.col-md-3.pull-right
-      = form_tag inventory_index_path, :id => 'asset_search_form', :method => 'get', :class => 'navbar-form search-form', :role => 'search' do
+      = form_tag full_text_search_searches_path, :id => 'asset_search_form', :class => 'navbar-form search-form', :role => 'search' do
         .input-group
           = text_field_tag :search_text, nil, :class => 'form-control search-control', :placeholder => 'Search inventory...', :id => 'search_text'
           .input-group-btn

@@ -45,6 +45,14 @@ class SearchesController < OrganizationAwareController
       format.html # new.html.erb
     end    
   end
+
+  def full_text_search
+
+    search_text = params["search_text"]
+
+    @full_text_search_results = FullTextSearchIndex.where("search_text like ?", "%#{search_text}%")
+
+  end
   
   protected
   
@@ -77,12 +85,6 @@ class SearchesController < OrganizationAwareController
       return     
     end
     
-  end
-
-  def full_text_search
-
-    FullTextSearchIndex.where("orders_count = ?", params[:orders])
-
   end
 
 end
