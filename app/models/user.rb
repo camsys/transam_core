@@ -16,47 +16,47 @@ class User < ActiveRecord::Base
 
   # Include the object key mixin
   include TransamObjectKey
-    
+
   #------------------------------------------------------------------------------
   # Callbacks
   #------------------------------------------------------------------------------
   after_initialize  :set_defaults
-  
+
   # Clean up any HABTM associations before the user is destroyed
   before_destroy { :clean_habtm_relationships }
-  
+
   #------------------------------------------------------------------------------
   # Associations
   #------------------------------------------------------------------------------
-  
+
   # every user belongs to a single organizations
   belongs_to :organization
 
   # Every user has 0 or 1 user organization filter that they are using
   belongs_to :user_organization_filter
-  
+
   # every user has access to 0 or more organizations for reporting
   has_and_belongs_to_many :organizations, :join_table => 'users_organizations'
   has_many :organization_users, through: :organizations, :source => 'users'
-  
+
   # Every user can have 0 or more messages
   has_many   :messages
-  
+
   # Every user can have 0 or tasks assigned to them
   has_many   :tasks,        :foreign_key => :assigned_to_user_id
 
   # Every user can have a profile picture
-  has_many    :images,      :as => :imagable,       :dependent => :destroy
-  
+  has_many   :images,      :as => :imagable,       :dependent => :destroy
+
   # Every user can have 0 or more organization filters they have created
   has_many   :organization_filters,   :class_name => 'UserOrganizationFilter', :dependent => :destroy
 
   # A special role like "TransAM Technical Contact". Since a user could have many, can't use belongs_to
   has_and_belongs_to_many :contact_types
-  
+
   #------------------------------------------------------------------------------
   # Validations
-  #------------------------------------------------------------------------------  
+  #------------------------------------------------------------------------------
   validates :first_name,    :presence => true
   validates :last_name,     :presence => true
   validates :email,         :presence => true, :uniqueness => true, :format => { :with => /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/, :message => "email address is not valid" }
@@ -64,18 +64,18 @@ class User < ActiveRecord::Base
   validates :timezone,      :presence => true
   validates :num_table_rows,:presence => true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 5}
   validates :organization,  :presence => true
-  
+
   # default scope
   default_scope { where(:active => true).order(:last_name) }
-      
+
   SEARCHABLE_FIELDS = [
     :first_name,
     :last_name,
     :email,
     :phone,
-  ] 
-         
-  # List of allowable form param hash keys  
+  ]
+
+  # List of allowable form param hash keys
   FORM_PARAMS = [
     :organization_id,
     :first_name,
@@ -99,46 +99,46 @@ class User < ActiveRecord::Base
     :state,
     :zip
   ]
-  
+
   #------------------------------------------------------------------------------
   #
   # Class Methods
   #
   #------------------------------------------------------------------------------
-  
+
   def self.allowable_params
     FORM_PARAMS
   end
-          
+
   #------------------------------------------------------------------------------
   #
   # Instance Methods
   #
   #------------------------------------------------------------------------------
-          
+
   # Devise overrides for logging account locks/unlocks
   def lock_access!
     super
     # Send a message to the admins that the account has been locked
     Delayed::Job.enqueue LockedAccountInformerJob.new(object_key) unless new_record?
     # Log it
-    Rails.logger.info "Locking account for user with email #{email} at #{Time.now}"    
-  end        
+    Rails.logger.info "Locking account for user with email #{email} at #{Time.now}"
+  end
   def unlock_access!
     super
-    Rails.logger.info "Unlocking account for user with email #{email} at #{Time.now}"    
-  end        
-  
+    Rails.logger.info "Unlocking account for user with email #{email} at #{Time.now}"
+  end
+
   def initials
     "#{first_name[0]}#{last_name[0]}"
   end
-          
-          
+
+
   # Returns true if the user is in a specified role, false otherwise
   def is_in_role(role_id)
     ! roles.find(role_id).nil?
   end
-      
+
   # Returns true if the user has at least one of the roles
   def is_in_roles?(roles_to_test)
     roles_to_test.each do |name|
@@ -148,11 +148,11 @@ class User < ActiveRecord::Base
     end
     false
   end
-  
+
   def to_s
     name
   end
-  
+
   def name
     "#{first_name} #{last_name}"
   end
@@ -167,7 +167,7 @@ class User < ActiveRecord::Base
   # Set resonable defaults for a new user
   def set_defaults
     self.timezone ||= 'Eastern Time (US & Canada)'
-  end    
+  end
 
   def clean_habtm_relationships
     organizations.clear
@@ -179,5 +179,5 @@ class User < ActiveRecord::Base
   #
   #------------------------------------------------------------------------------
   private
-    
+
 end

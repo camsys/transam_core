@@ -4,10 +4,10 @@ class CommentsController < NestedResourceController
   # GET /comments
   # GET /comments.json
   def index
-       
+
     @commentable = find_resource
     @comments = @commentable.comments
-  
+
   end
 
   # GET /comments/1
@@ -34,7 +34,7 @@ class CommentsController < NestedResourceController
     @commentable = find_resource
     @comment = @commentable.comments.build(comment_params)
     @comment.creator = current_user
-    
+
     respond_to do |format|
       if @comment.save
         notify_user(:notice, 'Comment was successfully created.')
@@ -55,7 +55,7 @@ class CommentsController < NestedResourceController
 
     respond_to do |format|
       if @comment.update(comment_params)
-        notify_user(:notice, 'Comment was successfully updated.')   
+        notify_user(:notice, 'Comment was successfully updated.')
         format.html { redirect_to get_resource_url(@commentable) }
         format.json { head :no_content }
       else
@@ -69,10 +69,10 @@ class CommentsController < NestedResourceController
   # DELETE /comments/1.json
   def destroy
 
-    @commentable = @comment.commentable    
+    @commentable = @comment.commentable
     @comment.destroy
-    
-    notify_user(:notice, 'Comment was successfully removed.')   
+
+    notify_user(:notice, 'Comment was successfully removed.')
     respond_to do |format|
       format.html { redirect_to get_resource_url(@commentable) }
       format.json { head :no_content }
@@ -80,10 +80,10 @@ class CommentsController < NestedResourceController
   end
 
   private
-    
+
   # Use callbacks to share common setup or constraints between actions.
   def set_comment
-    @comment = Comment.find_by_object_key(params[:id])
+    @comment = Comment.find_by(:object_key => params[:id])
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
