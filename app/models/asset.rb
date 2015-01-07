@@ -669,6 +669,10 @@ class Asset < ActiveRecord::Base
     puts "Result of index insert: " + result.to_s
   end
 
+  def full_text_search
+
+  end
+
   #------------------------------------------------------------------------------
   #
   # Protected Methods

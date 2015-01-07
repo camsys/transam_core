@@ -1,0 +1,12 @@
+%p#notice= notice
+
+%p
+  %b Object key:
+  = @full_text_search_index.object_key
+%p
+  %b Search text:
+  = @full_text_search_index.search_text
+
+= link_to 'Edit', edit_full_text_search_index_path(@full_text_search_index)
+\|
+= link_to 'Back', full_text_search_indices_path

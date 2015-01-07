@@ -1,0 +1,16 @@
+= form_for @full_text_search_index do |f|
+  - if @full_text_search_index.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@full_text_search_index.errors.count, "error")} prohibited this full_text_search_index from being saved:"
+      %ul
+        - @full_text_search_index.errors.full_messages.each do |msg|
+          %li= msg
+
+  .field
+    = f.label :object_key
+    = f.text_field :object_key
+  .field
+    = f.label :search_text
+    = f.text_area :search_text
+  .actions
+    = f.submit 'Save'

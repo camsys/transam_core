@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  resources :full_text_search_indices
+
   devise_for :users, :controllers => { :sessions => "sessions", :unlocks => "unlocks", :passwords => "passwords" }
 
   # server static pages
