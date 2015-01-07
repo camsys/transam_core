@@ -38,6 +38,7 @@ Rails.application.routes.draw do
 
     resources :asset_events
 
+    resources :tasks,       :only => [:create, :update, :edit, :new, :destroy]
     resources :comments,    :only => [:create, :update, :edit, :new, :destroy]
 
     resources :images,      :only => [:create, :update, :edit, :new, :destroy] do
@@ -56,6 +57,7 @@ Rails.application.routes.draw do
   # Provide an alias for asset paths which are discovered by form helpers such as
   # commentable, documentable, and imagable controllers
   resources :assets, :path => :inventory do
+    resources :tasks
     resources :comments
     resources :documents
     resources :images
@@ -63,6 +65,12 @@ Rails.application.routes.draw do
 
   resources :organizations, :path => "org", :only => [:index, :show, :edit, :update]
 
+  resources :tasks,       :only => [:create, :update, :edit, :new, :destroy] do
+    member do
+      patch 'fire_workflow_event'
+    end
+  end
+  
   resources :comments,    :only => [:create, :update, :edit, :new, :destroy]
   resources :documents,   :only => [:create, :update, :edit, :new, :destroy] do
     member do
@@ -121,9 +129,6 @@ Rails.application.routes.draw do
       resources :comments,    :only => [:create, :update, :edit, :new, :destroy]
       collection do
         get   'filter'
-      end
-      member do
-        patch 'update_status'
       end
     end
     # Add user organization filters
