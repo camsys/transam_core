@@ -11,6 +11,8 @@ class AssetEvent < ActiveRecord::Base
   # Include the fiscal year mixin
   include FiscalYear
 
+  include FullTextSearchable
+
   #------------------------------------------------------------------------------
   # Overrides
   #------------------------------------------------------------------------------
@@ -44,6 +46,35 @@ class AssetEvent < ActiveRecord::Base
     :event_date, 
     :comments
   ]
+
+    # List of fields which can be searched using a simple text-based search
+  SEARCHABLE_FIELDS = [
+    'object_key',
+    'associated_asset_tag'
+  ]
+
+  def associated_asset_tag
+    asset.asset_tag
+  end
+
+  def write_to_full_text_search_indexer(object_key)
+
+    binding.pry
+
+    text_blob = ""
+    separator = " "
+    searchable_fields.each { |searchable_field|
+      text_blob += self[searchable_field].to_s
+      text_blob += separator
+    }
+
+    FullTextSearchIndex.find_or_create_by(object_key: object_key) do |full_text_search_index|
+      full_text_search_index.search_text = text_blob
+    end
+
+    x = 1
+    
+  end
   
   #------------------------------------------------------------------------------
   #
@@ -85,7 +116,11 @@ class AssetEvent < ActiveRecord::Base
     # get a typed version of the asset event and return its value
     evt = is_typed? ? self : AssetEvent.as_typed_event(self)
     return evt.get_update unless evt.nil?    
-  end  
+  end
+
+  def searchable_fields
+    SEARCHABLE_FIELDS
+  end
 
 
   #------------------------------------------------------------------------------
