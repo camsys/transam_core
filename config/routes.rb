@@ -20,6 +20,10 @@ Rails.application.routes.draw do
   resources :vendors
   resources :manufacturers, :only => [:index]
 
+  # Forms are a top-level namespace. All concrete forms must be nested within this
+  # controller so they can be protected by the RBAC model
+  resources :forms, :only => [:index, :show]
+
   resources :inventory, :controller => 'assets' do
       collection do
         get 'filter'
@@ -70,7 +74,7 @@ Rails.application.routes.draw do
       patch 'fire_workflow_event'
     end
   end
-  
+
   resources :comments,    :only => [:create, :update, :edit, :new, :destroy]
   resources :documents,   :only => [:create, :update, :edit, :new, :destroy] do
     member do

@@ -15,6 +15,7 @@
       = render :partial => 'shared/app_main_nav' rescue nil
 
       = render 'shared/policy_nav'
+      = render 'shared/forms_nav'
       = render 'shared/reports_nav'
 
     - if current_user.has_role? :admin

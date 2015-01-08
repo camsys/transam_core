@@ -1,0 +1,20 @@
+<div class="row">
+	<div class="col-md-12">
+		<table class="table table-hover">
+			<thead>
+				<th>Report</th>
+				<th>Description</th>
+			</thead>
+			<tbody>
+				<% @reports.each do |report| %>
+				<tr data-action-path = '<%= report_path(report.id) %>'>
+					<td><%= report.name %></td>
+					<td><%= report.description %></td>
+				</tr>
+				<% end %>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<%= render 'shared/datatable_javascript' %>

@@ -1,0 +1,15 @@
+.row
+	- @forms.each do |form|
+		= action_thumbnail_tag({:class => 'col-md-3', :icon => "fa fa-file-type-o", :title => form.name, :path => form_path(form) }) do
+			%p
+				= form.description.html_safe
+
+:javascript
+
+	$(document).ready(function() {
+		transam.make_same_height('.thumbnail-content');
+
+		$(window).resize(function() {
+			transam.make_same_height('.thumbnail-content');
+		});
+	});
