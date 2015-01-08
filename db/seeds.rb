@@ -85,14 +85,6 @@ file_status_types = [
   {:active => 1, :name => 'Reverted',     :description => 'Changes have been undone and assets reverted to their previous state.'}
 ]
 
-task_status_types = [
-  {:active => 1, :name => 'Not Started',  :description => 'Not Started.'},
-  {:active => 1, :name => 'In Progress',  :description => 'In Progress.'},
-  {:active => 1, :name => 'Complete',     :description => 'Complete.'},
-  {:active => 1, :name => 'Halted Pending Input',      :description => 'Halted Pending Input.'},
-  {:active => 1, :name => 'Cancelled',    :description => 'Cancelled.'}
-]
-
 report_types = [
   {:active => 1, :name => 'Inventory Report',     :display_icon_name => "fa fa-bar-chart-o",  :description => 'Inventory Report.'},
   {:active => 1, :name => 'Capital Needs Report', :display_icon_name => "fa fa-usd",          :description => 'Capital Needs Report.'},
@@ -143,7 +135,7 @@ contact_types = [
 
 lookup_tables = %w{asset_event_types condition_types disposition_types cost_calculation_types license_types priority_types
   file_status_types report_types service_status_types
-  task_status_types service_life_calculation_types condition_estimation_types
+  service_life_calculation_types condition_estimation_types
   issue_types web_browser_types replacement_reason_types roles notice_types
   contact_types
   }
