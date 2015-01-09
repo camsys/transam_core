@@ -64,9 +64,7 @@ class SearchesController < OrganizationAwareController
 
     results = KeywordSearchIndex.where(search_criteria)
 
-    binding.pry
-
-    @keywords_search_results = results
+    @keyword_search_results = results
 
     x = 1
 
