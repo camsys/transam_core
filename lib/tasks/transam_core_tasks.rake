@@ -11,22 +11,11 @@ namespace :transam_core do
       Rake::Task[cmd].invoke
     end
   end
-  desc "Prepare the dummy app for rspec and capybara"
-  task :create_sandbox_user => ["app:test:set_sandbox_env", :environment] do
-    User = User.new
-  end
 end
 
 namespace :test do
   desc "Custom dependency to set test environment"
   task :set_test_env do # Note that we don't load the :environment task dependency
     Rails.env = "test"
-  end
-end
-
-namespace :sandbox do
-  desc "Custom dependency to set test environment"
-  task :set_sandbox_env do # Note that we don't load the :environment task dependency
-    Rails.env = "sandbox"
   end
 end
