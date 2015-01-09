@@ -62,11 +62,11 @@ class SearchesController < OrganizationAwareController
       end
     }
 
-    results = FullTextSearchIndex.where(search_criteria)
+    results = KeywordSearchIndex.where(search_criteria)
 
     binding.pry
 
-    @full_text_search_results = results
+    @keywords_search_results = results
 
     x = 1
 

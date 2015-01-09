@@ -98,7 +98,7 @@ Rails.application.routes.draw do
   resources :activity_logs, :only => [:index]
   resources :searches,      :only => [:new, :create] do
     collection do
-      post :full_text_search
+      post :keyword_search
     end
   end
   resources :reports,       :only => [:index, :show] do

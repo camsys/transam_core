@@ -7,7 +7,7 @@
       %th.sorting_disabled
       
   %tbody
-    - @search_results.each do |search_result|
+    - @keyword_search_results.each do |search_result|
       %tr{:data => {:action_path => polymorphic_path(search_result)}}
           = render :partial => "#{search_result.class.name}_search_result_dt_columns", :locals => {:search_result => search_result } rescue nil
                 

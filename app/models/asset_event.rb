@@ -56,25 +56,6 @@ class AssetEvent < ActiveRecord::Base
   def associated_asset_tag
     asset.asset_tag
   end
-
-  def write_to_full_text_search_indexer(object_key)
-
-    binding.pry
-
-    text_blob = ""
-    separator = " "
-    searchable_fields.each { |searchable_field|
-      text_blob += self[searchable_field].to_s
-      text_blob += separator
-    }
-
-    FullTextSearchIndex.find_or_create_by(object_key: object_key) do |full_text_search_index|
-      full_text_search_index.search_text = text_blob
-    end
-
-    x = 1
-    
-  end
   
   #------------------------------------------------------------------------------
   #
