@@ -27,7 +27,7 @@ namespace :transam do
   desc "Updates all updateable attributes.  Can accept a sql fragment to restrict"
   task :update_all, [:sql_frag] => [:environment] do |t, args|
     t_start = Time.now
-    # `rake transam:update_all['organization_id is null']` becomes 
+    # `rake transam:update_all['organization_id is null']` becomes
     # Asset.where("organization_id is null")
     if args[:sql_frag]
       asset_set = Asset.where(args[:sql_frag])
@@ -43,9 +43,9 @@ namespace :transam do
         typed_asset.send(m)
       end
       assets_run += 1
-      puts "#{assets_run} (#{((assets_run / total_num) * 100).to_i}%)"
+      Rails.logger.debug "#{assets_run} (#{((assets_run / total_num) * 100).to_i}%)"
     end
     t_finish = Time.now
-    puts "Completed in #{t_finish - t_start} seconds"
+    Rails.logger.debug "Completed in #{t_finish - t_start} seconds"
   end
 end

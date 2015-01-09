@@ -6,8 +6,8 @@ namespace :transam_core do
   desc "Prepare the dummy app for rspec and capybara"
   task :prepare_rspec => ["app:test:set_test_env", :environment] do
     %w(db:drop db:create db:schema:load db:migrate db:seed).each do |cmd|
-      puts "Running #{cmd} in Core"
-      puts "ENV IS #{Rails.env}"
+      Rails.logger.debug "Running #{cmd} in Core"
+      Rails.logger.debug "ENV IS #{Rails.env}"
       Rake::Task[cmd].invoke
     end
   end
