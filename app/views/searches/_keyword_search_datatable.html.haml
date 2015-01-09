@@ -9,6 +9,6 @@
   %tbody
     - @search_results.each do |search_result|
       %tr{:data => {:action_path => polymorphic_path(search_result)}}
-          = render :partial => "#{search_result.class.name}_dt_columns", :locals => {:search_result => search_result } rescue nil
+          = render :partial => "#{search_result.class.name}_search_result_dt_columns", :locals => {:search_result => search_result } rescue nil
                 
-= render :partial => 'shared/datatable_javascript', :locals => {:id => 'assets_datatable'}
+//= render :partial => 'shared/datatable_javascript', :locals => {:id => 'assets_datatable'}
