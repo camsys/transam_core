@@ -48,9 +48,27 @@ class SearchesController < OrganizationAwareController
 
   def full_text_search
 
+    #testing w "981ECCHHGG58 981ECCD92F8E"
+
     search_text = params["search_text"]
 
-    @full_text_search_results = FullTextSearchIndex.where("search_text like ?", "%#{search_text}%")
+    search_results = []
+
+    search_criteria = "1=2"
+    search_params = {}
+    search_text.split(" ").each {|search_string|
+      if search_string.length > 3
+        search_criteria += " OR search_text like '%#{search_string}%'"
+      end
+    }
+
+    results = FullTextSearchIndex.where(search_criteria)
+
+    binding.pry
+
+    @full_text_search_results = results
+
+    x = 1
 
   end
   
