@@ -46,7 +46,7 @@ class SearchesController < OrganizationAwareController
     end    
   end
 
-  def full_text_search
+  def keyword_search
 
     #testing w "981ECCHHGG58 981ECCD92F8E"
 

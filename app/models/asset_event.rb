@@ -11,7 +11,7 @@ class AssetEvent < ActiveRecord::Base
   # Include the fiscal year mixin
   include FiscalYear
 
-  include FullTextSearchable
+  include KeywordSearchable
 
   #------------------------------------------------------------------------------
   # Overrides

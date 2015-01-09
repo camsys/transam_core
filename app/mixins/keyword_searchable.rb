@@ -6,9 +6,9 @@
 # Mixin that adds a fiscal year methods to a class
 #
 #------------------------------------------------------------------------------
-module FullTextSearchable
+module KeywordSearchable
 
-  def write_to_full_text_search_index
+  def write_to_keyword_search_index
 
     text_blob = ""
     separator = " "
@@ -17,9 +17,15 @@ module FullTextSearchable
       text_blob += separator
     }
 
-    FullTextSearchIndex.find_or_create_by(object_key: object_key) do |full_text_search_index|
-  		full_text_search_index.search_text = text_blob
+    kwsi = KeywordSearchIndex.find_or_create_by(object_key: object_key) do |keyword_search_index|
+  		keyword_search_index.search_text = text_blob
+      keyword_search_index.object_class = self.class.name
 	  end
+
+    kwsi.search_text = text_blob
+    kwsi.object_class = self.class.name
+
+    kwsi.save!
     
   end
 
