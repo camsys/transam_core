@@ -4,6 +4,7 @@ class CreateFullTextSearchIndices < ActiveRecord::Migration
     create_table :full_text_search_indices do |t|
       t.string :object_key
       t.string :object_class
+      t.string :context
       t.text :search_text
 
       t.timestamps
