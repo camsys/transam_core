@@ -1,2 +1,4 @@
-%td.left= search_result.object_key
-%td.left= search_result.search_text
+- asset = Asset.find_by("object_key", search_result.object_key)
+%tr{:data => {:action_path => asset_path(asset)}}
+  %td.left= search_result.object_key
+  %td.left= search_result.search_text
