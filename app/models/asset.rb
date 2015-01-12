@@ -296,6 +296,11 @@ class Asset < ActiveRecord::Base
   #
   #------------------------------------------------------------------------------
 
+  # Returns true if the asset has one or more tasks that are open
+  def needs_attention?
+    (tasks.where('state IN (?)', Task.active_states).count > 0)
+  end
+  
   # Returns true if the asset is in service based on the last reported status update
   def in_service?
     service_status_type_id == ServiceStatusType.find_by(:code => 'I')

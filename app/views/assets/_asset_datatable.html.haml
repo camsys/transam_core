@@ -3,13 +3,21 @@
     %tr
       - SystemConfig.transam_module_names.each do |mod|
         = render :partial => "assets/#{mod}_asset_dt_head" rescue nil
-      %th.sorting_disabled
-      
+
+      %th.sorting_disabled.icon-column
+      %th.sorting_disabled.icon-column
+
   %tbody
     - assets.includes(:organization, :asset_subtype).each do |a|
       %tr{:data => {:action_path => inventory_path(a)}}
         - SystemConfig.transam_module_names.each do |mod|
           = render :partial => "assets/#{mod}_asset_dt_columns", :locals => {:a => a } rescue nil
-        %td.center= render :partial => 'assets/asset_info_detail_popup', :locals => {:asset => a}
-                
+
+        %td.center.icon-column
+          = format_as_boolean(a.needs_attention?, 'fa-flag', 'text-warning')
+          = format_as_boolean((a.documents.count > 0), 'fa-files-o')
+          = format_as_boolean((a.comments.count > 0), 'fa-comments')
+        %td.center.icon-column
+          = render :partial => 'assets/asset_info_detail_popup', :locals => {:asset => a}
+
 = render :partial => 'shared/datatable_javascript', :locals => {:id => 'assets_datatable'}

@@ -114,12 +114,15 @@ module TransamFormatHelper
     html.html_safe
   end
 
-  # formats a boolean field using a check if the value is true
-  def format_as_boolean(val)
+  # formats a boolean field using a flag if the value is true
+  def format_as_boolean(val, icon="fa-check", text_class='text-default')
     if val
-      return "<i class='fa fa-check fa-fw'></i>".html_safe
+      return "<i class='fa #{icon} #{text_class}'></i>".html_safe
+    else
+      return "<i class='fa #{icon} #{text_class}' style = 'visibility: hidden;'></i>".html_safe
     end
   end
+
   # formats a boolean field as Yes or No
   def format_as_yes_no(val)
     if val
