@@ -1,4 +1,5 @@
-%td.left= a.organization
+- if @organization_list.count > 1
+  %td.left= a.organization
 %td.left= a.asset_subtype
 %td.left= a.asset_tag
 %td.left= a.description
