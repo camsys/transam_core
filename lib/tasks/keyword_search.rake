@@ -7,7 +7,6 @@ namespace :transam_core do
     Asset.all.each do |asset|
       asset.write_to_keyword_search_index
     end
-    binding.pry
     Comment.all.each do |comment|
       comment.write_to_keyword_search_index
     end
