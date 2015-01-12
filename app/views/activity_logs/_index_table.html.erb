@@ -13,9 +13,9 @@
 				<% @activities.each do |a| %>
 				<tr>
 					<td><%= format_as_date_time(a.activity_time) %></td>
-					<td><%= a.user.name %></td>					
-					<td><%= a.item_type %></td>					
-					<td><%= a.activity %></td>
+					<td><%= a.user.name %></td>
+					<td><%= a.item_type %></td>
+					<td><%= a.activity.html_safe %></td>
 				</tr>
 				<% end %>
 			</tbody>
