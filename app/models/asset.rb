@@ -298,6 +298,11 @@ class Asset < ActiveRecord::Base
   #
   #------------------------------------------------------------------------------
 
+  # Returns true if the asset is in service based on the last reported status update
+  def in_service?
+    service_status_type_id == ServiceStatusType.find_by(:code => 'I')
+  end
+
   # Instantiate an asset event of the appropriate type.
   def build_typed_event(asset_event_type_class)
     # Could also add:  raise ArgumentError 'Asset Must be strongly typed' unless is_typed?
