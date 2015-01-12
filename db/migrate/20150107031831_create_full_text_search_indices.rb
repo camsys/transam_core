@@ -5,6 +5,7 @@ class CreateFullTextSearchIndices < ActiveRecord::Migration
       t.string :object_key
       t.string :object_class
       t.string :context
+      t.text :summary
       t.text :search_text
 
       t.timestamps
