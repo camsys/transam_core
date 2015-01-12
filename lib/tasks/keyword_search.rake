@@ -16,6 +16,12 @@ namespace :transam_core do
     AssetGroup.all.each do |asset_group|
       asset_group.write_to_keyword_search_index
     end
+    #BudgetAmount.all.each do |budget_amount|
+    #  budget_amount.write_to_keyword_search_index
+    #end
+    Comment.all.each do |comment|
+      comment.write_to_keyword_search_index
+    end
   end
 
   desc "Index assets based on searchable fields list"

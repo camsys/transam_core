@@ -16,6 +16,7 @@ class Comment < ActiveRecord::Base
 
   # Include the object key mixin
   include TransamObjectKey
+  include KeywordSearchable
       
   # Callbacks
   after_initialize  :set_defaults
@@ -36,6 +37,12 @@ class Comment < ActiveRecord::Base
     :commentable_type,
     :created_by_id
   ]
+
+  # List of fields which can be searched using a simple text-based search
+  SEARCHABLE_FIELDS = [
+    'object_key',
+    'comment'
+  ]
   
   #------------------------------------------------------------------------------
   #
@@ -45,6 +52,10 @@ class Comment < ActiveRecord::Base
     
   def self.allowable_params
     FORM_PARAMS
+  end
+
+  def searchable_fields
+    SEARCHABLE_FIELDS
   end
     
   #------------------------------------------------------------------------------
