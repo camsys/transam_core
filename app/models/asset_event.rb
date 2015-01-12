@@ -11,8 +11,6 @@ class AssetEvent < ActiveRecord::Base
   # Include the fiscal year mixin
   include FiscalYear
 
-  include KeywordSearchable
-
   #------------------------------------------------------------------------------
   # Overrides
   #------------------------------------------------------------------------------
@@ -45,12 +43,6 @@ class AssetEvent < ActiveRecord::Base
     :asset_type_id, 
     :event_date, 
     :comments
-  ]
-
-    # List of fields which can be searched using a simple text-based search
-  SEARCHABLE_FIELDS = [
-    'object_key',
-    'associated_asset_tag'
   ]
 
   def associated_asset_tag
@@ -98,12 +90,6 @@ class AssetEvent < ActiveRecord::Base
     evt = is_typed? ? self : AssetEvent.as_typed_event(self)
     return evt.get_update unless evt.nil?    
   end
-
-  def searchable_fields
-    SEARCHABLE_FIELDS
-  end
-
-
   #------------------------------------------------------------------------------
   #
   # Traversal Methods
