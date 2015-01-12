@@ -49,6 +49,10 @@ class SearchesController < OrganizationAwareController
   def keyword_search
 
     #testing w "981ECCHHGG58 981ECCD92F8E"
+    # 982596NN025M D1254 
+    #console stuff
+    #results = KeywordSearchIndex.where("search_text like '%D1254%'")
+    #
 
     search_text = params["search_text"]
 
