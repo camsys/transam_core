@@ -96,7 +96,11 @@ Rails.application.routes.draw do
 
   resources :dashboards,    :only => [:index, :show]
   resources :activity_logs, :only => [:index]
-  resources :searches,      :only => [:new, :create]
+  resources :searches,      :only => [:new, :create] do
+    collection do
+      post :keyword_search
+    end
+  end
   resources :reports,       :only => [:index, :show] do
     member do
       get 'load'  # load a report using ajax

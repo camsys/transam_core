@@ -45,6 +45,34 @@ class SearchesController < OrganizationAwareController
       format.html # new.html.erb
     end    
   end
+
+  def keyword_search
+
+    #testing w "981ECCHHGG58 981ECCD92F8E"
+    # 982596NN025M D1254 
+    #console stuff
+    #results = KeywordSearchIndex.where("search_text like '%D1254%'")
+    #
+
+    search_text = params["search_text"]
+
+    search_results = []
+
+    search_criteria = "1=2"
+    search_params = {}
+    search_text.split(" ").each {|search_string|
+      if search_string.length > 3
+        search_criteria += " OR search_text like '%#{search_string}%'"
+      end
+    }
+
+    results = KeywordSearchIndex.where(search_criteria)
+
+    @keyword_search_results = results
+
+    x = 1
+
+  end
   
   protected
   
@@ -78,6 +106,5 @@ class SearchesController < OrganizationAwareController
     end
     
   end
-   
 
 end

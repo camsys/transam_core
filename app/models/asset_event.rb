@@ -44,6 +44,10 @@ class AssetEvent < ActiveRecord::Base
     :event_date, 
     :comments
   ]
+
+  def associated_asset_tag
+    asset.asset_tag
+  end
   
   #------------------------------------------------------------------------------
   #
@@ -85,9 +89,7 @@ class AssetEvent < ActiveRecord::Base
     # get a typed version of the asset event and return its value
     evt = is_typed? ? self : AssetEvent.as_typed_event(self)
     return evt.get_update unless evt.nil?    
-  end  
-
-
+  end
   #------------------------------------------------------------------------------
   #
   # Traversal Methods

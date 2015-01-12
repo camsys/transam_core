@@ -8,12 +8,11 @@
 #------------------------------------------------------------------------------
 class Asset < ActiveRecord::Base
 
-  # Include the object key mixin
+  # Mixins
   include TransamObjectKey
-  # Include the numeric sanitizers mixin
   include TransamNumericSanitizers
-  # Include the fiscal year mixin
   include FiscalYear
+  include KeywordSearchable
 
   OBJECT_CACHE_EXPIRE_SECONDS = Rails.application.config.object_cache_expire_seconds
 
@@ -157,7 +156,6 @@ class Asset < ActiveRecord::Base
     'asset_tag',
     'manufacturer_model',
     'external_id'
-
   ]
 
   # List of fields that should be nilled when a copy is made

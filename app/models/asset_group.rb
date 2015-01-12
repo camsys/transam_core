@@ -52,6 +52,14 @@ class AssetGroup < ActiveRecord::Base
     :active
   ]
 
+  # # List of fields which can be searched using a simple text-based search
+  # SEARCHABLE_FIELDS = [
+  #   'object_key',
+  #   'name',
+  #   'code',
+  #   'description'
+  # ]
+
   #------------------------------------------------------------------------------
   #
   # Class Methods
@@ -70,6 +78,10 @@ class AssetGroup < ActiveRecord::Base
 
   def to_s
     name
+  end
+
+  def searchable_fields
+    SEARCHABLE_FIELDS
   end
 
 end
