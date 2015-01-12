@@ -13,6 +13,9 @@ namespace :transam_core do
     ActivityLog.all.each do |activity_log|
       activity_log.write_to_keyword_search_index
     end
+    AssetGroup.all.each do |asset_group|
+      asset_group.write_to_keyword_search_index
+    end
   end
 
   desc "Index assets based on searchable fields list"
