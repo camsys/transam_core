@@ -11,4 +11,4 @@ Rails.application.config.object_cache_expire_seconds = 300 # seconds to keep obj
 Rails.application.config.max_rows_returned = 500          # maximum number of rows to return from a database query
 
 Rails.application.config.max_upload_file_size = 4          # maximum file size able to be uploaded
-Rails.application.config.time_epoch = DateTime.new(1900,1,1)      # time epoch
+Rails.application.config.epoch = Date.new(1900,1,1)      # epoch

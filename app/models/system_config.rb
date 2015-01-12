@@ -28,8 +28,8 @@ class SystemConfig < ActiveRecord::Base
   validates :max_rows_returned,           :presence => true
   validates :data_file_path,              :presence => true
 
-  def time_epoch
-    Rails.application.config.time_epoch
+  def epoch
+    Rails.application.config.epoch
   end
 
   def geocoder_bounds
