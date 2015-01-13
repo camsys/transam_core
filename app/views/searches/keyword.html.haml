@@ -1,0 +1,10 @@
+.col-md-8.col-md-offset-2
+  %fieldset
+    %legend.panel-legend= "Search Results: #{@keyword_search_results.count} found."
+
+    - if @keyword_search_results.empty?
+      %p Nothing found
+    - else
+      %table.table.table-condensed.table-hover
+        - @keyword_search_results.each do |search_result|
+          = render :partial => 'keyword_search_result_detail', :locals => {:search_result => search_result }

@@ -152,10 +152,17 @@ class Asset < ActiveRecord::Base
 
   # List of fields which can be searched using a simple text-based search
   SEARCHABLE_FIELDS = [
-    'object_key',
-    'asset_tag',
-    'manufacturer_model',
-    'external_id'
+    :object_key,
+    :asset_tag,
+    :external_id,
+
+    :asset_type,
+    :asset_subtype,
+
+    :vendor,
+    :manufacturer,
+    :manufacturer_model,
+    :manufacture_year
   ]
 
   # List of fields that should be nilled when a copy is made
@@ -300,7 +307,7 @@ class Asset < ActiveRecord::Base
   def needs_attention?
     (tasks.where('state IN (?)', Task.active_states).count > 0)
   end
-  
+
   # Returns true if the asset is in service based on the last reported status update
   def in_service?
     service_status_type_id == ServiceStatusType.find_by(:code => 'I')

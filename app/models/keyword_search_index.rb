@@ -4,8 +4,14 @@ class KeywordSearchIndex < ActiveRecord::Base
   validates     :object_class,	:presence => true
   validates     :search_text,	:presence => true
 
+
 	def to_s
-		self.name.to_s
+		name
+	end
+
+	# Return the Rails path to this object
+	def name
+		"#{object_class.underscore}_path(:id => '#{object_key}')"
 	end
 
 end

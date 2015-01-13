@@ -1,0 +1,10 @@
+%tr
+  %td
+    .row
+      .col-md-12
+        %h4.pull-left.media-heading
+          = link_to "#{search_result.object_class}: #{search_result.summary}"
+        %p.text-muted.pull-right
+          = search_result.object_key
+      .col-md-12
+        %p= search_result.search_text

@@ -10,7 +10,7 @@ class Vendor < ActiveRecord::Base
   # Include the object key mixin
   include TransamObjectKey
   include KeywordSearchable
-  
+
   #------------------------------------------------------------------------------
   # Callbacks
   #------------------------------------------------------------------------------
@@ -52,7 +52,6 @@ class Vendor < ActiveRecord::Base
   SEARCHABLE_FIELDS = [
     :object_key,
     :name,
-    :description,
     :address1,
     :address2,
     :city,
@@ -84,7 +83,7 @@ class Vendor < ActiveRecord::Base
   end
 
   def searchable_fields
-
+    SEARCHABLE_FIELDS
   end
 
   #------------------------------------------------------------------------------

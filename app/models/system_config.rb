@@ -28,10 +28,18 @@ class SystemConfig < ActiveRecord::Base
   validates :max_rows_returned,           :presence => true
   validates :data_file_path,              :presence => true
 
+  # Returns the first day of the TransAM epoch -- the earliest date which TransAM
+  # assumes are valid for assets
   def epoch
     Rails.application.config.epoch
   end
 
+  # The max number of rows to be returned from a query
+  def max_rows_returned
+    Rails.application.config.max_rows_returned
+  end
+
+  
   def geocoder_bounds
     [[min_lat, min_lon], [max_lat, max_lon]]
   end

@@ -19,13 +19,16 @@ module KeywordSearchable
 
     kwsi = KeywordSearchIndex.find_or_create_by(object_key: object_key) do |keyword_search_index|
   		keyword_search_index.search_text = text_blob
-      keyword_search_index.name = "Index for " + object_key
       keyword_search_index.object_class = self.class.name
-      keyword_search_index.search_text = text_blob   
+      if respond_to? :description
+        keyword_search_index.summary = self.description
+      else
+        keyword_search_index.summary = self.name
+      end
 	  end
 
-    kwsi.save!
-    
+    kwsi.save
+
   end
 
 end

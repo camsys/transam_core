@@ -1,5 +1,7 @@
 class SearchesController < OrganizationAwareController
 
+  add_breadcrumb "Home", :root_path
+
   ASSET_SEARCH_TYPE             = '1'
   CAPITAL_PLAN_SEARCH_TYPE      = '2'
   ORGANIZATION_SEARCH_TYPE      = '3'
@@ -7,9 +9,14 @@ class SearchesController < OrganizationAwareController
   FUNDING_SOURCE_SEARCH_TYPE    = '5'
   FUNDING_LINE_ITEM_SEARCH_TYPE = '6'
 
+  # Session Variables
+  INDEX_KEY_LIST_VAR        = "search_key_list_cache_var"
+  
+  MAX_ROWS_RETURNED = SystemConfig.instance.max_rows_returned
+
   # Set the view variables form the params @search_type, @searcher_klass
   before_filter :set_view_vars,     :only => [:create, :new]
-                  
+
   def create
 
     @searcher = @searcher_klass.constantize.new(params[:searcher])
@@ -18,18 +25,18 @@ class SearchesController < OrganizationAwareController
 
     add_breadcrumb "Search"
     add_breadcrumb "Results"
-            
+
     # Cache the result set so the use can page through them
     unless @searcher.cache_variable_name.blank?
       cache_list(@data, @searcher.cache_variable_name)
     end
-              
+
     respond_to do |format|
       format.html { render 'new' }
       format.js   { render 'new' }
       format.json { render :json => @data }
     end
-    
+
   end
 
   # Render the inventory search form
@@ -40,45 +47,48 @@ class SearchesController < OrganizationAwareController
     @data = []
 
     add_breadcrumb "Search"
-          
+
     respond_to do |format|
       format.html # new.html.erb
-    end    
+    end
   end
 
-  def keyword_search
+  # Action for performiong full text search unsing the search text index
+  def keyword
+
+    @search_text = params["search_text"]
+
+    add_breadcrumb "Keyword Search: '#{@search_text}'"
 
     #testing w "981ECCHHGG58 981ECCD92F8E"
-    # 982596NN025M D1254 
+    # 982596NN025M D1254
     #console stuff
     #results = KeywordSearchIndex.where("search_text like '%D1254%'")
     #
 
-    search_text = params["search_text"]
-
-    search_results = []
-
     search_criteria = ""
-    search_text.split(" ").each_with_index {|search_string, search_string_index|
+    @search_text.split(" ").each_with_index {|search_string, search_string_index|
       if search_string.length > 3
         if search_criteria.length == 0
-          search_criteria =  " search_text like '%#{search_string}%'" 
+          search_criteria =  " search_text like '%#{search_string}%'"
         else
           search_criteria += " OR search_text like '%#{search_string}%'"
         end
       end
     }
 
-    results = KeywordSearchIndex.where(search_criteria)
+    @keyword_search_results = KeywordSearchIndex.where(search_criteria).limit(MAX_ROWS_RETURNED)
+    cache_list(@keyword_search_results, INDEX_KEY_LIST_VAR)
 
-    @keyword_search_results = results
-
-    x = 1
+    respond_to do |format|
+      format.html
+      format.json { render :json => @keyword_search_results }
+    end
 
   end
-  
+
   protected
-  
+
   def set_view_vars
 
     add_breadcrumb "Home", root_path
@@ -105,9 +115,9 @@ class SearchesController < OrganizationAwareController
     else
       notify_user(:alert, "Something went wrong. Can't determine type of search to perform.")
       redirect_to root_path
-      return     
+      return
     end
-    
+
   end
 
 end
