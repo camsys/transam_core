@@ -2,6 +2,7 @@ class FixFullTextSearchIndices < ActiveRecord::Migration
 
   def up
     change_table :keyword_search_indices do |t|
+      t.string :name, :limit => 254, :null => false
       t.remove :object_key
       t.string :object_key ,:limit => 12 ,:null => :false
       t.remove :object_class
@@ -16,7 +17,9 @@ class FixFullTextSearchIndices < ActiveRecord::Migration
   end
   
   def down
-    
+    change_table :keyword_search_indices do |t|
+      t.remove :name
+    end
   end
 
 end
