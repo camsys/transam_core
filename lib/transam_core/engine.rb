@@ -12,7 +12,6 @@ require 'high_voltage'
 require 'haml-rails'
 require 'simple_form'
 require 'carrierwave'
-require 'seedbank'
 
 module TransamCore
   class Engine < ::Rails::Engine
