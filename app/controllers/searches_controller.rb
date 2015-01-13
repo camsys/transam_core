@@ -58,11 +58,14 @@ class SearchesController < OrganizationAwareController
 
     search_results = []
 
-    search_criteria = "1=2"
-    search_params = {}
-    search_text.split(" ").each {|search_string|
+    search_criteria = ""
+    search_text.split(" ").each_with_index {|search_string, search_string_index|
       if search_string.length > 3
-        search_criteria += " OR search_text like '%#{search_string}%'"
+        if search_criteria.length == 0
+          search_criteria =  " search_text like '%#{search_string}%'" 
+        else
+          search_criteria += " OR search_text like '%#{search_string}%'"
+        end
       end
     }
 
