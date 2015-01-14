@@ -51,9 +51,6 @@ class User < ActiveRecord::Base
   # Every user can have 0 or more organization filters they have created
   has_many   :organization_filters,   :class_name => 'UserOrganizationFilter', :dependent => :destroy
 
-  # A special role like "TransAM Technical Contact". Since a user could have many, can't use belongs_to
-  has_and_belongs_to_many :contact_types
-
   #------------------------------------------------------------------------------
   # Validations
   #------------------------------------------------------------------------------
@@ -157,6 +154,17 @@ class User < ActiveRecord::Base
     "#{first_name} #{last_name}"
   end
 
+  # This method defines required fields for any model which is geocodable
+  def full_address
+    elems = []
+    elems << address1 unless address1.blank?
+    elems << address2 unless address2.blank?
+    elems << city unless city.blank?
+    elems << state unless state.blank?
+    elems << zip unless zip.blank?
+    elems.compact.join(', ')
+  end
+  
   #------------------------------------------------------------------------------
   #
   # Protected Methods
