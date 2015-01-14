@@ -1,15 +1,15 @@
 %ul.nav.nav-tabs
   %li
     %a{:href => "#contact", :data =>{:toggle => 'tab'}}
-      = "Company"
+      Corporate
   -if @user.eql? current_user or current_user.has_role? :admin
     %li
       %a{:href => "#settings", :data =>{:toggle => 'tab'}}
-        = "System Settings"
+        System Settings
   - if current_user.has_role? :admin
     %li
       %a{:href => "#activity", :data =>{:toggle => 'tab'}}
-        = "Activity"
+        Activity
 .tab-content
   .tab-pane.fade#contact
     .tab-content
@@ -22,6 +22,3 @@
     .tab-pane.fade#activity
       .tab-content
         = render 'activity'
-        
-
-

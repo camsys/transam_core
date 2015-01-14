@@ -4,13 +4,6 @@
 .row
   .col-xs-12
     = format_field("Primary Phone", format_as_phone_number(user.phone) )
-    = format_field("External ID", user.external_id )
-    - if current_user.has_role? :admin
-      = format_field("Roles", format_as_list(user.roles) )
-    - unless user.contact_types.empty?
-      = format_field("Contact Types", format_as_list(user.contact_types))
-    = format_field("Address", user.address1) if user.address1
-    = format_field("", user.address2) if user.address2
-    = format_field("City", user.city) if user.city
-    = format_field("State", user.state) if user.state
-    = format_field("ZIP Code", user.zip) if user.zip
+    = format_field("External ID", user.external_id ) unless user.external_id.blank?
+    = format_field("Roles", format_as_list(user.roles) )
+    = format_field("Address", format_as_address(user)) unless user.full_address.blank?

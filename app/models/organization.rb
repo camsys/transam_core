@@ -110,6 +110,21 @@ class Organization < ActiveRecord::Base
   #
   #------------------------------------------------------------------------------
 
+  # Returns the user with the assigned role :technical_contact
+  def technical_contact
+    usrs = users_with_role :technical_contact
+    if usrs.empty?
+      nil
+    else
+      usrs.first
+    end
+  end
+  
+  # Returns the users in the organiztion with the assigned role
+  def users_with_role role_name
+    users.with_role role_name
+  end
+
   # Returns a hash of asset-type_ids and the counts per non-zero type
   def asset_type_counts
     Asset.where(:organization_id => id).group(:asset_type_id).count
