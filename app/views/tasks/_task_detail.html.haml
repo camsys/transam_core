@@ -45,8 +45,14 @@
 
   .panel-footer.clearfix
     %span.pull-right.text-muted
+      .btn-group{:style => 'margin-left: 5px;'}
+        = link_to task_path(task), :class => "btn btn-success btn-xs" do
+          %i.fa.fa-fw.fa-plus
+          Open
+
       %i.fa.fa-clock-o
       = " due #{format_as_date_time_distance(task.complete_by)} from now"
+
     - if task.taskable
       %span.pull-left
         = link_to eval("#{task.taskable.class.name.underscore}_path(:id => '#{task.taskable.object_key}')") do
