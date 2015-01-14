@@ -131,7 +131,7 @@ class TasksController < NestedResourceController
 
     @task = Task.new
     @task.user = current_user
-    @task.assigned_to = User.find_by_object_key(params[:assigned_to]) unless params[:assigned_to].nil?
+    @task.assigned_to_user = User.find_by_object_key(params[:assigned_to]) unless params[:assigned_to].nil?
     @task.priority_type = PriorityType.default
 
     respond_to do |format|
