@@ -1,16 +1,7 @@
 .row
-  .col-md-12
-    %table.table.table-hover
-      %thead
-        %th Priority
-        %th Subject
-        %th From
-        %th Due
-      %tbody
-        - @tasks.each do |t|
-          %tr{:data => {:action_path => user_task_path(current_user, t)}}
-            %td= t.priority_type.name
-            %td= t.subject
-            %td= t.from_user.name
-            %td= format_as_date_time_distance(t.complete_by)
-        
+  .col-md-4
+    = render :partial => 'task_list_swimlane', :locals => {:title => "My Tasks", :tasks => tasks.where('assigned_to_user_id = ?', current_user.id) }
+  .col-md-4
+    = render :partial => 'task_list_swimlane', :locals => {:title => "Assigned Tasks", :tasks => tasks.where('assigned_to_user_id <> ? AND assigned_to_user_id IS NOT NULL', current_user.id) }
+  .col-md-4
+    = render :partial => 'task_list_swimlane', :locals => {:title => "Unassigned Tasks", :tasks => tasks.where('assigned_to_user_id IS NULL') }

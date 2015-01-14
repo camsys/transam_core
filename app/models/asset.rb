@@ -303,6 +303,11 @@ class Asset < ActiveRecord::Base
   #
   #------------------------------------------------------------------------------
 
+  # Override to_s to return a reasonable default
+  def to_s
+    "#{asset_subtype.name}: #{asset_tag}"
+  end
+
   # Returns true if the asset has one or more tasks that are open
   def needs_attention?
     (tasks.where('state IN (?)', Task.active_states).count > 0)

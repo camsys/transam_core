@@ -69,9 +69,11 @@ Rails.application.routes.draw do
 
   resources :organizations, :path => "org", :only => [:index, :show, :edit, :update]
 
-  resources :tasks,       :only => [:create, :update, :edit, :new, :destroy] do
+  resources :tasks,       :only => [:index, :show, :create, :update, :edit, :new, :destroy] do
+    resources :comments
     member do
-      patch 'fire_workflow_event'
+      get 'fire_workflow_event'
+      get 'change_owner'
     end
   end
 
@@ -89,10 +91,6 @@ Rails.application.routes.draw do
 
   resources :asset_groups
   resources :general_ledger_accounts
-
-  resources :tasks do
-    resources :comments
-  end
 
   resources :dashboards,    :only => [:index, :show]
   resources :activity_logs, :only => [:index]

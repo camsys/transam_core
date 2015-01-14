@@ -1,0 +1,54 @@
+.panel{:id => "#{task.object_key}_task_panel", :class => bootstrap_class_priority_type(task.priority_type)}
+  .panel-heading
+    %span.pull-right
+      .btn-group{:style => 'margin-left: 5px;'}
+        %button.btn.btn-default.btn-xs.dropdown-toggle{"data-toggle" => "dropdown", :aria_expanded => "false"}
+          = task.state.titleize
+          %span.caret
+        %ul.dropdown-menu{:role => "menu"}
+          %li
+            - task.allowable_events.each do |evt|
+              = link_to fire_workflow_event_task_path(task, :event => evt) do
+                %i.fa.fa-fw{:class => get_workflow_event_icon(evt)}
+                = "#{evt.titleize} this task"
+          %li.divider
+          %li
+            = link_to task_path(task), :method => :delete, :data => {:confirm => "Are you sure you want to remove this task? The action can't be undone."} do
+              %i.fa.fa-trash-o.fa-fw
+              = " Remove this task"
+      .btn-group{:style => 'margin-left: 5px;'}
+        %button.btn.btn-default.btn-xs.dropdown-toggle{"data-toggle" => "dropdown", :aria_expanded => "false"}
+          - if task.assigned_to_user.nil?
+            Assign
+          - else
+            = task.assigned_to_user
+          %span.caret
+        %ul.dropdown-menu{:role => "menu"}
+          %li
+            - @organization.users.each do |usr|
+              = link_to change_owner_task_path(task, :user => usr.object_key) do
+                %i.fa.fa-fw.fa-user
+                = usr
+          - if task.assigned_to_user
+            %li.divider
+            %li
+              = link_to change_owner_task_path(task, :user => "") do
+                %i.fa.fa-fw.fa-minus-square-o
+                Unassign
+
+    %i.fa.fa-lg.fa-caret-right.panel-toggle{:style => 'font-size:1.25em;margin-right:5px;', :data => {:toggle => "collapse", :target => "##{task.object_key}_panel_body"}}
+    = task.subject.upcase
+
+
+  .panel-body.collapse{:id => "#{task.object_key}_panel_body"}
+    %p= task.body.html_safe
+
+  .panel-footer.clearfix
+    %span.pull-right.text-muted
+      %i.fa.fa-clock-o
+      = " due #{format_as_date_time_distance(task.complete_by)} from now"
+    - if task.taskable
+      %span.pull-left
+        = link_to eval("#{task.taskable.class.name.underscore}_path(:id => '#{task.taskable.object_key}')") do
+          %i.fa.fa-fw.fa-link
+          = task.taskable

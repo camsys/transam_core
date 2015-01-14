@@ -1,0 +1,9 @@
+.panel.swimlane.panel-default
+  .panel-heading.swimlane-heading
+    %span.badge.pull-right= tasks.count
+    %h3.panel-title
+      %i.fa.fa-calendar
+      = title
+  .panel-body.swimlane-container
+    - tasks.each do |task|
+      = render :partial => "task_detail", locals: {:task => task}

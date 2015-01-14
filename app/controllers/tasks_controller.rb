@@ -3,7 +3,7 @@ class TasksController < NestedResourceController
   add_breadcrumb "Home", :root_path
 
   before_action :set_view_vars, :only => [:index, :filter]
-  before_action :set_task, :only => [:show, :edit, :update, :destroy, :fire_workflow_event]
+  before_action :set_task, :only => [:show, :edit, :update, :destroy, :fire_workflow_event, :change_owner]
   before_filter :reformat_date_field, :only => [:create, :update]
 
   # Ajax callback returning a list of tasks as JSON calendar events
@@ -75,12 +75,27 @@ class TasksController < NestedResourceController
 
   end
 
+  def change_owner
+
+    user = User.find_by(:object_key => params[:user])
+    @task.assigned_to_user = user
+    @task.save
+    if user.nil?
+      notify_user(:notice, "Task is no longer assigned to anyone.")
+    else
+      notify_user(:notice, "Task is now assigned to #{user}")
+    end
+
+    redirect_to :back
+
+  end
+
   def index
 
     add_breadcrumb "My Tasks", tasks_path
 
-    # Select tasks for this user or ones that are for the agency as a whole
-    @tasks = Task.where("organization_id = ? AND state IN (?) AND (assigned_to_user_id IS NULL OR assigned_to_user_id = ?)", @organization.id, @states, current_user.id).order("complete_by")
+    # Select tasks for this organization
+    @tasks = Task.where("organization_id = ? AND state IN (?)", @organization.id, @states).order("complete_by")
 
     respond_to do |format|
       format.html # index.html.erb

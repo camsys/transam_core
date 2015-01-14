@@ -59,6 +59,30 @@ module TransamHelper
     icon
   end
 
+  # Returns the correct icon for a workflow asset
+  def get_workflow_event_icon(event_name)
+
+    if event_name == 'retract'
+      'fa-eject'
+    elsif event_name == 'transmit'
+      'fa-share'
+    elsif event_name == 'accept'
+      'fa-check-square-o'
+    elsif event_name == 'start'
+      'fa-play'
+    elsif event_name == 'complete'
+      'fa-check-square'
+    elsif event_name == 'cancel'
+      'fa-stop'
+    elsif event_name == 're_start'
+      'fa-play'
+    elsif event_name == 'halt'
+      'fa-pause'
+    else
+      ''
+    end
+  end
+
   def bootstrap_class_for flash_type
     case flash_type
       when :success
@@ -71,6 +95,19 @@ module TransamHelper
         "alert-info alert-block"
       else
         flash_type.to_s
+    end
+  end
+
+  def bootstrap_class_priority_type priority_type
+    case priority_type.id
+    when 1
+      "panel-default"
+    when 2
+      "panel-info"
+    when 3
+      "panel-warning"
+    else
+      ""
     end
   end
 
