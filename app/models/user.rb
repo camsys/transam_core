@@ -176,6 +176,8 @@ class User < ActiveRecord::Base
   def set_defaults
     self.timezone ||= 'Eastern Time (US & Canada)'
     self.state ||= SystemConfig.instance.default_state_code
+    self.num_table_rows ||= 10
+    self.notify_via_email ||= false
   end
 
   def clean_habtm_relationships
