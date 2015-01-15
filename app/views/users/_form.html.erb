@@ -20,7 +20,7 @@
 			      <%= f.input :city %>
 		      </div>
 			    <div class="col-sm-3">
-			      <%= f.input :state, :as => :select, :collection => Country['US'].states, :include_blank => false, :selected => "PA" %>
+			      <%= f.input :state, :as => :select, :collection => Country['US'].states, :include_blank => false %>
 		      </div>
 			    <div class="col-sm-3">
 			      <%= f.input :zip %>
@@ -34,10 +34,9 @@
 		</div>
 		<div class="col-md-3">
 			<%= dialog_tag("Info", {:icon => "fa fa-question-circle", :class => "form_part"}) do %>
-				
+
 			<% end %>
 		</div>
 
 	<% end %>
 </div>
-
