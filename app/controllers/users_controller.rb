@@ -3,12 +3,12 @@ class UsersController < OrganizationAwareController
   add_breadcrumb "Home",  :root_path
   add_breadcrumb "Users", :users_path
 
-  before_action :set_user, :only => [:show, :edit, :settings, :update, :destroy, :set_current_org, :change_password, :update_password, :profile_photo]  
+  before_action :set_user, :only => [:show, :edit, :settings, :update, :destroy, :set_current_org, :change_password, :update_password, :profile_photo]
   before_filter :check_for_cancel, :only => [:create, :update, :update_password]
-  
+
   INDEX_KEY_LIST_VAR    = "user_key_list_cache_var"
   SESSION_VIEW_TYPE_VAR = 'users_subnav_view_type'
-  
+
   # User has selected an alternative org to view. This method sets a session variable
   # which is used by OrganizationAwareController to set the @organization variable
   # for subsequent views.
@@ -17,26 +17,26 @@ class UsersController < OrganizationAwareController
     if org.nil?
       notify_user(:alert, "Record not found!")
       redirect_to :back
-      return      
+      return
     end
     # Set the user's selected org
     set_selected_organization(org)
-    
+
     notify_user(:notice, "You are now viewing #{org.name}")
     # send the user back to the view they were looking at. This might
-    # cause another redirect if the view is not associated with the 
+    # cause another redirect if the view is not associated with the
     # newly selected organization
     redirect_to :back
-    
+
   end
   # GET /users
   # GET /users.json
   def index
-    
+
     # Start to set up the query
     conditions  = []
     values      = []
-        
+
     # See if we got an organization id
     @organization_id = params[:organization_id]
     if @organization_id.present?
@@ -45,18 +45,18 @@ class UsersController < OrganizationAwareController
       values << @organization_id
     else
       conditions << 'organization_id IN (?)'
-      values << @organization_list      
+      values << @organization_list
     end
 
     # See if we got a search string
     unless params[:search_text].blank?
       @search_text = params[:search_text]
       @search_param = params[:search_param]
-      
+
       # get the list of searchable fields from the model class
       searchable_fields = User.new.searchable_fields
       # create an OR query for each field
-      query_str = []    
+      query_str = []
       first = true
       # parameterize the search based on the selected search parameter
       search_value = get_search_value(@search_text, @search_param)
@@ -68,7 +68,7 @@ class UsersController < OrganizationAwareController
         else
           query_str << ' OR '
         end
-      
+
         query_str << field
         query_str << ' LIKE ? '
         # add the value in for this sub clause
@@ -76,11 +76,11 @@ class UsersController < OrganizationAwareController
       end
       query_str << ')' unless searchable_fields.empty?
 
-      conditions << query_str.join 
+      conditions << query_str.join
     end
     puts conditions.inspect
     puts values.inspect
-    
+
     # Get the Users but check to see if a role was selected
     @role = params[:role]
     if @role.blank?
@@ -88,7 +88,7 @@ class UsersController < OrganizationAwareController
     else
       @users = User.with_role(@role).where(conditions.join(' AND '), *values).order(:organization_id, :last_name)
     end
-    
+
     # cache the set of object keys in case we need them later
     cache_list(@users, INDEX_KEY_LIST_VAR)
 
@@ -105,7 +105,7 @@ class UsersController < OrganizationAwareController
   # GET /users/1.json
   def show
 
-    add_breadcrumb @user.name  
+    add_breadcrumb @user.name
 
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
@@ -114,18 +114,18 @@ class UsersController < OrganizationAwareController
       redirect_to users_url
       return
     end
- 
+
     if @user.id == current_user.id
       @page_title = "My Settings"
     else
       @page_title = "#{@user.name}: Settings"
     end
-   
+
     # get the @prev_record_path and @next_record_path view vars
     get_next_and_prev_object_keys(@user, INDEX_KEY_LIST_VAR)
     @prev_record_path = @prev_record_key.nil? ? "#" : user_path(@prev_record_key)
     @next_record_path = @next_record_key.nil? ? "#" : user_path(@next_record_key)
-    
+
     respond_to do |format|
       format.html # show.html.erb
       format.json { render :json => @user }
@@ -151,8 +151,8 @@ class UsersController < OrganizationAwareController
   # GET /users/1/edit
   def edit
 
-    add_user_breadcrumb
-    add_breadcrumb 'Update' 
+    add_user_breadcrumb('Profile')
+    add_breadcrumb 'Update'
 
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
@@ -166,11 +166,11 @@ class UsersController < OrganizationAwareController
 
   # GET /users/1/edit
   def change_password
-    add_user_breadcrumb
+    add_user_breadcrumb('Settings')
+    add_breadcrumb 'Change Password'
 
-    add_breadcrumb 'Change Password' 
     @page_title = "Change Password"
-    
+
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
     if @user.nil?
@@ -182,8 +182,8 @@ class UsersController < OrganizationAwareController
   end
 
   def settings
-    add_user_breadcrumb
-    add_breadcrumb 'Settings' 
+    add_user_breadcrumb('Settings')
+    add_breadcrumb 'Update'
 
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
@@ -224,12 +224,8 @@ class UsersController < OrganizationAwareController
       return
     end
 
-    if @user.id == current_user.id
-      add_breadcrumb "My Settings", user_path(@user)
-    else
-      add_breadcrumb @user.name, user_path(@user)
-    end
-    add_breadcrumb 'Update' 
+    add_user_breadcrumb('Profile')
+    add_breadcrumb 'Update'
 
     respond_to do |format|
       if @user.update_attributes(form_params)
@@ -242,7 +238,7 @@ class UsersController < OrganizationAwareController
       end
     end
   end
-  
+
   def update_password
 
     @page_title = "Change Password"
@@ -268,7 +264,7 @@ class UsersController < OrganizationAwareController
       end
     end
   end
-  
+
 
   def destroy
 
@@ -288,10 +284,10 @@ class UsersController < OrganizationAwareController
       format.json { head :no_content }
     end
   end
-  
+
   def profile_photo
-    add_user_breadcrumb
-    add_breadcrumb 'Profile Photo' 
+    add_user_breadcrumb('Profile')
+    add_breadcrumb 'Profile Photo'
   end
   #------------------------------------------------------------------------------
   #
@@ -304,20 +300,20 @@ class UsersController < OrganizationAwareController
   def form_params
     params.require(:user).permit(User.allowable_params)
   end
-  
+
   # Callbacks to share common setup or constraints between actions.
   def set_user
     @user = params[:id].nil? ? nil : User.find_by_object_key(params[:id])
   end
 
-  def add_user_breadcrumb
+  def add_user_breadcrumb(page)
     if @user.id == current_user.id
-      add_breadcrumb "My User", user_path(@user)
+      add_breadcrumb "My #{page}", user_path(@user)
     else
       add_breadcrumb @user.name, user_path(@user)
     end
   end
-  
+
   def check_for_cancel
     unless params[:cancel].blank?
       redirect_to user_url(current_user)
