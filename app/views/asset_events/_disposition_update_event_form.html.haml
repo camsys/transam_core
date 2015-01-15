@@ -15,7 +15,7 @@
     .col-sm-6
       = f.input :city
     .col-sm-3
-      = f.input :state, :as => :select, :collection => Country['US'].states, :include_blank => false, :selected => "PA"
+      = f.input :state, :as => :select, :collection => Country['US'].states, :include_blank => false
     .col-sm-3
       = f.input :zip
   = f.input :comments, :input_html => { :rows => 6 }, :placeholder => "Enter any additional comments..."
