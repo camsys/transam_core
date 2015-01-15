@@ -1,5 +1,6 @@
 = format_field("Cost", format_as_currency(@asset.purchase_cost) )
 = format_field("Date", format_as_date(@asset.purchase_date) )
+= format_field("In Service Date", format_as_date(@asset.in_service_date) )
 = format_field("Purchased New", format_as_boolean(@asset.purchased_new) )
 = format_field("Vendor", link_to(@asset.vendor, vendor_path(@asset.vendor))) unless @asset.vendor.nil?
 = format_field("Funding Type", @asset.fta_funding_type)
