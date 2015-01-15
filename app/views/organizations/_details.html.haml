@@ -6,7 +6,7 @@
 .tab-content
   - # Load module specific tab content if they exist
   - SystemConfig.transam_module_names.each do |mod|
-    = render :partial => "organizations/#{mod}_detail_tabs_content" 
+    = render :partial => "organizations/#{mod}_detail_tabs_content" rescue nil
 
 = render 'detail_scripts'
 
