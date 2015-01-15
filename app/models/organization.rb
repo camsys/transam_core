@@ -119,7 +119,7 @@ class Organization < ActiveRecord::Base
       usrs.first
     end
   end
-  
+
   # Returns the users in the organiztion with the assigned role
   def users_with_role role_name
     users.with_role role_name
@@ -198,6 +198,7 @@ class Organization < ActiveRecord::Base
   # Set resonable defaults for a new organization
   def set_defaults
     self.active ||= true
+    self.state ||= SystemConfig.instance.default_state_code
   end
 
 end

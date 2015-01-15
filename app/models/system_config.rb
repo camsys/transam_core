@@ -1,13 +1,21 @@
+#------------------------------------------------------------------------------
+#
+# SystemConfig
+#
+# This is a singleton that is used to set default options for TransAM applications
+# and is used to store and access important configuration information. This
+# class is immutable and cannot be updated at run time
+#
+# The correct way to use this class is to refer to the instance
+#
+#   foo = SystemConfig.instance.foo
+#
+#------------------------------------------------------------------------------
 class SystemConfig < ActiveRecord::Base
 
   #------------------------------------------------------------------------------
-  # Overrides
+  # Validations
   #------------------------------------------------------------------------------
-
-  def self.instance
-    # there will be only one row, and its ID must be '1'
-    find(1)
-  end
 
   # Validations on core attributes
   validates :customer_id,                 :presence => true, :uniqueness => true
@@ -28,23 +36,14 @@ class SystemConfig < ActiveRecord::Base
   validates :max_rows_returned,           :presence => true
   validates :data_file_path,              :presence => true
 
-  # Returns the first day of the TransAM epoch -- the earliest date which TransAM
-  # assumes are valid for assets
-  def epoch
-    Rails.application.config.epoch
-  end
-
-  # The max number of rows to be returned from a query
-  def max_rows_returned
-    Rails.application.config.max_rows_returned
-  end
-
-  
-  def geocoder_bounds
-    [[min_lat, min_lon], [max_lat, max_lon]]
-  end
-  def map_bounds
-    [[min_lat, min_lon], [max_lat, max_lon]]
+  #------------------------------------------------------------------------------
+  #
+  # Class Methods
+  #
+  #------------------------------------------------------------------------------
+  def self.instance
+    # there will be only one row, and its ID must be '1'
+    find(1)
   end
 
   #
@@ -101,4 +100,47 @@ class SystemConfig < ActiveRecord::Base
     end
     a
   end
+
+  #------------------------------------------------------------------------------
+  #
+  # Instance Methods
+  #
+  #------------------------------------------------------------------------------
+
+  # Returns the default state code. If not defined a nil is returned
+  def default_state_code
+    # For now get this from the geocoder
+    str = geocoder_components
+    if str.include? "administrative_area"
+      state_code = str.split("|").first.split(":").last
+    end
+    state_code
+  end
+
+  # Returns the first day of the TransAM epoch -- the earliest date which TransAM
+  # assumes are valid for assets
+  def epoch
+    Rails.application.config.epoch
+  end
+
+  # The max number of rows to be returned from a query
+  def max_rows_returned
+    Rails.application.config.max_rows_returned
+  end
+
+
+  def geocoder_bounds
+    [[min_lat, min_lon], [max_lat, max_lon]]
+  end
+  def map_bounds
+    [[min_lat, min_lon], [max_lat, max_lon]]
+  end
+
+  #------------------------------------------------------------------------------
+  #
+  # Private Methods
+  #
+  #------------------------------------------------------------------------------
+  private
+
 end

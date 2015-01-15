@@ -164,7 +164,7 @@ class User < ActiveRecord::Base
     elems << zip unless zip.blank?
     elems.compact.join(', ')
   end
-  
+
   #------------------------------------------------------------------------------
   #
   # Protected Methods
@@ -175,6 +175,7 @@ class User < ActiveRecord::Base
   # Set resonable defaults for a new user
   def set_defaults
     self.timezone ||= 'Eastern Time (US & Canada)'
+    self.state ||= SystemConfig.instance.default_state_code
   end
 
   def clean_habtm_relationships

@@ -149,10 +149,11 @@ class Task < ActiveRecord::Base
   def self.active_states
     ["new", "started", "halted"]
   end
-  
+
   def self.terminal_states
     ["cancelled", "completed"]
   end
+
   #------------------------------------------------------------------------------
   #
   # Instance Methods
