@@ -8,10 +8,10 @@ namespace :transam do
     task index_all: :environment do
       Rails.logger.info "Starting Keyword Search Index"
       KeywordSearchIndex.delete_all
-      [Asset, Comment, Document, Vendor].each do |klass|
+      TransamKeywordSearchable.implementors.each do |klass|
         Rails.logger.info "Creating keyword index for #{klass}"
         klass.all.each do |obj|
-          obj.write_to_keyword_search_index
+          obj.write_to_index
         end
       end
     end

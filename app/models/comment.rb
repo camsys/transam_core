@@ -2,7 +2,7 @@
 #
 # Comment
 #
-# A comment that has been associated with another class such as a Task etc. This is a 
+# A comment that has been associated with another class such as a Task etc. This is a
 # polymorphic class that can store comments against any class that includes a
 # commentable association
 #
@@ -16,17 +16,16 @@ class Comment < ActiveRecord::Base
 
   # Include the object key mixin
   include TransamObjectKey
-  include KeywordSearchable
       
   # Callbacks
   after_initialize  :set_defaults
 
   # Associations
   belongs_to :commentable,  :polymorphic => true
-  
+
   # Each comment was created by a user
   belongs_to :creator, :class_name => "User", :foreign_key => "created_by_id"
-  
+
   validates :comment,             :presence => true
   validates :created_by_id,       :presence => true
 
@@ -43,13 +42,13 @@ class Comment < ActiveRecord::Base
     'object_key',
     'comment'
   ]
-  
+
   #------------------------------------------------------------------------------
   #
   # Class Methods
   #
   #------------------------------------------------------------------------------
-    
+
   def self.allowable_params
     FORM_PARAMS
   end
@@ -57,7 +56,7 @@ class Comment < ActiveRecord::Base
   def searchable_fields
     SEARCHABLE_FIELDS
   end
-    
+
   #------------------------------------------------------------------------------
   #
   # Protected Methods
@@ -68,13 +67,13 @@ class Comment < ActiveRecord::Base
   # Set resonable defaults for a new asset event
   def set_defaults
 
-  end    
-    
+  end
+
   #------------------------------------------------------------------------------
   #
   # Private Methods
   #
   #------------------------------------------------------------------------------
   private
-  
+
 end

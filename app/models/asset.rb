@@ -12,7 +12,6 @@ class Asset < ActiveRecord::Base
   include TransamObjectKey
   include TransamNumericSanitizers
   include FiscalYear
-  include KeywordSearchable
 
   OBJECT_CACHE_EXPIRE_SECONDS = Rails.application.config.object_cache_expire_seconds
 

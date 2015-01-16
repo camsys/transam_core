@@ -2,7 +2,7 @@
 #
 # Document
 #
-# A document that has been associated with another class such as an Asset etc. This is a 
+# A document that has been associated with another class such as an Asset etc. This is a
 # polymorphic class that can store documents against any class that includes a
 # documentable association
 #
@@ -14,7 +14,7 @@
 #------------------------------------------------------------------------------
 
 # Include the FileSizevalidator mixin
-require 'file_size_validator' 
+require 'file_size_validator'
 
 class Document < ActiveRecord::Base
 
@@ -23,31 +23,30 @@ class Document < ActiveRecord::Base
 
   # Include the object key mixin
   include TransamObjectKey
-  include KeywordSearchable
   
   # Use the carrierway uploader
-  mount_uploader :document,   DocumentUploader      
-      
+  mount_uploader :document,   DocumentUploader
+
   # Callbacks
   after_initialize  :set_defaults
-  before_save       :update_file_attributes  
+  before_save       :update_file_attributes
 
   # Associations
   belongs_to :documentable,  :polymorphic => true
-  
+
   # Each comment was created by a user
   belongs_to :creator, :class_name => "User", :foreign_key => "created_by_id"
 
   validates :description,         :presence => true
   validates :original_filename,   :presence => true
-  validates :document,            :presence => true, :file_size => { :maximum => MAX_UPLOAD_FILE_SIZE.megabytes.to_i }  
+  validates :document,            :presence => true, :file_size => { :maximum => MAX_UPLOAD_FILE_SIZE.megabytes.to_i }
   validates :created_by_id,       :presence => true
 
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
     :documentable_id,
     :documentable_type,
-    :document, 
+    :document,
     :description,
     :original_filename,
     :content_type,
@@ -59,17 +58,17 @@ class Document < ActiveRecord::Base
     :object_key,
     :description
   ]
-  
+
   #------------------------------------------------------------------------------
   #
   # Class Methods
   #
   #------------------------------------------------------------------------------
-    
+
   def self.allowable_params
     FORM_PARAMS
   end
-    
+
   #------------------------------------------------------------------------------
   #
   # Protected Methods
@@ -80,21 +79,21 @@ class Document < ActiveRecord::Base
   # Set resonable defaults for a new asset event
   def set_defaults
 
-  end    
-    
+  end
+
   #------------------------------------------------------------------------------
   #
   # Private Methods
   #
   #------------------------------------------------------------------------------
   private
-  
+
   def update_file_attributes
-    
+
     if document.present? && document_changed?
       self.content_type = document.file.content_type
       self.file_size = document.file.size
     end
   end
-  
+
 end

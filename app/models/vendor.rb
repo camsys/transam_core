@@ -9,7 +9,6 @@ class Vendor < ActiveRecord::Base
 
   # Include the object key mixin
   include TransamObjectKey
-  include KeywordSearchable
 
   #------------------------------------------------------------------------------
   # Callbacks
@@ -96,7 +95,7 @@ class Vendor < ActiveRecord::Base
   # Set resonable defaults for a new organization
   def set_defaults
     self.active ||= true
-    self.state ||= SystemConfig.instance.default_state_code    
+    self.state ||= SystemConfig.instance.default_state_code
   end
 
 end
