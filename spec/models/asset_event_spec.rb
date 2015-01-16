@@ -65,16 +65,18 @@ RSpec.describe AssetEvent, :type => :model do
 
   it 'can get the previous same day event of its asset' do
     params = {:asset => test_asset_event.asset, :asset_event_type => test_asset_event.asset_event_type}
-    same_day = create(:asset_event, params)
-
-    expect(same_day.previous_event_of_type == AssetEvent.as_typed_event(test_asset_event)).to be true
+    params["created_at"] = test_asset_event.created_at + 2.seconds
+    event_created_two_seconds_later = create(:asset_event, params)
+    
+    expect(event_created_two_seconds_later.previous_event_of_type == AssetEvent.as_typed_event(test_asset_event)).to be true
   end
 
   it 'can get the next same day event of its asset' do
     params = {:asset => test_asset_event.asset, :asset_event_type => test_asset_event.asset_event_type}
-    same_day = create(:asset_event, params)
+    params["created_at"] = test_asset_event.created_at + 2.seconds
+    event_created_two_seconds_later = create(:asset_event, params)
 
-    expect(test_asset_event.next_event_of_type == AssetEvent.as_typed_event(same_day)).to be true
+    expect(test_asset_event.next_event_of_type == AssetEvent.as_typed_event(event_created_two_seconds_later)).to be true
   end
 
   it 'has no previous event if first chronologically' do
