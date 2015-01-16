@@ -78,8 +78,6 @@ class UsersController < OrganizationAwareController
 
       conditions << query_str.join
     end
-    puts conditions.inspect
-    puts values.inspect
 
     # Get the Users but check to see if a role was selected
     @role = params[:role]
@@ -105,8 +103,6 @@ class UsersController < OrganizationAwareController
   # GET /users/1.json
   def show
 
-    add_breadcrumb @user.name
-
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
     if @user.nil?
@@ -116,9 +112,9 @@ class UsersController < OrganizationAwareController
     end
 
     if @user.id == current_user.id
-      @page_title = "My Settings"
+      add_breadcrumb = "My Profile"
     else
-      @page_title = "#{@user.name}: Settings"
+      add_breadcrumb @user.name
     end
 
     # get the @prev_record_path and @next_record_path view vars
@@ -137,7 +133,6 @@ class UsersController < OrganizationAwareController
   def new
 
     add_breadcrumb 'New'
-    @page_title = "#{@organization.name}: New User"
 
     @user = User.new
     @user.organization = @organization
@@ -151,9 +146,6 @@ class UsersController < OrganizationAwareController
   # GET /users/1/edit
   def edit
 
-    add_user_breadcrumb('Profile')
-    add_breadcrumb 'Update'
-
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
     if @user.nil?
@@ -161,15 +153,14 @@ class UsersController < OrganizationAwareController
       redirect_to users_url
       return
     end
+
+    add_user_breadcrumb('Profile')
+    add_breadcrumb 'Update'
 
   end
 
   # GET /users/1/edit
   def change_password
-    add_user_breadcrumb('Settings')
-    add_breadcrumb 'Change Password'
-
-    @page_title = "Change Password"
 
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
@@ -178,12 +169,13 @@ class UsersController < OrganizationAwareController
       redirect_to users_url
       return
     end
+
+    add_user_breadcrumb('Profile')
+    add_breadcrumb 'Change Password'
 
   end
 
   def settings
-    add_user_breadcrumb('Settings')
-    add_breadcrumb 'Update'
 
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
@@ -192,6 +184,9 @@ class UsersController < OrganizationAwareController
       redirect_to users_url
       return
     end
+
+    add_user_breadcrumb('Profile')
+    add_breadcrumb 'Update'
   end
 
   # POST /users
@@ -200,6 +195,7 @@ class UsersController < OrganizationAwareController
 
     @user = User.new(form_params)
     @user.organization = @organization
+
     add_breadcrumb 'New'
 
     respond_to do |format|
@@ -241,8 +237,6 @@ class UsersController < OrganizationAwareController
 
   def update_password
 
-    @page_title = "Change Password"
-
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
     if @user.nil?
@@ -250,6 +244,9 @@ class UsersController < OrganizationAwareController
       redirect_to users_url
       return
     end
+
+    add_user_breadcrumb('Profile')
+    add_breadcrumb 'Change Password'
 
     respond_to do |format|
       if @user.update_with_password(form_params)
