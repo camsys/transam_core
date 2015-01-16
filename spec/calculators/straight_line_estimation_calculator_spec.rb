@@ -10,11 +10,15 @@ RSpec.describe StraightLineEstimationCalculator, :type => :calculator do
 
   class Vehicle < Asset; end
 
+  before(:all) do
+    @asset_subtype = create(:asset_subtype)
+  end
+
   before(:each) do
     @organization = create(:organization)
-    @test_asset = create(:buslike_asset, :organization => @organization)
+    @test_asset = create(:buslike_asset, :organization => @organization, :asset_type => @asset_subtype.asset_type, :asset_subtype => @asset_subtype)
     @policy = create(:policy, :organization => @organization)
-    @policy_item = create(:policy_item, :policy => @policy, :asset_subtype => @test_asset.asset_subtype)
+    @policy_item = create(:policy_item, :policy => @policy, :asset_subtype => @asset_subtype)
     @condition_update_event = @test_asset.condition_updates.create(attributes_for(:test_condition_update_event))
   end
 
@@ -28,7 +32,7 @@ RSpec.describe StraightLineEstimationCalculator, :type => :calculator do
 
     it 'calculates when no condition update event' do
       @test_asset.condition_updates.destroy_all
-      expect(test_calculator.calculate(@test_asset)).to eq(2.08)
+      expect(test_calculator.calculate(@test_asset)).to eq(1.5)
     end
 
     it 'is always greater than or equal to min rating' do
@@ -49,7 +53,7 @@ RSpec.describe StraightLineEstimationCalculator, :type => :calculator do
 
   describe '#last_servicable year' do
     it 'calculates' do
-      expect(test_calculator.last_servicable_year(@test_asset)).to eq(2025)
+      expect(test_calculator.last_servicable_year(@test_asset)).to eq(2010)
     end
 
     it 'is not greater than max life year' do

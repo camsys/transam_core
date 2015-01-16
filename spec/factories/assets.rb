@@ -11,6 +11,7 @@ FactoryGirl.define do
     asset_tag
     purchase_date { 1.year.ago }
     manufacture_year "2000"
+    in_service_date Date.new(2001,1,1)
     created_by_id 1
   end
 

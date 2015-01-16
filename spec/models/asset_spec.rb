@@ -36,7 +36,15 @@ RSpec.describe Asset, :type => :model do
 
   describe ".event_classes" do
     it 'returns the right event classes for an asset' do
-      expect(Asset.event_classes.count).to eq(6) # should enumerate those tests...
+      expect(Asset.event_classes.count).to eq(7) # should enumerate those tests...
+      # List of classes:
+      # Equipment
+      # Vehicle
+      # SupportVehicle
+      # TransitFacility
+      # SupportFacility
+      # RailCar
+      # Locomotive
     end
   end
 
@@ -47,29 +55,29 @@ RSpec.describe Asset, :type => :model do
   #
   #------------------------------------------------------------------------------
   describe "#age" do
-    it 'returns 0 for assets manufactured in the future' do
+    it 'returns 0 for assets in service in the future' do
       # Built next year -- should always return 0
-      buslike_asset.manufacture_year = Date.today.year + 1.year
+      buslike_asset.in_service_date = Date.today + 1.year
 
       expect(buslike_asset.age).to eql(0)
     end
 
-    it 'returns 0 for assets manufactured in this year' do
+    it 'returns 0 for assets in service this year' do
       # Built this year
-      buslike_asset.manufacture_year = Date.today.year
+      buslike_asset.in_service_date = Date.today
 
       expect(buslike_asset.age).to eql(0)
     end
 
-    it 'returns a positive value for an asset manufactured in the past' do
+    it 'returns a positive value for an asset starting service in the past' do
       # Built 6 years ago
-      buslike_asset.manufacture_year = Date.today.year - 6
+      buslike_asset.in_service_date = Date.today - 6.years
 
       expect(buslike_asset.age).to eql(6)
     end
 
     it 'calculates its age on a specific date properly' do
-      buslike_asset.manufacture_year = Date.today.year
+      buslike_asset.in_service_date = Date.today
 
       on_date = Date.today + 10.years
       expect(buslike_asset.age(on_date)).to eql(10)
@@ -122,7 +130,19 @@ RSpec.describe Asset, :type => :model do
 
   describe "#searchable_fields" do
     it 'inherits down the tree' do
-      asset_searchables = [ 'object_key', 'asset_tag', 'manufacture_year', 'manufacturer_model']
+      asset_searchables = [
+        :object_key,
+        :asset_tag,
+        :external_id,
+
+        :asset_type,
+        :asset_subtype,
+
+        :vendor,
+        :manufacturer,
+        :manufacturer_model,
+        :manufacture_year
+      ]
 
       expect(buslike_asset.searchable_fields).to eql(asset_searchables)
     end
