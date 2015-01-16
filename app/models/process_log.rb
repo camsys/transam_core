@@ -7,6 +7,7 @@
 #
 #------------------------------------------------------------------------------
 class ProcessLog
+  include Rails.application.routes.url_helpers # Known violation of MVC.  Do not change willy-nilly
 
   attr_reader :process_log
 
