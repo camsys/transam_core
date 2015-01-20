@@ -1,6 +1,6 @@
 %ul.media-list
   - tasks.each do |task|
-    %li.media
+    %li.media{:data => {:action_path => task_path(task)}}
       .well.well-small
         .row
           .media-body.col-md-12
