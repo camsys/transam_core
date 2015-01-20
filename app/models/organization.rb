@@ -127,7 +127,7 @@ class Organization < ActiveRecord::Base
 
   # Returns a hash of asset-type_ids and the counts per non-zero type
   def asset_type_counts
-    Asset.where(:organization_id => id).group(:asset_type_id).count
+    Asset.unscoped.where(:organization_id => id).group(:asset_type_id).count
   end
 
   # Returns a hash of asset subtype ids and the counts per non-zero type
@@ -137,7 +137,7 @@ class Organization < ActiveRecord::Base
 
   # Returns an array of manufacturers in use by this organization
   def manufacturer_counts
-    Asset.where('organization_id = ? AND manufacturer_id IS NOT NULL', id).group(:manufacturer_id).count
+    Asset.unscoped.where('organization_id = ? AND manufacturer_id IS NOT NULL', id).group(:manufacturer_id).count
   end
 
   # Returns true if the organization is of the specified class or has the specified class as
