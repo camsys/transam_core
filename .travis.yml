@@ -10,6 +10,8 @@ env:
 script:
 - bundle exec rake app:transam_core:prepare_rspec
 - bundle exec $TEST_SUITE
+before_script:
+- cp config/database.travis.yml config/database.yml
 before_install:
 - openssl aes-256-cbc -K $encrypted_1ed3e5c11482_key -iv $encrypted_1ed3e5c11482_iv
   -in spec/dummy/db/schema.rb.enc -out spec/dummy/db/schema.rb -d
