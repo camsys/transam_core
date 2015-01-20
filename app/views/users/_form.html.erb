@@ -11,7 +11,14 @@
 				<%= f.input :last_name, :placeholder => "User's last name...", :label => "Last Name" %>
 				<%= f.input :email, :as => :email, :placeholder => "User's business email address..." %>
 				<%= f.input :title, :placeholder => "User's public title" %>
-				<%= f.input :phone, :as => :tel, :placeholder => "Users primary phone number..." %>
+				<div class="row">
+					<div class="col-sm-9">
+						<%= f.input :phone, :as => :tel, :placeholder => "Users primary phone number..." %>
+					</div>
+					<div class="col-sm-3">
+						<%= f.input :phone_ext, :label => "Ext." %>
+					</div>
+				</div>
 				<%= f.input :external_id, :placeholder => "External ID..." %>
 				<%= f.input :address1 %>
 				<%= f.input :address2 %>
