@@ -9,7 +9,7 @@
 class Asset < ActiveRecord::Base
 
   OBJECT_CACHE_EXPIRE_SECONDS = Rails.application.config.object_cache_expire_seconds
-  
+
   #------------------------------------------------------------------------------
   # Behaviors
   #------------------------------------------------------------------------------
@@ -452,7 +452,7 @@ class Asset < ActiveRecord::Base
     cached_policy = get_cached_object("policy")
     if cached_policy.blank?
       cached_policy = Organization.get_typed_organization(organization).get_policy
-      cache_object("policy_rule", cached_policy)
+      cache_object("policy", cached_policy)
     end
     cached_policy
   end
