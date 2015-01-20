@@ -38,6 +38,7 @@ Gem::Specification.new do |s|
   # for running background processes
   s.add_dependency 'daemons'
   s.add_dependency 'haml-rails'
+  s.add_dependency 'rmagick'
 
   s.add_dependency 'simple_form'
 
