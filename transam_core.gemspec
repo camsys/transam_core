@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.test_files = Dir["test/**/*"]
 
 
-  s.add_dependency 'rails', '>=4.0.9'
+  s.add_dependency 'rails', '4.1.8'
   s.add_dependency "cancan"
   s.add_dependency "devise", '~> 3.2.2'
   s.add_dependency "rolify", '~> 3.4'
@@ -33,7 +33,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'fog'
   s.add_dependency 'carrierwave'
   s.add_dependency 'kaminari'
-  s.add_dependency 'rmagick'
   # for background processing jobs
   s.add_dependency 'delayed_job_active_record'
   # for running background processes
