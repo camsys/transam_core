@@ -1,9 +1,11 @@
 class KeywordSearchIndex < ActiveRecord::Base
 
-	validates     :object_key,	:presence => true
-  validates     :object_class,	:presence => true
-  validates     :search_text,	:presence => true
+	belongs_to		:organization
 
+	validates			:organization,	:presence => true
+	validates     :object_key,		:presence => true
+  validates     :object_class,	:presence => true
+  validates     :search_text,		:presence => true
 
 	def to_s
 		name

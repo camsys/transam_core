@@ -11,7 +11,7 @@ class SearchesController < OrganizationAwareController
 
   # Session Variables
   INDEX_KEY_LIST_VAR        = "search_key_list_cache_var"
-  
+
   MAX_ROWS_RETURNED = SystemConfig.instance.max_rows_returned
 
   # Set the view variables form the params @search_type, @searcher_klass
@@ -66,18 +66,27 @@ class SearchesController < OrganizationAwareController
     #results = KeywordSearchIndex.where("search_text like '%D1254%'")
     #
 
-    search_criteria = ""
-    @search_text.split(" ").each_with_index {|search_string, search_string_index|
-      if search_string.length > 3
-        if search_criteria.length == 0
-          search_criteria =  " search_text like '%#{search_string}%'"
-        else
-          search_criteria += " OR search_text like '%#{search_string}%'"
-        end
-      end
-    }
+    # here we build the query one clause at a time based on the input params. The query
+    # is of the form:
+    #
+    # where organization_id IN (?) AND (search_text LIKE ? OR search_text_like ? OR ... )
 
-    @keyword_search_results = KeywordSearchIndex.where(search_criteria).limit(MAX_ROWS_RETURNED)
+    where_clause = 'organization_id IN (?) AND ('
+    values = []
+    values << @organization.id
+
+    search_params = []
+    @search_text.split(" ").each_with_index do |search_string|
+      unless search_string.length < 2
+        search_params << 'search_text LIKE ?'
+        values << "%#{search_string}%"
+      end
+    end
+
+    where_clause << search_params.join(' OR ')
+    where_clause << ')'
+
+    @keyword_search_results = KeywordSearchIndex.where(where_clause, *values).limit(MAX_ROWS_RETURNED)
     cache_list(@keyword_search_results, INDEX_KEY_LIST_VAR)
 
     respond_to do |format|

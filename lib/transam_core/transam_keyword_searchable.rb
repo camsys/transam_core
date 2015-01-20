@@ -42,6 +42,8 @@ module TransamKeywordSearchable
     }
 
     kwsi = KeywordSearchIndex.find_or_create_by(object_key: object_key) do |keyword_search_index|
+      keyword_search_index.organization = organization
+      keyword_search_index.context = self.class.name
       keyword_search_index.search_text = text_blob
       keyword_search_index.object_class = self.class.name
       if respond_to? :description
