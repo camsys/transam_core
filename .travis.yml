@@ -6,9 +6,8 @@ branches:
   - master
   - fix_travis
 env:
-- TEST_SUITE=rspec
-- TEST_SUITE=cucumber
-- "RAILS_VERSION=4.1.9"
+- TEST_SUITE=rspec RAILS_VERSION=4.1.9
+- TEST_SUITE=cucumber RAILS_VERSION=4.1.9
 script:
 - bundle exec rake app:transam_core:prepare_rspec
 - bundle exec $TEST_SUITE
