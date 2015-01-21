@@ -15,7 +15,20 @@ class OrganizationsController < OrganizationAwareController
   # GET /asset
   # GET /asset.json
   def index
-    @organizations = current_user.organizations
+    # Start to set up the query
+    conditions  = []
+    values      = []
+
+    @organization_type_id = params[:organization_type_id]
+    unless @organization_type_id.blank?
+      @organization_type_id = @organization_type_id.to_i
+      conditions << 'organization_type_id = ?'
+      values << @organization_type_id
+
+      add_breadcrumb OrganizationType.find(@organization_type_id).name.pluralize(2), organizations_path(:organization_type_id => @organization_type_id)
+    end
+
+    @organizations = current_user.organizations.where(conditions.join(' AND '), *values)
 
     # cache the set of asset ids in case we need them later
     cache_list(@organizations, INDEX_KEY_LIST_VAR)
@@ -90,6 +103,7 @@ class OrganizationsController < OrganizationAwareController
       return
     end
 
+    add_breadcrumb @org.organization_type.name.pluralize(2), organizations_path(:organization_type_id => @org.organization_type.id)
     add_breadcrumb @org.short_name, organization_path(@org)
     add_breadcrumb "Update"
 
