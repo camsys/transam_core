@@ -4,10 +4,10 @@
 #
 #------------------------------------------------------------------------------
 class PolicyItem < ActiveRecord::Base
-  
+
   # Include the numeric sanitizers mixin
   include TransamNumericSanitizers
-  
+
   #------------------------------------------------------------------------------
   # Associations
   #------------------------------------------------------------------------------
@@ -26,20 +26,20 @@ class PolicyItem < ActiveRecord::Base
   validates :rehabilitation_cost,     :allow_nil => :true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
   validates :extended_service_life_months,     :allow_nil => :true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
   validates :rehabilitation_year,     :allow_nil => :true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}, :allow_nil => :true
-    
+
   #------------------------------------------------------------------------------
   # Scopes
   #------------------------------------------------------------------------------
   default_scope { where(:active => true).order('asset_subtype_id ASC') }
-  
+
   #------------------------------------------------------------------------------
   # List of hash parameters allowed by the controller
   #------------------------------------------------------------------------------
   FORM_PARAMS = [
     :policy_id,
-    :asset_subtype_id, 
-    :max_service_life_months, 
-    :replacement_cost, 
+    :asset_subtype_id,
+    :max_service_life_months,
+    :replacement_cost,
     :rehabilitation_cost,
     :extended_service_life_months,
     :pcnt_residual_value,
@@ -47,9 +47,9 @@ class PolicyItem < ActiveRecord::Base
     :rehabilitation_ali_code,
     :rehabilitation_year,
     :replace_asset_subtype_id,
-    :active    
+    :active
   ]
-  
+
   #------------------------------------------------------------------------------
   #
   # Class Methods
@@ -58,7 +58,7 @@ class PolicyItem < ActiveRecord::Base
   def self.allowable_params
     FORM_PARAMS
   end
-  
+
   #------------------------------------------------------------------------------
   #
   # Instance Methods
@@ -69,30 +69,33 @@ class PolicyItem < ActiveRecord::Base
     "#{asset_subtype}"
   end
 
-  # Override setters to remove any extraneous formats from the number strings eg $, etc.      
+  # Override setters to remove any extraneous formats from the number strings eg $, etc.
   def max_service_life_months=(num)
     self[:max_service_life_months] = sanitize_to_int(num)
-  end      
+  end
   def replacement_cost=(num)
     self[:replacement_cost] = sanitize_to_int(num)
-  end      
+  end
   def rehabilitation_cost=(num)
     self[:rehabilitation_cost] = sanitize_to_int(num)
-  end      
+  end
   def extended_service_life_months=(num)
     self[:extended_service_life_months] = sanitize_to_int(num)
-  end      
+  end
   def pcnt_residual_value=(num)
     self[:pcnt_residual_value] = sanitize_to_int(num)
-  end      
+  end
 
   def max_service_life_years
-    max_service_life_months / 12.0
+    (max_service_life_months / 12.0).to_i
   end
   def max_service_life_years=(num)
-    self[:max_service_life_months] = sanitize_to_int(num) / 12.0
-  end      
-  
+    self[:max_service_life_months] = (sanitize_to_int(num) * 12.0).to_i
+  end
+  def extended_service_life_years
+    (extended_service_life_months / 12.0).to_i
+  end
+
   #------------------------------------------------------------------------------
   #
   # Protected Methods
@@ -103,11 +106,11 @@ class PolicyItem < ActiveRecord::Base
   # Set resonable defaults for a new policy
   def set_defaults
     self.max_service_life_months ||= 0
-    self.replacement_cost ||= 0 
+    self.replacement_cost ||= 0
     self.extended_service_life_months ||= 0
-    self.rehabilitation_cost ||= 0 
+    self.rehabilitation_cost ||= 0
     self.rehabilitation_year ||= 0
     self.active ||= true
-  end    
-        
+  end
+
 end
