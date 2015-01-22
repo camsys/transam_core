@@ -16,7 +16,7 @@ class Comment < ActiveRecord::Base
 
   # Include the object key mixin
   include TransamObjectKey
-      
+
   # Callbacks
   after_initialize  :set_defaults
 
@@ -57,6 +57,10 @@ class Comment < ActiveRecord::Base
     SEARCHABLE_FIELDS
   end
 
+  def description
+    comment
+  end
+  
   #------------------------------------------------------------------------------
   #
   # Protected Methods

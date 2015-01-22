@@ -23,7 +23,7 @@ class Document < ActiveRecord::Base
 
   # Include the object key mixin
   include TransamObjectKey
-  
+
   # Use the carrierway uploader
   mount_uploader :document,   DocumentUploader
 
@@ -56,7 +56,8 @@ class Document < ActiveRecord::Base
 
   SEARCHABLE_FIELDS = [
     :object_key,
-    :description
+    :description,
+    :original_filename
   ]
 
   #------------------------------------------------------------------------------
