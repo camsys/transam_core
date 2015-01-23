@@ -1,7 +1,7 @@
 - if can? :update, @policy or can? :create, @policy or can? :delete, @policy
   .btn-group.pull-right.panel-action
     %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
-      I want to  
+      I want to
       %span.caret
     %ul.dropdown-menu{:role => 'menu'}
       %li
@@ -18,7 +18,7 @@
           %li
             = link_to updater_policy_path(@policy) do
               %i.fa.fa-fw.fa-cogs
-              = " Apply This Policy"
+              = " Apply this Policy"
         - else
           %li
             = link_to make_current_policy_path(@policy) do
@@ -29,17 +29,16 @@
           = link_to new_policy_policy_item_path(@policy) do
             %i.fa.fa-fw.fa-plus
             = " Add rule"
-            
+
       - if can? :create, @policy
         %li
           = link_to copy_policy_path(@policy) do
             %i.fa.fa-copy.fa-fw
             = " Make a copy"
-          
+
       - if can? :delete, @policy
         %li.divider
         %li
           = link_to policy_path(@policy), :method => :delete, :data => {:confirm => "Are you sure?. The action cannot be undone!."}  do
             %i.fa.fa-trash-o.fa-fw
             = " Remove this policy"
-            

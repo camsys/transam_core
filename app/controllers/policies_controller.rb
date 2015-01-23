@@ -168,6 +168,7 @@ class PoliciesController < OrganizationAwareController
 
   def update_assets
     add_breadcrumb "Asset Updater", updater_policy_path(@policy)
+    add_breadcrumb "Processing"
 
     @builder_proxy = AssetUpdaterProxy.new(params[:asset_updater_proxy])
     if @builder_proxy.valid?
@@ -185,14 +186,14 @@ class PoliciesController < OrganizationAwareController
 
       # Let the user know the results
       if num_to_update > 0
-        msg = "#{num_to_update} assets will be updated."
+        msg = "#{num_to_update} assets will be updated using policy #{policy}."
         notify_user(:notice, msg)
         # Add a row into the activity table
-        ActivityLog.create({:organization_id => @organization.id, :user_id => current_user.id, :item_type => "AssetUpdateJobBuilder", :activity => msg, :activity_time => Time.current})
+        ActivityLog.create({:organization_id => @organization.id, :user_id => current_user.id, :item_type => "Policy Asset Update", :activity => msg, :activity_time => Time.current})
       else
         notify_user(:notice, "No assets were updated.")
       end
-      redirect_to policies_path
+      redirect_to policy_path @policy
       return
     else
       respond_to do |format|
