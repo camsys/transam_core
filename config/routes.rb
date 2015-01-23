@@ -93,7 +93,7 @@ Rails.application.routes.draw do
   resources :general_ledger_accounts
 
   resources :dashboards,    :only => [:index, :show]
-  resources :activity_logs, :only => [:index]
+  resources :activity_logs, :only => [:index, :show]
   resources :searches,      :only => [:new, :create] do
     collection do
       post :keyword

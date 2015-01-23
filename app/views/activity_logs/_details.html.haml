@@ -1,0 +1,9 @@
+%ul.nav.nav-tabs
+  %li
+    %a{:href => "#log", :data =>{:toggle => 'tab'}}
+      = "Log"
+
+.tab-content
+  .tab-pane.fade#log
+    .tab-content{:style => "overflow-y:scroll;height:400px;"}
+      = render 'log'

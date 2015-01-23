@@ -22,7 +22,13 @@
 </li>
 <li class="divider text-left"></li>
 <li class="text-left">
+	<%= link_to activity_logs_path  do %>
+		<i class="fa fa-clock-o fa-fw"></i> Activity Log
+	<% end %>
+</li>
+<li class="divider text-left"></li>
+<li class="text-left">
 	<%= link_to new_issue_path  do %>
-		<i class="fa fa-bug fa-fw"></i> Report an issue
+	<i class="fa fa-bug fa-fw"></i> Report an issue
 	<% end %>
 </li>

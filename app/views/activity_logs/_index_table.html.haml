@@ -1,0 +1,17 @@
+%table.table.table-hover#activity_datatable
+	%thead
+		%tr
+			%th.left Date/Time
+			%th.left User
+			%th.left Action
+			%th.left Activity
+
+	%tbody
+		- @activities.each do |a|
+			%tr{:data => {:action_path => activity_log_path(a)}}
+				%td.left= format_as_date_time(a.activity_time)
+				%td.left= a.user
+				%td.left= a.item_type
+				%td.left= a.activity.truncate(64).html_safe
+
+= render :partial => 'shared/datatable_javascript', :locals => {:id => 'activity_datatable'}

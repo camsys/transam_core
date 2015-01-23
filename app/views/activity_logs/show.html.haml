@@ -1,0 +1,25 @@
+.row
+  .col-md-3
+    .panel.panel-default.header-part
+      .panel-heading
+        .row
+          .col-md-12
+            %h3.panel-title
+              %i.fa.fa-list
+              Activity
+      .panel-body
+        = render :partial => 'summary', :locals => {:notice => @notice}
+
+  .col-md-9
+    .panel.panel-default.header-part
+      .panel-heading
+        .row
+          .col-md-12
+            %h3.panel-title
+              %i.fa.fa-folder-open
+              Details
+
+      .panel-body
+        = render 'details'
+
+= render 'scripts'
