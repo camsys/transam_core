@@ -4,14 +4,6 @@
 		<title><%= app_title %></title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<%= stylesheet_link_tag    "application", :media => "all" %>
-		<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4/leaflet.css" />
-		<!--[if lte IE 8]>
-			<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.4/leaflet.ie.css" />
-		<![endif]-->
-
-      	<%= javascript_include_tag "http://cdn.leafletjs.com/leaflet-0.4/leaflet.js" %>
-      	<%= javascript_include_tag "http://maps.google.com/maps/api/js?v=3.2&sensor=false" %>
-      	<%= javascript_include_tag "https://www.google.com/jsapi" %>
 		<%= javascript_include_tag "application" %>
 
 		<!-- HTML5 shim, for IE8 support of HTML5 elements -->
@@ -39,7 +31,7 @@
 				<%= yield %>
 			</div>
 		</div>
-				
+
 		<div id="footer" class="footer">
 			<%= render 'shared/footer' %>
 		</div>
