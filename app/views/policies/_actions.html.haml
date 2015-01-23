@@ -8,22 +8,24 @@
         = link_to policy_policy_items_path(@policy, :asset_type => @asset_type, :format => 'xls') do
           %i.fa.fa-fw.fa-file-excel-o
           = " Export rules to Excel"
-        %li.divider
       - if can? :update, @policy
+        %li.divider
         %li
           = link_to edit_policy_path(@policy) do
             %i.fa.fa-edit.fa-fw
             = " Modify this policy"
-        - if @policy.current
-          %li
-            = link_to updater_policy_path(@policy) do
-              %i.fa.fa-fw.fa-cogs
-              = " Apply this Policy"
-        - else
-          %li
-            = link_to make_current_policy_path(@policy) do
-              %i.fa.fa-check-square-o.fa-fw
-              = " Set as current"
+      - if @policy.current
+        %li.divider
+        %li
+          = link_to updater_policy_path(@policy) do
+            %i.fa.fa-fw.fa-cogs
+            = " Apply this Policy"
+      - else
+        %li.divider
+        %li
+          = link_to make_current_policy_path(@policy) do
+            %i.fa.fa-check-square-o.fa-fw
+            = " Set as current"
         %li.divider
         %li
           = link_to new_policy_policy_item_path(@policy) do
@@ -31,6 +33,7 @@
             = " Add rule"
 
       - if can? :create, @policy
+        %li.divider
         %li
           = link_to copy_policy_path(@policy) do
             %i.fa.fa-copy.fa-fw
