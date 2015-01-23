@@ -6,12 +6,11 @@ class Manufacturer < ActiveRecord::Base
   def self.search(text, exact = true, **params) # **params is a ruby parameter "hash-splat"
     if exact
       x = where('name = ? OR code = ?', text, text)
-      x = x.where(params) if params
     else
       val = "%#{text.upcase}%"
       x = where('UPPER(name) LIKE ? OR UPPER(code) LIKE ?', val, val)
-      x = x.where(params) if params
     end
+    x = x.where(params) if params
     x.first
   end
 
