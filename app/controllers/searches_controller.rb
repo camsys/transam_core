@@ -53,7 +53,7 @@ class SearchesController < OrganizationAwareController
     end
   end
 
-  # Action for performiong full text search unsing the search text index
+  # Action for performing full text search using the search text index
   def keyword
 
     @search_text = params["search_text"]
