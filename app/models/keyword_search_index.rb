@@ -2,7 +2,7 @@ class KeywordSearchIndex < ActiveRecord::Base
 
 	belongs_to		:organization
 
-	validates			:organization,	:presence => true
+	#validates			:organization,	:presence => true
 	validates     :object_key,		:presence => true
   validates     :object_class,	:presence => true
   validates     :search_text,		:presence => true
