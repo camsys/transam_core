@@ -1,3 +1,6 @@
-def create_organization(org_name, org_short_name)
-  @organization = FactoryGirl.create(:organization, {:name => org_name, :short_name => org_short_name})
+def create_organization
+  @organization = FactoryGirl.create(:organization)
+  @policy = FactoryGirl.create(:policy, :organization => @organization)
+
+  return @organization
 end

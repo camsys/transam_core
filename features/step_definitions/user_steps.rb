@@ -1,7 +1,18 @@
+#### MOCK CLASSES ####
+
+class TestOrg < Organization
+  def get_policy
+    return Policy.where("`organization_id` = ?",self.id).order('created_at').last
+  end
+end
+
+
 ### UTILITY METHODS ###
 def create_user(email, org_short_name)
-  user = FactoryGirl.build(:normal_user, :email => email)
-  user.organization = Organization.find_by(:short_name => org_short_name)
+  o = Organization.find_by(:short_name => org_short_name)
+  user = FactoryGirl.build(:normal_user, :email => email, :organization => o)
+
+  user.organizations << o
   user.save!
 end
 
@@ -23,15 +34,14 @@ def sign_in(email, password)
 end
 
 ### GIVEN ###
-Given(/^A user with email "(.*?)" belongs to an organization named "(.*?) \((.*)\)"$/) do |user_email, org_name, org_short_name|
-  create_organization(org_name, org_short_name)
-  create_user(user_email, org_short_name)
+Given(/^A user with email "(.*?)"$/) do |user_email|
+  org1 = create_organization
+  create_user(user_email, org1.short_name)
 end
 
 Given(/^"(.*?)" is logged in$/) do |arg1|
   sign_in(arg1, "Welcome1")
 end
-
 
 Given(/^"(.*?)" is not logged in$/) do |arg1|
   sign_out
@@ -42,9 +52,14 @@ When(/^"(.*?)" logs in using valid user data$/) do |email|
   sign_in(email, "Welcome1")
 end
 
+When(/^"(.*?)" logs in using invalid user data$/) do |email|
+  sign_in(email, "Welcome2")
+end
+
 When(/^The user logs out$/) do
   sign_out
 end
+
 
 # When /^I sign out$/ do
 #   visit '/users/sign_out'
@@ -105,18 +120,16 @@ end
 # end
 
 ### THEN ###
-Then(/^The user will be signed in$/) do
-  expect(page).to have_content "Quick Links"
-  expect(page).to have_content "Useful Life Consumed Report"
-  expect(page).to_not have_content "Sign up"
-  expect(page).to_not have_content "Login"
-end
 
 Then(/^The user will be signed out$/) do
   expect(page).to have_field "user_email"
   expect(page).to have_field "user_password"
   expect(page).to have_button "Sign in"
 end
+
+# Then(/^I should see "(.*?)"$/) do |arg1|
+#   expect(page).to have_content arg1
+# end
 
 # Then /^I should be signed out$/ do
 #   page.should have_content "Sign up"

@@ -8,4 +8,13 @@ FactoryGirl.define do
     display_icon_name "fa fa-bus"
     map_icon_name "redIcon"
   end
+
+  factory :equipment_type, :class => :asset_type do
+    name "Equipment"
+    class_name "Equipment"
+    description "Equipment"
+    active true
+    display_icon_name "fa fa-bus"
+    map_icon_name "redIcon"
+  end
 end
