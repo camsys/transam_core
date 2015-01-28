@@ -13,6 +13,7 @@ require 'haml-rails'
 require 'simple_form'
 require 'carrierwave'
 require 'rmagick'
+require 'countries'
 
 module TransamCore
   class Engine < ::Rails::Engine

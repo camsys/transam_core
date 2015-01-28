@@ -33,6 +33,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'fog'
   s.add_dependency 'carrierwave'
   s.add_dependency 'kaminari'
+  s.add_dependency 'countries'
   # for background processing jobs
   s.add_dependency 'delayed_job_active_record'
   # for running background processes
