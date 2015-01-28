@@ -26,8 +26,6 @@ Given(/^I am at the \[(.*?)\] detail page$/) do |obj|
   if is_asset(obj)
     visit inventory_path(Asset.first)
   elsif is_org(obj)
-    puts organization_path(Organization.first).to_s
-    puts SystemConfig.transam_modules.to_s
     visit organization_path(Organization.first)
   else
     visit "/#{obj.pluralize}/#{obj.classify.constantize.first.object_key}"

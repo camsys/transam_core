@@ -12,12 +12,12 @@ module TransamAttributes
   def asset_allowable_params
     Asset.allowable_params
   end
-  
+
   def asset_event_allowable_params
-    AssetEvent.allowable_params + 
-    ConditionUpdateEvent.allowable_params + 
-    ServiceStatusUpdateEvent.allowable_params + 
-    ScheduleRehabilitationUpdateEvent.allowable_params + 
+    AssetEvent.allowable_params +
+    ConditionUpdateEvent.allowable_params +
+    ServiceStatusUpdateEvent.allowable_params +
+    ScheduleRehabilitationUpdateEvent.allowable_params +
     DispositionUpdateEvent.allowable_params
   end
 
@@ -34,7 +34,7 @@ module TransamAttributes
   end
 
   def organization_allowable_params
-    Organization.allowable_params + TransitAgency.allowable_params
+    Organization.allowable_params #+ TransitAgency.allowable_params
   end
 
   def policy_allowable_params
@@ -56,5 +56,5 @@ module TransamAttributes
   def location_allowable_params
     Location.allowable_params
   end
-  
+
 end

@@ -30,3 +30,5 @@ User.find_or_create_by(
   :email => "admin@email.com",
   :num_table_rows => 10,
   )
+
+ActiveRecord::Base.connection.execute("ALTER TABLE `transam_core_testing`.`assets` ADD COLUMN `geometry` GEOMETRY NULL AFTER `vendor_id`;")

@@ -14,4 +14,4 @@ Feature: Users can update an [organization]
       And I update a [test_org] with {:name => 'New Test Organization'}
     Then I am at the [organization] detail page
       And I will see "New Test Organization"
-      And show me the page
+      #And show me the page
