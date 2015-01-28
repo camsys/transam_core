@@ -125,6 +125,14 @@ RSpec.describe Asset, :type => :model do
       expect(event.assessed_rating).to eq(3)
       expect(event.current_mileage).to eq(25000)
     end
+
+    it 'nullifies disposition fields if disposition update is deleted' do
+      persisted_buslike_asset.disposition_updates.create(attributes_for :disposition_update_event)
+      persisted_buslike_asset.update_scheduled_disposition
+
+      persisted_buslike_asset.disposition_updates.destroy_all
+      expect(persisted_buslike_asset.scheduled_disposition_year).to be nil
+    end
   end
 
 
