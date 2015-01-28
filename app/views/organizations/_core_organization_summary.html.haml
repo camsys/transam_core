@@ -2,5 +2,5 @@
 = format_field("Name", link_to(org.name, organization_path(org)) )
 = format_field("Short Name", org.short_name )
 = format_field("External ID", org.external_id ) unless org.external_id.blank?
-= format_field("Address", format_as_address(org) ) unless org.full_address.blank?
+= format_field("Address", format_as_address(org) )
 = format_field("Technical Contact", @org.technical_contact.nil? ? "Not Set" : link_to(@org.technical_contact, @org.technical_contact) )

@@ -1,6 +1,8 @@
 #### MOCK CLASSES ####
 
 class TestOrg < Organization
+  has_many :assets,   :foreign_key => 'organization_id'
+
   def get_policy
     return Policy.where("`organization_id` = ?",self.id).order('created_at').last
   end

@@ -1,4 +1,10 @@
+def is_asset(obj)
+  obj.classify.constantize.ancestors.include?(Asset)
+end
 
+def is_org(obj)
+  obj.classify.constantize.ancestors.include?(Organization)
+end
 
 ### WHEN ###
 
@@ -11,17 +17,43 @@ When(/^I press the (.*?) "(.*?)"$/) do |arg1, arg2|
   end
 end
 
-# TODO: build out for more functionality
-# After loading a create or update form for an object
-# It tests the form by changes its external id
-# Arguments: create/update, object, form field (TODO)
-When(/^I (.*?) the \[(.*?)\]$/) do |action, obj|
-  fill_in "asset_external_id", :with => "EXTERNALID TEST 1"
-  click_button "#{action.titleize} #{obj.titleize}"
-end
-
 When(/^I start the app$/) do
   visit '/users/sign_in'
+end
+
+# got to the detail page
+Given(/^I am at the \[(.*?)\] detail page$/) do |obj|
+  if is_asset(obj)
+    visit inventory_path(Asset.first)
+  elsif is_org(obj)
+    puts organization_path(Organization.first).to_s
+    puts SystemConfig.transam_modules.to_s
+    visit organization_path(Organization.first)
+  else
+    visit "/#{obj.pluralize}/#{obj.classify.constantize.first.object_key}"
+  end
+end
+
+
+# Create/update a model object using its form
+# Assumes user is already at the form
+# Example: When I create a [vehicle] with {'name' => "hello"}
+# Parameters:
+# action can be "create" or "update"
+# obj is any model with forms
+# fields is a hash of field names and their values
+# Issues: currently assumes hash is properly formatted
+When(/^I (.*?) an? \[(.*?)\] with \{(.*?)\}$/) do |action, obj, fields|
+  eval("{#{fields}}").each do |key, val|
+    if is_asset(obj)
+      fill_in "asset_#{key.to_s}", :with => val
+    elsif is_org(obj)
+      fill_in "organization_#{key.to_s}", :with => val
+    else
+      fill_in "#{obj.downcase}_#{key.to_s}", :with => val
+    end
+  end
+  click_button "#{action.titleize} #{obj.humanize}"
 end
 
 

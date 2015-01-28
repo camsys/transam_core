@@ -11,7 +11,7 @@ Feature: Users can update the master record of an [asset]
     And an [equipment] exists
     When I am at the [equipment] detail page
       And I press the link "Update the master record"
-      And I update the [equipment]
+      And I update an [equipment] with {'external_id' => "EXTERNALID TEST 1"}
     Then I am at the [equipment] detail page
       And I will see "EXTERNALID TEST 1"
       #And show me the page
