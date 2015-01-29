@@ -3,5 +3,4 @@
 = format_field("In Service Date", format_as_date(@asset.in_service_date) )
 = format_field("Purchased New", format_as_boolean(@asset.purchased_new) )
 = format_field("Vendor", link_to(@asset.vendor, vendor_path(@asset.vendor))) unless @asset.vendor.nil?
-= format_field("Funding Type", @asset.fta_funding_type)
 = format_field("Expected Useful Life", "#{@asset.expected_useful_life} months" )

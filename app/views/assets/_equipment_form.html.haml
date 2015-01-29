@@ -19,10 +19,10 @@
         = f.input :description
         = f.association :manufacturer, :prompt => "Select manufacturer...", :collection => @asset.asset_type.manufacturers
         = f.input :manufacturer_model, :prompt => "Enter manufacturer model...", :label => "Manufacturer Model"
+        = f.input :manufacture_year, :label => "Manufacture Year"
         = f.input :quantity
         = f.input :quantity_units, :collection => Uom.units
         = f.input :serial_number
-        = f.input :manufacture_year, :label => "Manufacture Year"
 
     .col-md-6
       = dialog_tag('Purchase', {:icon => 'fa fa-refresh', :class => "form_part"}) do
