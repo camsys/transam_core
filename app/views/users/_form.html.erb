@@ -1,5 +1,5 @@
 <div class="row">
-	<%= simple_form_for(@user, :html => {:class => 'form-vertical' }, :wrapper => :vertical_form, :wrapper_mappings => {:boolean => :vertical_boolean}) do |f| %>
+	<%= simple_form_for(@user, :html => {:class => 'form-vertical user_form' }, :wrapper => :vertical_form, :wrapper_mappings => {:boolean => :vertical_boolean}) do |f| %>
 		<div class="col-md-3">
 			<%= dialog_tag("#{@user.name}", {:icon => "fa fa-user", :class => "form_part"}) do %>
 				<%= render(:partial => "summary", :locals =>{:user => @user}) %>
@@ -47,3 +47,31 @@
 
 	<% end %>
 </div>
+
+<script>
+	// Override placement of validator msg on .input-groups
+	$.validator.setDefaults({errorPlacement: function(error, element) {
+			console.log(element);
+			if(element.parents('.input-group').length) {
+				error.insertAfter(element.parents('.input-group'));
+			} else {
+				error.insertAfter(element);
+			}
+		}
+	});
+	$('.user_form').validate({
+		submitHandler: function(form) {
+			form.submit();
+		}
+	});
+
+	$.validator.addMethod(
+			"regex",
+			function(value, element, regexp) {
+				var re = new RegExp(regexp);
+			return this.optional(element) || re.test(value);
+		},
+		"Must be a valid zip code."
+	);
+	$("input[name='user[zip]']").rules("add", { regex: /^\d{5}([\-]?\d{4})?$/ })
+</script>
