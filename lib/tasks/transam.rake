@@ -17,6 +17,12 @@ namespace :transam do
       a.update_book_value
     end
   end
+  desc "Updates the estimated replacement cost of every asset"
+  task update_estimated_replacement_cost: :environment do
+    Asset.all.each do |a|
+      a.update_estimated_replacement_cost
+    end
+  end
   desc "Updates the disposition of every asset"
   task update_disposition: :environment do
     Asset.all.each do |a|

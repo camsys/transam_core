@@ -614,6 +614,24 @@ class Asset < ActiveRecord::Base
     a
   end
 
+  def update_estimated_replacement_cost(on_date=nil)
+
+    # Make sure we are working with a concrete asset class
+    asset = is_typed? ? self : Asset.get_typed_asset(self)
+
+    # Get the policy to use
+    policy = asset.policy
+    class_name = policy.cost_calculation_type.class_name
+
+    # create an instance of this class and call the method
+    calculator_instance = class_name.constantize.new
+    Rails.logger.debug "Instance created #{calculator_instance}"
+
+    asset.estimated_replacement_cost = calculator_instance.calculate_on_date(asset,on_date)
+    asset.save
+
+  end
+
   # calculate the year that the asset will need replacing based on
   # a policy
   def calculate_replacement_year(policy = nil)
@@ -629,6 +647,8 @@ class Asset < ActiveRecord::Base
     return last_year_for_service + 1
 
   end
+
+
   # calculate the estimated year that the asset will need replacing based on
   # a policy
   def calculate_estimated_replacement_year(policy = nil)
@@ -753,14 +773,6 @@ class Asset < ActiveRecord::Base
     begin
       class_name = policy.condition_estimation_type.class_name
       asset.estimated_replacement_year = calculate(asset, policy, class_name, 'last_servicable_year')
-    rescue Exception => e
-      Rails.logger.warn e.message
-    end
-
-    # returns the cost for replacing the asset in the replacement year based on the policy
-    begin
-      class_name = policy.cost_calculation_type.class_name
-      asset.estimated_replacement_cost = calculate(asset, policy, class_name)
     rescue Exception => e
       Rails.logger.warn e.message
     end
