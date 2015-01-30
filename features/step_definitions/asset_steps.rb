@@ -1,7 +1,7 @@
 ### GIVEN ###
 
 # create an equipment asset
-Given(/^an equipment exists$/) do |obj|
+Given(/^an \[equipment\] exists$/) do
   o = Organization.last
   test_asset = FactoryGirl.create(:equipment_asset, :organization => o)
   policy = Policy.find_by_organization_id(o.id)

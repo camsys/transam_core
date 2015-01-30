@@ -8,7 +8,6 @@ Feature: Users can update an [organization]
   Scenario: Update for an [organization]
     Given A user with email "jsoloski@catabus.com"
     And "jsoloski@catabus.com" logs in using valid user data
-    And an [organization] exists
     When I am at the [organization] detail page
       And I press the link "Update this organization"
       And I update a [test_org] with {:name => 'New Test Organization'}
