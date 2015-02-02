@@ -1,7 +1,7 @@
 - if can? :update, @asset or can? :delete, @asset
   .btn-group.pull-right.panel-action
     %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
-      I want to  
+      I want to
       %span.caret
     %ul.dropdown-menu.multi-level{:role => 'menu'}
 
@@ -16,19 +16,19 @@
           = link_to edit_inventory_path(@asset) do
             %i.fa.fa-fw.fa-edit
             = " Update the master record"
-      
-        %li.divider      
+
+        %li.divider
         %li
           = link_to copy_inventory_path(@asset) do
             %i.fa.fa-fw.fa-copy
             = " Make a copy"
-      
+
         %li.divider
         %li
           = link_to new_inventory_asset_event_path(@asset, :event_type => DispositionUpdateEvent.asset_event_type.id) do
             %i.fa.fa-fw{:class => DispositionUpdateEvent.asset_event_type.display_icon_name}
-            = " Record final dispostion"
-      
+            = " Record final disposition"
+
       - if can? :delete, @asset
         %li.divider
         %li

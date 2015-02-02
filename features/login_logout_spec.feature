@@ -12,9 +12,10 @@ Scenario: Login
 
 Scenario: Forgot your password
 	When I start the app
-	Then I will see "Forgot Your Password?"
-	# TODO:Finish scenario
-	#Then show me the page
+		And I press the link "Forgot Your Password?"
+		And I fill out the forgotten password form with "jsoloski@catabus.com"
+	Then I will see "Sign in"
+	# TODO: finish
 
 Scenario: Log in with incorrect credentials
 	When "jsoloski@catabus.com" logs in using invalid user data
