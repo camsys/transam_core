@@ -9,6 +9,10 @@
 class PurchasePricePlusInterestCalculator < CostCalculator
 
   def calculate(asset)
+    calculate_on_date(asset)
+  end
+
+  def calculate_on_date(asset,on_date=nil)
 
     Rails.logger.debug "PurchasePricePlusInterestCalculator.calculate(asset)"
 
@@ -16,14 +20,14 @@ class PurchasePricePlusInterestCalculator < CostCalculator
     initial_cost = asset.cost
     Rails.logger.debug "initial_cost #{initial_cost}"
 
-    # if we are past the replacement year, the replacement year is the max of the asset replacement year
-    # or now
-    replacement_year = [replacement_year(asset), fiscal_year_year_on_date(Date.today)].max
-    Rails.logger.debug "actual replacement_year #{replacement_year}"
+    purchase_date = asset.purchase_date
 
-    # Do the math...
-    # if past replacement year, return 0
-    num_years_to_replacement = [replacement_year - fiscal_year_year_on_date(asset.depreciation_start_date), 0].max
+    if on_date.nil?
+      num_years_to_replacement = [current_planning_year_year - fiscal_year_year_on_date(purchase_date), 0].max
+    else
+      months_to_replacement = (on_date.year * 12 + on_date.month) - (purchase_date.year * 12 + purchase_date.month)
+      num_years_to_replacement = [(months_to_replacement.to_f/12.0+0.5).floor, 0].max
+    end
     Rails.logger.debug "num_years_to_replacement #{num_years_to_replacement}"
 
     # interest rate

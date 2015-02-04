@@ -11,12 +11,12 @@ class ReplacementCostPlusInterestCalculator < ReplacementCostCalculator
 
   # average replacement cost for the asset plus accrued interest
   # from the policy year (in FY) until the FY of the given date (the planning year by default)
-  def calculate_on_date(asset,on_date)
+  def calculate_on_date(asset,on_date=nil)
 
     Rails.logger.debug "ReplacementCostPlusInterestCalculator.calculate(asset)"
 
     # Get the replacement cost of the asset
-    initial_cost = super
+    initial_cost = asset.cost
     Rails.logger.debug "initial_cost #{initial_cost}"
 
     if on_date.nil?
@@ -28,7 +28,7 @@ class ReplacementCostPlusInterestCalculator < ReplacementCostCalculator
 
     # Do the math...
     # if past replacement year, return 0
-    num_years_to_replacement = [replacement_year - fiscal_year_year_on_date(asset.depreciation_start_date), 0].max
+    num_years_to_replacement = [replacement_year - asset.policy.year, 0].max
     Rails.logger.debug "num_years_to_replacement #{num_years_to_replacement}"
 
     # interest rate
