@@ -131,16 +131,16 @@ class User < ActiveRecord::Base
     "#{first_name[0]}#{last_name[0]}"
   end
 
-
   # Returns true if the user is in a specified role, false otherwise
   def is_in_role(role_id)
     ! roles.find(role_id).nil?
   end
 
-  # Returns true if the user has at least one of the roles
+  # Returns true if the user has at least one of the roles. Roles can be strings
+  # or symbols
   def is_in_roles?(roles_to_test)
     roles_to_test.each do |name|
-      if roles_name.include? name
+      if roles_name.include? name.to_s
         return true
       end
     end
