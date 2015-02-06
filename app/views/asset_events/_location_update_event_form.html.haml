@@ -5,7 +5,7 @@
       %a.btn-default#find_asset
         ="Find"
   #spinner
-    = image_tag('ajax-loader.gif') 
+    = image_tag('ajax-loader.gif')
   = f.input :event_date, :label => 'Date of Report', :wrapper => :vertical_append do
     = f.input_field :event_date, :class => "form-control", :as => :string, :data => {'behavior' => 'datepicker'}, :value => f.object.event_date.strftime("%m-%d-%Y")
     %span.input-group-addon
@@ -13,6 +13,7 @@
   = f.input :comments, :input_html => { :rows => 6 }, :placeholder => "Enter any location comments..."
   .form-group
     = f.button :submit, "Update the storage location", :class => 'btn btn-primary'
+
 :javascript
   $(document).ready(function() {
     $("#spinner").hide();
