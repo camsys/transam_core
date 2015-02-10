@@ -142,12 +142,20 @@ module TransamFormatHelper
   end
 
   # Standard formats for dates and times
-  def format_as_date_time(datetime)
-    return datetime.strftime("%I:%M %p %b %d %Y") unless datetime.nil?
+  def format_as_date_time(datetime, compact=true)
+    if compact
+      datetime.strftime("%I:%M %p %m/%d/%Y") unless datetime.nil?      
+    else
+      datetime.strftime("%I:%M %p %b %d %Y") unless datetime.nil?
+    end
   end
 
-  def format_as_date(date)
-    return date.strftime("%b %d %Y") unless date.nil?
+  def format_as_date(date, compact=true)
+    if compact
+      date.strftime("%m/%d/%Y") unless date.nil?
+    else
+      date.strftime("%b %d %Y") unless date.nil?
+    end
   end
 
   def format_as_time(time)
