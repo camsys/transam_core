@@ -232,6 +232,7 @@ class AssetsController < AssetAwareController
     # get the class name for this asset event type
     class_name = asset_type.class_name
     klass = Object.const_get class_name
+
     @asset = klass.new(form_params)
     @asset.asset_type = asset_type
     @asset.asset_subtype = asset_subtype
@@ -241,12 +242,23 @@ class AssetsController < AssetAwareController
 
     #Rails.logger.debug @asset.inspect
 
+    #fix issues with saving a new asset w. grant purchase
+    grant_purchases_attributes = form_params[:grant_purchases_attributes]
+    if grant_purchases_attributes.present?
+      new_grant_purchase = GrantPurchase.new(grant_purchases_attributes["0"])
+      new_grant_purchase.asset = @asset
+      @asset.grant_purchases.delete_all
+    end
+
     add_breadcrumb "#{asset_type.name}".pluralize(2), inventory_index_path(:asset_type => asset_subtype.asset_type)
     add_breadcrumb "#{asset_subtype.name}", inventory_index_path(:asset_subtype => asset_subtype)
     add_breadcrumb "New", new_inventory_path(asset_subtype)
 
     respond_to do |format|
       if @asset.save
+
+        new_grant_purchase.save if new_grant_purchase.present?
+
         # If the asset was successfully saved, schedule update the condition and disposition asynchronously
         Delayed::Job.enqueue AssetUpdateJob.new(@asset.object_key), :priority => 0
 
