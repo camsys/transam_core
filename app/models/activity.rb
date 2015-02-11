@@ -34,7 +34,7 @@ class Activity < ActiveRecord::Base
   validates :organization_type, :presence => true, :allow_nil => true
   validates :name,              :presence => true
   validates :description,       :presence => true
-  validates :schedule,          :presence => true
+  validates :start,             :presence => true
   validates :due,               :presence => true
   validates :notify,            :presence => true
   validates :warn,              :presence => true
@@ -47,7 +47,7 @@ class Activity < ActiveRecord::Base
     :organization_type_id,
     :name,
     :description,
-    :schedule,
+    :start,
     :due,
     :notify,
     :notify_complete,
