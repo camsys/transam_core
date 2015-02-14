@@ -111,7 +111,7 @@ class Asset < ActiveRecord::Base
   validates_inclusion_of :purchased_new, :in => [true, false]
   validates     :purchase_cost,       :presence => :true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0}
   validates     :purchase_date,       :presence => :true
-  validates     :in_service_date,     :presence => :true
+  #validates     :in_service_date,     :presence => :true
 
   #------------------------------------------------------------------------------
   # Attributes common to all asset types
@@ -403,7 +403,11 @@ class Asset < ActiveRecord::Base
 
   # returns the number of months an asset has been in service
   def months_in_service(on_date=Date.today)
-    (on_date.year * 12 + on_date.month) - (in_service_date.year * 12 + in_service_date.month)
+    if in_service_date.nil?
+      0
+    else
+      (on_date.year * 12 + on_date.month) - (in_service_date.year * 12 + in_service_date.month)
+    end
   end
 
   # returns the number of years since the asset was manufactured. It can't be less than 0
