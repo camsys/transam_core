@@ -1,26 +1,24 @@
 %ul.media-list
   - comments.each do |c|
-    %li.media
+    %li.media-body
       .well.well-small
         .row
-          .media-body.col-md-12
-            .row
-              .col-xs-1
-                %i.fa.fa-comment.fa-3x
-              .col-xs-11
-                .col-xs-9
-                  %h5.media-heading.pull-left
-                    = "#{c.creator.name} at #{format_as_date_time(c.created_at)}"
-                .col-xs-3
-                  .pull-right
-                    - if can? :update, c
-                      = link_to edit_comment_path(c), :class => "btn btn-primary btn-xs pull-right", :style => "margin-left: 5px;" do
-                        %i.fa.fa-edit
-                        Edit
-                    - if can? :delete, c
-                      = link_to c, :method => :delete, :class => "btn btn-warning btn-xs pull-right", :style => "margin-left: 5px;", :data => { :confirm => 'Are you sure you want to remove this comment?' } do
-                        %i.fa.fa-trash
-                        Delete
+          .col-xs-1
+            %i.fa.fa-comment.fa-3x
+          .col-xs-11
+            .col-xs-9
+              %h5.media-heading.pull-left
+                = "#{c.creator.name} at #{format_as_date_time(c.created_at)}"
+            .col-xs-3
+              .pull-right
+                - if can? :update, c
+                  = link_to edit_comment_path(c), :class => "btn btn-primary btn-xs pull-right", :style => "margin-left: 5px;" do
+                    %i.fa.fa-edit
+                    Edit
+                - if can? :delete, c
+                  = link_to c, :method => :delete, :class => "btn btn-warning btn-xs pull-right", :style => "margin-left: 5px;", :data => { :confirm => 'Are you sure you want to remove this comment?' } do
+                    %i.fa.fa-trash
+                    Delete
 
-                .col-xs-12
-                  %p= c.comment.html_safe
+            .col-xs-12
+              %p= c.comment.html_safe
