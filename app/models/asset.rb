@@ -337,6 +337,20 @@ class Asset < ActiveRecord::Base
     disposition_date.present?
   end
 
+  # Returns true if the asset exists, i.e. has an in_service_date. If using this
+  # method, make sure the context is well defiend, for example, a building could
+  # be under construction but is not yet in service, similary, a bus could have
+  # been purchased but has not been placed into service.
+  def exists?
+    in_service_date.present?
+  end
+
+  # Returns true if an asset is scheduled for disposition
+  def scheduled_for_disposition?
+    scheduled_disposition_year.present?
+  end
+
+
   # Returns true if the asset is of the specified class or has the specified class as
   # and ancestor (superclass).
   #
