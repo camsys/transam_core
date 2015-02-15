@@ -3,6 +3,29 @@ module TransamFormatHelper
   # Include the fiscal year mixin
   include FiscalYear
 
+  # Formats a user name and provides an optional (defaulted) message link and
+  # messaging options
+  def format_as_user_link(user, options = {})
+    html = ''
+    from_user = options[:from_user]
+    subject = options[:subject].present? ? options[:subject] : ''
+    body = options[:body].present? ? options[:body] : ''
+    unless user.blank?
+      user_url = user_path(user)
+      html = "<a href='#{user_url}'>#{user}</a>"
+      if from_user.present?
+        message_url = new_user_message_path(from_user, :to_user => user, :subject => subject, :body => body)
+        html << '&nbsp;'
+        html << "<span class = 'message-link'>"
+        html << "<a href='#{message_url}'>"
+        html << "<i class = 'fa fa-envelope'></i>"
+        html << "</a>"
+        html << "</span>"
+      end
+    end
+    html.html_safe
+  end
+
 
   # Formats a quantity
   def format_as_quantity(count, unit_type = 'unit')
@@ -15,7 +38,7 @@ module TransamFormatHelper
 
   # formats an assets list of asset groups with remove option
   def format_asset_groups(asset, style = 'info')
-    html = ''
+    html = ""
     asset.asset_groups.each do |grp|
       html << "<span class='label label-#{style}'>"
       html << grp.code
@@ -144,7 +167,7 @@ module TransamFormatHelper
   # Standard formats for dates and times
   def format_as_date_time(datetime, compact=true)
     if compact
-      datetime.strftime("%I:%M %p %m/%d/%Y") unless datetime.nil?      
+      datetime.strftime("%I:%M %p %m/%d/%Y") unless datetime.nil?
     else
       datetime.strftime("%I:%M %p %b %d %Y") unless datetime.nil?
     end
