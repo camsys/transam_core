@@ -342,7 +342,7 @@ class Asset < ActiveRecord::Base
   # be under construction but is not yet in service, similary, a bus could have
   # been purchased but has not been placed into service.
   def exists?
-    in_service_date.present?
+    (in_service_date.present? and disposed? == false)
   end
 
   # Returns true if an asset is scheduled for disposition
