@@ -626,8 +626,8 @@ class AssetsController < AssetAwareController
   end
 
   def reformat_date_fields
-    params[:asset][:purchase_date] = reformat_date(params[:asset][:purchase_date])
-    params[:asset][:in_service_date] = reformat_date(params[:asset][:in_service_date])
+    params[:asset][:purchase_date] = reformat_date(params[:asset][:purchase_date]) unless params[:asset][:purchase_date].blank?
+    params[:asset][:in_service_date] = reformat_date(params[:asset][:in_service_date]) unless params[:asset][:in_service_date].blank?
   end
 
 end
