@@ -225,7 +225,11 @@ class UsersController < OrganizationAwareController
 
     respond_to do |format|
       if @user.update_attributes(form_params)
-        notify_user(:notice, "User #{@user.name} was successfully updated.")
+        if @user.id == current_user.id
+          notify_user(:notice, "Your profile was successfully updated.")
+        else
+          notify_user(:notice, "#{@user.name}'s profile was successfully updated.")
+        end
         format.html { redirect_to user_url(@user) }
         format.json { head :no_content }
       else
@@ -251,7 +255,11 @@ class UsersController < OrganizationAwareController
     respond_to do |format|
       if @user.update_with_password(form_params)
         # automatically sign in the user bypassing validation
-        notify_user(:notice, "User #{@user.name} was successfully updated.")
+        if @user.id == current_user.id
+          notify_user(:notice, "Your password was successfully updated.")
+        else
+          notify_user(:notice, "#{@user.name}'s password was successfully updated.")
+        end
         sign_in @user, :bypass => true
         format.html { redirect_to user_url(@user) }
         format.json { head :no_content }
