@@ -1,4 +1,4 @@
-= link_to user_message_path(current_user, message), :class => 'list-group-item' do
+= link_to user_messages_path(current_user), :class => 'list-group-item' do
   -if message.user.images.length != 0
     = image_tag message.user.images.last.image.url(:thumb), alt: message.user.name, class: "pull-left media-object img-circle img-responsive"
   -else
