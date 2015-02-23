@@ -33,7 +33,7 @@ class BaseSearcher
   end
 
   def to_s
-    conditions
+    queries.to_s
   end
 
   protected
