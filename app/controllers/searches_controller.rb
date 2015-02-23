@@ -100,8 +100,6 @@ class SearchesController < OrganizationAwareController
 
   def set_view_vars
 
-    add_breadcrumb "Home", root_path
-
     @search_type = params[:search_type]
     if @search_type == ASSET_SEARCH_TYPE
       @searcher_klass = "AssetSearcher"
