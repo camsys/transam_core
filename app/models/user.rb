@@ -32,9 +32,6 @@ class User < ActiveRecord::Base
   # every user belongs to a single organizations
   belongs_to :organization
 
-  # Every user has 0 or 1 user organization filter that they are using
-  belongs_to :user_organization_filter
-
   # every user has access to 0 or more organizations for reporting
   has_and_belongs_to_many :organizations, :join_table => 'users_organizations'
   has_many :organization_users, through: :organizations, :source => 'users'
@@ -48,8 +45,6 @@ class User < ActiveRecord::Base
   # Every user can have a profile picture
   has_many   :images,      :as => :imagable,       :dependent => :destroy
 
-  # Every user can have 0 or more organization filters they have created
-  has_many   :organization_filters,   :class_name => 'UserOrganizationFilter', :dependent => :destroy
 
   # Messages that have been tagged by the user
   has_many    :message_tags
@@ -92,7 +87,6 @@ class User < ActiveRecord::Base
     :current_password,
     :remember_me,
     :external_id,
-    :user_organization_filter_id,
     :num_table_rows,
     :active,
     :address1,
