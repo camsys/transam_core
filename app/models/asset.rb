@@ -338,7 +338,7 @@ class Asset < ActiveRecord::Base
   end
 
   # Returns true if the asset exists, i.e. has an in_service_date. If using this
-  # method, make sure the context is well defiend, for example, a building could
+  # method, make sure the context is well defined, for example, a building could
   # be under construction but is not yet in service, similary, a bus could have
   # been purchased but has not been placed into service.
   def exists?
@@ -347,9 +347,13 @@ class Asset < ActiveRecord::Base
 
   # Returns true if an asset is scheduled for disposition
   def scheduled_for_disposition?
-    scheduled_disposition_year.present?
+    (scheduled_disposition_year.present? and disposed? == false)
   end
 
+  # Returns true if an asset is scheduled for rehabilitation
+  def scheduled_for_rehabilitation?
+    (scheduled_rehabilitation_year.present? and disposed? == false)
+  end
 
   # Returns true if the asset is of the specified class or has the specified class as
   # and ancestor (superclass).
