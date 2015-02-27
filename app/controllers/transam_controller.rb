@@ -121,6 +121,11 @@ class TransamController < ApplicationController
     ret = Rails.cache.read(get_cache_key(current_user, key))
     return ret.nil? ? [] : ret
   end
+
+  def clear_cached_objects(key)
+    Rails.logger.debug "ApplicationController CACHE clear for key #{get_cache_key(current_user, key)}"
+    Rails.cache.delete(get_cache_key(current_user, key))
+  end
     
   # generates a cache key that is unique for a user and key name
   def get_cache_key(user, key)
