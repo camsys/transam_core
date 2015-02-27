@@ -55,7 +55,7 @@ class LocationUpdateEvent < AssetEvent
     self.parent = Asset.find_by_object_key(object_key)
   end
   def parent_key
-    parent.object_key
+    parent.object_key if parent
   end
 
   protected
