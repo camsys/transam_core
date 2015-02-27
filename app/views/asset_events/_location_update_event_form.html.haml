@@ -1,6 +1,6 @@
 = render :layout => "update_event_form" do |f|
-  = f.input :parent_id, :wrapper => :vertical_append, :label => "Parent (ID)" do
-    = f.input_field :parent_id, :class => "form-control", :as => :string
+  = f.input :parent_key, :wrapper => :vertical_append, :label => "Parent (ID)" do
+    = f.input_field :parent_key, :class => "form-control", :as => :string
     %span.input-group-addon.popover_anchor{ :tabindex => 0 }
       %a.btn-default#find_asset
         ="Find"
@@ -19,7 +19,7 @@
     $("#spinner").hide();
 
     $("#find_asset").on('click', function() {
-      var parent_id = $("#asset_event_parent_id").val();
+      var parent_key = $("#asset_event_parent_key").val();
       $(".popover_anchor").popover({
         toggle: "popover",
         container: "body",
@@ -30,7 +30,7 @@
       $.ajax({
         type: "GET",
         url: "#{parent_inventory_index_path}",
-        data: {parent_id: parent_id },
+        data: {parent_key: parent_key },
         dataType: "html",
         beforeSend: function() {
           $("#spinner").show()
