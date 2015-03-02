@@ -2,7 +2,7 @@
   notices = Notice.active_for_organization(@organization).order(:display_datetime)
 
 .col-md-3.col-sm-3
-  .panel.panel-default{:style => 'height: 200px;overflow-y: auto;'}  
+  .panel.panel-default{:style => 'height: 200px;overflow-y: auto;'}
     .panel-heading
       .pull-right
         %span.badge= notices.count
@@ -11,7 +11,6 @@
       .panel-body
         %p= "No notices."
     - else
-      %ul.media-list
+      %ul.list-group
         - notices.each do |n|
-          %li.media
-            = render :partial => "shared/notice_detail", locals: {:notice => n}
+          = render :partial => "shared/notice_detail", locals: {:notice => n}

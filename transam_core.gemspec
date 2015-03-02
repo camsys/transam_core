@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
   s.add_dependency "devise", '~> 3.2.2'
   s.add_dependency "rolify", '~> 3.4'
   s.add_dependency "high_voltage"
-  s.add_dependency "fullcalendar-rails"
+  #s.add_dependency "fullcalendar-rails"
   #s.add_dependency 'mail', '2.5.4'
   s.add_dependency 'unitwise'
   s.add_dependency 'chronic'

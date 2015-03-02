@@ -1,5 +1,7 @@
-= link_to notices_path, :class => 'list-group-item' do
-  %i.fa.fa-fw.fa-2x.pull-left.media-object{:class => notice.notice_type.display_icon}
+%li.list-group-item
+  %i.fa.fa-fw.fa-1-5x.pull-left.media-object{:class => "#{notice.notice_type.display_icon} #{notice.notice_type.display_class}"}
   .media-body
-    %h4.media-heading{:class => notice.notice_type.display_class}= notice.subject
-    %p= notice.summary.html_safe
+    .media-heading{:class => notice.notice_type.display_class}
+      = notice.subject
+      %span.pull-right.text-default.text-muted{:style => 'font-size: 0.75em'}= format_as_date_time(notice.display_datetime)
+    %p.text-muted{:style => 'font-size: 0.85em'}= notice.summary.html_safe
