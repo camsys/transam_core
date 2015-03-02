@@ -51,6 +51,10 @@ class User < ActiveRecord::Base
   # Every user can have 0 or more organization filters they have created
   has_many   :organization_filters,   :class_name => 'UserOrganizationFilter', :dependent => :destroy
 
+  # Messages that have been tagged by the user
+  has_many    :message_tags
+  has_many    :messages, :through => :message_tags
+
   #------------------------------------------------------------------------------
   # Validations
   #------------------------------------------------------------------------------

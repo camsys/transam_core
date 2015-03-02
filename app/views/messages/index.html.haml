@@ -1,0 +1,102 @@
+:css
+  .tab-pane .list-group-item:first-child {border-top-right-radius: 0px; border-top-left-radius: 0px; border-top: 0px}
+  .tab-pane .list-group-item:last-child {border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;}
+  .btn+.btn {margin-left: 10px;}
+  .taggable {margin-right: 2px;}
+  .fa-flag {margin-right: 2px;}
+  .tab-content {padding: 0px;}
+
+.row
+  .col-lg-10.col-md-10.col-sm-12.col-xs-12.col-lg-offset-1.col-md-offset-1{:style => 'margin-top: 10px;'}
+
+    = link_to user_messages_path(current_user), :class => "btn btn-default", :role => 'button' do
+      %i.fa.fa-refresh
+      = " Refresh"
+
+    = link_to new_user_message_path(current_user), :class => "btn btn-info", :role => 'button' do
+      %i.fa.fa-envelope
+      = " Compose"
+
+.row
+  .col-lg-10.col-md-10.col-sm-12.col-xs-12.col-lg-offset-1.col-md-offset-1{:style => 'margin-top: 15px;'}
+    %ul.nav.nav-tabs
+      %li
+        %a{:href => "#new", :data =>{:toggle => 'tab'}}
+          %span.badge.pull-right= @new_messages.count
+          %i.fa.fa-download
+          = " New"
+
+      %li
+        %a{:href => "#flag", :data =>{:toggle => 'tab'}}
+          %span.badge.pull-right= @flagged_messages.count
+          %i.fa.fa-star
+          = " Flagged"
+
+      %li
+        %a{:href => "#inbox", :data =>{:toggle => 'tab'}}
+          %span.badge.pull-right= @all_messages.count
+          %i.fa.fa-inbox
+          = " Inbox"
+
+      %li
+        %a{:href => "#sent", :data =>{:toggle => 'tab'}}
+          %span.badge.pull-right= @sent_messages.count
+          %i.fa.fa-send
+          = " Sent"
+
+    .tab-content
+      .tab-pane.fade.in#new
+        .list-group
+          - if @new_messages.empty?
+            %p No new messages
+          - else
+            - @new_messages.each do |msg|
+              = render :partial => 'message_detail', :locals => {:msg => msg}
+
+      .tab-pane.fade.in#flag
+        .list-group
+          - if @flagged_messages.empty?
+            %p No flagged messages
+          - else
+            - @flagged_messages.each do |msg|
+              = render :partial => 'message_detail', :locals => {:msg => msg}
+
+      .tab-pane.fade.in#inbox
+        .list-group
+          - if @all_messages.empty?
+            %p No messages
+          - else
+            - @all_messages.each do |msg|
+              = render :partial => 'message_detail', :locals => {:msg => msg}
+
+      .tab-pane.fade.in#sent
+        .list-group
+          - if @sent_messages.empty?
+            %p No sent messages
+          - else
+            - @sent_messages.each do |msg|
+              = render :partial => 'message_detail', :locals => {:msg => msg, :sent => true}
+
+:javascript
+
+  var tab_var = 'messages_tab';
+
+  $(document).ready(function() {
+
+    // Manage the tabs
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+      // save the latest tab
+      var this_tab = $(this).attr('href');
+      transam.set_ui_key_value(tab_var, this_tab);
+    });
+  });
+
+  $(function() {
+    var last_tab = transam.get_ui_key_value(tab_var);
+    if (last_tab) {
+      $('a[href='+last_tab+']').tab('show');
+    } else {
+      // Default to the first tab if no tab is stored
+      $('a[data-toggle="tab"]:first').tab('show');
+    }
+  });

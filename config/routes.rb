@@ -128,8 +128,14 @@ Rails.application.routes.draw do
       patch 'update_password'
       get   'profile_photo'
     end
+
     resources :images
-    resources :messages
+    
+    resources :messages do
+      member do
+        get 'tag'
+      end
+    end
 
     resources :tasks do
       resources :comments,    :only => [:create, :update, :edit, :new, :destroy]

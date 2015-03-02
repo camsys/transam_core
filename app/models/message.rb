@@ -1,8 +1,8 @@
 class Message < ActiveRecord::Base
-  
+
   # Include the object key mixin
   include TransamObjectKey
-  
+
   #------------------------------------------------------------------------------
   # Callbacks
   #------------------------------------------------------------------------------
@@ -15,7 +15,11 @@ class Message < ActiveRecord::Base
   belongs_to :to_user, :class_name => 'User', :foreign_key => "to_user_id"
   belongs_to :priority_type
   has_many   :responses, :class_name => "Message", :foreign_key => "thread_message_id"
-  
+
+  # Has been tagged by the user
+  has_many    :message_tags
+  has_many    :users, :through => :message_tags
+
   # Validations on core attributes
   validates :organization_id,   :presence => true
   validates :user,              :presence => true
@@ -23,10 +27,10 @@ class Message < ActiveRecord::Base
   validates :priority_type_id,  :presence => true
   validates :subject,           :presence => true
   validates :body,              :presence => true
-   
+
   default_scope { order('created_at DESC') }
-      
-  # List of allowable form param hash keys  
+
+  # List of allowable form param hash keys
   FORM_PARAMS = [
     :organization_id,
     :user_id,
@@ -36,11 +40,23 @@ class Message < ActiveRecord::Base
     :subject,
     :body
   ]
-  
+
   def self.allowable_params
     FORM_PARAMS
   end
-      
+
+  # Returns true if the user has tagged this order
+  def tagged? user
+    users.include? user
+  end
+
+  # Tags this order for the user
+  def tag user
+    unless tagged? user
+      users << user
+    end
+  end
+
   # Recursively determine how many total responses there are to this thread
   def response_count
     sum = 0
@@ -50,10 +66,10 @@ class Message < ActiveRecord::Base
     end
     return sum
   end
-   
+
   # Set resonable defaults for a new message
   def set_defaults
-  end    
+  end
 
   # If the to_user has elected to receive emails, send them upon message creation
   def send_email
@@ -61,5 +77,5 @@ class Message < ActiveRecord::Base
       Delayed::Job.enqueue SendMessageAsEmailJob.new(object_key), :priority => 0
     end
   end
-   
+
 end

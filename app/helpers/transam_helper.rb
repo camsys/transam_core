@@ -59,6 +59,27 @@ module TransamHelper
     icon
   end
 
+  # Returns the tag icon classes (empty star or filled star) for an object based on
+  # whether the object has been tagged by the user or not
+  def get_tag_icon(obj)
+    if obj.tagged? current_user
+      'fa-star text-tagged taggable'
+    else
+      'fa-star-o text-tagged taggable'
+    end
+  end
+
+  # Returns the message priority icon classes for an message based on
+  # the message priority
+  def get_message_priority_icon(msg)
+    if msg.priority_type_id == 1
+    elsif msg.priority_type_id == 2
+      'fa-flag text-default'
+    elsif msg.priority_type_id == 3
+      'fa-flag text-danger'
+    end
+  end
+
   # Returns the correct icon for a workflow asset
   def get_workflow_event_icon(event_name)
 

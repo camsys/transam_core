@@ -1,0 +1,37 @@
+:css
+	.list-group-item+.list-group-item{margin-top: 5px;}
+	h5{margin-bottom: 2px;}
+
+:ruby
+	is_to_me = @message.to_user.id == current_user.id
+
+.row
+	.col-md-12
+		%frameset
+			%legend Message
+
+			.list-group-item
+				%span.fa{:class => get_message_priority_icon(@message)}
+				%span.fa{:class => get_tag_icon(@message)}
+				%span.name{:style => "min-width: 180px;display: inline-block;"}
+					- if is_to_me
+						= @message.user.name
+					- else
+						= @message.to_user.name
+
+				%span.pull-right.text-muted.small= format_as_date_time(@message.created_at)
+
+			%h5 Subject
+			.list-group-item
+				%span.name{:style => "display: inline-block;"}
+					= @message.subject
+
+			%h5 Message
+			.list-group-item
+				%span.name{:style => "display: inline-block;"}
+					= @message.body.html_safe
+
+- if is_to_me
+	.row
+		.col-md-12
+			= render 'response_form'

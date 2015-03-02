@@ -2,7 +2,7 @@ class MessagesController < OrganizationAwareController
 
   add_breadcrumb "Home", :root_path
 
-  before_action :set_message, :only => [:show, :edit, :update, :destroy]
+  before_action :set_message, :only => [:show, :edit, :update, :destroy, :tag]
   before_filter :check_for_cancel, :only => [:create]
 
   # Enumerables for message filters
@@ -27,40 +27,36 @@ class MessagesController < OrganizationAwareController
     conditions << 'organization_id = ?'
     values << @organization.id
 
-    if @filter == MESSAGE_TYPE_NEW
-      @page_title = 'New Messages'
-      # New messages must be for the current user
-      conditions << 'to_user_id = ?'
-      values << current_user.id
-      # ad not have been previously opened
-      conditions << 'opened_at IS NULL'
-
-    elsif @filter == MESSAGE_TYPE_SENT
-
-      @page_title = 'New Messages'
-      # New messages must be from the current user
-      conditions << 'user_id = ?'
-      values << current_user.id
-
-    else
-      # Already read messages
-      @page_title = 'Messages'
-      # All others must be for the current user
-      conditions << 'to_user_id = ?'
-      values << current_user.id
-      # and have been previously opened
-      conditions << 'opened_at IS NOT NULL'
-    end
+    # New messages must be for the current user
+    conditions << 'to_user_id = ?'
+    values << current_user.id
 
     # Get the messages
     @messages = Message.where(conditions.join(' AND '), *values).order("created_at DESC")
-
-    #puts "Filter Val = '#{session[SESSION_FILTER_TYPE_VAR]}'"
+    @all_messages = @messages.where('opened_at IS NOT NULL')
+    @new_messages = @messages.where('opened_at IS NULL')
+    @flagged_messages = current_user.messages
+    @sent_messages = Message.where(:user_id => current_user.id).order("created_at DESC")
 
     respond_to do |format|
       format.html # index.html.erb
       format.json { render :json => @messages }
     end
+  end
+
+  # Tags the message for the user or removes it if the message
+  # is already tagged. called by ajax so no response is rendered
+  def tag
+
+    if @message.tagged? current_user
+      @message.users.delete current_user
+    else
+      @message.tag current_user
+    end
+
+    # No response needed
+    render :nothing => true
+
   end
 
   def show
