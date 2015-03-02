@@ -52,7 +52,7 @@ class AssetsController < AssetAwareController
   end
 
   def parent
-    parent_asset = @organization.assets.find_by_object_key(params[:parent_id])
+    parent_asset = @organization.assets.find_by_object_key(params[:parent_key])
     respond_to do |format|
       format.js   {render :partial => 'assets/asset_details', :locals => { :asset => parent_asset} }
     end

@@ -22,7 +22,7 @@ class LocationUpdateEvent < AssetEvent
     
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
-    :parent_id
+    :parent_key
   ]
   
   #------------------------------------------------------------------------------
@@ -49,6 +49,13 @@ class LocationUpdateEvent < AssetEvent
   # This must be overriden otherwise a stack error will occur  
   def get_update
     parent.object_key unless parent.nil?
+  end
+
+  def parent_key=(object_key)
+    self.parent = Asset.find_by_object_key(object_key)
+  end
+  def parent_key
+    parent.object_key if parent
   end
 
   protected
