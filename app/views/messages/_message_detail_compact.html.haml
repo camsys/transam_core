@@ -1,0 +1,14 @@
+:ruby
+	sent ||= false
+
+= link_to user_message_path(current_user, msg), :class => 'list-group-item' do
+	%span.fa{:class => get_message_priority_icon(msg)}
+	%span.fa{:class => get_tag_icon(msg)}
+	%span.name{:style => "min-width: 180px;display: inline-block;"}
+		- if sent
+			= msg.to_user.name
+		- else
+			= msg.user.name
+	%span.pull-right.text-muted.small= format_as_date_time(msg.created_at)
+	%br
+	%span= msg.subject.truncate(64)
