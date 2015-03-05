@@ -10,16 +10,15 @@
 		%frameset
 			%legend Message
 
+			%h5 From: #{@message.user.name}
 			.list-group-item
 				%span.fa{:class => get_message_priority_icon(@message)}
 				%span.fa{:class => get_tag_icon(@message)}
 				%span.name{:style => "min-width: 180px;display: inline-block;"}
-					- if is_to_me
-						= @message.user.name
-					- else
-						= @message.to_user.name
+					= "To: <strong>#{@message.to_user.name}</strong>".html_safe
 
-				%span.pull-right.text-muted.small= format_as_date_time(@message.created_at)
+				%span.pull-right.text-muted.small
+					= format_as_date_time(@message.created_at)
 
 			%h5 Subject
 			.list-group-item
