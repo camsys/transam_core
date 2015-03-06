@@ -99,12 +99,11 @@ class MessagesController < OrganizationAwareController
     add_breadcrumb "My Messages", user_messages_path(current_user)
     add_breadcrumb "New"
 
-    @message = Message.new
-    @message.organization = @organization
-    @message.user = current_user
-    @message.priority_type = PriorityType.default
+    @message = MessageProxy.new
 
+    @message.priority_type = PriorityType.default
     @message.to_user = User.find_by_object_key(params[:to_user]) unless params[:to_user].nil?
+    @message.available_agencies = (@organization_list + current_user.organization_ids).uniq
     @message.subject = params[:subject] unless params[:subject].nil?
     @message.body    = params[:body] unless params[:body].nil?
 
@@ -119,8 +118,12 @@ class MessagesController < OrganizationAwareController
     add_breadcrumb "My Messages", user_messages_path(current_user)
     add_breadcrumb "New"
 
-    @message = Message.new(form_params)
+    @message = MessageProxy.new(form_params)
+
+    @message.group_role = params[:message][:group_role]
+    @message.group_agency = params[:message][:group_agency]
     @message.organization = @organization
+    @message.available_agencies = (@organization_list + current_user.organization_ids).sort.uniq
     @message.user = current_user
 
     # See if we got a message id posted, if so then the post is a response
@@ -130,12 +133,12 @@ class MessagesController < OrganizationAwareController
       @message.subject = 'Re: ' + parent_message.subject
       @message.to_user_id = parent_message.to_user_id.nil? ? nil : parent_message.user_id
       #@message.thread = parent_message
-      parent_message.responses << @message
+      # parent_message.responses << @message.message
     end
 
     respond_to do |format|
       if @message.save
-        notify_user(:notice, "Message was successfully sent.")
+        notify_user(:notice, "#{view_context.pluralize( @message.messages_sent, 'Messages')} successfully sent.")
         format.html { redirect_to user_messages_url(current_user) }
         format.json { render :json => @message, :status => :created }
       else
