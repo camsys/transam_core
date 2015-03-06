@@ -10,5 +10,5 @@ Background:
 Scenario: Creating a new message
   When I am at the "New Message" page
     And I create a [message] with {:to_user_id => "joe normal", :subject => "Test Subject", :body => "Hi, This is a test email."}
-  Then I will see "New Messages (1)"
+  Then I will see "1 New"
   #Then show me the page
