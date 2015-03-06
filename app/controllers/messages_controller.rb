@@ -126,6 +126,23 @@ class MessagesController < OrganizationAwareController
     @message.available_agencies = (@organization_list + current_user.organization_ids).sort.uniq
     @message.user = current_user
 
+    respond_to do |format|
+      if @message.save
+        notify_user(:notice, "#{view_context.pluralize( @message.messages_sent, 'Messages')} successfully sent.")
+        format.html { redirect_to user_messages_url(current_user) }
+        format.json { render :json => @message, :status => :created }
+      else
+        format.html { render :action => "new" }
+        format.json { render :json => @message.errors, :status => :unprocessable_entity }
+      end
+    end
+  end
+
+  def reply
+    @message = Message.new(form_params)
+    @message.organization = @organization
+    @message.user = current_user
+
     # See if we got a message id posted, if so then the post is a response
     if params[:message_id]
       parent_message = @organization.messages.find(params[:message_id])
@@ -133,12 +150,12 @@ class MessagesController < OrganizationAwareController
       @message.subject = 'Re: ' + parent_message.subject
       @message.to_user_id = parent_message.to_user_id.nil? ? nil : parent_message.user_id
       #@message.thread = parent_message
-      # parent_message.responses << @message.message
+      parent_message.responses << @message
     end
 
     respond_to do |format|
       if @message.save
-        notify_user(:notice, "#{view_context.pluralize( @message.messages_sent, 'Messages')} successfully sent.")
+        notify_user(:notice, "Message was successfully sent.")
         format.html { redirect_to user_messages_url(current_user) }
         format.json { render :json => @message, :status => :created }
       else
