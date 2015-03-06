@@ -35,7 +35,7 @@ class MessageProxy < Proxy
       total_users = User.where(id: self.to_user_id)
     end
 
-    total_users
+    total_users -[@message.user]
   end
 
   def save
