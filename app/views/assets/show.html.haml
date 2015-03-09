@@ -29,5 +29,8 @@
 :javascript
   
   $(document).ready(function() {            
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+      transam.make_same_height('.header-part');    
+    });
     transam.make_same_height('.header-part');    
   });
