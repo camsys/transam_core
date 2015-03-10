@@ -3,7 +3,7 @@
 $.rails.allowAction = (element) ->
   # The message is something like "Are you sure?"
   message = element.data('confirm')
-  # If there's no message, there's no data-confirm attribute, 
+  # If there's no message, there's no data-confirm attribute,
   # which means there's nothing to confirm
   return true unless message
   # Clone the clicked element (probably a delete link) so we can use it in the dialog box.
@@ -24,7 +24,7 @@ $.rails.allowAction = (element) ->
                  <div class="modal-dialog">
                    <div class='modal-content'>
                      <div class='modal-body'>
-                        <h3>#{message}</h3>
+                        <p>#{message}</p>
                      </div>
                     <div class="modal-footer">
                       <a data-dismiss="modal" class="btn btn-default">Cancel</a>
@@ -44,4 +44,3 @@ $.rails.allowAction = (element) ->
   $modal_html.modal()
   # Prevent the original link from working
   return false
-  
