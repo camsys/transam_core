@@ -1,36 +1,76 @@
-- available_agencies = Organization.where(id: @message.available_agencies)
-= simple_form_for([current_user, @message], :url => user_messages_path, :as => :message, :html => {:class => 'form-horizontal' }, :wrapper => :horizontal_form) do |f|
-  = dialog_tag('Message', {:icon => 'fa fa-envelope', :class => "form_part"}) do
-    .form-group#by_user
-      %label.control-label.col-sm-3 To
-      .form-inline.col-sm-9
-        = f.input :to_user_id, :collection => available_agencies, :as => :grouped_select, :group_method => :users, :label => false, :include_blank => "No User Selected"
+- available_agencies = Organization.where(id: @message_proxy.available_agencies)
+
+%fieldset
+  %legend
+    = "New Message"
     - if current_user.is_in_roles? [:admin, :manager]
-      .form-group#by_role_and_agency
-        %label.control-label.col-sm-3
-        .form-inline.col-sm-9
-          %p
-            %b OR
-          = f.input :group_agency, :collection => available_agencies, :label => false, :label_method => :short_name, :include_blank => "All Organizations", :prompt => "No Organization Selected"
-          = f.input :group_role, :collection => Role.all, :label => false, :include_blank => "Any Role", :label_method => lambda {|r| "#{r.name.titleize.pluralize}"}, :value_method => lambda { |r| r.id }
-    = f.input :subject, :placeholder => "Subject..."
-    = f.input :priority_type_id, :collection => PriorityType.all, :include_blank => false, :label => "Priority Type", :selected => @message.priority_type_id
-    = f.input :body, :as => :text, :input_html => { :rows => 10 }, :placeholder => "Enter your message..."
-    = f.submit 'Send Message', :class => "btn btn-primary"
+      .pull-right
+        %input{:type => "checkbox", :id => "switch-mode", :data => {:label_text => "Group mode", :size => 'small'}}
+
+  = simple_form_for([current_user, @message_proxy],
+    :url => user_messages_path(current_user),
+    :html => {:class => 'form-vertical'},
+    :wrapper => :vertical_form,
+    :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes,
+    :radio_buttons => :vertical_radio_and_checkboxes,
+    :file => :vertical_file_input,
+    :boolean => :vertical_boolean}) do |f|
+
+    = f.input :send_to_group, :as => :hidden
+
+    .row
+      .col-lg-3.col-md-3.col-sm-6.col-xs-6
+        = f.input :to_user_ids, :label => "Users", :collection => available_agencies, :input_html => {:multiple => true}, :as => :grouped_select, :group_method => :users, :include_blank => false
+        = f.input :group_agencys, :input_html => {:multiple => true}, :label => "Organizations", :collection => available_agencies, :include_blank => false
+      .col-lg-4.col-md-4.col-sm-6.col-xs-6
+        = f.input :group_roles, :input_html => {:multiple => true}, :label => "Roles", :collection => Role.all, :include_blank => "All Roles", :label_method => lambda {|r| "#{r.name.titleize.pluralize}"}, :value_method => lambda { |r| r.id }
+
+    .row
+      .col-lg-9.col-md-9.col-sm-9.col-xs-9
+        = f.input :subject, :placeholder => "Enter a brief summary..."
+      .col-lg-3.col-md-3.col-sm-6.col-xs-6
+        = f.input :priority_type_id, :collection => PriorityType.all, :include_blank => false, :label => "Priority"
+
+    = f.input :body, :label => false, :as => :ckeditor, :input_html => { :ckeditor => {:toolbar => 'mini'}}
+
+    = f.button :submit, "Send...", :class => "btn btn-primary"
+
 
 :javascript
-  $(document).ready(function() {
-    // Set up "No User", "No Organization" to have sentinel values
-    $('select option').filter(function () { 
-      return $(this).html().match(/All Organizations/);
-    }).val("all");
 
-    // Use sentinel values to reset form based on user actions
-    // They should only be able to select EITHER to_user or Agency and Role
-    $("#message_to_user_id").on("change", function() {
-      $("#message_group_agency option[value=''], #message_group_role option[value='']").prop('selected', true)
-    })
-    $("#message_group_agency, #message_group_role").on("change", function() {
-      $("#message_to_user_id option[value='']").prop('selected', true);
-    })
-  })
+  $(document).ready(function() {
+
+    $("#switch-mode").bootstrapSwitch({
+      onSwitchChange: switch_mode
+    });
+
+    enable_user_mode();
+
+  });
+
+  function switch_mode() {
+    var val = $('#message_proxy_send_to_group').val();
+    if (val == '0') {
+      enable_group_mode();
+    } else {
+      enable_user_mode();
+    }
+  };
+
+  function enable_user_mode() {
+    var val = $('#message_proxy_send_to_group').val('1');
+    $('.message_proxy_group_agencys, .message_proxy_group_roles').hide();
+    $('.message_proxy_to_user_ids').show();
+    $('#message_proxy_send_to_group').val('0');
+    $('#switch-mode span').html('Send to group')
+    $('#switch-mode i').removeClass('fa-user')
+    $('#switch-mode i').addClass('fa-users')
+  };
+  function enable_group_mode() {
+    $('.message_proxy_group_agencys, .message_proxy_group_roles').show();
+    $('.message_proxy_to_user_ids').hide();
+    $('#message_proxy_send_to_group').val('1');
+    $('#switch-mode span').html('Send to users')
+    $('#switch-mode i').addClass('fa-user')
+    $('#switch-mode i').removeClass('fa-users')
+  };

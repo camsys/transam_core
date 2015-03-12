@@ -96,17 +96,16 @@ class MessagesController < OrganizationAwareController
     add_breadcrumb "My Messages", user_messages_path(current_user)
     add_breadcrumb "New"
 
-    @message = MessageProxy.new
+    @message_proxy = MessageProxy.new
 
-    @message.priority_type = PriorityType.default
-    @message.to_user = User.find_by_object_key(params[:to_user]) unless params[:to_user].nil?
-    @message.available_agencies = (@organization_list + current_user.organization_ids).uniq
-    @message.subject = params[:subject] unless params[:subject].nil?
-    @message.body    = params[:body] unless params[:body].nil?
+    @message_proxy.priority_type_id = PriorityType.default.id
+    @message_proxy.to_user_ids << User.find_by_object_key(params[:to_user]).id unless params[:to_user].nil?
+    @message_proxy.available_agencies = (@organization_list + current_user.organization_ids).uniq
+    @message_proxy.subject = params[:subject] unless params[:subject].nil?
+    @message_proxy.body    = params[:body] unless params[:body].nil?
 
     respond_to do |format|
       format.html # new.html.erb
-      format.json { render :json => @message }
     end
   end
 
@@ -115,22 +114,58 @@ class MessagesController < OrganizationAwareController
     add_breadcrumb "My Messages", user_messages_path(current_user)
     add_breadcrumb "New"
 
-    @message = MessageProxy.new(form_params)
-
-    @message.group_role = params[:message][:group_role]
-    @message.group_agency = params[:message][:group_agency]
-    @message.organization = @organization
-    @message.available_agencies = (@organization_list + current_user.organization_ids).sort.uniq
-    @message.user = current_user
+    @message_proxy = MessageProxy.new(message_proxy_form_params)
+    Rails.logger.debug @message_proxy.inspect
 
     respond_to do |format|
-      if @message.save
-        notify_user(:notice, "#{view_context.pluralize( @message.messages_sent, 'Messages')} successfully sent.")
+      if @message_proxy.valid?
+        priority = PriorityType.find(@message_proxy.priority_type_id)
+        send_count = 0
+
+        if @message_proxy.send_to_group == '1'
+          org_list = []
+          @message_proxy.group_agencys.uniq.each {|x| org_list << x unless x.blank?}
+          # Sending to a group
+          selected_users = User.where(:active => true)
+          # Select agencies if provided
+          selected_users = selected_users.where(:organization_id => org_list) unless org_list.empty?
+          # Select roles if provided
+          @message_proxy.group_roles.each do |role_id|
+            selected_users = selected_users.with_role(Role.find(role_id).name) unless role_id.blank?
+          end
+          selected_users.each do |user|
+            msg = Message.new
+            msg.user = current_user
+            msg.organization = @organization
+            msg.to_user = user
+            msg.subject = @message_proxy.subject
+            msg.body = @message_proxy.body
+            msg.priority_type = priority
+            msg.save
+            send_count += 1
+          end
+        else
+          # Sending to individual users
+          @message_proxy.to_user_ids.each do |user_id|
+            unless user_id.blank?
+              msg = Message.new
+              msg.user = current_user
+              msg.organization = @organization
+              msg.to_user = User.find(user_id)
+              msg.subject = @message_proxy.subject
+              msg.body = @message_proxy.body
+              msg.priority_type = priority
+              msg.save
+              send_count += 1
+            end
+          end
+        end
+        notify_user(:notice, "#{view_context.pluralize( send_count, 'Messages')} successfully sent.")
         format.html { redirect_to user_messages_url(current_user) }
-        format.json { render :json => @message, :status => :created }
       else
+        Rails.logger.debug @message_proxy.errors
+        @message_proxy.available_agencies = (@organization_list + current_user.organization_ids).uniq
         format.html { render :action => "new" }
-        format.json { render :json => @message.errors, :status => :unprocessable_entity }
       end
     end
   end
@@ -192,6 +227,10 @@ class MessagesController < OrganizationAwareController
   # Never trust parameters from the scary internet, only allow the white list through.
   def form_params
     params.require(:message).permit(Message.allowable_params)
+  end
+
+  def message_proxy_form_params
+    params.require(:message_proxy).permit(MessageProxy.allowable_params)
   end
 
   # Callbacks to share common setup or constraints between actions.

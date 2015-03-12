@@ -1,96 +1,92 @@
-# 
-#     A user may want to send a message to more than one person
-#   The message proxy holds a template message, as well as the 
-#   additional information required to send it to a number of
-#   people (for instance, sending by role or sending to all users at
-#   an organization)
-# 
+#-------------------------------------------------------------------------------
+# MessageProxy
+#
+# Proxy class for gathering new message data
+#
+#-------------------------------------------------------------------------------
 class MessageProxy < Proxy
-  extend ActiveModel::Naming
 
-  attr_accessor :group_role, :group_agency, :available_agencies
+  #-----------------------------------------------------------------------------
+  # Attributes
+  #-----------------------------------------------------------------------------
+  attr_accessor :priority_type_id
+  attr_accessor :to_user_ids
+  attr_accessor :group_roles
+  attr_accessor :group_agencys
+  attr_accessor :available_agencies
+  attr_accessor :subject
+  attr_accessor :body
+  attr_accessor :send_to_group
 
-  # @message is a PROTOTYPE holding everything except to_user_id
-  attr_reader :message, :messages_sent
-
+  #-----------------------------------------------------------------------------
+  # Validations
+  #-----------------------------------------------------------------------------
   validates :priority_type_id,  :presence => true
   validates :subject,           :presence => true
   validates :body,              :presence => true
+
   validate  :at_least_one_target_user
 
+  #-----------------------------------------------------------------------------
+  # Constants
+  #-----------------------------------------------------------------------------
 
-  # A list of users (>=1) that will receive messages from the given parameters
-  def target_users 
-    total_users = 0
-    if self.to_user_id.nil? # "No User Selected" -> use agency and role selectors
-      if @group_agency.eql?("all")
-        agency_basis = @available_agencies
-      else
-        agency_basis = @group_agency
-      end
-      total_users = User.where(organization_id: agency_basis)
-      # Filter down to_users from form params
-      total_users = total_users.with_role(Role.find(@group_role).name) unless @group_role.blank?
-    else # user has selected a specific user
-      total_users = User.where(id: self.to_user_id)
-    end
+  # List of allowable form param hash keys
+  FORM_PARAMS = [
+    :priority_type_id,
+    :subject,
+    :body,
+    :send_to_group,
+    :to_user_ids => [],
+    :group_roles => [],
+    :group_agencys => []
+  ]
 
-    total_users -[@message.user]
+  #-----------------------------------------------------------------------------
+  #
+  # Class Methods
+  #
+  #-----------------------------------------------------------------------------
+
+  def self.allowable_params
+    FORM_PARAMS
   end
 
-  def save
-    if valid?
-      persist
-      true
-    else
-      false
-    end
-  end
+  #-----------------------------------------------------------------------------
+  #
+  # Instance Methods
+  #
+  #-----------------------------------------------------------------------------
 
-  def respond_to_missing?(method_name, include_private = false)
-    @message.respond_to? method_name || super
-  end
-
-  private
-
-  def initialize(attrs = {})
-    # Messages will be sent to one-or-more users based on form parameters
-    @message = Message.new(attrs)
-    @messages_sent = 0
-    super
-  end
-  
-
-  #############################################################################
-  # 
-  #  Validation Methods
-  # 
-  #############################################################################
+  #-----------------------------------------------------------------------------
+  #
+  # Protected Methods
+  #
+  #-----------------------------------------------------------------------------
+  protected
 
   def at_least_one_target_user
-    @errors.add(:base, "Messages must have at least one recipient") unless target_users.count > 0
-  end
-
-
-  #############################################################################
-  # 
-  #  Plumbing
-  # 
-  #############################################################################
-
-  def persist
-    target_users.each do |u|
-      message_to_send = @message.dup
-      message_to_send.to_user = u
-      if message_to_send.save
-        @messages_sent += 1
-      end
+    if send_to_group == '0'
+      user_ids = []
+      to_user_ids.each {|x| user_ids << x unless x.blank?}
+      @errors.add(:to_user_ids, "At least one user must be selected") if user_ids.empty?
+    else
+      group_ids = []
+      group_roles.each {|x| group_ids << x unless x.blank?}
+      group_agencys.each {|x| group_ids << x unless x.blank?}
+      @errors.add(:base, "At least one organization or user role must be selected") if group_ids.empty?
     end
   end
 
-  # Wrap the @message and Message, allowing us to delegate all methods
-  def method_missing(method_sym, *arguments, &block)
-    # binding.pry
-    @message.send(method_sym, *arguments, &block)
+  def initialize(attrs = {})
+    super
+    attrs.each do |k, v|
+      self.send "#{k}=", v
+    end
+    self.send_to_group ||= '0'
+    self.to_user_ids ||= []
+    self.group_roles ||= []
+    self.group_agencys ||= []
   end
+
 end
