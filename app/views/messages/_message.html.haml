@@ -1,36 +1,42 @@
 :css
 	.list-group-item+.list-group-item{margin-top: 5px;}
+	.btn+.btn {margin-left: 10px;}
 	h5{margin-bottom: 2px;}
 
 :ruby
 	is_to_me = @message.to_user.id == current_user.id
 
-.row
-	.col-md-12
-		%frameset
-			%legend Message
+.row{:style => 'margin-top: 10px;'}
+	.col-lg-12.col-md-12.col-sm-12.col-xs-12
+		= link_to user_messages_path(current_user), :class => "btn btn-default" do
+			%i.fa.fa-arrow-circle-left
+			= " Messages"
 
-			%h5 From: #{@message.user.name}
+		= link_to new_user_message_path(current_user), :class => "btn btn-info" do
+			%i.fa.fa-envelope
+			= " Compose"
+
+.row{:style => 'margin-top: 10px;'}
+	.col-lg-12.col-md-12.col-sm-12.col-xs-12
+		%frameset
+			%legend= @message.subject
+
 			.list-group-item
 				%span.fa{:class => get_message_priority_icon(@message)}
 				%span.fa{:class => get_tag_icon(@message)}
 				%span.name{:style => "min-width: 180px;display: inline-block;"}
-					= "To: <strong>#{@message.to_user.name}</strong>".html_safe
+					- if is_to_me
+						= "From: #{@message.user.name}"
+					- else
+						= "To: #{@message.to_user.name}"
 
 				%span.pull-right.text-muted.small
 					= format_as_date_time(@message.created_at)
-
-			%h5 Subject
-			.list-group-item
-				%span.name{:style => "display: inline-block;"}
-					= @message.subject
-
-			%h5 Message
-			.list-group-item
+				%hr
 				%span.name{:style => "display: inline-block;"}
 					= @message.body.html_safe
 
 - if is_to_me
 	.row
-		.col-md-12
+		.col-lg-12.col-md-12.col-sm-12.col-xs-12
 			= render 'response_form'
