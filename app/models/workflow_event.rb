@@ -2,7 +2,7 @@
 #
 # WorkflowEvent
 #
-# A WorkflowEvent that has been associated with another class such as a Workorder, Asset etc. This is a 
+# A WorkflowEvent that has been associated with another class such as a Workorder, Asset etc. This is a
 # polymorphic class that can store workflow events against any class that includes an
 # accountable association
 #
@@ -23,11 +23,11 @@ class WorkflowEvent < ActiveRecord::Base
   # Associations
   belongs_to :accountable,  :polymorphic => true
 
-  belongs_to :creator,    :class_name => 'User', :foreign_key => :created_by_id 
-       
+  belongs_to :creator,    :class_name => 'User', :foreign_key => :created_by_id
+
   # default scope
-  default_scope { order(:created_at) }
-       
+  default_scope { order('created_at DESC') }
+
   validates :event_type,          :presence => true
   validates :creator,             :presence => true
 
@@ -38,17 +38,17 @@ class WorkflowEvent < ActiveRecord::Base
     :accountable_type,
     :created_by_id
   ]
-  
+
   #------------------------------------------------------------------------------
   #
   # Class Methods
   #
   #------------------------------------------------------------------------------
-    
+
   def self.allowable_params
     FORM_PARAMS
   end
-    
+
   #------------------------------------------------------------------------------
   #
   # Protected Methods
@@ -59,13 +59,13 @@ class WorkflowEvent < ActiveRecord::Base
   # Set resonable defaults for a new asset event
   def set_defaults
 
-  end    
-    
+  end
+
   #------------------------------------------------------------------------------
   #
   # Private Methods
   #
   #------------------------------------------------------------------------------
   private
-  
+
 end
