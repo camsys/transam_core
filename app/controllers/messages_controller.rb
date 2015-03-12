@@ -23,9 +23,6 @@ class MessagesController < OrganizationAwareController
     # Start to set up the query
     conditions  = []
     values      = []
-    # every query is bounded by the user's organization
-    conditions << 'organization_id = ?'
-    values << @organization.id
 
     # New messages must be for the current user
     conditions << 'to_user_id = ?'
