@@ -96,12 +96,11 @@ class MessagesController < OrganizationAwareController
     add_breadcrumb "My Messages", user_messages_path(current_user)
     add_breadcrumb "New"
 
-    @message = Message.new
-    @message.organization = @organization
-    @message.user = current_user
-    @message.priority_type = PriorityType.default
+    @message = MessageProxy.new
 
+    @message.priority_type = PriorityType.default
     @message.to_user = User.find_by_object_key(params[:to_user]) unless params[:to_user].nil?
+    @message.available_agencies = (@organization_list + current_user.organization_ids).uniq
     @message.subject = params[:subject] unless params[:subject].nil?
     @message.body    = params[:body] unless params[:body].nil?
 
@@ -116,6 +115,27 @@ class MessagesController < OrganizationAwareController
     add_breadcrumb "My Messages", user_messages_path(current_user)
     add_breadcrumb "New"
 
+    @message = MessageProxy.new(form_params)
+
+    @message.group_role = params[:message][:group_role]
+    @message.group_agency = params[:message][:group_agency]
+    @message.organization = @organization
+    @message.available_agencies = (@organization_list + current_user.organization_ids).sort.uniq
+    @message.user = current_user
+
+    respond_to do |format|
+      if @message.save
+        notify_user(:notice, "#{view_context.pluralize( @message.messages_sent, 'Messages')} successfully sent.")
+        format.html { redirect_to user_messages_url(current_user) }
+        format.json { render :json => @message, :status => :created }
+      else
+        format.html { render :action => "new" }
+        format.json { render :json => @message.errors, :status => :unprocessable_entity }
+      end
+    end
+  end
+
+  def reply
     @message = Message.new(form_params)
     @message.organization = @organization
     @message.user = current_user

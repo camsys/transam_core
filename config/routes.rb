@@ -134,6 +134,7 @@ Rails.application.routes.draw do
     resources :messages do
       member do
         get 'tag'
+        post 'reply'
       end
     end
 

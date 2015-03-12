@@ -1,0 +1,36 @@
+- available_agencies = Organization.where(id: @message.available_agencies)
+= simple_form_for([current_user, @message], :url => user_messages_path, :as => :message, :html => {:class => 'form-horizontal' }, :wrapper => :horizontal_form) do |f|
+  = dialog_tag('Message', {:icon => 'fa fa-envelope', :class => "form_part"}) do
+    .form-group#by_user
+      %label.control-label.col-sm-3 To
+      .form-inline.col-sm-9
+        = f.input :to_user_id, :collection => available_agencies, :as => :grouped_select, :group_method => :users, :label => false, :include_blank => "No User Selected"
+    - if current_user.is_in_roles? [:admin, :manager]
+      .form-group#by_role_and_agency
+        %label.control-label.col-sm-3
+        .form-inline.col-sm-9
+          %p
+            %b OR
+          = f.input :group_agency, :collection => available_agencies, :label => false, :label_method => :short_name, :include_blank => "All Organizations", :prompt => "No Organization Selected"
+          = f.input :group_role, :collection => Role.all, :label => false, :include_blank => "Any Role", :label_method => lambda {|r| "#{r.name.titleize.pluralize}"}, :value_method => lambda { |r| r.id }
+    = f.input :subject, :placeholder => "Subject..."
+    = f.input :priority_type_id, :collection => PriorityType.all, :include_blank => false, :label => "Priority Type", :selected => @message.priority_type_id
+    = f.input :body, :as => :text, :input_html => { :rows => 10 }, :placeholder => "Enter your message..."
+    = f.submit 'Send Message', :class => "btn btn-primary"
+
+:javascript
+  $(document).ready(function() {
+    // Set up "No User", "No Organization" to have sentinel values
+    $('select option').filter(function () { 
+      return $(this).html().match(/All Organizations/);
+    }).val("all");
+
+    // Use sentinel values to reset form based on user actions
+    // They should only be able to select EITHER to_user or Agency and Role
+    $("#message_to_user_id").on("change", function() {
+      $("#message_group_agency option[value=''], #message_group_role option[value='']").prop('selected', true)
+    })
+    $("#message_group_agency, #message_group_role").on("change", function() {
+      $("#message_to_user_id option[value='']").prop('selected', true);
+    })
+  })
