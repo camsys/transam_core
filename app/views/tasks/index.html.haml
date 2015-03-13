@@ -1,1 +1,93 @@
-= render :partial => 'index_list', :locals => {:tasks => @tasks}
+:css
+  .tab-pane .list-group-item:first-child {border-top-right-radius: 0px; border-top-left-radius: 0px; border-top: 0px}
+  .tab-pane .list-group-item:last-child {border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;}
+  .btn+.btn {margin-left: 10px;}
+  .taggable {margin-right: 2px;}
+  .fa-flag {margin-right: 2px;}
+  .tab-content {padding: 0px;}
+
+:ruby
+  my_tasks = @tasks.where('assigned_to_user_id = ?', current_user.id)
+  others_tasks = @tasks.where('assigned_to_user_id <> ? AND assigned_to_user_id IS NOT NULL', current_user.id)
+  unassigned_tasks = @tasks.where('assigned_to_user_id IS NULL')
+
+.row
+  .col-lg-10.col-md-10.col-sm-12.col-xs-12.col-lg-offset-1.col-md-offset-1{:style => 'margin-top: 10px;'}
+
+    = link_to user_tasks_path(current_user), :class => "btn btn-default", :role => 'button' do
+      %i.fa.fa-refresh
+      = " Refresh"
+
+    = link_to new_user_task_path(current_user), :class => "btn btn-info", :role => 'button' do
+      %i.fa.fa-calendar
+      = " New Task"
+
+.row
+  .col-lg-10.col-md-10.col-sm-12.col-xs-12.col-lg-offset-1.col-md-offset-1{:style => 'margin-top: 15px;'}
+    %ul.nav.nav-tabs
+      %li
+        %a{:href => "#mine", :data =>{:toggle => 'tab'}}
+          %span.badge.pull-right= my_tasks.count
+          %i.fa.fa-user
+          = " My Tasks"
+
+      %li
+        %a{:href => "#others", :data =>{:toggle => 'tab'}}
+          %span.badge.pull-right= others_tasks.count
+          %i.fa.fa-users
+          = " Tasks Assigned to Others"
+
+      %li
+        %a{:href => "#unass", :data =>{:toggle => 'tab'}}
+          %span.badge.pull-right= unassigned_tasks.count
+          %i.fa.fa-calendar
+          = " Unassigned Tasks"
+
+    .tab-content
+      .tab-pane.fade.in#mine
+        .list-group
+          - if my_tasks.empty?
+            %p You have no tasks waiting
+          - else
+            - my_tasks.each do |task|
+              = render :partial => 'task_detail', :locals => {:task => task}
+
+      .tab-pane.fade.in#others
+        .list-group
+          - if others_tasks.empty?
+            %p No tasks found
+          - else
+            - others_tasks.each do |task|
+              = render :partial => 'task_detail', :locals => {:task => task}
+
+      .tab-pane.fade.in#unass
+        .list-group
+          - if unassigned_tasks.empty?
+            %p No tasks unassigned
+          - else
+            - unassigned_tasks.each do |task|
+              = render :partial => 'task_detail', :locals => {:task => task}
+
+:javascript
+
+  var tab_var = 'tasks_index_tab';
+
+  $(document).ready(function() {
+
+    // Manage the tabs
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+      // save the latest tab
+      var this_tab = $(this).attr('href');
+      transam.set_ui_key_value(tab_var, this_tab);
+    });
+  });
+
+  $(function() {
+    var last_tab = transam.get_ui_key_value(tab_var);
+    if (last_tab) {
+      $('a[href='+last_tab+']').tab('show');
+    } else {
+      // Default to the first tab if no tab is stored
+      $('a[data-toggle="tab"]:first').tab('show');
+    }
+  });
