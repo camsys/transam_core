@@ -35,10 +35,6 @@ class AssetEndOfServiceService
     # Filter for the selected org
     conditions << "organization_id IN (?)"
     values << org_id_list
-
-    # Can't already be marked as disposed
-    conditions << "disposition_date IS NULL"
-
     # Scheduled replacement year, defaults to the next planning year unless
     # specified
     conditions << "scheduled_replacement_year = ?"
@@ -55,7 +51,7 @@ class AssetEndOfServiceService
       values << asset_subtype_id
     end
 
-    Asset.where(conditions.join(' AND '), *values)
+    Asset.active.where(conditions.join(' AND '), *values)
   end
 
   #------------------------------------------------------------------------------
