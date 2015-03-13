@@ -144,6 +144,10 @@ class Asset < ActiveRecord::Base
   # Scopes
   #------------------------------------------------------------------------------
   default_scope { order("assets.asset_subtype_id") }
+  # Returns a list of assets that have been disposed
+  scope :disposed,  -> { where('assets.disposition_date IS NULL') }
+  # Returns a list of assets that are still in service
+  scope :active,    -> { where('assets.disposition_date IS NOT NULL') }
 
   #------------------------------------------------------------------------------
   # Lists. These lists are used by derived classes to make up lists of attributes

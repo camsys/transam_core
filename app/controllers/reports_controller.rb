@@ -51,7 +51,7 @@ class ReportsController < OrganizationAwareController
       @report_view = @report.view_name
       add_breadcrumb @report.name
 
-      report_instance = @report.class_name.constantize.new
+      report_instance = @report.class_name.constantize.new(params)
       # inject the sql for the report into the params
       params[:sql] = @report.custom_sql unless @report.custom_sql.blank?
       # get the report data
