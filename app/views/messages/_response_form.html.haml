@@ -1,6 +1,7 @@
-= simple_form_for([current_user, @response], :url => reply_user_message_path(current_user, @message)) do |f|
-	= hidden_field_tag :message_id, @message.id
-	%h5 Reply
-	= f.text_area :body, :class => "col-md-12", :rows => 10, :placeholder => "Enter your reply..."
+= simple_form_for([current_user, @response]) do |f|
+  = hidden_field_tag :message_id, @message.id
+  %h5 Reply
 
-	= f.button :submit, 'Send Reply', :class => "btn btn-primary", :style => "margin-top:10px;"
+  = f.input :body, :label => false, :placeholder => "Enter your reply...", :as => :ckeditor, :input_html => { :ckeditor => {:toolbar => 'mini'}}
+
+  = f.button :submit, 'Send Reply', :class => "btn btn-primary", :style => "margin-top:10px;"
