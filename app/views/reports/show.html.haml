@@ -1,14 +1,17 @@
-.row
-  .col-md-12
-    .page-header
-      %h1= @report.name
+%nav.navbar.navbar-default
+  .container-fluid
+    .navbar-header
+      %button.navbar-toggle.collapsed{:data => {:toggle => "collapse", :target => "#report-form-actions"}}
+        %span.sr-only Toggle Controls
+        %span.icon-bar
+        %span.icon-bar
+        %span.icon-bar
+      .navbar-brand= @report.name
 
-- if lookup_context.template_exists?("#{@report_view}_actions", 'reports', true)
-  %nav.navbar.navbar-default
-    .container-fluid
-      .collapse.navbar-collapse
+    - if lookup_context.template_exists?("#{@report_view}_actions", 'reports', true)
+      .collapse.navbar-collapse#report-form-actions
         = render :partial => "#{@report_view}_actions"
 
 .row
-  .col-md-12
+  .col-lg-12.col-md-12.col-sm-12.col-xs-12
     = render @report_view

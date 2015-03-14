@@ -41,12 +41,12 @@ class AssetEndOfServiceService
     values << fy_year
 
     # Limit by asset type
-    unless asset_type_id.nil?
+    unless asset_type_id.blank?
       conditions << "asset_type_id = ?"
       values << asset_type_id
     end
 
-    unless asset_subtype_id.nil?
+    unless asset_subtype_id.blank?
       conditions << "asset_subtype_id = ?"
       values << asset_subtype_id
     end
