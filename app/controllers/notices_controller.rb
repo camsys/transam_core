@@ -5,13 +5,19 @@ class NoticesController < OrganizationAwareController
 
   before_filter :get_notice, :except => [:index, :create, :new]
 
+  # Protect controller methods using the cancan ability
+  authorize_resource
+
   # Session Variables
   INDEX_KEY_LIST_VAR        = "notice_list_cache_var"
 
   def index
 
-    @notices = Notice.all.order(:display_datetime)
-
+    if current_user.has_role? :admin
+      @notices = Notice.active.order(:display_datetime)
+    else
+      @notices = Notice.visible.order(:display_datetime)
+    end
     # cache the set of asset ids in case we need them later
     #cache_list(@notices, INDEX_KEY_LIST_VAR)
 

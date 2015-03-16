@@ -6,7 +6,7 @@
 # Needs standardizing between active vs end_datetime.  Views use end_datetime
 #------------------------------------------------------------------------------
 class Notice < ActiveRecord::Base
-  
+
   # Include the object key mixin
   include TransamObjectKey
 
@@ -20,11 +20,11 @@ class Notice < ActiveRecord::Base
   #------------------------------------------------------------------------------
   after_initialize  :set_defaults
   before_validation :calculate_datetimes_from_virtual_attributes
-  
+
   #------------------------------------------------------------------------------
-  # 
+  #
   # Virtual Attributes
-  # 
+  #
   # Build the datetimes from a date and an hour, passed as strings
   #------------------------------------------------------------------------------
   def display_datetime_date
@@ -48,7 +48,7 @@ class Notice < ActiveRecord::Base
   def end_datetime_hour
     end_datetime.hour if end_datetime
   end
-  
+
   def end_datetime_date=(date_str)
     Rails.logger.debug "in end_datetime_date #{date_str}"
     self.end_date = Chronic.parse(date_str).to_date
@@ -69,11 +69,11 @@ class Notice < ActiveRecord::Base
 
   # Every notice must have a defined type
   belongs_to :notice_type
-  
+
   #------------------------------------------------------------------------------
   # Validations
   #------------------------------------------------------------------------------
-    
+
   validates :subject,           :presence => true, :length => {:maximum => 64}
   validates :summary,           :presence => true, :length => {:maximum => 254}
   validates :display_datetime,  :presence => true
@@ -81,7 +81,7 @@ class Notice < ActiveRecord::Base
   validates :notice_type,       :presence => true
   validate  :validate_end_after_start
 
-  # List of allowable form param hash keys  
+  # List of allowable form param hash keys
   FORM_PARAMS = [
     :organization_id,
     :subject,
@@ -104,18 +104,19 @@ class Notice < ActiveRecord::Base
 
   scope :system_level_notices, -> { active.where("organization_id IS null").where("end_datetime > ?", DateTime.current) }
   scope :active_for_organization, -> (org) { active.where("organization_id IS null OR organization_id = ?", org.id).where("end_datetime > ?", DateTime.current) }
-  scope :active, -> { where(:active => true) }                                       
+  scope :active, -> { where(:active => true) }
+  scope :visible, -> { active.where("end_datetime > ?", DateTime.current) }
 
   #------------------------------------------------------------------------------
   #
   # Class Methods
   #
   #------------------------------------------------------------------------------
-      
+
   def self.allowable_params
     FORM_PARAMS
   end
-            
+
   #------------------------------------------------------------------------------
   #
   # Instance Methods
@@ -131,7 +132,7 @@ class Notice < ActiveRecord::Base
   def to_s
     subject
   end
-    
+
   #------------------------------------------------------------------------------
   #
   # Protected Methods
@@ -148,7 +149,7 @@ class Notice < ActiveRecord::Base
     self.active = true if self.active.nil?
     self.display_datetime ||= parsed_display_datetime_from_virtual_attributes || (DateTime.current.beginning_of_hour)
     self.end_datetime ||= parsed_end_datetime_from_virtual_attributes || display_datetime.end_of_day
-  end    
+  end
 
   # Before validating, ensure that we have converted from virtual attributes
   # to native ones
@@ -178,6 +179,5 @@ class Notice < ActiveRecord::Base
       errors.add(:end_datetime, "must be after start time")
     end
   end
-  
+
 end
-      
