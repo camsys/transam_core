@@ -2,6 +2,6 @@
   = hidden_field_tag :message_id, @message.id
   %h5 Reply
 
-  = f.input :body, :label => false, :placeholder => "Enter your reply...", :as => :ckeditor, :input_html => { :ckeditor => {:toolbar => 'mini'}}
+  = f.input :body, :label => false, :placeholder => "Enter your reply...", :as => :ckeditor, :input_html => { :ckeditor => {:toolbar => 'mini'}, :class => "form-control"}
 
   = f.button :submit, 'Send Reply', :class => "btn btn-primary", :style => "margin-top:10px;"

@@ -32,7 +32,7 @@
       .col-lg-3.col-md-3.col-sm-6.col-xs-6
         = f.input :priority_type_id, :collection => PriorityType.all, :include_blank => false, :label => "Priority"
 
-    = f.input :body, :label => false, :as => :ckeditor, :input_html => { :ckeditor => {:toolbar => 'mini'}}
+    = f.input :body, :label => false, :as => :ckeditor, :input_html => { :ckeditor => {:toolbar => 'mini'}, :class => "form-control"}
 
     = f.button :submit, "Send...", :class => "btn btn-primary"
 
