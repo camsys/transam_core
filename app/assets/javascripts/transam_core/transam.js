@@ -31,13 +31,13 @@ var transam = new function() {
 	this.activate_info_popups = function(class_name) {
 		$(class_name).bind({
 	    	mouseenter: function() {
-	    			$(".popover").popover("hide");
 	        	var el=$(this);
 	        		$.ajax({
 	          			type: "GET",
 	          			url: el.attr("data-url"),
 	          			dataType: "html",
 	          			success: function(data) {
+					    			$(".popover").popover("hide");
 	            			el.attr("data-content", data);
 	            			el.popover('show');
 	          			}
