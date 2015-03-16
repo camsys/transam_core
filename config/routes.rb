@@ -130,7 +130,7 @@ Rails.application.routes.draw do
     end
 
     resources :images
-    
+
     resources :messages do
       member do
         get 'tag'
