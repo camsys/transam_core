@@ -45,7 +45,12 @@ module TransamKeywordSearchable
       keyword_search_index.organization = organization if respond_to? :organization
       keyword_search_index.context = self.class.name
       keyword_search_index.search_text = text_blob
-      keyword_search_index.object_class = self.class.name
+      if self.is_a?(Asset)
+        keyword_search_index.object_class = "Asset"
+      else
+        keyword_search_index.object_class = self.class.name
+      end
+
       if respond_to? :description
         keyword_search_index.summary = self.description.truncate(64)
       elsif respond_to? :name

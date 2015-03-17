@@ -5,6 +5,8 @@
         %legend.panel-legend Asset Details
       = render partial: "assets/asset_details", :locals => {:asset => @asset}
     .col-sm-4
+      %fieldset
+        %legend.panel-legend Condition
       = render partial: "assets/asset_condition_details", :locals => {:asset => @asset}
     .col-sm-4
       %fieldset

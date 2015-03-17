@@ -170,7 +170,11 @@ class TasksController < NestedResourceController
 
     # Simple form doesn't process mapped associations very well
     #@task.assigned_to_user = User.find(params[:task][:assigned_to_user_id]) unless params[:task][:assigned_to_user_id].blank?
-    @task.organization = @task.assigned_to_user.organization unless @task.assigned_to_user.nil?
+    if @task.assigned_to_user.nil?
+      @task.organization = @taskable.organization
+    else
+      @task.organization = @task.assigned_to_user.organization
+    end
     @task.user = current_user
 
     add_breadcrumb "My Tasks", tasks_path
