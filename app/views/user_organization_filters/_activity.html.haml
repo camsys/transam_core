@@ -1,6 +1,0 @@
-.row
-  .col-md-12
-    = format_field("Created", format_as_date_time(@user.created_at) )
-    = format_field("Last Updated", format_as_date_time(@user.updated_at) )
-    = format_field("Last Login", format_as_date_time(@user.last_sign_in_at) )
-    = format_field("Last Login IP", @user.last_sign_in_ip )

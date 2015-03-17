@@ -15,24 +15,6 @@ class OrganizationAwareController < TransamController
           
   protected
 
-  def render_typed_organizations
-    RENDER_TYPED_ORGANIZATIONS
-  end
-
-  # Store the list of organizations in the user's session
-  def set_selected_organization_list(orgs)
-    list = []
-    orgs.each do |o|
-      list << o.id
-    end
-    session[USER_SELECTED_ORGANIZATION_ID_LIST] = list
-  end
-  
-  # Set the session varibale with the newly selected organization
-  def set_selected_organization(org)
-    session[USER_SELECTED_ORGANIZATION] = org.short_name
-  end
-
   # Sets the @organization and @organization_list class variables. 
   def get_organization_selections
 
@@ -75,6 +57,17 @@ class OrganizationAwareController < TransamController
     end
     
   end
+
+  def render_typed_organizations
+    RENDER_TYPED_ORGANIZATIONS
+  end
+
+  
+  # Set the session varibale with the newly selected organization
+  def set_selected_organization(org)
+    session[USER_SELECTED_ORGANIZATION] = org.short_name
+  end
+
         
   def get_typed_organization(org)
     
