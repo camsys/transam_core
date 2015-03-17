@@ -1,11 +1,8 @@
 = render :layout => "update_event_form" do |f|
-  = f.input :parent_key, :wrapper => :vertical_append, :label => "Parent (ID)" do
-    = f.input_field :parent_key, :class => "form-control", :as => :string
-    %span.input-group-addon.popover_anchor{ :tabindex => 0 }
-      %a.btn-default#find_asset
-        ="Find"
-  #spinner
-    = image_tag('ajax-loader.gif')
+
+  = f.input :parent_id, :as => :hidden
+  = f.input :parent_name, :input_html => {:autocomplete => 'off', :class => 'form-control', :placeholder => 'Enter search text', :id => 'parent_name', :data => {:url => filter_inventory_index_path}}
+
   = f.input :event_date, :label => 'Date of Report', :wrapper => :vertical_append do
     = f.input_field :event_date, :class => "form-control", :as => :string, :data => {'behavior' => 'datepicker'}, :value => f.object.event_date.strftime("%m-%d-%Y")
     %span.input-group-addon
@@ -15,33 +12,23 @@
     = f.button :submit, "Update the storage location", :class => 'btn btn-primary'
 
 :javascript
-  $(document).ready(function() {
-    $("#spinner").hide();
 
-    $("#find_asset").on('click', function() {
-      var parent_key = $("#asset_event_parent_key").val();
-      $(".popover_anchor").popover({
-        toggle: "popover",
-        container: "body",
-        trigger: "focus",
-        html: true
-      });
+  $('#parent_name').on('focus', function() {
+    _typeahead_source_url = $(this).data('url');
+  });
 
-      $.ajax({
-        type: "GET",
-        url: "#{parent_inventory_index_path}",
-        data: {parent_key: parent_key },
-        dataType: "html",
-        beforeSend: function() {
-          $("#spinner").show()
-        },
-        success:    function(data) {
-          $(".popover_anchor").data("bs.popover").options.content = data;
-          $(".popover_anchor").popover("show");
-        },
-        complete:   function() {
-          $("#spinner").hide()
-        }
-      })
-    })
-  })
+  // Enable typeahead for the SMO filter
+  $('#parent_name').typeahead({
+    items: 10,
+    minLength: 2,
+    source: _typeahead_searcher,
+    matcher: _typeahead_matcher,
+    highlighter: _typeahead_highlighter,
+    updater: function (obj) {
+      var item = JSON.parse(obj);
+      // Update the UI
+      $('#parent_name').attr('value', item.name);
+      $('#asset_event_parent_id').attr('value', item.id);
+      return item.name;
+    }
+  });
