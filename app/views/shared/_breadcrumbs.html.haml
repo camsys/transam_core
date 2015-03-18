@@ -2,9 +2,9 @@
   - unless params[:controller] == 'dashboards'
     - if @total_rows and @total_rows > 0
       .row
-        .col-md-10
+        .col-lg-10.col-md-10.col-sm-9.col.col-xs-8
           = render_breadcrumbs :builder => ::BootstrapBreadcrumbsBuilder, :separator => "&raquo;"
-        .col-md-2
+        .col-lg-2.col-md-2.col-sm-3.col.col-xs-4
           #row_pager
             = render 'shared/row_pager'
     - else

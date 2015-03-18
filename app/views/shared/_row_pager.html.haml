@@ -5,7 +5,7 @@
     = link_to @next_record_path, :title => 'Next record', :remote => @row_pager_remote.nil? ? false : @row_pager_remote  do
       %i.fa.fa-chevron-circle-right.fa-2x.navbar-right
 
-  %span.navbar-right{:style => 'padding: 5px 10px;'} Record #{@row_number} of #{@total_rows}
+  %span.navbar-right{:style => 'padding: 5px 10px;'} #{@row_number} of #{@total_rows}
 
   - if @prev_record_path == "#"
     %i.fa.fa-chevron-circle-left.text-muted.fa-2x.navbar-right
