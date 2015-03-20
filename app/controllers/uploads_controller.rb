@@ -172,7 +172,7 @@ class UploadsController < OrganizationAwareController
       # Find out which builder is used to construct the template and create an instance
       builder = file_content_type.builder_name.constantize.new
       builder.organization = @organization
-      builder.asset_types = [template_proxy.asset_type]
+      builder.asset_types = [*template_proxy.asset_type]
       
       # Generate the spreadsheet. This returns a StringIO that has been rewound
       stream = builder.build
