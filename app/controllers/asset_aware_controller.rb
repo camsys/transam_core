@@ -36,7 +36,7 @@ class AssetAwareController < OrganizationAwareController
     assets.each do |asset|
       matches << {
         "id" => asset.object_key,
-        "name" => asset.name
+        "name" => "#{asset.name}: #{asset.description}"
       }
     end
 
