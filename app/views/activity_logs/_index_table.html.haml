@@ -1,4 +1,7 @@
-%table.table.table-hover#activity_datatable
+:ruby
+  table_dom_id = SecureRandom.hex
+
+%table.table.table-hover{:id => table_dom_id}
 	%thead
 		%tr
 			%th.left Date/Time
@@ -14,4 +17,5 @@
 				%td.left= a.item_type
 				%td.left= a.activity.truncate(64).html_safe
 
-= render :partial => 'shared/datatable_javascript', :locals => {:id => 'activity_datatable'}
+- if @activities.count > current_user.num_table_rows
+  = render :partial => 'shared/datatable_javascript', :locals => {:id => table_dom_id}

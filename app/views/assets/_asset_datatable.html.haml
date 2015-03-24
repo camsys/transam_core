@@ -1,4 +1,7 @@
-%table.table.table-hover#assets_datatable
+:ruby
+  table_dom_id = SecureRandom.hex
+
+%table.table.table-hover{:id => table_dom_id}
   %thead
     %tr
       - SystemConfig.transam_module_names.each do |mod|
@@ -22,4 +25,5 @@
         %td.center.icon-column
           = render :partial => 'assets/asset_info_detail_popup', :locals => {:asset => a}
 
-= render :partial => 'shared/datatable_javascript', :locals => {:id => 'assets_datatable'}
+- if assets.count > current_user.num_table_rows
+  = render :partial => 'shared/datatable_javascript', :locals => {:id => table_dom_id}

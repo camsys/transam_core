@@ -1,4 +1,7 @@
-%table.table.table-hover#datatable
+:ruby
+  table_dom_id = SecureRandom.hex
+
+%table.table.table-hover{:id => table_dom_id}
   %thead
     %tr
       %th.left Name
@@ -10,4 +13,5 @@
         %td.left= v.name
         %td.left= format_as_address(v) if v.address1
 
-= render 'shared/datatable_javascript'
+- if @vendors.count > current_user.num_table_rows
+  = render :partial => 'shared/datatable_javascript', :locals => {:id => table_dom_id}

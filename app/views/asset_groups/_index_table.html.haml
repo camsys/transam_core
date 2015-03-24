@@ -1,17 +1,22 @@
-%table.table.table-hover#datatable
+:ruby
+  table_dom_id = SecureRandom.hex
+
+%table.table.table-hover{:id => table_dom_id}
   %thead
     %tr
       %th.left Name
       %th.left Code
       %th.left Description
       %th.right Num Assets
-      				
+
   %tbody
-    - @asset_groups.each do |a|      
+    - @asset_groups.each do |a|
       %tr.popup-details{:data => {:action_path => asset_group_path(a)}}
         %td.left= a.name
         %td.left= a.code
         %td.left= a.description
         %td.right= format_as_integer(a.assets.count)
 
-= render 'shared/datatable_javascript'
+
+- if @asset_groups.count > current_user.num_table_rows
+  = render :partial => 'shared/datatable_javascript', :locals => {:id => table_dom_id}

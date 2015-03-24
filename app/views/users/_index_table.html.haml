@@ -1,4 +1,7 @@
-%table.table.table-hover#datatable
+:ruby
+  table_dom_id = SecureRandom.hex
+
+%table.table.table-hover{:id => table_dom_id}
   %thead
     %tr
       %th.left Organization
@@ -7,9 +10,9 @@
       %th.left Email
       %th.left Phone
       %th.center
-      				
+
   %tbody
-    - @users.each do |u|      
+    - @users.each do |u|
       %tr.popup-details{:data => {:action_path => user_path(u)}}
         %td= u.organization.short_name
         %td= u.first_name
@@ -19,7 +22,8 @@
         %td.center
           %i.fa.fa-info-circle.text-info.popup-details{:data => {:title => "#{u.name}", :content => "#{raw render :partial => 'users/summary', :locals => {:user => u}}"}}
 
-= render 'shared/datatable_javascript'
+- if @users.count > current_user.num_table_rows
+  = render :partial => 'shared/datatable_javascript', :locals => {:id => table_dom_id}
 
 :javascript
   $('.popup-details').popover({
@@ -27,5 +31,5 @@
     container: 'body',
     placement: 'left',
     animation: 'true',
-    html: 'true'    
-  });  
+    html: 'true'
+  });

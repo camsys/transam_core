@@ -1,4 +1,7 @@
-%table.table.table-hover#datatable
+:ruby
+  table_dom_id = SecureRandom.hex
+
+%table.table.table-hover{:id => table_dom_id}
   %thead
     %th.left Type
     %th.left Subject
@@ -11,7 +14,7 @@
       %tr
         %td.left= notice.notice_type
         %td.left= notice.subject
-        %td.left= notice.summary.html_safe 
+        %td.left= notice.summary.html_safe
         %td.right= format_as_date_time(notice.end_datetime)
         - if can? :update, notice
           %td.center
@@ -27,5 +30,6 @@
             - if can? :delete, notice
               = link_to notice_path(notice), :method => :delete, :data => {:confirm => "Are you sure you want to remove this notice? The action can't be undone."} do
                 %i.fa.fa-fw.fa-trash-o.action-icon.text-danger
-            
-= render 'shared/datatable_javascript'
+
+- if notices.count > current_user.num_table_rows
+  = render :partial => 'shared/datatable_javascript', :locals => {:id => table_dom_id}

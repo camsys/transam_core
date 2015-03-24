@@ -1,4 +1,7 @@
-%table.table.table-hover#datatable
+:ruby
+  table_dom_id = SecureRandom.hex
+
+%table.table.table-hover{:id => table_dom_id}
   %thead
     %th.left Agency
     %th.left File Name
@@ -16,4 +19,5 @@
         %td.right= f.file_status_type
         %td.right= format_as_date_time(f.created_at)
 
-= render 'shared/datatable_javascript'
+- if @uploads.count > current_user.num_table_rows
+  = render :partial => 'shared/datatable_javascript', :locals => {:id => table_dom_id}
