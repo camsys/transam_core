@@ -1,18 +1,21 @@
-%table.table.table-hover#assets_compact_datatable
+:ruby
+  table_dom_id = SecureRandom.hex
+
+%table.table.table-hover{:id => table_dom_id}
   %thead
     %tr
       %th.left Agency
       %th.left Type
       %th.left Asset Tag
       %th.left Description
-      
+
       %th.right In Service
       %th.right Age
       %th.center Condition
       %th.center Status
 
       %th.sorting_disabled
-      
+
   %tbody
     - assets.each do |a|
       %tr{:data => {:action_path => inventory_path(a)}}
@@ -20,15 +23,16 @@
         %td.left= a.asset_subtype
         %td.left= a.asset_tag
         %td.left= a.description
-        
+
         %td.right= format_as_date(a.in_service_date)
         %td.right= format_as_integer(a.age)
         %td.center= format_as_decimal(a.reported_condition_rating, 1)
         %td.center= a.service_status_type.code unless a.service_status_type.nil?
 
         %td.center= render :partial => 'assets/asset_info_detail_popup', :locals => {:asset => a}
-                
-= render :partial => 'shared/datatable_javascript', :locals => {:id => 'assets_compact_datatable'}
+
+- if assets.count > current_user.num_table_rows
+  = render :partial => 'shared/datatable_javascript', :locals => {:id => table_dom_id}
 
 :javascript
   $('.popup-details').popover({
