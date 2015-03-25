@@ -61,7 +61,7 @@ class ReportsController < OrganizationAwareController
         format.html
         format.xls do
           sanitized_report_name = @report.name.gsub(" ", "_").underscore
-          response.headers['Content-Disposition'] = "attachment; filename='#{@organization.short_name}_#{sanitized_report_name}.xls'"
+          response.headers['Content-Disposition'] = "attachment; filename=#{@organization.short_name}_#{sanitized_report_name}.xls"
         end
       end
     end
