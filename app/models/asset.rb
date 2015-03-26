@@ -67,6 +67,9 @@ class Asset < ActiveRecord::Base
   # each asset has zero or more scheduled rehabilitation updates
   has_many   :schedule_rehabilitation_updates, -> {where :asset_event_type_id => ScheduleRehabilitationUpdateEvent.asset_event_type.id }, :class_name => "ScheduleRehabilitationUpdateEvent"
 
+  # each asset has zero or more recorded rehabilitation events
+  has_many   :rehabilitation_updates, -> {where :asset_event_type_id => RehabilitationUpdateEvent.asset_event_type.id}, :class_name => "RehabilitationUpdateEvent"
+
   # each asset has zero or more scheduled disposition updates
   has_many   :schedule_disposition_updates, -> {where :asset_event_type_id => ScheduleDispositionUpdateEvent.asset_event_type.id }, :class_name => "ScheduleDispositionUpdateEvent"
 
@@ -500,6 +503,10 @@ class Asset < ActiveRecord::Base
     end
   end
 
+  def total_rehab_costs
+    rehabilitation_updates.map(&:cost)
+  end
+
   # Record that the asset has been disposed. This updates the dispostion date and the disposition_type attributes
   def record_disposition
     Rails.logger.info "Recording final disposition for asset = #{object_key}"
@@ -533,6 +540,24 @@ class Asset < ActiveRecord::Base
         event = location_updates.last
         self.parent_id = event.parent_id
         self.location_comments = event.comments
+      end
+      save
+    end
+  end
+
+  def update_rehabilitation
+    Rails.logger.debug "Updating the recorded rehabilitation for asset = #{object_key}"
+    
+    # Make sure we are working with a concrete asset class
+    asset = is_typed? ? self : Asset.get_typed_asset(self)
+
+    # can't do this if it is a new record as none of the IDs would be set
+    unless asset.new_record?
+      if asset.rehabilitation_updates.empty?
+        
+      else
+        event = asset.rehabilitation_updates.last
+        
       end
       save
     end
