@@ -15,7 +15,7 @@ class CreateRehabUpdateTables < ActiveRecord::Migration
     add_index     :asset_event_subsystems, :asset_event_id, :name => :rehab_events_subsystems_idx1
     add_index     :asset_event_subsystems, :subsystem_id,   :name => :rehab_events_subsystems_idx2
 
-    add_column :asset_events :extended_useful_life_months, :integer, :after => :disposition_year
-    add_column :asset_events :extended_useful_life_miles, :integer, :after => :disposition_year
+    add_column :asset_events, :extended_useful_life_months, :integer, :after => :disposition_year
+    add_column :asset_events, :extended_useful_life_miles, :integer, :after => :disposition_year
   end
 end
