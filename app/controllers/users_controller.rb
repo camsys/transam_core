@@ -193,15 +193,13 @@ class UsersController < OrganizationAwareController
   # POST /users.json
   def create
 
-    new_user_service = get_user_service
-    @user = new_user_service.create_new_user(form_params)
-    @user.organization = @organization unless @user.organization # allow for mass-assignment of organization
+    @user = User.new(form_params)
+    @user.organization = @organization
 
     add_breadcrumb 'New'
 
     respond_to do |format|
       if @user.save
-        new_user_service.post_process(@user)
         notify_user(:notice, "User #{@user.name} was successfully created.")
         format.html { redirect_to user_url(@user) }
         format.json { render :json => @user, :status => :created, :location => @user }
@@ -324,15 +322,6 @@ class UsersController < OrganizationAwareController
   def check_for_cancel
     unless params[:cancel].blank?
       redirect_to user_url(current_user)
-    end
-  end
-
-  # Get the configured service to handle user creation, defaulting
-  def get_user_service
-    if Rails.application.config.new_user_service
-      Rails.application.config.new_user_service.constantize
-    else
-      DefaultNewUserService
     end
   end
 end
