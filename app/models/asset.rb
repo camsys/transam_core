@@ -465,6 +465,15 @@ class Asset < ActiveRecord::Base
     AssetEvent.unscoped.where('asset_id = ?', id).order('event_date DESC')
   end
 
+  # Returns the total amount spent rehabilitating the asset
+  def rehabilitation_cost
+    if rehabilitation_updates.empty?
+      0
+    else
+      rehabilitation_updates.map(&:cost)
+    end
+  end
+
   # Returns the policy rule that this asset uses for replacement and rehabilitation
   def policy_rule
     cached_policy_rule = get_cached_object("policy_rule")
@@ -503,9 +512,6 @@ class Asset < ActiveRecord::Base
     end
   end
 
-  def total_rehab_costs
-    rehabilitation_updates.map(&:cost)
-  end
 
   # Record that the asset has been disposed. This updates the dispostion date and the disposition_type attributes
   def record_disposition
@@ -547,17 +553,17 @@ class Asset < ActiveRecord::Base
 
   def update_rehabilitation
     Rails.logger.debug "Updating the recorded rehabilitation for asset = #{object_key}"
-    
+
     # Make sure we are working with a concrete asset class
     asset = is_typed? ? self : Asset.get_typed_asset(self)
 
     # can't do this if it is a new record as none of the IDs would be set
     unless asset.new_record?
       if asset.rehabilitation_updates.empty?
-        
+
       else
         event = asset.rehabilitation_updates.last
-        
+
       end
       save
     end
