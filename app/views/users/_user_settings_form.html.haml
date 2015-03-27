@@ -7,8 +7,8 @@
     = dialog_tag('System Settings', {:icon => 'fa fa-cog', :class => "form_part"}) do
       = f.input :notify_via_email, :label => "Notify via Email" 
       = f.input :num_table_rows, :collection => [5,10,15,20,25,50,100], :include_blank => false, :label => "Number of table rows to display"
-      = f.button :submit, :class => "btn btn-primary"
-
+      .col-md-12
+        = f.button :submit, :class => "btn btn-primary"
 .col-md-3
   = dialog_tag("Info", {:icon => "fa fa-question-circle", :class => "form_part"}) do
     %p Uncheck <strong>Notify via Email</strong> to turn off email notifications
