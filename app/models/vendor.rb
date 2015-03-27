@@ -61,6 +61,8 @@ class Vendor < ActiveRecord::Base
     :url
   ]
 
+  scope :active, -> { where(:active => true) }
+
   #------------------------------------------------------------------------------
   #
   # Class Methods

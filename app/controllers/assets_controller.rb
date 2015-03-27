@@ -236,6 +236,7 @@ class AssetsController < AssetAwareController
     @asset.asset_type = asset_type
     @asset.asset_subtype = asset_subtype
     @asset.organization = @organization
+    @asset.vendor_name = params[:asset][:vendor_name]
     @asset.creator = current_user
     @asset.updator = current_user
 

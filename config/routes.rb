@@ -17,7 +17,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :vendors
+  resources :vendors do
+    collection do
+      get 'filter'
+    end
+  end
   resources :manufacturers, :only => [:index]
 
   # Forms are a top-level namespace. All concrete forms must be nested within this

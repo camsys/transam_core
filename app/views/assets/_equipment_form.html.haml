@@ -40,7 +40,7 @@
           %span.input-group-addon
             %i.fa.fa-calendar
         = f.input :purchased_new, :as => :radio_buttons, :label => "Purchased New"
-        = f.association :vendor
+        = f.input :vendor_name, :input_html => {:autocomplete => 'off', :class => 'form-control', :placeholder => 'Enter search text', :id => 'vendor_name', :data => {:url => filter_vendors_path}}
         = f.input :expected_useful_life, :label => "Expected Useful Life (Months)"
 
     .col-md-12
@@ -52,5 +52,24 @@
   $(document).ready(function(){
     $('[data-behavior~=datepicker]').datepicker({
       format: "mm-dd-yyyy"
+    });
+    $('#vendor_name').on('focus', function() {
+      _typeahead_source_url = $(this).data('url');
+    });
+
+    // Enable typeahead for the SMO filter
+    $('#vendor_name').typeahead({
+      items: 10,
+      minLength: 2,
+      source: _typeahead_searcher,
+      matcher: _typeahead_matcher,
+      highlighter: _typeahead_highlighter,
+      updater: function (obj) {
+        var item = JSON.parse(obj);
+        // Update the UI
+        $('#vendor_name').attr('value', item.name);
+        $('#asset_vendor_key').attr('value', item.id);
+        return item.name;
+      }
     });
   });

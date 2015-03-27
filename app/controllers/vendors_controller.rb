@@ -29,6 +29,27 @@ class VendorsController < OrganizationAwareController
 
   end
 
+  def filter
+    query = params[:query]
+    query_str = "%" + query + "%"
+    Rails.logger.debug query_str
+
+    matches = []
+    vendors = Vendor.active.where("organization_id in (?) AND (name LIKE ?)", @organization_list, query_str)
+    vendors.each do |vendor|
+      matches << {
+        "id" => vendor.object_key,
+        "name" => vendor.name
+      }
+    end
+
+    respond_to do |format|
+      format.js { render :json => matches.to_json }
+      format.json { render :json => matches.to_json }
+    end
+
+  end
+
   # GET /vendors/1
   def show
 
