@@ -26,7 +26,7 @@ class AssetEventSubsystem < ActiveRecord::Base
   validates     :rehabilitation_update_event, :presence => :true
   validates     :parts_cost,                  :numericality => {:only_integer => :true, :greater_than => 0}, allow_nil: true
   validates     :labor_cost,                  :numericality => {:only_integer => :true, :greater_than => 0}, allow_nil: true
-  
+
   #-----------------------------------------------------------------------------
   # Constants
   #-----------------------------------------------------------------------------
@@ -56,7 +56,7 @@ class AssetEventSubsystem < ActiveRecord::Base
   #
   #-----------------------------------------------------------------------------
   def cost
-    parts_cost.to_i + labor_cost.to_i
+    parts_cost + labor_cost
   end
   #-----------------------------------------------------------------------------
   #
@@ -67,5 +67,6 @@ class AssetEventSubsystem < ActiveRecord::Base
 
   # Set resonable defaults for a new instance
   def set_defaults
+
   end
 end
