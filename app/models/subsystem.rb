@@ -5,6 +5,8 @@ class Subsystem < ActiveRecord::Base
 
   scope :for_type, ->(type_id) { where(asset_type_id: [type_id, nil]) } # NOTE: can handle id or coerce down an AssetType itself
 
+  validates :name, :presence => true
+
   def to_s
     name
   end
