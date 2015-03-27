@@ -166,15 +166,43 @@ class UploadsController < OrganizationAwareController
     add_breadcrumb "All Uploads", uploads_path
     add_breadcrumb "Download Template"
     
-    template_proxy = TemplateProxy.new(params[:template_proxy])
-    file_content_type = FileContentType.find(template_proxy.file_content_type_id)
-    if template_proxy.valid?
+    # Determine how we're gathering assets
+    if params[:template_proxy]
+      template_proxy = TemplateProxy.new(params[:template_proxy]) 
+      file_content_type = FileContentType.find(template_proxy.file_content_type_id)
+      asset_type = template_proxy.asset_type
+    end
+    if params[:file_content_type]
+      file_content_type = FileContentType.find(params[:file_content_type])
+      if params[:asset_type]
+        asset_type = AssetType.find(params[:asset_type])
+      end
+      if params[:asset_group]
+        asset_group = AssetGroup.find_by_object_key(params[:asset_group])
+        if asset_group.homogeneous?
+          asset_type = AssetType.find(asset_group.asset_type_ids.first)
+        end
+      end
+    end
+    
+    if file_content_type and asset_type
       # Find out which builder is used to construct the template and create an instance
-      builder = file_content_type.builder_name.constantize.new
-      builder.organization = @organization
-      builder.asset_types = [template_proxy.asset_type]
+      builder = file_content_type.builder_name.constantize.new(
+                    organization: @organization,
+                    asset_types: [*asset_type] # [*args] is my new favorite trick ever- coerce anything to enumerable
+                )
       
       # Generate the spreadsheet. This returns a StringIO that has been rewound
+      if asset_group
+        builder.assets = asset_group.assets
+      else
+        asset_params = {}
+        asset_params[:organization] = @organization
+        asset_params[:asset_type] = asset_type
+        asset_params[:object_key] = params[:ids] if params[:ids]
+
+        builder.assets = Asset.where(asset_params)
+      end
       stream = builder.build
 
       # Save the template to a temporary file and render a success/download view
@@ -190,10 +218,14 @@ class UploadsController < OrganizationAwareController
       ensure
         file.close
       end 
+      # Ensure you're cleaning up appropriately...something wonky happened with Tempfiles not disappearing during testing
+      respond_to do |format|
+        format.js 
+        format.html
+      end
     else
-      render :action => 'templates'   
+      render :action => 'templates'
     end
-              
   end
   
   def new

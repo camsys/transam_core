@@ -80,6 +80,20 @@ class AssetGroup < ActiveRecord::Base
     name
   end
 
+  def homogeneous?
+    asset_type_ids.length == 1
+  end
+
+  def heterogeneous?
+    !homogeneous
+  end
+
+  # .scope returns the ActiveRecord::Relation for the assets, so we can 
+  # do the uniqueness with a DISTINCT in SQL instead of in-memory
+  def asset_type_ids
+    assets.scope.uniq.pluck(:asset_type_id)
+  end
+
   def searchable_fields
     SEARCHABLE_FIELDS
   end

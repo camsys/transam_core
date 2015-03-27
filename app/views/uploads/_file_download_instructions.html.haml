@@ -1,0 +1,12 @@
+- style ||= 'min-height: 300px;padding:20px;'
+.row
+  .col-xs-12.text-center{:style => style}
+    %i.fa.fa-thumbs-up.fa-4x
+    %h4
+      Success
+    %p
+      Your template has been created. Click the button below to download the file to your computer.
+    %p
+      = link_to download_file_uploads_path(:filename => filename, :filepath => filepath), :class => "btn btn-primary btn-lg" do
+        %i.fa.fa-download
+        Download File

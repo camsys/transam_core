@@ -1,0 +1,1 @@
+$("#modal-body").html("<%= escape_javascript(render :partial => "file_download_instructions", locals: {filename: @filename, filepath: @filepath, style: "padding:20px;"}) %>")

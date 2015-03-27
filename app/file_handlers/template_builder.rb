@@ -9,6 +9,7 @@ class TemplateBuilder
 
   attr_accessor :organization
   attr_accessor :asset_types
+  attr_accessor :assets
 
   def build
 
@@ -104,8 +105,12 @@ class TemplateBuilder
 
   private
 
-  def initialize(*args)
-
+  def initialize(args = {})
+    args.each do |k, v|
+      self.send "#{k}=", v
+    end
+    # asset_class = AssetType.find(@asset_type).class_name.constantize
+    # @event_classes = asset_class.event_classes
   end
 
 end

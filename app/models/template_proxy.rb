@@ -4,13 +4,13 @@ class TemplateProxy < Proxy
   # General state variables
  
   # Type of template to generate
-  attr_accessor  :file_content_type_id
+  attr_accessor  :file_content_type
   
   # Type of asset to process
   attr_accessor    :asset_type
   
   # Basic validations. Just checking that the form is complete
-  validates :file_content_type_id, :presence => true 
+  validates :file_content_type, :presence => true 
 
   def initialize(attrs = {})
     super
