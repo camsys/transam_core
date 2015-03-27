@@ -93,7 +93,8 @@ class User < ActiveRecord::Base
     :address2,
     :city,
     :state,
-    :zip
+    :zip,
+    :role_ids
   ]
 
   #------------------------------------------------------------------------------
