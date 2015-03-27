@@ -1,7 +1,9 @@
 module TransamTagHelper
 
   def loader_panel_tag(options={})
-    "<div class='ajax-loader text-center'><i class='fa fa-spinner fa-spin fa-4x'></i><span class='ajax-loader-message'> Working...</span></div>".html_safe
+
+    msg = (options[:message] ||= "Loading...")
+    "<div class='ajax-loader text-center'><i class='fa fa-spinner fa-spin fa-4x'></i><span class='ajax-loader-message'> #{msg}</span></div>".html_safe
   end
 
   def image_thumbnail_tag(options={}, &block)
