@@ -168,6 +168,8 @@ class AssetsController < AssetAwareController
 
     unless params[:asset][:vendor_name].blank?
       @asset.vendor = Vendor.find_or_create_by(:name => params[:asset][:vendor_name], :organization => @organization)
+    else
+      @asset.vendor = nil
     end
 
     respond_to do |format|
@@ -242,6 +244,8 @@ class AssetsController < AssetAwareController
     @asset.organization = @organization
     unless params[:asset][:vendor_name].blank?
       @asset.vendor = Vendor.find_or_create_by(:name => params[:asset][:vendor_name], :organization => @organization)
+    else
+      @asset.vendor = nil
     end
     @asset.creator = current_user
     @asset.updator = current_user
