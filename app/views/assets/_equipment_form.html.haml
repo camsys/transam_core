@@ -40,7 +40,7 @@
           %span.input-group-addon
             %i.fa.fa-calendar
         = f.input :purchased_new, :as => :radio_buttons, :label => "Purchased New"
-        = f.input :vendor_name, :input_html => {:autocomplete => 'off', :class => 'form-control', :placeholder => 'Enter search text', :id => 'vendor_name', :data => {:url => filter_vendors_path}}
+        = f.input :vendor_name, :label => 'Vendor', :input_html => {:autocomplete => 'off', :class => 'form-control', :placeholder => 'Enter vendor name', :id => 'vendor_name', :data => {:url => filter_vendors_path}}
         = f.input :expected_useful_life, :label => "Expected Useful Life (Months)"
 
     .col-md-12
@@ -68,7 +68,6 @@
         var item = JSON.parse(obj);
         // Update the UI
         $('#vendor_name').attr('value', item.name);
-        $('#asset_vendor_key').attr('value', item.id);
         return item.name;
       }
     });
