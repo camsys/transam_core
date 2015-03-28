@@ -166,6 +166,10 @@ class AssetsController < AssetAwareController
     add_breadcrumb @asset.name, inventory_path(@asset)
     add_breadcrumb "Modify", edit_inventory_path(@asset)
 
+    unless params[:asset][:vendor_name].blank?
+      @asset.vendor = Vendor.find_or_create_by(:name => params[:asset][:vendor_name], :organization => @organization)
+    end
+
     respond_to do |format|
       if @asset.update_attributes(form_params)
 
@@ -236,7 +240,9 @@ class AssetsController < AssetAwareController
     @asset.asset_type = asset_type
     @asset.asset_subtype = asset_subtype
     @asset.organization = @organization
-    @asset.vendor_name = params[:asset][:vendor_name]
+    unless params[:asset][:vendor_name].blank?
+      @asset.vendor = Vendor.find_or_create_by(:name => params[:asset][:vendor_name], :organization => @organization)
+    end
     @asset.creator = current_user
     @asset.updator = current_user
 

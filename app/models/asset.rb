@@ -144,6 +144,11 @@ class Asset < ActiveRecord::Base
   belongs_to      :service_status_type
 
   #------------------------------------------------------------------------------
+  # Transient Attributes
+  #------------------------------------------------------------------------------
+  attr_accessor :vendor_name
+
+  #------------------------------------------------------------------------------
   # Scopes
   #------------------------------------------------------------------------------
   default_scope { order("assets.asset_subtype_id") }
@@ -214,6 +219,7 @@ class Asset < ActiveRecord::Base
     :asset_tag,
     :external_id,
     :manufacture_year,
+    :vendor_id,
     :vendor_name,
     :manufacturer_id,
     :manufacturer_model,
@@ -459,21 +465,6 @@ class Asset < ActiveRecord::Base
     fiscal_year_on_date(in_service_date) unless in_service_date.nil?
   end
 
-  # Virtual Attributes for Vendor- allow typeahead in Asset Form
-  def vendor_name
-    vendor
-  end
-  def vendor_name=(vendor_nm)
-    unless vendor_nm.blank?
-      v = Vendor.find_or_create_by(:name => vendor_nm) do |new_vendor|
-        new_vendor.organization = organization # won't work for new record, since organization is unset
-      end
-      self.vendor = v
-    else
-      self.vendor = nil #must be able to remove vendor
-    end
-  end
-
   # returns the list of events associated with this asset ordered by date, newest first
   def history
     AssetEvent.unscoped.where('asset_id = ?', id).order('event_date DESC')
@@ -496,6 +487,11 @@ class Asset < ActiveRecord::Base
       cache_object("policy_rule", cached_policy_rule)
     end
     cached_policy_rule
+  end
+
+  # Override the getter for vendor name
+  def vendor_name
+    vendor.name unless vendor.nil?
   end
 
   # returns the the organizations's policy that governs the replacement of this asset. This needs to upcast
