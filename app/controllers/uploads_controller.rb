@@ -10,7 +10,7 @@ class UploadsController < OrganizationAwareController
     
   def index
 
-    add_breadcrumb "All Uploads", uploads_path
+    add_breadcrumb "Uploads", uploads_path
     
     # Start to set up the query
     conditions  = []
@@ -65,7 +65,7 @@ class UploadsController < OrganizationAwareController
       return      
     end
 
-    add_breadcrumb "All Uploads", uploads_path
+    add_breadcrumb "Uploads", uploads_path
     add_breadcrumb @upload.original_filename
         
     # get the @prev_record_path and @next_record_path view vars
@@ -136,7 +136,7 @@ class UploadsController < OrganizationAwareController
 
   def templates
     
-    add_breadcrumb "All Uploads", uploads_path
+    add_breadcrumb "Uploads", uploads_path
     add_breadcrumb "Download Template"
         
     @message = "Creating inventory template. This process might take a while."
@@ -163,7 +163,7 @@ class UploadsController < OrganizationAwareController
 
   def create_template
 
-    add_breadcrumb "All Uploads", uploads_path
+    add_breadcrumb "Uploads", uploads_path
     add_breadcrumb "Download Template"
     
     template_proxy = TemplateProxy.new(params[:template_proxy])
@@ -198,7 +198,7 @@ class UploadsController < OrganizationAwareController
   
   def new
 
-    add_breadcrumb "All Uploads", uploads_path
+    add_breadcrumb "Uploads", uploads_path
     add_breadcrumb "New"
     
     @upload = Upload.new
@@ -217,7 +217,7 @@ class UploadsController < OrganizationAwareController
       @upload.organization = @organization
     end
 
-    add_breadcrumb "All Uploads", uploads_path
+    add_breadcrumb "Uploads", uploads_path
     add_breadcrumb "New"
     
     respond_to do |format|
