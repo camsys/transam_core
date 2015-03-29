@@ -9,6 +9,8 @@ class AssetsController < AssetAwareController
   # set the @asset variable before any actions are invoked
   before_filter :get_asset,         :only => [:show, :edit, :copy, :update, :destroy, :summary_info, :add_to_group, :remove_from_group]
   before_filter :reformat_date_fields,  :only => [:create, :update]
+  # Update the vendor_id param if the user is using the vendor_name parameter
+  before_filter :update_vendor_param  :only => [:create, :update]
 
   STRING_TOKENIZER          = '|'
 
@@ -166,12 +168,6 @@ class AssetsController < AssetAwareController
     add_breadcrumb @asset.name, inventory_path(@asset)
     add_breadcrumb "Modify", edit_inventory_path(@asset)
 
-    unless params[:asset][:vendor_name].blank?
-      @asset.vendor = Vendor.find_or_create_by(:name => params[:asset][:vendor_name], :organization => @organization)
-    else
-      @asset.vendor = nil
-    end
-
     respond_to do |format|
       if @asset.update_attributes(form_params)
 
@@ -242,11 +238,7 @@ class AssetsController < AssetAwareController
     @asset.asset_type = asset_type
     @asset.asset_subtype = asset_subtype
     @asset.organization = @organization
-    unless params[:asset][:vendor_name].blank?
-      @asset.vendor = Vendor.find_or_create_by(:name => params[:asset][:vendor_name], :organization => @organization)
-    else
-      @asset.vendor = nil
-    end
+
     @asset.creator = current_user
     @asset.updator = current_user
 
@@ -641,4 +633,18 @@ class AssetsController < AssetAwareController
     params[:asset][:in_service_date] = reformat_date(params[:asset][:in_service_date]) unless params[:asset][:in_service_date].blank?
   end
 
+  # Manage the vendor_id/vendor_name
+  def update_vendor_param
+
+    # If the vendor_name is set in the params then the model needs to override the
+    # vendor_id param. If both the vendor_id and vendor_name are unset then the
+    # model needs to remove the vendor. If the vendor_id is set, leave it alone
+    if params[:asset][:vendor_name].present?
+      vendor = Vendor.find_or_create_by(:name => params[:asset][:vendor_name], :organization => @organization)
+      params[:asset][:vendor_id] = vendor.id
+    elsif params[:asset][:vendor_id].blank? and params[:asset][:vendor_name].blank?
+      params[:asset][:vendor_id] = nil
+    end
+
+  end
 end
