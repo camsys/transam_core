@@ -10,7 +10,7 @@ class AssetsController < AssetAwareController
   before_filter :get_asset,         :only => [:show, :edit, :copy, :update, :destroy, :summary_info, :add_to_group, :remove_from_group]
   before_filter :reformat_date_fields,  :only => [:create, :update]
   # Update the vendor_id param if the user is using the vendor_name parameter
-  before_filter :update_vendor_param  :only => [:create, :update]
+  before_filter :update_vendor_param,  :only => [:create, :update]
 
   STRING_TOKENIZER          = '|'
 
