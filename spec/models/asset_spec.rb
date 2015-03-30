@@ -146,7 +146,6 @@ RSpec.describe Asset, :type => :model do
         :asset_type,
         :asset_subtype,
 
-        :vendor,
         :manufacturer,
         :manufacturer_model,
         :manufacture_year
