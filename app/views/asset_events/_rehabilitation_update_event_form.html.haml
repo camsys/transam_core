@@ -1,3 +1,11 @@
+:ruby
+  if @asset_event.asset_event_asset_subsystems.empty?
+    AssetSubsystem.for_type(@asset.asset_type).each do |ss|
+      @asset_event.asset_event_asset_subsystems.build(asset_subsystem: ss)
+    end
+  end
+
+
 = render :layout => "update_event_form" do |f|
   = f.input :event_date, :label => 'Date of Report', :wrapper => :vertical_append do
     = f.input_field :event_date, :as => :string, :class => 'form-control datepicker', :data => {'behavior' => 'datepicker'}, :value => f.object.event_date.strftime("%m-%d-%Y")
@@ -9,20 +17,22 @@
         .control-label Parts
       .col-sm-6
         .control-label Labor
-  = f.simple_fields_for :asset_event_subsystems do |s|
+  = f.simple_fields_for :asset_event_asset_subsystems do |s|
+    = s.input :asset_subsystem_id, :as => :hidden
     .form-group#costs
-      %label.control-label.col-sm-8.text-right= s.object.subsystem
+      %label.control-label.col-sm-8.text-right
+        = s.object.asset_subsystem
       .col-sm-4
         .col-sm-6.form-group
           = s.input :parts_cost, :wrapper => :vertical_prepend, :label => false do
             %span.input-group-addon
               %i.fa.fa-usd
-            = s.input :parts_cost, :class => 'form-control', :label => false
+            = s.input_field :parts_cost, :class => 'form-control', :label => false
         .col-sm-6.form-group
           = s.input :labor_cost, :wrapper => :vertical_prepend, label: false do
             %span.input-group-addon
               %i.fa.fa-usd
-            = s.input :labor_cost, :class => 'form-control', :label => false
+            = s.input_field :labor_cost, :class => 'form-control', :label => false
   .form-group.col-sm-4.col-sm-offset-8
     %label Total Cost
     .input-group
@@ -33,7 +43,7 @@
   = f.input :extended_useful_life_miles if @asset.type_of? :rolling_stock
   = f.input :comments, :input_html => { :rows => 6 }, :placeholder => "Describe work performed...", label: "Notes"
   .form-group
-    = f.button :submit, "Update maintenance provider", :class => 'btn btn-primary'
+    = f.button :submit, "Add rehabilitation", :class => 'btn btn-primary'
 :javascript
   $(document).ready(function() {
     $("#costs input").on("change", function() {

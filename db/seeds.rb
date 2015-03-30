@@ -202,6 +202,11 @@ data.each do |row|
   x.save!
 end
 
-subsystems = [
+asset_subsystems = [
   {:active => 1, :name => "Other"}
 ]
+asset_subsystems.each do |s|
+  asset_type = AssetType.find_by(name: s[:asset_type]) # subsystems can be optionally scoped to only a single asset type
+  subsystem = AssetSubsystem.create(s)
+  subsystem.asset_type = asset_type
+end

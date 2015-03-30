@@ -8,9 +8,13 @@ class RehabilitationUpdateEvent < AssetEvent
   after_initialize :set_defaults
       
   # Associations
-  has_many :asset_event_subsystems, :foreign_key => "asset_event_id", :inverse_of => :rehabilitation_update_event
-  has_many :subsystems, :through => :asset_event_subsystems
-  accepts_nested_attributes_for :asset_event_subsystems
+  has_many :asset_event_asset_subsystems, 
+             :foreign_key => "asset_event_id", 
+             :inverse_of  => :rehabilitation_update_event, 
+             :dependent   => :destroy
+  accepts_nested_attributes_for :asset_event_asset_subsystems, :allow_destroy => true
+  
+  has_many :asset_subsystems, :through => :asset_event_asset_subsystems
         
   #------------------------------------------------------------------------------
   # Scopes
@@ -22,7 +26,7 @@ class RehabilitationUpdateEvent < AssetEvent
   FORM_PARAMS = [
     :extended_useful_life_months,
     :extended_useful_life_miles,
-    :asset_event_subsystems_attributes => [AssetEventSubsystem.allowable_params]
+    :asset_event_asset_subsystems_attributes => [AssetEventAssetSubsystem.allowable_params]
   ]
   
   #------------------------------------------------------------------------------
@@ -47,7 +51,7 @@ class RehabilitationUpdateEvent < AssetEvent
   #------------------------------------------------------------------------------
 
   def get_update
-    "Rehabilitation: $#{cost}: #{subsystems.join(",")}"
+    "Rehabilitation: $#{cost}: #{asset_subsystems.join(",")}"
   end
 
   def cost
@@ -56,10 +60,10 @@ class RehabilitationUpdateEvent < AssetEvent
 
   # Cost for each piece is the sum of what's spent on subsystems
   def parts_cost
-    asset_event_subsystems.map(&:parts_cost).compact.reduce(0, :+)
+    asset_event_asset_subsystems.map(&:parts_cost).compact.reduce(0, :+)
   end
   def labor_cost
-    asset_event_subsystems.map(&:labor_cost).compact.reduce(0, :+)
+    asset_event_asset_subsystems.map(&:labor_cost).compact.reduce(0, :+)
   end
   
   #------------------------------------------------------------------------------
@@ -72,11 +76,6 @@ class RehabilitationUpdateEvent < AssetEvent
   # Set resonable defaults for a new condition update event
   def set_defaults
     super
-    if asset_event_subsystems == []
-      Subsystem.for_type(asset.asset_type).each do |ss|
-        self.asset_event_subsystems.build(subsystem: ss)
-      end
-    end
   end    
   
 end

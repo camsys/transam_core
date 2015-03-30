@@ -5,4 +5,4 @@
   = format_field("Useful Life Extended (mo.)", @asset_event.extended_useful_life_months)
 - if @asset_event.extended_useful_life_miles
   = format_field("Useful Life Extended (mi.)", @asset_event.extended_useful_life_miles)
-= format_field("Subsystems affected", format_as_list(@asset_event.subsystems))
+= format_field("Subsystems affected", format_as_list(@asset_event.asset_subsystems))
