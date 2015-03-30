@@ -1,6 +1,6 @@
-= format_field("Parts Cost", @asset_event.parts_cost.nil? ? "None" : @asset_event.parts_cost)
-= format_field("Labor Cost", @asset_event.labor_cost.nil? ? "None" : @asset_event.labor_cost)
-= format_field("Total Cost", @asset_event.cost)
+= format_field("Total Parts Cost", @asset_event.parts_cost.nil? ? "None" : format_as_currency(@asset_event.parts_cost))
+= format_field("Total Labor Cost", @asset_event.labor_cost.nil? ? "None" : format_as_currency(@asset_event.labor_cost))
+= format_field("Total Cost", format_as_currency(@asset_event.cost))
 - if @asset_event.extended_useful_life_months
   = format_field("Useful Life Extended (mo.)", @asset_event.extended_useful_life_months)
 - if @asset_event.extended_useful_life_miles
