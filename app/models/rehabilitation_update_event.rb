@@ -12,7 +12,9 @@ class RehabilitationUpdateEvent < AssetEvent
              :foreign_key => "asset_event_id", 
              :inverse_of  => :rehabilitation_update_event, 
              :dependent   => :destroy
-  accepts_nested_attributes_for :asset_event_asset_subsystems, :allow_destroy => true
+  accepts_nested_attributes_for :asset_event_asset_subsystems, 
+                                  :allow_destroy => true,
+                                  :reject_if   => lambda{ |attrs| attrs[:parts_cost].blank? and attrs[:labor_cost].blank? }
   
   has_many :asset_subsystems, :through => :asset_event_asset_subsystems
         
