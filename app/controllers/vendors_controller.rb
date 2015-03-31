@@ -38,7 +38,7 @@ class VendorsController < OrganizationAwareController
     vendors = Vendor.active.where("organization_id in (?) AND (name LIKE ?)", @organization_list, query_str)
     vendors.each do |vendor|
       matches << {
-        "id" => vendor.object_key,
+        "id" => vendor.id,
         "name" => vendor.name
       }
     end

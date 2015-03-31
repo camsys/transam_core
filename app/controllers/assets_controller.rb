@@ -645,6 +645,8 @@ class AssetsController < AssetAwareController
     elsif params[:asset][:vendor_id].blank? and params[:asset][:vendor_name].blank?
       params[:asset][:vendor_id] = nil
     end
+    # vendor_name has served its purpose (find/set vendor_id), so remove from hash
+    params[:asset].delete :vendor_name
 
   end
 end
