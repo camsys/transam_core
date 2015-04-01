@@ -178,6 +178,8 @@ class User < ActiveRecord::Base
     self.state ||= SystemConfig.instance.default_state_code
     self.num_table_rows ||= 10
     self.notify_via_email ||= false
+    self.failed_attempts ||= 0
+    self.active ||= false    
   end
 
   def clean_habtm_relationships

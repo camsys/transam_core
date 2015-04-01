@@ -1,5 +1,8 @@
 class UsersController < OrganizationAwareController
 
+  # Protect controller methods using the cancan ability
+  authorize_resource
+
   add_breadcrumb "Home",  :root_path
   add_breadcrumb "Users", :users_path
 
@@ -193,14 +196,18 @@ class UsersController < OrganizationAwareController
   # POST /users.json
   def create
 
-    new_user_service = get_user_service
-    @user = new_user_service.create_new_user(form_params)
+    # Get a new user service to invoke any business logic associated with creating
+    # new users
+    new_user_service = get_new_user_service
+    # Create the user
+    @user = new_user_service.build(form_params)
     @user.organization = @organization unless @user.organization # allow for mass-assignment of organization
 
     add_breadcrumb 'New'
 
     respond_to do |format|
       if @user.save
+        # Perform an post-creation tasks such as sending emails, etc.
         new_user_service.post_process(@user)
         notify_user(:notice, "User #{@user.name} was successfully created.")
         format.html { redirect_to user_url(@user) }
@@ -328,11 +335,11 @@ class UsersController < OrganizationAwareController
   end
 
   # Get the configured service to handle user creation, defaulting
-  def get_user_service
+  def get_new_user_service
     if Rails.application.config.new_user_service
-      Rails.application.config.new_user_service.constantize
+      Rails.application.config.new_user_service.constantize.new
     else
-      DefaultNewUserService
+      NewUserService.new
     end
   end
 end
