@@ -18,5 +18,5 @@
         %ul.dropdown-menu
           - @task.allowable_events.each do |evt|
             %li
-              = link_to fire_workflow_event_task_path( @task, :event => evt), :method => "patch" do
+              = link_to fire_workflow_event_task_path( @task, :event => evt) do
                 = evt.titleize
