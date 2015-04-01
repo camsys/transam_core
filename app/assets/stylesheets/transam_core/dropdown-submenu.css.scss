@@ -10,12 +10,12 @@
         -moz-border-radius: 0 6px 6px;
         border-radius: 0 6px 6px 6px;
     }
-    
+
     &:hover {
         > .dropdown-menu {
             display: block;
         }
-        
+
         > a:after {
             border-left-color: #fff;
         }
@@ -34,7 +34,7 @@
         margin-top: 5px;
         margin-right: -10px;
     }
-    
+
     &.pull-left {
         float: none;
         > .dropdown-menu {
@@ -45,7 +45,7 @@
             border-radius: 6px 0 6px 6px;
         }
     }
-    
+
     // right-aligned submenus
     &.dropdown-submenu-right > .dropdown-menu {
         top: 0;
