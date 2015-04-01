@@ -13,7 +13,7 @@
 .tab-content
   .tab-pane.fade#contact
     .tab-content
-      = render :partial => 'contact'
+      = render 'contact'
   -if @user.eql? current_user or current_user.has_role? :admin
     .tab-pane.fade#settings
       .tab-content
