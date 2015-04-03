@@ -1,17 +1,17 @@
 class ImageUploader < TransamAbstractUploader
-  
-  include CarrierWave::RMagick
-  
+
+  include CarrierWave::rmagick
+
   process :convert => 'png'
 
   def filename
     super.chomp(File.extname(super)) + '.png' if original_filename.present?
-  end     
-  
+  end
+
   version :thumb do
     process :resize_to_fill => [150, 150]
   end
-  
+
   def store_dir
     "image_uploads/#{model.object_key}"
   end

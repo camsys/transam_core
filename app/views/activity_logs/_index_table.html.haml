@@ -2,20 +2,20 @@
   table_dom_id = SecureRandom.hex
 
 %table.table.table-hover{:id => table_dom_id}
-	%thead
-		%tr
-			%th.left Date/Time
-			%th.left User
-			%th.left Action
-			%th.left Activity
+  %thead
+    %tr
+      %th.left Date/Time
+      %th.left User
+      %th.left Action
+      %th.left Activity
 
-	%tbody
-		- @activities.each do |a|
-			%tr{:data => {:action_path => activity_log_path(a)}}
-				%td.left= format_as_date_time(a.activity_time)
-				%td.left= a.user
-				%td.left= a.item_type
-				%td.left= a.activity.truncate(64).html_safe
+  %tbody
+    - @activities.each do |a|
+      %tr{:data => {:action_path => activity_log_path(a)}}
+        %td.left= format_as_date_time(a.activity_time)
+        %td.left= a.user
+        %td.left= a.item_type
+        %td.left= a.activity.truncate(64).html_safe
 
 - if @activities.count > current_user.num_table_rows
   = render :partial => 'shared/datatable_javascript', :locals => {:id => table_dom_id}
