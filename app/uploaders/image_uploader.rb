@@ -1,6 +1,6 @@
 class ImageUploader < TransamAbstractUploader
 
-  include CarrierWave::rmagick
+  include CarrierWave::RMagick
 
   process :convert => 'png'
 
