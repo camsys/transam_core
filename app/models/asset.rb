@@ -155,7 +155,9 @@ class Asset < ActiveRecord::Base
   # Returns a list of assets that have been disposed
   scope :disposed,  -> { where('assets.disposition_date IS NOT NULL') }
   # Returns a list of assets that are still in service
-  scope :active,    -> { where('assets.disposition_date IS NULL') }
+  #scope :active,    -> { where('assets.disposition_date IS NULL') } # Being deprecated. Use operational
+  # Returns a list of assets that are still in service
+  scope :operational,    -> { where('assets.disposition_date IS NULL') }
 
   #------------------------------------------------------------------------------
   # Lists. These lists are used by derived classes to make up lists of attributes

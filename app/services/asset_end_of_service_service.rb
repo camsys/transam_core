@@ -51,7 +51,7 @@ class AssetEndOfServiceService
       values << asset_subtype_id
     end
 
-    Asset.active.where(conditions.join(' AND '), *values)
+    Asset.operational.where(conditions.join(' AND '), *values)
   end
 
   #------------------------------------------------------------------------------
