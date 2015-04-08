@@ -1,11 +1,11 @@
 <li class="text-left">
 	<%= link_to user_tasks_path(current_user, :state => "all")  do %>
-		<i class="fa fa-calendar fa-fw"></i> My tasks
+		<i class="fa fa-calendar fa-fw"></i><%= " My tasks (#{current_user.assigned_tasks.count})" %>
 	<% end %>
 </li>
 <li class="text-left">
 	<%= link_to user_messages_path(current_user) do %>
-		<i class="fa fa-envelope fa-fw"></i> My messages
+		<i class="fa fa-envelope fa-fw"></i><%= " My messages (#{current_user.new_messages.count})" %>
 	<% end %>
 </li>
 <li class="divider text-left"></li>
