@@ -51,7 +51,7 @@
           Open
 
       %i.fa.fa-clock-o
-      = " due #{format_as_date_time_distance(task.complete_by)} from now"
+      = " due #{format_as_date_time_distance(task.complete_by)}"
 
     - if task.taskable
       %span.pull-left
