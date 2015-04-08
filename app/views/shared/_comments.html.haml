@@ -1,6 +1,6 @@
 %ul.list-group
   - comments.each do |c|
-    %li.list-group-item
+    %li.list-group-item.comment
       %span.title.text-muted{:style => 'min-width: 140px; display:inline-block;'}= "#{c.creator.name}<br/>#{format_as_date_time(c.created_at)}".html_safe
       %span.title{:style => 'display:inline-block;vertical-align:top'}= c.comment.html_safe.truncate(128)
       %span.pull-right{:style => 'min-width: 80px; display:inline-block;vertical-align:top'}
