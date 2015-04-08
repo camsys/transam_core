@@ -113,6 +113,29 @@ class User < ActiveRecord::Base
   #
   #------------------------------------------------------------------------------
 
+  # Get the new messages for the current user
+  def new_messages
+    Message.where('to_user_id = ? AND opened_at IS NULL', id).order("created_at DESC")
+  end
+
+  # Gets the tasks for the current user that are still open
+  def assigned_tasks
+    Task.where("assigned_to_user_id = ? AND state IN (?)", id, ["new", "started", "halted"]).order(:complete_by)
+  end
+  def due_tasks
+    today = Date.today
+    assigned_tasks.where("complete_by < ?",  Date.today.end_of_day)
+  end
+  def new_tasks
+    assigned_tasks.where(:state => "new")
+  end
+  def started_tasks
+    assigned_tasks.where(:state => "started")
+  end
+  def on_hold_tasks
+    assigned_tasks.where(:state => "halted")
+  end
+
   # Devise overrides for logging account locks/unlocks
   def lock_access!
     super
@@ -179,7 +202,7 @@ class User < ActiveRecord::Base
     self.num_table_rows ||= 10
     self.notify_via_email ||= false
     self.failed_attempts ||= 0
-    self.active ||= false    
+    self.active ||= false
   end
 
   def clean_habtm_relationships
