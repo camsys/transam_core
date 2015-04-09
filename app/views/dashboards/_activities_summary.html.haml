@@ -1,16 +1,14 @@
 :ruby
   activities = Activity.where("organization_type_id IN (?)", [0, @organization.organization_type.id])
 
-.col-md-4.col-sm-4
-  .panel.panel-default{:style => "height: 200px;overflow-y: auto;"}
-    .panel-heading
-      .pull-right
-        %span.badge= activities.count
-      Activities
-    - if activities.empty?
-      .panel-body
-        %p= "No activities"
-    - else
-      %ul.list-group.media-list
-        - activities.each do |act|
-          = render :partial => 'activity_repeater', :locals => {:activity => act}
+%fieldeset
+  %legend Activities
+
+  .panel.panel-default
+    .panel-body
+      - if activities.empty?
+        %p= "No upcoming activities."
+      - else
+        %ul.list-group
+          - activities.each do |act|
+            = render :partial => "dashboards/activity_detail", locals: {:activity => act}
