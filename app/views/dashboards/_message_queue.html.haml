@@ -1,0 +1,8 @@
+.panel.panel-default{:style => 'height: 200px;overflow-y: auto;'}
+  - if messages.empty?
+    .panel-body
+      %p= "No messages."
+  - else
+    %ul.list-group
+      - messages.each do |msg|
+        = render :partial => 'messages/message_detail_compact', :locals => {:msg => msg}

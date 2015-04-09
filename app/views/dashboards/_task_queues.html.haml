@@ -1,0 +1,23 @@
+%fieldset
+  %legend My Tasks
+  .panel.panel-default
+    .panel-body
+
+      %ul.nav.nav-tabs#task_tabs
+        %li
+          %a{:href => "#due_tasks", :data =>{:toggle => 'tab'}}
+            %span.badge.pull-right= current_user.due_tasks.count
+            %i.fa.fa-calendar
+            = " Due today"
+        %li
+          %a{:href => "#new_tasks", :data =>{:toggle => 'tab'}}
+            %span.badge.pull-right= current_user.new_tasks.count
+            %i.fa.fa-calendar
+            = " New"
+
+      .tab-content{:style => 'min-height: 200px'}
+        .tab-pane.fade{:id => "due_tasks"}
+          = render :partial => 'task_queue', :locals => {:name => "Tasks Dues", :tasks => current_user.due_tasks}
+
+        .tab-pane.fade{:id => "new_tasks"}
+          = render :partial => 'task_queue', :locals => {:name => "New Tasks", :tasks => current_user.new_tasks}

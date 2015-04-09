@@ -1,0 +1,28 @@
+:ruby
+  new_messages = Message.where('to_user_id = ? AND opened_at IS NULL', current_user.id).order("created_at DESC")
+  flagged_messages = current_user.messages
+
+%fieldset
+  %legend My Messages
+  .panel.panel-default
+    .panel-body
+
+      %ul.nav.nav-tabs#message_tabs
+        %li
+          %a{:href => "#new", :data =>{:toggle => 'tab'}}
+            %span.badge.pull-right= new_messages.count
+            %i.fa.fa-download
+            = " New"
+
+        %li
+          %a{:href => "#flag", :data =>{:toggle => 'tab'}}
+            %span.badge.pull-right= flagged_messages.count
+            %i.fa.fa-star
+            = " Flagged"
+
+      .tab-content{:style => 'min-height: 200px'}
+        .tab-pane.fade{:id => "new"}
+          = render :partial => 'message_queue', :locals => {:name => "New Messages", :messages => new_messages}
+
+        .tab-pane.fade{:id => "flag"}
+          = render :partial => 'message_queue', :locals => {:name => "Inbox", :messages => flagged_messages}

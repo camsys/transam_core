@@ -1,0 +1,8 @@
+.panel.panel-default{:style => 'height: 200px;overflow-y: auto;'}
+  - if tasks.empty?
+    .panel-body
+      %p= "No tasks."
+  - else
+    %ul.list-group
+      - tasks.each do |task|
+        = render :partial => 'tasks/task_detail_compact', :locals => {:task => task}

@@ -1,0 +1,14 @@
+:ruby
+  notices = Notice.active_for_organization(@organization).order(:display_datetime)
+
+%fieldeset
+  %legend My Notices
+
+  .panel.panel-default
+    .panel-body
+      - if notices.empty?
+        %p= "No notices."
+      - else
+        %ul.list-group
+          - notices.each do |n|
+            = render :partial => "shared/notice_detail", locals: {:notice => n}
