@@ -1,4 +1,4 @@
-%ul.nav.nav-tabs
+%ul.nav.nav-tabs.responsive-tabs
   - # Load module specific tabs if they exist
   - SystemConfig.transam_module_names.each do |mod|
     = render :partial => "assets/#{mod}_detail_tabs" rescue nil

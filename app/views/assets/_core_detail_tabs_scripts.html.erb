@@ -27,30 +27,27 @@
         }
     });
 
-	// Capture the show event for the dependents tab
-	$("a[href='#depd']").on('shown.bs.tab', function(e) {
-		transam.activate_info_popups('.info-popup');
-	});
+  	// Capture the show event for the dependents tab
+  	$("a[href='#depd']").on('shown.bs.tab', function(e) {
+  		transam.activate_info_popups('.info-popup');
+  	});
 
-	// Use validation plugin to validate the forms before submittal
-	$('#new_comment').validate({
-	  submitHandler: function(form) {
-	    $(form).submit();
-	  }
-	});
-	$('#new_image').validate({
-	  submitHandler: function(form) {
-	    $(form).submit();
-	  }
-	});
-	$('#new_document').validate({
-	  submitHandler: function(form) {
-	    $(form).submit();
-	  }
-	});
-
-	// Enable the lightbox
-	$('[data-lightbox]').simpleLightbox();
+  	// Use validation plugin to validate the forms before submittal
+  	$('#new_comment').validate({
+  	  submitHandler: function(form) {
+  	    $(form).submit();
+  	  }
+  	});
+  	$('#new_image').validate({
+  	  submitHandler: function(form) {
+  	    $(form).submit();
+  	  }
+  	});
+  	$('#new_document').validate({
+  	  submitHandler: function(form) {
+  	    $(form).submit();
+  	  }
+  	});
 
   });
 
