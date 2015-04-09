@@ -98,9 +98,11 @@ Rails.application.routes.draw do
 
   resources :dashboards,    :only => [:index, :show]
   resources :activity_logs, :only => [:index, :show]
+
   resources :searches,      :only => [:new, :create] do
     collection do
       post :keyword
+      get  :keyword
     end
   end
   resources :reports,       :only => [:index, :show] do

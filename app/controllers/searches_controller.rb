@@ -56,37 +56,36 @@ class SearchesController < OrganizationAwareController
   # Action for performing full text search using the search text index
   def keyword
 
-    @search_text = params["search_text"]
+    @search_text = params["search_text"] ||= ""
 
     add_breadcrumb "Keyword Search: '#{@search_text}'"
 
-    #testing w "981ECCHHGG58 981ECCD92F8E"
-    # 982596NN025M D1254
-    #console stuff
-    #results = KeywordSearchIndex.where("search_text like '%D1254%'")
-    #
+    if @search_text.blank?
+      @keyword_search_results = []
+    else
 
-    # here we build the query one clause at a time based on the input params. The query
-    # is of the form:
-    #
-    # where organization_id IN (?) AND (search_text LIKE ? OR search_text_like ? OR ... )
+      # here we build the query one clause at a time based on the input params. The query
+      # is of the form:
+      #
+      # where organization_id IN (?) AND (search_text LIKE ? OR search_text_like ? OR ... )
 
-    where_clause = 'organization_id IN (?) AND ('
-    values = []
-    values << @organization.id
+      where_clause = 'organization_id IN (?) AND ('
+      values = []
+      values << @organization.id
 
-    search_params = []
-    @search_text.split(" ").each_with_index do |search_string|
-      unless search_string.length < 2
-        search_params << 'search_text LIKE ?'
-        values << "%#{search_string}%"
+      search_params = []
+      @search_text.split(" ").each_with_index do |search_string|
+        unless search_string.length < 2
+          search_params << 'search_text LIKE ?'
+          values << "%#{search_string}%"
+        end
       end
+
+      where_clause << search_params.join(' OR ')
+      where_clause << ')'
+
+      @keyword_search_results = KeywordSearchIndex.where(where_clause, *values).limit(MAX_ROWS_RETURNED)
     end
-
-    where_clause << search_params.join(' OR ')
-    where_clause << ')'
-
-    @keyword_search_results = KeywordSearchIndex.where(where_clause, *values).limit(MAX_ROWS_RETURNED)
     cache_list(@keyword_search_results, INDEX_KEY_LIST_VAR)
 
     respond_to do |format|
