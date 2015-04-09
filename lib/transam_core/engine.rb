@@ -21,7 +21,6 @@ module TransamCore
     config.autoload_paths += %W(#{Rails.root}/app/calculators)
     config.autoload_paths += %W(#{Rails.root}/app/file_handlers)
     config.autoload_paths += %W(#{Rails.root}/app/jobs)
-    config.autoload_paths += %W(#{Rails.root}/app/mixins)
     config.autoload_paths += %W(#{Rails.root}/app/reports)
     config.autoload_paths += %W(#{Rails.root}/app/searches)
     config.autoload_paths += %W(#{Rails.root}/app/services)

@@ -1,9 +1,8 @@
 class ServiceStatusType < ActiveRecord::Base
-        
+
   # default scope
   default_scope { where(:active => true) }
 
-  
   def self.search(text, exact = true)
     if exact
       x = where('name = ? OR code = ? OR description = ?', text, text, text).first
@@ -17,5 +16,5 @@ class ServiceStatusType < ActiveRecord::Base
   def to_s
     name
   end
-              
+
 end
