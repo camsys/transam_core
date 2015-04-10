@@ -1,5 +1,4 @@
-= link_to "#", :class => 'list-group-item' do
-  .media-body
-    %h4.media-heading= activity.name
-    %p.pull-left= "#{format_as_date_time_distance(activity.due_datetime)} from now."
-    %p.pull-right= format_as_date_time(activity.due_datetime)
+%li.list-group-item
+  %h4.media-heading= activity.name
+  %p.pull-left= "#{format_as_date_time_distance(activity.due_datetime)} from now."
+  %p.pull-right= format_as_date_time(activity.due_datetime)
