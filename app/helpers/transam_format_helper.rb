@@ -137,6 +137,15 @@ module TransamFormatHelper
     html.html_safe
   end
 
+  # formats a boolean field using a checkbox if the value is true
+  def format_as_checkbox(val, text_class='text-default')
+    if val
+      return "<i class='fa fa-check-square-o #{text_class}'></i>".html_safe
+    else
+      return "<i class='fa fa-square-o #{text_class}'></i>".html_safe
+    end
+  end
+
   # formats a boolean field using a flag if the value is true
   def format_as_boolean(val, icon="fa-check", text_class='text-default')
     if val
