@@ -188,6 +188,10 @@ class User < ActiveRecord::Base
     elems.compact.join(', ')
   end
 
+  def searchable_fields
+    SEARCHABLE_FIELDS
+  end
+
   #------------------------------------------------------------------------------
   #
   # Protected Methods
