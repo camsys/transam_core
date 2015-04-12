@@ -5,10 +5,10 @@
   %legend My Notices
 
   .panel.panel-default
-    .panel-body
-      - if notices.empty?
+    - if notices.empty?
+      .panel-body
         %p= "No notices."
-      - else
-        %ul.list-group
-          - notices.each do |n|
-            = render :partial => "shared/notice_detail", locals: {:notice => n}
+    - else
+      %ul.list-group
+        - notices.each do |n|
+          = render :partial => "shared/notice_detail", locals: {:notice => n}

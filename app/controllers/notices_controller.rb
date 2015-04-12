@@ -29,6 +29,7 @@ class NoticesController < OrganizationAwareController
 
   def new
 
+    Rails.logger.debug "In notices#new"
     add_breadcrumb "New"
     @notice = Notice.new
 

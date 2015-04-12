@@ -162,7 +162,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :notices, :only => [:index, :create, :update, :edit, :new, :destroy] do
+  resources :notices, :only => [:index, :show, :create, :update, :edit, :new, :destroy] do
     member do
       get 'reactivate'
       get 'deactivate'

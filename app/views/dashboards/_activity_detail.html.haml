@@ -1,4 +1,6 @@
 %li.list-group-item
-  %h4.media-heading= activity.name
-  %p.pull-left= "#{format_as_date_time_distance(activity.due_datetime)} from now."
-  %p.pull-right= format_as_date_time(activity.due_datetime)
+  .media-body
+    .media-heading.text-success
+      %strong= activity.name
+      %span.pull-right.text-default.text-muted{:style => 'font-size: 0.75em'}= format_as_date_time_distance(activity.due_datetime)
+    %p.text-muted{:style => 'font-size: 0.85em'}= activity.description.html_safe

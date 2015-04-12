@@ -5,10 +5,10 @@
   %legend Activities
 
   .panel.panel-default
-    .panel-body
-      - if activities.empty?
+    - if activities.empty?
+      .panel-body
         %p= "No upcoming activities."
-      - else
-        %ul.list-group
-          - activities.each do |act|
-            = render :partial => "dashboards/activity_detail", locals: {:activity => act}
+    - else
+      %ul.list-group
+        - activities.each do |act|
+          = render :partial => "dashboards/activity_detail", locals: {:activity => act}
