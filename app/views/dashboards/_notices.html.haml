@@ -12,3 +12,7 @@
       %ul.list-group
         - notices.each do |n|
           = render :partial => "shared/notice_detail", locals: {:notice => n}
+
+
+:javascript
+  $("a[data-toggle='popover']").popover();
