@@ -1,5 +1,24 @@
 module TransamTagHelper
 
+  def popover_tag(text, options={})
+
+    tag_class = (options[:class] ||= "transam-popover")
+    placement = (options[:placement] ||= "auto")
+
+    html = "<a tabindex='0' class='#{tag_class}' role='button' data-placement='#{placement}' data-container='body' data-html='true' data-toggle='popover' data-trigger='focus'"
+    html << " title='#{options["title"]}'" unless options[:title].blank?
+    html << " data-content='#{options[:content]}'>"
+    if options[:icon].present?
+      html << "<i class='fa #{options[:icon]}'>"
+    end
+    html << text unless text.blank?
+    if options[:icon].present?
+      html << "</i>"
+    end
+    html << "</a>"
+    html.html_safe
+  end
+
   def loader_panel_tag(options={})
 
     msg = (options[:message] ||= "Loading...")
