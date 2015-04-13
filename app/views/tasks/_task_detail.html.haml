@@ -1,11 +1,11 @@
-.panel{:id => "#{task.object_key}_task_panel", :class => bootstrap_class_priority_type(task.priority_type)}
+.panel.panel-default{:id => "#{task.object_key}_task_panel"}
   .panel-heading
     %span.pull-right
       .btn-group{:style => 'margin-left: 5px;'}
         %button.btn.btn-default.btn-xs.dropdown-toggle{"data-toggle" => "dropdown", :aria_expanded => "false"}
           = task.state.titleize
           %span.caret
-        %ul.dropdown-menu{:role => "menu"}
+        %ul.dropdown-menu.pull-right{:role => "menu"}
           %li
             - task.allowable_events.each do |evt|
               = link_to fire_workflow_event_task_path(task, :event => evt) do
@@ -23,7 +23,7 @@
           - else
             = task.assigned_to_user
           %span.caret
-        %ul.dropdown-menu{:role => "menu"}
+        %ul.dropdown-menu.pull-right{:role => "menu"}
           %li
             - @organization.users.each do |usr|
               = link_to change_owner_task_path(task, :user => usr.object_key) do
