@@ -1,6 +1,17 @@
 :ruby
   table_dom_id = SecureRandom.hex
 
+%ul.list-inline.pull-right
+  %li
+    %i.text-warning.fa.fa-flag.fa-fw
+    Tasks
+  %li
+    %i.fa.fa-files-o.fa-fw
+    Attachments
+  %li
+    %i.fa.fa-comments.fa-fw
+    Comments
+
 %table.table.table-hover{:id => table_dom_id}
   %thead
     %tr

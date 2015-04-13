@@ -7,4 +7,4 @@
     %p.text-muted.pull-left{:style => 'font-size: 0.85em'}= notice.summary
     - if notice.details.present?
       %span.pull-right.text-default.text-muted{:style => 'font-size: 0.75em'}
-        = link_to "details...", "#", :role => 'button', :tabindex => "0", :data => {:toggle => 'popover', :placement => 'left', :container => 'body', :trigger => 'focus',  :html => 'true', :title => notice.subject, :content => notice.details.html_safe}
+        = popover_tag("Details...", {:placement => 'auto left', :title => notice.subject, :content => notice.details.html_safe})
