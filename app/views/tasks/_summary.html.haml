@@ -1,3 +1,4 @@
+= format_field("Attached To", link_to(@task.taskable, polymorphic_path(@task.taskable))) unless @task.taskable.nil?
 = format_field("Status", @task.state.humanize )
 = format_field("Due", format_as_date(@task.complete_by))
 = format_field("Priority", @task.priority_type )
