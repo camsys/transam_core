@@ -17,7 +17,7 @@
 						<i class="<%= rt.display_icon_name %> fa-fw"></i> <%= rt.name.pluralize(2) %>
 					<% end %>
 					<ul class="dropdown-menu">
-						<% rt.reports.active.each do |report| %>
+						<% rt.reports.show_in_nav.each do |report| %>
 							<% if current_user.is_in_roles? report.role_names %>
 								<li class="text-left">
 									<%= link_to report_path(report)  do %>
