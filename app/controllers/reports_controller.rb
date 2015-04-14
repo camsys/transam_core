@@ -13,7 +13,7 @@ class ReportsController < OrganizationAwareController
     @view_type = get_view_type(SESSION_VIEW_TYPE_VAR)
 
     @reports = []
-    Report.all.each do |rep|
+    Report.active.each do |rep|
       if current_user.is_in_roles? rep.role_names
         @reports << rep
       end
