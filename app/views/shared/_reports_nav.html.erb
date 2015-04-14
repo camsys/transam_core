@@ -4,24 +4,24 @@
 		<b class="caret"></b>
 	<% end %>
 	<ul class="dropdown-menu multi-level" role="menu">
-		<li class="text-left">												
+		<li class="text-left">
 			<%= link_to reports_path  do %>
-				<i class="fa fa-bar-chart-o fa-fw"></i> All			
+				<i class="fa fa-bar-chart-o fa-fw"></i> All
 			<% end %>
 		</li>
-		<li class="divider"></li>			
+		<li class="divider"></li>
 		<% ReportType.all.includes(:reports).each do | rt | %>
 			<% if rt.reports.count > 0 %>
-				<li class="text-left dropdown-submenu">												
+				<li class="text-left dropdown-submenu">
 					<%= link_to reports_path(:report_type => rt.id)  do %>
-						<i class="<%= rt.display_icon_name %> fa-fw"></i> <%= rt.name.pluralize(2) %>								
+						<i class="<%= rt.display_icon_name %> fa-fw"></i> <%= rt.name.pluralize(2) %>
 					<% end %>
 					<ul class="dropdown-menu">
-						<% rt.reports.each do |report| %>
+						<% rt.reports.active.each do |report| %>
 							<% if current_user.is_in_roles? report.role_names %>
-								<li class="text-left">												
+								<li class="text-left">
 									<%= link_to report_path(report)  do %>
-										<i class="<%= report.report_type.display_icon_name %> fa-fw"></i> <%= report.name %>								
+										<i class="<%= report.report_type.display_icon_name %> fa-fw"></i> <%= report.name %>
 									<% end %>
 								</li>
 							<% end %>
@@ -30,6 +30,5 @@
 				</li>
 			<% end %>
 		<% end %>
-	</ul>				
+	</ul>
 </li>
-
