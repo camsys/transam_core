@@ -12,6 +12,8 @@
             .btn-group.pull-right.panel-action
               %button.btn.btn-primary.btn-sm#collapse{:data => {:toggle => "collapse", :target => ".search-panel"}}
                 %i.fa.fa-fw.fa-minus
+            = render 'actions'
+
       .panel-body.collapse.in.search-panel#asset_search_form
         = simple_form_for(@searcher,
         :as => :searcher,
@@ -35,7 +37,7 @@
     var hidden_fields = $(".input-group-btn input[type='hidden']");
     hidden_fields.each(function(selector) {
       var selected_link = $(this).prev("ul").find("a[data-compare=" + this.value+ "]");
-      var text = selected_link.html();
+      var text = selected_link.html() + " ";
       var btn = $(this).prevAll("button");
       btn.html(text).append("<span class='caret'></span>");
     });
@@ -45,16 +47,16 @@
   $(".input-group-btn a").on("click", function() {
     // Handle btn-dropdown by setting relevant variable in hidden field
     $(this).parents("ul").siblings("input:hidden").val($(this).attr("data-compare"));
-    $(this).parents("ul").prev("button").text($(this).text());
+    $(this).parents("ul").prev("button").text($(this).text() + " ");
     $(this).parents("ul").prev("button").append("<span class='caret'></span>");
   });
 
   // Update the icons in the header based on collapsing the panels
   $('.search-panel').on('hide.bs.collapse', function () {
     $('#collapse i').removeClass('fa-minus');
-    $('#collapse i').addClass('fa-plus');   
+    $('#collapse i').addClass('fa-plus');
   });
   $('.search-panel').on('show.bs.collapse', function () {
     $('#collapse i').removeClass('fa-plus');
-    $('#collapse i').addClass('fa-minus');   
-  });  
+    $('#collapse i').addClass('fa-minus');
+  });

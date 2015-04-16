@@ -38,7 +38,7 @@ class AssetGroup < ActiveRecord::Base
   # Validations
   #------------------------------------------------------------------------------
   validates :organization,          :presence => true
-  validates :name,                  :presence => true, :length => { maximum: 64 }
+  validates :name,                  :presence => true, :length => { maximum: 64 }, :uniqueness => {:scope => :organization, :message => "must be unique within an organization"}
   validates :code,                  :presence => true, :length => { maximum: 8 }
   validates :description,           :presence => true
 
@@ -75,6 +75,16 @@ class AssetGroup < ActiveRecord::Base
   # Instance Methods
   #
   #------------------------------------------------------------------------------
+
+  # Returns true if the asset group contains a homogeneous set of asset types, false otherwise
+  def homogeneous?
+    asset_type_ids.length == 1
+  end
+
+  # Returns the unique set of asset_ids for assets stored in the group
+  def asset_type_ids
+    assets.scope.uniq.pluck(:asset_type_id)
+  end
 
   def to_s
     name

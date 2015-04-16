@@ -1,12 +1,12 @@
 class AssetGroupsController < OrganizationAwareController
-  
+
   before_action :set_asset_group, :only => [:show, :edit, :update, :destroy]
 
   add_breadcrumb "Home", :root_path
 
   # GET /asset_groups
   def index
-    
+
     add_breadcrumb 'Asset Groups', asset_groups_path
 
     @asset_groups = @organization.asset_groups
@@ -18,11 +18,11 @@ class AssetGroupsController < OrganizationAwareController
 
     add_breadcrumb 'Asset Groups', asset_groups_path
     add_breadcrumb @asset_group
-    
+
     rep = AssetSubtypeReport.new
     @data = rep.get_data_from_collection(@asset_group.assets)
     @total_assets = @asset_group.assets.count
-    
+
   end
 
   # GET /asset_groups/new
@@ -30,8 +30,14 @@ class AssetGroupsController < OrganizationAwareController
 
     add_breadcrumb 'Asset Groups', asset_groups_path
     add_breadcrumb 'New'
+
     @asset_group = AssetGroup.new
-    
+
+    # See if the user added a flag to load from a search results
+    if params[:from_search] == "1"
+      @use_cached_assets = "1"
+    end
+
   end
 
   # GET /asset_groups/1/edit
@@ -40,22 +46,41 @@ class AssetGroupsController < OrganizationAwareController
     add_breadcrumb 'Asset Groups', asset_groups_path
     add_breadcrumb @asset_group, asset_group_path(@asset_group)
     add_breadcrumb 'Update'
-  
+
   end
 
   # POST /asset_groups
   def create
-    @asset_group = AssetGroup.new(form_params)
-    @asset_group.organization = @organization
-    
+
     add_breadcrumb 'Asset Groups', asset_groups_path
     add_breadcrumb 'New'
 
+    @asset_group = AssetGroup.new(form_params)
+    @asset_group.organization = @organization
+
     if @asset_group.save
+
+      # See if the user is creating the group from a set of cached assets
+      if params[:use_cached_assets] == "1"
+        # Populate the asset group from the cached results
+        cache_key = AssetSearcher.new.cache_variable_name
+        assets = Asset.where(object_key: get_cached_objects(cache_key))
+        assets.each do |asset|
+          a = Asset.get_typed_asset(asset)
+          @asset_group.assets << a
+        end
+        # clear out the cached items once they're in a group
+        clear_cached_objects(cache_key)
+        notify_user(:notice, "Asset group #{@asset_group} was successfully created and #{@asset_group.assets.count} assets were added.")
+      else
+        notify_user(:notice, "Asset group #{@asset_group} was successfully created.")
+      end
+
       redirect_to asset_group_path(@asset_group)
     else
       render :new
     end
+
   end
 
   # PATCH/PUT /issues/1
@@ -66,7 +91,8 @@ class AssetGroupsController < OrganizationAwareController
     add_breadcrumb 'Update'
 
     if @asset_group.update(form_params)
-      redirect_to @asset_group, notice: 'Asset group was successfully updated.'
+      notify_user(:notice, "Asset group #{@asset_group} was successfully updated.")
+      redirect_to @asset_group
     else
       render :edit
     end
@@ -74,8 +100,12 @@ class AssetGroupsController < OrganizationAwareController
 
   # DELETE /issues/1
   def destroy
+
+    name = @asset_group.name
     @asset_group.destroy
-    redirect_to asset_groups_url, notice: 'Asset Group was successfully destroyed.'
+
+    notify_user(:notice, "Asset group #{name} was successfully removed.")
+    redirect_to asset_groups_url
   end
 
   private
