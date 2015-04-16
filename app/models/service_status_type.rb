@@ -1,7 +1,6 @@
 class ServiceStatusType < ActiveRecord::Base
 
-  # default scope
-  default_scope { where(:active => true) }
+  scope :active, -> { where(active: true) }
 
   def self.search(text, exact = true)
     if exact
