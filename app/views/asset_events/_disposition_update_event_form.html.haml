@@ -4,10 +4,19 @@
     %span.input-group-addon
       %i.fa.fa-calendar
   = f.association :disposition_type, :label => "Disposition Type"
-  = f.input :sales_proceeds, :wrapper => :vertical_prepend, :label => "Sales Proceeds" do
-    %span.input-group-addon
-      %i.fa.fa-usd
-    = f.input :sales_proceeds, :class => 'form-control', :input_html => { :min => 0, :max => 1000000 }, :label => false
+  .row
+    .col-xs-4
+      = f.input :sales_proceeds, :wrapper => :vertical_prepend, :label => "Sales Proceeds" do
+        %span.input-group-addon
+          %i.fa.fa-usd
+        = f.input :sales_proceeds, :class => 'form-control', :input_html => { :min => 0 }, :label => false
+    .row
+      .col-xs-4
+        = f.input :age, :wrapper => :vertical_prepend, :label => "Age at disposition", :input_html => { :min => 0 }
+    .row
+      .col-xs-4
+        = f.input :mileage, :wrapper => :vertical_prepend, :label => "Mileage", :input_html => { :min => 0 }
+
   = f.input :new_owner_name, :label => "New Owner Name"
   = f.input :address1, :label => "New Owner Address"
   = f.input :address2, :label => "Address 2"
@@ -21,13 +30,15 @@
   = f.input :comments, :input_html => { :rows => 6 }, :placeholder => "Enter any additional comments..."
   .form-group
     = f.button :submit, "Record disposition", :class => 'btn btn-primary'
+
 :javascript
   $.validator.addMethod(
-          "regex",
-          function(value, element, regexp) {
-              var re = new RegExp(regexp);
-              return this.optional(element) || re.test(value);
-          },
-          "Must be a valid zip code."
+    "regex",
+    function(value, element, regexp) {
+      var re = new RegExp(regexp);
+      return this.optional(element) || re.test(value);
+    },
+    "Must be a valid zip code."
   );
+
   $("input[name='asset_event[zip]']").rules("add", { regex: /^\d{5}([\-]?\d{4})?$/ })

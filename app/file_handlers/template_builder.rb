@@ -9,13 +9,14 @@ class TemplateBuilder
 
   attr_accessor :organization
   attr_accessor :asset_types
+  attr_accessor :assets
 
   def build
 
     # Create a new workbook
     p = Axlsx::Package.new
     wb = p.workbook
-    
+
     # Add the worksheet
     sheet = wb.add_worksheet(:name => worksheet_name)
 
@@ -48,7 +49,7 @@ class TemplateBuilder
 
     # Perform any additional processing
     post_process(sheet)
-    
+
     # Serialize the spreadsheet to the stream and return it
     p.to_stream()
 
@@ -61,7 +62,7 @@ class TemplateBuilder
   def setup_workbook(workbook)
     # nothing to do by default
   end
-  
+
   # Override with new styles
   def styles
     [
@@ -89,14 +90,14 @@ class TemplateBuilder
   def worksheet_name
     'default'
   end
-  
+
   # Override this to get the header rows
   def header_rows
     [
       ['COL_1', 'COL_2', 'COL_3']
     ]
   end
-  
+
   # Override this at rows to the sheet
   def add_rows(sheet)
     # Do nothing
@@ -104,8 +105,10 @@ class TemplateBuilder
 
   private
 
-  def initialize(*args)
-
+  def initialize(args = {})
+    args.each do |k, v|
+      self.send "#{k}=", v
+    end
   end
 
 end

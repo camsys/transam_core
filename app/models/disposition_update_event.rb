@@ -14,6 +14,7 @@ class DispositionUpdateEvent < AssetEvent
 
   validates :disposition_type,    :presence => true
   validates :sales_proceeds,      :presence => true, :numericality => {:only_integer => true, :greater_than_or_equal_to => 0}
+  validates :age
   #validates :new_owner_name,      :presence => true
   #validates :address1,            :presence => true
   #validates :city,                :presence => true
@@ -31,6 +32,8 @@ class DispositionUpdateEvent < AssetEvent
   FORM_PARAMS = [
     :disposition_type_id,
     :sales_proceeds,
+    :age,
+    :mileage,
     :new_owner_name,
     :address1,
     :address2,
@@ -65,6 +68,13 @@ class DispositionUpdateEvent < AssetEvent
     self[:sales_proceeds] = sanitize_to_int(num)
   end
 
+  def age=(num)
+    self[:age] = sanitize_to_int(num)
+  end
+
+  def mileage=(num)
+    self[:mileage] = sanitize_to_int(num)
+  end
 
   def get_update
     "#{disposition_type} on #{event_date}"

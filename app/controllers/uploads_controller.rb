@@ -159,33 +159,47 @@ class UploadsController < OrganizationAwareController
 
   end
 
+  #-----------------------------------------------------------------------------
+  # Creates a spreadsheet template for bulk updating assets. There are two pathways
+  # to this method:
+  #
+  # template form -- sets the params[:template] param
+  # from an asset group -- sets the params[:file_content_type] param
+  #
+
   def create_template
 
     add_breadcrumb "Download Template"
 
-    # Determine how we're gathering assets
-    if params[:template_proxy]
-      template_proxy = TemplateProxy.new(params[:template_proxy])
-      file_content_type = FileContentType.find(template_proxy.file_content_type_id)
-      asset_type = template_proxy.asset_type
-    end
+    # Figure out which approach was used to access this method
 
-    if params[:file_content_type]
+    # From the form. This is managed via a TemplateProxy class
+    if params[:template_proxy]
+      # Inflate the proxy
+      template_proxy = TemplateProxy.new(params[:template_proxy])
+      # The form defines the FileContentType which identifies the builder to use
+      file_content_type = FileContentType.find(template_proxy.file_content_type_id)
+      # asset_types are an array or class names that will be used in the builder
+      asset_types = template_proxy.asset_types
+    elsif params[:file_content_type]
+      # The request came from the group controller -- the user is attempting to
+      # use an asset group to drive the template assets
       file_content_type = FileContentType.find(params[:file_content_type])
       if params[:asset_type]
-        asset_type = AssetType.find(params[:asset_type])
+        asset_types = [AssetType.find(params[:asset_type])]
       end
       if params[:asset_group]
         asset_group = AssetGroup.find_by_object_key(params[:asset_group])
         if asset_group.homogeneous?
-          asset_type = AssetType.find(asset_group.asset_type_ids.first)
+          asset_types = [AssetType.find(asset_group.asset_type_ids.first)]
         end
       end
     end
 
-    if file_content_type and asset_type
+    # Start to build the template. Make sure we know what we need to build
+    if file_content_type and asset_types
       # Find out which builder is used to construct the template and create an instance
-      builder = file_content_type.builder_name.constantize.new(organization: @organization, asset_types: [*asset_type])
+      builder = file_content_type.builder_name.constantize.new(:organization => @organization, :asset_types => [*asset_types])
 
       # Generate the spreadsheet. This returns a StringIO that has been rewound
       if asset_group
@@ -193,7 +207,7 @@ class UploadsController < OrganizationAwareController
       else
         asset_params = {}
         asset_params[:organization] = @organization
-        asset_params[:asset_type] = asset_type
+        asset_params[:asset_type] = asset_types
         asset_params[:object_key] = params[:ids] if params[:ids]
 
         builder.assets = Asset.operational.where(asset_params)
