@@ -524,8 +524,14 @@ class Asset < ActiveRecord::Base
     end
   end
 
-
-  # Record that the asset has been disposed. This updates the dispostion date and the disposition_type attributes
+  #-----------------------------------------------------------------------------
+  # Record that the asset has been disposed. This updates the dispostion date
+  # and the disposition_type attribute on the master record. It also sets the
+  # ServiceStatusType to 'disposed'
+  #
+  # If the user removed the disposition event, the master record is reset by
+  # removing the disposition type, disposition date and setting the service
+  # status back to the last known status if on exists
   def record_disposition
     Rails.logger.info "Recording final disposition for asset = #{object_key}"
 
@@ -537,9 +543,19 @@ class Asset < ActiveRecord::Base
         event = asset.disposition_updates.last
         asset.disposition_date = event.event_date
         asset.disposition_type = event.disposition_type
+        # Set the service status to disposed
+        asset.service_status_type = ServiceStatusType.find_by(:code => 'D')
       else
+        # The use is undo-ing the disposition update
         asset.disposition_type = nil
         asset.disposition_date = nil
+        # Set the service status to the last known service status
+        if asset.service_status_updates.empty?
+          # Set to Uknown
+          asset.service_status_type = ServiceStatusType.find_by(:code => 'U')
+        else
+          asset.service_status_type = asset.service_status_updates.last.service_status_type
+        end
       end
       asset.save
     end

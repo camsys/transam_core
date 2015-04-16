@@ -1,10 +1,7 @@
 class DispositionType < ActiveRecord::Base
 
-  # associations
-  has_many :assets
-  
   # default scope
-  default_scope { where(:active => true) }
+  scope :active, -> { where(active: true) }
 
   def self.search(text, exact = true)
     if exact
@@ -19,5 +16,5 @@ class DispositionType < ActiveRecord::Base
   def to_s
     name
   end
-  
+
 end
