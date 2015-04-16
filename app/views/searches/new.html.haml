@@ -3,7 +3,6 @@
 .row{:style => 'margin-top: 20px;'}
   .col-md-12
     #results_table
-    #spinner
-      = image_tag('ajax-loader.gif') 
+    #spinner{:style => 'padding: 20px;'}= loader_panel_tag({:message => "Searching...", :size => 3, :spinner => "refresh"})
 
 = render 'scripts'
