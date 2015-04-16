@@ -1,18 +1,18 @@
 - if can? :create, Upload
   .btn-group.pull-right.panel-action
     %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
-      I want to  
+      I want to
       %span.caret
     %ul.dropdown-menu{:role => 'menu'}
       %li
         = link_to templates_uploads_path do
           %i.fa.fa-fw.fa-download
-          = " Download a Spreadsheet Template"
+          = " Create a new Template"
       %li.divider
       %li
         = link_to new_upload_path do
           %i.fa.fa-fw.fa-upload
-          = " Upload a Spreadsheet"
+          = " Upload a Template"
 
 = form_tag uploads_path, :id => 'filter_form', :method => "get", :class => 'navbar-form navbar-right panel-action' do
   .form-group
@@ -24,5 +24,5 @@
     $('#file_status_type_id').change(function() {
       $('#filter_form').submit();
     });
-    
-  });  
+
+  });
