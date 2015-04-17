@@ -2,7 +2,7 @@ class MessagesController < OrganizationAwareController
 
   add_breadcrumb "Home", :root_path
 
-  before_action :set_message, :only => [:show, :edit, :update, :destroy, :tag]
+  before_action :set_message, :only => [:show, :edit, :update, :destroy, :tag, :reply]
   before_filter :check_for_cancel, :only => [:create]
 
   # Enumerables for message filters
@@ -170,29 +170,28 @@ class MessagesController < OrganizationAwareController
     end
   end
 
+  # The user has posted a reply to an existing message
   def reply
-    @message = Message.new(form_params)
-    @message.organization = @organization
-    @message.user = current_user
 
-    # See if we got a message id posted, if so then the post is a response
-    if params[:message_id]
-      parent_message = @organization.messages.find(params[:message_id])
-      @message.priority_type_id = parent_message.priority_type_id
-      @message.subject = 'Re: ' + parent_message.subject
-      @message.to_user_id = parent_message.to_user_id.nil? ? nil : parent_message.user_id
-      #@message.thread = parent_message
-      parent_message.responses << @message
-    end
+    # old message is set from the filter
+    @new_message = Message.new(form_params)
+    @new_message.organization = @organization
+    @new_message.user = current_user
+    @new_message.priority_type = @message.priority_type
+    @new_message.subject = 'Re: ' +  @message.subject
+    @new_message.to_user = @message.to_user
 
     respond_to do |format|
-      if @message.save
-        notify_user(:notice, "Message was successfully sent.")
+      if @new_message.save
+        notify_user(:notice, "Reply was successfully sent.")
+
+        @message.responses << @new_message
+
         format.html { redirect_to user_messages_url(current_user) }
-        format.json { render :json => @message, :status => :created }
+        format.json { render :json => @new_message, :status => :created }
       else
         format.html { render :action => "new" }
-        format.json { render :json => @message.errors, :status => :unprocessable_entity }
+        format.json { render :json => @new_message.errors, :status => :unprocessable_entity }
       end
     end
   end

@@ -1,7 +1,9 @@
-= simple_form_for([current_user, @response]) do |f|
-  = hidden_field_tag :message_id, @message.id
-  %h5 Reply
+%h5 Reply
+= simple_form_for([current_user, @response],
+  :html => {:class => 'form-vertical' },
+  :url => reply_user_message_path(current_user, @message),
+  :wrapper => :vertical_form,
+  :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}) do |f|
 
   = f.input :body, :label => false, :placeholder => "Enter your reply...", :as => :ckeditor, :input_html => { :ckeditor => {:toolbar => 'mini'}, :class => "form-control"}
-
   = f.button :submit, 'Send Reply', :class => "btn btn-primary", :style => "margin-top:10px;"
