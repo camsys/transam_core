@@ -9,12 +9,18 @@ class DispositionUpdateEvent < AssetEvent
 
   # Associations
 
+  # Alias current_mileage to mileage_disposition so we can re-use the existing attribute
+  alias_attribute :mileage_at_disposition,  :current_mileage
+  # Alias age_at_disposition to replacement_year so we can re-use the existing attribute
+  alias_attribute :age_at_disposition,      :replacement_year
+
   # Disposition of the asset
   belongs_to  :disposition_type
 
-  validates :disposition_type,    :presence => true
-  validates :sales_proceeds,      :presence => true, :numericality => {:only_integer => true, :greater_than_or_equal_to => 0}
-  validates :age
+  validates :disposition_type,      :presence => true
+  validates :sales_proceeds,        :presence => true, :numericality => {:only_integer => true, :greater_than_or_equal_to => 0}
+  validates :mileage_at_disposition,:presence => true, :numericality => {:only_integer => true, :greater_than_or_equal_to => 0}
+  validates :age_at_disposition,    :presence => true, :numericality => {:only_integer => true, :greater_than_or_equal_to => 0}
   #validates :new_owner_name,      :presence => true
   #validates :address1,            :presence => true
   #validates :city,                :presence => true
@@ -32,8 +38,8 @@ class DispositionUpdateEvent < AssetEvent
   FORM_PARAMS = [
     :disposition_type_id,
     :sales_proceeds,
-    :age,
-    :mileage,
+    :age_at_disposition,
+    :mileage_at_disposition,
     :new_owner_name,
     :address1,
     :address2,
@@ -68,12 +74,12 @@ class DispositionUpdateEvent < AssetEvent
     self[:sales_proceeds] = sanitize_to_int(num)
   end
 
-  def age=(num)
-    self[:age] = sanitize_to_int(num)
+  def age_at_disposition=(num)
+    self[:replacement_year] = sanitize_to_int(num)
   end
 
-  def mileage=(num)
-    self[:mileage] = sanitize_to_int(num)
+  def mileage_at_disposition=(num)
+    self[:current_mileage] = sanitize_to_int(num)
   end
 
   def get_update

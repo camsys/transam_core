@@ -1,25 +1,30 @@
 = render :layout => "update_event_form" do |f|
-  = f.input :event_date, :label => 'Date of Disposition', :wrapper => :vertical_append do
-    = f.input_field :event_date, :as => :string, :class => 'form-control datepicker', :data => {'behavior' => 'datepicker'}, :value => f.object.event_date.strftime("%m-%d-%Y")
-    %span.input-group-addon
-      %i.fa.fa-calendar
-  = f.association :disposition_type, :label => "Disposition Type"
+
+
+  .row
+    .col-xs-6
+      = f.input :event_date, :label => 'Date of Disposition', :wrapper => :vertical_append do
+        = f.input_field :event_date, :as => :string, :class => 'form-control datepicker', :data => {'behavior' => 'datepicker'}, :value => f.object.event_date.strftime("%m-%d-%Y")
+        %span.input-group-addon
+          %i.fa.fa-calendar
+    .col-xs-6
+      = f.association :disposition_type, :label => "Disposition Type", :include_blank => false
+
   .row
     .col-xs-4
       = f.input :sales_proceeds, :wrapper => :vertical_prepend, :label => "Sales Proceeds" do
         %span.input-group-addon
           %i.fa.fa-usd
         = f.input :sales_proceeds, :class => 'form-control', :input_html => { :min => 0 }, :label => false
-    .row
-      .col-xs-4
-        = f.input :age, :wrapper => :vertical_prepend, :label => "Age at disposition", :input_html => { :min => 0 }
-    .row
-      .col-xs-4
-        = f.input :mileage, :wrapper => :vertical_prepend, :label => "Mileage", :input_html => { :min => 0 }
+    .col-xs-4
+      = f.input :age_at_disposition, :label => "Age at disposition", :input_html => { :min => 0 }
+    .col-xs-4
+      = f.input :mileage_at_disposition, :label => "Mileage at disposition", :input_html => { :min => 0 }
 
   = f.input :new_owner_name, :label => "New Owner Name"
   = f.input :address1, :label => "New Owner Address"
   = f.input :address2, :label => "Address 2"
+
   .row
     .col-sm-6
       = f.input :city
