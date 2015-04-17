@@ -114,6 +114,8 @@ class Asset < ActiveRecord::Base
   validates_inclusion_of :purchased_new, :in => [true, false]
   validates     :purchase_cost,       :presence => :true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0}
   validates     :purchase_date,       :presence => :true
+  validates     :serial_number,       uniqueness: {scope: :organization, message: "must be unique within an organization"}, allow_nil: true, allow_blank: true
+
   #validates     :in_service_date,     :presence => :true
 
   #------------------------------------------------------------------------------
@@ -566,7 +568,7 @@ class Asset < ActiveRecord::Base
 
     Rails.logger.debug "Updating the recorded location for asset = #{object_key}"
 
-    unless new_record?
+    unless new_record? or disposed?
       if location_updates.empty?
         self.parent_id = nil
         self.location_comments = nil
@@ -586,12 +588,11 @@ class Asset < ActiveRecord::Base
     asset = is_typed? ? self : Asset.get_typed_asset(self)
 
     # can't do this if it is a new record as none of the IDs would be set
-    unless asset.new_record?
+    unless asset.new_record? or disposed?
       if asset.rehabilitation_updates.empty?
 
       else
         event = asset.rehabilitation_updates.last
-
       end
       save
     end
@@ -605,7 +606,7 @@ class Asset < ActiveRecord::Base
     asset = is_typed? ? self : Asset.get_typed_asset(self)
 
     # can't do this if it is a new record as none of the IDs would be set
-    unless asset.new_record?
+    unless asset.new_record? or disposed?
       if asset.service_status_updates.empty?
         service_status_type = nil
         service_status_date = nil
@@ -624,7 +625,7 @@ class Asset < ActiveRecord::Base
     Rails.logger.debug "Updating condition for asset = #{object_key}"
 
     # can't do this if it is a new record as none of the IDs would be set
-    unless new_record?
+    unless new_record? or disposed?
       if condition_updates.empty?
         self.reported_condition_date = nil
         self.reported_condition_rating = nil
@@ -645,7 +646,7 @@ class Asset < ActiveRecord::Base
 
     Rails.logger.debug "Updating the scheduled replacement year for asset = #{object_key}"
 
-    unless new_record?
+    unless new_record? or disposed?
       if schedule_replacement_updates.empty?
         self.scheduled_replacement_year = nil
         self.replacement_reason_type_id = nil
@@ -665,7 +666,7 @@ class Asset < ActiveRecord::Base
 
     Rails.logger.debug "Updating the scheduled rehabilitation year for asset = #{object_key}"
 
-    unless new_record?
+    unless new_record? or disposed?
       if schedule_rehabilitation_updates.empty?
         self.scheduled_rehabilitation_year = nil
       else
@@ -681,7 +682,7 @@ class Asset < ActiveRecord::Base
 
     Rails.logger.debug "Updating the scheduled disposition for asset = #{object_key}"
 
-    unless new_record?
+    unless new_record? or disposed?
       if schedule_disposition_updates.empty?
         self.scheduled_disposition_year = nil
       else
@@ -700,6 +701,8 @@ class Asset < ActiveRecord::Base
   end
 
   def update_estimated_replacement_cost(on_date=nil)
+
+    return if disposed?
 
     # Make sure we are working with a concrete asset class
     asset = is_typed? ? self : Asset.get_typed_asset(self)
@@ -720,6 +723,9 @@ class Asset < ActiveRecord::Base
   # calculate the year that the asset will need replacing based on
   # a policy
   def calculate_replacement_year(policy = nil)
+
+    return if disposed?
+
     # Make sure we are working with a concrete asset class
     asset = is_typed? ? self : Asset.get_typed_asset(self)
 
@@ -737,6 +743,9 @@ class Asset < ActiveRecord::Base
   # calculate the estimated year that the asset will need replacing based on
   # a policy
   def calculate_estimated_replacement_year(policy = nil)
+
+    return if disposed?
+
     # Make sure we are working with a concrete asset class
     asset = is_typed? ? self : Asset.get_typed_asset(self)
 
@@ -772,7 +781,10 @@ class Asset < ActiveRecord::Base
 
   # Update the SOGR for an asset
   def update_sogr(policy = nil)
-    update_asset_state(policy)
+
+    unless disposed?
+      update_asset_state(policy)
+    end
   end
 
   # External method for managing an object's local cache
@@ -820,6 +832,10 @@ class Asset < ActiveRecord::Base
   # updates the calculated values of an asset
   def update_asset_state(policy = nil)
     Rails.logger.debug "Updating SOGR for asset = #{object_key}"
+
+    if disposed?
+      Rails.logger.debug "Asset #{object_key} is disposed"
+    end
 
     # Make sure we are working with a concrete asset class
     asset = is_typed? ? self : Asset.get_typed_asset(self)
