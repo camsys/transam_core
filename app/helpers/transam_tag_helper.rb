@@ -6,7 +6,7 @@ module TransamTagHelper
     placement = (options[:placement] ||= "auto")
 
     html = "<a tabindex='0' class='#{tag_class}' role='button' data-placement='#{placement}' data-container='body' data-html='true' data-toggle='popover' data-trigger='focus'"
-    html << " title='#{options["title"]}'" unless options[:title].blank?
+    html << " title='#{options[:title]}'" unless options[:title].blank?
     html << " data-content='#{options[:content]}'>"
     if options[:icon].present?
       html << "<i class='fa #{options[:icon]}'>"
