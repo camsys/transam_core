@@ -53,12 +53,23 @@ class User < ActiveRecord::Base
   #------------------------------------------------------------------------------
   # Validations
   #------------------------------------------------------------------------------
-  validates :first_name,    :presence => true
-  validates :last_name,     :presence => true
-  validates :email,         :presence => true, :uniqueness => true, :format => { :with => /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/, :message => "email address is not valid" }
-  validates :phone,         :presence => true
-  validates :timezone,      :presence => true
-  validates :num_table_rows,:presence => true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 5}
+  validates :first_name,    :presence => true,  :length => { maximum: 64 }
+  validates :last_name,     :presence => true,  :length => { maximum: 64 }
+  validates :external_id,   :allow_nil => true, :length => { maximum: 32 }
+  validates :title,         :allow_nil => true, :length => { maximum: 64 }
+
+  validates :email,         :presence => true,  :length => { maximum: 128 },  :uniqueness => true, :format => { :with => /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/, :message => "email address is not valid" }
+  validates :phone,         :presence => true,  :length => { maximum: 12 }
+  validates :phone_ext,     :allow_nil => true, :length => { maximum: 6 }
+  validates :timezone,      :presence => true,  :length => { maximum: 32 }
+
+  validates :address1,      :allow_nil => true, :length => { maximum: 32 }
+  validates :address2,      :allow_nil => true, :length => { maximum: 32 }
+  validates :city,          :allow_nil => true, :length => { maximum: 32 }
+  validates :state,         :allow_nil => true, :length => { maximum: 2 }
+  validates :zip,           :allow_nil => true, :length => { maximum: 12 }
+
+  validates :num_table_rows,:presence => true,  :numericality => {:only_integer => :true, :greater_than_or_equal_to => 5}
   validates :organization,  :presence => true
 
   # default scope
