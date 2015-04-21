@@ -1,7 +1,14 @@
 :ruby
   table_dom_id = SecureRandom.hex
 
-%table.table.table-hover{:id => table_dom_id}
+%table.table.table-hover{:id => table_dom_id, :data => {:toggle => 'table',
+  :pagination => 'true',
+  :show_pagination_switch => 'true',
+  :page_list => "[5, 10, 20, 50, 100, 200]",
+  :page_size => current_user.num_table_rows,
+  :search => 'false',
+  :show_columns => 'true',
+  :show_toggle => 'true'}}
   %thead
     %tr
       %th.left Date/Time
@@ -17,5 +24,8 @@
         %td.left= a.item_type
         %td.left= a.activity.truncate(64).html_safe
 
-- if @activities.count > current_user.num_table_rows
-  = render :partial => 'shared/datatable_javascript', :locals => {:id => table_dom_id}
+:javascript
+
+  $(window).resize(function() {
+    $("##{table_dom_id}").bootstrapTable('resetView');
+  });

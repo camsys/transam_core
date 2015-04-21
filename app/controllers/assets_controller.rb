@@ -96,7 +96,15 @@ class AssetsController < AssetAwareController
     respond_to do |format|
       format.html
       format.js
-      format.json { render :json => get_as_json(@assets, @row_count) }
+      format.json {
+        # check that an order param was provided otherwise use asset_tag as the default
+        params[:sort] ||= 'asset_tag'
+
+        render :json => {
+          :total => @assets.count,
+          :rows => @assets.order("#{params[:sort]} #{params[:order]}").limit(params[:limit]).offset(params[:offset])
+          }
+        }
       format.xls
     end
   end
@@ -370,12 +378,6 @@ class AssetsController < AssetAwareController
       @fmt = 'html'
     end
 
-    # See if we got start row and count data
-    if params[:iDisplayStart] && params[:iDisplayLength]
-      @start_row = params[:iDisplayStart]
-      @num_rows  = params[:iDisplayLength]
-    end
-
     # If the asset type and subtypes are not set we default to the asset base class
     if @id_filter_list or (@asset_type == 0 and @asset_subtype == 0)
       @asset_class_name = SystemConfig.instance.asset_base_class_name
@@ -486,15 +488,7 @@ class AssetsController < AssetAwareController
     end
 
     # send the query
-    @row_count = klass.where(clauses.join(' AND '), *values).count
-    if @fmt == 'js'
-      # if it is an JS query page the rows
-      assets = klass.where(clauses.join(' AND '), *values).order("#{sort_column(klass)} #{sort_direction}").page(page).per_page(per_page)
-    else
-      # Otherwise get everything
-      assets = klass.where(clauses.join(' AND '), *values).limit(250)
-    end
-    return assets
+    klass.where(clauses.join(' AND '), *values)
   end
 
   # stores the just-created list of asset ids in the session
@@ -534,65 +528,6 @@ class AssetsController < AssetAwareController
   #
   #------------------------------------------------------------------------------
   private
-
-  # Returns the set of assets, usually paged, as a JSON array compatible
-  # with the datatables Jquery plugin.
-  def get_as_json(assets, total_rows)
-    {
-      sEcho: params[:sEcho].to_i,
-      iTotalRecords: total_rows,
-      iTotalDisplayRecords: assets.total_entries,
-      aaData: data(assets)
-    }
-  end
-
-  # Renders the assets as an array of arrays where each sub-array is an asset.
-  def data(assets)
-    assets.map do |a|
-      [
-        inventory_path(a),
-        a.organization,
-        a.asset_subtype,
-        a.asset_tag,
-        a.description,
-        a.parent.nil? ? "" : view_context.link_to(a.parent.name, inventory_path(a.parent)),
-
-        view_context.format_as_fiscal_year(a.in_service_date.year),
-        view_context.format_as_integer(a.age),
-        view_context.format_as_decimal(a.reported_condition_rating, 1),
-        a.service_status_type,
-
-        view_context.format_as_fiscal_year(a.scheduled_rehabilitation_year),
-        view_context.format_as_fiscal_year(a.scheduled_replacement_year),
-
-        view_context.format_as_boolean(a.depreciable),
-        view_context.format_as_currency(a.book_value)
-      ]
-    end
-  end
-
-  # Determine start row from the input params
-  def page
-    params[:iDisplayStart].to_i/per_page + 1
-  end
-  # determine number of rows to return
-  def per_page
-    params[:iDisplayLength].to_i > 0 ? params[:iDisplayLength].to_i : current_user.num_table_rows
-  end
-
-  def sort_column(klass)
-    columns = klass.column_names
-    columns[params[:iSortCol_0].to_i]
-  end
-
-  def sort_direction
-    params[:sSortDir_0] == "desc" ? "desc" : "asc"
-  end
-
-  # constructs a query string for a search from a list of searchable fields provided by an asset class
-  def get_search_query_string(searchable_fields_list)
-
-  end
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def form_params

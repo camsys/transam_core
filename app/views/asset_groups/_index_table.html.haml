@@ -1,7 +1,18 @@
 :ruby
   table_dom_id = SecureRandom.hex
 
-%table.table.table-hover{:id => table_dom_id}
+%table.table.table-hover{:id => table_dom_id, :data => {:toggle => 'table',
+  :card_view => "false",
+  :pagination => 'true',
+  :page_list => "[5, 10, 20, 50, 100, 200]",
+  :page_size => current_user.num_table_rows,
+  :show_pagination_switch => 'true',
+  :search => 'false',
+  :show_columns => 'true',
+  :show_export => 'true',
+  :show_toggle => 'true',
+  :resizable => 'true',
+  :search => 'false'}}
   %thead
     %tr
       %th.left Name
@@ -18,5 +29,8 @@
         %td.right= format_as_integer(a.assets.count)
 
 
-- if @asset_groups.count > current_user.num_table_rows
-  = render :partial => 'shared/datatable_javascript', :locals => {:id => table_dom_id}
+:javascript
+
+  $(window).resize(function() {
+    $("##{table_dom_id}").bootstrapTable('resetView');
+  });

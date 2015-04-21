@@ -320,6 +320,34 @@ class Asset < ActiveRecord::Base
   #
   #------------------------------------------------------------------------------
 
+  # Render the asset as a JSON object -- overrides the default json encoding
+  def as_json(options={})
+    {
+      :id => self.id,
+      :object_key => self.object_key,
+      :asset_tag => self.asset_tag,
+      :external_id => self.external_id,
+
+      :org => self.organization.to_s,
+      :asset_type => self.asset_type.to_s,
+      :asset_subtype => self.asset_subtype.to_s,
+
+      :parent => self.parent.to_s,
+      :name => self.name,
+      :description => self.description,
+
+      :service_status => self.service_status_type.to_s,
+      :age => self.age,
+      :condition_rating => self.reported_condition_rating,
+
+      :scheduled_rehabilitation_year => self.scheduled_rehabilitation_year,
+      :scheduled_replacement_year => self.scheduled_replacement_year,
+
+      :created_at => self.created_at,
+      :updated_at => self.updated_at
+    }
+  end
+
   # Override to_s to return a reasonable default
   def to_s
     "#{asset_subtype.name}: #{asset_tag}"

@@ -1,4 +1,4 @@
-- if @fmt == 'js'
-  = render 'asset_server_datatable'
+- if @fmt == 'json'
+  = render 'asset_table_ajax'
 - else
-  = render :partial => 'asset_datatable', :locals => {:assets => @assets}
+  = render :partial => 'asset_table', :locals => {:assets => @assets}

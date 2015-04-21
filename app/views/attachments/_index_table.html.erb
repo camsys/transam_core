@@ -18,7 +18,7 @@
 						<td class="left"><%= a.attachment_type.name %></td>
 						<td class="left"><%= a.name %></td>
 						<td class="left"><%= a.original_filename %></td>
-						<td class="right"><%= number_to_human_size(a.file_size) %></td>						
+						<td class="right"><%= number_to_human_size(a.file_size) %></td>
 						<td class="left"><%= a.creator.name %></td>
 						<td class="right"><%= format_as_date_time(a.created_at) %></td>
 						<td class="center">
@@ -35,5 +35,3 @@
 		</table>
 	</div>
 </div>
-
-<%= render 'shared/datatable_javascript' %>

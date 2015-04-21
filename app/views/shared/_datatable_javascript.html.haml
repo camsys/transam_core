@@ -1,9 +1,0 @@
-:ruby
-	id ||= "datatable"
-	sorting ||= 1
-	filtering ||= 0
-
-:javascript
-	$(document).ready(function() {
-		transam.render_data_table("#{id}", #{filtering == 1}, #{sorting == 1});
-	});

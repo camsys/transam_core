@@ -1,13 +1,13 @@
 .row
-  .col-sm-12
-    .col-sm-6
+  .col-xs-12
+    .col-xs-6
       %fieldset
         %legend.panel-legend Details
         = format_field("Type", org.organization_type.name )
         = format_field("Name", org.name )
         = format_field("Short Name", org.short_name )
         = format_field("External ID", org.external_id ) unless org.phone_ext.blank?
-    .col-sm-6
+    .col-xs-6
       %fieldset
         %legend.panel-legend Contact
         = format_field("Address", format_as_address(org) )

@@ -4,7 +4,7 @@
 			<div class="container-fluid">
 				<ul class="nav navbar-nav">
 				  	<li>
-						<%= link_to inventory_path(@asset) do %> 
+						<%= link_to inventory_path(@asset) do %>
 							<i class="fa fa-angle-left"></i> Back
 						<% end %>
 					</li>
@@ -12,7 +12,7 @@
 				<%= form_tag inventory_attachments_path(@asset), :id => 'attachment_filter_form', :method => "get", :class => 'navbar-form navbar-left' do %>
 					<div class="form-group">
 						<span class="form-group-addon">Filter</span>
-						<%= select_tag(:filter_type, options_for_select(AttachmentType.all.collect{|a| [a.name, a.id]}, :selected => @filter_type), :class => "form-control", :prompt => 'All attachment types...', :id => 'attachment_filter') %>	  
+						<%= select_tag(:filter_type, options_for_select(AttachmentType.all.collect{|a| [a.name, a.id]}, :selected => @filter_type), :class => "form-control", :prompt => 'All attachment types...', :id => 'attachment_filter') %>
 					</div>
 				<% end %>
 				<ul class="nav navbar-nav">
@@ -44,7 +44,7 @@
 
 	// Add a listener on the event type filter that submits the form when changed
 	$('#attachment_filter').change(function() {
-		$('#attachment_filter_form').submit();  
+		$('#attachment_filter_form').submit();
 	});
 
 </script>

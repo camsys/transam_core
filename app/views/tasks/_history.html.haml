@@ -15,6 +15,3 @@
               %td= format_as_date_time(wfe.created_at)
               %td= wfe.event_type.humanize
               %td= wfe.creator.name
-
-
-      = render :partial => 'shared/datatable_javascript', :locals => {:id => 'history_datatable'}

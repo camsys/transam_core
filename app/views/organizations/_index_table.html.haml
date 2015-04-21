@@ -1,13 +1,27 @@
-%table.table.table-hover#datatable
+:ruby
+  table_dom_id = SecureRandom.hex
+
+%table.table.table-hover{:id => table_dom_id, :data => {:toggle => 'B:AHs',
+  :card_view => "false",
+  :pagination => 'true',
+  :page_list => "[5, 10, 20, 50, 100, 200]",
+  :page_size => current_user.num_table_rows,
+  :show_pagination_switch => 'true',
+  :search => 'false',
+  :show_columns => 'true',
+  :show_export => 'true',
+  :show_toggle => 'true',
+  :resizable => 'true',
+  :search => 'false'}}
   %thead
     %tr
       %th.left Organization
       %th.left Name
-      %th.left Type
+      %th.left.nowrap Type
       %th.left Address
-      %th.left Phone
+      %th.left.nowrap Phone
       %th.left Ext
-      %th.left Fax
+      %th.left.nowrap Fax
       %th.left Web Site
 
       %th.center
@@ -24,15 +38,16 @@
         %td= format_as_phone_number(o.fax)
         %td= format_as_url(o.url)
         %td.center
-          %i.fa.fa-info-circle.text-info.popup-details{:data => {:title => "#{o.short_name}", :content => "#{raw render :partial => 'organizations/table_summary', :locals => {:org => o}}"}}
-
-= render 'shared/datatable_javascript'
+          = popover_tag("", {:placement => 'auto left', :icon => 'fa-info-circle', :title => o.short_name, :content => render(:partial => 'organizations/table_summary', :locals => {:org => o}).html_safe})
 
 :javascript
-  $('.popup-details').popover({
-    trigger: 'hover',
-    container: 'body',
-    placement: 'left',
-    animation: 'true',
-    html: 'true'
+
+  $(document).ready(function() {
+
+    $('[data-toggle="popover"]').popover();
+
+  });
+
+  $(window).resize(function() {
+    $("##{table_dom_id}").bootstrapTable('resetView');
   });
