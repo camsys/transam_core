@@ -61,7 +61,7 @@ class SearchesController < OrganizationAwareController
     add_breadcrumb "Keyword Search: '#{@search_text}'"
 
     if @search_text.blank?
-      @keyword_search_results = []
+      @keyword_search_results = KeywordSearchIndex.where("1 = 2")
     else
 
       # here we build the query one clause at a time based on the input params. The query
@@ -84,18 +84,35 @@ class SearchesController < OrganizationAwareController
       where_clause << search_params.join(' OR ')
       where_clause << ')'
 
-      @keyword_search_results = KeywordSearchIndex.where(where_clause, *values).limit(MAX_ROWS_RETURNED)
+      @keyword_search_results = KeywordSearchIndex.where(where_clause, *values)
     end
+
+    @num_rows = @keyword_search_results.count
     cache_list(@keyword_search_results, INDEX_KEY_LIST_VAR)
 
     respond_to do |format|
       format.html
-      format.json { render :json => @keyword_search_results }
+      format.json {
+        render :json => {
+          :total => @num_rows,
+          :rows => data
+          }
+        }
     end
 
   end
 
   protected
+
+  def data
+    res = []
+    @keyword_search_results.limit(params[:limit]).offset(params[:offset]).each do |row|
+      res << {
+        'content' => render_to_string(:partial => 'keyword_search_result_detail', :locals => {:search_result => row}).html_safe
+      }
+    end
+    res
+  end
 
   def set_view_vars
 

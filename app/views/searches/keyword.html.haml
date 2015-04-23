@@ -3,8 +3,36 @@
   = render 'dashboards/search'
 
   %fieldset
-    %legend.panel-legend= "#{@keyword_search_results.count} found."
+    %legend.panel-legend= "#{@num_rows} found."
 
-    %table.table.table-condensed.table-hover
-      - @keyword_search_results.each do |search_result|
-        = render :partial => 'keyword_search_result_detail', :locals => {:search_result => search_result }
+    .table-responsive
+      %table{:id => "search_results_table",
+        :data => {:toggle => 'table',
+        :classes => 'table table-hover table-no-bordered',
+        :url => keyword_searches_path(:format => :json),
+        :card_view => 'false',
+        :show_refresh => 'true',
+        :pagination => 'true',
+        :side_pagination => 'server',
+        :show_pagination_switch => 'true',
+        :page_list => "[5, 10, 20, 50, 100, 200]",
+        :page_size => current_user.num_table_rows,
+        :search => 'false',
+        :resizable => 'true',
+        :show_header => 'false',
+        :query_params => 'query_params'}}
+        %thead
+          %tr
+            %th.center{:data => {:field => "content", :title => "Search Results", :align => 'left'}}
+
+:javascript
+
+  function query_params(params) {
+    params.search_text = '#{@search_text}';
+    console.log(JSON.stringify(params));
+    return params;
+  };
+
+  $(window).resize(function() {
+    $('#search_results_table').bootstrapTable('resetView');
+  });
