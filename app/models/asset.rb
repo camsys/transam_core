@@ -328,6 +328,8 @@ class Asset < ActiveRecord::Base
       :asset_tag => self.asset_tag,
       :external_id => self.external_id,
 
+      :flagged => 0,
+
       :org => self.organization.to_s,
       :asset_type => self.asset_type.to_s,
       :asset_subtype => self.asset_subtype.to_s,
@@ -336,15 +338,30 @@ class Asset < ActiveRecord::Base
       :name => self.name,
       :description => self.description,
 
-      :service_status => self.service_status_type.to_s,
+      :service_status => self.service_status_type.present? ? self.service_status_type.code : nil,
       :age => self.age,
       :condition_rating => self.reported_condition_rating,
 
-      :scheduled_rehabilitation_year => self.scheduled_rehabilitation_year,
-      :scheduled_replacement_year => self.scheduled_replacement_year,
+      :scheduled_rehabilitation_year => self.scheduled_rehabilitation_year.present? ? fiscal_year(self.scheduled_rehabilitation_year) : nil,
+      :scheduled_replacement_year => self.scheduled_replacement_year.present? ? fiscal_year(self.scheduled_replacement_year) : nil,
+
+      :manufacturer => self.manufacturer.present? ? self.manufacturer.to_s : nil,
+      :manufacture_year => self.manufacture_year,
+
+      :purchase_cost => self.purchase_cost,
+      :purchase_date => self.purchase_date,
+      :purchased_new => self.purchased_new,
+      :in_service_date => self.in_service_date,
+      :vendor => self.vendor.present? ? self.vendor.to_s : nil,
 
       :created_at => self.created_at,
-      :updated_at => self.updated_at
+      :updated_at => self.updated_at,
+
+      :tasks => self.tasks.count,
+      :comments => self.comments.count,
+      :documents => self.documents.count,
+      :photos => self.images.count
+
     }
   end
 

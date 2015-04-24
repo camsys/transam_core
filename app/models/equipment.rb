@@ -53,6 +53,16 @@ class Equipment < Asset
   # Instance Methods
   #
   #------------------------------------------------------------------------------
+
+  # Render the asset as a JSON object -- overrides the default json encoding
+  def as_json(options={})
+    super.merge(
+    {
+      :quantity => self.quantity,
+      :quantity_units => self.quantity_units
+    })
+  end
+
   # Creates a duplicate that has all asset-specific attributes nilled
   def copy(cleanse = true)
     a = dup

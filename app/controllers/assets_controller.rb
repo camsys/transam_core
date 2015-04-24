@@ -340,9 +340,9 @@ class AssetsController < AssetAwareController
 
     # Check to see if we got an organization to sub select on.
     if params[:org_id].nil?
-      @org_filter = 0
+      @org_id = 0
     else
-      @org_filter = params[:org_id].to_i
+      @org_id = params[:org_id].to_i
     end
 
     # Check to see if we got a manufacturer to sub select on.
@@ -409,9 +409,9 @@ class AssetsController < AssetAwareController
     clauses = []
     values = []
 
-    unless @org_filter == 0
+    unless @org_id == 0
       clauses << ['organization_id = ?']
-      values << @org_filter
+      values << @org_id
     else
       clauses << ['organization_id IN (?)']
       values << @organization_list

@@ -1,18 +1,3 @@
 .row
-  .col-md-12
-    .panel.panel-default.header-part
-      .panel-heading
-        .row
-          .col-md-4
-            %h3.panel-title
-              %i.fa.fa-list
-              Inventory
-          .col-md-8
-            = render 'index_actions'
-      .panel-body
-        - if @assets.empty?
-          %p No matching assets found
-        - else    
-          = render :partial => 'table_index', :locals => {:assets => @assets}
-
-
+  .col-xs-12
+    = render :partial => 'table_index', :locals => {:assets => @assets}
