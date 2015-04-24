@@ -1,6 +1,3 @@
-:ruby
-  table_dom_id = SecureRandom.hex
-
 :css
   .flag-column {
     :width: 30px;
@@ -12,7 +9,7 @@
       = render :partial => "assets/#{mod}_index_actions"
 
 .table-responsive
-  %table.table.table-condensed.table-hover{:id => table_dom_id,
+  %table.table.table-condensed.table-hover{:id => 'asset_server_table',
     :data => {:toggle => 'table',
     :url => inventory_index_path(:format => :json),
     :card_view => "false", :show_refresh => "true",
@@ -27,6 +24,10 @@
     :resizable => 'true',
     :click_to_select => 'true',
     :query_params => "query_params",
+    :show_export => 'true',
+    :export_types => "['csv', 'txt', 'excel']",
+    :state_saved => 'true',
+    :state_save_id_table => 'assetServerTable',
     :single_select => 'true'}}
     %thead
       %tr
@@ -74,8 +75,7 @@
     return params;
   }
 
-  $('##{table_dom_id}').on('click-row.bs.table', function (e, row, $element) {
-    console.log(row, $element);
+  $('#asset_server_table').on('click-row.bs.table', function (e, row, $element) {
     var url = '/inventory/' + row['object_key'];
     document.location.href = url;
   }).on('post-body.bs.table', function() {
@@ -153,5 +153,5 @@
   };
 
   $(window).resize(function() {
-    $('##{table_dom_id}').bootstrapTable('resetView');
+    $('#asset_server_table').bootstrapTable('resetView');
   });
