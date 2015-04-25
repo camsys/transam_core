@@ -7,24 +7,39 @@
   :page_list => "[5, 10, 20, 50, 100, 200]",
   :page_size => current_user.num_table_rows,
   :search => 'false',
+  :export_types => "['csv', 'txt', 'excel']",
+  :show_export => 'true',
   :show_columns => 'true',
   :show_toggle => 'true'}}
   %thead
     %tr
-      %th.left Date/Time
-      %th.left User
-      %th.left Action
-      %th.left Activity
+      %th.left{:data => {:visible => 'false'}} Id
+      %th.left{:data => {:sortable => 'true'}} Date/Time
+      %th.left{:data => {:sortable => 'true'}} User
+      %th.left{:data => {:sortable => 'true'}} Action
+      %th.left{:data => {:sortable => 'true'}} Activity
 
   %tbody
     - @activities.each do |a|
-      %tr{:data => {:action_path => activity_log_path(a)}}
+      %tr{:id => a.id, :class => 'action-path'}
+        %td.left= a.id
         %td.left= format_as_date_time(a.activity_time)
         %td.left= a.user
         %td.left= a.item_type
         %td.left= a.activity.truncate(64).html_safe
 
 :javascript
+
+  var path = '#{activity_log_path("x")}';
+
+  $('##{table_dom_id}').on('click-row.bs.table', function (e, row, $element) {
+    //alert($element.attr('id'));
+    var url = path.replace("x", $element.attr('id'));
+    //alert(url);
+    document.location.href = url;
+  }).on('post-body.bs.table', function() {
+    $('.fixed-table-container').css('min-height', '300px')
+  });
 
   $(window).resize(function() {
     $("##{table_dom_id}").bootstrapTable('resetView');

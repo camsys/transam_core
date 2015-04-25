@@ -2,33 +2,37 @@
   table_dom_id = SecureRandom.hex
 
 %table.table.table-hover{:id => table_dom_id, :data => {:toggle => 'table',
-  :card_view => "false",
   :pagination => 'true',
+  :show_pagination_switch => 'true',
   :page_list => "[5, 10, 20, 50, 100, 200]",
   :page_size => current_user.num_table_rows,
-  :show_pagination_switch => 'true',
   :search => 'false',
-  :show_columns => 'true',
+  :export_types => "['csv', 'txt', 'excel']",
   :show_export => 'true',
-  :show_toggle => 'true',
-  :resizable => 'true',
-  :search => 'false'}}
+  :show_columns => 'true',
+  :show_toggle => 'true'}}
   %thead
     %tr
-      %th.left Name
-      %th.left Code
-      %th.left Type
-      %th.right Count
+      %th.left{:data => {:visible => 'false'}} Id
+      %th.left{:data => {:sortable => 'true'}} Name
+      %th.left{:data => {:sortable => 'true'}} Code
+      %th.left{:data => {:sortable => 'true'}} Type
+      %th.right{:data => {:sortable => 'true'}} Num Assets
 
   %tbody
     - @manufacturers.each do |m|
-      %tr{:data => {:action_path => inventory_index_path(:manufacturer_id => m.id)}}
+      %tr{:id => m.id, :class => 'action-path'}
+        %td.left= m.id
         %td.left= m.name
         %td.left= m.code
         %td.left= m.filter
         %td.right= format_as_integer(m.asset_count(@organization))
 
 :javascript
+
+  $('##{table_dom_id}').on('post-body.bs.table', function() {
+    $('.fixed-table-container').css('min-height', '300px')
+  });
 
   $(window).resize(function() {
     $("##{table_dom_id}").bootstrapTable('resetView');

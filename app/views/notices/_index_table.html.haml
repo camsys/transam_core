@@ -2,28 +2,28 @@
   table_dom_id = SecureRandom.hex
 
 %table.table.table-hover{:id => table_dom_id, :data => {:toggle => 'table',
-  :card_view => "false",
   :pagination => 'true',
+  :show_pagination_switch => 'true',
   :page_list => "[5, 10, 20, 50, 100, 200]",
   :page_size => current_user.num_table_rows,
-  :show_pagination_switch => 'true',
   :search => 'false',
-  :show_columns => 'true',
+  :toolbar => "#table_actions",
+  :export_types => "['csv', 'txt', 'excel']",
   :show_export => 'true',
-  :show_toggle => 'true',
-  :resizable => 'true',
-  :search => 'false'}}
+  :show_columns => 'true',
+  :show_toggle => 'true'}}
   %thead
-  %thead
-    %th.left Type
-    %th.left Subject
-    %th.left Summary
-    %th.right Display Until
+    %th.left{:data => {:visible => 'false'}} Object Key
+    %th.left{:data => {:sortable => 'true'}} Type
+    %th.left{:data => {:sortable => 'true'}} Subject
+    %th.left{:data => {:sortable => 'true'}} Summary
+    %th.right{:data => {:sortable => 'true'}} Display Until
     - if can? :update, Notice
       %th.center Actions
   %tbody
     - notices.each do |notice|
-      %tr
+      %tr{:id => notice.object_key, :class => 'action-path'}
+        %td.left= notice.object_key
         %td.left= notice.notice_type
         %td.left= notice.subject
         %td.left= notice.summary.html_safe
@@ -44,6 +44,17 @@
                 %i.fa.fa-fw.fa-trash-o.action-icon.text-danger
 
 :javascript
+
+  var path = '#{notice_path("x")}';
+
+  $('##{table_dom_id}').on('click-row.bs.table', function (e, row, $element) {
+    //alert($element.attr('id'));
+    var url = path.replace("x", $element.attr('id'));
+    //alert(url);
+    document.location.href = url;
+  }).on('post-body.bs.table', function() {
+    $('.fixed-table-container').css('min-height', '300px')
+  });
 
   $(window).resize(function() {
     $("##{table_dom_id}").bootstrapTable('resetView');
