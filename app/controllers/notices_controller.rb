@@ -18,8 +18,8 @@ class NoticesController < OrganizationAwareController
     else
       @notices = Notice.visible.order(:display_datetime)
     end
-    # cache the set of asset ids in case we need them later
-    #cache_list(@notices, INDEX_KEY_LIST_VAR)
+    # cache the set of notices ids in case we need them later
+    cache_list(@notices, INDEX_KEY_LIST_VAR)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -29,6 +29,12 @@ class NoticesController < OrganizationAwareController
 
   def show
     add_breadcrumb ActionController::Base.helpers.sanitize(@notice.subject)
+
+    # get the @prev_record_path and @next_record_path view vars
+    get_next_and_prev_object_keys(@notice, INDEX_KEY_LIST_VAR)
+    @prev_record_path = @prev_record_key.nil? ? "#" : notice_path(@prev_record_key)
+    @next_record_path = @next_record_key.nil? ? "#" : notice_path(@next_record_key)
+
   end
 
   def new

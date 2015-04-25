@@ -1,6 +1,9 @@
 :ruby
   table_dom_id = SecureRandom.hex
 
+#table_actions.btn-group
+  = render :partial => "index_actions"
+
 %table.table.table-hover{:id => table_dom_id, :data => {:toggle => 'table',
   :pagination => 'true',
   :show_pagination_switch => 'true',
