@@ -27,6 +27,10 @@ class NoticesController < OrganizationAwareController
     end
   end
 
+  def show
+    add_breadcrumb ActionController::Base.helpers.sanitize(@notice.subject)
+  end
+
   def new
 
     Rails.logger.debug "In notices#new"
