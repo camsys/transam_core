@@ -1,10 +1,4 @@
-.btn-group.pull-right.panel-action
-  %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
-    I want to  
-    %span.caret
-  %ul.dropdown-menu{:role => 'menu'}
-    - if can? :create, Vendor
-      %li
-        = link_to new_vendor_path do
-          %i.fa.fa-plus.fa-fw
-          = " Add Vendor";  
+- if can? :create, Vendor
+  = link_to new_vendor_path, :class => 'btn btn-default' do
+    %i.fa.fa-plus.fa-fw
+    = " Add Vendor";
