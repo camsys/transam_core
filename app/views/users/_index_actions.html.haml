@@ -1,17 +1,7 @@
-.btn-group.pull-right.panel-action{:style => 'margin-left: 5px;'}
-  %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
-    Actions
-    %span.caret
-  %ul.dropdown-menu{:role => 'menu'}
-    %li
-      = link_to new_user_path do
-        %i.fa.fa-fw.fa-user
-        = " Add a user"
-    %li.divider
-    %li
-      = link_to new_upload_path do
-        %i.fa.fa-fw.fa-file-excel-o
-        = " Export to Excel"
+- if can? :create, User
+  = link_to new_user_path, :class => 'btn btn-default' do
+    %i.fa.fa-fw.fa-user
+    = " Add a user"
 
 = form_tag users_path, :id => 'filter_form', :method => "get", :class => 'navbar-form navbar-right panel-action' do
   - if @organization_list.count > 1
