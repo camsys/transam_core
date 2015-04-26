@@ -1,5 +1,10 @@
 :ruby
   table_dom_id = SecureRandom.hex
+  show_actions ||= 0
+
+- if show_actions == 1
+  #table_actions.btn-group
+    = render :partial => "activity_logs/index_actions"
 
 %table.table.table-hover{:id => table_dom_id, :data => {:toggle => 'table',
   :pagination => 'true',

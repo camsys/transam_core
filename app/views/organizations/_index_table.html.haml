@@ -1,51 +1,67 @@
 :ruby
   table_dom_id = SecureRandom.hex
+  show_actions ||= 0
 
-%table.table.table-hover{:id => table_dom_id, :data => {:toggle => 'B:AHs',
-  :card_view => "false",
+- if show_actions == 1
+  #table_actions.btn-group
+    = render :partial => "organizations/index_actions"
+
+%table.table.table-hover{:id => table_dom_id, :data => {:toggle => 'table',
   :pagination => 'true',
+  :show_pagination_switch => 'true',
   :page_list => "[5, 10, 20, 50, 100, 200]",
   :page_size => current_user.num_table_rows,
-  :show_pagination_switch => 'true',
   :search => 'false',
-  :show_columns => 'true',
+  :toolbar => "#table_actions",
+  :export_types => "['csv', 'txt', 'excel']",
   :show_export => 'true',
-  :show_toggle => 'true',
-  :resizable => 'true',
-  :search => 'false'}}
+  :show_columns => 'true',
+  :show_toggle => 'true'}}
   %thead
     %tr
-      %th.left Organization
-      %th.left Name
-      %th.left.nowrap Type
-      %th.left Address
-      %th.left.nowrap Phone
-      %th.left Ext
-      %th.left.nowrap Fax
-      %th.left Web Site
-
-      %th.center
-
+      %th.left{:data => {:visible => 'false', :sortable => 'true'}} Id
+      %th.left{:data => {:visible => 'false', :sortable => 'true'}} External Id
+      %th.left{:data => {:sortable => 'true'}} Type
+      %th.left{:data => {:sortable => 'true'}} Organization
+      %th.left{:data => {:visible => 'true', :sortable => 'true'}} Full Name
+      %th.left{:data => {:sortable => 'false'}} Full Address
+      %th.left{:data => {:visible => 'false', :sortable => 'true'}} Street
+      %th.left{:data => {:visible => 'false', :sortable => 'true'}} City
+      %th.left{:data => {:visible => 'false', :sortable => 'true'}} State
+      %th.left{:data => {:visible => 'false', :sortable => 'true'}} Zip
+      %th.left.nowrap{:data => {:sortable => 'true'}} Phone
+      %th.left{:data => {:sortable => 'true'}} Ext
+      %th.left.nowrap{:data => {:sortable => 'true'}} Fax
+      %th.left{:data => {:sortable => 'true'}} Web Site
   %tbody
     - @organizations.each do |o|
-      %tr.popup-details{:data => {:action_path => organization_path(o)}}
+      %tr{:id => o.short_name, :class => 'action-path'}
+        %td= o.id
+        %td= o.external_id
+        %td= o.organization_type
         %td= o.short_name
         %td= o.name
-        %td= o.organization_type.name
         %td= format_as_address(o)
+        %td= o.address1
+        %td= o.city
+        %td= o.state
+        %td= o.zip
         %td= format_as_phone_number(o.phone)
         %td= o.phone_ext
         %td= format_as_phone_number(o.fax)
         %td= format_as_url(o.url)
-        %td.center
-          = popover_tag("", {:placement => 'auto left', :icon => 'fa-info-circle', :title => o.short_name, :content => render(:partial => 'organizations/table_summary', :locals => {:org => o}).html_safe})
 
 :javascript
 
-  $(document).ready(function() {
+  var path = '#{organization_path("x")}';
 
-    $('[data-toggle="popover"]').popover();
-
+  $('##{table_dom_id}').on('click-row.bs.table', function (e, row, $element) {
+    //alert($element.attr('id'));
+    var url = path.replace("x", $element.attr('id'));
+    //alert(url);
+    document.location.href = url;
+  }).on('post-body.bs.table', function() {
+    $('.fixed-table-container').css('min-height', '300px')
   });
 
   $(window).resize(function() {
