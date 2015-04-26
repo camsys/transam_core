@@ -1,38 +1,70 @@
 :ruby
   table_dom_id = SecureRandom.hex
 
+#table_actions.btn-group
+  = render :partial => "uploads/index_actions"
+
 %table.table.table-hover{:id => table_dom_id, :data => {:toggle => 'table',
-  :card_view => "false",
   :pagination => 'true',
+  :show_pagination_switch => 'true',
   :page_list => "[5, 10, 20, 50, 100, 200]",
   :page_size => current_user.num_table_rows,
-  :show_pagination_switch => 'true',
   :search => 'false',
-  :show_columns => 'true',
+  :toolbar => "#table_actions",
+  :export_types => "['csv', 'txt', 'excel']",
   :show_export => 'true',
-  :show_toggle => 'true',
-  :resizable => 'true',
-  :search => 'false'}}
+  :show_columns => 'true',
+  :show_toggle => 'true'}}
   %thead
-  %thead
-    %th.left Agency
-    %th.left File Name
-    %th.right Content
-    %th.right Loaded By
-    %th.right Status
-    %th.right Loaded On
+    %th.left{:data => {:visible => 'false'}} Object Key
+    %th.left{:data => {:sortable => 'true'}} Agency
+    %th.left{:data => {:sortable => 'true'}} File Name
+    %th.left{:data => {:sortable => 'true'}} Content
+    %th.left{:data => {:sortable => 'true'}} Loaded By
+    %th.center{:data => {:sortable => 'true'}} Status
+    %th.right{:data => {:sortable => 'true'}} Num Rows Processed
+    %th.right{:data => {:visible => 'false', :sortable => 'true'}} Num Rows Added
+    %th.right{:data => {:visible => 'false', :sortable => 'true'}} Num Rows Replaced
+    %th.right{:data => {:visible => 'false', :sortable => 'true'}} Num Rows Skipped
+    %th.right{:data => {:visible => 'true', :sortable => 'true'}} Num Rows Failed
+    %th.right{:data => {:visible => 'false', :sortable => 'true'}} Processing Started
+    %th.right{:data => {:visible => 'false', :sortable => 'true'}} Processing Completed
+    %th.right{:data => {:sortable => 'true'}} Processing Time
+    %th.right{:data => {:sortable => 'true'}} Uploaded At
   %tbody
     - @uploads.each do |f|
-      %tr{:data => {:action_path => "#{upload_path(f)}"}}
+      %tr{:id => f.object_key, :class => 'action-path'}
+        %td.left= f.object_key
         %td.left= f.organization.short_name
         %td.left= f.original_filename
-        %td.right= f.file_content_type
-        %td.right= f.user.name
-        %td.right= f.file_status_type
+        %td.left= f.file_content_type
+        %td.left= f.user.name
+        %td.center= f.file_status_type
+
+        %td.right= format_as_integer(f.num_rows_processed)
+        %td.right= format_as_integer(f.num_rows_added)
+        %td.right= format_as_integer(f.num_rows_replaced)
+        %td.right= format_as_integer(f.num_rows_skipped)
+        %td.right= format_as_integer(f.num_rows_failed)
+
+        %td.right= format_as_date_time(f.processing_started_at)
+        %td.right= format_as_date_time(f.processing_completed_at)
+        %td.right= "#{format_as_integer(f.processing_time.to_i)}s"
         %td.right= format_as_date_time(f.created_at)
 
 
 :javascript
+
+  var path = '#{upload_path("x")}';
+
+  $('##{table_dom_id}').on('click-row.bs.table', function (e, row, $element) {
+    //alert($element.attr('id'));
+    var url = path.replace("x", $element.attr('id'));
+    //alert(url);
+    document.location.href = url;
+  }).on('post-body.bs.table', function() {
+    $('.fixed-table-container').css('min-height', '300px')
+  });
 
   $(window).resize(function() {
     $("##{table_dom_id}").bootstrapTable('resetView');

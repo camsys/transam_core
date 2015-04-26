@@ -1,17 +1,3 @@
 .row
   .col-md-12
-    .panel.panel-default.header-part
-      .panel-heading
-        .row
-          .col-md-4
-            %h3.panel-title
-              %i.fa.fa-list
-              Spreadsheet Uploads
-          .col-md-8
-            = render 'index_actions'
-      .panel-body
-        - if @uploads.empty?
-          %p No file uploads found
-        - else
-          .col-md-12
-            = render 'index_table'
+    = render 'index_table'
