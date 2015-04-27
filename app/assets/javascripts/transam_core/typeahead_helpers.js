@@ -3,28 +3,17 @@ var _typeahead_delay = 300;
 var _typeahead_timeout;
 var _typeahead_source_url;
 var _typeahead_item_handler = _id_name_item_handler;
-var _selected_borough_id;
 
-function street_name_typeahead_searcher(query, process) {
-  if (_typeahead_timeout) {
-    clearTimeout(_typeahead_timeout);
-  }
-  _typeahead_timeout = setTimeout(function() {
-    return $.ajax({
-      url: _typeahead_source_url,
-      type: 'get',
-      data: {
-        query: query,
-        borough_id: _selected_borough_id
-      },
-      dataType: 'json',
-      success: function(result) {
-        var resultList = result.map(_typeahead_item_handler);
-        return process(resultList);
-      }
-    });
-  },
-  _typeahead_delay);
+// Matches all returned items. Should be the default where items are filtered
+// by the controller
+function _match_all_matcher(obj) {
+  return 1;
+};
+
+// No prioritization in sort order. Should be the default if prioritization is
+// performed by the controller
+function _no_sort_sorter(items) {
+  return items;
 };
 
 function _id_name_item_handler(item) {
