@@ -96,6 +96,10 @@ Then(/^I will see "(.*?)"$/) do |arg1|
   expect(page).to have_content arg1
 end
 
+Then(/^I will not see "(.*?)"$/) do |arg1|
+  expect(page).not_to have_content arg1
+end
+
 # Shows the html of the page for debugging purposes
 Then(/^show me the page$/) do
   print page.html

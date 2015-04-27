@@ -32,4 +32,4 @@ Scenario: Recording final disposition
 
 Scenario: Deleting an asset
   When I press the link "Remove this asset"
-  Then I will see "No matching assets found"
+  Then I will not see "equipment test"
