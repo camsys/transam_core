@@ -1,9 +1,10 @@
 .btn-group.pull-right.panel-action
   %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
-    I want to  
+    %i.fa.fa-cog
+    = " Actions"
     %span.caret
   %ul.dropdown-menu{:role => 'menu'}
-  
+
     - # Load module specific actions if they exist
     - SystemConfig.transam_module_names.each do |mod|
       = render :partial => "organizations/#{mod}_detail_actions" rescue nil

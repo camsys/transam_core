@@ -1,6 +1,7 @@
 .btn-group.pull-right.panel-action
   %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
-    I want to  
+    %i.fa.fa-cog
+    = " Actions"
     %span.caret
   %ul.dropdown-menu{:role => 'menu'}
     - if can? :update, @asset_group
@@ -13,4 +14,4 @@
       %li
         = link_to asset_group_path(@asset_group), :method => :delete, :data => {:confirm => "Are you sure you want to remove this group? The action can't be undone."} do
           %i.fa.fa-trash-o.fa-fw
-          = " Remove this group"          
+          = " Remove this group"

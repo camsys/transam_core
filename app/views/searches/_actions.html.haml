@@ -1,7 +1,8 @@
 - if @search_type == SearchesController::ASSET_SEARCH_TYPE
   .btn-group.pull-right.panel-action{:style => "padding-right: 5px;"}
     %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
-      I want to
+      %i.fa.fa-cog
+      = " Actions"
       %span.caret
     %ul.dropdown-menu{:role => 'menu'}
       %li

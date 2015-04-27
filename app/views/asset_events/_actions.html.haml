@@ -1,6 +1,7 @@
 .btn-group.pull-right.panel-action
   %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
-    I want to  
+    %i.fa.fa-cog
+    = " Actions"
     %span.caret
   %ul.dropdown-menu{:role => 'menu'}
 
@@ -16,4 +17,3 @@
         = link_to inventory_asset_event_path(@asset, @asset_event), :method => :delete, :data => {:confirm => "Are you sure you want to remove this update? The action can't be undone."} do
           %i.fa.fa-fw.fa-trash-o
           = " Remove this update"
-          

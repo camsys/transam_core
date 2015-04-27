@@ -1,6 +1,7 @@
 .btn-group.pull-right.panel-action
   %button.btn.btn-primary.btn-sm.dropdown-toggle#test{:data => {:toggle => 'dropdown'}}
-    I want to  
+    %i.fa.fa-cog
+    = " Actions"
     %span.caret
   %ul.dropdown-menu{:role => 'menu'}
     - if current_user.organization_users.include? @user
@@ -15,7 +16,7 @@
             %i.fa.fa-calendar.fa-fw
             - if @user.id != current_user.id
               = " Assign #{@user.first_name} a task"
-            - else 
+            - else
               = " Assign myself a task"
     - if current_user == @user or current_user.has_role? :admin
       %li.divider
@@ -48,7 +49,7 @@
             = " Update #{@user.first_name}'s password"
           - else
             = " Update my password"
-          
+
     - if can? :delete, @user and @user != current_user
       %li.divider
       %li

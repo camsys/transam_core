@@ -1,7 +1,8 @@
 - unless @task.completed? or @task.cancelled?
   .btn-group.pull-right.panel-action
     %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
-      I want to
+      %i.fa.fa-cog
+      = " Actions"
       %span.caret
     %ul.dropdown-menu{:role => 'menu'}
       - if current_user == @task.user or current_user.has_role? :admin
