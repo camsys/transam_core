@@ -1,5 +1,3 @@
-%h1 New comment
+= render(:partial => 'shared/form_errors', :locals => {:obj => @comment}) unless @comment.errors.empty?
 
 = render 'form'
-
-= link_to 'Back', comments_path

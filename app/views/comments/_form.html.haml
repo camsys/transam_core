@@ -1,10 +1,8 @@
 .row
-  .col-md-8.col-md-offset-2
-    = simple_form_for([@commentable, @comment]) do |f|
-      = f.error_notification
-    
-      .form-inputs
-        = f.input :comment, :input_html => {:rows => 6}
-        
-      .form-actions
-        = f.button :submit, :class => "btn btn-primary"
+  .col-md-8.col-md-offset-2.col-sm-10.col-sm-offset-1.col-xs-12
+    = simple_form_for([@documentable, Document.new],
+        :html => {:multipart => true, :class => 'form-vertical' },
+        :wrapper => :vertical_form,
+        :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}) do |f|
+      = f.input :comment, :input_html => {:rows => 3}, :placeholder => 'Enter comment...'
+      = f.submit "Add comment", :class => 'btn btn-primary'
