@@ -3,21 +3,28 @@
     %i.fa.fa-fw.fa-user
     = " Add a user"
 
-= form_tag users_path, :id => 'filter_form', :method => "get", :class => 'navbar-form navbar-right panel-action' do
-  - if @organization_list.count > 1
-    .form-group
-      = select_tag(:organization_id, options_for_select(Organization.all.collect{|a| [a.coded_name, a.id]}, :selected => @organization_id), :class => "form-control", :prompt => "Any organization...")
+- if @organization_list.count > 1
+  .btn-group{:style => 'margin-left: 0!important;'}
+    %button.btn.btn-default.dropdown-toggle{:data => {:toggle => 'dropdown'}, :aria => {:exapanded => 'false'}}
+      Agency
+      %span.caret
+    %ul.dropdown-menu{:role => 'menu'}
+      %li
+        = link_to "All agencies", users_path(:role => @role)
+      %li.divider
+      - Organization.where('id IN (?)', @organization_list).each do |org|
+        %li
+          = link_to org.coded_name, users_path(:organization_id => org.id, :role => @role)
 
-  - if current_user.has_role? :admin
-    .form-group
-      = select_tag(:role, options_for_select(Role.all, :selected => @role), :class => "form-control", :prompt => "Any role...")
-
-
-:javascript
-  $(document).ready(function() {
-
-    $('#organization_id, #role').change(function() {
-      $('#filter_form').submit();
-    });
-
-  });
+- if current_user.has_role? :admin
+  .btn-group{:style => 'margin-left: 0!important;'}
+    %button.btn.btn-default.dropdown-toggle{:data => {:toggle => 'dropdown'}, :aria => {:exapanded => 'false'}}
+      Roles
+      %span.caret
+    %ul.dropdown-menu{:role => 'menu'}
+      %li
+        = link_to "All roles", users_path(:organization_id => @organization_id)
+      %li.divider
+      - Role.all.each do |role|
+        %li
+          = link_to role.name.titleize, users_path(:organization_id => @organization_id, :role => role.name)

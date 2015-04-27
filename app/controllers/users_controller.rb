@@ -51,43 +51,21 @@ class UsersController < OrganizationAwareController
       values << @organization_list
     end
 
-    # See if we got a search string
-    unless params[:search_text].blank?
-      @search_text = params[:search_text]
-      @search_param = params[:search_param]
-
-      # get the list of searchable fields from the model class
-      searchable_fields = User.new.searchable_fields
-      # create an OR query for each field
-      query_str = []
-      first = true
-      # parameterize the search based on the selected search parameter
-      search_value = get_search_value(@search_text, @search_param)
-      # Construct the query based on the searchable fields for the model
-      searchable_fields.each do |field|
-        if first
-          first = false
-          query_str << '('
-        else
-          query_str << ' OR '
-        end
-
-        query_str << field
-        query_str << ' LIKE ? '
-        # add the value in for this sub clause
-        values << search_value
-      end
-      query_str << ')' unless searchable_fields.empty?
-
-      conditions << query_str.join
-    end
-
     # Get the Users but check to see if a role was selected
     @role = params[:role]
     if @role.blank?
       @users = User.where(conditions.join(' AND '), *values).order(:organization_id, :last_name)
     else
       @users = User.with_role(@role).where(conditions.join(' AND '), *values).order(:organization_id, :last_name)
+    end
+
+    # Set the breadcrumbs
+    if @organization_id.present?
+      org = Organization.find(@organization_id)
+      add_breadcrumb org.short_name, users_path(:organization_id => org.id)
+    end
+    if @role.present?
+      add_breadcrumb @role.titleize, users_path(:role => @role)
     end
 
     # cache the set of object keys in case we need them later
@@ -115,7 +93,7 @@ class UsersController < OrganizationAwareController
     end
 
     if @user.id == current_user.id
-      add_breadcrumb = "My Profile"
+      add_breadcrumb "My Profile"
     else
       add_breadcrumb @user.name
     end
