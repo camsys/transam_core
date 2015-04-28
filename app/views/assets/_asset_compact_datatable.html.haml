@@ -3,15 +3,11 @@
 
 %table.table.table-hover{:id => table_dom_id, :data => {:toggle => 'table',
   :card_view => "false",
-  :pagination => 'true',
-  :page_list => "[5, 10, 20, 50, 100, 200]",
-  :page_size => current_user.num_table_rows,
-  :show_pagination_switch => 'true',
-  :search => 'false',
-  :show_columns => 'true',
-  :show_export => 'true',
-  :show_toggle => 'true',
-  :resizable => 'true',
+  :pagination => 'false',
+  :show_columns => 'false',
+  :show_export => 'false',
+  :show_toggle => 'false',
+  :resizable => 'dalse',
   :search => 'false'}}
   %thead
     %tr
@@ -25,11 +21,9 @@
       %th.center Condition
       %th.center Status
 
-      %th.sorting_disabled
-
   %tbody
     - assets.each do |a|
-      %tr{:data => {:action_path => inventory_path(a)}}
+      %tr{:id => a.object_key, :class => 'action-path'}
         %td.left= a.organization
         %td.left= a.asset_subtype
         %td.left= a.asset_tag
@@ -40,18 +34,17 @@
         %td.center= format_as_decimal(a.reported_condition_rating, 1)
         %td.center= a.service_status_type.code unless a.service_status_type.nil?
 
-        %td.center= render :partial => 'assets/asset_info_detail_popup', :locals => {:asset => a}
-
 :javascript
+
+  var path = '#{inventory_path("0")}';
+
+  $('##{table_dom_id}').on('click-row.bs.table', function (e, row, $element) {
+    //alert($element.attr('id'));
+    var url = path.replace("0", $element.attr('id'));
+    //alert(url);
+    document.location.href = url;
+  });
 
   $(window).resize(function() {
     $("##{table_dom_id}").bootstrapTable('resetView');
-  });
-
-  $('.popup-details').popover({
-    trigger: 'hover',
-    container: 'body',
-    placement: 'left',
-    animation: 'true',
-    html: 'true'
   });
