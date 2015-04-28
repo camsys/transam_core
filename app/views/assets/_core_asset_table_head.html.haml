@@ -3,8 +3,9 @@
 %th.center{:data => {:field => "external_id", :align => 'left', :visible => 'false'}} External Id
 
 - if @organization_list.count > 1
-  %th.center.nowrap{:data => {:field => "org",           :sortable => 'true',  :searchable => 'true'}} Agency
-
+  %th.center.nowrap{:data => {:field => "org", :sortable => 'true',  :searchable => 'true'}} Agency
+- else
+  %th.center.nowrap{:data => {:field => "org", :visible => 'false', :sortable => 'true',  :searchable => 'true'}} Agency
 
 %th.center{:data => {:field => "asset_subtype", :align => 'left', :sortable => 'true', :searchable => 'true'}} Type
 %th.center.nowrap{:data => {:field => "asset_tag", :align => 'left', :sortable => 'true',  :searchable => 'true'}} Asset Tag
@@ -21,5 +22,5 @@
 
 %th.center{:data => {:field => "purchased_new", :align => 'center', :visible => 'false', :formatter => 'boolean_formatter'}} Purchased New
 %th.center{:data => {:field => "purchase_cost", :align => 'right', :visible => 'false', :formatter => 'currency_formatter'}} Cost
-%th.center{:data => {:field => "purchase_date", :align => 'right', :visible => 'false', :formatter => 'date_formatter'}} Purchase
-%th.center{:data => {:field => "in_service_date", :align => 'right', :visible => 'false', :formatter => 'date_formatter'}} In Service
+%th.center{:data => {:field => "purchase_date", :align => 'right', :visible => 'false', :formatter => 'date_formatter'}} Purchase Date
+%th.center{:data => {:field => "in_service_date", :align => 'right', :visible => 'false', :formatter => 'date_formatter'}} In Service Date

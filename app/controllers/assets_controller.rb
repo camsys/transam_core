@@ -7,7 +7,7 @@ class AssetsController < AssetAwareController
   # Don't process cancel buttons
   before_filter :check_for_cancel,  :only => [:create, :update]
   # set the @asset variable before any actions are invoked
-  before_filter :get_asset,         :only => [:show, :edit, :copy, :update, :destroy, :summary_info, :add_to_group, :remove_from_group]
+  before_filter :get_asset,         :only => [:tag, :show, :edit, :copy, :update, :destroy, :summary_info, :add_to_group, :remove_from_group]
   before_filter :reformat_date_fields,  :only => [:create, :update]
   # Update the vendor_id param if the user is using the vendor_name parameter
   before_filter :update_vendor_param,  :only => [:create, :update]
@@ -99,10 +99,18 @@ class AssetsController < AssetAwareController
       format.json {
         # check that an order param was provided otherwise use asset_tag as the default
         params[:sort] ||= 'asset_tag'
-
+        data = []
+        @assets.order("#{params[:sort]} #{params[:order]}").limit(params[:limit]).offset(params[:offset]).each do |asset|
+          jsn = asset.as_json
+          jsn.merge!({:tagged => (asset.tagged? current_user) ? '1' : '0'})
+          if asset.respond_to? :book_value
+            jsn.merge! asset.depreciable_as_json
+          end
+          data << jsn
+        end
         render :json => {
           :total => @assets.count,
-          :rows => @assets.order("#{params[:sort]} #{params[:order]}").limit(params[:limit]).offset(params[:offset])
+          :rows => data
           }
         }
       format.xls
@@ -291,6 +299,21 @@ class AssetsController < AssetAwareController
       format.html { redirect_to(inventory_url) }
       format.json { head :no_content }
     end
+
+  end
+
+  # Adds the assets to the user's tag list or removes it if the asset
+  # is already tagged. called by ajax so no response is rendered
+  def tag
+
+    if @asset.tagged? current_user
+      @asset.users.delete current_user
+    else
+      @asset.tag current_user
+    end
+
+    # No response needed
+    render :nothing => true
 
   end
 

@@ -104,6 +104,10 @@ class Asset < ActiveRecord::Base
   belongs_to :creator, :class_name => "User", :foreign_key => :created_by_id
   belongs_to :updator, :class_name => "User", :foreign_key => :updated_by_id
 
+  # Has been tagged by the user
+  has_many    :asset_tags
+  has_many    :users, :through => :asset_tags
+
   # Validations on associations
   validates     :organization_id,     :presence => true
   validates     :asset_type_id,       :presence => true
@@ -319,6 +323,18 @@ class Asset < ActiveRecord::Base
   #
   #------------------------------------------------------------------------------
 
+  # Returns true if the user has tagged this asset
+  def tagged? user
+    users.include? user
+  end
+
+  # Tags this asset for the user
+  def tag user
+    unless tagged? user
+      users << user
+    end
+  end
+
   # Render the asset as a JSON object -- overrides the default json encoding
   def as_json(options={})
     {
@@ -326,8 +342,6 @@ class Asset < ActiveRecord::Base
       :object_key => self.object_key,
       :asset_tag => self.asset_tag,
       :external_id => self.external_id,
-
-      :flagged => 0,
 
       :org => self.organization.to_s,
       :asset_type => self.asset_type.to_s,

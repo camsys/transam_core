@@ -1,6 +1,7 @@
 <script type="text/javascript">
 
   var user_tab_key = 'assets_tab_key';
+  var tag_url = '<%= tag_inventory_path(@asset) + ".js" %>';
 
   $(document).ready(function() {
 
@@ -14,6 +15,32 @@
       // save the latest tab
       var this_tab = $(this).attr('href');
       transam.set_ui_key_value(user_tab_key, this_tab);
+    });
+
+  });
+
+  // Register a click-handler for the taggable class
+  $('.taggable').on('click', function() {
+    var elem = $(this);
+    var order = elem.data('id');
+    // Toggle the class
+    if (elem.hasClass('fa-star-o')) {
+      // Tag this
+      elem.removeClass('fa-star-o');
+      elem.addClass('fa-star');
+    } else {
+      // Untag this
+      elem.removeClass('fa-star');
+      elem.addClass('fa-star-o');
+    }
+    // Send an ajax request to make the change
+    $.ajax({
+      url: tag_url,
+      type: 'get',
+      success: function(result) {
+      },
+      error: function (xhr, ajaxOptions, thrownError) {
+      }
     });
   });
 

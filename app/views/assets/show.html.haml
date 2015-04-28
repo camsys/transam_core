@@ -5,13 +5,13 @@
         .row
           .col-md-6
             %h3.panel-title
-              %i.fa.fa-list
-              Asset
+              %i.fa{:class => get_tag_icon(@asset), :data => {:id => @asset.object_key}}
+              = Asset
           .col-md-6
             = render 'actions'
-      .panel-body    
+      .panel-body
         = render 'summary'
-        
+
   .col-md-9
     .panel.panel-default.header-part
       .panel-heading
@@ -22,15 +22,15 @@
             %h3.panel-title
               %i.fa.fa-folder-open
               Details
-                
+
       .panel-body
         = render 'details'
-        
+
 :javascript
-  
-  $(document).ready(function() {            
+
+  $(document).ready(function() {
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-      transam.make_same_height('.header-part');    
+      transam.make_same_height('.header-part');
     });
-    transam.make_same_height('.header-part');    
+    transam.make_same_height('.header-part');
   });

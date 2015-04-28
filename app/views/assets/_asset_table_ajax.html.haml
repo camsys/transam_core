@@ -32,7 +32,7 @@
     :single_select => 'true'}}
     %thead
       %tr
-        %th.center.icon-column{:data => {:field => 'flagged', :formatter => 'flagged_formatter'}}
+        %th.center.icon-column{:data => {:field => 'tagged', :formatter => 'tagged_formatter'}}
           %i.fa.fa-star
 
         - SystemConfig.transam_module_names.each do |mod|
@@ -41,11 +41,11 @@
 
         %th.center.flag-column{:data => {:field => 'tasks', :formatter => 'tasks_formatter'}}
           %i.fa.fa-flag
-        %th.center.flag-column{:data => {:field => 'comments', :formatter => 'comments_formatter'}}
+        %th.center.flag-column{:data => {:field => 'comments', :visible => 'false', :formatter => 'comments_formatter'}}
           %i.fa.fa-comments
-        %th.center.flag-column{:data => {:field => 'documents', :formatter => 'documents_formatter'}}
+        %th.center.flag-column{:data => {:field => 'documents', :visible => 'false', :formatter => 'documents_formatter'}}
           %i.fa.fa-files-o
-        %th.center.flag-column{:data => {:field => 'photos', :formatter => 'images_formatter'}}
+        %th.center.flag-column{:data => {:field => 'photos', :visible => 'false', :formatter => 'images_formatter'}}
           %i.fa.fa-image
 
 :javascript
@@ -127,7 +127,7 @@
     }
   };
 
-  function flagged_formatter(value) {
+  function tagged_formatter(value) {
     if (value == '1') {
       return '<i class="fa fa-star"></i>';
     } else {

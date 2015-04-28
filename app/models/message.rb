@@ -50,7 +50,7 @@ class Message < ActiveRecord::Base
     users.include? user
   end
 
-  # Tags this order for the user
+  # Tags this message for the user
   def tag user
     unless tagged? user
       users << user

@@ -37,6 +37,7 @@ Rails.application.routes.draw do
         get 'parent'
       end
       member do
+        get 'tag'
         get 'summary_info'
         get 'update_status'
         get 'copy'
