@@ -3,23 +3,23 @@
 
 %table.table.table-hover{:id => table_dom_id, :data => {:toggle => 'table',
   :card_view => "false",
-  :pagination => 'false',
+  :pagination => 'true',
   :show_columns => 'false',
   :show_export => 'false',
   :show_toggle => 'false',
-  :resizable => 'dalse',
+  :resizable => 'false',
   :search => 'false'}}
   %thead
     %tr
-      %th.left Agency
-      %th.left Type
-      %th.left Asset Tag
-      %th.left Description
+      %th.left{:data => {:sortable => 'true', :order => 'desc'}} Agency
+      %th.left{:data => {:sortable => 'true', :order => 'desc'}} Type
+      %th.left{:data => {:sortable => 'true', :order => 'desc'}} Asset Tag
+      %th.left{:data => {:sortable => 'true', :order => 'desc'}} Description
 
-      %th.right In Service
-      %th.right Age
-      %th.center Condition
-      %th.center Status
+      %th.right{:data => {:sortable => 'true', :order => 'desc'}} In Service
+      %th.right{:data => {:sortable => 'true', :order => 'desc'}} Age
+      %th.center{:data => {:sortable => 'true', :order => 'desc'}} Condition
+      %th.center{:data => {:sortable => 'true', :order => 'desc'}} Status
 
   %tbody
     - assets.each do |a|
@@ -43,6 +43,12 @@
     var url = path.replace("0", $element.attr('id'));
     //alert(url);
     document.location.href = url;
+  }).on('all.bs.table', function(evt, name, args) {
+    transam.make_same_height('.header-part');
+  });
+
+  $(window).load(function() {
+    transam.make_same_height('.header-part');
   });
 
   $(window).resize(function() {
