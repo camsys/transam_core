@@ -6,7 +6,7 @@ class UsersController < OrganizationAwareController
   add_breadcrumb "Home",  :root_path
   add_breadcrumb "Users", :users_path
 
-  before_action :set_user, :only => [:show, :edit, :settings, :update, :destroy, :set_current_org, :change_password, :update_password, :profile_photo]
+  before_action :set_user, :only => [:show, :edit, :settings, :update, :destroy, :set_current_org, :change_password, :update_password, :profile_photo, :reset_password]
   before_filter :check_for_cancel, :only => [:create, :update, :update_password]
 
   INDEX_KEY_LIST_VAR    = "user_key_list_cache_var"
@@ -140,6 +140,24 @@ class UsersController < OrganizationAwareController
 
   end
 
+  # Sends a reset password email to the user. This is an admin function
+  def reset_password
+
+    # if not found or the object does not belong to the users
+    # send them back to index.html.erb
+    if @user.nil?
+      notify_user(:alert, "Record not found!")
+      redirect_to users_url
+      return
+    end
+
+    @user.send_reset_password_instructions
+    notify_user(:notice, "Instructions for resetting their password was sent to #{@user} at #{@user.email}")
+
+    redirect_to user_path(@user)
+
+  end
+
   # GET /users/1/edit
   def change_password
 
@@ -240,7 +258,7 @@ class UsersController < OrganizationAwareController
     add_breadcrumb 'Change Password'
 
     respond_to do |format|
-      if @user.update_with_password(form_params)
+      if @user.update_with_password(params.required(:user).permit(:current_password, :password, :password_confirmation))
         # automatically sign in the user bypassing validation
         if @user.id == current_user.id
           notify_user(:notice, "Your password was successfully updated.")
@@ -295,7 +313,7 @@ class UsersController < OrganizationAwareController
 
   # Callbacks to share common setup or constraints between actions.
   def set_user
-    @user = params[:id].nil? ? nil : User.find_by_object_key(params[:id])
+    @user = User.find_by_object_key(params[:id])
   end
 
   def add_user_breadcrumb(page)
