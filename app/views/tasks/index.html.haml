@@ -10,8 +10,8 @@
   my_tasks = @open_tasks.where('assigned_to_user_id = ?', current_user.id)
   others_tasks = @open_tasks.where('assigned_to_user_id <> ? AND assigned_to_user_id IS NOT NULL', current_user.id)
   unassigned_tasks = @open_tasks.where('assigned_to_user_id IS NULL')
-  my_completed_tasks = @closed_tasks.where('assigned_to_user_id = ? AND state = ?', current_user.id, 'cancelled')
-  my_cancelled_tasks = @closed_tasks.where('assigned_to_user_id = ? AND state = ?', current_user.id, 'completed')
+  my_completed_tasks = @closed_tasks.where('assigned_to_user_id = ? AND state = ?', current_user.id, 'completed')
+  my_cancelled_tasks = @closed_tasks.where('assigned_to_user_id = ? AND state = ?', current_user.id, 'cancelled')
 
 .row
   .col-lg-8.col-md-8.col-sm-10.col-xs-12.col-lg-offset-2.col-md-offset-2.col-sm-offset-1{:style => 'margin-top: 10px;'}
