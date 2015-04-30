@@ -23,7 +23,7 @@
       %th.left{:data => {:visible => 'false', :sortable => 'true'}} External Id
       %th.left{:data => {:sortable => 'true'}} Type
       %th.left{:data => {:sortable => 'true'}} Organization
-      %th.left{:data => {:visible => 'true', :sortable => 'true'}} Full Name
+      %th.left{:data => {:sortable => 'true'}} Full Name
       %th.left{:data => {:sortable => 'false'}} Full Address
       %th.left{:data => {:visible => 'false', :sortable => 'true'}} Street
       %th.left{:data => {:visible => 'false', :sortable => 'true'}} City
@@ -34,7 +34,7 @@
       %th.left.nowrap{:data => {:sortable => 'true'}} Fax
       %th.left{:data => {:sortable => 'true'}} Web Site
   %tbody
-    - @organizations.each do |o|
+    - organizations.each do |o|
       %tr{:id => o.short_name, :class => 'action-path'}
         %td= o.id
         %td= o.external_id
@@ -51,19 +51,4 @@
         %td= format_as_phone_number(o.fax)
         %td= format_as_url(o.url)
 
-:javascript
-
-  var path = '#{organization_path("x")}';
-
-  $('##{table_dom_id}').on('click-row.bs.table', function (e, row, $element) {
-    //alert($element.attr('id'));
-    var url = path.replace("x", $element.attr('id'));
-    //alert(url);
-    document.location.href = url;
-  }).on('post-body.bs.table', function() {
-    $('.fixed-table-container').css('min-height', '300px')
-  });
-
-  $(window).resize(function() {
-    $("##{table_dom_id}").bootstrapTable('resetView');
-  });
+= render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :path_pattern => organization_path("xxx")}

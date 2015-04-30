@@ -1,0 +1,99 @@
+:javascript
+
+  var table_dom_id = "#{table_id}";
+  var action_path = "#{path_pattern}";
+
+  $("#" + table_dom_id).on('click-row.bs.table', function (e, row, $element) {
+    //alert($element.attr('id'));
+    var url = action_path.replace("xxx", $element.attr('id'));
+    //alert(url);
+    document.location.href = url;
+  }).on('all.bs.table', function(evt, name, args) {
+    $('.fixed-table-container').css('min-height', '300px')
+    transam.make_same_height('.header-part');
+  });
+
+  $(window).load(function() {
+    transam.make_same_height('.header-part');
+  });
+
+  $(window).resize(function() {
+    $("#" + table_dom_id).bootstrapTable('resetView');
+  });
+
+  function boolean_formatter(value) {
+    if (value) {
+      return '<i class="fa fa-check"></i>';
+    } else {
+      return '';
+    }
+  };
+
+  function integer_formatter(value) {
+    if (value) {
+      return format("###,##0.", value);
+    } else {
+      return value;
+    }
+  };
+
+  function currency_formatter(value) {
+    if (value) {
+      return '$' + integer_formatter(value);
+    } else {
+      return value;
+    }
+  };
+
+  function percentage_formatter(value) {
+    if (value) {
+      return format("##0.00", value) + "%";
+    } else {
+      return value;
+    }
+  };
+
+  function date_formatter(value) {
+    if (value) {
+      var date = new Date(value);
+      return date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear();
+    } else {
+      return value;
+    }
+  };
+
+  function tagged_formatter(value) {
+    if (value == '1') {
+      return '<i class="fa fa-star"></i>';
+    } else {
+      return '<i class="fa fa-star-o"></i>';
+    }
+  };
+
+  function tasks_formatter(value) {
+    if (value > 0) {
+      return '<i class="fa fa-flag"></i>';
+    }
+    return "";
+  };
+
+  function documents_formatter(value) {
+    if (value > 0) {
+      return '<i class="fa fa-file-o"></i>';
+    }
+    return "";
+  };
+
+  function comments_formatter(value) {
+    if (value > 0) {
+      return '<i class="fa fa-comments"></i>';
+    }
+    return "";
+  };
+
+  function images_formatter(value) {
+    if (value > 0) {
+      return '<i class="fa fa-image"></i>';
+    }
+    return "";
+  };

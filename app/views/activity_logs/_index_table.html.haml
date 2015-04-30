@@ -33,19 +33,4 @@
         %td.left= a.item_type
         %td.left= a.activity.truncate(64).html_safe
 
-:javascript
-
-  var path = '#{activity_log_path("x")}';
-
-  $('##{table_dom_id}').on('click-row.bs.table', function (e, row, $element) {
-    //alert($element.attr('id'));
-    var url = path.replace("x", $element.attr('id'));
-    //alert(url);
-    document.location.href = url;
-  }).on('post-body.bs.table', function() {
-    $('.fixed-table-container').css('min-height', '300px')
-  });
-
-  $(window).resize(function() {
-    $("##{table_dom_id}").bootstrapTable('resetView');
-  });
+= render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :path_pattern => activity_log_path("xxx")}

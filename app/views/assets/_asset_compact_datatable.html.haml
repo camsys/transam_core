@@ -34,23 +34,4 @@
         %td.center= format_as_decimal(a.reported_condition_rating, 1)
         %td.center= a.service_status_type.code unless a.service_status_type.nil?
 
-:javascript
-
-  var path = '#{inventory_path("0")}';
-
-  $('##{table_dom_id}').on('click-row.bs.table', function (e, row, $element) {
-    //alert($element.attr('id'));
-    var url = path.replace("0", $element.attr('id'));
-    //alert(url);
-    document.location.href = url;
-  }).on('all.bs.table', function(evt, name, args) {
-    transam.make_same_height('.header-part');
-  });
-
-  $(window).load(function() {
-    transam.make_same_height('.header-part');
-  });
-
-  $(window).resize(function() {
-    $("##{table_dom_id}").bootstrapTable('resetView');
-  });
+= render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :path_pattern => inventory_path("xxx")}

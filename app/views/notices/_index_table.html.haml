@@ -21,6 +21,8 @@
     %th.left{:data => {:sortable => 'true'}} Subject
     %th.left{:data => {:sortable => 'true'}} Summary
     %th.right{:data => {:sortable => 'true'}} Display Until
+    %th.right{:data => {:visible => 'false', :sortable => 'true'}} Created At
+    %th.right{:data => {:visible => 'false', :sortable => 'true'}} Updated At
     - if can? :update, Notice
       %th.center Actions
   %tbody
@@ -31,6 +33,8 @@
         %td.left= notice.subject
         %td.left= notice.summary.html_safe
         %td.right= format_as_date_time(notice.end_datetime)
+        %td.right= format_as_date_time(notice.created_at)
+        %td.right= format_as_date_time(notice.updated_at)
         - if can? :update, notice
           %td.center
             - if notice and notice.end_datetime > DateTime.current and notice.active
@@ -46,19 +50,4 @@
               = link_to notice_path(notice), :method => :delete, :data => {:confirm => "Are you sure you want to remove this notice? The action can't be undone."} do
                 %i.fa.fa-fw.fa-trash-o.action-icon.text-danger
 
-:javascript
-
-  var path = '#{notice_path("x")}';
-
-  $('##{table_dom_id}').on('click-row.bs.table', function (e, row, $element) {
-    //alert($element.attr('id'));
-    var url = path.replace("x", $element.attr('id'));
-    //alert(url);
-    document.location.href = url;
-  }).on('post-body.bs.table', function() {
-    $('.fixed-table-container').css('min-height', '300px')
-  });
-
-  $(window).resize(function() {
-    $("##{table_dom_id}").bootstrapTable('resetView');
-  });
+= render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :path_pattern => notice_path("xxx")}

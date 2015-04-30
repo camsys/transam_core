@@ -14,6 +14,8 @@
     :url => inventory_index_path(:format => :json),
     :card_view => "false",
     :pagination => 'true',
+    :sort_order => 'asc',
+    :sortable => 'true',
     :side_pagination => 'server',
     :show_pagination_switch => 'true',
     :page_list => "[5, 10, 20, 50, 100, 200]",
@@ -90,30 +92,29 @@
     $('#asset_server_table > tbody > tr').addClass('action-path');
   });
 
+  $(window).resize(function() {
+    $('#asset_server_table').bootstrapTable('resetView');
+  });
+
   function boolean_formatter(value) {
     if (value) {
-      return '<i class="fa fa-check-square-o"></i>';
+      return '<i class="fa fa-check"></i>';
     } else {
-      return '<i class="fa fa-square-o"></i>';
+      return '';
     }
   };
+
   function integer_formatter(value) {
-    if (value) {
-      return format("###,##0.", value);
-    } else {
-      return value;
-    }
+    return format("###,##0.", value);
   };
+
   function currency_formatter(value) {
-    if (value) {
-      return '$' + integer_formatter(value);
-    } else {
-      return value;
-    }
+    return '$' + integer_formatter(value);
   };
+
   function percentage_formatter(value) {
     if (value) {
-      return format("##0.##", value) + "%";
+      return format("##0.00", value) + "%";
     } else {
       return value;
     }
@@ -135,31 +136,31 @@
       return '<i class="fa fa-star-o"></i>';
     }
   };
+
   function tasks_formatter(value) {
     if (value > 0) {
       return '<i class="fa fa-flag"></i>';
     }
     return "";
   };
+
   function documents_formatter(value) {
     if (value > 0) {
       return '<i class="fa fa-file-o"></i>';
     }
     return "";
   };
+
   function comments_formatter(value) {
     if (value > 0) {
       return '<i class="fa fa-comments"></i>';
     }
     return "";
   };
+
   function images_formatter(value) {
     if (value > 0) {
       return '<i class="fa fa-image"></i>';
     }
     return "";
   };
-
-  $(window).resize(function() {
-    $('#asset_server_table').bootstrapTable('resetView');
-  });
