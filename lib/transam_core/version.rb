@@ -1,3 +1,3 @@
 module TransamCore
-  VERSION = "0.6.3a"
+  VERSION = "0.6.3b"
 end
