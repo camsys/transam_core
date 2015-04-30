@@ -95,7 +95,8 @@ class TasksController < NestedResourceController
     add_breadcrumb "My Tasks", tasks_path
 
     # Select tasks for this organization
-    @tasks = Task.where("organization_id = ? AND state IN (?)", @organization.id, @states).order("complete_by")
+    @open_tasks = Task.where("organization_id = ? AND state IN (?)", @organization.id, Task.active_states).order("complete_by")
+    @closed_tasks = Task.where("organization_id = ? AND state IN (?)", @organization.id, Task.terminal_states).order("complete_by")
 
     respond_to do |format|
       format.html # index.html.erb

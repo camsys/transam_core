@@ -23,7 +23,7 @@
           - else
             = task.assigned_to_user
           %span.caret
-        %ul.dropdown-menu.pull-right{:role => "menu"}
+        %ul.dropdown-menu.pull-right.scrollable-menu{:role => "menu"}
           %li
             - @organization.users.each do |usr|
               = link_to change_owner_task_path(task, :user => usr.object_key) do

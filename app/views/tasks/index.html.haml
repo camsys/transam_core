@@ -7,9 +7,11 @@
   .tab-content {padding: 0px;}
 
 :ruby
-  my_tasks = @tasks.where('assigned_to_user_id = ?', current_user.id)
-  others_tasks = @tasks.where('assigned_to_user_id <> ? AND assigned_to_user_id IS NOT NULL', current_user.id)
-  unassigned_tasks = @tasks.where('assigned_to_user_id IS NULL')
+  my_tasks = @open_tasks.where('assigned_to_user_id = ?', current_user.id)
+  others_tasks = @open_tasks.where('assigned_to_user_id <> ? AND assigned_to_user_id IS NOT NULL', current_user.id)
+  unassigned_tasks = @open_tasks.where('assigned_to_user_id IS NULL')
+  my_completed_tasks = @closed_tasks.where('assigned_to_user_id = ? AND state = ?', current_user.id, 'cancelled')
+  my_cancelled_tasks = @closed_tasks.where('assigned_to_user_id = ? AND state = ?', current_user.id, 'completed')
 
 .row
   .col-lg-8.col-md-8.col-sm-10.col-xs-12.col-lg-offset-2.col-md-offset-2.col-sm-offset-1{:style => 'margin-top: 10px;'}
@@ -26,10 +28,16 @@
   .col-lg-8.col-md-8.col-sm-10.col-xs-12.col-lg-offset-2.col-md-offset-2.col-sm-offset-1{:style => 'margin-top: 15px;'}
     %ul.nav.nav-tabs
       %li
-        %a{:href => "#mine", :data =>{:toggle => 'tab'}}
+        %a{:href => "#my_open", :data =>{:toggle => 'tab'}}
           %span.badge.pull-right= my_tasks.count
           %i.fa.fa-user
-          = " My Tasks"
+          = " My Open Tasks"
+
+      %li
+        %a{:href => "#my_completed", :data =>{:toggle => 'tab'}}
+          %span.badge.pull-right= my_completed_tasks.count
+          %i.fa.fa-check-square-o
+          = " My Completed Tasks"
 
       %li
         %a{:href => "#others", :data =>{:toggle => 'tab'}}
@@ -43,13 +51,27 @@
           %i.fa.fa-calendar
           = " Unassigned Tasks"
 
+      %li
+        %a{:href => "#cancelled", :data =>{:toggle => 'tab'}}
+          %span.badge.pull-right= my_cancelled_tasks.count
+          %i.fa.fa-times-circle
+          = " Cancelled Tasks"
+
     .tab-content
-      .tab-pane.fade.in#mine
+      .tab-pane.fade.in#my_open
         .list-group
           - if my_tasks.empty?
             %p You have no tasks waiting
           - else
             - my_tasks.each do |task|
+              = render :partial => 'task_detail', :locals => {:task => task}
+
+      .tab-pane.fade.in#my_completed
+        .list-group
+          - if my_completed_tasks.empty?
+            %p You have no completed tasks
+          - else
+            - my_completed_tasks.each do |task|
               = render :partial => 'task_detail', :locals => {:task => task}
 
       .tab-pane.fade.in#others
@@ -66,6 +88,14 @@
             %p No tasks unassigned
           - else
             - unassigned_tasks.each do |task|
+              = render :partial => 'task_detail', :locals => {:task => task}
+
+      .tab-pane.fade.in#cancelled
+        .list-group
+          - if my_cancelled_tasks.empty?
+            %p No tasks unassigned
+          - else
+            - my_cancelled_tasks.each do |task|
               = render :partial => 'task_detail', :locals => {:task => task}
 
 :javascript
