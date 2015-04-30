@@ -253,6 +253,7 @@ class Asset < ActiveRecord::Base
     :disposition_date,
     :disposition_type_id,
     :parent_id,
+    :superseded_by_id,
     :created_by_id,
     :updated_by_id
   ]
@@ -332,6 +333,30 @@ class Asset < ActiveRecord::Base
   def tag user
     unless tagged? user
       users << user
+    end
+  end
+
+  # Returns true if the asset has been superseded
+  def superseded?
+    (self.superseded_by_id.present?)
+  end
+  
+  # Returns the asset that replaced this asset if it has been replaced
+  def superseded_by
+    if self.superseded_by_id.present?
+      Asset.get_typed_asset(Asset.find(self.superseded_by_id))
+    else
+      nil
+    end
+  end
+
+  # Returns the asset that this asset replaced this asset if it has been replaced
+  def supersedes
+    asset = Asset.find_by(:superseded_by_id => self.id)
+    if asset.present?
+      Asset.get_typed_asset(asset)
+    else
+      nil
     end
   end
 
