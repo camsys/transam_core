@@ -86,6 +86,7 @@ module TransamFormatHelper
 
   # if no precision is set this truncates any decimals and returns the number as currency
   def format_as_currency(val, precision = 0)
+    val ||= 0
     if precision == 0
       val = val + 0.5
       number_to_currency(val.to_i, :precision => 0)
