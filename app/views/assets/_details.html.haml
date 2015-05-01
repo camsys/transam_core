@@ -1,15 +1,18 @@
 %ul.nav.nav-tabs.responsive-tabs
   - # Load module specific tabs if they exist
   - SystemConfig.transam_module_names.each do |mod|
-    = render :partial => "assets/#{mod}_detail_tabs" rescue nil
+    - if lookup_context.template_exists?("#{mod}_detail_tabs", 'assets', true)
+      = render :partial => "assets/#{mod}_detail_tabs"
 
 .tab-content
   - # Load module specific tab content if they exist
   - SystemConfig.transam_module_names.each do |mod|
-    = render :partial => "assets/#{mod}_detail_tabs_content" rescue nil
+    - if lookup_context.template_exists?("#{mod}_detail_tabs_content", 'assets', true)
+      = render :partial => "assets/#{mod}_detail_tabs_content"
 
 = render 'detail_scripts'
 
 - # Load module specific tab if they exist
 - SystemConfig.transam_module_names.each do |mod|
-  = render :partial => "assets/#{mod}_detail_tabs_scripts" rescue nil
+  - if lookup_context.template_exists?("#{mod}_detail_tabs_scripts", 'assets', true)
+    = render :partial => "assets/#{mod}_detail_tabs_scripts"
