@@ -47,7 +47,7 @@ service_status_types = [
   {:active => 1, :name => 'In Service',       :code => 'I', :description => 'Asset is in service.'},
   {:active => 1, :name => 'Out of Service',   :code => 'O', :description => 'Asset is temporarily out of service.'},
   {:active => 1, :name => 'Spare',            :code => 'S', :description => 'Asset has been reprovisioned as a spare.'},
-  {:active => 1, :name => 'Disposed',         :code => 'D', :description => 'Asset has been permanently disposed.'}
+  {:active => 0, :name => 'Disposed',         :code => 'D', :description => 'Asset has been permanently disposed.'}
 ]
 
 cost_calculation_types = [
