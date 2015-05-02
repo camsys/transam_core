@@ -55,6 +55,14 @@ class Image < ActiveRecord::Base
     :created_by_id
   ]
 
+  # List of fields which can be searched using a simple text-based search
+  SEARCHABLE_FIELDS = [
+    'object_key',
+    'original_filename',
+    'description'
+  ]
+
+
   #------------------------------------------------------------------------------
   #
   # Class Methods
@@ -63,6 +71,20 @@ class Image < ActiveRecord::Base
 
   def self.allowable_params
     FORM_PARAMS
+  end
+
+  #------------------------------------------------------------------------------
+  #
+  # Instance Methods
+  #
+  #------------------------------------------------------------------------------
+
+  def to_s
+    original_filename
+  end
+
+  def searchable_fields
+    SEARCHABLE_FIELDS
   end
 
   #------------------------------------------------------------------------------

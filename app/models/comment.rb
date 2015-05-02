@@ -53,14 +53,24 @@ class Comment < ActiveRecord::Base
     FORM_PARAMS
   end
 
+  #------------------------------------------------------------------------------
+  #
+  # Instance Methods
+  #
+  #------------------------------------------------------------------------------
+
   def searchable_fields
     SEARCHABLE_FIELDS
   end
 
-  def description
+  def to_s
     comment
   end
   
+  def description
+    comment
+  end
+
   #------------------------------------------------------------------------------
   #
   # Protected Methods

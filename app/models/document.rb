@@ -60,6 +60,13 @@ class Document < ActiveRecord::Base
     :original_filename
   ]
 
+  # List of fields which can be searched using a simple text-based search
+  SEARCHABLE_FIELDS = [
+    'object_key',
+    'original_filename',
+    'description'
+  ]
+
   #------------------------------------------------------------------------------
   #
   # Class Methods
@@ -68,6 +75,20 @@ class Document < ActiveRecord::Base
 
   def self.allowable_params
     FORM_PARAMS
+  end
+
+  #------------------------------------------------------------------------------
+  #
+  # Instance Methods
+  #
+  #------------------------------------------------------------------------------
+
+  def to_s
+    original_filename
+  end
+
+  def searchable_fields
+    SEARCHABLE_FIELDS
   end
 
   #------------------------------------------------------------------------------
