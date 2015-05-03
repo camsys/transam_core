@@ -5,6 +5,12 @@
 # Adds ability to index a model for keyword based searches. All models that use
 # this plugin can be searched generically using the Transam keyword search
 #
+# To protect the priovacy of organization sepcific data, each searchable object
+# must implement an organization method that returns the organization that owns
+# the object being searched. Implementations can determine through the database
+# schema wether to allow null organization_id values or not. Each object must
+# also return an Object Key.
+#
 #------------------------------------------------------------------------------
 module TransamKeywordSearchable
   extend ActiveSupport::Concern
@@ -26,6 +32,7 @@ module TransamKeywordSearchable
   def self.implementors
     ObjectSpace.each_object(Class).select { |klass| klass < TransamKeywordSearchable }
   end
+
   #------------------------------------------------------------------------------
   #
   # Instance Methods
@@ -42,7 +49,7 @@ module TransamKeywordSearchable
     }
 
     kwsi = KeywordSearchIndex.find_or_create_by(object_key: object_key) do |keyword_search_index|
-      keyword_search_index.organization = organization if respond_to? :organization
+      keyword_search_index.organization = self.organization
       keyword_search_index.context = self.class.name
       keyword_search_index.search_text = text_blob
       if self.is_a?(Asset)
@@ -55,10 +62,13 @@ module TransamKeywordSearchable
         keyword_search_index.summary = self.description.truncate(64)
       elsif respond_to? :name
         keyword_search_index.summary = self.name.truncate(64)
+      else
+        keyword_search_index.summary = self.class.name
       end
     end
 
-    kwsi.save
+    # Save, catching errors
+    save_with_exception_handler kwsi
 
   end
   #------------------------------------------------------------------------------
@@ -67,6 +77,16 @@ module TransamKeywordSearchable
   #
   #------------------------------------------------------------------------------
   protected
+
+  # Wrap the save method in an exception handler so that any schema-level problems
+  # bubble up and can be caught without terminating the current transaction
+  def save_with_exception_handler kwsi
+    begin
+      kwsi.save!
+    rescue Exception => e
+      Rails.logger.info "KeywordSearcher Error. Class = #{self.class.name}, Object Key = #{self.object_key}, Error = #{e.message}"
+    end
+  end
 
   # Creates a job to udpate the index. This is done in the background so the
   # current transaction does not get bloacked. Default priority is 10
