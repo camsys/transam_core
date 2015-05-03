@@ -3,9 +3,9 @@
     %li.list-group-item.document
       %span.title{:style => 'min-width: 20px; display:inline-block;'}
         %i.fa.fa-3x{:class => get_file_icon_for_filename(d.original_filename)}
-      %span.title.text-muted{:style => 'min-width: 140px; display:inline-block;'}= "#{d.creator.name}<br/>#{format_as_date_time(d.created_at)}".html_safe
-      %span.title{:style => 'display:inline-block;vertical-align:top'}= d.description.html_safe.truncate(128)
-      %span.pull-right{:style => 'min-width: 80px; display:inline-block;vertical-align:top'}
+      %span.title.text-muted.small{:style => 'min-width: 140px; vertical-align:top;display:inline-block;'}= "#{d.creator.name}<br/>#{format_as_date_time(d.created_at)}".html_safe
+      %span.title{:style => 'display:inline-block;vertical-align:top;'}= d.description.html_safe.truncate(128)
+      %span.pull-right{:style => 'min-width: 80px; display:inline-block;vertical-align:top;'}
         - if can? :read, d
           = link_to download_document_path(d), :class => "btn btn-primary btn-xs pull-right", :style => "margin-left: 5px;" do
             %i.fa.fa-download
