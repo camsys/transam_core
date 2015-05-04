@@ -181,7 +181,9 @@ class Asset < ActiveRecord::Base
 
     :manufacturer,
     :manufacturer_model,
-    :manufacture_year
+    :manufacture_year,
+
+    :vendor
   ]
 
   # List of fields that should be nilled when a copy is made
@@ -340,7 +342,7 @@ class Asset < ActiveRecord::Base
   def superseded?
     (self.superseded_by_id.present?)
   end
-  
+
   # Returns the asset that replaced this asset if it has been replaced
   def superseded_by
     if self.superseded_by_id.present?

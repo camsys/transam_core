@@ -27,11 +27,13 @@ class Equipment < Asset
   #------------------------------------------------------------------------------
 
   SEARCHABLE_FIELDS = [
-    :quantity
+    :description
   ]
+
   CLEANSABLE_FIELDS = [
     :quantity
   ]
+
   # List of hash parameters specific to this class that are allowed by the controller
   FORM_PARAMS = [
     :quantity,
