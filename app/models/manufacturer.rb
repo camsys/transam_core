@@ -1,7 +1,7 @@
 class Manufacturer < ActiveRecord::Base
 
   has_many :assets
-  
+
   # default scope
   default_scope { where(:active => true).order('code') }
 
@@ -26,7 +26,7 @@ class Manufacturer < ActiveRecord::Base
   end
 
   def to_s
-    name
+    code
   end
 
 end
