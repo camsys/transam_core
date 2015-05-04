@@ -27,7 +27,8 @@ class Equipment < Asset
   #------------------------------------------------------------------------------
 
   SEARCHABLE_FIELDS = [
-    :description
+    :description,
+    :serial_number
   ]
 
   CLEANSABLE_FIELDS = [
