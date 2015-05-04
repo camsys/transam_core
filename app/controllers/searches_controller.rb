@@ -71,7 +71,9 @@ class SearchesController < OrganizationAwareController
 
       where_clause = 'organization_id IN (?) AND ('
       values = []
-      values << @organization.id
+      # The organization is scoped to search across all objects that are owned by
+      # the user's list of organizations
+      values << @organization_list
 
       search_params = []
       @search_text.split(" ").each_with_index do |search_string|
