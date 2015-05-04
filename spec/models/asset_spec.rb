@@ -148,7 +148,8 @@ RSpec.describe Asset, :type => :model do
 
         :manufacturer,
         :manufacturer_model,
-        :manufacture_year
+        :manufacture_year,
+        :vendor
       ]
 
       expect(buslike_asset.searchable_fields).to eql(asset_searchables)
