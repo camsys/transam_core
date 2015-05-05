@@ -1,4 +1,17 @@
-.row
-  - images.each do |d|
-    .col-md-2.col-sm-4.col-xs-6
-      = image_tag p.image.url(:thumb), :class => "img-responsive gallery-image" if p.image
+%ul.media-list
+  - images.each do |p|
+    %li.media
+      .media-left
+        = link_to image_tag(p.image.url(:thumb)), p.image.url,  :class => "img-responsive gallery-image", :data => {:lightbox => "gallery"}
+      .media-body
+        = p.description.html_safe
+        %p.title.text-muted.small= "#{p.creator.name}<br/>#{format_as_date_time(p.created_at)}".html_safe
+      .media-right
+        .btn-group-vertical.btn-group-xs{:role => "group"}
+          = link_to download_image_path(p), :class => "btn btn-primary" do
+            %i.fa.fa-download
+            Download
+          - if can? :delete, p
+            = link_to p, :method => :delete, :class => "btn btn-warning", :data => { :confirm => 'Are you sure you want to remove this image?' } do
+              %i.fa.fa-trash
+              Delete

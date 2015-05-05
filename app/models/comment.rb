@@ -71,7 +71,7 @@ class Comment < ActiveRecord::Base
     comment
   end
 
-  # Return the organiation of the owning object so instances can be index using
+  # Return the organization of the owning object so instances can be index using
   # the keyword indexer
   def organization
     if commentable.respond_to? :organization

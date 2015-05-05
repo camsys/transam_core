@@ -4,10 +4,10 @@ class DocumentsController < NestedResourceController
   # GET /documents
   # GET /documents.json
   def index
-       
+
     @documentable = find_resource
     @documents = @documentable.documents
-  
+
   end
 
   # GET /documents/new
@@ -24,13 +24,13 @@ class DocumentsController < NestedResourceController
   end
 
   def download
-    
+
     if @document.nil?
       notify_user(:alert, 'Record not found!')
       redirect_to( root_path )
-      return            
+      return
     end
-    # read the attachment 
+    # read the attachment
     content = open(@document.document.url, "User-Agent" => "Ruby/#{RUBY_VERSION}") {|f| f.read}
     # Send to the client
     send_data content, :filename => @document.original_filename
@@ -64,7 +64,7 @@ class DocumentsController < NestedResourceController
 
     respond_to do |format|
       if @document.update(document_params)
-        notify_user(:notice, 'Document was successfully updated.')   
+        notify_user(:notice, 'Document was successfully updated.')
         format.html { redirect_to get_resource_url(@documentable) }
         format.json { head :no_content }
       else
@@ -78,10 +78,10 @@ class DocumentsController < NestedResourceController
   # DELETE /documents/1.json
   def destroy
 
-    @documentable = @document.documentable    
+    @documentable = @document.documentable
     @document.destroy
-    
-    notify_user(:notice, 'Document was successfully removed.')   
+
+    notify_user(:notice, 'Document was successfully removed.')
     respond_to do |format|
       format.html { redirect_to get_resource_url(@documentable) }
       format.json { head :no_content }
@@ -89,10 +89,10 @@ class DocumentsController < NestedResourceController
   end
 
   private
-    
+
   # Use callbacks to share common setup or constraints between actions.
   def set_document
-    @document = Document.find_by_object_key(params[:id])
+    @document = Document.find_by(:object_key => params[:id])
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
