@@ -1,15 +1,22 @@
 require 'rails_helper'
 
-# Specs in this file have access to a helper object that includes
-# the NoticesHelper. For example:
-#
-# describe NoticesHelper do
-#   describe "string concat" do
-#     it "concats two strings with spaces" do
-#       expect(helper.concat_strings("this","that")).to eq("this that")
-#     end
-#   end
-# end
 RSpec.describe NoticesHelper, :type => :helper do
-  pending "add some examples to (or delete) #{__FILE__}"
+  let(:notice)  {build_stubbed(:notice)}
+
+  it '#notice_endpoints' do
+    notice.display_datetime = DateTime.new(2014, 10, 17, 0)
+    notice.end_datetime     = DateTime.new(2014, 10, 17, 10, 30) # 10.5 hours later
+    puts notice.display_datetime
+    puts notice.end_datetime
+    result = "#{notice.display_datetime.strftime('%b %d, %Y %l:%M%p')} - #{notice.end_datetime.strftime('%b %d, %Y %l:%M%p')}"
+    expect(notice_endpoints(notice)).to eq(result)
+  end
+
+  it '#notice_title' do
+    expect(notice_title(notice)).to eq("Test Subject") #if active
+
+    notice.active = false
+    expect(notice_title(notice)).to eq("Test Subject<small class='text-danger'> (Inactive)</small>") #if inactive
+  end
+
 end

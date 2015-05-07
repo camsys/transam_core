@@ -168,8 +168,28 @@ RSpec.describe Asset, :type => :model do
     end
   end
 
-  describe "#initialize_policy_items" do #pending
-    pending "Need some specs"
+  describe "#initialize_policy_items" do
+    class TestOrg < Organization
+      def get_policy
+        return Policy.where("`organization_id` = ?",self.id).order('created_at').last
+      end
+    end
+
+    class Vehicle < Asset; end
+
+    before(:all) do
+      @organization = create(:organization)
+      @test_asset = create(:buslike_asset, :organization => @organization)
+      @policy = create(:policy, :organization => @organization)
+    end
+
+    it 'sets expected useful life if policy and policy item exists' do
+      @policy_item = create(:policy_item, :policy => @policy, :asset_subtype => @test_asset.asset_subtype, :max_service_life_months => 123)
+
+      @test_asset.initialize_policy_items
+      expect(@test_asset.expected_useful_life).to eq(@policy_item.max_service_life_months)
+    end
+
   end
 
   describe '#copy' do
@@ -215,16 +235,27 @@ RSpec.describe Asset, :type => :model do
     end
   end
 
+  ###           METHODS USING CALCULATORS             ###
+  ### actual calculations tested in calculator rspec  ###
   describe '#calculate_replacement_year' do
-    pending "I need to learn about policies"
+    it 'is nil if disposed' do
+      buslike_asset.disposition_date = Date.today
+      expect(buslike_asset.calculate_replacement_year).to be nil
+    end
   end
 
   describe '#calculate_estimated_replacement_year' do
-    pending "I need to learn about policies"
+    it 'is nil if disposed' do
+      buslike_asset.disposition_date = Date.today
+      expect(buslike_asset.calculate_estimated_replacement_year).to be nil
+    end
   end
 
   describe '#update_sogr' do
-    pending "I need to learn about policies"
+    it 'returns if disposed' do
+      buslike_asset.disposition_date = Date.today
+      expect(buslike_asset.update_sogr).to be nil
+    end
   end
 
   ################ TESTS THAT ASSOCIATIONS HOLD ON CRUD METHODS ################
