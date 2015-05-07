@@ -235,6 +235,7 @@ class Asset < ActiveRecord::Base
     :purchase_cost,
     :purchase_date,
     :purchased_new,
+    :warranty_date,
     :in_service_date,
     :policy_replacement_year,
     :expected_useful_life,
@@ -391,6 +392,7 @@ class Asset < ActiveRecord::Base
       :purchase_cost => self.purchase_cost,
       :purchase_date => self.purchase_date,
       :purchased_new => self.purchased_new,
+      :warranty_date => self.warranty_date,
       :in_service_date => self.in_service_date,
       :vendor_id => self.vendor.present? ? self.vendor.to_s : nil,
 
@@ -994,6 +996,7 @@ class Asset < ActiveRecord::Base
   def set_defaults
     self.purchase_date ||= Date.today
     self.in_service_date ||= self.purchase_date
+    self.warranty_date ||= self.purchase_date
     self.manufacture_year ||= Date.today.year
     self.purchased_new = self.purchased_new.nil? ? true : self.purchased_new
   end
