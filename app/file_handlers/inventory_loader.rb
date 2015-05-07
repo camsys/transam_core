@@ -9,25 +9,25 @@
 class InventoryLoader
 
   attr_accessor :upload
-  
+
   def comments?
-    @comments.count > 0 
-  end  
-  
+    @comments.count > 0
+  end
+
   def warnings?
-    @warnings.count > 0 
-  end  
+    @warnings.count > 0
+  end
   def errors?
-    @errors.count > 0 
+    @errors.count > 0
   end
   def comments
     @comments
   end
-  
+
   def warnings
     @warnings
   end
-  
+
   def errors
     @errors
   end
@@ -37,21 +37,24 @@ class InventoryLoader
   def is_number?(val)
     Float(val) != nil rescue false
   end
-  
+
   def as_boolean(cell_val)
-    return false if cell_val.blank?
-    return cell_val.to_s.start_with?("Y", "y")
+    if cell_val.blank?
+      false
+    else
+      (cell_val.to_s.start_with?("Y", "y", "T", "t"))
+    end
   end
 
   def as_year(cell_val)
     #Rails.logger.debug "Converting  to year '#{cell_val}'"
     val = as_integer(cell_val)
-    if val < 50 
+    if val < 50
       val += 2000
     end
     val
   end
-  
+
   # Roo parses date and datetime formatted cells to the corresponding class
   # so we check to see if they are already processed otherwise we attempt
   # to parse the string value
@@ -86,7 +89,7 @@ class InventoryLoader
     val = as_float(cell_val) + 0.5
     val.to_i
   end
-  
+
   def as_string(cell_val)
     # Check to see if the spreadsheet encoded this as a number
     #if cell_val.is_a?(Float)
@@ -95,10 +98,10 @@ class InventoryLoader
     #else
       val = cell_val.to_s
     #end
-    
+
     val
   end
-    
+
   # Return the manufacturer for the asset, if not found, Unknown is returned
   def get_manufacturer(manufacturer_str, is_rail)
     filter = is_rail ? "rail" : "non-rail"
@@ -109,13 +112,13 @@ class InventoryLoader
     result
   end
 
-  
+
   private
-  
+
   def initialize
     @warnings = []
     @errors   = []
     @comments = []
   end
-  
+
 end
