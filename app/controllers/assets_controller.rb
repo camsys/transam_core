@@ -589,6 +589,7 @@ class AssetsController < AssetAwareController
   def reformat_date_fields
     params[:asset][:purchase_date] = reformat_date(params[:asset][:purchase_date]) unless params[:asset][:purchase_date].blank?
     params[:asset][:in_service_date] = reformat_date(params[:asset][:in_service_date]) unless params[:asset][:in_service_date].blank?
+    params[:asset][:warranty_date] = reformat_date(params[:asset][:warranty_date]) unless params[:asset][:warranty_date].blank?
   end
 
   # Manage the vendor_id/vendor_name
