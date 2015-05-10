@@ -35,7 +35,6 @@ condition_types = [
 ]
 
 disposition_types = [
-  {:active => 1, :name => 'Unknown',      :code => 'U', :description => 'Asset disposition is unknown.'},
   {:active => 1, :name => 'Public Sale',  :code => 'P', :description => 'Sold at public auction or other method.'},
   {:active => 1, :name => 'Transferred',  :code => 'T', :description => 'Transferred to another transportation provider.'},
   {:active => 1, :name => 'Reprovisioned',:code => 'R', :description => 'Reprovisioned as a spare or backup.'},
@@ -43,7 +42,6 @@ disposition_types = [
 ]
 
 service_status_types = [
-  {:active => 1, :name => 'Unknown',          :code => 'U', :description => 'Asset service status is unknown.'},
   {:active => 1, :name => 'In Service',       :code => 'I', :description => 'Asset is in service.'},
   {:active => 1, :name => 'Out of Service',   :code => 'O', :description => 'Asset is temporarily out of service.'},
   {:active => 1, :name => 'Spare',            :code => 'S', :description => 'Asset has been reprovisioned as a spare.'},
@@ -105,6 +103,7 @@ web_browser_types = [
   {:active => 1, :name => 'Microsoft IE 9',      :description => 'IE 9'},
   {:active => 1, :name => 'Microsoft IE 10',     :description => 'IE 10'},
   {:active => 1, :name => 'Microsoft IE 11',     :description => 'IE 11'},
+  {:active => 1, :name => 'Microsoft Spartan',   :description => 'Spartan'},
   {:active => 1, :name => 'Apple Safari',        :description => 'Safari'},
   {:active => 1, :name => 'Google Chrome',       :description => 'Chrome'},
   {:active => 1, :name => 'Mozilla Firefox',     :description => 'Firefox'},
