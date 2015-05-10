@@ -32,13 +32,14 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
     slopes = calculate_slope(asset, min_rating, max_rating)
 
     # determine the scale factor to make the mileage in the same interval as condition
-    if policy_item.max_service_life_miles.nil?
-      scale_factor = 1.0
-    else
-      scale_factor = (max_rating - condition_threshold) / policy_item.max_service_life_miles
+    scale_factor = 1.0
+    if asset.policy_rule.respond_to? :max_service_life_miles
+      unless policy_item.max_service_life_miles.nil?
+        scale_factor = (max_rating - condition_threshold) / policy_item.max_service_life_miles
+      end
     end
 
-    min_slope = [slopes[:condition_slope],slopes[:mileage_slope]*scale_factor].min
+    min_slope = [slopes[:condition_slope], slopes[:mileage_slope] * scale_factor].min
     est_rating = max_rating + (min_slope * asset.age)
     Rails.logger.debug "est rating = #{est_rating}"
     # make sure we don't go below the minimum. This is possible as the slope can extend infinitely for extreme cases
@@ -83,13 +84,15 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
     end
 
     # mileage
-    m = slopes[:mileage_slope]
-    if m.abs.between?(0.00001, 0.99999)
-      b = policy_item.max_service_life_miles
-      y = 0
-      x = (y - b) / m
-      # Take care of any rounding errors
-      years_mileage = (x + 0.1).to_i
+    if asset.policy_rule.respond_to? :max_service_life_miles
+      m = slopes[:mileage_slope]
+      if m.abs.between?(0.00001, 0.99999)
+        b = asset.policy_rule.max_service_life_miles
+        y = 0
+        x = (y - b) / m
+        # Take care of any rounding errors
+        years_mileage = (x + 0.1).to_i
+      end
     end
 
     # return the last year that the asset is viable
@@ -151,13 +154,15 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
         Rails.logger.debug "Slope = #{condition_slope}."
 
         # See if we can do a mileage calculation
-        if policy_item.max_service_life_miles && age_at_report > 0
-          # Here the slope is based on the number of miles remaining. This keeps the
-          # slope in the same direction
-          y1 = policy_item.max_service_life_miles
-          y2 = policy_item.max_service_life_miles - (asset.reported_mileage.nil? ? 0 : asset.reported_mileage)
-          # get the slope
-          mileage_slope = slope(x1, y1, x2, y2)
+        if policy_item.respond_to? :max_service_life_miles
+          if policy_item.max_service_life_miles && age_at_report > 0
+            # Here the slope is based on the number of miles remaining. This keeps the
+            # slope in the same direction
+            y1 = policy_item.max_service_life_miles
+            y2 = policy_item.max_service_life_miles - (asset.reported_mileage.nil? ? 0 : asset.reported_mileage)
+            # get the slope
+            mileage_slope = slope(x1, y1, x2, y2)
+          end
         end
       end
 

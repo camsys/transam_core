@@ -969,7 +969,7 @@ class Asset < ActiveRecord::Base
     begin
       # Check to see if the asset should have been replaced before this year
       replacement_year = asset.policy_replacement_year
-      asset.in_backlog = replacement_year < Date.today.year
+      asset.in_backlog = replacement_year < current_fiscal_year_year
     rescue Exception => e
       Rails.logger.warn e.message
     end

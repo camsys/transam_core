@@ -12,7 +12,7 @@ class PurchasePricePlusInterestCalculator < CostCalculator
     calculate_on_date(asset)
   end
 
-  def calculate_on_date(asset,on_date=nil)
+  def calculate_on_date(asset, on_date=nil)
 
     Rails.logger.debug "PurchasePricePlusInterestCalculator.calculate(asset)"
 
