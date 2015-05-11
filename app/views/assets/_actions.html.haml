@@ -6,9 +6,10 @@
       %span.caret
     %ul.dropdown-menu.multi-level{:role => 'menu'}
 
-      - # Load module specific actions if they exist
+      - # Load module specific tabs if they exist
       - SystemConfig.transam_module_names.each do |mod|
-        = render :partial => "assets/#{mod}_detail_actions" rescue nil
+        - if lookup_context.template_exists?("#{mod}_detail_actions", 'assets', true)
+          = render :partial => "assets/#{mod}_detail_actions"
 
       - # Load other core actions last into the menu
       - if can? :update, @asset

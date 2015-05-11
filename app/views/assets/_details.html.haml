@@ -7,8 +7,10 @@
 .tab-content
   - # Load module specific tab content if they exist
   - SystemConfig.transam_module_names.each do |mod|
-    - if lookup_context.template_exists?("#{mod}_detail_tabs_content", 'assets', true)
-      = render :partial => "assets/#{mod}_detail_tabs_content"
+    - view_component = "#{mod}_detail_tabs_content"
+    - Rails.logger.debug "Checking for #{view_component}: Results = #{lookup_context.template_exists?(view_component, 'assets', true)}"
+    - if lookup_context.template_exists?(view_component, 'assets', true)
+      = render :partial => "assets/#{view_component}"
 
 = render 'detail_scripts'
 

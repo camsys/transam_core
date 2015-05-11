@@ -156,6 +156,10 @@ class AssetsController < AssetAwareController
     add_breadcrumb "#{@asset.asset_subtype.name}", inventory_index_path(:asset_subtype => @asset.asset_subtype)
     add_breadcrumb @asset.asset_tag, inventory_path(@asset)
 
+    # Set the asset class view var. This can be used to determine which view components
+    # are rendered, for example, which tabs and action items the user sees
+    @asset_class_name = @asset.class.name.underscore
+
     # get the @prev_record_path and @next_record_path view vars
     get_next_and_prev_object_keys(@asset, INDEX_KEY_LIST_VAR)
     @prev_record_path = @prev_record_key.nil? ? "#" : inventory_path(@prev_record_key)
