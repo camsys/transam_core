@@ -308,7 +308,7 @@ class UsersController < OrganizationAwareController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def form_params
-    params.require(:user).permit(user_allowable_params)
+    params.require(:user).permit(User.allowable_params)
   end
 
   # Callbacks to share common setup or constraints between actions.
