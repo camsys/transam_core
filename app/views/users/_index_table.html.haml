@@ -37,7 +37,6 @@
         %th.left.nowrap{:data => {:visible => 'false', :sortable => 'true'}} Last Login IP
         %th.right{:data => {:visible => 'false', :sortable => 'true'}} Num Failed
         %th.center{:data => {:sortable => 'true'}} Locked
-        %th.left{:data => {:visible => 'false', :sortable => 'true'}} Pwd Change
         %th.center{:data => {:sortable => 'true'}} Active
         %th.right{:data => {:sortable => 'true'}} Created At
         %th.right{:data => {:visible => 'false', :sortable => 'true'}} Updated At
@@ -63,7 +62,6 @@
           %td= u.last_sign_in_ip
           %td= format_as_integer(u.failed_attempts)
           %td= format_as_boolean(u.locked_at.present?)
-          %td= format_as_date_time(u.password_changed_at)
           %td= format_as_boolean(u.active)
           %td= format_as_date_time(u.created_at)
           %td= format_as_date_time(u.updated_at)
