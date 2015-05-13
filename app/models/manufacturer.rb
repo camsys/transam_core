@@ -3,7 +3,12 @@ class Manufacturer < ActiveRecord::Base
   has_many :assets
 
   # default scope
-  default_scope { where(:active => true).order('code') }
+  default_scope { order('code') }
+
+  # Manufacturers that are maked as active
+  scope :active, -> { where(:active => true) }
+  # Notices that are active and visible for a specific organization
+  scope :active_for_asset_type, -> (asset_type) { active.where("filter = ?", asset_type.class_name) }
 
   def self.search(text, exact = true, **params) # **params is a ruby parameter "hash-splat"
     if exact
@@ -22,7 +27,7 @@ class Manufacturer < ActiveRecord::Base
   end
 
   def full_name
-    "#{name} - #{filter.titleize}"
+    name
   end
 
   def to_s

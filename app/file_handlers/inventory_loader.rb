@@ -103,9 +103,8 @@ class InventoryLoader
   end
 
   # Return the manufacturer for the asset, if not found, Unknown is returned
-  def get_manufacturer(manufacturer_str, is_rail)
-    filter = is_rail ? "rail" : "non-rail"
-    result = Manufacturer.where('filter = ? AND code = ? OR name = ?', filter, manufacturer_str, manufacturer_str).first
+  def get_manufacturer(manufacturer_str, filter)
+    result = Manufacturer.where('filter = ? AND (code = ? OR name = ?)', filter, manufacturer_str, manufacturer_str).first
     if result.nil?
       result = Manufacturer.where('filter = ? AND name = ?', filter, @Unknown).first
     end

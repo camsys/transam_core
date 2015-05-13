@@ -135,11 +135,6 @@ class Organization < ActiveRecord::Base
     Asset.where(:organization_id => id, :asset_type_id => asset_type_id).group(:asset_subtype_id).count
   end
 
-  # Returns an array of manufacturers in use by this organization
-  def manufacturer_counts
-    Asset.unscoped.where('organization_id = ? AND manufacturer_id IS NOT NULL', id).group(:manufacturer_id).count
-  end
-
   # Returns true if the organization is of the specified class or has the specified class as
   # and ancestor (superclass).
   #
