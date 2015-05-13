@@ -121,22 +121,22 @@ class SearchesController < OrganizationAwareController
     @search_type = params[:search_type]
     if @search_type == ASSET_SEARCH_TYPE
       @searcher_klass = "AssetSearcher"
-      add_breadcrumb "Assets", inventory_index_path
+      add_breadcrumb "Assets", new_search_path(:search_type => ASSET_SEARCH_TYPE)
     elsif @search_type == CAPITAL_PLAN_SEARCH_TYPE
       @searcher_klass = "CapitalProjectSearcher"
-      add_breadcrumb "Capital Projects", capital_projects_path
+      add_breadcrumb "Capital Projects", new_search_path(:search_type => CAPITAL_PLAN_SEARCH_TYPE)
     elsif @search_type == ORGANIZATION_SEARCH_TYPE
       @searcher_klass = "OrganizationSearcher"
-      add_breadcrumb "Organizations", organizations_path
+      add_breadcrumb "Organizations", new_search_path(:search_type => ORGANIZATION_SEARCH_TYPE)
     elsif @search_type == USER_SEARCH_TYPE
       @searcher_klass = "UserSearcher"
-      add_breadcrumb "Users", users_path
+      add_breadcrumb "Users", new_search_path(:search_type => USER_SEARCH_TYPE)
     elsif @search_type == FUNDING_SOURCE_SEARCH_TYPE
       @searcher_klass = "FundingSourceSearcher"
-      add_breadcrumb "Funds", funding_sources_path
+      add_breadcrumb "Funds", new_search_path(:search_type => FUNDING_SOURCE_SEARCH_TYPE)
     elsif @search_type == FUNDING_LINE_ITEM_SEARCH_TYPE
       @searcher_klass = "FundingLineItemSearcher"
-      add_breadcrumb "Appropriations", funding_line_items_path
+      add_breadcrumb "Appropriations", new_search_path(:search_type => FUNDING_LINE_ITEM_SEARCH_TYPE)
     else
       notify_user(:alert, "Something went wrong. Can't determine type of search to perform.")
       redirect_to root_path
