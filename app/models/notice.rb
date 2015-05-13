@@ -102,10 +102,14 @@ class Notice < ActiveRecord::Base
   #
   #------------------------------------------------------------------------------
 
-  scope :system_level_notices, -> { active.where("organization_id IS null").where("end_datetime > ?", DateTime.current) }
-  scope :active_for_organization, -> (org) { active.where("organization_id IS null OR organization_id = ?", org.id).where("end_datetime > ?", DateTime.current) }
+  # Notices that are maked as active
   scope :active, -> { where(:active => true) }
-  scope :visible, -> { active.where("end_datetime > ?", DateTime.current) }
+  # Notices that have a start time before current date/time and an end time before current date/time
+  scope :visible, -> { active.where("? BETWEEN display_datetime AND end_datetime", DateTime.current) }
+  # Notices that are for the entire set of organizations
+  scope :system_level_notices, -> { active.visible.where("organization_id IS null") }
+  # Notices that are active and visible for a specific organization
+  scope :active_for_organization, -> (org) { active.visible.where("organization_id IS null OR organization_id = ?", org.id) }
 
   #------------------------------------------------------------------------------
   #
