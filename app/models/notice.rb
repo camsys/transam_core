@@ -127,6 +127,14 @@ class Notice < ActiveRecord::Base
   #
   #------------------------------------------------------------------------------
 
+  def visible?
+    now = Time.now
+    if display_datetime < now and now < end_datetime
+      true
+    else
+      false
+    end
+  end
   # Return the duration of a notice's display in hours
   def duration_in_hours
     float_duration = (end_datetime - display_datetime)/3600
@@ -158,8 +166,10 @@ class Notice < ActiveRecord::Base
   # Before validating, ensure that we have converted from virtual attributes
   # to native ones
   def calculate_datetimes_from_virtual_attributes
-    self.display_datetime ||= parsed_display_datetime_from_virtual_attributes
-    self.end_datetime     ||= parsed_end_datetime_from_virtual_attributes
+
+    self.display_datetime = parsed_display_datetime_from_virtual_attributes
+    self.end_datetime     = parsed_end_datetime_from_virtual_attributes
+  
   end
 
   # Returns nil if a bad parse
