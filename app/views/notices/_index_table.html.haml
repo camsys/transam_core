@@ -20,6 +20,8 @@
     %th.left{:data => {:sortable => 'true'}} Type
     %th.left{:data => {:sortable => 'true'}} Subject
     %th.left{:data => {:sortable => 'true'}} Summary
+    %th.center{:data => {:sortable => 'true'}} Visible
+    %th.right{:data => {:sortable => 'true'}} Start Display
     %th.right{:data => {:sortable => 'true'}} Display Until
     %th.right{:data => {:visible => 'false', :sortable => 'true'}} Created At
     %th.right{:data => {:visible => 'false', :sortable => 'true'}} Updated At
@@ -32,22 +34,24 @@
         %td.left= notice.notice_type
         %td.left= notice.subject
         %td.left= notice.summary.html_safe
+        %td.center= format_as_boolean(notice.visible?)
+        %td.right= format_as_date_time(notice.display_datetime)
         %td.right= format_as_date_time(notice.end_datetime)
         %td.right= format_as_date_time(notice.created_at)
         %td.right= format_as_date_time(notice.updated_at)
         - if can? :update, notice
           %td.center
             - if notice and notice.end_datetime > DateTime.current and notice.active
-              = link_to edit_notice_path(notice) do
+              = link_to edit_notice_path(notice), :title => "Edit this notice." do
                 %i.fa.fa-fw.fa-edit.action-icon.text-info
             - if notice.end_datetime > DateTime.current and notice.active
-              = link_to deactivate_notice_path(notice) do
+              = link_to deactivate_notice_path(notice), :title => "Deactivate this notice. The notice will no longer show in the dashboard." do
                 %i.fa.fa-fw.fa-ban.action-icon.text-warning
             - if notice.end_datetime < DateTime.current or not notice.active
-              = link_to reactivate_notice_path(notice) do
+              = link_to reactivate_notice_path(notice), :title => "Reactivate this notice." do
                 %i.fa.fa-fw.fa-check.action-icon.text-success
             - if can? :delete, notice
-              = link_to notice_path(notice), :method => :delete, :data => {:confirm => "Are you sure you want to remove this notice? The action can't be undone."} do
+              = link_to notice_path(notice), :title => "Remove this notice", :method => :delete, :data => {:confirm => "Are you sure you want to remove this notice? The action can't be undone."} do
                 %i.fa.fa-fw.fa-trash-o.action-icon.text-danger
 
 = render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :path_pattern => notice_path("xxx")}
