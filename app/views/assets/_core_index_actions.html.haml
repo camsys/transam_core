@@ -9,4 +9,4 @@
       %li.divider
       - Organization.where('id IN (?)', @organization_list).each do |org|
         %li
-          = link_to org.coded_name, inventory_index_path(:org_id => org.id, :asset_type => @asset_type, :asset_subtype => @asset_subtype, :asset_group => @asset_group, :manufacturer_id => @manufacturer_id))
+          = link_to org.coded_name, inventory_index_path(:org_id => org.id, :asset_type => @asset_type, :asset_subtype => @asset_subtype, :asset_group => @asset_group, :manufacturer_id => @manufacturer_id)
