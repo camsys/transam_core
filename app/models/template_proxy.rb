@@ -1,4 +1,3 @@
-
 class TemplateProxy < Proxy
 
   # General state variables
@@ -19,7 +18,7 @@ class TemplateProxy < Proxy
     end
 
     @asset_types ||= []
-    
+
   end
 
 end

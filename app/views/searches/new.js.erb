@@ -1,3 +1,4 @@
 $('#spinner').hide();
 $('#results_table').show();
 $('#results_table').html(" <%= escape_javascript(render 'results') %>");
+$('#results_table').find('table').bootstrapTable();

@@ -32,12 +32,10 @@
           = render :partial => "assets/#{mod}_asset_dt_head"
 
       %th.center.sorting_disabled.icon-column Flags
-      %th.center.sorting_disabled.icon-column
-        %i.fa.fa-info-circle
 
   %tbody
     - assets.includes(:organization, :asset_subtype).each do |a|
-      %tr{:data => {:action_path => inventory_path(a)}}
+      %tr{:id => a.object_key, :class => 'action-path'}
         - SystemConfig.transam_module_names.each do |mod|
           - if lookup_context.template_exists?("#{mod}_asset_dt_columns", "assets", true)
             = render :partial => "assets/#{mod}_asset_dt_columns", :locals => {:a => a }
@@ -46,11 +44,5 @@
           = format_as_boolean(a.needs_attention?, 'fa-flag', 'text-warning')
           = format_as_boolean((a.documents.count > 0), 'fa-files-o')
           = format_as_boolean((a.comments.count > 0), 'fa-comments')
-        %td.center.icon-column
-          = render :partial => 'assets/asset_info_detail_popup', :locals => {:asset => a}
 
-:javascript
-
-  $(window).resize(function() {
-    $("##{table_dom_id}").bootstrapTable('resetView');
-  });
+= render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :path_pattern => inventory_path("xxx")}
