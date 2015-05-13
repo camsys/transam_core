@@ -7,7 +7,6 @@
         = f.input :keyword, :placeholder => "Enter A Search Term"
         = f.input :asset_type_id, :collection => AssetType.all, :label => "Type"
         = f.input :asset_subtype_id, :collection => AssetSubtype.all, :label => "Subtype"
-        = f.input :parent_id
         = f.input :disposition_date, :collection => get_fiscal_years
         = f.input :in_backlog, :as => :boolean, :label => "In Backlog"
     .col-lg-3.col-md-6
@@ -19,11 +18,11 @@
             %button.btn.btn-default.dropdown-toggle{"data-toggle" => "dropdown", :type => "button"}
             %ul.dropdown-menu{:role => "menu"}
               %li
-                %a{:data => {:compare => "-1"}} Before 
+                %a{:data => {:compare => "-1"}} Before
               %li
-                %a{:data => {:compare => "0"}} During 
+                %a{:data => {:compare => "0"}} During
               %li
-                %a{:data => {:compare => "1"}} After 
+                %a{:data => {:compare => "1"}} After
             = f.input_field :manufacture_date_comparator, :as => :hidden, :value => '0'
           = f.input_field :manufacture_date, :class => "form-control"
         = f.input :purchase_cost, :wrapper => :vertical_prepend do
@@ -41,11 +40,11 @@
             %button.btn.btn-default.dropdown-toggle{"data-toggle" => "dropdown", :type => "button"}
             %ul.dropdown-menu{:role => "menu"}
               %li
-                %a{:data => {:compare => "-1"}} Before 
+                %a{:data => {:compare => "-1"}} Before
               %li
-                %a{:data => {:compare => "0"}} During 
+                %a{:data => {:compare => "0"}} During
               %li
-                %a{:data => {:compare => "1"}} After 
+                %a{:data => {:compare => "1"}} After
             = f.input_field :purchase_date_comparator, :as => :hidden, :value => '0'
           = f.input_field :purchase_date, :class => "form-control"
         = f.input :estimated_value, :wrapper => :vertical_prepend do
@@ -69,7 +68,7 @@
               %li
                 %a{:data => {:compare => "-1"}} Less Than
               %li
-                %a{:data => {:compare => "1"}} Greater Than 
+                %a{:data => {:compare => "1"}} Greater Than
             = f.input_field :reported_mileage_comparator, :as => :hidden, :value => '1'
           = f.input_field :reported_mileage, :class => "form-control"
         = f.input :scheduled_replacement_year, :wrapper => :vertical_prepend do
@@ -77,11 +76,11 @@
             %button.btn.btn-default.dropdown-toggle{"data-toggle" => "dropdown", :type => "button"}
             %ul.dropdown-menu{:role => "menu"}
               %li
-                %a{:data => {:compare => "-1"}} Before 
+                %a{:data => {:compare => "-1"}} Before
               %li
-                %a{:data => {:compare => "0"}} During 
+                %a{:data => {:compare => "0"}} During
               %li
-                %a{:data => {:compare => "1"}} After 
+                %a{:data => {:compare => "1"}} After
             = f.input_field :scheduled_replacement_year_comparator, :as => :hidden, :value => '0'
           = f.input_field :scheduled_replacement_year, :collection => get_fiscal_years, :class => "form-control"
         = f.input :policy_replacement_year, :wrapper => :vertical_prepend, :label => "Policy Replacement Year" do
@@ -89,11 +88,11 @@
             %button.btn.btn-default.dropdown-toggle{"data-toggle" => "dropdown", :type => "button"}
             %ul.dropdown-menu{:role => "menu"}
               %li
-                %a{:data => {:compare => "-1"}} Before 
+                %a{:data => {:compare => "-1"}} Before
               %li
-                %a{:data => {:compare => "0"}} During 
+                %a{:data => {:compare => "0"}} During
               %li
-                %a{:data => {:compare => "1"}} After 
+                %a{:data => {:compare => "1"}} After
             = f.input_field :policy_replacement_year_comparator, :as => :hidden, :value => '0'
           = f.input_field :policy_replacement_year, :collection => get_fiscal_years, :class => "form-control"
         = f.input :condition_type_ids, :label => "Condition Type", :collection => ConditionType.all
