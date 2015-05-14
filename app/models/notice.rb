@@ -167,9 +167,9 @@ class Notice < ActiveRecord::Base
   # to native ones
   def calculate_datetimes_from_virtual_attributes
 
-    self.display_datetime = parsed_display_datetime_from_virtual_attributes
-    self.end_datetime     = parsed_end_datetime_from_virtual_attributes
-  
+    self.display_datetime = parsed_display_datetime_from_virtual_attributes || (DateTime.current.beginning_of_hour)
+    self.end_datetime     = parsed_end_datetime_from_virtual_attributes || display_datetime.end_of_day
+
   end
 
   # Returns nil if a bad parse
