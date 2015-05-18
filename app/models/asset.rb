@@ -162,7 +162,7 @@ class Asset < ActiveRecord::Base
   # Returns a list of assets that are still operational
   scope :operational, -> { where('assets.disposition_date IS NULL') }
   # Returns a list of asset that operational and are marked as being in service
-  scope :in_service,  -> { where('assets.disposition_date IS NULL AND assets.service_status_type_id = 2')}
+  scope :in_service,  -> { where('assets.disposition_date IS NULL AND assets.service_status_type_id = 1')}
   #------------------------------------------------------------------------------
   # Lists. These lists are used by derived classes to make up lists of attributes
   # that can be used for operations like full text search etc. Each derived class
