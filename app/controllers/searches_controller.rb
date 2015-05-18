@@ -60,7 +60,7 @@ class SearchesController < OrganizationAwareController
 
     add_breadcrumb "Keyword Search: '#{@search_text}'"
 
-    if @search_text.blank?
+    if @search_text.blank? or @search_text.length < 2
       @keyword_search_results = KeywordSearchIndex.where("1 = 2")
     else
 
@@ -76,11 +76,9 @@ class SearchesController < OrganizationAwareController
       values << @organization_list
 
       search_params = []
-      @search_text.split(" ").each_with_index do |search_string|
-        unless search_string.length < 2
-          search_params << 'search_text LIKE ?'
-          values << "%#{search_string}%"
-        end
+      @search_text.split(",").each_with_index do |search_string|
+        search_params << 'search_text LIKE ?'
+        values << "%#{search_string.strip}%"
       end
 
       where_clause << search_params.join(' OR ')
