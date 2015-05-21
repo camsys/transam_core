@@ -87,6 +87,13 @@ class AbstractFileHandler
 
     loader = klass.new
     loader.process(asset, cells)
+
+    # Only proceed if an event was generated
+    if loader.event.nil?
+      add_processing_message(3, 'success', "Nothing to do.")
+      return
+    end
+    
     if loader.errors?
       row_errored = true
       loader.errors.each { |e| add_processing_message(3, 'warning', e)}
@@ -106,7 +113,7 @@ class AbstractFileHandler
 
   end
 
-  
+
   def is_number?(val)
     Float(val) != nil rescue false
   end
