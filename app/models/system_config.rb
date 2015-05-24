@@ -34,7 +34,6 @@ class SystemConfig < ActiveRecord::Base
   validates :num_reporting_years,         :presence => true
   validates :asset_base_class_name,       :presence => true
   validates :max_rows_returned,           :presence => true
-  validates :data_file_path,              :presence => true
 
   #------------------------------------------------------------------------------
   #
