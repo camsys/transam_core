@@ -10,14 +10,13 @@ class Manufacturer < ActiveRecord::Base
   # Notices that are active and visible for a specific organization
   scope :active_for_asset_type, -> (asset_type) { active.where("filter = ?", asset_type.class_name) }
 
-  def self.search(text, exact = true, **params) # **params is a ruby parameter "hash-splat"
+  def self.search(text, filter, exact = true)
     if exact
-      x = where('name = ? OR code = ?', text, text)
+      x = where('(name = ? OR code = ?) AND filter = ?', text, text, filter)
     else
-      val = "%#{text.upcase}%"
-      x = where('UPPER(name) LIKE ? OR UPPER(code) LIKE ?', val, val)
+      val = "%#{text}%"
+      x = where('(name LIKE ? OR code LIKE ?) AND filter = ?', val, val, filter)
     end
-    x = x.where(params) if params
     x.first
   end
 
