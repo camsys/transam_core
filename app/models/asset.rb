@@ -782,6 +782,7 @@ class Asset < ActiveRecord::Base
   # Creates a duplicate that has all asset-specific attributes nilled
   def copy(cleanse = true)
     a = dup
+    a.object_key = nil
     a.cleanse if cleanse
     a
   end

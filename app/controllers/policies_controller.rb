@@ -88,6 +88,7 @@ class PoliciesController < OrganizationAwareController
 
     old_policy_name = @policy.name
     new_policy = @policy.dup
+    new_policy.object_key = nil
     new_policy.parent = @policy
     new_policy.organization = @organization
     new_policy.name = "Copy of " + @policy.name
