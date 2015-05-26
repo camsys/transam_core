@@ -47,7 +47,7 @@ class TransamController < ApplicationController
       "unauthorized"
     end
   end
-    
+
   protected
 
   # Stores the object keys of a list of objects in the session
