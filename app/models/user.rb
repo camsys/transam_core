@@ -32,6 +32,10 @@ class User < ActiveRecord::Base
   # every user belongs to a single organizations
   belongs_to :organization
 
+  # Every user can have a weather code associated with their city. This is used
+  # to display local weather on the dashboard
+  belongs_to  :weather_code
+
   # every user has access to 0 or more organizations for reporting
   has_and_belongs_to_many :organizations, :join_table => 'users_organizations'
   has_many :organization_users, through: :organizations, :source => 'users'
@@ -103,6 +107,7 @@ class User < ActiveRecord::Base
     :remember_me,
     :external_id,
     :num_table_rows,
+    :weather_code_id,
     :active,
     :address1,
     :address2,
@@ -127,6 +132,15 @@ class User < ActiveRecord::Base
   # Instance Methods
   #
   #------------------------------------------------------------------------------
+
+  # Returns the default weather code for the users dashboard
+  def default_weather_code
+    if weather_code
+      weather_code.code
+    else
+      Rails.application.config.default_weather_code
+    end
+  end
 
   # Get the new messages for the current user
   def new_messages

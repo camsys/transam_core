@@ -5,7 +5,7 @@
       %frameset
         %legend User Details
         - if current_user.organizations.count > 1
-          = f.association :organization, :ion => current_user.organizations, :label_method => 'coded_name'
+          = f.association :organization, :collection => current_user.organizations, :label_method => 'coded_name'
         - else
           = f.association :organization, :placeholder => current_user.organization.id, :as => :hidden
 
