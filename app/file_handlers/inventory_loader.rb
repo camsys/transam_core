@@ -103,10 +103,16 @@ class InventoryLoader
   end
 
   # Return the manufacturer for the asset, if not found, Unknown is returned
-  def get_manufacturer(manufacturer_str, filter)
-    result = Manufacturer.where('filter = ? AND (code = ? OR name = ?)', filter, manufacturer_str, manufacturer_str).first
+  def get_manufacturer(manufacturer_str, asset)
+    # See if we can get a correct hit
+    result = Manufacturer.where('filter = ? AND (code = ? OR name = ?)', asset.class.name, manufacturer_str, manufacturer_str).first
+    # Nothing so try matching the start of the name
     if result.nil?
-      result = Manufacturer.where('filter = ? AND name = ?', filter, @Unknown).first
+      result = Manufacturer.where('filter = ? AND name LIKE ?', asset.class.name, "#{manufacturer_str}%").first
+    end
+    # Still nothing! Default to class unknown
+    if result.nil?
+      result = Manufacturer.where('filter = ? AND name = ?', asset.class.name, "Unknown").first
     end
     result
   end
