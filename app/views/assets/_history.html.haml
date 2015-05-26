@@ -13,7 +13,7 @@
           %th Update
           %th Notes
       %tbody
-        - @asset.history.order(:created_at => :desc).each do |evt|
+        - @asset.history.order(:event_date => :desc, :created_at => :desc).each do |evt|
           %tr{:data => {:action_path => "#{inventory_asset_event_path(@asset, evt)}"}}
             %td
               = evt.asset_event_type.description
