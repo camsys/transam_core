@@ -18,7 +18,7 @@ class SearchesController < OrganizationAwareController
   before_filter :set_view_vars,     :only => [:create, :new]
 
   def create
-
+    params[:searcher][:organization_ids] = @organization_list
     @searcher = @searcher_klass.constantize.new(params[:searcher])
     @searcher.user = current_user
     @data = @searcher.data
@@ -85,6 +85,7 @@ class SearchesController < OrganizationAwareController
       where_clause << ')'
 
       @keyword_search_results = KeywordSearchIndex.where(where_clause, *values)
+
     end
 
     @num_rows = @keyword_search_results.count

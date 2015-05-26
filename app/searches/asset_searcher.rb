@@ -1,19 +1,20 @@
-# Inventory searcher. 
+# Inventory searcher.
 # Designed to be populated from a search form using a new/create controller model.
 #
 class AssetSearcher < BaseSearcher
-  
+
   # Include the numeric sanitizers mixin
   include TransamNumericSanitizers
 
-  # From the application config    
-  ASSET_BASE_CLASS_NAME     = SystemConfig.instance.asset_base_class_name   
+  # From the application config
+  ASSET_BASE_CLASS_NAME     = SystemConfig.instance.asset_base_class_name
 
   # add any search params to this list.  Grouped based on their logical queries
-  attr_accessor :organization_id,
+  attr_accessor :organization_ids,
+                :organization_id,
                 :district_id,
-                :asset_type_id, 
-                :asset_subtype_id, 
+                :asset_type_id,
+                :asset_subtype_id,
                 :manufacturer_id,
                 :parent_id,
                 :disposition_date,
@@ -46,7 +47,7 @@ class AssetSearcher < BaseSearcher
                 :ada_accessible_ramp,
                 :fta_emergency_contingency_fleet
 
-  
+
   # Return the name of the form to display
   def form_view
     'asset_search_form'
@@ -55,11 +56,11 @@ class AssetSearcher < BaseSearcher
   def results_view
     'asset_search_results_table'
   end
-               
+
   def initialize(attributes = {})
-    @klass = Object.const_get ASSET_BASE_CLASS_NAME  
+    @klass = Object.const_get ASSET_BASE_CLASS_NAME
     super(attributes)
-  end    
+  end
 
   def to_s
     queries.to_sql
@@ -68,7 +69,7 @@ class AssetSearcher < BaseSearcher
   def cache_variable_name
     AssetsController::INDEX_KEY_LIST_VAR
   end
-  
+
   private
 
   #---------------------------------------------------
@@ -94,7 +95,7 @@ class AssetSearcher < BaseSearcher
   def manufacturer_conditions
     @klass.where(manufacturer_id: manufacturer_id) unless manufacturer_id.blank?
   end
-  
+
   def district_type_conditions
     @klass.where(district_id: district_id) unless district_id.blank?
   end
@@ -102,7 +103,7 @@ class AssetSearcher < BaseSearcher
   def asset_type_conditions
     @klass.where(asset_type_id: asset_type_id) unless asset_type_id.blank?
   end
-    
+
   def asset_subtype_conditions
     @klass.where(asset_subtype_id: asset_subtype_id) unless asset_subtype_id.blank?
   end
@@ -118,11 +119,11 @@ class AssetSearcher < BaseSearcher
     unless scheduled_replacement_year.blank?
       case scheduled_replacement_year_comparator
       when "-1" # Before Year X
-        @klass.where("scheduled_replacement_year < ?", scheduled_replacement_year) 
+        @klass.where("scheduled_replacement_year < ?", scheduled_replacement_year)
       when "0" # During Year X
-        @klass.where("scheduled_replacement_year = ?", scheduled_replacement_year) 
+        @klass.where("scheduled_replacement_year = ?", scheduled_replacement_year)
       when "1" # After Year X
-        @klass.where("scheduled_replacement_year > ?", scheduled_replacement_year) 
+        @klass.where("scheduled_replacement_year > ?", scheduled_replacement_year)
       end
     end
   end
@@ -131,11 +132,11 @@ class AssetSearcher < BaseSearcher
     unless policy_replacement_year.blank?
       case policy_replacement_year_comparator
       when "-1" # Before Year X
-        @klass.where("policy_replacement_year < ?", policy_replacement_year) 
+        @klass.where("policy_replacement_year < ?", policy_replacement_year)
       when "0" # During Year X
-        @klass.where("policy_replacement_year = ?", policy_replacement_year) 
+        @klass.where("policy_replacement_year = ?", policy_replacement_year)
       when "1" # After Year X
-        @klass.where("policy_replacement_year > ?", policy_replacement_year) 
+        @klass.where("policy_replacement_year > ?", policy_replacement_year)
       end
     end
   end
@@ -145,11 +146,11 @@ class AssetSearcher < BaseSearcher
       reported_mileage_as_int = sanitize_to_int(reported_mileage)
       case reported_mileage_comparator
       when "-1" # Less than X miles
-        @klass.where("reported_mileage < ?", reported_mileage_as_int) 
+        @klass.where("reported_mileage < ?", reported_mileage_as_int)
       when "0" # Exactly X miles
-        @klass.where("reported_mileage = ?", reported_mileage_as_int) 
+        @klass.where("reported_mileage = ?", reported_mileage_as_int)
       when "1" # Greater than X miles
-        @klass.where("reported_mileage > ?", reported_mileage_as_int) 
+        @klass.where("reported_mileage > ?", reported_mileage_as_int)
       end
     end
   end
@@ -159,11 +160,11 @@ class AssetSearcher < BaseSearcher
       value_as_int = sanitize_to_int(estimated_value)
       case estimated_value_comparator
       when "-1" # Less than X miles
-        @klass.where("estimated_value < ?", value_as_int) 
+        @klass.where("estimated_value < ?", value_as_int)
       when "0" # Exactly X miles
-        @klass.where("estimated_value = ?", value_as_int) 
+        @klass.where("estimated_value = ?", value_as_int)
       when "1" # Greater than X miles
-        @klass.where("estimated_value > ?", value_as_int) 
+        @klass.where("estimated_value > ?", value_as_int)
       end
     end
   end
@@ -173,11 +174,11 @@ class AssetSearcher < BaseSearcher
       purchase_cost_as_float = sanitize_to_float(purchase_cost)
       case purchase_cost_comparator
       when "-1" # Less than X miles
-        @klass.where("purchase_cost < ?", purchase_cost) 
+        @klass.where("purchase_cost < ?", purchase_cost)
       when "0" # Exactly X miles
-        @klass.where("purchase_cost = ?", purchase_cost) 
+        @klass.where("purchase_cost = ?", purchase_cost)
       when "1" # Greater than X miles
-        @klass.where("purchase_cost > ?", purchase_cost) 
+        @klass.where("purchase_cost > ?", purchase_cost)
       end
     end
   end
@@ -224,10 +225,14 @@ class AssetSearcher < BaseSearcher
   #---------------------------------------------------
   # Custom Queries # When the logic does not fall into the above categories, place the method here
   #---------------------------------------------------
-    
+
   def organization_conditions
     if organization_id.blank?
-      @klass.where(organization_id: get_id_list(user.organizations))
+      if organization_ids.empty?
+        @klass.where(organization_id: get_id_list(user.organizations))
+      else
+        @klass.where(organization_id: organization_ids)
+      end
     else
       @klass.where(organization_id: organization_id)
     end
@@ -259,9 +264,9 @@ class AssetSearcher < BaseSearcher
       when "-1" # Before Year X
         @klass.where("purchase_date < ?", purchase_date )
       when "0" # During Year X
-        @klass.where("purchase_date >= ? AND purchase_date <= ?", purchase_date, purchase_date.end_of_year) 
+        @klass.where("purchase_date >= ? AND purchase_date <= ?", purchase_date, purchase_date.end_of_year)
       when "1" # After Year X
-        @klass.where("purchase_date > ?", purchase_date.end_of_year) 
+        @klass.where("purchase_date > ?", purchase_date.end_of_year)
       end
     end
   end
