@@ -286,11 +286,11 @@ class UsersController < OrganizationAwareController
       return
     end
 
-    @user.destroy
-    notify_user(:notice, "User was successfully removed.")
-
+    @user.active = false
+    @user.save(:validate => :false)
     respond_to do |format|
-      format.html { redirect_to users_url }
+      notify_user(:notice, "User #{@user} has been deactivated.")
+      format.html { redirect_to user_url(@user) }
       format.json { head :no_content }
     end
   end
