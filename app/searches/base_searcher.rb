@@ -3,22 +3,22 @@
 #
 class BaseSearcher
 
-  # From the application config    
+  # From the application config
   MAX_ROWS_RETURNED         = SystemConfig.instance.max_rows_returned
-  
+
   # Every search must have a user as the searcher
   attr_accessor :user
- 
-  #performs ActiveRecord-like mass assignment of attributes             
+
+  #performs ActiveRecord-like mass assignment of attributes
   def initialize(attributes = {})
     mass_assign(attributes)
-  end    
-  
+  end
+
   # Caches the rows
   def data
     @data ||= perform_query
   end
-  
+
   # Override this to return the name of the form to display
   def form_view
   end
@@ -27,7 +27,7 @@ class BaseSearcher
   # results set for paging through the result lists
   def cache_variable_name
   end
-  
+
   # Override this to return the name of the results table to display
   def results_view
   end
@@ -47,7 +47,7 @@ class BaseSearcher
     attributes.each do |attribute, value|
       respond_to?(:"#{attribute}=") && send(:"#{attribute}=", value)
     end
-  end   
+  end
 
 
   #############################################################################
@@ -57,7 +57,7 @@ class BaseSearcher
   # Log query and prepare it for front-end
   def perform_query
     Rails.logger.info queries.to_sql
-    queries.limit(MAX_ROWS_RETURNED)  
+    queries
   end
 
   # Reduce as in map-reduce- merges down array of queries into a single one
@@ -85,5 +85,5 @@ class BaseSearcher
     end
     ids
   end
-       
+
 end
