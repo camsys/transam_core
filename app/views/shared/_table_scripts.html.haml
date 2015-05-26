@@ -33,35 +33,35 @@
   };
 
   function integer_formatter(value) {
-    if (value) {
-      return format("###,##0.", value);
-    } else {
+    if (value == null) {
       return value;
+    } else {
+      return format("###,##0.", value);
     }
   };
 
   function currency_formatter(value) {
-    if (value) {
-      return '$' + integer_formatter(value);
-    } else {
+    if (value == null) {
       return value;
+    } else {
+      return '$' + integer_formatter(value);
     }
   };
 
   function percentage_formatter(value) {
-    if (value) {
-      return format("##0.00", value) + "%";
-    } else {
+    if (value == null) {
       return value;
+    } else {
+      return format("##0.00", value) + "%";
     }
   };
 
   function date_formatter(value) {
-    if (value) {
+    if (value == null) {
+      return value;
+    } else {
       var date = new Date(value);
       return date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear();
-    } else {
-      return value;
     }
   };
 
