@@ -258,7 +258,7 @@ class UsersController < OrganizationAwareController
     add_breadcrumb 'Change Password'
 
     respond_to do |format|
-      if @user.update_with_password(params.required(:user).permit(:current_password, :password, :password_confirmation))
+      if @user.update_with_password(form_params)
         # automatically sign in the user bypassing validation
         if @user.id == current_user.id
           notify_user(:notice, "Your password was successfully updated.")
@@ -308,7 +308,7 @@ class UsersController < OrganizationAwareController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def form_params
-    params.require(:user).permit(User.allowable_params)
+    params.require(:user).permit(user_allowable_params)
   end
 
   # Callbacks to share common setup or constraints between actions.
