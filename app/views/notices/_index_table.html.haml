@@ -50,7 +50,7 @@
             - if notice.end_datetime < DateTime.current or not notice.active
               = link_to reactivate_notice_path(notice), :title => "Reactivate this notice." do
                 %i.fa.fa-fw.fa-check.action-icon.text-success
-            - if can? :delete, notice
+            - if can? :destroy, notice
               = link_to notice_path(notice), :title => "Remove this notice", :method => :delete, :data => {:confirm => "Are you sure you want to remove this notice? The action can't be undone."} do
                 %i.fa.fa-fw.fa-trash-o.action-icon.text-danger
 

@@ -9,7 +9,7 @@
         = link_to edit_asset_group_path(@asset_group) do
           %i.fa.fa-edit.fa-fw
           = " Update this group"
-    - if can? :delete, @asset_group
+    - if can? :destroy, @asset_group
       %li.divider
       %li
         = link_to asset_group_path(@asset_group), :method => :delete, :data => {:confirm => "Are you sure you want to remove this group? The action can't be undone."} do

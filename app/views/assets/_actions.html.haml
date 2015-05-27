@@ -1,4 +1,4 @@
-- if can? :update, @asset or can? :delete, @asset
+- if can? :update, @asset or can? :destroy, @asset
   .btn-group.pull-right.panel-action
     %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
       %i.fa.fa-cog
@@ -31,7 +31,7 @@
             %i.fa.fa-fw{:class => DispositionUpdateEvent.asset_event_type.display_icon_name}
             = " Record final disposition"
 
-      - if can? :delete, @asset
+      - if can? :destroy, @asset
         %li.divider
         %li
           = link_to inventory_path(@asset), :method => :delete, :data => {:confirm => "Are you sure you want to remove this asset?. The action can't be undone."} do

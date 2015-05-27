@@ -11,7 +11,7 @@
           = link_to download_image_path(p), :class => "btn btn-primary" do
             %i.fa.fa-download
             Download
-          - if can? :delete, p
+          - if can? :destroy, p
             = link_to p, :method => :delete, :class => "btn btn-warning", :data => { :confirm => 'Are you sure you want to remove this image?' } do
               %i.fa.fa-trash
               Delete

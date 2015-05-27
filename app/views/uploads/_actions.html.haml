@@ -22,7 +22,7 @@
             %i.fa.fa-undo.fa-fw
             = " Undo changes"
       %li.divider
-      - if can? :delete, @upload
+      - if can? :destroy, @upload
         %li
           = link_to upload_path(@upload), :method => :delete, :data => {:confirm => "Are you sure you want to remove this file?"}  do
             %i.fa.fa-trash.fa-fw

@@ -50,7 +50,7 @@
           - else
             = " Update my password"
 
-    - if can? :delete, @user and @user != current_user
+    - if can? :destroy, @user and @user != current_user
       %li.divider
       %li
         = link_to user_path(@user), :method => :delete, :data => {:confirm => "Are you sure?. The action cannot be undone!."}  do

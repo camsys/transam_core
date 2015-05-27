@@ -1,4 +1,4 @@
-- if can? :update, @policy or can? :create, @policy or can? :delete, @policy
+- if can? :update, @policy or can? :create, @policy or can? :destroy, @policy
   .btn-group.pull-right.panel-action
     %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
       %i.fa.fa-cog
@@ -40,7 +40,7 @@
             %i.fa.fa-copy.fa-fw
             = " Make a copy"
 
-      - if can? :delete, @policy
+      - if can? :destroy, @policy
         %li.divider
         %li
           = link_to policy_path(@policy), :method => :delete, :data => {:confirm => "Are you sure?. The action cannot be undone!."}  do

@@ -1,4 +1,4 @@
-- if can? :update, @notice or can? :delete, @notice
+- if can? :update, @notice or can? :destroy, @notice
   .btn-group.pull-right.panel-action
     %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
       %i.fa.fa-cog
@@ -21,7 +21,7 @@
           = link_to reactivate_notice_path(@notice) do
             %i.fa.fa-fw.fa-check
             = " Reactivate this notice"
-      - if can? :delete, @notice
+      - if can? :destroy, @notice
         %li.divider
         %li
           = link_to notice_path(@notice), :method => :delete, :data => {:confirm => "Are you sure you want to remove this notice? The action can't be undone."} do

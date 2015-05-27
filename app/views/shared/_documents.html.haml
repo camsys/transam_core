@@ -10,7 +10,7 @@
           = link_to download_document_path(d), :class => "btn btn-primary btn-xs pull-right", :style => "margin-left: 5px;" do
             %i.fa.fa-download
             Download
-        - if can? :delete, d
+        - if can? :destroy, d
           = link_to d, :method => :delete, :class => "btn btn-warning btn-xs pull-right", :style => "margin-left: 5px;", :data => { :confirm => 'Are you sure you want to remove this document?' } do
             %i.fa.fa-trash
             Delete
