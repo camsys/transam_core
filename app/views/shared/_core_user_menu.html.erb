@@ -20,12 +20,14 @@
 		<i class="fa fa-user fa-fw"></i> My settings
 	<% end %>
 </li>
-<li class="divider text-left"></li>
-<li class="text-left">
-	<%= link_to activity_logs_path  do %>
-		<i class="fa fa-clock-o fa-fw"></i> Activity Log
-	<% end %>
-</li>
+<% if can? :read, ActivityLog %>
+	<li class="divider text-left"></li>
+	<li class="text-left">
+		<%= link_to activity_logs_path  do %>
+			<i class="fa fa-clock-o fa-fw"></i> Activity Log
+		<% end %>
+	</li>
+<% end %>
 <li class="divider text-left"></li>
 <li class="text-left">
 	<%= link_to new_issue_path  do %>
