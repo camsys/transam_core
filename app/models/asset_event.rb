@@ -3,7 +3,7 @@
 # this
 #
 class AssetEvent < ActiveRecord::Base
-      
+
   # Include the object key mixin
   include TransamObjectKey
   # Include the numeric sanitizers mixin
@@ -14,51 +14,51 @@ class AssetEvent < ActiveRecord::Base
   #------------------------------------------------------------------------------
   # Overrides
   #------------------------------------------------------------------------------
-  
-      
+
+
   # Callbacks
   after_initialize :set_defaults
 
   # Associations
-  
+
   # Every event belongs to an asset
   belongs_to  :asset
   # Every event is of a type
   belongs_to  :asset_event_type
   # Assets can be associated with Uploads
   belongs_to  :upload
-  
+
   validates :asset_id,            :presence => true
   validates :asset_event_type_id, :presence => true
   validates :event_date,          :presence => true
-    
+
   # default scope
-  default_scope { order("event_date") }
+  default_scope { order("event_date, created_at") }
   # named scopes
 
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
     :asset_id,
-    :asset_event_type_id, 
-    :asset_type_id, 
-    :event_date, 
+    :asset_event_type_id,
+    :asset_type_id,
+    :event_date,
     :comments
   ]
 
   def associated_asset_tag
     asset.asset_tag
   end
-  
+
   #------------------------------------------------------------------------------
   #
   # Class Methods
   #
   #------------------------------------------------------------------------------
-    
+
   def self.allowable_params
     FORM_PARAMS
   end
-  
+
   # Returns a typed version of itself. Every asset has a type and this will
   # return a specific asset type based on the AssetType attribute
   def self.as_typed_event(asset_event)
@@ -82,13 +82,13 @@ class AssetEvent < ActiveRecord::Base
   def is_typed?
     self.class.to_s == asset_event_type.class_name
   end
-      
+
   # Return the update by coercing as a typed class and returning the appropriate
   # update from it
   def get_update
     # get a typed version of the asset event and return its value
     evt = is_typed? ? self : AssetEvent.as_typed_event(self)
-    return evt.get_update unless evt.nil?    
+    return evt.get_update unless evt.nil?
   end
   #------------------------------------------------------------------------------
   #
@@ -121,7 +121,7 @@ class AssetEvent < ActiveRecord::Base
     # Return Strongly Typed Asset
     AssetEvent.as_typed_event(event)
   end
-  
+
   #------------------------------------------------------------------------------
   #
   # Protected Methods
