@@ -5,6 +5,9 @@ class ActivityLogsController < OrganizationAwareController
 
   INDEX_KEY_LIST_VAR    = "activity_log_key_list_cache_var"
 
+  # Protect controller methods using the cancan ability
+  authorize_resource
+
   def index
 
     add_breadcrumb "Activity Log"
