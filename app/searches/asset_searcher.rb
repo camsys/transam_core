@@ -26,8 +26,8 @@ class AssetSearcher < BaseSearcher
                 # Comparator-based (<=>)
                 :purchase_cost,
                 :purchase_cost_comparator,
-                :estimated_value,
-                :estimated_value_comparator,
+                :book_value,
+                :book_value_comparator,
                 :replacement_year,
                 :replacement_year_comparator,
                 :scheduled_replacement_year,
@@ -155,16 +155,16 @@ class AssetSearcher < BaseSearcher
     end
   end
 
-  def estimated_value_conditions
-    unless estimated_value.blank?
-      value_as_int = sanitize_to_int(estimated_value)
-      case estimated_value_comparator
+  def book_value_conditions
+    unless book_value.blank?
+      value_as_int = sanitize_to_int(book_value)
+      case book_value_comparator
       when "-1" # Less than X miles
-        @klass.where("estimated_value < ?", value_as_int)
+        @klass.where("book_value < ?", value_as_int)
       when "0" # Exactly X miles
-        @klass.where("estimated_value = ?", value_as_int)
+        @klass.where("book_value = ?", value_as_int)
       when "1" # Greater than X miles
-        @klass.where("estimated_value > ?", value_as_int)
+        @klass.where("book_value > ?", value_as_int)
       end
     end
   end

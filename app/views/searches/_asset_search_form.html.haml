@@ -47,7 +47,7 @@
                 %a{:data => {:compare => "1"}} After
             = f.input_field :purchase_date_comparator, :as => :hidden, :value => '0'
           = f.input_field :purchase_date, :class => "form-control"
-        = f.input :estimated_value, :wrapper => :vertical_prepend do
+        = f.input :book_value, :wrapper => :vertical_prepend do
           .input-group-btn
             %button.btn.btn-default.dropdown-toggle{"data-toggle" => "dropdown", :type => "button"}
             %ul.dropdown-menu{:role => "menu"}
@@ -55,8 +55,8 @@
                 %a{:data => {:compare => "-1"}} Less Than
               %li
                 %a{:data => {:compare => "1"}} Greater Than
-            = f.input_field :estimated_value_comparator, :as => :hidden, :value => '1'
-          = f.input_field :estimated_value, :class => "form-control", :label => "Estimated Current Value"
+            = f.input_field :book_value_comparator, :as => :hidden, :value => '1'
+          = f.input_field :book_value, :class => "form-control", :label => "Book Value"
         = f.input :purchased_new, :as => :boolean, :label => "Purchased New", :label_html => { :class => 'bold' }
     .col-lg-3.col-md-6
       %fieldset
