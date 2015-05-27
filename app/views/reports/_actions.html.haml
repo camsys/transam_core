@@ -2,9 +2,6 @@
   .form-group
     = select_tag(:report_filter_type, options_for_select(@asset_types, :selected => @report_filter_type), :class => "form-control", :prompt => 'Any Type...', :id => 'asset_filter')
 
-= link_to "#chart-div", :data => {:toggle => "collapse", :parent => "accordion"}, :class => "btn btn-default navbar-btn", :id => "chart-toggle" do
-  Toggle chart
-
 :javascript
 
   $(document).ready(function() {
