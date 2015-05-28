@@ -986,7 +986,7 @@ class Asset < ActiveRecord::Base
     # Update the estimated replacement cost. This should be set for the start of
     # the fiscal year in which the asset is scheduled to be replaced
     begin
-      if self.scheduled_replacement_year.present
+      if self.scheduled_replacement_year.present?
         update_estimated_replacement_cost start_of_fiscal_year(scheduled_replacement_year)
       end
     rescue Exception => e
