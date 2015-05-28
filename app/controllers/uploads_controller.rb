@@ -254,6 +254,7 @@ class UploadsController < OrganizationAwareController
 
     @upload = Upload.new(form_params)
     @upload.user = current_user
+    @upload.force_update = true
     if @upload.organization.nil?
       @upload.organization = @organization
     end

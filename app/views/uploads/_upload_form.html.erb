@@ -1,49 +1,30 @@
-<%= dialog_tag('Spreadsheet', {:icon => 'fa fa-upload', :class => "header-part"}) do %>	
+<%= dialog_tag('Spreadsheet', {:icon => 'fa fa-upload', :class => "header-part"}) do %>
 	<%= simple_form_for(@upload, :html => {:multipart => true, :class => 'form-horizontal' }, :wrapper => :horizontal_form, :wrapper_mappings => {:check_boxes => :horizontal_radio_and_checkboxes, :file => :horizontal_file_input, :boolean => :horizontal_boolean}) do |f| %>
 		<% if current_user.organizations.count > 1 %>
 			<%= f.association :organization, :collection => current_user.organizations, :label_method => 'coded_name' %>
 		<% end %>
 		<%= f.input :file, :label => 'Spreadsheet', :hint => 'Select a spreadsheet that has been downloaded from TransAM, edited, then saved.' %>
 		<%= f.association :file_content_type, :label => 'Spreadsheet Content', :prompt => 'Set the spreadsheet contents...' %>
-		<%= f.input :force_update, :as => :boolean, :label => "Update existing assets", :hint => 'If this box is checked TransAM will overwrite any existing assets in the inventory with matching assets in the spreadsheet.' %>
 		<div class='col-sm-offset-3 class-sm-9'>
 			<%= f.button :submit, 'Upload spreadsheet', :class=>"btn btn-primary"  %>
-		</div>	
+		</div>
 	<% end %>
 <% end %>
 
 <script type="text/javascript">
-	
+
 	var max_file_size_mb = <%= Rails.application.config.max_upload_file_size %>;
 
 	$(document).ready(function() {
-    	
-		var set_force_update_visibility = function(val) {
-			if (val == 1) {
-				// Unhide the other input
-				$('.upload_force_update').show();
-			} else {
-				// Hide the other input
-				$('.upload_force_update').hide();
-			}
-			// Always leave this unchecked and force the user to manually select it
-			$('#upload_force_update').prop('checked', false);
-		}
 
   	transam.make_same_height('.header-part');
-  	set_force_update_visibility($("#upload_file_content_type_id").val());
-		
+
 		// Insert a change listener to validate the file size before uploading.
 		$('#upload_file').change(function() {
 			transam.validate_file_size(this, max_file_size_mb);
 		});
-		// Hide the upload_force_update checkbox
-		// Add a change listener to the upload_file_content_type_id to hide/show the force_update flag
-		$('#upload_file_content_type_id').change(function() {
-			set_force_update_visibility(this.value)
-		});
 				
 	});
 
-		
+
 </script>
