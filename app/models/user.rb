@@ -167,19 +167,6 @@ class User < ActiveRecord::Base
     assigned_tasks.where(:state => "halted")
   end
 
-  # Devise overrides for logging account locks/unlocks
-  def lock_access!
-    super
-    # Send a message to the admins that the account has been locked
-    Delayed::Job.enqueue LockedAccountInformerJob.new(object_key) unless new_record?
-    # Log it
-    Rails.logger.info "Locking account for user with email #{email} at #{Time.now}"
-  end
-  def unlock_access!
-    super
-    Rails.logger.info "Unlocking account for user with email #{email} at #{Time.now}"
-  end
-
   def initials
     "#{first_name[0]}#{last_name[0]}"
   end
@@ -222,6 +209,38 @@ class User < ActiveRecord::Base
   def searchable_fields
     SEARCHABLE_FIELDS
   end
+
+  #------------------------------------------------------------------------------
+  # Devise hooks
+  #------------------------------------------------------------------------------
+
+  # check if the user is active and can log in
+  def active_for_authentication?
+    # Log it
+    unless self.active
+      Rails.logger.info "Attempted access to in-active account for user with email #{email} at #{Time.now}"
+    end
+
+    super && self.active
+  end
+
+  def inactive_message
+    "Sorry, this account has been deactivated."
+  end
+
+  # Overrides for logging account locks/unlocks
+  def lock_access!
+    super
+    # Send a message to the admins that the account has been locked
+    Delayed::Job.enqueue LockedAccountInformerJob.new(object_key) unless new_record?
+    # Log it
+    Rails.logger.info "Locking account for user with email #{email} at #{Time.now}"
+  end
+  def unlock_access!
+    super
+    Rails.logger.info "Unlocking account for user with email #{email} at #{Time.now}"
+  end
+  #------------------------------------------------------------------------------
 
   #------------------------------------------------------------------------------
   #
