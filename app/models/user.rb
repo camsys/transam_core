@@ -116,7 +116,7 @@ class User < ActiveRecord::Base
     :city,
     :state,
     :zip,
-    :role_ids
+    :role_ids => []
   ]
 
   #------------------------------------------------------------------------------
