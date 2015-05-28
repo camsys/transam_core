@@ -54,9 +54,9 @@ class UsersController < OrganizationAwareController
     # Get the Users but check to see if a role was selected
     @role = params[:role]
     if @role.blank?
-      @users = User.where(conditions.join(' AND '), *values).order(:organization_id, :last_name)
+      @users = User.active.where(conditions.join(' AND '), *values).order(:organization_id, :last_name)
     else
-      @users = User.with_role(@role).where(conditions.join(' AND '), *values).order(:organization_id, :last_name)
+      @users = User.active.with_role(@role).where(conditions.join(' AND '), *values).order(:organization_id, :last_name)
     end
 
     # Set the breadcrumbs

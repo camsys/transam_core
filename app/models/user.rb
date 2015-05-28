@@ -81,7 +81,9 @@ class User < ActiveRecord::Base
   validates :organization,  :presence => true
 
   # default scope
-  default_scope { where(:active => true).order(:last_name) }
+  default_scope { order(:last_name) }
+  # Scope only active users
+  scope :active, -> { where(active: true) }
 
   SEARCHABLE_FIELDS = [
     :first_name,
