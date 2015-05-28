@@ -1005,7 +1005,6 @@ class Asset < ActiveRecord::Base
   def set_defaults
     self.purchase_date ||= Date.today
     self.in_service_date ||= self.purchase_date
-    self.warranty_date ||= self.purchase_date
     self.manufacture_year ||= Date.today.year
     self.purchased_new = self.purchased_new.nil? ? true : self.purchased_new
   end
