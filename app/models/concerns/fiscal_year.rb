@@ -7,6 +7,20 @@
 #------------------------------------------------------------------------------
 module FiscalYear
 
+  # Returns the date of the start of a fiscal year for a given calendar year. For
+  # a year like 2015 we return the start of the FY-15-16 year
+  def start_of_fiscal_year date_year
+    # System Config provides a string giving the start day of the fiscal year as "mm-dd" eg 07-01 for July 1st. We can
+    # append the date year to this and generate the date of the fiscal year starting in the date calendar year
+    date_str = "#{SystemConfig.instance.start_of_fiscal_year}-#{date_year}"
+
+    start_of_fiscal_year = Date.strptime(date_str, "%m-%d-%Y")
+  end
+
+  # Returns the first day of the planning year which is the next fiscal year
+  def start_of_planning_year
+    start_of_fiscal_year current_planning_year_year
+  end
   # returns the fiscal year epoch -- the first allowable fiscal year for the application
   def fiscal_year_epoch_year
     2010
@@ -52,15 +66,9 @@ module FiscalYear
     end
     date_year = date.year
 
-    # System Config provides a string giving the start day of the fiscal year as "mm-dd" eg 07-01 for July 1st. We can
-    # append the date year to this and generate the date of the fiscal year starting in the date calendar year
-    date_str = "#{SystemConfig.instance.start_of_fiscal_year}-#{date_year}"
-
-    start_of_fiscal_year = Date.strptime(date_str, "%m-%d-%Y")
-
     # If the start of the fiscal year in the calendar year is before date, we are in the fiscal year that starts in this
     # calendar years, otherwise the date is in the fiscal year that started the previous calendar year
-    date < start_of_fiscal_year ? date_year - 1 : date_year
+    date < start_of_fiscal_year(date_year) ? date_year - 1 : date_year
 
   end
 
