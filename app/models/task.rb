@@ -58,8 +58,6 @@ class Task < ActiveRecord::Base
   validates :body,                  :presence => true
   validates :complete_by,           :presence => true
 
-  default_scope { order('complete_by') }
-
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
     :user_id,
@@ -72,6 +70,14 @@ class Task < ActiveRecord::Base
     :send_reminder,
     :complete_by
   ]
+
+  #------------------------------------------------------------------------------
+  # Scopes
+  #------------------------------------------------------------------------------
+  default_scope { order('complete_by') }
+
+  # tasks which are currently active based on the workflow
+  scope :active, -> { where("state IN (?)", Task.active_states) }
 
   #------------------------------------------------------------------------------
   #
