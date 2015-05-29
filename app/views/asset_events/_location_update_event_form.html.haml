@@ -4,7 +4,7 @@
   = f.input :parent_name, :input_html => {:autocomplete => 'off', :class => 'form-control', :placeholder => 'Enter search text', :id => 'parent_name', :data => {:url => filter_inventory_index_path}}
 
   = f.input :event_date, :label => 'Date of Report', :wrapper => :vertical_append do
-    = f.input_field :event_date, :class => "form-control", :as => :string, :data => {'behavior' => 'datepicker'}, :value => f.object.event_date.strftime("%m-%d-%Y")
+    = f.input_field :event_date, :class => "form-control", :as => :string, :data => {'behavior' => 'datepicker'}, :value => format_as_date(f.object.event_date)
     %span.input-group-addon
       %i.fa.fa-calendar
   = f.input :comments, :input_html => { :rows => 6 }, :placeholder => "Enter any location comments..."

@@ -8,7 +8,7 @@
 
 = render :layout => "update_event_form" do |f|
   = f.input :event_date, :label => 'Date of Report', :wrapper => :vertical_append do
-    = f.input_field :event_date, :as => :string, :class => 'form-control datepicker', :data => {'behavior' => 'datepicker'}, :value => f.object.event_date.strftime("%m-%d-%Y")
+    = f.input_field :event_date, :as => :string, :class => 'form-control datepicker', :data => {'behavior' => 'datepicker'}, :value => format_as_date(f.object.event_date)
     %span.input-group-addon
       %i.fa.fa-calendar
   .row
@@ -47,7 +47,7 @@
 :javascript
   $(document).ready(function() {
     $("#costs input").on("change", function() {
-      var all_rehab_costs = $("#costs input").map(function() { 
+      var all_rehab_costs = $("#costs input").map(function() {
         var val = $(this).val();
         return parseInt(val) || 0;
       });

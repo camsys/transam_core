@@ -586,7 +586,7 @@ class AssetsController < AssetAwareController
   end
 
   def reformat_date(date_str)
-    form_date = Date.strptime(date_str, '%m-%d-%Y')
+    form_date = Date.strptime(date_str, '%m/%d/%Y')
     return form_date.strftime('%Y-%m-%d')
   end
 

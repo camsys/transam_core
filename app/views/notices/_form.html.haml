@@ -18,7 +18,7 @@
           .col-sm-9
             .form-group
               = f.input :display_datetime, :label => 'Start Displaying', :wrapper => :vertical_append do
-                = f.input_field :display_datetime_date, :class => "form-control", :as => :string, :data => {'behavior' => 'datepicker'}, :value => f.object.display_datetime.strftime("%m-%d-%Y")
+                = f.input_field :display_datetime_date, :class => "form-control", :as => :string, :data => {'behavior' => 'datepicker'}, :value => format_as_date(f.object.display_datetime)
                 %span.input-group-addon
                   %i.fa.fa-calendar
           .col-sm-3
@@ -27,11 +27,10 @@
           .col-sm-9
             .form-group
               = f.input :end_datetime_date, :label => 'Stop Displaying', :wrapper => :vertical_append do
-                = f.input_field :end_datetime_date, :class => "form-control", :as => :string, :data => {'behavior' => 'datepicker'}, :value => f.object.end_datetime.strftime("%m-%d-%Y")
+                = f.input_field :end_datetime_date, :class => "form-control", :as => :string, :data => {'behavior' => 'datepicker'}, :value => format_as_date(f.object.end_datetime)
                 %span.input-group-addon
                   %i.fa.fa-calendar
           .col-sm-3
             = f.input :end_datetime_hour, :as => :select, :collection => 0..23, :label_method => lambda { |hr| Time.current.change(:hour => hr).strftime("%l:%M %p")}, :requred => true, :label => "Hour"
         = f.association :notice_type, :include_blank => false
       = f.button :submit, :class => 'btn btn-primary'
-

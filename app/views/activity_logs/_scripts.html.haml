@@ -2,7 +2,7 @@
   // Document Ready
   $(document).ready(function(){
     $('[data-behavior~=datepicker]').datepicker({
-      format: "mm-dd-yyyy"
+      format: "mm/dd/yyyy"
     });
     transam.make_same_height(".header-part")
 
@@ -20,5 +20,5 @@
   } else {
     // Default to the first tab if no tab is stored
     $('a[data-toggle="tab"]:first').tab('show');
-  } 
+  }
   });

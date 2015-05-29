@@ -3,13 +3,13 @@ class AssetEventsController < AssetAwareController
   add_breadcrumb "Home", :root_path
 
   # set the @asset_event variable before any actions are invoked
-  before_filter :get_asset_event,       :only => [:show, :edit, :update, :destroy]  
+  before_filter :get_asset_event,       :only => [:show, :edit, :update, :destroy]
   before_filter :check_for_cancel,      :only => [:create, :update]
   before_filter :reformat_date_field,   :only => [:create, :update]
 
   # always use generic untyped assets for this controller
   RENDER_TYPED_ASSETS = true
-    
+
   # always render untyped assets for this controller
   def render_typed_assets
     RENDER_TYPED_ASSETS
@@ -40,18 +40,18 @@ class AssetEventsController < AssetAwareController
     else
       @events = @asset.asset_events.where('asset_event_type_id = ?', @filter_type)
     end
-         
+
     @page_title = "#{@asset.name}: History"
-    
+
     respond_to do |format|
       format.html # index.html.erb
       format.json { render :json => @events }
     end
 
   end
-  
+
   def new
-        
+
     # get the asset event type
     asset_event_type = AssetEventType.find(params[:event_type])
     unless asset_event_type.blank?
@@ -61,10 +61,10 @@ class AssetEventsController < AssetAwareController
     add_new_show_create_breadcrumbs
 
     respond_to do |format|
-      format.html 
+      format.html
       format.json { render :json => @asset_event }
     end
-    
+
   end
 
   def show
@@ -78,7 +78,7 @@ class AssetEventsController < AssetAwareController
     end
 
     add_new_show_create_breadcrumbs
-     
+
     respond_to do |format|
       format.html # show.html.erb
       format.json { render :json => @asset_event }
@@ -96,9 +96,9 @@ class AssetEventsController < AssetAwareController
     end
 
     add_edit_update_breadcrumbs
-   
+
   end
-  
+
   def update
 
     # if not found or the object does not belong to the asset
@@ -114,11 +114,11 @@ class AssetEventsController < AssetAwareController
     respond_to do |format|
       if @asset_event.update_attributes(form_params)
 
-        notify_user(:notice, "Event was successfully updated.")   
+        notify_user(:notice, "Event was successfully updated.")
 
         # The event was updated so we need to update the asset.
         fire_asset_update_event(@asset_event.asset_event_type, @asset)
-             
+
         format.html { redirect_to inventory_url(@asset) }
         format.json { head :no_content }
       else
@@ -137,16 +137,16 @@ class AssetEventsController < AssetAwareController
     end
 
     add_new_show_create_breadcrumbs
-    
+
     respond_to do |format|
       if @asset_event.update(form_params)
         Rails.logger.debug @asset_event.inspect
-        
-        notify_user(:notice, "Event was successfully created.")   
 
-        # The event was removed so we need to update the asset 
+        notify_user(:notice, "Event was successfully created.")
+
+        # The event was removed so we need to update the asset
         fire_asset_update_event(@asset_event.asset_event_type, @asset)
-                
+
         format.html { redirect_to inventory_url(@asset) }
         format.json { render :json => @asset_event, :status => :created, :location => @asset_event }
       else
@@ -170,24 +170,24 @@ class AssetEventsController < AssetAwareController
     asset_event_type = @asset_event.asset_event_type
     @asset_event.destroy
 
-    notify_user(:notice, "Event was successfully removed.")   
+    notify_user(:notice, "Event was successfully removed.")
 
     # The event was removed so we need to update the asset condition
     fire_asset_update_event(asset_event_type, @asset)
 
     respond_to do |format|
-      format.html { redirect_to(inventory_url(@asset)) } 
+      format.html { redirect_to(inventory_url(@asset)) }
       format.json { head :no_content }
     end
   end
-  
+
   #------------------------------------------------------------------------------
   #
   # Protected Methods
   #
   #------------------------------------------------------------------------------
   protected
-  
+
   # Updates the asset by running the appropriate job. The job is based on the
   # type of event that was modified. If the job requires the asset SOGR metrics be updated
   # then the SOGR update job is queued for the asset
@@ -208,8 +208,8 @@ class AssetEventsController < AssetAwareController
       end
     end
   end
-  
-  
+
+
   def get_asset_event
     asset_event = AssetEvent.find_by_object_key(params[:id]) unless params[:id].nil?
     if asset_event
@@ -226,10 +226,10 @@ class AssetEventsController < AssetAwareController
 
   def reformat_date_field
     date_str = params[:asset_event][:event_date]
-    form_date = Date.strptime(date_str, '%m-%d-%Y')
+    form_date = Date.strptime(date_str, '%m/%d/%Y')
     params[:asset_event][:event_date] = form_date.strftime('%Y-%m-%d')
   end
-  
+
   # Never trust parameters from the scary internet, only allow the white list through.
   def form_params
     params.require(:asset_event).permit(asset_event_allowable_params)
@@ -251,12 +251,12 @@ class AssetEventsController < AssetAwareController
     add_breadcrumb @asset.asset_subtype.name.pluralize(2), inventory_index_path(:asset_subtype => @asset.asset_subtype)
     add_breadcrumb @asset.asset_tag, inventory_path(@asset)
   end
-  
+
   def check_for_cancel
     # go back to the asset view
     unless params[:cancel].blank?
       redirect_to(inventory_url(@asset))
-    end    
+    end
   end
-    
+
 end

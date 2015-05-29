@@ -4,7 +4,7 @@
   .row
     .col-xs-6
       = f.input :event_date, :label => 'Date of Disposition', :wrapper => :vertical_append do
-        = f.input_field :event_date, :as => :string, :class => 'form-control datepicker', :data => {'behavior' => 'datepicker'}, :value => f.object.event_date.strftime("%m-%d-%Y")
+        = f.input_field :event_date, :as => :string, :class => 'form-control datepicker', :data => {'behavior' => 'datepicker'}, :value => format_as_date(f.object.event_date)
         %span.input-group-addon
           %i.fa.fa-calendar
     .col-xs-6
