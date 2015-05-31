@@ -112,14 +112,14 @@ class TransamController < ApplicationController
   # Cache an array of objects
   def cache_objects(key, objects, expires_in = OBJECT_CACHE_EXPIRE_SECONDS)
     Rails.logger.debug "ApplicationController CACHE put for key #{get_cache_key(current_user, key)}"
-    Rails.cache.write(get_cache_key(current_user, key), objects, :expires_in => expires_in)
+    Rails.cache.fetch(get_cache_key(current_user, key), :force => true, :expires_in => expires_in) { objects }
   end
 
   # Return an array of cached objects
   def get_cached_objects(key)
     Rails.logger.debug "ApplicationController CACHE get for key #{get_cache_key(current_user, key)}"
-    ret = Rails.cache.read(get_cache_key(current_user, key))
-    return ret.nil? ? [] : ret
+    ret = Rails.cache.fetch(get_cache_key(current_user, key))
+    ret ||= []
   end
 
   def clear_cached_objects(key)
