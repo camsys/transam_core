@@ -40,6 +40,7 @@ class AssetSearcher < BaseSearcher
                 :reported_mileage_comparator,
                 :manufacture_date,
                 :manufacture_date_comparator,
+                :service_date,
                 # Checkboxes
                 :in_backlog,
                 :purchased_new,
