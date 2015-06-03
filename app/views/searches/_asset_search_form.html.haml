@@ -25,6 +25,22 @@
                 %a{:data => {:compare => "1"}} After
             = f.input_field :manufacture_date_comparator, :as => :hidden, :value => '0'
           = f.input_field :manufacture_date, :class => "form-control"
+
+        = f.input :in_service_date, :wrapper => :vertical_prepend, :label => "Year Placed in Service" do
+          .input-group-btn
+            %button.btn.btn-default.dropdown-toggle{"data-toggle" => "dropdown", :type => "button"}
+            %ul.dropdown-menu{:role => "menu"}
+              %li
+                %a{:data => {:compare => "-1"}} Before
+              %li
+                %a{:data => {:compare => "0"}} During
+              %li
+                %a{:data => {:compare => "1"}} After
+            = f.input_field :in_service_date_comparator, :as => :hidden, :value => '0'
+          = f.input_field :in_service_date, :class => "form-control"
+
+
+
         = f.input :purchase_cost, :wrapper => :vertical_prepend do
           .input-group-btn
             %button.btn.btn-default.dropdown-toggle{"data-toggle" => "dropdown", :type => "button"}

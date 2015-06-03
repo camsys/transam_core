@@ -40,7 +40,8 @@ class AssetSearcher < BaseSearcher
                 :reported_mileage_comparator,
                 :manufacture_date,
                 :manufacture_date_comparator,
-                :service_date,
+                :in_service_date,
+                :in_service_comparator,
                 # Checkboxes
                 :in_backlog,
                 :purchased_new,
@@ -184,17 +185,31 @@ class AssetSearcher < BaseSearcher
     end
   end
 
-  # Special handling because this is a Date column in the DB, not an integer
-  def manufacture_date_conditions
-    unless manufacture_date.blank?
-      year_as_integer = manufacture_date.to_i
-      case manufacture_date_comparator
+  def scheduled_replacement_year_conditions
+    unless scheduled_replacement_year.blank?
+      case scheduled_replacement_year_comparator
       when "-1" # Before Year X
-        @klass.where("manufacture_year < ?", year_as_integer )
+        @klass.where("scheduled_replacement_year < ?", scheduled_replacement_year)
       when "0" # During Year X
-        @klass.where("manufacture_year = ?", year_as_integer)
+        @klass.where("scheduled_replacement_year = ?", scheduled_replacement_year)
       when "1" # After Year X
-        @klass.where("manufacture_year > ?", year_as_integer)
+        @klass.where("scheduled_replacement_year > ?", scheduled_replacement_year)
+      end
+    end
+  end
+
+  # Special handling because this is a Date column in the DB, not an integer
+  def in_service_date_conditions
+    unless in_service_date.blank?
+      year_as_integer = in_service.to_i
+      purchase_date = Date.new(year_as_integer)
+      case in_service_date_comparator
+      when "-1" # Before Year X
+        @klass.where("in_service_date < ?", year_as_integer )
+      when "0" # During Year X
+        @klass.where("in_service_date = ?", year_as_integer)
+      when "1" # After Year X
+        @klass.where("in_service_date > ?", year_as_integer)
       end
     end
   end
