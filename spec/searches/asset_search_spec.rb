@@ -13,7 +13,7 @@ RSpec.describe AssetSearch, :type => :model do
     expect(searcher.attributes).to include(:in_service_date_comparator)
 
     searcher = AssetSearcher.new(:in_service_date => 2014, :in_service_date_comparator => '0')
-    expect(searcher.data). to eq(Asset.where(‘organization_id = 1’))
+    expect(searcher.data). to eq(Asset.where('in_service_year = 2014'))
   end
 
   it 'should be able to search for assets put in service in after a particular year' do
@@ -22,7 +22,7 @@ RSpec.describe AssetSearch, :type => :model do
     expect(searcher.attributes).to include(:in_service_date_comparator)
 
     searcher = AssetSearcher.new(:in_service_date => 2014, :in_service_date_comparator => '1')
-    expect(searcher.data). to eq(Asset.where(‘organization_id > 1’))
+    expect(searcher.data). to eq(Asset.where('in_service_year > 2014'))
   end
 
   it 'should be able to search for assets put in service in before a particular year' do
@@ -31,6 +31,6 @@ RSpec.describe AssetSearch, :type => :model do
     expect(searcher.attributes).to include(:in_service_date_comparator)
 
     searcher = AssetSearcher.new(:in_service_date => 2014, :in_service_date_comparator => '-1')
-    expect(searcher.data). to eq(Asset.where(‘organization_id < 1’))
+    expect(searcher.data). to eq(Asset.where('in_service_year < 2014'))
   end
 end
