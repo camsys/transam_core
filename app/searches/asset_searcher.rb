@@ -41,7 +41,7 @@ class AssetSearcher < BaseSearcher
                 :manufacture_date,
                 :manufacture_date_comparator,
                 :in_service_date,
-                :in_service_comparator,
+                :in_service_date_comparator,
                 # Checkboxes
                 :in_backlog,
                 :purchased_new,
@@ -201,7 +201,7 @@ class AssetSearcher < BaseSearcher
   # Special handling because this is a Date column in the DB, not an integer
   def in_service_date_conditions
     unless in_service_date.blank?
-      year_as_integer = in_service.to_i
+      year_as_integer = in_service_date.to_i
       purchase_date = Date.new(year_as_integer)
       case in_service_date_comparator
       when "-1" # Before Year X
