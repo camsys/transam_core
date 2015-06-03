@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe AssetSearch, :type => :model do
+RSpec.describe AssetSearcher do
 
   #------------------------------------------------------------------------------
   #
@@ -59,5 +59,13 @@ RSpec.describe AssetSearch, :type => :model do
 
     searcher = AssetSearcher.new(:book_value => 30000, :book_value_comparator => '-1')
     expect(searcher.data). to eq(Asset.where('book_value < 30000'))
+  end
+
+  it 'should be able to search for assets by funding type' do
+    searcher = AssetSearcher.new();
+    expect(searcher.attributes).to include(:fta_funding_type_id)
+
+    searcher = AssetSearcher.new(:fta_funding_type_id => 1)
+    expect(searcher.data). to eq(Asset.where(fta_funding_type_id: 1))
   end
 end
