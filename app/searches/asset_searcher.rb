@@ -283,9 +283,10 @@ class AssetSearcher < BaseSearcher
   end
 
   def manufacturer_model_conditions
+    manufacturer_model.strip!
     unless manufacturer_model.blank?
-      manufacturer_model.strip!
-      @klass.where("manufacturer_model LIKE ?", manufacturer_model)
+      wildcard_search = "%#{manufacturer_model}%"
+      @klass.where("manufacturer_model LIKE ?", wildcard_search)
     end
   end
 
