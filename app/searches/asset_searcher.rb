@@ -79,7 +79,8 @@ class AssetSearcher < BaseSearcher
   #---------------------------------------------------
 
   def asset_condition_type_conditions
-    @klass.where(reported_condition_type_id: condition_type_ids) unless condition_type_ids.blank?
+    clean_condition_type_ids = remove_blanks(condition_type_ids)
+    @klass.where(reported_condition_type_id: clean_condition_type_ids) unless clean_condition_type_ids.empty?
   end
 
   def fta_funding_type_conditions

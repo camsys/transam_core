@@ -107,7 +107,7 @@
                 %a{:data => {:compare => "1"}} After
             = f.input_field :policy_replacement_year_comparator, :as => :hidden, :value => '0'
           = f.input_field :policy_replacement_year, :collection => get_fiscal_years, :class => "form-control"
-        = f.input :condition_type_ids, :label => "Condition Type", :collection => ConditionType.all
+        = f.input :condition_type_ids, :label => "Condition Type", :collection => ConditionType.all, input_html: { multiple: true }
     .col-lg-3.col-md-6
       %fieldset
         %legend.panel-legend FTA
