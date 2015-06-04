@@ -37,7 +37,7 @@
               %li
                 %a{:data => {:compare => "1"}} After
             = f.input_field :in_service_date_comparator, :as => :hidden, :value => '0'
-          = f.input_field :in_service_date, as: :date, :class => "form-control"
+          = f.input_field :in_service_date,  :collection => get_fiscal_years, :class => "form-control"
         = f.input :purchase_cost, :wrapper => :vertical_prepend do
           .input-group-btn
             %button.btn.btn-default.dropdown-toggle{"data-toggle" => "dropdown", :type => "button"}
