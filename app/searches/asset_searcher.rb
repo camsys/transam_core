@@ -25,6 +25,7 @@ class AssetSearcher < BaseSearcher
                 :condition_type_ids,
                 :vendor_ids,
                 :service_status_type_ids,
+                :manufacturer_model,
                 # Comparator-based (<=>)
                 :purchase_cost,
                 :purchase_cost_comparator,
@@ -50,6 +51,7 @@ class AssetSearcher < BaseSearcher
                 :ada_accessible_lift,
                 :ada_accessible_ramp,
                 :fta_emergency_contingency_fleet
+
 
 
   # Return the name of the form to display
@@ -277,6 +279,13 @@ class AssetSearcher < BaseSearcher
       keyword.strip!
       search_str = searchable_columns.map { |x| "#{x} like :keyword"}.to_sentence(:words_connector => " OR ", :last_word_connector => " OR ")
       @klass.joins(:organization).where(search_str, :keyword => "%#{keyword}%")
+    end
+  end
+
+  def manufacturer_model_conditions
+    unless manufacturer_model.blank?
+      manufacturer_model.strip!
+      @klass.where("manufacturer_model LIKE ?", manufacturer_model)
     end
   end
 
