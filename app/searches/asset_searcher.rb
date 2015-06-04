@@ -95,7 +95,8 @@ class AssetSearcher < BaseSearcher
   end
 
   def manufacturer_conditions
-    @klass.where(manufacturer_id: manufacturer_id) unless manufacturer_id.blank?
+    clean_manufacturer_ids = remove_blanks(manufacturer_id)
+    @klass.where(manufacturer_id: clean_manufacturer_ids) unless clean_manufacturer_ids.empty?
   end
 
   def district_type_conditions
@@ -103,7 +104,8 @@ class AssetSearcher < BaseSearcher
   end
 
   def asset_type_conditions
-    @klass.where(asset_type_id: asset_type_id) unless asset_type_id.blank?
+    clean_asset_type_ids = remove_blanks(asset_type_id)
+    @klass.where(asset_type_id: clean_asset_type_ids) unless clean_asset_type_ids.empty?
   end
 
   def asset_subtype_conditions
@@ -285,6 +287,12 @@ class AssetSearcher < BaseSearcher
         @klass.where("purchase_date > ?", purchase_date.end_of_year)
       end
     end
+  end
+
+  # Removes empty spaces from multi-select forms
+
+  def remove_blanks(input)
+    input.select { |num_string| !num_string.blank? }
   end
 
 end
