@@ -130,7 +130,7 @@ class AssetSearcher < BaseSearcher
 
   def service_status_type_conditions
     clean_service_status_type_ids = remove_blanks(service_status_type_ids)
-    @klass.where(service_status_type: service_status_type_ids) unless service_status_type_ids.empty?
+    @klass.where(service_status_type: service_status_type_ids) unless clean_service_status_type_ids.empty?
   end
 
   #---------------------------------------------------
@@ -220,15 +220,13 @@ class AssetSearcher < BaseSearcher
   # Special handling because this is a Date column in the DB, not an integer
   def in_service_date_conditions
     unless in_service_date.blank?
-      year_as_integer = in_service_date.to_i
-      purchase_date = Date.new(year_as_integer)
       case in_service_date_comparator
       when "-1" # Before Year X
-        @klass.where("in_service_date < ?", year_as_integer )
+        @klass.where("in_service_date < ?", in_service_date)
       when "0" # During Year X
-        @klass.where("in_service_date = ?", year_as_integer)
+        @klass.where("in_service_date = ?", in_service_date)
       when "1" # After Year X
-        @klass.where("in_service_date > ?", year_as_integer)
+        @klass.where("in_service_date > ?", in_service_date)
       end
     end
   end
