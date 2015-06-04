@@ -14,7 +14,7 @@ class AssetSearcher < BaseSearcher
                 :organization_id,
                 :district_id,
                 :asset_type_ids,
-                :asset_subtype_id,
+                :asset_subtype_ids,
                 :manufacturer_ids,
                 :parent_id,
                 :disposition_date,
@@ -109,7 +109,8 @@ class AssetSearcher < BaseSearcher
   end
 
   def asset_subtype_conditions
-    @klass.where(asset_subtype_id: asset_subtype_id) unless asset_subtype_id.blank?
+    clean_asset_subtype_ids = remove_blanks(asset_subtype_ids)
+    @klass.where(asset_subtype_id: clean_asset_subtype_ids) unless clean_asset_subtype_ids.empty?
   end
 
   def location_id_conditions
