@@ -109,6 +109,7 @@
             = f.input_field :policy_replacement_year_comparator, :as => :hidden, :value => '0'
           = f.input_field :policy_replacement_year, :collection => get_fiscal_years, :class => "form-control"
         = f.input :condition_type_ids, :label => "Condition Type", :collection => ConditionType.all, input_html: { multiple: true }
+        = f.input :service_status_type_ids, :label => "Service Status", :collection => ServiceStatusType.all, input_html: { multiple: true }
     .col-lg-3.col-md-6
       %fieldset
         %legend.panel-legend FTA

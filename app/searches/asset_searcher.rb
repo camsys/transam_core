@@ -24,6 +24,7 @@ class AssetSearcher < BaseSearcher
                 :fta_vehicle_type_ids,
                 :condition_type_ids,
                 :vendor_ids,
+                :service_status_type_ids,
                 # Comparator-based (<=>)
                 :purchase_cost,
                 :purchase_cost_comparator,
@@ -125,6 +126,11 @@ class AssetSearcher < BaseSearcher
   def vendor_conditions
     clean_vendor_ids = remove_blanks(vendor_ids)
     @klass.where(vendor_id: clean_vendor_ids) unless clean_vendor_ids.empty?
+  end
+
+  def service_status_type_conditions
+    clean_service_status_type_ids = remove_blanks(service_status_type_ids)
+    @klass.where(service_status_type: service_status_type_ids) unless service_status_type_ids.empty?
   end
 
   #---------------------------------------------------
