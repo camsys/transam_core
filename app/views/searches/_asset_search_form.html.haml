@@ -25,6 +25,13 @@
                 %a{:data => {:compare => "1"}} After
             = f.input_field :manufacture_date_comparator, :as => :hidden, :value => '0'
           = f.input_field :manufacture_date, :class => "form-control"
+
+        = f.input :vendor_ids, collection: Vendor.all, label: 'Vendor', input_html: { multiple: true }
+
+
+
+
+
         = f.input :in_service_date, :wrapper => :vertical_prepend, :label => "Year Placed in Service" do
           .input-group-btn
             %button.btn.btn-default.dropdown-toggle{"data-toggle" => "dropdown", :type => "button"}

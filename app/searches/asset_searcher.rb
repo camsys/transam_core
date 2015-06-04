@@ -23,6 +23,7 @@ class AssetSearcher < BaseSearcher
                 :fta_ownership_type_ids,
                 :fta_vehicle_type_ids,
                 :condition_type_ids,
+                :vendor_ids,
                 # Comparator-based (<=>)
                 :purchase_cost,
                 :purchase_cost_comparator,
@@ -119,6 +120,11 @@ class AssetSearcher < BaseSearcher
 
   def location_id_conditions
     @klass.where(parent_id: parent_id) unless parent_id.blank?
+  end
+
+  def vendor_conditions
+    clean_vendor_ids = remove_blanks(vendor_ids)
+    @klass.where(vendor_id: clean_vendor_ids) unless clean_vendor_ids.empty?
   end
 
   #---------------------------------------------------
