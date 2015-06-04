@@ -20,7 +20,7 @@ class AssetSearcher < BaseSearcher
                 :disposition_date,
                 :keyword,
                 :fta_funding_type_id,
-                :fta_ownership_type_id,
+                :fta_ownership_type_ids,
                 :fta_vehicle_type_ids,
                 :condition_type_ids,
                 # Comparator-based (<=>)
@@ -87,7 +87,8 @@ class AssetSearcher < BaseSearcher
   end
 
   def fta_ownership_type_conditions
-    @klass.where(fta_ownership_type_id: fta_ownership_type_id) unless fta_ownership_type_id.blank?
+    clean_fta_ownership_type_ids = remove_blanks(fta_ownership_type_ids)
+    @klass.where(fta_ownership_type_id: clean_fta_ownership_type_ids) unless clean_fta_ownership_type_ids.empty?
   end
 
   def fta_vehicle_type_id_conditions
