@@ -5,14 +5,14 @@
         %legend.panel-legend Asset
         = f.input :organization_id, :collection => Organization.where(id: @organization_list), :label_method => 'coded_name' unless @organization_list.count < 2
         = f.input :keyword, :placeholder => "Enter A Search Term"
-        = f.input :asset_type_id, :collection => AssetType.all, input_html: { multiple: true }, :label => "Type"
+        = f.input :asset_type_ids, :collection => AssetType.all, input_html: { multiple: true }, :label => "Type"
         = f.input :asset_subtype_id, :collection => AssetSubtype.all, :label => "Subtype"
         = f.input :disposition_date, :collection => get_fiscal_years
         = f.input :in_backlog, :as => :boolean, :label => "In Backlog"
     .col-lg-3.col-md-6
       %fieldset
         %legend.panel-legend Purchase
-        = f.input :manufacturer_id, collection: Manufacturer.all, label_method: :full_name, input_html: { multiple: true }
+        = f.input :manufacturer_ids, collection: Manufacturer.all, label_method: :full_name, input_html: { multiple: true }
         = f.input :manufacture_date, :wrapper => :vertical_prepend, :label => "Manufacture Year" do
           .input-group-btn
             %button.btn.btn-default.dropdown-toggle{"data-toggle" => "dropdown", :type => "button"}

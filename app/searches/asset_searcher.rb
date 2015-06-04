@@ -13,9 +13,9 @@ class AssetSearcher < BaseSearcher
   attr_accessor :organization_ids,
                 :organization_id,
                 :district_id,
-                :asset_type_id,
+                :asset_type_ids,
                 :asset_subtype_id,
-                :manufacturer_id,
+                :manufacturer_ids,
                 :parent_id,
                 :disposition_date,
                 :keyword,
@@ -95,7 +95,7 @@ class AssetSearcher < BaseSearcher
   end
 
   def manufacturer_conditions
-    clean_manufacturer_ids = remove_blanks(manufacturer_id)
+    clean_manufacturer_ids = remove_blanks(manufacturer_ids)
     @klass.where(manufacturer_id: clean_manufacturer_ids) unless clean_manufacturer_ids.empty?
   end
 
@@ -104,7 +104,7 @@ class AssetSearcher < BaseSearcher
   end
 
   def asset_type_conditions
-    clean_asset_type_ids = remove_blanks(asset_type_id)
+    clean_asset_type_ids = remove_blanks(asset_type_ids)
     @klass.where(asset_type_id: clean_asset_type_ids) unless clean_asset_type_ids.empty?
   end
 
