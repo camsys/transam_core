@@ -49,7 +49,7 @@
                 %a{:data => {:compare => "1"}} Greater Than
             = f.input_field :purchase_cost_comparator, :as => :hidden, :value => '1'
           = f.input_field :purchase_cost, :class => "form-control", :as => :integer, :label => "Original Purchase Cost", input_html: { :min => '0'}
-        = f.input :purchase_date, :wrapper => :vertical_prepend, :label => "Purchase Year" do
+        = f.input :purchase_date, :wrapper => :vertical_prepend, :label => "Purchase Date" do
           .input-group-btn
             %button.btn.btn-default.dropdown-toggle{"data-toggle" => "dropdown", :type => "button"}
             %ul.dropdown-menu{:role => "menu"}
@@ -60,7 +60,7 @@
               %li
                 %a{:data => {:compare => "1"}} After
             = f.input_field :purchase_date_comparator, :as => :hidden, :value => '0'
-          = f.input_field :purchase_date, :class => "form-control"
+          = f.date_field :purchase_date, :class => "form-control"
         = f.input :book_value, :wrapper => :vertical_prepend do
           .input-group-btn
             %button.btn.btn-default.dropdown-toggle{"data-toggle" => "dropdown", :type => "button"}
