@@ -312,6 +312,17 @@ class AssetSearcher < BaseSearcher
     end
   end
 
+  #Search by Funding Source
+
+  def federal_funding_source_conditions
+    clean_federal_funding_source_ids = remove_blanks()
+    query = '''
+            INNER JOIN grants ON assets.grant_id = grants.id
+            INNER JOIN funding_sources ON grants.funding_source_id = ?
+            '''
+    @klass.where(query, clean_federal_funding_source_ids) unless clean_federal_funding_source_ids.empty?
+  end
+
   # Removes empty spaces from multi-select forms
 
   def remove_blanks(input)
