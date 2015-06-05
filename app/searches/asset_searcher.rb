@@ -283,8 +283,8 @@ class AssetSearcher < BaseSearcher
   end
 
   def manufacturer_model_conditions
-    manufacturer_model.strip!
     unless manufacturer_model.blank?
+      manufacturer_model.strip!
       wildcard_search = "%#{manufacturer_model}%"
       @klass.where("manufacturer_model LIKE ?", wildcard_search)
     end
@@ -317,7 +317,12 @@ class AssetSearcher < BaseSearcher
   # Removes empty spaces from multi-select forms
 
   def remove_blanks(input)
-    input.select { |num_string| !num_string.blank? }
+    if input.class == Array
+      output = input.select { |num_string| !num_string.blank? }
+    else
+      output = []
+    end
+    output
   end
 
 end
