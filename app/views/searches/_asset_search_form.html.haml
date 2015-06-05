@@ -5,7 +5,7 @@
         %legend.panel-legend Asset
         = f.input :organization_id, :collection => Organization.where(id: @organization_list), :label_method => 'coded_name' unless @organization_list.count < 2
         = f.input :manufacturer_model, :placeholder => "Enter The Manufacturer Model"
-        = f.input :keyword, :placeholder => "Enter A Search Term"
+        = f.input :keyword, :placeholder => "Enter A Query Term"
         = f.input :asset_type_ids, :collection => AssetType.all, input_html: { multiple: true }, :label => "Type"
         = f.input :asset_subtype_ids, :collection => AssetSubtype.all, :label => "Subtype", input_html: { multiple: true }
         = f.input :disposition_date, :collection => get_fiscal_years
