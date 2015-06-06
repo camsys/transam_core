@@ -314,9 +314,9 @@ class AssetSearcher < BaseSearcher
     end
   end
 
-  #Search by Funding Source
+  #Search by Funding Source.  This search consolidates the federal and non-federal searches into one search.
 
-  def federal_funding_source_conditions
+  def funding_source_conditions
     funding_source_ids = federal_funding_source_ids + non_federal_funding_source_ids
     clean_funding_source_ids = remove_blanks(funding_source_ids)
 
@@ -332,16 +332,6 @@ class AssetSearcher < BaseSearcher
       asset_ids = assets.map { |a| a.id }
       @klass.where(id: asset_ids)
     end
-  end
-
-  def non_federal_funding_source_conditions
-    # clean_non_federal_funding_source_ids = remove_blanks(non_federal_funding_source_ids)
-    # unless clean_non_federal_funding_source_ids.empty?
-    #   grants = Grant.includes(:assets).where(funding_source_id: clean_non_federal_funding_source_ids)
-    #   assets = grants.inject([]) { |memo, grant| memo + grant.assets }
-    #   asset_ids = assets.map { |a| a.id }
-    #   @klass.where(id: asset_ids)
-    # end
   end
 
   # Removes empty spaces from multi-select forms
