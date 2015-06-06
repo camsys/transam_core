@@ -318,6 +318,13 @@ class AssetSearcher < BaseSearcher
 
   def federal_funding_source_conditions
     clean_federal_funding_source_ids = remove_blanks(federal_funding_source_ids)
+
+    # query = '''
+    #         JOIN grant_purchases ON grant_purchases.asset_id = assets.id
+    #         JOIN grants ON grant_purchases.grant_id = grants.id
+    #         WHERE grants.funding_source_id = ?
+    #         '''
+    #@klass.joins(:grants).where(query, clean_federal_funding_source_ids) unless clean_federal_funding_source_ids.empty?
     @klass.joins(:grants).where('funding_source_id = ?', clean_federal_funding_source_ids) unless clean_federal_funding_source_ids.empty?
   end
 
