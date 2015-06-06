@@ -62,6 +62,7 @@
             = f.input_field :purchase_date_comparator, :as => :hidden, :value => '0'
           = f.date_field :purchase_date, :class => "form-control"
         = f.input :federal_funding_source_ids, :collection => FundingSource.all.select { |source| source.federal? }, input_html: { multiple: true }, :label => "Federal Funding Source"
+        = f.input :non_federal_funding_source_ids, :collection => FundingSource.all.select { |source| !source.federal? }, input_html: { multiple: true }, :label => "Non-Federal Funding Source"
         = f.input :book_value, :wrapper => :vertical_prepend do
           .input-group-btn
             %button.btn.btn-default.dropdown-toggle{"data-toggle" => "dropdown", :type => "button"}
