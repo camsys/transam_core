@@ -317,7 +317,8 @@ class AssetSearcher < BaseSearcher
   #Search by Funding Source
 
   def federal_funding_source_conditions
-    clean_federal_funding_source_ids = remove_blanks(federal_funding_source_ids)
+    funding_source_ids = federal_funding_source_ids + non_federal_funding_source_ids
+    clean_funding_source_ids = remove_blanks(funding_source_ids)
 
     # query = '''
     #         JOIN grant_purchases ON grant_purchases.asset_id = assets.id
@@ -325,8 +326,8 @@ class AssetSearcher < BaseSearcher
     #         WHERE grants.funding_source_id = ?
     #         '''
     #@klass.joins(:grants).where(query, clean_federal_funding_source_ids) unless clean_federal_funding_source_ids.empty?
-    unless clean_federal_funding_source_ids.empty?
-      grants = Grant.includes(:assets).where(funding_source_id: clean_federal_funding_source_ids)
+    unless clean_funding_source_ids.empty?
+      grants = Grant.includes(:assets).where(funding_source_id: clean_funding_source_ids)
       assets = grants.inject([]) { |memo, grant| memo + grant.assets }
       asset_ids = assets.map { |a| a.id }
       @klass.where(id: asset_ids)
@@ -334,13 +335,13 @@ class AssetSearcher < BaseSearcher
   end
 
   def non_federal_funding_source_conditions
-    clean_non_federal_funding_source_ids = remove_blanks(non_federal_funding_source_ids)
-    unless clean_non_federal_funding_source_ids.empty?
-      grants = Grant.includes(:assets).where(funding_source_id: clean_non_federal_funding_source_ids)
-      assets = grants.inject([]) { |memo, grant| memo + grant.assets }
-      asset_ids = assets.map { |a| a.id }
-      @klass.where(id: asset_ids)
-    end
+    # clean_non_federal_funding_source_ids = remove_blanks(non_federal_funding_source_ids)
+    # unless clean_non_federal_funding_source_ids.empty?
+    #   grants = Grant.includes(:assets).where(funding_source_id: clean_non_federal_funding_source_ids)
+    #   assets = grants.inject([]) { |memo, grant| memo + grant.assets }
+    #   asset_ids = assets.map { |a| a.id }
+    #   @klass.where(id: asset_ids)
+    # end
   end
 
   # Removes empty spaces from multi-select forms
