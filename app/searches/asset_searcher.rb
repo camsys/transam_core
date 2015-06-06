@@ -26,6 +26,8 @@ class AssetSearcher < BaseSearcher
                 :vendor_ids,
                 :service_status_type_ids,
                 :manufacturer_model,
+                :federal_funding_source_ids,
+                :non_federal_funding_source_ids,
                 # Comparator-based (<=>)
                 :purchase_cost,
                 :purchase_cost_comparator,
@@ -316,20 +318,12 @@ class AssetSearcher < BaseSearcher
 
   def federal_funding_source_conditions
     clean_federal_funding_source_ids = remove_blanks(federal_funding_source_ids)
-    query = '''
-            INNER JOIN grants ON assets.grant_id = grants.id
-            INNER JOIN funding_sources ON grants.funding_source_id = ?
-            '''
-    @klass.where(query, clean_federal_funding_source_ids) unless clean_federal_funding_source_ids.empty?
+    @klass.joins(:grants).where('funding_source_id = ?', clean_federal_funding_source_ids) unless clean_federal_funding_source_ids.empty?
   end
 
   def non_federal_funding_source_conditions
     clean_non_federal_funding_source_ids = remove_blanks(non_federal_funding_source_ids)
-    query = '''
-            INNER JOIN grants ON assets.grant_id = grants.id
-            INNER JOIN funding_sources ON grants.funding_source_id = ?
-            '''
-    @klass.where(query, clean_federal_funding_source_ids) unless clean_non_federal_funding_source_ids.empty?
+    @klass.joins(:grants).where('funding_source_id = ?', clean_non_federal_funding_source_ids) unless clean_non_federal_funding_source_ids.empty?
   end
 
   # Removes empty spaces from multi-select forms
