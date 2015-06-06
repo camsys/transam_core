@@ -325,12 +325,22 @@ class AssetSearcher < BaseSearcher
     #         WHERE grants.funding_source_id = ?
     #         '''
     #@klass.joins(:grants).where(query, clean_federal_funding_source_ids) unless clean_federal_funding_source_ids.empty?
-    @klass.joins(:grants).where('funding_source_id = ?', clean_federal_funding_source_ids) unless clean_federal_funding_source_ids.empty?
+    unless clean_federal_funding_source_ids.empty?
+      grants = Grant.includes(:assets).where(funding_source_id: clean_federal_funding_source_ids)
+      assets = grants.inject([]) { |memo, grant| memo + grant.assets }
+      asset_ids = assets.map { |a| a.id }
+      @klass.where(id: asset_ids)
+    end
   end
 
   def non_federal_funding_source_conditions
     clean_non_federal_funding_source_ids = remove_blanks(non_federal_funding_source_ids)
-    @klass.joins(:grants).where('funding_source_id = ?', clean_non_federal_funding_source_ids) unless clean_non_federal_funding_source_ids.empty?
+    unless clean_non_federal_funding_source_ids.empty?
+      grants = Grant.includes(:assets).where(funding_source_id: clean_non_federal_funding_source_ids)
+      assets = grants.inject([]) { |memo, grant| memo + grant.assets }
+      asset_ids = assets.map { |a| a.id }
+      @klass.where(id: asset_ids)
+    end
   end
 
   # Removes empty spaces from multi-select forms
