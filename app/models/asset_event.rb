@@ -31,6 +31,7 @@ class AssetEvent < ActiveRecord::Base
   validates :asset_id,            :presence => true
   validates :asset_event_type_id, :presence => true
   validates :event_date,          :presence => true
+  validate :validate_event_date_with_purchase
 
   # default scope
   default_scope { order("event_date, created_at") }
@@ -132,5 +133,11 @@ class AssetEvent < ActiveRecord::Base
   # Set resonable defaults for a new asset event
   def set_defaults
     self.event_date ||= Date.today
+  end
+
+  def validate_event_date_with_purchase
+    if asset.purchased_new && event_date < asset.purchase_date
+      errors.add(:event_date, "must be after purchase date if new purchase")
+    end
   end
 end
