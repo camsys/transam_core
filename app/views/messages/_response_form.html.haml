@@ -1,4 +1,7 @@
 %h5 Reply
+- unless @response.errors.empty?
+  = render(:partial => 'shared/form_errors', :locals => {:obj => @response})
+
 = simple_form_for([current_user, @response],
   :html => {:class => 'form-vertical' },
   :url => reply_user_message_path(current_user, @message),

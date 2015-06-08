@@ -190,7 +190,8 @@ class MessagesController < OrganizationAwareController
         format.html { redirect_to user_messages_url(current_user) }
         format.json { render :json => @new_message, :status => :created }
       else
-        format.html { render :action => "new" }
+        @response = @new_message
+        format.html { render :action => "show" }
         format.json { render :json => @new_message.errors, :status => :unprocessable_entity }
       end
     end
