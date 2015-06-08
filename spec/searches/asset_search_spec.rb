@@ -8,60 +8,53 @@ RSpec.describe AssetSearcher do
   #
   #------------------------------------------------------------------------------
   it 'should be able to search by manufacturer' do
-    searcher = AssetSearcher.new(:manufacturer_ids => [bus.manufacturer.id], :organization_id => bus.organization.id )
+    searcher = AssetSearcher.new(:manufacturer_ids => [bus.manufacturer_id], :organization_id => bus.organization.id )
     expect(searcher.respond_to?(:manufacturer_ids)).to be true
     expect(searcher.data).to eq(Asset.where('manufacturer_id = ?', [bus.manufacturer_id]))
   end
 
-  it 'should be able to search by fta_funding_type' do
-    searcher = AssetSearcher.new(:fta_funding_type_ids => [bus.fta_funding_type.id], :organization_id => bus.organization.id )
+  it 'should be able to search by fta funding type' do
+    searcher = AssetSearcher.new(:fta_funding_type_ids => [bus.fta_funding_type_id], :organization_id => bus.organization.id )
     expect(searcher.respond_to?(:fta_funding_type_ids)).to be true
-    expect(searcher.data).to eq(Asset.where('fta_funding_type_id = ?', [bus.fta_funding_type.id]))
+    expect(searcher.data).to eq(Asset.where('fta_funding_type_id = ?', [bus.fta_funding_type_id]))
   end
 
-  it 'should be able to search by fta_ownership_type' do
-    searcher = AssetSearcher.new(:fta_ownership_type_ids => [bus.fta_ownership_type.id], :organization_id => bus.organization.id )
+  it 'should be able to search by fta ownership type' do
+    searcher = AssetSearcher.new(:fta_ownership_type_ids => [bus.fta_ownership_type_id], :organization_id => bus.organization.id )
     expect(searcher.respond_to?(:fta_ownership_type_ids)).to be true
-    expect(searcher.data).to eq(Asset.where('fta_ownership_type_id = ?', [bus.fta_ownership_type.id]))
+    expect(searcher.data).to eq(Asset.where('fta_ownership_type_id = ?', [bus.fta_ownership_type_id]))
   end
 
-  it 'should be able to search by fta_vehicle_type' do
-    searcher = AssetSearcher.new(:fta_vehicle_type_ids => [bus.fta_vehicle_type.id], :organization_id => bus.organization.id )
+  it 'should be able to search by fta vehicle_type' do
+    searcher = AssetSearcher.new(:fta_vehicle_type_ids => [bus.fta_vehicle_type_id], :organization_id => bus.organization.id )
     expect(searcher.respond_to?(:fta_vehicle_type_ids)).to be true
-    expect(searcher.data).to eq(Asset.where('fta_vehicle_type_id = ?', [bus.fta_vehicle_type.id]))
+    expect(searcher.data).to eq(Asset.where('fta_vehicle_type_id = ?', [bus.fta_vehicle_type_id]))
   end
 
-  it 'should be able to search by asset_type' do
-    searcher = AssetSearcher.new(:asset_type_ids => [bus.asset_type.id], :organization_id => bus.organization.id )
+  it 'should be able to search by asset type' do
+    searcher = AssetSearcher.new(:asset_type_ids => [bus.asset_type_id], :organization_id => bus.organization.id )
     expect(searcher.respond_to?(:asset_type_ids)).to be true
-    expect(searcher.data).to eq(Asset.where('asset_type_id = ?', [bus.asset_type.id]))
+    expect(searcher.data).to eq(Asset.where('asset_type_id = ?', [bus.asset_type_id]))
   end
 
-  it 'should be able to search by asset_subtype' do
-    searcher = AssetSearcher.new(:asset_subtype_ids => [bus.asset_subtype.id], :organization_id => bus.organization.id )
+  it 'should be able to search by asset subtype' do
+    searcher = AssetSearcher.new(:asset_subtype_ids => [bus.asset_subtype_id], :organization_id => bus.organization.id )
     expect(searcher.respond_to?(:asset_subtype_ids)).to be true
-    expect(searcher.data).to eq(Asset.where('asset_subtype_id = ?', [bus.asset_subtype.id]))
+    expect(searcher.data).to eq(Asset.where('asset_subtype_id = ?', [bus.asset_subtype_id]))
   end
 
-  it 'should be able to search by vendor' do
-    searcher = AssetSearcher.new(:vendor_ids => [bus.vendor], :organization_id => bus.organization.id )
-    expect(searcher.respond_to?(:vendor_ids)).to be true
-    expect(searcher.data).to eq(Asset.where('vendor_id = ?', [bus.vendor.id]))
+  it 'should be able to search by condition type' do
+    searcher = AssetSearcher.new(:condition_type_ids => [bus.asset_subtype_id], :organization_id => bus.organization.id )
+    expect(searcher.respond_to?(:condition_type_ids)).to be true
+    expect(searcher.data).to eq(Asset.where('condition_type_id = ?', [bus.asset_subtype_id]))
   end
 
-  it 'should be able to search by vendor' do
-    searcher = AssetSearcher.new(:vendor_ids => [bus.vendor], :organization_id => bus.organization.id )
-    expect(searcher.respond_to?(:vendor_ids)).to be true
-    expect(searcher.data).to eq(Asset.where('vendor_id = ?', [bus.vendor.id]))
-  end
-
-  it 'should be able to search by service_status_type' do
-    searcher = AssetSearcher.new(:service_status_type_ids => [bus.service_status_type.id], :organization_id => bus.organization.id )
+  it 'should be able to search by service status' do
+    searcher = AssetSearcher.new(:service_status_type_ids => [bus.service_status_type_id], :organization_id => bus.organization.id )
     expect(searcher.respond_to?(:service_status_type_ids)).to be true
-    expect(searcher.data).to eq(Asset.where('service_status_type_id = ?', [bus.service_status_type.id]))
+    expect(searcher.data).to eq(Asset.where('service_status_type_id = ?', [bus.service_status_type_id]))
   end
-
-  #------------------------------------------------------------------------------
+ #------------------------------------------------------------------------------
   #
   # Comparator Searches
   #
@@ -150,16 +143,16 @@ RSpec.describe AssetSearcher do
     expect(searcher.data).to eq(Asset.where('reported_mileage > ?', bus.reported_mileage))
   end
 
-  it 'should be able to search by manufacture date' do
-    searcher = AssetSearcher.new(:manufacture_date => bus.manufacture_date, :manufacture_date_comparator => '0', :organization_id => bus.organization.id )
-    expect(searcher.respond_to?(:manufacture_date)).to be true
-    expect(searcher.data).to eq(Asset.where('manufacture_date = ?', bus.manufacture_date))
+  it 'should be able to search by manufacture year' do
+    searcher = AssetSearcher.new(:manufacture_year => bus.manufacture_year, :manufacture_year_comparator => '0', :organization_id => bus.organization.id )
+    expect(searcher.respond_to?(:manufacture_year)).to be true
+    expect(searcher.data).to eq(Asset.where('manufacture_year = ?', bus.manufacture_year))
 
-    searcher = AssetSearcher.new(:manufacture_date => bus.manufacture_date, :manufacture_date_comparator => '-1', :organization_id => bus.organization.id )
-    expect(searcher.data).to eq(Asset.where('manufacture_date < ?', bus.manufacture_date))
+    searcher = AssetSearcher.new(:manufacture_year => bus.manufacture_year, :manufacture_year_comparator => '-1', :organization_id => bus.organization.id )
+    expect(searcher.data).to eq(Asset.where('manufacture_year < ?', bus.manufacture_year))
 
-    searcher = AssetSearcher.new(:manufacture_date => bus.manufacture_date, :manufacture_date_comparator => '1', :organization_id => bus.organization.id )
-    expect(searcher.data).to eq(Asset.where('manufacture_date > ?', bus.manufacture_date))
+    searcher = AssetSearcher.new(:manufacture_year => bus.manufacture_year, :manufacture_year_comparator => '1', :organization_id => bus.organization.id )
+    expect(searcher.data).to eq(Asset.where('manufacture_year > ?', bus.manufacture_year))
   end
 
   it 'should be able to search by in service date' do
