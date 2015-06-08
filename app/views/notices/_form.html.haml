@@ -1,7 +1,7 @@
 .col-md-6.col-md-offset-3
   .row
     = simple_form_for(@notice,
-    :html => {:class => 'form-vertical'},
+    :html => {:class => 'form-vertical notice_form'},
     :wrapper => :vertical_form,
     :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes,
     :radio_buttons => :vertical_radio_and_checkboxes,
@@ -34,3 +34,47 @@
             = f.input :end_datetime_hour, :as => :select, :collection => 0..23, :label_method => lambda { |hr| Time.current.change(:hour => hr).strftime("%l:%M %p")}, :requred => true, :label => "Hour"
         = f.association :notice_type, :include_blank => false
       = f.button :submit, :class => 'btn btn-primary'
+
+:javascript
+
+  $('.notice_form').validate({
+    ignore: [], //validate hidden fields
+    submitHandler: function(form) {
+      form.submit();
+    }
+  });
+
+  $('#notice_subject').rules("add", {
+    required: true
+  });
+  $('#notice_summary').rules("add", {
+    required: true
+  });
+  $('#notice_notice_type_id').rules("add", {
+    required: true
+  });
+  $('#notice_display_datetime_date').rules("add", {
+    required: true
+  });
+  $('#notice_display_datetime_hour').rules("add", {
+    required: true
+  });
+  $('#notice_end_datetime_date').rules("add", {
+    required: true,
+    endGreaterThanStart: true
+  });
+  $('#notice_end_datetime_hour').rules("add", {
+    required: true
+  });
+
+  $.validator.addMethod("endGreaterThanStart", function(value, element) {
+    var display_datetime = new Date($('#notice_display_datetime_date').val());
+    display_datetime.setHours($('#notice_display_datetime_hour').val(),0,0,0);
+    var end_datetime = new Date($('#notice_end_datetime_date').val());
+    end_datetime.setHours($('#notice_end_datetime_hour').val(),0,0,0);
+
+    if (end_datetime > display_datetime) {
+      return true;
+    }
+    return false;
+  }, "End time must be after start time.");
