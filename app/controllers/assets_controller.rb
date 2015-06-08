@@ -7,7 +7,7 @@ class AssetsController < AssetAwareController
   # Don't process cancel buttons
   before_filter :check_for_cancel,  :only => [:create, :update]
   # set the @asset variable before any actions are invoked
-  before_filter :get_asset,         :only => [:tag, :show, :edit, :copy, :update, :destroy, :summary_info, :add_to_group, :remove_from_group]
+  before_filter :get_asset,         :only => [:tag, :show, :edit, :copy, :update, :destroy, :summary_info, :add_to_group, :remove_from_group, :popup]
   before_filter :reformat_date_fields,  :only => [:create, :update]
   # Update the vendor_id param if the user is using the vendor_name parameter
   before_filter :update_vendor_param,  :only => [:create, :update]
@@ -318,6 +318,18 @@ class AssetsController < AssetAwareController
 
     # No response needed
     render :nothing => true
+
+  end
+
+  # Called via AJAX to get dynamic content via AJAX
+  def popup
+
+    str = ""
+    if @asset
+      str = render_to_string(:partial => "popup", :locals => { :asset => @asset })
+    end
+
+    render json: str.to_json
 
   end
 
