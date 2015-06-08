@@ -90,5 +90,8 @@
     required: true
   });
   $('#message_proxy_body').rules("add", {
-    required: true
+    required: function()
+    {
+      CKEDITOR.instances.message_proxy_body.updateElement();
+    }
   });
