@@ -179,7 +179,7 @@ class MessagesController < OrganizationAwareController
     @new_message.user = current_user
     @new_message.priority_type = @message.priority_type
     @new_message.subject = 'Re: ' +  @message.subject
-    @new_message.to_user = @message.to_user
+    @new_message.to_user = @message.user
 
     respond_to do |format|
       if @new_message.save
