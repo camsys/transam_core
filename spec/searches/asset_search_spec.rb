@@ -54,7 +54,7 @@ RSpec.describe AssetSearcher do
     expect(searcher.respond_to?(:service_status_type_ids)).to be true
     expect(searcher.data).to eq(Asset.where('service_status_type_id = ?', [bus.service_status_type_id]))
   end
- #------------------------------------------------------------------------------
+  #------------------------------------------------------------------------------
   #
   # Comparator Searches
   #
@@ -156,7 +156,7 @@ RSpec.describe AssetSearcher do
   end
 
   it 'should be able to search by in service date' do
-    searcher = AssetSearcher.new(:in_service_date => bus.in_service_date, :in_service_date => '0', :organization_id => bus.organization.id )
+    searcher = AssetSearcher.new(:in_service_date => bus.in_service_date, :in_service_date_comparator => '0', :organization_id => bus.organization.id )
     expect(searcher.respond_to?(:in_service_date)).to be true
     expect(searcher.data).to eq(Asset.where('in_service_date = ?', bus.in_service_date))
 
@@ -165,6 +165,47 @@ RSpec.describe AssetSearcher do
 
     searcher = AssetSearcher.new(:in_service_date => bus.in_service_date, :in_service_date_comparator => '1', :organization_id => bus.organization.id )
     expect(searcher.data).to eq(Asset.where('in_service_date > ?', bus.in_service_date))
+  end
+
+  #------------------------------------------------------------------------------
+  #
+  # Checkbox Searches
+  #
+  #------------------------------------------------------------------------------
+
+  it 'should be able to search by in backlog status' do
+    searcher = AssetSearcher.new(:in_backlog => bus.in_backlog, :organization_id => bus.organization.id )
+    expect(searcher.respond_to?(:in_backlog)).to be true
+
+    expect(searcher.data).to eq(Asset.where('in_backlog = ?', bus.in_backlog))
+  end
+
+  it 'should be able to search by in purchased new' do
+    searcher = AssetSearcher.new(:purchased_new => bus.purchased_new, :organization_id => bus.organization.id )
+    expect(searcher.respond_to?(:purchased_new)).to be true
+
+    expect(searcher.data).to eq(Asset.where('purchased_new = ?', bus.purchased_new))
+  end
+
+  it 'should be able to search by ada accessible lift' do
+    searcher = AssetSearcher.new(:ada_accessible_lift => bus.ada_accessible_lift, :organization_id => bus.organization.id )
+    expect(searcher.respond_to?(:ada_accessible_lift)).to be true
+
+    expect(searcher.data).to eq(Asset.where('ada_accessible_lift = ?', bus.ada_accessible_lift))
+  end
+
+  it 'should be able to search by ada accessible ramp' do
+    searcher = AssetSearcher.new(:ada_accessible_ramp => bus.ada_accessible_ramp, :organization_id => bus.organization.id )
+    expect(searcher.respond_to?(:ada_accessible_ramp)).to be true
+
+    expect(searcher.data).to eq(Asset.where('ada_accessible_ramp = ?', bus.ada_accessible_ramp))
+  end
+
+  it 'should be able to search by fta_emergency_contingency_fleet' do
+    searcher = AssetSearcher.new(:fta_emergency_contingency_fleet => bus.fta_emergency_contingency_fleet, :organization_id => bus.organization.id )
+    expect(searcher.respond_to?(:fta_emergency_contingency_fleet)).to be true
+
+    expect(searcher.data).to eq(Asset.where('fta_emergency_contingency_fleet = ?', bus.fta_emergency_contingency_fleet))
   end
 
 end
