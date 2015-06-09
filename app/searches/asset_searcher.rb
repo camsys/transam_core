@@ -19,20 +19,13 @@ class AssetSearcher < BaseSearcher
                 :parent_id,
                 :disposition_date,
                 :keyword,
-                :fta_funding_type_ids,
-                :fta_ownership_type_ids,
-                :fta_vehicle_type_ids,
                 :condition_type_ids,
                 :vendor_ids,
                 :service_status_type_ids,
                 :manufacturer_model,
-                :federal_funding_source_ids,
-                :non_federal_funding_source_ids,
                 # Comparator-based (<=>)
                 :purchase_cost,
                 :purchase_cost_comparator,
-                :book_value,
-                :book_value_comparator,
                 :replacement_year,
                 :replacement_year_comparator,
                 :scheduled_replacement_year,
@@ -41,18 +34,13 @@ class AssetSearcher < BaseSearcher
                 :policy_replacement_year_comparator,
                 :purchase_date,
                 :purchase_date_comparator,
-                :reported_mileage,
-                :reported_mileage_comparator,
                 :manufacture_date,
                 :manufacture_date_comparator,
                 :in_service_date,
                 :in_service_date_comparator,
                 # Checkboxes
                 :in_backlog,
-                :purchased_new,
-                :ada_accessible_lift,
-                :ada_accessible_ramp,
-                :fta_emergency_contingency_fleet
+                :purchased_new
 
 
 
@@ -87,21 +75,6 @@ class AssetSearcher < BaseSearcher
   def asset_condition_type_conditions
     clean_condition_type_ids = remove_blanks(condition_type_ids)
     @klass.where(reported_condition_type_id: clean_condition_type_ids) unless clean_condition_type_ids.empty?
-  end
-
-  def fta_funding_type_conditions
-    clean_fta_funding_type_ids = remove_blanks(fta_funding_type_ids)
-    @klass.where(fta_funding_type_id: clean_fta_funding_type_ids) unless clean_fta_funding_type_ids.empty?
-  end
-
-  def fta_ownership_type_conditions
-    clean_fta_ownership_type_ids = remove_blanks(fta_ownership_type_ids)
-    @klass.where(fta_ownership_type_id: clean_fta_ownership_type_ids) unless clean_fta_ownership_type_ids.empty?
-  end
-
-  def fta_vehicle_type_id_conditions
-    clean_fta_vehicle_type_ids = remove_blanks(fta_vehicle_type_ids)
-    @klass.where(fta_vehicle_type_id: clean_fta_vehicle_type_ids) unless clean_fta_vehicle_type_ids.empty?
   end
 
   def manufacturer_conditions
@@ -166,34 +139,6 @@ class AssetSearcher < BaseSearcher
     end
   end
 
-  def reported_mileage_conditions
-    unless reported_mileage.blank?
-      reported_mileage_as_int = sanitize_to_int(reported_mileage)
-      case reported_mileage_comparator
-      when "-1" # Less than X miles
-        @klass.where("reported_mileage < ?", reported_mileage_as_int)
-      when "0" # Exactly X miles
-        @klass.where("reported_mileage = ?", reported_mileage_as_int)
-      when "1" # Greater than X miles
-        @klass.where("reported_mileage > ?", reported_mileage_as_int)
-      end
-    end
-  end
-
-  def book_value_conditions
-    unless book_value.blank?
-      value_as_int = sanitize_to_int(book_value)
-      case book_value_comparator
-      when "-1" # Less than X miles
-        @klass.where("book_value < ?", value_as_int)
-      when "0" # Exactly X miles
-        @klass.where("book_value = ?", value_as_int)
-      when "1" # Greater than X miles
-        @klass.where("book_value > ?", value_as_int)
-      end
-    end
-  end
-
   def purchase_cost_conditions
     unless purchase_cost.blank?
       purchase_cost_as_float = sanitize_to_float(purchase_cost)
@@ -245,18 +190,6 @@ class AssetSearcher < BaseSearcher
 
   def purchased_new_conditions
     @klass.where(purchased_new: true) unless purchased_new.to_i.eql? 0
-  end
-
-  def ada_accessible_lift_conditions
-    @klass.where(ada_accessible_lift: true) unless ada_accessible_lift.to_i.eql? 0
-  end
-
-  def ada_accessible_ramp_conditions
-    @klass.where(ada_accessible_ramp: true) unless ada_accessible_ramp.to_i.eql? 0
-  end
-
-  def fta_emergency_contingency_fleet_conditions
-    @klass.where(fta_emergency_contingency_fleet: true) unless fta_emergency_contingency_fleet.to_i.eql? 0
   end
 
   #---------------------------------------------------
