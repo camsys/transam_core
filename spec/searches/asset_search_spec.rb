@@ -90,20 +90,20 @@ RSpec.describe AssetSearcher, :type => :model do
     expect(searcher.data).to eq(Asset.where('scheduled_replacement_year > ?', asset.scheduled_replacement_year).to_a)
   end
 
-  # it 'should be able to search by policy replacement year' do
-  #   asset = create(:equipment_asset, :policy_replacement_year => 2020, :organization_id => 1)
-  #   lesser = create(:equipment_asset, :policy_replacement_year => 2010, :organization_id => 1)
+  it 'should be able to search by policy replacement year' do
+    asset = create(:equipment_asset, :policy_replacement_year => 2020, :organization_id => 1)
+    lesser = create(:equipment_asset, :policy_replacement_year => 2010, :organization_id => 1)
 
-  #   searcher = AssetSearcher.new(:policy_replacement_year => asset.policy_replacement_year, :policy_replacement_year_comparator => '0', :organization_id => asset.organization_id )
-  #   expect(searcher.respond_to?(:policy_replacement_year)).to be true
-  #   expect(searcher.data).to eq(Asset.where('policy_replacement_year = ?', asset.policy_replacement_year).to_a)
+    searcher = AssetSearcher.new(:policy_replacement_year => asset.policy_replacement_year, :policy_replacement_year_comparator => '0', :organization_id => asset.organization_id )
+    expect(searcher.respond_to?(:policy_replacement_year)).to be true
+    expect(searcher.data).to eq(Asset.where('policy_replacement_year = ?', asset.policy_replacement_year).to_a)
 
-  #   searcher = AssetSearcher.new(:policy_replacement_year => asset.policy_replacement_year, :policy_replacement_year_comparator => '-1', :organization_id => asset.organization_id )
-  #   expect(searcher.data).to eq(Asset.where('policy_replacement_year < ?', asset.policy_replacement_year).to_a)
+    searcher = AssetSearcher.new(:policy_replacement_year => asset.policy_replacement_year, :policy_replacement_year_comparator => '-1', :organization_id => asset.organization_id )
+    expect(searcher.data).to eq(Asset.where('policy_replacement_year < ?', asset.policy_replacement_year).to_a)
 
-  #   searcher = AssetSearcher.new(:policy_replacement_year => asset.policy_replacement_year, :scheduled_replacement_year_comparator => '1', :organization_id => asset.organization_id )
-  #   expect(searcher.data).to eq(Asset.where('policy_replacement_year > ?', asset.policy_replacement_year).to_a)
-  # end
+    searcher = AssetSearcher.new(:policy_replacement_year => asset.policy_replacement_year, :policy_replacement_year_comparator => '1', :organization_id => asset.organization_id )
+    expect(searcher.data).to eq(Asset.where('policy_replacement_year > ?', asset.policy_replacement_year).to_a)
+  end
 
   # it 'should be able to search by purchase date' do
   #   asset = create(:equipment_asset, :purchase_date => Date.today, :organization_id => 1)
