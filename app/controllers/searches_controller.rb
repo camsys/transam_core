@@ -48,8 +48,6 @@ class SearchesController < OrganizationAwareController
 
     add_breadcrumb "Query"
 
-    binding.pry
-
     respond_to do |format|
       format.html # new.html.erb
     end
