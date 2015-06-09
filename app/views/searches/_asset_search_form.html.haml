@@ -65,6 +65,16 @@
     .col-lg-3.col-md-6
       %fieldset
         %legend.panel-legend Condition
+        = f.input :reported_mileage, :wrapper => :vertical_prepend, :label => "Mileage" do
+          .input-group-btn
+            %button.btn.btn-default.dropdown-toggle{"data-toggle" => "dropdown", :type => "button"}
+            %ul.dropdown-menu{:role => "menu"}
+              %li
+                %a{:data => {:compare => "-1"}} Less Than
+              %li
+                %a{:data => {:compare => "1"}} Greater Than
+            = f.input_field :reported_mileage_comparator, :as => :hidden, :value => '1'
+          = f.input_field :reported_mileage, :class => "form-control"
         = f.input :scheduled_replacement_year, :wrapper => :vertical_prepend do
           .input-group-btn
             %button.btn.btn-default.dropdown-toggle{"data-toggle" => "dropdown", :type => "button"}

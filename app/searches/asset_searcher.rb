@@ -46,8 +46,6 @@ class AssetSearcher < BaseSearcher
                 :ada_accessible_lift,
                 :ada_accessible_ramp,
 
-
-
   # Return the name of the form to display
   def form_view
     'asset_search_form'
@@ -276,12 +274,8 @@ class AssetSearcher < BaseSearcher
   # Removes empty spaces from multi-select forms
 
   def remove_blanks(input)
-    if input.class == Array
-      output = input.select { |num_string| !num_string.blank? }
-    else
-      output = []
-    end
-    output
+    output = (input.is_a?(Array) ? output : [output])
+    output.select { |e| !e.blank? }
   end
 
 end
