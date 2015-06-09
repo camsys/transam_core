@@ -19,10 +19,11 @@ class AssetSearcher < BaseSearcher
                 :parent_id,
                 :disposition_date,
                 :keyword,
-                :condition_type_ids,
+                :estimated_condition_type_ids,
                 :vendor_ids,
                 :service_status_type_ids,
                 :manufacturer_model,
+                :manufacture_year,
                 # Comparator-based (<=>)
                 :purchase_cost,
                 :purchase_cost_comparator,
@@ -72,9 +73,9 @@ class AssetSearcher < BaseSearcher
   # Simple Equality Queries
   #---------------------------------------------------
 
-  def asset_condition_type_conditions
-    clean_condition_type_ids = remove_blanks(condition_type_ids)
-    @klass.where(reported_condition_type_id: clean_condition_type_ids) unless clean_condition_type_ids.empty?
+  def estimated_condition_type_conditions
+    clean_estimated_condition_type_ids = remove_blanks(estimated_condition_type_ids)
+    @klass.where(estimated_condition_type_id: estimated_condition_type_ids) unless clean_estimated_condition_type_ids.empty?
   end
 
   def manufacturer_conditions
