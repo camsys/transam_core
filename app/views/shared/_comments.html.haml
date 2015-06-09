@@ -5,6 +5,6 @@
       %span.title{:style => 'display:inline-block;vertical-align:top'}= c.comment.html_safe.truncate(128)
       %span.pull-right{:style => 'min-width: 80px; display:inline-block;vertical-align:top'}
         - if can? :destroy, c
-          = link_to c, :method => :destroy, :class => "btn btn-warning btn-xs pull-right", :style => "margin-left: 5px;", :data => { :confirm => 'Are you sure you want to remove this comment?' } do
+          = link_to [c.commentable, c], :method => :delete, :class => "btn btn-warning btn-xs pull-right", :style => "margin-left: 5px;", :data => { :confirm => 'Are you sure you want to remove this comment?' } do
             %i.fa.fa-trash
             Delete
