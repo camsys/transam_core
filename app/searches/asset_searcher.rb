@@ -247,35 +247,11 @@ class AssetSearcher < BaseSearcher
     end
   end
 
-  #Search by Funding Source.  This search consolidates the federal and non-federal searches into one search.
-
-  def funding_source_conditions
-    funding_source_ids = federal_funding_source_ids + non_federal_funding_source_ids
-    clean_funding_source_ids = remove_blanks(funding_source_ids)
-
-    # query = '''
-    #         JOIN grant_purchases ON grant_purchases.asset_id = assets.id
-    #         JOIN grants ON grant_purchases.grant_id = grants.id
-    #         WHERE grants.funding_source_id = ?
-    #         '''
-    #@klass.joins(:grants).where(query, clean_federal_funding_source_ids) unless clean_federal_funding_source_ids.empty?
-    unless clean_funding_source_ids.empty?
-      grants = Grant.includes(:assets).where(funding_source_id: clean_funding_source_ids)
-      assets = grants.inject([]) { |memo, grant| memo + grant.assets }
-      asset_ids = assets.map { |a| a.id }
-      @klass.where(id: asset_ids)
-    end
-  end
-
   # Removes empty spaces from multi-select forms
 
   def remove_blanks(input)
-    if input.class == Array
-      output = input.select { |num_string| !num_string.blank? }
-    else
-      output = []
-    end
-    output
+    output = (input.is_a?(Array) ? input : [input])
+    output.select { |e| !e.blank? }
   end
 
 end
