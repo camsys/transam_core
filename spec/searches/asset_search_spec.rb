@@ -165,13 +165,13 @@ RSpec.describe AssetSearcher, :type => :model do
     expect(searcher.data).to eq(Asset.where(in_backlog: true).to_a)
   end
 
-  # it 'should be able to search by in purchased new' do
-  #   asset = create(:equipment_asset, :purchased_new => true, :organization_id => 1)
+  it 'should be able to search by in purchased new' do
+    asset = create(:equipment_asset, :purchased_new => true, :organization_id => 1)
 
-  #   searcher = AssetSearcher.new(:purchased_new => asset.purchased_new, :organization_id => asset.organization_id )
-  #   expect(searcher.respond_to?(:purchased_new)).to be true
+    searcher = AssetSearcher.new(:purchased_new => '1', :organization_id => asset.organization_id )
+    expect(searcher.respond_to?(:purchased_new)).to be true
 
-  #   expect(searcher.data).to eq(Asset.where('purchased_new = ?', asset.purchased_new).to_a)
-  # end
+    expect(searcher.data).to eq(Asset.where('purchased_new = ?', asset.purchased_new).to_a)
+  end
 
 end
