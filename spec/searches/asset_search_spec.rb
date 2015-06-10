@@ -159,10 +159,10 @@ RSpec.describe AssetSearcher, :type => :model do
   it 'should be able to search by in backlog status' do
     asset = create(:equipment_asset, :in_backlog => true, :organization_id => 1)
 
-    searcher = AssetSearcher.new(:in_backlog => asset.in_backlog, :organization_id => asset.organization_id )
+    searcher = AssetSearcher.new(:in_backlog => "1", :organization_id => asset.organization_id )
     expect(searcher.respond_to?(:in_backlog)).to be true
 
-    expect(searcher.data).to eq(Asset.where('in_backlog = ?', asset.in_backlog).to_a)
+    expect(searcher.data).to eq(Asset.where(in_backlog: true).to_a)
   end
 
   # it 'should be able to search by in purchased new' do
