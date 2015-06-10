@@ -27,11 +27,18 @@ RSpec.describe AssetSearcher, :type => :model do
     expect(searcher.data).to eq(Asset.where('asset_subtype_id = ?', [asset.asset_subtype_id]).to_a)
   end
 
-  it 'should be able to search by condition type' do
+  it 'should be able to search by estimated condition type' do
     asset = create(:equipment_asset, :estimated_condition_type_id => 1, :organization_id => 1)
     searcher = AssetSearcher.new(:estimated_condition_type_ids => [asset.estimated_condition_type_id], :organization_id => asset.organization_id )
     expect(searcher.respond_to?(:estimated_condition_type_ids)).to be true
     expect(searcher.data).to eq(Asset.where('estimated_condition_type_id = ?', [asset.estimated_condition_type_id]).to_a)
+  end
+
+  it 'should be able to search by reported condition type' do
+    asset = create(:equipment_asset, :reported_condition_type_id => 1, :organization_id => 1)
+    searcher = AssetSearcher.new(:reported_condition_type_ids => [asset.reported_condition_type_id], :organization_id => asset.organization_id )
+    expect(searcher.respond_to?(:reported_condition_type_ids)).to be true
+    expect(searcher.data).to eq(Asset.where('reported_condition_type_id = ?', [asset.reported_condition_type_id]).to_a)
   end
 
   it 'should be able to search by service status' do
@@ -59,21 +66,6 @@ RSpec.describe AssetSearcher, :type => :model do
     searcher = AssetSearcher.new(:purchase_cost => [asset.purchase_cost], :purchase_cost_comparator => '1', :organization_id => asset.organization_id )
     expect(searcher.data).to eq(Asset.where('purchase_cost > ?', [asset.purchase_cost]).to_a)
   end
-
-  # it 'should be able to search by replacement year' do
-  #   asset = create(:equipment_asset, :replacement_year => 2020, :organization_id => 1)
-  #   lesser = create(:equipment_asset, :replacement_year => 2010, :organization_id => 1)
-
-  #   searcher = AssetSearcher.new(:replacement_year => asset.replacement_year, :replacement_year_comparator => '0', :organization_id => asset.organization_id )
-  #   expect(searcher.respond_to?(:replacement_year)).to be true
-  #   expect(searcher.data).to eq(Asset.where('replacement_year = ?', asset.replacement_year).to_a)
-
-  #   searcher = AssetSearcher.new(:replacement_year => asset.replacement_year, :replacement_year_comparator => '-1', :organization_id => asset.organization_id )
-  #   expect(searcher.data).to eq(Asset.where('replacement_year < ?', asset.replacement_year).to_a)
-
-  #   searcher = AssetSearcher.new(:replacement_year => asset.replacement_year, :replacement_year_comparator => '1', :organization_id => asset.organization_id )
-  #   expect(searcher.data).to eq(Asset.where('replacement_year > ?', [asset.replacement_year]).to_a)
-  # end
 
   it 'should be able to search by scheduled replacement year' do
     asset = create(:equipment_asset, :scheduled_replacement_year => 2020, :organization_id => 1)

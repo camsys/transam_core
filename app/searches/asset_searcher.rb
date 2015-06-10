@@ -20,6 +20,7 @@ class AssetSearcher < BaseSearcher
                 :disposition_date,
                 :keyword,
                 :estimated_condition_type_ids,
+                :reported_condition_type_ids,
                 :vendor_ids,
                 :service_status_type_ids,
                 :manufacturer_model,
@@ -77,6 +78,11 @@ class AssetSearcher < BaseSearcher
   def estimated_condition_type_conditions
     clean_estimated_condition_type_ids = remove_blanks(estimated_condition_type_ids)
     @klass.where(estimated_condition_type_id: estimated_condition_type_ids) unless clean_estimated_condition_type_ids.empty?
+  end
+
+  def reported_condition_type_conditions
+    clean_reported_condition_type_ids = remove_blanks(reported_condition_type_ids)
+    @klass.where(reported_condition_type_id: reported_condition_type_ids) unless clean_reported_condition_type_ids.empty?
   end
 
   def manufacturer_conditions
