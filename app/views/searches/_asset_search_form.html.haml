@@ -14,7 +14,7 @@
       %fieldset
         %legend.panel-legend Purchase
         = f.input :manufacturer_ids, collection: Manufacturer.all, label_method: :full_name, input_html: { multiple: true }
-        = f.input :manufacture_date, :wrapper => :vertical_prepend, :label => "Manufacture Year" do
+        = f.input :manufacture_year, :wrapper => :vertical_prepend, :label => "Manufacture Year" do
           .input-group-btn
             %button.btn.btn-default.dropdown-toggle{"data-toggle" => "dropdown", :type => "button"}
             %ul.dropdown-menu{:role => "menu"}
@@ -24,8 +24,8 @@
                 %a{:data => {:compare => "0"}} During
               %li
                 %a{:data => {:compare => "1"}} After
-            = f.input_field :manufacture_date_comparator, :as => :hidden, :value => '0'
-          = f.input_field :manufacture_date, :class => "form-control"
+            = f.input_field :manufacture_year_comparator, :as => :hidden, :value => '0'
+          = f.input_field :manufacture_year, :class => "form-control"
         = f.input :vendor_ids, collection: Vendor.all, label: 'Vendor', input_html: { multiple: true }
         = f.input :in_service_date, :wrapper => :vertical_prepend, :label => "Year Placed in Service" do
           .input-group-btn

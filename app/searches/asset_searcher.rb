@@ -23,8 +23,9 @@ class AssetSearcher < BaseSearcher
                 :vendor_ids,
                 :service_status_type_ids,
                 :manufacturer_model,
-                :manufacture_year,
                 # Comparator-based (<=>)
+                :manufacture_year,
+                :manufacture_year_comparator,
                 :purchase_cost,
                 :purchase_cost_comparator,
                 :replacement_year,
@@ -114,6 +115,19 @@ class AssetSearcher < BaseSearcher
   #---------------------------------------------------
   # Comparator Queries
   #---------------------------------------------------
+  def manufacture_year_conditions
+    unless manufacture_year.blank?
+      case manufacture_year_comparator
+      when "-1" # Before Year X
+        @klass.where("manufacture_year < ?", manufacture_year)
+      when "0" # During Year X
+        @klass.where("manufacture_year = ?", manufacture_year)
+      when "1" # After Year X
+        @klass.where("manufacture_year > ?", manufacture_year)
+      end
+    end
+  end
+
   def scheduled_replacement_year_conditions
     unless scheduled_replacement_year.blank?
       case scheduled_replacement_year_comparator

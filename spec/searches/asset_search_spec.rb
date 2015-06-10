@@ -120,20 +120,20 @@ RSpec.describe AssetSearcher, :type => :model do
     expect(searcher.data).to eq(Asset.where('purchase_date > ?', asset.purchase_date).to_a)
   end
 
-  # it 'should be able to search by manufacture year' do
-  #   asset = create(:equipment_asset, :manufacture_year => 2010, :organization_id => 1)
-  #   lesser = create(:equipment_asset, :manufacture_year => 2000, :organization_id => 1)
+  it 'should be able to search by manufacture year' do
+    asset = create(:equipment_asset, :manufacture_year => 2010, :organization_id => 1)
+    lesser = create(:equipment_asset, :manufacture_year => 2000, :organization_id => 1)
 
-  #   searcher = AssetSearcher.new(:manufacture_year => asset.manufacture_year, :manufacture_year_comparator => '0', :organization_id => asset.organization_id )
-  #   expect(searcher.respond_to?(:manufacture_year)).to be true
-  #   expect(searcher.data).to eq(Asset.where('manufacture_year = ?', asset.manufacture_year).to_a)
+    searcher = AssetSearcher.new(:manufacture_year => asset.manufacture_year, :manufacture_year_comparator => '0', :organization_id => asset.organization_id )
+    expect(searcher.respond_to?(:manufacture_year)).to be true
+    expect(searcher.data).to eq(Asset.where('manufacture_year = ?', asset.manufacture_year).to_a)
 
-  #   searcher = AssetSearcher.new(:manufacture_year => asset.manufacture_year, :manufacture_year_comparator => '-1', :organization_id => asset.organization_id )
-  #   expect(searcher.data).to eq(Asset.where('manufacture_year < ?', asset.manufacture_year).to_a)
+    searcher = AssetSearcher.new(:manufacture_year => asset.manufacture_year, :manufacture_year_comparator => '-1', :organization_id => asset.organization_id )
+    expect(searcher.data).to eq(Asset.where('manufacture_year < ?', asset.manufacture_year).to_a)
 
-  #   searcher = AssetSearcher.new(:manufacture_year => asset.manufacture_year, :manufacture_year_comparator => '1', :organization_id => asset.organization_id )
-  #   expect(searcher.data).to eq(Asset.where('manufacture_year > ?', asset.manufacture_year).to_a)
-  # end
+    searcher = AssetSearcher.new(:manufacture_year => asset.manufacture_year, :manufacture_year_comparator => '1', :organization_id => asset.organization_id )
+    expect(searcher.data).to eq(Asset.where('manufacture_year > ?', asset.manufacture_year).to_a)
+  end
 
   # it 'should be able to search by in service date' do
   #   asset = create(:equipment_asset, :in_service_date => Date.today, :organization_id => 1)
