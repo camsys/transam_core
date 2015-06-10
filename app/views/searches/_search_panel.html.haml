@@ -7,7 +7,7 @@
             .panel-title
               %h3.panel-title
                 %i.fa.fa-search.fa-fw
-                Search
+                Query
           .col-sm-6
             .btn-group.pull-right.panel-action
               %button.btn.btn-primary.btn-sm#collapse{:data => {:toggle => "collapse", :target => ".search-panel"}}
@@ -28,7 +28,7 @@
           = yield f
           .row
             .col-md-12
-              = f.button :submit, 'Search', :class=>"btn btn-primary", :id => 'submit_btn'
+              = f.button :submit, 'Query', :class=>"btn btn-primary", :id => 'submit_btn'
               = button_tag 'Reset', :type => 'reset', :class=> 'btn btn-warning'
 
 :javascript

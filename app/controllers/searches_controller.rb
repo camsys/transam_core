@@ -23,7 +23,7 @@ class SearchesController < OrganizationAwareController
     @searcher.user = current_user
     @data = @searcher.data
 
-    add_breadcrumb "Search"
+    add_breadcrumb "Query"
     add_breadcrumb "Results"
 
     # Cache the result set so the use can page through them
@@ -46,7 +46,7 @@ class SearchesController < OrganizationAwareController
     @searcher.user = current_user
     @data = []
 
-    add_breadcrumb "Search"
+    add_breadcrumb "Query"
 
     respond_to do |format|
       format.html # new.html.erb
