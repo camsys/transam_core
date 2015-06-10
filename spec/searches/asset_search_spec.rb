@@ -8,43 +8,43 @@ RSpec.describe AssetSearcher, :type => :model do
   #------------------------------------------------------------------------------
   it 'should be able to search by manufacturer' do
     asset = create(:equipment_asset, :manufacturer_id => 1, :organization_id => 1)
-    searcher = AssetSearcher.new(:manufacturer_ids => [asset.manufacturer_id], :organization_id => asset.organization_id )
-    expect(searcher.respond_to?(:manufacturer_ids)).to be true
+    searcher = AssetSearcher.new(:manufacturer_id => [asset.manufacturer_id], :organization_id => asset.organization_id )
+    expect(searcher.respond_to?(:manufacturer_id)).to be true
     expect(searcher.data).to eq(Asset.where('manufacturer_id = ?', [asset.manufacturer_id]).to_a)
   end
 
   it 'should be able to search by asset type' do
     asset = create(:equipment_asset, :asset_type_id => 1, :organization_id => 1)
-    searcher = AssetSearcher.new(:asset_type_ids => [asset.asset_type_id], :organization_id => asset.organization_id )
-    expect(searcher.respond_to?(:asset_type_ids)).to be true
+    searcher = AssetSearcher.new(:asset_type_id => [asset.asset_type_id], :organization_id => asset.organization_id )
+    expect(searcher.respond_to?(:asset_type_id)).to be true
     expect(searcher.data).to eq(Asset.where('asset_type_id = ?', [asset.asset_type_id]).to_a)
   end
 
   it 'should be able to search by asset subtype' do
     asset = create(:equipment_asset, :asset_subtype_id => 1, :organization_id => 1)
-    searcher = AssetSearcher.new(:asset_subtype_ids => [asset.asset_subtype_id], :organization_id => asset.organization_id )
-    expect(searcher.respond_to?(:asset_subtype_ids)).to be true
+    searcher = AssetSearcher.new(:asset_subtype_id => [asset.asset_subtype_id], :organization_id => asset.organization_id )
+    expect(searcher.respond_to?(:asset_subtype_id)).to be true
     expect(searcher.data).to eq(Asset.where('asset_subtype_id = ?', [asset.asset_subtype_id]).to_a)
   end
 
   it 'should be able to search by estimated condition type' do
     asset = create(:equipment_asset, :estimated_condition_type_id => 1, :organization_id => 1)
-    searcher = AssetSearcher.new(:estimated_condition_type_ids => [asset.estimated_condition_type_id], :organization_id => asset.organization_id )
-    expect(searcher.respond_to?(:estimated_condition_type_ids)).to be true
+    searcher = AssetSearcher.new(:estimated_condition_type_id => [asset.estimated_condition_type_id], :organization_id => asset.organization_id )
+    expect(searcher.respond_to?(:estimated_condition_type_id)).to be true
     expect(searcher.data).to eq(Asset.where('estimated_condition_type_id = ?', [asset.estimated_condition_type_id]).to_a)
   end
 
   it 'should be able to search by reported condition type' do
     asset = create(:equipment_asset, :reported_condition_type_id => 1, :organization_id => 1)
-    searcher = AssetSearcher.new(:reported_condition_type_ids => [asset.reported_condition_type_id], :organization_id => asset.organization_id )
-    expect(searcher.respond_to?(:reported_condition_type_ids)).to be true
+    searcher = AssetSearcher.new(:reported_condition_type_id => [asset.reported_condition_type_id], :organization_id => asset.organization_id )
+    expect(searcher.respond_to?(:reported_condition_type_id)).to be true
     expect(searcher.data).to eq(Asset.where('reported_condition_type_id = ?', [asset.reported_condition_type_id]).to_a)
   end
 
   it 'should be able to search by service status' do
     asset = create(:equipment_asset, :service_status_type_id => 1, :organization_id => 1)
-    searcher = AssetSearcher.new(:service_status_type_ids => [asset.service_status_type_id], :organization_id => asset.organization_id )
-    expect(searcher.respond_to?(:service_status_type_ids)).to be true
+    searcher = AssetSearcher.new(:service_status_type_id => [asset.service_status_type_id], :organization_id => asset.organization_id )
+    expect(searcher.respond_to?(:service_status_type_id)).to be true
     expect(searcher.data).to eq(Asset.where('service_status_type_id = ?', [asset.service_status_type_id]).to_a)
   end
   # #------------------------------------------------------------------------------
