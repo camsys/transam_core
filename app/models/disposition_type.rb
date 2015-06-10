@@ -1,7 +1,7 @@
 class DispositionType < ActiveRecord::Base
 
-  # default scope
-  scope :active, -> { where(active: true) }
+  # All types that are available
+  scope :active, -> { where(:active => true) }
 
   def self.search(text, exact = true)
     if exact

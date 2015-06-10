@@ -1,9 +1,7 @@
 class FuelType < ActiveRecord::Base
 
-  #attr_accessible :name, :description, :code, :active
-
-  # default scope
-  default_scope { where(:active => true) }
+  # All types that are available
+  scope :active, -> { where(:active => true) }
 
   def self.search(text, exact = true)
     if exact

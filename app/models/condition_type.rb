@@ -1,16 +1,16 @@
 class ConditionType < ActiveRecord::Base
-        
-  # default scope
-  default_scope { where(:active => true) }
+
+  # All types that are available
+  scope :active, -> { where(:active => true) }
  
-  def self.max_rating 
+  def self.max_rating
     order("rating DESC").first.rating
   end
-  def self.min_rating 
+  def self.min_rating
     where('name <> ?', 'Unknown').order("rating ASC").first.rating
   end
-  
-  # Uses FTA's condition assessment ratings 
+
+  # Uses FTA's condition assessment ratings
   def self.from_rating(estimated_rating)
     return if estimated_rating.nil?
     if estimated_rating >= 4.8
@@ -25,7 +25,7 @@ class ConditionType < ActiveRecord::Base
       rating = 1
     end
     ConditionType.find_by_rating(rating)
-  end                                                                                                                                   
+  end
 
   def to_s
     name
