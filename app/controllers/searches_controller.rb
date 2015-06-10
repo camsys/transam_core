@@ -23,6 +23,8 @@ class SearchesController < OrganizationAwareController
     @searcher.user = current_user
     @data = @searcher.data
 
+    binding.pry
+
     add_breadcrumb "Query"
     add_breadcrumb "Results"
 
