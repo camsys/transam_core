@@ -22,7 +22,6 @@ FactoryGirl.define do
     purchase_cost 2000.0
     expected_useful_life 120
     reported_condition_rating 2.0
-    replacement_year '2020'
   end
 
   factory :equipment_asset, :class => :equipment do # An untyped asset which looks like a bus

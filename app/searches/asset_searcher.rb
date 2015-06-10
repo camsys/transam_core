@@ -271,7 +271,7 @@ class AssetSearcher < BaseSearcher
   # Removes empty spaces from multi-select forms
 
   def remove_blanks(input)
-    output = (input.is_a?(Array) ? input : [input])
+    output = (input.blank? ? [input] : input)
     output.select { |e| !e.blank? }
   end
 end
