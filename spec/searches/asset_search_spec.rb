@@ -166,4 +166,19 @@ RSpec.describe AssetSearcher, :type => :model do
     expect(searcher.data).to eq(Asset.where('purchased_new = ?', asset.purchased_new).to_a)
   end
 
+  # #------------------------------------------------------------------------------
+  # #
+  # # Non-Standard Searches
+  # #
+  # #------------------------------------------------------------------------------
+  it 'should be able to search by manufacturer model' do
+    asset = create(:equipment_asset, :manufacturer_model => 'test', :organization_id => 1)
+
+    searcher = AssetSearcher.new(:manufacturer_model => asset.manufacturer_model, :organization_id => asset.organization_id )
+    expect(searcher.respond_to?(:manufacturer_model)).to be true
+
+    wildcard_search = "%#{asset.manufacturer_model}%"
+    expect(searcher.data).to eq(Asset.where("manufacturer_model LIKE ?", wildcard_search).to_a)
+  end
+
 end
