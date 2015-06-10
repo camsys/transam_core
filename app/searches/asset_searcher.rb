@@ -13,15 +13,22 @@ class AssetSearcher < BaseSearcher
   attr_accessor :organization_ids,
                 :organization_id,
                 :district_id,
+                :asset_type_id,
                 :asset_type_ids,
+                :asset_subtype_id,
                 :asset_subtype_ids,
+                :manufacturer_id,
                 :manufacturer_ids,
                 :parent_id,
                 :disposition_date,
                 :keyword,
+                :estimated_condition_type_id,
                 :estimated_condition_type_ids,
+                :reported_condition_type_id,
                 :reported_condition_type_ids,
+                :vendor_id,
                 :vendor_ids,
+                :service_status_type_id,
                 :service_status_type_ids,
                 :manufacturer_model,
                 # Comparator-based (<=>)
@@ -76,18 +83,30 @@ class AssetSearcher < BaseSearcher
   #---------------------------------------------------
 
   def estimated_condition_type_conditions
-    clean_estimated_condition_type_ids = remove_blanks(estimated_condition_type_ids)
-    @klass.where(estimated_condition_type_id: estimated_condition_type_ids) unless clean_estimated_condition_type_ids.empty?
+    if estimated_condition_type_id.blank?
+      clean_estimated_condition_type_ids = remove_blanks(estimated_condition_type_ids)
+      @klass.where(estimated_condition_type_id: clean_estimated_condition_type_ids) unless clean_estimated_condition_type_ids.empty?
+    else
+      @klass.where(estimated_condition_type_id: estimated_condition_type_id)
+    end
   end
 
   def reported_condition_type_conditions
-    clean_reported_condition_type_ids = remove_blanks(reported_condition_type_ids)
-    @klass.where(reported_condition_type_id: reported_condition_type_ids) unless clean_reported_condition_type_ids.empty?
+    if reported_condition_type_id.blank?
+      clean_reported_condition_type_ids = remove_blanks(reported_condition_type_ids)
+      @klass.where(reported_condition_type_id: clean_reported_condition_type_ids) unless clean_reported_condition_type_ids.empty?
+    else
+      @klass.where(reported_condition_type_id: reported_condition_type_id)
+    end
   end
 
   def manufacturer_conditions
-    clean_manufacturer_ids = remove_blanks(manufacturer_ids)
-    @klass.where(manufacturer_id: clean_manufacturer_ids) unless clean_manufacturer_ids.empty?
+    if manufacturer_id.blank?
+      clean_manufacturer_ids = remove_blanks(manufacturer_ids)
+      @klass.where(manufacturer_id: clean_manufacturer_ids) unless clean_manufacturer_ids.empty?
+    else
+      @klass.where(manufacturer_id: manufacturer_id)
+    end
   end
 
   def district_type_conditions
@@ -95,13 +114,21 @@ class AssetSearcher < BaseSearcher
   end
 
   def asset_type_conditions
-    clean_asset_type_ids = remove_blanks(asset_type_ids)
-    @klass.where(asset_type_id: clean_asset_type_ids) unless clean_asset_type_ids.empty?
+    if asset_type_id.blank?
+      clean_asset_type_ids = remove_blanks(asset_type_ids)
+      @klass.where(asset_type_id: clean_asset_type_ids) unless clean_asset_type_ids.empty?
+    else
+      @klass.where(asset_type_id: asset_type_id)
+    end
   end
 
   def asset_subtype_conditions
-    clean_asset_subtype_ids = remove_blanks(asset_subtype_ids)
-    @klass.where(asset_subtype_id: clean_asset_subtype_ids) unless clean_asset_subtype_ids.empty?
+    if asset_subtype_id.blank?
+      clean_asset_subtype_ids = remove_blanks(asset_subtype_ids)
+      @klass.where(asset_subtype_id: clean_asset_subtype_ids) unless clean_asset_subtype_ids.empty?
+    else
+      @klass.where(asset_subtype_id: asset_subtype_id)
+    end
   end
 
   def location_id_conditions
@@ -109,13 +136,21 @@ class AssetSearcher < BaseSearcher
   end
 
   def vendor_conditions
-    clean_vendor_ids = remove_blanks(vendor_ids)
-    @klass.where(vendor_id: clean_vendor_ids) unless clean_vendor_ids.empty?
+    if vendor_id.blank?
+      clean_vendor_ids = remove_blanks(vendor_ids)
+      @klass.where(vendor_id: clean_vendor_ids) unless clean_vendor_ids.empty?
+    else
+      @klass.where(vendor_id: vendor_id)
+    end
   end
 
   def service_status_type_conditions
-    clean_service_status_type_ids = remove_blanks(service_status_type_ids)
-    @klass.where(service_status_type: service_status_type_ids) unless clean_service_status_type_ids.empty?
+    if service_status_type_id.blank?
+      clean_service_status_type_ids = remove_blanks(service_status_type_ids)
+      @klass.where(service_status_type: clean_service_status_type_ids) unless clean_service_status_type_ids.empty?
+    else
+      @klass.where(service_status_type: service_status_type_id)
+    end
   end
 
   #---------------------------------------------------
