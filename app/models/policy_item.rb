@@ -25,7 +25,7 @@ class PolicyItem < ActiveRecord::Base
   validates :pcnt_residual_value,     :presence => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0, :less_than_or_equal_to => 100}
   validates :rehabilitation_cost,     :allow_nil => :true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
   validates :extended_service_life_months,     :allow_nil => :true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
-  validates :rehabilitation_year,     :allow_nil => :true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}, :allow_nil => :true
+  validates :rehabilitation_year,     :allow_nil => :true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
 
   #------------------------------------------------------------------------------
   # Scopes
