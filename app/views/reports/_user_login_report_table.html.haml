@@ -1,0 +1,28 @@
+%table.table.table-hover
+	%thead
+		%tr
+			%th.left.nowrap Org
+			%th.left.nowrap Last Name
+			%th.left.nowrap First Name
+			%th.left.nowrap Email
+			%th.right.nowrap Num Logins
+			%th.right.nowrap Current Login
+			%th.right.nowrap Current Login IP
+			%th.right.nowrap Last Login
+			%th.right.nowrap Last Login IP
+			%th.right.nowrap Num Failed
+			%th.right.nowrap Acct Locked On
+		%tbody
+			- @data.each do |user|
+				%tr
+					%td.left= user.organization
+					%td.left= user.last_name
+					%td.left= user.first_name
+					%td.left= user.email
+					%td.right= format_as_integer(user.sign_in_count)
+					%td.right= format_as_date_time(user.current_sign_in_at)
+					%td.right= user.current_sign_in_ip
+					%td.right= format_as_date_time(user.last_sign_in_at)
+					%td.right= user.last_sign_in_ip
+					%td.right= format_as_integer(user.failed_attempts)
+					%td.right= format_as_date_time(user.locked_at)

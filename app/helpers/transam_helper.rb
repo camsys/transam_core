@@ -132,6 +132,18 @@ module TransamHelper
     end
   end
 
+  # Returns the list of reports that are displayable in the menu for the
+  # current user
+  def get_user_menu_reports report_type
+    a = []
+    report_type.reports.show_in_nav.each do |rep|
+      if current_user.is_in_roles? rep.role_names
+        a << rep
+      end
+    end
+    a
+  end
+
   # Returns the system user.
   def system_user
     # By convention, the first user is always the system user.

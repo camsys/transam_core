@@ -43,6 +43,7 @@ Rails.application.routes.draw do
         get 'copy'
         get 'add_to_group'
         get 'remove_from_group'
+        get 'popup'
       end
 
     resources :asset_events

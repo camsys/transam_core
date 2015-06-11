@@ -75,3 +75,23 @@
     $('#switch-mode i').addClass('fa-user')
     $('#switch-mode i').removeClass('fa-users')
   };
+
+  $('#new_message_proxy').validate({
+    ignore: [], //validate hidden fields
+    submitHandler: function(form) {
+      form.submit();
+    }
+  });
+
+  $('#message_proxy_subject').rules("add", {
+    required: true
+  });
+  $('#message_proxy_priority_type_id').rules("add", {
+    required: true
+  });
+  $('#message_proxy_body').rules("add", {
+    required: function()
+    {
+      CKEDITOR.instances.message_proxy_body.updateElement();
+    }
+  });

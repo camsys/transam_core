@@ -1,7 +1,7 @@
 class CostCalculationType < ActiveRecord::Base
 
-  # default scope
-  default_scope { where(:active => true) }
+  # All types that are available
+  scope :active, -> { where(:active => true) }
 
   def to_s
     name

@@ -31,8 +31,8 @@ class AssetGroup < ActiveRecord::Base
   # Scopes
   #------------------------------------------------------------------------------
 
-  # default scope
-  default_scope { where(:active => true) }
+  # All order types that are available
+  scope :active, -> { where(:active => true) }
 
   #------------------------------------------------------------------------------
   # Validations

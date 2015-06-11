@@ -179,7 +179,7 @@ class MessagesController < OrganizationAwareController
     @new_message.user = current_user
     @new_message.priority_type = @message.priority_type
     @new_message.subject = 'Re: ' +  @message.subject
-    @new_message.to_user = @message.to_user
+    @new_message.to_user = @message.user
 
     respond_to do |format|
       if @new_message.save
@@ -190,7 +190,8 @@ class MessagesController < OrganizationAwareController
         format.html { redirect_to user_messages_url(current_user) }
         format.json { render :json => @new_message, :status => :created }
       else
-        format.html { render :action => "new" }
+        @response = @new_message
+        format.html { render :action => "show" }
         format.json { render :json => @new_message.errors, :status => :unprocessable_entity }
       end
     end

@@ -175,7 +175,7 @@ class Notice < ActiveRecord::Base
   # Returns nil if a bad parse
   def parsed_display_datetime_from_virtual_attributes
     Rails.logger.debug "in parsed_display_datetime_from_virtual_attributes: #{display_date} #{display_hour}"
-    dt = Chronic.parse("#{display_date} #{display_hour}")
+    dt = Chronic.parse("#{display_date} #{display_hour}", :ambiguous_time_range => :none)
     Rails.logger.debug "parsed value = #{dt}"
     return dt
   end
@@ -183,7 +183,7 @@ class Notice < ActiveRecord::Base
   # Returns nil if a bad parse
   def parsed_end_datetime_from_virtual_attributes
     Rails.logger.debug "in parsed_end_datetime_from_virtual_attributes #{end_date} #{end_hour}"
-    dt = Chronic.parse("#{end_date} #{end_hour}")
+    dt = Chronic.parse("#{end_date} #{end_hour}", :ambiguous_time_range => :none)
     Rails.logger.debug "parsed value = #{dt}"
     return dt
   end

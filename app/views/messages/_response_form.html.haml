@@ -1,4 +1,7 @@
 %h5 Reply
+- unless @response.errors.empty?
+  = render(:partial => 'shared/form_errors', :locals => {:obj => @response})
+
 = simple_form_for([current_user, @response],
   :html => {:class => 'form-vertical' },
   :url => reply_user_message_path(current_user, @message),
@@ -7,3 +10,19 @@
 
   = f.input :body, :label => false, :placeholder => "Enter your reply...", :as => :ckeditor, :input_html => { :ckeditor => {:toolbar => 'mini'}, :class => "form-control"}
   = f.button :submit, 'Send Reply', :class => "btn btn-primary", :style => "margin-top:10px;"
+
+:javascript
+
+  $('#new_message').validate({
+    ignore: [], //validate hidden fields
+    submitHandler: function(form) {
+      form.submit();
+    }
+  });
+
+  $('#message_body').rules("add", {
+    required: function()
+    {
+      CKEDITOR.instances.message_body.updateElement();
+    }
+  });

@@ -107,10 +107,11 @@ RSpec.describe Asset, :type => :model do
 
   describe '#history' do
     it 'holds events of all types' do
-      buslike_asset.condition_updates.create(attributes_for :condition_update_event)
-      buslike_asset.service_status_updates.create(attributes_for :service_status_update_event)
+      persisted_buslike_asset.update!(:purchased_new => false)
+      persisted_buslike_asset.condition_updates.create!(attributes_for :condition_update_event)
+      persisted_buslike_asset.service_status_updates.create!(attributes_for :service_status_update_event)
 
-      expect(buslike_asset.history.count).to eq(2)
+      expect(persisted_buslike_asset.history.count).to eq(2)
     end
 
     it 'defaults to no events' do
@@ -118,9 +119,10 @@ RSpec.describe Asset, :type => :model do
     end
 
     it 'is ordered correctly' do
-      buslike_asset.condition_updates.create(attributes_for :condition_update_event)
+      persisted_buslike_asset.update!(:purchased_new => false)
+      persisted_buslike_asset.condition_updates.create!(attributes_for :condition_update_event)
 
-      event = AssetEvent.as_typed_event buslike_asset.history.first
+      event = AssetEvent.as_typed_event persisted_buslike_asset.history.first
       expect(event.condition_type.name).to eq("Adequate")
       expect(event.assessed_rating).to eq(3)
       expect(event.current_mileage).to eq(25000)

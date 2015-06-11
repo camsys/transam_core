@@ -5,8 +5,8 @@ class AssetType < ActiveRecord::Base
   # every asset type has 0 or more sub types
   has_many :asset_subtypes
 
-  # default scope
-  default_scope { where(:active => true) }
+  # All order types that are available
+  scope :active, -> { where(:active => true) }
   
   def full_name
     "#{name} - #{description}"

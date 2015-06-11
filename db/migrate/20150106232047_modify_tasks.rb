@@ -9,7 +9,7 @@ class ModifyTasks < ActiveRecord::Migration
     remove_column :tasks, :completed_on
 
     add_column    :tasks, :taskable_id,     :integer,                 :after => :object_key
-    add_column    :tasks, :taskable_type,   :string,  :limit => 255,  :after => :taskable_id
+    add_column    :tasks, :taskable_type,   :string,  :limit => 254,  :after => :taskable_id
     add_column    :tasks, :state,           :string,  :limit => 32,   :after => :send_reminder
 
     # Index the state

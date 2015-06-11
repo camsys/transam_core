@@ -41,6 +41,7 @@ RSpec.describe AssetEvent, :type => :model do
   end
 
   it 'can find previous events' do
+    test_asset_event.asset.update!(:purchased_new => false)
     params = {:event_date => Date.today - 2.years, :asset => test_asset_event.asset, :asset_event_type => test_asset_event.asset_event_type}
     prev_event = create(:asset_event, params)
 
@@ -67,7 +68,7 @@ RSpec.describe AssetEvent, :type => :model do
     params = {:asset => test_asset_event.asset, :asset_event_type => test_asset_event.asset_event_type}
     params["created_at"] = test_asset_event.created_at + 2.seconds
     event_created_two_seconds_later = create(:asset_event, params)
-    
+
     expect(event_created_two_seconds_later.previous_event_of_type == AssetEvent.as_typed_event(test_asset_event)).to be true
   end
 

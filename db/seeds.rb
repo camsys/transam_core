@@ -163,13 +163,12 @@ reports = [
     :active => 1,
     :belongs_to => 'report_type', :type => "System Report",
     :name => 'User Login Report',
-    :class_name => "CustomSqlReport",
-    :view_name => "generic_report_table",
+    :class_name => "UserLoginReport",
+    :view_name => "user_login_report",
     :show_in_nav => 0,
     :show_in_dashboard => 0,
-    :roles => 'manager',
-    :description => 'Displays a summary of user logins by organization.',
-    :custom_sql => "SELECT b.short_name AS 'ORGANIZATION',a.first_name AS 'FIRST NAME',a.last_name AS 'LAST NAME',a.sign_in_count AS 'NUM SIGNINS',a.last_sign_in_at AS 'LAST SIGN IN',a.locked_at AS 'ACCT LOCKED ON' FROM users a LEFT JOIN organizations b ON a.organization_id=b.id WHERE a.last_sign_in_at IS NOT NULL ORDER BY organization_id, first_name"
+    :roles => 'manager,admin',
+    :description => 'Displays a summary of user logins by organization.'
   },
   {
     :active => 1,

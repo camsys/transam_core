@@ -157,7 +157,7 @@ class Organization < ActiveRecord::Base
   end
 
   def object_key
-    "#{id}"
+    "#{short_name}"
   end
 
   def to_s
