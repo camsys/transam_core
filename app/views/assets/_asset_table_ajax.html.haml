@@ -123,13 +123,27 @@
 
   function date_formatter(value) {
     if (value) {
+      //console.log(value);
       var date = new Date(value);
-      return date.getMonth() + 1 + "/" + date.getDate() + "/" + date.getFullYear();
+      //console.log(date);
+      var local_date = convertUTCDateToLocalDate(date);
+      //console.log(local_date);
+      return local_date.getMonth() + 1 + "/" + local_date.getDate() + "/" + local_date.getFullYear();
     } else {
       return value;
     }
   };
 
+  function convertUTCDateToLocalDate(date) {
+      var newDate = new Date(date.getTime()+date.getTimezoneOffset()*60*1000);
+
+      var offset = date.getTimezoneOffset() / 60;
+      var hours = date.getHours();
+
+      newDate.setHours(hours - offset);
+
+      return newDate;
+  };
   function tagged_formatter(value) {
     if (value == '1') {
       return '<i class="fa fa-star"></i>';
