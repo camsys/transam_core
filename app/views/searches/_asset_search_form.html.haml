@@ -27,17 +27,15 @@
             = f.input_field :manufacture_year_comparator, :as => :hidden, :value => '0'
           = f.input_field :manufacture_year, :class => "form-control"
         = f.input :vendor_id, collection: Vendor.all, label: 'Vendor', input_html: { multiple: true }
-        = f.input :in_service_date, :wrapper => :vertical_prepend, :label => "Year Placed in Service" do
+        = f.input :in_service_date, :wrapper => :vertical_prepend, :label => "In Service Date" do
           .input-group-btn
             %button.btn.btn-default.dropdown-toggle{"data-toggle" => "dropdown", :type => "button"}
             %ul.dropdown-menu{:role => "menu"}
               %li
                 %a{:data => {:compare => "-1"}} Before
               %li
-                %a{:data => {:compare => "0"}} During
-              %li
                 %a{:data => {:compare => "1"}} After
-            = f.input_field :in_service_date_comparator, :as => :hidden, :value => '0'
+            = f.input_field :in_service_date_comparator, :as => :hidden, :value => '1'
           = f.date_field :in_service_date, :class => "form-control"
         = f.input :purchase_cost, :wrapper => :vertical_prepend do
           .input-group-btn
@@ -58,10 +56,8 @@
               %li
                 %a{:data => {:compare => "-1"}} Before
               %li
-                %a{:data => {:compare => "0"}} During
-              %li
                 %a{:data => {:compare => "1"}} After
-            = f.input_field :purchase_date_comparator, :as => :hidden, :value => '0'
+            = f.input_field :purchase_date_comparator, :as => :hidden, :value => '1'
           = f.date_field :purchase_date, :class => "form-control"
         = f.input :purchased_new, :as => :boolean, :label => "Purchased New", :label_html => { :class => 'bold' }
     .col-lg-3.col-md-6
