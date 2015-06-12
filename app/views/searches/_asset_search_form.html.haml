@@ -46,6 +46,8 @@
               %li
                 %a{:data => {:compare => "-1"}} Less Than
               %li
+                %a{:data => {:compare => "0"}} Equal To
+              %li
                 %a{:data => {:compare => "1"}} Greater Than
             = f.input_field :purchase_cost_comparator, :as => :hidden, :value => '1'
           = f.input_field :purchase_cost, :class => "form-control", :as => :integer, :label => "Original Purchase Cost", input_html: { :min => '0'}
