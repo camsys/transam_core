@@ -68,12 +68,30 @@ class InventoryLoader
     else
       begin
         #puts "As Date val = #{cell_val.to_s}"
-        val = Date.parse(cell_val.to_s)
+        val = date_from_string(cell_val.to_s)
       rescue
         val = Date.today
       end
     end
     val
+  end
+
+  def date_from_string(val)
+    # If there is no date, dont try to set one
+    if val.blank?
+      return nil
+    end
+
+    # Pull the date apart and try to determine what is there
+    elems = val.split('/')
+    # check for just a year
+    if elems.size == 1
+      DateTime.strptime('7/1/' + elems, "%m/%d/%Y")
+    elsif elems.last.length == 2
+      DateTime.strptime(val, "%m/%d/%y")
+    else
+      DateTime.strptime(val, "%m/%d/%Y")
+    end
   end
 
   def as_float(cell_val)
