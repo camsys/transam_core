@@ -23,9 +23,8 @@ class ServiceStatusUpdateEventLoader < EventLoader
     end
 
     # Event Date
-    temp = as_date(cells[EVENT_DATE_COL])
-    u@event.event_date = temp unless temp.nil?
-
+    @event.event_date = as_date(cells[EVENT_DATE_COL])
+    
   end
 
   private

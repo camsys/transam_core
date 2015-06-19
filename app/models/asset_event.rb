@@ -136,7 +136,9 @@ class AssetEvent < ActiveRecord::Base
   end
 
   def validate_event_date_with_purchase
-    if asset.purchased_new && event_date < asset.purchase_date
+    if event_date.nil? 
+      errors.add(:event_date, "must exist")
+    elsif asset.purchased_new && event_date < asset.purchase_date
       errors.add(:event_date, "must be after purchase date if new purchase")
     end
   end
