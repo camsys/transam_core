@@ -124,11 +124,14 @@ class InventoryLoader
       return nil
     end
 
+    #strip date first
+    val.strip!
+
     # Pull the date apart and try to determine what is there
     elems = val.split('/')
     # check for just a year and set it to the first day of the fiscal year
     if elems.size == 1
-      date_str = "#{SystemConfig.instance.start_of_fiscal_year}-#{elems}"
+      date_str = "#{SystemConfig.instance.start_of_fiscal_year}-#{elems[0]}"
       d = Date.strptime(date_str, "%m-%d-%Y")
     elsif elems.last.length == 2
       d = Date.strptime(val, "%m/%d/%y")
