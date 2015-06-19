@@ -118,6 +118,7 @@ class InventoryLoader
   # Attempts to coerce a string containing an excel formatted date back into a
   # Ruby date
   def coerce_date(val)
+    #puts "coerce_date: '#{val}'"
     # If there is no date, dont try to set one
     if val.blank?
       return nil
@@ -128,12 +129,14 @@ class InventoryLoader
     # check for just a year and set it to the first day of the fiscal year
     if elems.size == 1
       date_str = "#{SystemConfig.instance.start_of_fiscal_year}-#{elems}"
-      Date.strptime(date_str, "%m-%d-%Y")
+      d = Date.strptime(date_str, "%m-%d-%Y")
     elsif elems.last.length == 2
-      Date.strptime(val, "%m/%d/%y")
+      d = Date.strptime(val, "%m/%d/%y")
     else
-      Date.strptime(val, "%m/%d/%Y")
+      d = Date.strptime(val, "%m/%d/%Y")
     end
+    #puts d
+    d
   end
 
   private
