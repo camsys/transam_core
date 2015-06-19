@@ -81,13 +81,15 @@
     if (asset_group > 0) {
       params.asset_group = asset_group;
     }
-    console.log(JSON.stringify(params));
+    //console.log(JSON.stringify(params));
     return params;
   }
 
   $('#asset_server_table').on('click-row.bs.table', function (e, row, $element) {
     var url = path.replace("x", row['object_key']);
     document.location.href = url;
+  }).on('sort.bs.table', function(e, name, order) {
+    $('#asset_server_table').bootstrapTable('selectPage', 1);
   }).on('post-body.bs.table', function() {
     $('.fixed-table-container').css('min-height', '300px');
     $('#asset_server_table > tbody > tr').addClass('action-path');
