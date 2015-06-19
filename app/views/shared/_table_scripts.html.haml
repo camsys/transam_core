@@ -17,7 +17,8 @@
   });
 
   $(window).load(function() {
-    transam.make_same_height('.header-part');
+    // Make sure the paginator is set to the first page
+    $(table_dom_id).bootstrapTable('selectPage', 1);
   });
 
   $(window).resize(function() {
