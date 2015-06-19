@@ -7,12 +7,17 @@
 #------------------------------------------------------------------------------
 class DispositionUpdateEventLoader < EventLoader
 
-  EVENT_DATE_COL          = 0
-  DISPOSITION_TYPE_COL    = 1
-  SALES_PROCEEDS_COL      = 2
-  NEW_OWNER_NAME_COL      = 3
-  NEW_OWNER_ADDRESS_COL   = 4
-  MILEAGE_AT_DISPOSITION  = 5
+  EVENT_DATE_COL        = 0
+  DISPOSITION_TYPE_COL  = 1
+  SALES_PROCEEDS_COL    = 2
+  AGE_COL               = 3
+  MILEAGE_COL           = 4
+  NEW_OWNER_NAME_COL    = 5
+  NEW_OWNER_ADDRESS_COL = 6
+  NEW_OWNER_CITY_COL    = 7
+  NEW_OWNER_STATE_COL   = 8
+  NEW_OWNER_ZIP_COL     = 9
+  COMMENTS_COL          = 10
 
   def process(asset, cells)
 
@@ -26,12 +31,17 @@ class DispositionUpdateEventLoader < EventLoader
     val = as_string(cells[DISPOSITION_TYPE_COL])
     @event.disposition_type = DispositionType.search(val)
     if @event.disposition_type.nil?
-      @errors << "Disposition Type '#{val}' not found or missing. Defaulting to Sold at Public Auction."
-      @event.disposition_type = DispositionType.find_by(:code => 'P')
+      @errors << "Dispositon Type not found or missing. Type = #{val}."
     end
 
     # Sales Proceeds
     @event.sales_proceeds = as_integer(cells[SALES_PROCEEDS_COL])
+
+    # Age at disposition
+    @event.age_at_disposition = as_integer(cells[AGE_COL])
+
+    # Mileage at disposition
+    @event.mileage_at_disposition = as_integer(cells[MILEAGE_COL])
 
     # New Owner Name
     @event.new_owner_name = as_string(cells[NEW_OWNER_NAME_COL])
@@ -39,13 +49,17 @@ class DispositionUpdateEventLoader < EventLoader
     # New Owner Address
     @event.address1 = as_string(cells[NEW_OWNER_ADDRESS_COL])
 
-    # Current Mileage
-    if asset.type_of? :vehicle or asset.type_of? :support_vehicle
-      @event.mileage_at_disposition = as_integer(cells[MILEAGE_AT_DISPOSITION])
-    end
+    # New Owner City
+    @event.city = as_string(cells[NEW_OWNER_CITY_COL])
 
-    # Age
-    @event.age_at_disposition = asset.age(@event.event_date)
+    # New Owner State
+    @event.state = as_string(cells[NEW_OWNER_STATE_COL])
+
+    # New Owner Zip
+    @event.zip = as_string(cells[NEW_OWNER_ZIP_COL])
+
+    # Comments
+    @event.comments = as_string(cells[COMMENTS_COL])
 
   end
 
