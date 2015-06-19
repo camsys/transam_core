@@ -66,12 +66,8 @@ class InventoryLoader
       cell_val.is_a?(DateTime)
       val = cell_val.date
     else
-      begin
-        #puts "As Date val = #{cell_val.to_s}"
-        val = Date.parse(cell_val.to_s)
-      rescue
-        val = Date.today
-      end
+      # parse the string as a date
+      val = coerce_date(cell_val.to_s)
     end
     val
   end
@@ -117,6 +113,28 @@ class InventoryLoader
     result
   end
 
+  protected
+
+  # Attempts to coerce a string containing an excel formatted date back into a
+  # Ruby date
+  def coerce_date(val)
+    # If there is no date, dont try to set one
+    if val.blank?
+      return nil
+    end
+
+    # Pull the date apart and try to determine what is there
+    elems = val.split('/')
+    # check for just a year and set it to the first day of the fiscal year
+    if elems.size == 1
+      date_str = "#{SystemConfig.instance.start_of_fiscal_year}-#{elems}"
+      Date.strptime(date_str, "%m-%d-%Y")
+    elsif elems.last.length == 2
+      Date.strptime(val, "%m/%d/%y")
+    else
+      Date.strptime(val, "%m/%d/%Y")
+    end
+  end
 
   private
 
