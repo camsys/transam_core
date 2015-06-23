@@ -29,16 +29,31 @@
   $(document).ready(function() {
     // Disable the submit button
     $('#submit_button').attr("disabled", "disabled");
-    // Add an event listener on the selector
+
+    // Add an event listener on the org selector
+    $('#organization_id').change(function() {
+      var org = $('#organization_id').val();
+      var val = $('#asset_subtype_filter').val();
+      if (org && val) {
+        $('#submit_button').removeAttr("disabled");
+      } else {
+        $('#submit_button').attr("disabled", "disabled");
+      }
+    });
+
+    // Add an event listener on the subtype selector
     $('#asset_subtype_filter').change(function() {
+      var org = $('#organization_id').val();
       var val = $('#asset_subtype_filter').val();
       if (val) {
-        $('#submit_button').removeAttr("disabled");
-          var url = ajax_url + '?asset_subtype=' + val;
-          transam.ajax_render_action(url, 'get');
-        } else {
-          $('#submit_button').attr("disabled", "disabled");
-          $('#subtype_details').html("");
+        if (org) {
+          $('#submit_button').removeAttr("disabled");
         }
+        var url = ajax_url + '?asset_subtype=' + val;
+        transam.ajax_render_action(url, 'get');
+      } else {
+        $('#submit_button').attr("disabled", "disabled");
+        $('#subtype_details').html("");
+      }
     });
   });
