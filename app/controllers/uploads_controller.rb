@@ -177,6 +177,14 @@ class UploadsController < OrganizationAwareController
     if params[:template_proxy]
       # Inflate the proxy
       template_proxy = TemplateProxy.new(params[:template_proxy])
+
+      # See if an org was set, use the default otherwise
+      if template_proxy.organization_id.blank?
+        org = @organization
+      else
+        org = Organization.find(template_proxy.organization_id)
+      end
+
       # The form defines the FileContentType which identifies the builder to use
       file_content_type = FileContentType.find(template_proxy.file_content_type_id)
       # asset_types are an array or class names that will be used in the builder
@@ -187,9 +195,11 @@ class UploadsController < OrganizationAwareController
       file_content_type = FileContentType.find(params[:file_content_type])
       if params[:asset_type]
         asset_types = [AssetType.find(params[:asset_type])]
+        org = @organization
       end
       if params[:asset_group]
         asset_group = AssetGroup.find_by_object_key(params[:asset_group])
+        org = asset_group.organization
         if asset_group.homogeneous?
           asset_types = [AssetType.find(asset_group.asset_type_ids.first)]
         end
@@ -199,14 +209,14 @@ class UploadsController < OrganizationAwareController
     # Start to build the template. Make sure we know what we need to build
     if file_content_type and asset_types
       # Find out which builder is used to construct the template and create an instance
-      builder = file_content_type.builder_name.constantize.new(:organization => @organization, :asset_types => [*asset_types])
+      builder = file_content_type.builder_name.constantize.new(:organization => org, :asset_types => [*asset_types])
 
       # Generate the spreadsheet. This returns a StringIO that has been rewound
       if asset_group
         builder.assets = asset_group.assets
       else
         asset_params = {}
-        asset_params[:organization] = @organization
+        asset_params[:organization] = org
         asset_params[:asset_type] = asset_types
         asset_params[:object_key] = params[:ids] if params[:ids]
 
@@ -219,7 +229,7 @@ class UploadsController < OrganizationAwareController
       #ObjectSpace.undefine_finalizer(file)
       #You can uncomment this line when debugging locally to prevent Tempfile from disappearing before download.
       @filepath = file.path
-      @filename = "#{@organization.short_name.downcase}_#{file_content_type.class_name.underscore}_#{Date.today}.xlsx"
+      @filename = "#{org.short_name.downcase}_#{file_content_type.class_name.underscore}_#{Date.today}.xlsx"
       begin
         file << stream.string
       rescue => ex

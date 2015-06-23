@@ -5,6 +5,9 @@ class TemplateProxy < Proxy
   # Type of template to generate
   attr_accessor  :file_content_type_id
 
+  # Organization selected -- blank if the user only has a single org
+  attr_accessor   :organization_id
+
   # Type of asset to process
   attr_accessor    :asset_types
 
