@@ -228,17 +228,22 @@ class AssetsController < AssetAwareController
       return
     end
 
-    @page_title = "New #{asset_subtype.name}"
     add_breadcrumb "#{asset_subtype.asset_type.name}".pluralize(2), inventory_index_path(:asset_type => asset_subtype.asset_type)
     add_breadcrumb "#{asset_subtype.name}", inventory_index_path(:asset_subtype => asset_subtype)
     add_breadcrumb "New", new_inventory_path(asset_subtype)
 
     # Use the base class to create an asset of the correct type
     @asset = Asset.new_asset(asset_subtype)
-    @asset.organization = @organization
+
+    # See if the user selected an org to associate the asset with
+    if params[:organization_id].present?
+      @asset.organization = Organization.find(params[:organization_id])
+    else
+      @asset.organization = @organization
+    end
 
     # Force the asset to initialize any internal values such as expected_useful_life from the policy
-    @asset.initialize_policy_items @organization.get_policy
+    @asset.initialize_policy_items @asset.organization.get_policy
 
     respond_to do |format|
       format.html # new.html.erb
@@ -257,7 +262,12 @@ class AssetsController < AssetAwareController
     @asset = klass.new(form_params)
     @asset.asset_type = asset_type
     @asset.asset_subtype = asset_subtype
-    @asset.organization = @organization
+
+    # If the asset does not have an org already defined, set to the default for
+    # the user
+    if @asset.organization.blank?
+      @asset.organization = @organization
+    end
 
     @asset.creator = current_user
     @asset.updator = current_user

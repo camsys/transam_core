@@ -4,6 +4,14 @@
       %legend New Asset
       .col-sm-6.col-xs-12
         = form_tag new_inventory_path, :id => 'asset_subtype_form', :method => "get", :class => 'form-vertical', :role => 'form' do
+
+          - if current_user.organizations.count > 1
+            .form-group
+              %label.control-label.string.required
+                * Organization
+
+              = select_tag(:organization_id, options_from_collection_for_select(current_user.organizations, :id, :coded_name), :class => 'form-control string required', :prompt => 'Select organization...')
+
           .form-group
             %label.control-label.string.required
               * Asset Type

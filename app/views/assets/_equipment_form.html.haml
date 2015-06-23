@@ -9,8 +9,10 @@
     :radio_buttons => :vertical_radio_and_checkboxes,
     :file => :vertical_file_input,
     :boolean => :vertical_boolean}) do |f|
+
     = f.input :asset_type_id, :as => :hidden
     = f.input :asset_subtype_id, :as => :hidden
+    = f.input :organization_id, :as => :hidden
 
     .col-md-6
       = dialog_tag('Equipment', {:icon => 'fa fa-refresh', :class => "form_part"}) do
