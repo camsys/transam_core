@@ -1,5 +1,5 @@
-.media
-  .media-body
+.well.well-sm{:style => "min-height: 150px;"}
+  %frameset
+    %legend Description
     - if @asset_subtype
-      %h4.media-heading= @asset_subtype.name
-      %p= @asset_subtype.description.html_safe
+      = @asset_subtype.description.html_safe
