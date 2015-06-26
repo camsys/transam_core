@@ -46,7 +46,7 @@
       var org = $('#organization_id').val();
       var val = $('#asset_subtype_filter').val();
       if (val) {
-        if (org) {
+        if ($('#organization_id').length == 0 || org) {
           $('#submit_button').removeAttr("disabled");
         }
         var url = ajax_url + '?asset_subtype=' + val;
