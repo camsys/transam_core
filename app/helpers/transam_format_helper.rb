@@ -192,7 +192,18 @@ module TransamFormatHelper
   end
 
   def format_as_time(time)
-    return time.strftime("%I:%M") unless time.nil?
+    return time.strftime("%I:%M %p") unless time.nil?
+  end
+
+  def format_as_time_difference(s, show_seconds = false)
+    return if s.blank?
+    dhms = [60,60,24].reduce([s]) { |m,o| m.unshift(m.shift.divmod(o)).flatten }
+    val = []
+    val << "#{dhms[0]} days" unless dhms[0] == 0
+    val << "#{dhms[1]}h" unless dhms[1] == 0
+    val << "#{dhms[2]}m"
+    val << "#{dhms[3]}s" if show_seconds
+    val.join(' ')
   end
 
   # formats an address
