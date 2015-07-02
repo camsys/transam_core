@@ -21,8 +21,9 @@
         .row
           .col-lg-4.col-md-4.col-sm-6.col-xs-12
             = f.input :external_id, :placeholder => "User's ID number...", :label => "ID Number"
-          .col-lg-8.col-md-8.col-sm-6.col-xs-12
-            = f.input :role_ids, :collection => Role.all.collect{|x| [x.name.titleize, x.id]}, :as => :check_boxes
+          - if current_user.has_role? :admin
+            .col-lg-8.col-md-8.col-sm-6.col-xs-12
+              = f.input :role_ids, :collection => Role.all.collect{|x| [x.name.titleize, x.id]}, :as => :check_boxes
 
       %frameset
         %legend Contact Info
