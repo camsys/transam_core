@@ -1,4 +1,5 @@
 require 'rails_helper'
+include FiscalYear
 
 RSpec.describe ServiceLifeCalculator, :type => :calculator do
 
@@ -40,7 +41,7 @@ RSpec.describe ServiceLifeCalculator, :type => :calculator do
   describe '#by_condition' do
 
     it 'calculates' do
-      expect(test_calculator.send(:by_condition,@test_asset)).to eq(2014)
+      expect(test_calculator.send(:by_condition,@test_asset)).to eq(fiscal_year_year_on_date(Date.today))
     end
 
     it 'is by age if assessed_rating is greater than condition threshold' do
