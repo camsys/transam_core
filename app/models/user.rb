@@ -168,7 +168,7 @@ class User < ActiveRecord::Base
   end
 
   def initials
-    "#{first_name[0]}#{last_name[0]}"
+    "#{first_name[0]}#{last_name[0]}".upcase
   end
 
   # Returns true if the user is in a specified role, false otherwise
