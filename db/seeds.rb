@@ -174,13 +174,12 @@ reports = [
     :active => 1,
     :belongs_to => 'report_type', :type => "System Report",
     :name => 'Issues Report',
-    :class_name => "CustomSqlReport",
-    :view_name => "generic_report_table",
+    :class_name => "IssuesReport",
+    :view_name => "issues_report_table",
     :show_in_nav => 0,
     :show_in_dashboard => 0,
     :roles => 'manager',
-    :description => 'Displays a list of reported user issues.',
-    :custom_sql => "SELECT d.short_name AS 'ORGANIZATION', b.name AS 'TYPE', a.created_at AS 'DATE/TIME', a.comments AS 'COMMENTS', e.name AS 'BROWSER TYPE', c.first_name AS 'FIRST NAME', c.last_name AS 'LAST NAME', c.phone AS 'PHONE' FROM issues a LEFT JOIN issue_types b ON a.issue_type_id=b.id LEFT JOIN users c ON a.created_by_id=c.id LEFT JOIN organizations d ON c.organization_id=d.id LEFT JOIN web_browser_types e ON a.web_browser_type_id=e.id ORDER BY a.created_at"
+    :description => 'Displays a list of reported user issues.'
   }
 ]
 
