@@ -14,7 +14,7 @@ RSpec.describe User, :type => :model do
   #
   #------------------------------------------------------------------------------
 
-  
+
   #------------------------------------------------------------------------------
   #
   # Instance Methods
@@ -39,22 +39,22 @@ RSpec.describe User, :type => :model do
       expect(normal_user.name).to eql("joe normal")
       expect(manager_user.name).to eql("kate manager")
       expect(guest_user.name).to eql("bob guest")
-    end    
+    end
   end
-  
+
   describe ".to_s" do
     it 'returns the correct default string for a User' do
       expect(normal_user.to_s).to eql(normal_user.name)
       expect(manager_user.to_s).to eql(manager_user.name)
-    end    
+    end
   end
 
   describe ".initials" do
     it 'returns the correct initials for a User' do
-      expect(normal_user.initials).to eql("jn")
-      expect(manager_user.initials).to eql("km")
-      expect(guest_user.initials).to eql("bg")
-    end    
+      expect(normal_user.initials).to eql("JN")
+      expect(manager_user.initials).to eql("KM")
+      expect(guest_user.initials).to eql("BG")
+    end
   end
 
   describe ".has_role?" do
@@ -76,7 +76,7 @@ RSpec.describe User, :type => :model do
       normal_user.organizations << org
       #expect(normal_user.organizations.count).to eql(1)
       #expect(normal_user.organization_ids).to eql([org.id])
-    end    
+    end
   end
 
   describe ".lock_access" do
