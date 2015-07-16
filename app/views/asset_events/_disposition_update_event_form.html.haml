@@ -18,8 +18,9 @@
         = f.input :sales_proceeds, :class => 'form-control', :input_html => { :min => 0 }, :label => false
     .col-xs-4
       = f.input :age_at_disposition, :label => "Age at disposition", :input_html => { :min => 0 }
-    .col-xs-4
-      = f.input :mileage_at_disposition, :label => "Mileage at disposition", :input_html => { :min => 0 }
+    - if @asset.asset_type.class_name == "Vehicle" || @asset.asset_type.class_name == "SupportVehicle"
+      .col-xs-4
+        = f.input :mileage_at_disposition, :label => "Mileage at disposition", :input_html => { :min => 0 }
 
   = f.input :new_owner_name, :label => "New Owner Name"
   = f.input :address1, :label => "New Owner Address"
