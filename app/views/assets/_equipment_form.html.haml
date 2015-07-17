@@ -50,7 +50,7 @@
 
         = f.input :purchased_new, :as => :radio_buttons, :label => "Purchased New"
         = f.input :vendor_name, :label => 'Vendor', :input_html => {:autocomplete => 'off', :class => 'form-control', :placeholder => 'Enter vendor name', :id => 'vendor_name', :data => {:url => filter_vendors_path}}
-        = f.input :expected_useful_life, :label => "Expected Useful Life (Months)"
+     = f.input :expected_useful_life, as: :string, :label => "Expected Useful Life (Months) 11"
 
     .col-md-12
       = f.button :submit, :class => 'btn btn-primary'
