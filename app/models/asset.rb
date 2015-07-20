@@ -114,8 +114,7 @@ class Asset < ActiveRecord::Base
   validates     :asset_subtype_id,    :presence => true
   validates     :created_by_id,       :presence => true
   validates     :manufacture_year,    :presence => true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 1900}
-  # validates     :expected_useful_life, :numericality => { :greater_than => 0, :allow_nil => true, allow_blank: true  }, :allow_nil => true, allow_blank: true
-  validates_numericality_of     :expected_useful_life, :allow_nil => true, :allow_blank => true
+  validates     :expected_useful_life,:allow_nil => true, :numericality => {:only_integer => :true, :greater_than => 0}
   validates_inclusion_of :purchased_new, :in => [true, false]
   validates     :purchase_cost,       :presence => :true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0}
   validates     :purchase_date,       :presence => :true
