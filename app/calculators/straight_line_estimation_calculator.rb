@@ -34,7 +34,7 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
     # determine the scale factor to make the mileage in the same interval as condition
     scale_factor = 1.0
     if asset.policy_rule.respond_to? :max_service_life_miles
-      unless policy_item.max_service_life_miles.nil?
+      unless policy_item.max_service_life_miles > 0
         scale_factor = (max_rating - condition_threshold) / policy_item.max_service_life_miles
       end
     end
