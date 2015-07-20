@@ -3,47 +3,40 @@
 # all implementations
 #
 class RehabilitationUpdateEvent < AssetEvent
-      
+
   # Callbacks
   after_initialize :set_defaults
-      
+
   # Associations
-  has_many :asset_event_asset_subsystems, 
-             :foreign_key => "asset_event_id", 
-             :inverse_of  => :rehabilitation_update_event, 
-             :dependent   => :destroy
-  accepts_nested_attributes_for :asset_event_asset_subsystems, 
-                                  :allow_destroy => true,
-                                  :reject_if   => lambda{ |attrs| attrs[:parts_cost].blank? and attrs[:labor_cost].blank? }
-  
+  has_many :asset_event_asset_subsystems, :foreign_key => "asset_event_id", :dependent => :destroy
+  accepts_nested_attributes_for :asset_event_asset_subsystems, :allow_destroy => true, :reject_if   => lambda{ |attrs| attrs[:parts_cost].blank? and attrs[:labor_cost].blank? }
+
   has_many :asset_subsystems, :through => :asset_event_asset_subsystems
 
   validates :extended_useful_life_months, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0}, allow_nil: true
-  validates :extended_useful_life_miles,  :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0}, allow_nil: true
-        
+
   #------------------------------------------------------------------------------
   # Scopes
   #------------------------------------------------------------------------------
   # set the default scope
   default_scope { where(:asset_event_type_id => AssetEventType.find_by_class_name(self.name).id).order(:event_date, :created_at) }
-    
+
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
     :extended_useful_life_months,
-    :extended_useful_life_miles,
     :asset_event_asset_subsystems_attributes => [AssetEventAssetSubsystem.allowable_params]
   ]
-  
+
   #------------------------------------------------------------------------------
   #
   # Class Methods
   #
   #------------------------------------------------------------------------------
-    
+
   def self.allowable_params
     FORM_PARAMS
   end
-    
+
   #returns the asset event type for this type of event
   def self.asset_event_type
     AssetEventType.find_by_class_name(self.name)
@@ -70,7 +63,7 @@ class RehabilitationUpdateEvent < AssetEvent
   def labor_cost
     asset_event_asset_subsystems.map(&:labor_cost).compact.reduce(0, :+)
   end
-  
+
   #------------------------------------------------------------------------------
   #
   # Protected Methods
@@ -82,7 +75,6 @@ class RehabilitationUpdateEvent < AssetEvent
   def set_defaults
     super
     extended_useful_life_months ||= 0
-    extended_useful_life_miles ||= 0
-  end    
-  
+  end
+
 end
