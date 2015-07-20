@@ -484,7 +484,7 @@ class Asset < ActiveRecord::Base
   end
 
   def expected_useful_life=(num)
-    self[:expected_useful_life] = sanitize_to_int(num)
+    self[:expected_useful_life] = (num.blank? ?  nil : sanitize_to_int(num))
   end
 
 
