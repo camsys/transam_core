@@ -188,8 +188,6 @@ class AssetsController < AssetAwareController
     add_breadcrumb @asset.name, inventory_path(@asset)
     add_breadcrumb "Modify", edit_inventory_path(@asset)
 
-    binding.pry
-
     respond_to do |format|
       if @asset.update_attributes(form_params)
 
