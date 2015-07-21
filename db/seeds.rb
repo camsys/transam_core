@@ -166,7 +166,7 @@ reports = [
     :belongs_to => 'report_type', :type => "System Report",
     :name => 'User Login Report',
     :class_name => "UserLoginReport",
-    :view_name => "user_login_report",
+    :view_name => "user_login_report_table",
     :show_in_nav => 0,
     :show_in_dashboard => 0,
     :roles => 'manager,admin',
@@ -204,7 +204,7 @@ end
 asset_subsystems = [
 ]
 asset_subsystems.each do |s|
-  asset_type = AssetType.find_by(name: s[:asset_type]) # subsystems can be optionally scoped to only a single asset type
+  asset_type = AssetType.find_by(name: [:asset_type]) # subsystems can be optionally scoped to only a single asset type
   subsystem = AssetSubsystem.create(s)
   subsystem.asset_type = asset_type
 end
