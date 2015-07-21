@@ -39,7 +39,7 @@ disposition_types = [
   {:active => 1, :name => 'Transferred',  :code => 'T', :description => 'Transferred to another transportation provider.'},
   {:active => 1, :name => 'Reprovisioned',:code => 'R', :description => 'Reprovisioned as a spare or backup.'},
   {:active => 1, :name => 'Trade-In',     :code => 'I', :description => 'Trade in on purchase of new asset.'},
-  {:active => 1, :name => 'Disposed',     :code => 'D', :description => 'Permanently disposed.'}
+  {:active => 1, :name => 'Disposed',     :code => 'D', :description => 'Permanently disposed.'},
   {:active => 1, :name => 'Other',        :code => 'O', :description => 'Other disposition type.'}
 ]
 
