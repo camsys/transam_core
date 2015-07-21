@@ -34,7 +34,7 @@
       %th.center.sorting_disabled.icon-column Flags
 
   %tbody
-    - assets.where(organization_id: current_user.organization.id ).includes(:organization, :asset_subtype).each do |a|
+    - assets.includes(:organization, :asset_subtype).each do |a|
       %tr{:id => a.object_key, :class => 'action-path'}
         - SystemConfig.transam_module_names.each do |mod|
           - if lookup_context.template_exists?("#{mod}_asset_dt_columns", "assets", true)
