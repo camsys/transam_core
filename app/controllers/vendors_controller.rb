@@ -22,7 +22,7 @@ class VendorsController < OrganizationAwareController
     conditions << 'organization_id = ?'
     values << @organization.id
 
-    @vendors = Vendor.where(conditions.join(' AND '), *values)
+    @vendors = Vendor.where(conditions.join(' AND '), *values).order(:name)
 
     # cache the vendor ids in case we need them later
     cache_list(@vendors, INDEX_KEY_LIST_VAR)
