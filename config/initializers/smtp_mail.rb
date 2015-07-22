@@ -5,7 +5,6 @@ ActionMailer::Base.smtp_settings = {
   :domain               => ENV["SMTP_MAIL_DOMAIN"],
   :user_name            => ENV["SMTP_MAIL_USER_NAME"],
   :password             => ENV["SMTP_MAIL_PASSWORD"],
-  :authentication       => :plain,
+  :authentication       => :login,
   :enable_starttls_auto => 'true'
 }
-
