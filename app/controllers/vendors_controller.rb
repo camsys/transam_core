@@ -18,9 +18,9 @@ class VendorsController < OrganizationAwareController
     conditions  = []
     values      = []
 
-    # Limit to the org
-    conditions << 'organization_id = ?'
-    values << @organization.id
+    # Limit to the organization list
+    conditions << 'organization_id IN (?)'
+    values << @organization_list
 
     @vendors = Vendor.where(conditions.join(' AND '), *values).order(:name)
 
