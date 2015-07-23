@@ -61,6 +61,8 @@ class Vendor < ActiveRecord::Base
     :url
   ]
 
+  default_scope { order("name") }
+
   scope :active, -> { where(:active => true) }
 
   #------------------------------------------------------------------------------
