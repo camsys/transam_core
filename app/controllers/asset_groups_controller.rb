@@ -56,6 +56,7 @@ class AssetGroupsController < OrganizationAwareController
     add_breadcrumb 'New'
 
     @asset_group = AssetGroup.new(form_params)
+    @asset_group.active = true
     @asset_group.organization = @organization
 
     if @asset_group.save
