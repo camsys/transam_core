@@ -21,7 +21,7 @@ class ConditionType < ActiveRecord::Base
       rating = 3
     elsif estimated_rating >= 2.0
       rating = 2
-    elsif estimated_rating >= 1.0
+    elsif estimated_rating > 0
       rating = 1
     else
       rating = 0
