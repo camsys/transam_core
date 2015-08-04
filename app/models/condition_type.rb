@@ -2,7 +2,7 @@ class ConditionType < ActiveRecord::Base
 
   # All types that are available
   scope :active, -> { where(:active => true) }
- 
+
   def self.max_rating
     order("rating DESC").first.rating
   end
@@ -21,8 +21,10 @@ class ConditionType < ActiveRecord::Base
       rating = 3
     elsif estimated_rating >= 2.0
       rating = 2
-    else
+    elsif estimated_rating > 0
       rating = 1
+    else
+      rating = 0
     end
     ConditionType.find_by_rating(rating)
   end

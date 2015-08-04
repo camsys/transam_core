@@ -1,5 +1,5 @@
 = render :layout => "update_event_form" do |f|
-  = f.input :assessed_rating, :as => :float, :input_html => {:min => ConditionType.min_rating, :max => ConditionType.max_rating}
+  = f.input :assessed_rating, :as => :float, :input_html => {:min => 0, :max => ConditionType.max_rating}
   = f.input :event_date, :label => 'Date of Report', :wrapper => :vertical_append do
     = f.input_field :event_date, :class => "form-control", :as => :string, :data => {'behavior' => 'datepicker'}, :value => format_as_date(f.object.event_date)
     %span.input-group-addon
