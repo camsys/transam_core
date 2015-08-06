@@ -1,0 +1,21 @@
+<script type="text/javascript">
+
+  // Document Ready
+  $(document).ready(function(){
+    $('#asset_event_disposition_type_id').change(function(){
+
+      var disposition_type = $('#asset_event_disposition_type_id option:selected').text();
+
+      var comments_label = $('label[for = asset_event_comments]').text();
+
+      if (disposition_type === "Other"){
+        $('#asset_event_comments').addClass('required');
+        $('label[for = asset_event_comments]').text("* Comments");
+      } else {
+        $('#asset_event_comments').removeClass('required');
+        $('label[for = asset_event_comments]').text("Comments");
+      };
+    });
+  });
+
+</script>
