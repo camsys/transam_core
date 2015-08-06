@@ -48,7 +48,7 @@ class ImagesController < NestedResourceController
     respond_to do |format|
       if @image.save
         notify_user(:notice, 'Image was successfully created.')
-        format.html { redirect_to get_resource_url(@imagable) }
+        format.html { redirect_to :back }
         format.json { render action: 'show', status: :created, location: @image }
       else
         format.html { render action: 'new' }
@@ -84,7 +84,7 @@ class ImagesController < NestedResourceController
 
     notify_user(:notice, 'Image was successfully removed.')
     respond_to do |format|
-      format.html { redirect_to get_resource_url(@imagable) }
+      format.html { redirect_to :back }
       format.json { head :no_content }
     end
   end
