@@ -5,10 +5,8 @@
     $('#asset_event_disposition_type_id').change(function(){
 
       var disposition_type = $('#asset_event_disposition_type_id option:selected').text();
-      console.log(disposition_type);
 
       var comments_label = $('label[for = asset_event_comments]').text();
-      console.log(comments_label);
 
       if (disposition_type === "Other"){
         $('#asset_event_comments').addClass('required');
