@@ -2,25 +2,20 @@
 
   // Document Ready
   $(document).ready(function(){
-   // $('#new_asset_event_form').validate({
-   //      ignore: [], //validate hidden fields
-   //      submitHandler: function(form) {
-   //        form.submit();
-   //      }
-   //    });
-
-   //    $('#asset_event_comments').rules("add", {
-   //      min: 0,
-   //    });
     $('#asset_event_disposition_type_id').change(function(){
 
       var disposition_type = $('#asset_event_disposition_type_id option:selected').text();
       console.log(disposition_type);
 
+      var comments_label = $('label[for = asset_event_comments]').text();
+      console.log(comments_label);
+
       if (disposition_type === "Other"){
         $('#asset_event_comments').addClass('required');
+        $('label[for = asset_event_comments]').text("* Comments");
       } else {
         $('#asset_event_comments').removeClass('required');
+        $('label[for = asset_event_comments]').text("Comments");
       };
     });
   });
