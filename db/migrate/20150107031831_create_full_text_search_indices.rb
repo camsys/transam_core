@@ -15,5 +15,5 @@ class CreateFullTextSearchIndices < ActiveRecord::Migration
   def down
   	drop_table :keyword_search_indices
   end
-  
+
 end

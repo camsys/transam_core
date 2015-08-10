@@ -17,6 +17,6 @@ class AddFormsTable < ActiveRecord::Migration
     end
 
     add_index :forms, :object_key,       :unique => :true,  :name => :forms_idx1
-    
+
   end
 end
