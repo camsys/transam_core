@@ -16,9 +16,9 @@ class BacklogReport < AbstractReport
 
     # get the list of assets for this agency
     if report_filter_type > 0
-      assets = Asset.where('organization_id IN (?) AND assets.asset_type_id = ? AND assets.policy_replacement_year < ?', organization_id_list, report_filter_type, current_fiscal_year_year).order('asset_type_id, asset_subtype_id')
+      assets = Asset.where('organization_id IN (?) AND assets.asset_type_id = ? AND assets.policy_replacement_year <= ?', organization_id_list, report_filter_type, current_planning_year_year).order('asset_type_id, asset_subtype_id')
     else
-      assets = Asset.where("organization_id IN (?) AND assets.policy_replacement_year < ?", organization_id_list, current_fiscal_year_year).order('asset_type_id, asset_subtype_id')
+      assets = Asset.where("organization_id IN (?) AND assets.policy_replacement_year <= ?", organization_id_list, current_planning_year_year).order('asset_type_id, asset_subtype_id')
     end
 
     a = {}
