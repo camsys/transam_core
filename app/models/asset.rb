@@ -676,11 +676,10 @@ class Asset < ActiveRecord::Base
     # can't do this if it is a new record as none of the IDs would be set
     unless asset.new_record? or disposed?
       if asset.rehabilitation_updates.empty?
-
+        asset.last_rehabilitation_date = nil
       else
-        event = asset.rehabilitation_updates.last
+        asset.last_rehabilitation_date = asset.rehabilitation_updates.last.event_date
       end
-      save
     end
   end
 
@@ -941,16 +940,14 @@ class Asset < ActiveRecord::Base
       # see what metric we are using to determine the service life of the asset
       class_name = policy.service_life_calculation_type.class_name
       asset.policy_replacement_year = calculate(asset, policy, class_name)
-      # automatically flag the replacement year unless the user has set one
-      unless asset.scheduled_by_user == true
-        # If the asset is in backlog set the scheduled year to the current FY year
-        if asset.policy_replacement_year < current_fiscal_year_year
-          Rails.logger.debug "Asset is in backlog. Setting scheduled replacement year to #{current_fiscal_year_year}"
-          asset.scheduled_replacement_year = current_fiscal_year_year
-        else
-          Rails.logger.debug "Setting scheduled replacement year to #{asset.policy_replacement_year}"
-          asset.scheduled_replacement_year = asset.policy_replacement_year
-        end
+
+      # If the asset is in backlog set the scheduled year to the current FY year
+      if asset.policy_replacement_year < current_planning_year_year
+        Rails.logger.debug "Asset is in backlog. Setting scheduled replacement year to #{current_planning_year_year}"
+        asset.scheduled_replacement_year = current_planning_year_year
+      else
+        Rails.logger.debug "Setting scheduled replacement year to #{asset.policy_replacement_year}"
+        asset.scheduled_replacement_year = asset.policy_replacement_year
       end
     rescue Exception => e
       Rails.logger.warn e.message
@@ -969,6 +966,15 @@ class Asset < ActiveRecord::Base
       # Check to see if the asset should have been replaced before this year
       replacement_year = asset.policy_replacement_year
       asset.in_backlog = replacement_year < current_fiscal_year_year
+    rescue Exception => e
+      Rails.logger.warn e.message
+    end
+
+    # Check for rehabilitation policy events
+    begin
+      # Use the calculator to calculate the policy rehabilitation fiscal year
+      calculator = RehabilitationYearCalculator.new
+      asset.policy_rehabilitation_year = calculator.calculate(asset)
     rescue Exception => e
       Rails.logger.warn e.message
     end
