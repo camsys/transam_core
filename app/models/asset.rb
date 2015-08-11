@@ -943,9 +943,11 @@ class Asset < ActiveRecord::Base
       if asset.policy_replacement_year < current_planning_year_year
         Rails.logger.debug "Asset is in backlog. Setting scheduled replacement year to #{current_planning_year_year}"
         asset.scheduled_replacement_year = current_planning_year_year
+        asset.in_backlog = true
       else
         Rails.logger.debug "Setting scheduled replacement year to #{asset.policy_replacement_year}"
         asset.scheduled_replacement_year = asset.policy_replacement_year
+        asset.in_backlog = false
       end
     rescue Exception => e
       Rails.logger.warn e.message
@@ -955,15 +957,6 @@ class Asset < ActiveRecord::Base
     begin
       class_name = policy.condition_estimation_type.class_name
       asset.estimated_replacement_year = calculate(asset, policy, class_name, 'last_servicable_year')
-    rescue Exception => e
-      Rails.logger.warn e.message
-    end
-
-    # determine if the asset is in backlog
-    begin
-      # Check to see if the asset should have been replaced before this year
-      replacement_year = asset.policy_replacement_year
-      asset.in_backlog = replacement_year < current_fiscal_year_year
     rescue Exception => e
       Rails.logger.warn e.message
     end
