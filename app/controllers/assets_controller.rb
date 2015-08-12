@@ -413,7 +413,7 @@ class AssetsController < AssetAwareController
 
     # Check to see if we got list of assets to filter on
     if params[:ids]
-      @id_filter_list = params[:ids]
+      @id_filter_list = params[:ids].split("|")
     end
 
     # Check to see if we got spatial filter. This session variable is managed
