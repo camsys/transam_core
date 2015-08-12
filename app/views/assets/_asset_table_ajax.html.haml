@@ -62,6 +62,15 @@
   var org_id = #{@org_id.to_i};
   var path = '#{inventory_path("x")}';
 
+
+  var ids = #{
+    if @id_filter_list.present?
+      @id_filter_list
+    else
+      []
+    end
+    };
+
   function row_style(row, index) {
     return 'action-path';
   };
@@ -81,6 +90,9 @@
     }
     if (asset_group > 0) {
       params.asset_group = asset_group;
+    }
+    if (ids.length > 0){
+      params.id_filter_list = ids;
     }
     return params;
   }
