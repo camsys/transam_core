@@ -64,8 +64,6 @@
 
 
   var ids = #{
-    / the @id_filter_list is not always set, so this code addresses both cases
-    / where it is present and when it is not present
     if @id_filter_list.present?
       @id_filter_list
     else
@@ -94,7 +92,7 @@
       params.asset_group = asset_group;
     }
     if (ids.length > 0){
-      params.id_filter_list = ids;
+      params.ids = ids;
     }
     return params;
   }
