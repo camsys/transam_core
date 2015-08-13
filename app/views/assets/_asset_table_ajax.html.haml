@@ -64,6 +64,7 @@
 
 
   var ids = #{
+    # The following checks to see if the id_filter_list is present
     if @id_filter_list.present?
       @id_filter_list
     else
