@@ -63,14 +63,7 @@
   var path = '#{inventory_path("x")}';
 
 
-  var ids = #{
-    # The following checks to see if the id_filter_list is present
-    if @id_filter_list.present?
-      @id_filter_list
-    else
-      []
-    end
-    };
+  var ids = #{ @id_filter_list };
 
   function row_style(row, index) {
     return 'action-path';

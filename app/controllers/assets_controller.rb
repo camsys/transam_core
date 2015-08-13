@@ -420,6 +420,9 @@ class AssetsController < AssetAwareController
       else
         @id_filter_list = params[:ids].split("|")
       end
+
+    else
+      @id_filter_list = []
     end
 
     # Check to see if we got spatial filter. This session variable is managed
