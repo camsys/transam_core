@@ -413,6 +413,8 @@ class AssetsController < AssetAwareController
 
     # Check to see if we got list of assets to filter on
     if params[:ids]
+      #Checks to see if the id list is already an array.  Converts a string to
+      # an array if necessary.
       if params[:ids].is_a?(Array)
         @id_filter_list = params[:ids]
       else
