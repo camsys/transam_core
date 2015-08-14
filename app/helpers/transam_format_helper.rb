@@ -26,7 +26,6 @@ module TransamFormatHelper
     html.html_safe
   end
 
-
   # Formats a quantity
   def format_as_quantity(count, unit_type = 'unit')
     unless unit_type.blank?
@@ -193,6 +192,10 @@ module TransamFormatHelper
 
   def format_as_time(time)
     return time.strftime("%I:%M %p") unless time.nil?
+  end
+
+  def format_as_military_time(time)
+    return time.strftime("%H:%M") unless time.nil?
   end
 
   def format_as_time_difference(s, show_seconds = false)
