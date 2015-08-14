@@ -2,9 +2,16 @@
   - comments.each do |c|
     %li.list-group-item.comment
       %span.title.text-muted{:style => 'min-width: 140px; display:inline-block;'}= "#{c.creator.name}<br/>#{format_as_date_time(c.created_at)}".html_safe
-      %span.title{:style => 'display:inline-block;vertical-align:top'}= c.comment.html_safe.truncate(128)
+      %span.title.truncated{:style => 'display:inline-block;vertical-align:top'}= c.comment.html_safe.truncate(128)
+      %span.title.full-comment{:style => 'display:none'}= c.comment.html_safe
       %span.pull-right{:style => 'min-width: 80px; display:inline-block;vertical-align:top'}
         - if can? :destroy, c
           = link_to [c.commentable, c], :method => :delete, :class => "btn btn-warning btn-xs pull-right", :style => "margin-left: 5px;", :data => { :confirm => 'Are you sure you want to remove this comment?' } do
             %i.fa.fa-trash
             Delete
+
+:javascript
+  $(document).ready(function(){
+    console.log("hi")
+    $(".full-comment").hide;
+    });
