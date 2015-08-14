@@ -17,12 +17,19 @@
   $(document).ready(function(){
 
     $(".comment").click( function(){
+      var truncated = $(this).find(".truncated");
+      var fullComment = $(this).find(".full-comment");
 
-      $(this).find(".truncated").hide();
+      truncated.toggleClass("hidden");
 
-      $(this).find(".full-comment").show().css({ 'display': 'inline-block' })
+      if (truncated.hasClass("hidden")){
+        fullComment.show().css({ 'display': 'inline-block' });
+
+      } else {
+        fullComment.hide();
 
       }
-    );
+
+    });
 
   });
