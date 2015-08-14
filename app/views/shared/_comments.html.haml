@@ -12,6 +12,10 @@
 
 :javascript
   $(document).ready(function(){
-    console.log("hi")
-    $(".full-comment").hide;
-    });
+
+    $(".comment").click( function(){
+      $(this).find(".full-comment").css({'min-width': '140px', 'display': 'inline-block' })
+      }
+    );
+
+  });
