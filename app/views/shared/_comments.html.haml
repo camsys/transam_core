@@ -5,6 +5,9 @@
         .col-md-3.title.text-muted{:style => 'display:inline-block;'}= "#{c.creator.name}<br/>#{format_as_date_time(c.created_at)}".html_safe
         .col-md-6.title.truncated{:style => 'display:inline-block;vertical-align:top'}
           #{ c.comment.html_safe.truncate(128) }
+          -if c.comment.html_safe.length > 128
+            %span
+              .btn.btn-default.comment-toggle Show Full Comment
         .col-md-6.title.full-comment{:style => 'display:none;vertical-align:top'}
           #{c.comment.html_safe}
         .col-md-3.pull-right{:style => 'display:inline-block;vertical-align:top'}
