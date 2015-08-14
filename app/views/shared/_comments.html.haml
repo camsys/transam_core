@@ -10,6 +10,8 @@
               .btn.btn-default.comment-toggle Show Full Comment
         .col-md-6.title.full-comment{:style => 'display:none;vertical-align:top'}
           #{c.comment.html_safe}
+          %span
+            .btn.btn-default.comment-toggle Hide Full Comment
         .col-md-3.pull-right{:style => 'display:inline-block;vertical-align:top'}
           - if can? :destroy, c
             = link_to [c.commentable, c], :method => :delete, :class => "btn btn-warning btn-xs pull-right", :style => "margin-left: 5px;", :data => { :confirm => 'Are you sure you want to remove this comment?' } do
@@ -19,9 +21,10 @@
 :javascript
   $(document).ready(function(){
 
-    $(".comment").click( function(){
-      var truncated = $(this).find(".truncated");
-      var fullComment = $(this).find(".full-comment");
+    $(".comment-toggle").click( function(){
+      var comment = $(this).closest(".comment")
+      var truncated = comment.find(".truncated");
+      var fullComment = comment.find(".full-comment");
 
       truncated.toggleClass("hidden");
 
