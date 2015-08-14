@@ -14,7 +14,11 @@
   $(document).ready(function(){
 
     $(".comment").click( function(){
+
+      $(this).find(".truncated").hide();
+
       $(this).find(".full-comment").css({'min-width': '140px', 'display': 'inline-block' })
+
       }
     );
 
