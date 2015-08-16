@@ -7,11 +7,11 @@
           #{ c.comment.html_safe.truncate(128) }
           -if c.comment.html_safe.length > 128
             %span
-              .btn.btn-default.comment-toggle Show Full Comment
+              .btn.btn-default.btn-xs.comment-toggle More
         .col-md-6.title.full-comment{:style => 'display:none;vertical-align:top'}
           #{c.comment.html_safe}
           %span
-            .btn.btn-default.comment-toggle Hide Full Comment
+            .btn.btn-default.btn-xs.comment-toggle Less
         .col-md-3.pull-right{:style => 'display:inline-block;vertical-align:top'}
           - if can? :destroy, c
             = link_to [c.commentable, c], :method => :delete, :class => "btn btn-warning btn-xs pull-right", :style => "margin-left: 5px;", :data => { :confirm => 'Are you sure you want to remove this comment?' } do
@@ -29,11 +29,10 @@
       truncated.toggleClass("hidden");
 
       if (truncated.hasClass("hidden")){
-        fullComment.show().css({ 'display': 'inline-block' });
+        fullComment.fadeIn().css({ 'display': 'inline-block' });
 
       } else {
         fullComment.hide();
-
       }
 
     });
