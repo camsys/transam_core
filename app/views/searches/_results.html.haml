@@ -1,7 +1,5 @@
-%fieldset
-	%legend Search Results
-	- if @data.empty?
-		%p No records found.
-	- else
-		= render @searcher.results_view
-		
+- if @data.empty?
+	%p No records found.
+- else
+	= render @searcher.results_view
+
