@@ -11,6 +11,5 @@
       %legend Add Comment
       = form_for [@asset, Comment.new], :url => inventory_comments_path(@asset, Comment.new), :role => 'form' do |f|
         .form-group
-          = f.text_area :comment, :class => 'form-control', :placeholder => 'Enter a new comment...', :required => true, :minlength => 10
+          = f.text_area :comment, :class => 'form-control', :placeholder => 'Enter a new comment...', :required => true, :minlength => 10, :maxlength => 254
         = f.submit :class => 'btn btn-primary', :id => 'comment_submit'
-  
