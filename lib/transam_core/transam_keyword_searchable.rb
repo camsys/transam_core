@@ -58,12 +58,12 @@ module TransamKeywordSearchable
         keyword_search_index.object_class = self.class.name
       end
 
-      if respond_to? :description
+      if respond_to? :description and self.description.present?
         keyword_search_index.summary = self.description.truncate(64)
-      elsif respond_to? :name
+      elsif respond_to? :name and self.name.present?
         keyword_search_index.summary = self.name.truncate(64)
       else
-        keyword_search_index.summary = self.class.name
+        keyword_search_index.summary = self.to_s
       end
     end
 
