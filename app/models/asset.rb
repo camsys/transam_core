@@ -634,7 +634,7 @@ class Asset < ActiveRecord::Base
         # Set the service status to disposed
         asset.service_status_type = ServiceStatusType.find_by(:code => 'D')
       else
-        # The use is undo-ing the disposition update
+        # The user is undo-ing the disposition update
         asset.disposition_type = nil
         asset.disposition_date = nil
         # Set the service status to the last known service status
@@ -645,7 +645,7 @@ class Asset < ActiveRecord::Base
           asset.service_status_type = asset.service_status_updates.last.service_status_type
         end
       end
-      asset.save
+      save(:validate => false)
     end
   end
 
@@ -679,7 +679,9 @@ class Asset < ActiveRecord::Base
         asset.last_rehabilitation_date = nil
       else
         asset.last_rehabilitation_date = asset.rehabilitation_updates.last.event_date
+        asset.scheduled_rehabilitation_year = nil
       end
+      asset.save(:validate => false)
     end
   end
 
@@ -700,7 +702,7 @@ class Asset < ActiveRecord::Base
         asset.service_status_date = event.event_date
         asset.service_status_type = event.service_status_type
       end
-      asset.save
+      asset.save(:validate => false)
     end
   end
 
@@ -721,7 +723,7 @@ class Asset < ActiveRecord::Base
         self.reported_condition_rating = event.assessed_rating
         self.reported_condition_type = ConditionType.from_rating(event.assessed_rating)
       end
-      save
+      save(:validate => false)
     end
 
   end
@@ -740,7 +742,7 @@ class Asset < ActiveRecord::Base
         self.scheduled_replacement_year = event.replacement_year unless event.replacement_year.nil?
         self.replacement_reason_type_id = event.replacement_reason_type_id unless event.replacement_reason_type_id.nil?
       end
-      save
+      save(:validate => false)
     end
   end
 
@@ -756,7 +758,7 @@ class Asset < ActiveRecord::Base
         event = schedule_rehabilitation_updates.last
         self.scheduled_rehabilitation_year = event.rebuild_year
       end
-      save
+      save(:validate => false)
     end
   end
 
@@ -772,7 +774,7 @@ class Asset < ActiveRecord::Base
         event = schedule_disposition_updates.last
         self.scheduled_disposition_year = event.disposition_year
       end
-      save
+      save(:validate => false)
     end
   end
 
@@ -799,7 +801,7 @@ class Asset < ActiveRecord::Base
     Rails.logger.debug "Instance created #{calculator_instance}"
 
     asset.estimated_replacement_cost = calculator_instance.calculate_on_date(asset,on_date)
-    asset.save
+    asset.save(:validate => false)
 
   end
 
