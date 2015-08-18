@@ -15,5 +15,5 @@
           :wrapper => :vertical_form,
           :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}) do |f|
         = f.input :image, :required => true
-        = f.input :description, :as => :text, :placeholder => 'Enter a brief description of the photo...', :required => true, :minlength => 10
+        = f.input :description, :as => :text, :placeholder => 'Enter a brief description of the photo...', :required => true, :input_html => { :minlength => 10, :maxlength => 254 }
         = f.submit "Add Photo", :class => 'btn btn-primary', :id => 'image_submit'
