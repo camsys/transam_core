@@ -36,8 +36,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'countries'
   # for background processing jobs
   s.add_dependency 'delayed_job_active_record'
-  # for running background processes
-  s.add_dependency 'daemons'
   s.add_dependency 'haml-rails'
   s.add_dependency 'rmagick'
 
