@@ -645,7 +645,7 @@ class Asset < ActiveRecord::Base
           asset.service_status_type = asset.service_status_updates.last.service_status_type
         end
       end
-      save(:validate => false)
+      asset.save(:validate => false)
     end
   end
 
