@@ -2,6 +2,7 @@ class TransamController < ApplicationController
 
   before_filter :authenticate_user!
   before_filter :set_timezone
+  before_filter :log_session
 
   # Include the rails4 style form parameters mixin
   include TransamAttributes
@@ -16,7 +17,11 @@ class TransamController < ApplicationController
   VIEW_TYPE_TABLE = 2   # table
   VIEW_TYPE_MAP   = 3   # map
 
+  ACTIVE_SESSION_LIST_CACHE_VAR = 'active_sessions_cache_key'
+
+  #-----------------------------------------------------------------------------
   # A set of utilities to determine the database adapter type
+  #-----------------------------------------------------------------------------
   def is_mysql
     get_db_adapter == 'mysql2'
   end
@@ -28,7 +33,9 @@ class TransamController < ApplicationController
     ActiveRecord::Base.configurations[Rails.env]['adapter']
   end
 
+  #-----------------------------------------------------------------------------
   # Centralized message sender that can be overriden by an implementation
+  #-----------------------------------------------------------------------------
   def notify_user(type, message)
     # if there is a notify_user method in ApplicationController use it otherwise
     # use this one
@@ -39,7 +46,9 @@ class TransamController < ApplicationController
     end
   end
 
+  #-----------------------------------------------------------------------------
   # Determine which layout to use based on the authorized state
+  #-----------------------------------------------------------------------------
   def layout_by_resource
     if user_signed_in?
       "application"
@@ -48,9 +57,13 @@ class TransamController < ApplicationController
     end
   end
 
+  #-----------------------------------------------------------------------------
   protected
+  #-----------------------------------------------------------------------------
 
+  #-----------------------------------------------------------------------------
   # Stores the object keys of a list of objects in the session
+  #-----------------------------------------------------------------------------
   def cache_list(objs, cache_key)
     list = []
     unless objs.nil?
@@ -61,8 +74,10 @@ class TransamController < ApplicationController
     cache_objects(cache_key, list)
   end
 
+  #-----------------------------------------------------------------------------
   # Sets view vars @prev_record_key, @next_record_key, @total_rows and @row_number for
   # a current object
+  #-----------------------------------------------------------------------------
   def get_next_and_prev_object_keys(obj, cache_key)
     @prev_record_key = nil
     @next_record_key = nil
@@ -86,11 +101,13 @@ class TransamController < ApplicationController
     end
   end
 
+  #-----------------------------------------------------------------------------
   # Wrap the search text with db string search wildcards. This might need to be adjusted
   # depending on the database being used.
   #
   # These work for MySQL
   #
+  #-----------------------------------------------------------------------------
   def get_search_value(search_text, search_type)
     if search_type == "equals"
       val = search_text
@@ -109,31 +126,43 @@ class TransamController < ApplicationController
     Delayed::Job.enqueue job, :priority => priority
   end
 
-  # Cache an array of objects
+  #-----------------------------------------------------------------------------
+  # Cache an object
+  #-----------------------------------------------------------------------------
   def cache_objects(key, objects, expires_in = OBJECT_CACHE_EXPIRE_SECONDS)
     Rails.logger.debug "ApplicationController CACHE put for key #{get_cache_key(current_user, key)}"
     Rails.cache.fetch(get_cache_key(current_user, key), :force => true, :expires_in => expires_in) { objects }
   end
 
-  # Return an array of cached objects
+  #-----------------------------------------------------------------------------
+  # Return a cached object. If the object does not exist, an empty array is
+  # returned
+  #-----------------------------------------------------------------------------
   def get_cached_objects(key)
     Rails.logger.debug "ApplicationController CACHE get for key #{get_cache_key(current_user, key)}"
     ret = Rails.cache.fetch(get_cache_key(current_user, key))
     ret ||= []
   end
 
+  #-----------------------------------------------------------------------------
+  # Clear an existing cache value
+  #-----------------------------------------------------------------------------
   def clear_cached_objects(key)
     Rails.logger.debug "ApplicationController CACHE clear for key #{get_cache_key(current_user, key)}"
     Rails.cache.delete(get_cache_key(current_user, key))
   end
 
+  #-----------------------------------------------------------------------------
   # generates a cache key that is unique for a user and key name
+  #-----------------------------------------------------------------------------
   def get_cache_key(user, key)
     return "%06d:%s" % [user.id, key]
   end
 
+  #-----------------------------------------------------------------------------
   # returns the viewtype for the current controller and sets the session variable
   # to store any change in view type for the controller
+  #-----------------------------------------------------------------------------
   def get_view_type(session_var)
     view_type = params[:view_type].nil? ? session[session_var].to_i : params[:view_type].to_i
     if view_type.nil?
@@ -149,6 +178,32 @@ class TransamController < ApplicationController
   # otherwise one is defutled
   def set_timezone
     Time.zone = current_user.nil? ? 'Eastern Time (US & Canada)' : current_user.timezone
+  end
+
+  #-----------------------------------------------------------------------------
+  # Logs a session id in the cache with the time of access. If the session already
+  # exists the timestamp is updated with the time of this request otherwise
+  # the session is logged
+  #-----------------------------------------------------------------------------
+  def log_session
+    if user_signed_in?
+      key = "000000:#{ACTIVE_SESSION_LIST_CACHE_VAR}"
+      session_list = Rails.cache.fetch(key)
+      if session_list.blank?
+        h = {}
+      else
+        h = session_list
+      end
+      if ! h.has_key? session.id
+        h[session.id] = {:start_time => Time.now, :views => 0, :user_id => current_user.id}
+      end
+      h[session.id][:last_view] = Time.now
+      h[session.id][:path] = request.env['ORIGINAL_FULLPATH']
+      h[session.id][:views] = h[session.id][:views].to_i + 1
+      h[session.id][:expire_time] = Time.now + current_user.timeout_in
+      h[session.id][:ip_addr] = request.remote_ip
+      Rails.cache.fetch(key, :force => true, :expires_in => 1.week) { h }
+    end
   end
 
 end

@@ -127,6 +127,9 @@ Rails.application.routes.draw do
   end
 
   resources :users do
+    collection do
+      get  'sessions'
+    end
     member do
       get   'reset_password'
       post  'set_current_org'

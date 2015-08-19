@@ -4,7 +4,7 @@
     %br
     Admin
     %b.caret
-  %ul.dropdown-menu.dropdown-menu-right{:role => 'menu'}      
+  %ul.dropdown-menu.dropdown-menu-right{:role => 'menu'}
     %li.text-left
       = link_to notices_path do
         %i.fa.fa-thumb-tack.fa-fw
@@ -17,9 +17,13 @@
       = link_to users_path do
         %i.fa.fa-users.fa-fw
         Users
-    %li.divider        
+    %li.divider
+    %li.text-left
+      = link_to sessions_users_path do
+        %i.fa.fa-users.fa-fw
+        Online Users
+    %li.divider
     %li.text-left
       = link_to admin_path do
         %i.fa.fa-cogs.fa-fw
         Admin Interface
-

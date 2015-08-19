@@ -80,6 +80,17 @@ class UsersController < OrganizationAwareController
     end
   end
 
+  #-----------------------------------------------------------------------------
+  # Show the list of current sessions. Only available for admin users
+  #-----------------------------------------------------------------------------
+  def sessions
+
+    key = "000000:#{TransamController::ACTIVE_SESSION_LIST_CACHE_VAR}"
+    @sessions =  Rails.cache.fetch(key)
+    @sessions ||= {}
+
+  end
+
   # GET /users/1
   # GET /users/1.json
   def show

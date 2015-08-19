@@ -1,0 +1,40 @@
+%table.table.table-hover{:id => 'user-sessions-table', :data => {:toggle => 'table',
+  :pagination => 'true',
+  :show_pagination_switch => 'true',
+  :page_list => "[5, 10, 20, 50, 100, 200]",
+  :page_size => current_user.num_table_rows,
+  :search => 'false',
+  :export_types => "['csv', 'txt', 'excel']",
+  :show_export => 'true',
+  :show_columns => 'true',
+  :show_toggle => 'false'}}
+  %thead
+    %tr
+      %th.center.nowrap{:data => {:visible => 'false', :sortable => 'true'}} Session Id
+      %th.center.nowrap{:data => {:sortable => 'true'}} User
+      %th.center.nowrap{:data => {:sortable => 'true'}} IP Addr
+      %th.center.nowrap{:data => {:sortable => 'true'}} Organization
+      %th.center.nowrap{:data => {:sortable => 'true'}} Started
+      %th.center.nowrap{:data => {:sortable => 'true'}} Expires
+      %th.center.nowrap{:data => {:sortable => 'true'}} Age
+      %th.center.nowrap{:data => {:sortable => 'true'}} Last View Time
+      %th.center.nowrap{:data => {:sortable => 'true'}} Inactive Time
+      %th.left.nowrap{:data => {:sortable => 'true'}} View Count
+      %th.left.nowrap{:data => {:sortable => 'true'}} Last View
+  %tbody
+    - @sessions.keys.each do |s|
+      - user = User.find_by(:id => @sessions[s][:user_id])
+      %tr
+        %td= s
+        %td= user.name unless user.blank?
+        %td= @sessions[s][:ip_addr]
+        %td= user.organization.short_name unless user.blank?
+        %td= format_as_date_time(@sessions[s][:start_time])
+        %td= format_as_date_time(@sessions[s][:expire_time])
+        %td= format_as_time_difference((Time.now - @sessions[s][:start_time]).to_i) unless @sessions[s][:start_time].blank?
+        %td= format_as_date_time(@sessions[s][:last_view])
+        %td= format_as_time_difference((Time.now - @sessions[s][:last_view]).to_i) unless @sessions[s][:last_view].blank?
+        %td.center= format_as_integer(@sessions[s][:views])
+        %td= @sessions[s][:path]
+
+= render :partial => 'shared/table_scripts', :locals => {:table_id => 'user-sessions-table', :path_pattern => user_path("xxx")}

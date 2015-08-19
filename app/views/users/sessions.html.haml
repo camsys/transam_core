@@ -1,0 +1,18 @@
+.col-xs-12.col-sm-10.col-sm-offset-1
+  .page-header
+    %h2 Active User Sessions
+  .row
+    .col-xs-12#sessions-table-container
+      = render 'sessions_table'
+
+= render :partial => 'shared/table_scripts', :locals => {:table_id => 'user-sessions-table', :path_pattern => user_path("xxx")}
+
+:javascript
+  var url = '#{sessions_users_path(:format => :js)}';
+  var interval = 60000;
+  setInterval(function(){
+    $.ajax({
+      url: url,
+      cache: false
+    });
+  }, interval);
