@@ -1,5 +1,21 @@
+:css
+  .submit-action, .cancel-action {
+    font-size: 2.5em;
+    margin-top: 15px;
+  }
+  .row-action:hover {
+    cursor: pointer;
+  }
+  #spinner {
+    top: 250px;
+    left: 50%;
+    z-index: 1001;
+    margin-left: -2em;
+    position: absolute;
+  }
+
 .row
-  .col-md-12
+  .col-sm-12
     .panel.panel-default.header-part
       .panel-heading
         .row
@@ -9,8 +25,28 @@
               Policy
           .col-md-6
             = render 'actions'
-      .panel-body    
+      .panel-body
         = render 'summary'
+
+.col-lg-12.col-md-12.col-sm-12.col-xs-12
+  #spinner
+    = loader_panel_tag({:message => "Working...", :size => 3, :spinner => "refresh"})
+
 .row
-  .col-md-12#rules
-    = render 'rules'
+  .col-sm-12
+    %fieldset
+      %legend Asset Type Rules
+      .row
+        .col-sm-12#asset-type-rules-container
+          = render 'asset_type_rules'
+.row
+  .col-sm-12
+    %fieldset
+      %legend Asset Subtype Rules
+      .row
+        .col-sm-12#asset-subtype-rules-container
+          = render 'asset_subtype_rules'
+
+.modal.fade#rule-modal{:tabindex => -1, :role => 'dialog', :aria => {:hidden => true}}
+
+= render 'table_edit_scripts'

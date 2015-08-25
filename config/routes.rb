@@ -159,6 +159,7 @@ Rails.application.routes.draw do
   resources :policies do
     resources :policy_items
     member do
+      get  'show_edit_form'
       get   'updater'
       post  'update_assets'
       get   'copy'

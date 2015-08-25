@@ -1,0 +1,22 @@
+%table.table.table-condensed#asset-type-rules-table
+  %thead
+    %tr
+      %th.center Asset type
+      %th.center Service Life Calculation Method
+      %th.center Repl. Cost Calculation Method
+      %th.center Annual Inflation Rate
+      %th.center Pcnt Residual Value
+      %th.center Last Updated
+      %th.center
+  %tbody
+    - @policy.policy_asset_type_rules.each_with_index do |rule, idx|
+      %tr{:data => {:row => idx, :rule => rule.id, :type => 'asset_type'}}
+        %td.center= rule.asset_type
+        %td.center= rule.service_life_calculation_type
+        %td.center= rule.replacement_cost_calculation_type
+        %td.center= format_as_decimal(rule.annual_inflation_rate, 2)
+        %td.center= format_as_percentage(rule.pcnt_residual_value)
+        %td.center= format_as_date_time(rule.updated_at)
+        %td.center
+          = link_to "#", :remote => true, :title => "Alter rule..." do
+            %i.fa.fa-edit.fa-1-5x.text-success.row-action

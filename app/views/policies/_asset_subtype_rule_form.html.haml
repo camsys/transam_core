@@ -1,0 +1,61 @@
+= simple_form_for(@rule,
+  :url => policy_path(@policy),
+  :remote => true,
+  :html => {:class => 'form-vertical', :autocomplete => 'off', :id => 'edit-form'},
+  :wrapper => :vertical_form,
+  :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes,
+  :radio_buttons => :vertical_radio_and_checkboxes,
+  :file => :vertical_file_input,
+  :boolean => :vertical_boolean}) do |f|
+
+  .row
+    .col-xs-4
+      = f.input :max_service_life_months
+
+    .col-xs-4
+      = f.input :max_service_life_miles
+
+    .col-xs-4
+      = f.input :replacement_cost
+
+    .col-xs-4
+      = f.input :cost_fy_year
+
+    .col-xs-2
+      = f.input :replace_with_new
+
+    .col-xs-2
+      = f.input :replace_with_leased
+
+    .col-xs-4
+      = f.input :lease_length_months
+
+    .col-xs-4
+      = f.input :rehabilitation_service_month
+
+    .col-xs-4
+      = f.input :rehabilitation_service_month
+
+    .col-xs-4
+      = f.input :rehabilitation_cost
+
+    .col-xs-4
+      = f.input :extended_service_life_months
+
+    .col-xs-4
+      = f.input :extended_service_life_miles
+
+  .row
+    = f.button :submit, "Update", :class => 'btn btn-primary'
+    %button.btn.btn-default{:data => {:dismiss => "modal"}} Cancel
+
+:javascript
+
+  // validate the form before submittal
+  $('#edit-form').validate({
+    submitHandler: function(form) {
+      // Show the spinner while the form request is being handled
+      $("#spinner").show();
+      $(form).ajaxSubmit();
+    }
+  });

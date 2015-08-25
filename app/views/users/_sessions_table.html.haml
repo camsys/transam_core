@@ -36,5 +36,3 @@
         %td= format_as_time_difference((Time.now - @sessions[s][:last_view]).to_i) unless @sessions[s][:last_view].blank?
         %td.center= format_as_integer(@sessions[s][:views])
         %td= @sessions[s][:path]
-
-= render :partial => 'shared/table_scripts', :locals => {:table_id => 'user-sessions-table', :path_pattern => user_path("xxx")}

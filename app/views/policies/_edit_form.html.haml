@@ -1,0 +1,9 @@
+.modal-dialog
+  .modal-content
+    .modal-header
+      %button.close{:data => {:dismiss => "modal"}}
+        x
+      %h3.modal-title
+        Modify Rule
+    .modal-body
+      = render "#{@type}_rule_form"

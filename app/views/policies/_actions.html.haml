@@ -5,18 +5,17 @@
       = " Actions"
       %span.caret
     %ul.dropdown-menu{:role => 'menu'}
-      - # Commenting out the export to excel option because we are changing this system.
-      - #%li
-      - #  = link_to policy_policy_items_path(@policy, :asset_type => @asset_type, :format => 'xls') do
-      - #    %i.fa.fa-fw.fa-file-excel-o
-      - #    = " Export rules to Excel"
+      %li
+        = link_to policy_policy_items_path(@policy, :asset_type => @asset_type, :format => 'xls') do
+          %i.fa.fa-fw.fa-file-excel-o
+          = " Export rules to Excel"
       - if can? :update, @policy
         %li.divider
         %li
           = link_to edit_policy_path(@policy) do
             %i.fa.fa-edit.fa-fw
             = " Modify this policy"
-      - if @policy.current
+      - if @policy.active
         %li.divider
         %li
           = link_to updater_policy_path(@policy) do
