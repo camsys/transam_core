@@ -104,7 +104,8 @@ class AssetsController < AssetAwareController
           jsn = asset.as_json
           jsn.merge!({:tagged => (asset.tagged? current_user) ? '1' : '0'})
           if asset.respond_to? :book_value
-            jsn.merge! asset.depreciable_as_json
+            a = Asset.get_typed_asset asset
+            jsn.merge! a.depreciable_as_json
           end
           data << jsn
         end
