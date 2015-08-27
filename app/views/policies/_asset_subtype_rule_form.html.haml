@@ -22,7 +22,7 @@
         = f.input_field :replacement_cost, :class => "form-control", :min => 0
 
     .col-xs-4
-      = f.input :cost_fy_year
+      = f.input :cost_fy_year, :collection => get_fiscal_years
 
     .col-xs-2
       = f.input :replace_with_new
