@@ -38,7 +38,43 @@ class PoliciesController < OrganizationAwareController
     elsif @type == 'asset_subtype'
       @rule = @policy.policy_asset_subtype_rules.find(params[:rule_id])
     end
-  
+
+  end
+
+  #-----------------------------------------------------------------------------
+  # Updates a policy rule for the current policy. Called via ajax
+  #-----------------------------------------------------------------------------
+  def update_policy_rule
+
+    if params[:policy_asset_type_rule].present?
+      rule = PolicyAssetTypeRule.find(params[:policy_asset_type_rule][:id])
+      rule.update_attributes(asset_type_rule_form_params)
+    else
+      rule = PolicyAssetSubtypeRule.find(params[:policy_asset_subtype_rule][:id])
+      rule.update_attributes(asset_subtype_rule_form_params)
+    end
+
+    render 'update_policy_rules'
+
+  end
+  #-----------------------------------------------------------------------------
+  # Adds a policy rule to the current policy. Called via ajax
+  #-----------------------------------------------------------------------------
+  def add_policy_rule
+
+    if params[:policy_asset_type_rule].present?
+      rule = PolicyAssetTypeRule.new(asset_type_rule_form_params])
+    else
+      rule = PolicyAssetSubtypeRule.new(asset_subtype_rule_form_params)
+    end
+
+    if rule.present?
+      rule.policy = @policy
+      rule.save
+    end
+
+    render 'update_policy_rules'
+
   end
 
   # Sets the current policy for an organization
@@ -193,9 +229,18 @@ class PoliciesController < OrganizationAwareController
   end
 
   private
+
   # Never trust parameters from the scary internet, only allow the white list through.
   def form_params
     params.require(:policy).permit(policy_allowable_params)
+  end
+
+  def asset_subtype_rule_form_params
+    params.require(:policy_asset_subtype_rule).permit(PolicyAssetSubtypeRule.allowable_params)
+  end
+
+  def asset_type_rule_form_params
+    params.require(:policy_asset_type_rule).permit(PolicyAssetTypeRule.allowable_params)
   end
 
   def get_policy

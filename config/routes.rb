@@ -157,13 +157,14 @@ Rails.application.routes.draw do
   end
 
   resources :policies do
-    resources :policy_items
     member do
       get  'show_edit_form'
       get   'updater'
       post  'update_assets'
       get   'copy'
       get   'make_current'
+      post  'update_policy_rule'
+      post  'add_policy_rule'
     end
   end
 

@@ -51,9 +51,10 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
     :asset_subtype_id,
     :max_service_life_months,
     :replacement_cost,
-    :replace_fuel_type_id,
+    :cost_fy_year,
     :replace_with_new,
     :replace_with_leased,
+    :replacement_cost,
     :lease_length_months,
 
     :rehabilitation_service_month,
