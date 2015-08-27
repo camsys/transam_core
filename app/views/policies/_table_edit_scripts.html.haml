@@ -3,6 +3,7 @@
   var url = '#{show_edit_form_policy_path(@policy)}.js';
 
   $(document).ready(function() {
+    $('#spinner').hide();
     enable_row_actions();
   });
 
@@ -27,4 +28,14 @@
         }
       });
     });
+
+    $("form").on("ajax:send", function(xhr) {
+        $('#spinner').show();
+      })
+      .on("ajax:success", function(xhr) {
+        $('#rule-modal').modal('hide');
+      })
+      .on("ajax:complete", function(xhr, status) {
+        $('#spinner').hide();
+      });
   };
