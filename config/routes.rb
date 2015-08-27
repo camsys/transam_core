@@ -163,6 +163,7 @@ Rails.application.routes.draw do
       post  'update_assets'
       get   'copy'
       get   'make_current'
+      patch  'update_policy_rule'
       post  'update_policy_rule'
       post  'add_policy_rule'
     end

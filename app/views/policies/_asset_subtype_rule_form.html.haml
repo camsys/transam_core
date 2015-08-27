@@ -8,6 +8,9 @@
   :file => :vertical_file_input,
   :boolean => :vertical_boolean}) do |f|
 
+  -if @rule.id
+    = f.input :id, :as => :hidden, :input_html => { :value => @rule.id }
+
   .row
     .col-xs-4
       = f.input :max_service_life_months, :input_html => { min: 1}
