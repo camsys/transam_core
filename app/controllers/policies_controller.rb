@@ -63,7 +63,7 @@ class PoliciesController < OrganizationAwareController
   def add_policy_rule
 
     if params[:policy_asset_type_rule].present?
-      rule = PolicyAssetTypeRule.new(asset_type_rule_form_params])
+      rule = PolicyAssetTypeRule.new(asset_type_rule_form_params)
     else
       rule = PolicyAssetSubtypeRule.new(asset_subtype_rule_form_params)
     end
