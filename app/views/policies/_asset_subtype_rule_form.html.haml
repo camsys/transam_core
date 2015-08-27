@@ -1,5 +1,5 @@
 = simple_form_for(@rule,
-  :url => update_rule_policy_path(@policy),
+  :url => policy_path(@policy),
   :remote => true,
   :html => {:class => 'form-vertical', :autocomplete => 'off', :id => 'edit-form'},
   :wrapper => :vertical_form,
@@ -8,23 +8,18 @@
   :file => :vertical_file_input,
   :boolean => :vertical_boolean}) do |f|
 
-  = f.input :id, :as => :hidden, :input_html => { :value => @rule.id }
-
   .row
     .col-xs-4
-      = f.input :max_service_life_months, :input_html => { :min => 1 }
+      = f.input :max_service_life_months, :input_html => { min: 1}
 
     .col-xs-4
-      = f.input :max_service_life_miles, :input_html => { :min => 1 }
+      = f.input :max_service_life_miles, :input_html => { min: 0 }
 
     .col-xs-4
-      = f.input :replacement_cost, :wrapper=> :vertical_prepend  do
-        %span.input-group-addon
-          %i.fa.fa-usd
-        = f.input_field :replacement_cost, :class => "form-control", :min => 0
+      = f.input :replacement_cost, :input_html => { min: 0 }
 
     .col-xs-4
-      = f.input :cost_fy_year, :collection => get_fiscal_years
+      = f.input :cost_fy_year
 
     .col-xs-2
       = f.input :replace_with_new
@@ -32,30 +27,26 @@
     .col-xs-2
       = f.input :replace_with_leased
 
-    .col-xs-4.lease.hidden
-      = f.input :lease_length_months, :input_html => { :min => 1 }
+    .col-xs-4
+      = f.input :lease_length_months, :input_html => { min: 1 }
 
     .col-xs-4
-      = f.input :rehabilitation_service_month, :input_html => { :min => 1 }
+      = f.input :rehabilitation_service_month, :input_html => { min: 1 }
 
     .col-xs-4
-      = f.input :rehabilitation_cost, :wrapper=> :vertical_prepend  do
-        %span.input-group-addon
-          %i.fa.fa-usd
-        = f.input_field :rehabilitation_cost, :class => "form-control", :min => 0
+      = f.input :rehabilitation_cost
 
     .col-xs-4
-      = f.input :extended_service_life_months, :input_html => { :min => 1 }
+      = f.input :extended_service_life_months, :input_html => { min: 1 }
 
     .col-xs-4
-      = f.input :extended_service_life_miles, :input_html => { :min => 0 }
+      = f.input :extended_service_life_miles, :input_html => { min: 0 }
 
   .row
     = f.button :submit, "Update", :class => 'btn btn-primary'
     %button.btn.btn-default{:data => {:dismiss => "modal"}} Cancel
 
 :javascript
-
   // validate the form before submittal
   $('#edit-form').validate({
     submitHandler: function(form) {
@@ -63,21 +54,4 @@
       $("#spinner").show();
       $(form).ajaxSubmit();
     }
-  });
-
-  $(document).ready(function() {
-
-    // Changes the label of replacement cost to "Lease Cost" if replaced with leased
-    $('#policy_asset_subtype_rule_replace_with_leased').click(function(){
-
-      var checked = $(this).is(':checked');
-
-      if (checked){
-        $("label[for = policy_asset_subtype_rule_replacement_cost]").html(' <abbr title="required">*</abbr> Lease Cost ')
-      } else {
-        $("label[for = policy_asset_subtype_rule_replacement_cost]").html(' <abbr title="required">*</abbr> Replacement Cost ')
-      }
-    });
-
-
   });
