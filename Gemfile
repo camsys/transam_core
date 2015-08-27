@@ -12,3 +12,4 @@ gemspec
 
 # To use debugger
 # gem 'debugger'
+gem 'countries', "~> 0.11.5" # lock gem for dummy app
