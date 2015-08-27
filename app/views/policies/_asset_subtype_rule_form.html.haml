@@ -33,7 +33,7 @@
     .col-xs-2
       = f.input :replace_with_leased
 
-    .col-xs-4
+    .col-xs-4.leased
       = f.input :lease_length_months, :input_html => { min: 1 }
 
     .col-xs-4
@@ -64,3 +64,25 @@
       $(form).ajaxSubmit();
     }
   });
+
+  $(document).ready(function() {
+    // Changes the label of replacement cost to "Lease Cost" if replaced with leased
+      var checkbox = $('#policy_asset_subtype_rule_replace_with_leased');
+
+      function isChecked(){
+        var checked = checkbox.is(':checked');
+        if (checked){
+          $("label[for = policy_asset_subtype_rule_replacement_cost]").html(' <abbr title="required">*</abbr> Lease Cost ');
+          $('.leased').fadeIn();
+        } else {
+          $("label[for = policy_asset_subtype_rule_replacement_cost]").html(' <abbr title="required">*</abbr> Replacement Cost ');
+          $('.leased').hide().find(':input').val('');
+        }
+      }
+
+    isChecked();
+
+    checkbox.click(function(){
+      isChecked();
+    });
+   });
