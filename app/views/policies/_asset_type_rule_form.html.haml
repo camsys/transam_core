@@ -1,5 +1,5 @@
 = simple_form_for(@rule,
-  :url => policy_path(@policy),
+  :url => update_policy_rule_policy_path(@policy),
   :remote => true,
   :html => {:class => 'form-vertical', :autocomplete => 'off', :id => 'edit-form'},
   :wrapper => :vertical_form,
@@ -7,6 +7,9 @@
   :radio_buttons => :vertical_radio_and_checkboxes,
   :file => :vertical_file_input,
   :boolean => :vertical_boolean}) do |f|
+
+  -if @rule.id
+    = f.input :id, :as => :hidden, :input_html => { :value => @rule.id }
 
   .row
     .col-xs-6
