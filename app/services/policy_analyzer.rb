@@ -3,19 +3,36 @@
 # PolicyAnalyzer
 #
 # Wraps a policy for an asset and provides a shortcut for accessing the policy
-# rules for the asset
+# rules for the asset. The class uses a combination of factory and decorator
+# patterns to create a read-only analyzer instance for an asset then provide
+# accessors that delegate to the correct underlying model using reflection.
+#
+# The service exposes a set of get_xxxxx methods which delegate to the underlying
+# models without the caller needing to know which object contains the actual
+# property being accessed
+#
+# Direct access to the model details can be obtained through the attr_reader
+# properties
 #------------------------------------------------------------------------------
 class PolicyAnalyzer
+
+  DECORATOR_METHOD_SIGNATURE = /^get_(.*)$/
 
   attr_reader :asset
   attr_reader :policy
   attr_reader :asset_type_rule
   attr_reader :asset_subtype_rule
 
-  # Define on self, since it's  a class method
+  #-----------------------------------------------------------------------------
+  # Recieves method requests. Anything that does not start with get_ is delegated
+  # to the super model otherwise the request is tested against the model components
+  # until a match is found or not in which case the call is delegated to the super
+  # model to be evaluated
+  #-----------------------------------------------------------------------------
   def method_missing(method_sym, *arguments)
 
-    if method_sym.to_s =~ /^get_(.*)$/
+    if method_sym.to_s =~ DECORATOR_METHOD_SIGNATURE
+      # Strip off the decorator and see who can handle the real request
       actual_method_sym = method_sym.to_s[4..-1].to_sym
       if policy.respond_to? actual_method_sym
         method_object = asset_type_rule.method(actual_method_sym)
@@ -26,26 +43,37 @@ class PolicyAnalyzer
       elsif asset_subtype_rule.respond_to? actual_method_sym
         method_object = asset_subtype_rule.method(actual_method_sym)
         method_object.call(*arguments)
+      else
+        # Pass the call on -- probably generates a method not found exception
+        super
       end
     else
+      # Pass the call on -- probably generates a method not found exception
       super
     end
   end
 
-  # Delegate to the type and subtype rules
+  #-----------------------------------------------------------------------------
+  # See if we respond to the method request
+  #-----------------------------------------------------------------------------
   def respond_to?(method_sym, include_private = false)
-    if method_sym.to_s =~ /^get_(.*)$/
+    if method_sym.to_s =~ DECORATOR_METHOD_SIGNATURE
       actual_method_sym = method_sym.to_s[4..-1].to_sym
       if policy.respond_to? actual_method_sym or asset_type_rule.respond_to? actual_method_sym or asset_subtype_rule .respond_to? actual_method_sym
         true
       else
+        # Pass it up the chain
         super
       end
     else
+      # Pass it up the chain
       super
     end
   end
 
+  #------------------------------------------------------------------------------
+  # Factor style constructor
+  #------------------------------------------------------------------------------
   def initialize(asset, policy)
     @asset = asset
     @policy = policy
@@ -56,16 +84,12 @@ class PolicyAnalyzer
   end
 
   #------------------------------------------------------------------------------
-  #
   # Protected Methods
-  #
   #------------------------------------------------------------------------------
   protected
 
   #------------------------------------------------------------------------------
-  #
   # Private Methods
-  #
   #------------------------------------------------------------------------------
   private
 
