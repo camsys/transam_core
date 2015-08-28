@@ -16,9 +16,6 @@
       = f.input :max_service_life_months, :input_html => { min: 1}
 
     .col-xs-4
-      = f.input :max_service_life_miles, :input_html => { min: 0 }
-
-    .col-xs-4
       = f.input :replacement_cost, :wrapper=> :vertical_prepend  do
         %span.input-group-addon
           %i.fa.fa-usd
@@ -48,8 +45,6 @@
     .col-xs-4
       = f.input :extended_service_life_months, :input_html => { min: 1 }
 
-    .col-xs-4
-      = f.input :extended_service_life_miles, :input_html => { min: 0 }
 
   .row
     = f.button :submit, "Update", :class => 'btn btn-primary'
