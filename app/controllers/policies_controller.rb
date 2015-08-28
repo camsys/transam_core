@@ -3,8 +3,7 @@ class PoliciesController < OrganizationAwareController
   add_breadcrumb "Home", :root_path
 
   #before_filter :authorize_admin
-  before_filter :check_for_cancel, :only => [:create, :update]
-  before_filter :get_policy, :except => [:index, :create, :new]
+  before_action :get_policy, :except => [:index, :create, :new]
 
   SESSION_VIEW_TYPE_VAR = 'policies_subnav_view_type'
 
@@ -13,18 +12,8 @@ class PoliciesController < OrganizationAwareController
     add_breadcrumb "Policies", policies_path
 
     # get the policies for this agency
-    @policies = []
-    @organization.policies.each do |p|
-      @policies << p
-    end
+    @policies = @organization.policies
 
-    # remember the view type
-    @view_type = get_view_type(SESSION_VIEW_TYPE_VAR)
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render :json => @policies }
-    end
   end
 
   def show
@@ -32,25 +21,60 @@ class PoliciesController < OrganizationAwareController
     add_breadcrumb "Policies", policies_path
     add_breadcrumb @policy.name, policy_path(@policy)
 
-    # See if the user wants to filter on an asset type
-    @asset_type = params[:asset_type]
-    if @asset_type.blank?
-      @rules = @policy.policy_items
-    else
-      asset_type = AssetType.find(@asset_type)
-      @rules = @policy.policy_items.where('asset_subtype_id IN (?)', asset_type.asset_subtype_ids)
-    end
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.js
-      format.json { render :json => @policy }
-    end
   end
-
 
   def new
     #right now, no blank policies can be created - just copying existing policies
+  end
+
+  #-----------------------------------------------------------------------------
+  # Loads an edit form for a policy. called via ajax
+  #-----------------------------------------------------------------------------
+  def show_edit_form
+
+    @type = params[:type]
+    if @type == 'asset_type'
+      @rule = @policy.policy_asset_type_rules.find(params[:rule_id])
+    elsif @type == 'asset_subtype'
+      @rule = @policy.policy_asset_subtype_rules.find(params[:rule_id])
+    end
+
+  end
+
+  #-----------------------------------------------------------------------------
+  # Updates a policy rule for the current policy. Called via ajax
+  #-----------------------------------------------------------------------------
+  def update_policy_rule
+
+    if params[:policy_asset_type_rule].present?
+      rule = PolicyAssetTypeRule.find(params[:policy_asset_type_rule][:id])
+      rule.update_attributes(asset_type_rule_form_params)
+    else
+      rule = PolicyAssetSubtypeRule.find(params[:policy_asset_subtype_rule][:id])
+      rule.update_attributes(asset_subtype_rule_form_params)
+    end
+
+    render 'update_policy_rules'
+
+  end
+  #-----------------------------------------------------------------------------
+  # Adds a policy rule to the current policy. Called via ajax
+  #-----------------------------------------------------------------------------
+  def add_policy_rule
+
+    if params[:policy_asset_type_rule].present?
+      rule = PolicyAssetTypeRule.new(asset_type_rule_form_params)
+    else
+      rule = PolicyAssetSubtypeRule.new(asset_subtype_rule_form_params)
+    end
+
+    if rule.present?
+      rule.policy = @policy
+      rule.save
+    end
+
+    render 'update_policy_rules'
+
   end
 
   # Sets the current policy for an organization
@@ -62,11 +86,11 @@ class PoliciesController < OrganizationAwareController
     # Make sure that any other policies including the selected ones
     # are not current
     org.policies.each do |pol|
-      pol.current = false
+      pol.active = false
       pol.save
     end
     # make the selected policy current
-    @policy.current = true
+    @policy.active = true
     @policy.save
 
     notify_user(:notice, "Policy #{@policy.name} is now set as the current policy.")
@@ -205,35 +229,22 @@ class PoliciesController < OrganizationAwareController
   end
 
   private
+
   # Never trust parameters from the scary internet, only allow the white list through.
   def form_params
     params.require(:policy).permit(policy_allowable_params)
   end
 
+  def asset_subtype_rule_form_params
+    params.require(:policy_asset_subtype_rule).permit(PolicyAssetSubtypeRule.allowable_params)
+  end
+
+  def asset_type_rule_form_params
+    params.require(:policy_asset_type_rule).permit(PolicyAssetTypeRule.allowable_params)
+  end
+
   def get_policy
-    # See if it is our policy
-    @policy = Policy.find_by_object_key(params[:id]) unless params[:id].nil?
-    if @policy.nil?
-      @policy = Organization.get_typed_organization(@organization).get_policy
-    end
-    # if not found or the object does not belong to the users
-    # send them back to index.html.erb
-    if @policy.nil?
-      notify_user(:alert, 'Record not found!')
-      redirect_to(policies_url)
-      return
-    end
-
+    @policy = Policy.find_by(:object_key => params[:id]) unless params[:id].nil?
   end
 
-  def check_for_cancel
-    unless params[:cancel].blank?
-      # get the policy, if one was being edited
-      if params[:id]
-        redirect_to(policy_url(params[:id]))
-      else
-        redirect_to(policies_url)
-      end
-    end
-  end
 end

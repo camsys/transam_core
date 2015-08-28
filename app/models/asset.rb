@@ -1,25 +1,25 @@
-#------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #
 # Asset
 #
 # Base class for all assets. This class represents a generic asset, subclasses represent concrete
 # asset types.
 #
-#------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 class Asset < ActiveRecord::Base
 
   OBJECT_CACHE_EXPIRE_SECONDS = Rails.application.config.object_cache_expire_seconds
 
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   # Behaviors
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   include TransamObjectKey
   include TransamNumericSanitizers
   include FiscalYear
 
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   # Callbacks
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   after_initialize  :set_defaults
 
   # Clean up any HABTM associations before the asset is destroyed
@@ -27,9 +27,9 @@ class Asset < ActiveRecord::Base
 
   before_update :clear_cache
 
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   # Associations common to all asset types
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
 
   # each asset belongs to a single organization
   belongs_to  :organization
@@ -55,7 +55,8 @@ class Asset < ActiveRecord::Base
   # each can belong to a parent
   belongs_to  :parent, :class_name => "Asset",  :foreign_key => :parent_id
 
-  # Each asset has zero or more asset events. These are all events regardless of event type. Events are deleted when the asset is deleted
+  # Each asset has zero or more asset events. These are all events regardless of
+  # event type. Events are deleted when the asset is deleted
   has_many   :asset_events, :dependent => :destroy
 
   # each asset has zero or more condition updates
@@ -122,20 +123,20 @@ class Asset < ActiveRecord::Base
 
   #validates     :in_service_date,     :presence => :true
 
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   # Attributes common to all asset types
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
 
   # Validations on core attributes
   validates       :asset_tag,         :presence => true, :length => { :maximum => 12 }
   # Asset tags must be unique within an organization
   validates_uniqueness_of :asset_tag, :scope => :organization
 
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   # Attributes that are used to cache asset condition information.
   # This set of attributes are updated when the asset condirtion or disposition is
   # updated. Used for reporting only.
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
 
   # The last reported condition type for the asset
   belongs_to      :reported_condition_type,   :class_name => "ConditionType",   :foreign_key => :reported_condition_type_id
@@ -149,25 +150,25 @@ class Asset < ActiveRecord::Base
   # The last reported disposition type for the asset
   belongs_to      :service_status_type
 
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   # Transient Attributes
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   attr_reader :vendor_name
 
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   # Scopes
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   # Returns a list of assets that have been disposed
   scope :disposed,    -> { where('assets.disposition_date IS NOT NULL') }
   # Returns a list of assets that are still operational
   scope :operational, -> { where('assets.disposition_date IS NULL') }
   # Returns a list of asset that operational and are marked as being in service
   scope :in_service,  -> { where('assets.disposition_date IS NULL AND assets.service_status_type_id = 1')}
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   # Lists. These lists are used by derived classes to make up lists of attributes
   # that can be used for operations like full text search etc. Each derived class
   # can add their own fields to the list
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
 
   # List of fields which can be searched using a simple text-based search
   SEARCHABLE_FIELDS = [
@@ -260,11 +261,11 @@ class Asset < ActiveRecord::Base
     :updated_by_id
   ]
 
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   #
   # Class Methods
   #
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
 
   # Returns an array of classes which are descendents of Asset, this includes classes
   # that are both direct and in-direct assendents.
@@ -320,11 +321,11 @@ class Asset < ActiveRecord::Base
     a
   end
 
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   #
   # Instance Methods
   #
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
 
   # Returns true if the user has tagged this asset
   def tagged? user
@@ -411,6 +412,11 @@ class Asset < ActiveRecord::Base
     "#{asset_subtype.name}: #{asset_tag}"
   end
 
+  # Override the getter for vendor name
+  def vendor_name
+    vendor.name unless vendor.nil?
+  end
+
   # Returns true if the asset has one or more tasks that are open
   def needs_attention?
     (tasks.where('state IN (?)', Task.active_states).count > 0)
@@ -474,7 +480,10 @@ class Asset < ActiveRecord::Base
     end
   end
 
-  # Override numeric setters to remove any extraneous formats from the number strings eg $, etc.
+  #-----------------------------------------------------------------------------
+  # Override numeric setters to remove any extraneous formats from the number
+  # strings eg $, etc.
+  #-----------------------------------------------------------------------------
   def manufacture_year=(num)
     self[:manufacture_year] = sanitize_to_int(num)
   end
@@ -486,6 +495,7 @@ class Asset < ActiveRecord::Base
   def expected_useful_life=(num)
     self[:expected_useful_life] = sanitize_to_int(num)
   end
+  #-----------------------------------------------------------------------------
 
 
   # Returns true if this asset participates in one or more events
@@ -569,23 +579,25 @@ class Asset < ActiveRecord::Base
     end
   end
 
-  # Returns the policy rule that this asset uses for replacement and rehabilitation
-  def policy_rule
-    cached_policy_rule = get_cached_object("policy_rule")
-    if cached_policy_rule.blank?
-      cached_policy_rule = policy.get_rule(self)
-      cache_object("policy_rule", cached_policy_rule)
+  #-----------------------------------------------------------------------------
+  # Return the policy analyzer for this asset. If a policy is not provided the
+  # default policy for the asset is used
+  #-----------------------------------------------------------------------------
+  def policy_analyzer(policy_to_use=nil)
+    cached_policy_analyzer = get_cached_object("policy_analyzer")
+    if cached_policy_analyzer.blank?
+      if policy_to_use.blank?
+        policy_to_use = policy
+      end
+      cached_policy_analyzer = PolicyAnalyzer.new(self, policy_to_use)
+      cache_object("policy_analyzer", cached_policy_analyzer)
     end
-    cached_policy_rule
+    cached_policy_analyzer
   end
-
-  # Override the getter for vendor name
-  def vendor_name
-    vendor.name unless vendor.nil?
-  end
-
-  # returns the the organizations's policy that governs the replacement of this asset. This needs to upcast
-  # the organization type to a class that owns assets
+  #-----------------------------------------------------------------------------
+  # returns the the organizations's policy that governs the replacement of this
+  # asset. This needs to upcast the organization type to a class that owns assets
+  #-----------------------------------------------------------------------------
   def policy
     cached_policy = get_cached_object("policy")
     if cached_policy.blank?
@@ -593,23 +605,6 @@ class Asset < ActiveRecord::Base
       cache_object("policy", cached_policy)
     end
     cached_policy
-  end
-
-  # initialize any policy-related items. This method should be overridden for each sub class
-  def initialize_policy_items(init_policy = nil)
-    # Set the expected_useful_life
-    if init_policy
-      p = init_policy
-    else
-      p = policy
-    end
-    if p
-      policy_item = p.get_rule(self)
-      if policy_item
-        Rails.logger.debug("p.get_rule(self)#{policy_item.to_yaml}")
-        self.expected_useful_life = policy_item.max_service_life_months # Asset life is in months, policy in years
-      end
-    end
   end
 
   #-----------------------------------------------------------------------------
@@ -880,11 +875,11 @@ class Asset < ActiveRecord::Base
     clear_cache
   end
 
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   #
   # Protected Methods
   #
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   protected
 
   # Return an object that has been cached against this asset
@@ -1008,11 +1003,11 @@ class Asset < ActiveRecord::Base
     self.purchased_new = self.purchased_new.nil? ? true : self.purchased_new
   end
 
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   #
   # Private Methods
   #
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   private
 
   # Calls a calculate method on a Calculator class to perform a condition or cost calculation
@@ -1032,4 +1027,5 @@ class Asset < ActiveRecord::Base
       raise RuntimeError.new "#{class_name} calculation failed for asset #{asset.object_key} and policy #{policy.name}"
     end
   end
+
 end

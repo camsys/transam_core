@@ -1,0 +1,41 @@
+:javascript
+
+  var url = '#{show_edit_form_policy_path(@policy)}.js';
+
+  $(document).ready(function() {
+    $('#spinner').hide();
+    enable_row_actions();
+  });
+
+  // Adds handlers for the row actions
+  function enable_row_actions() {
+    // Enable click handlers for the row actions
+    $('.row-action').on('click', function() {
+      var action = $(this).data('action');
+      var rule_id = $(this).closest('tr').data('rule');
+      var type = $(this).closest('tr').data('type');
+      $.ajax({
+        url: url,
+        data: {
+          rule_id: rule_id,
+          type: type
+        },
+        success: function(result) {
+          console.log('Success');
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+          alert("We are sorry but something went wrong. " + xhr.status + " " + thrownError);
+        }
+      });
+    });
+
+    $("form").on("ajax:send", function(xhr) {
+        $('#spinner').show();
+      })
+      .on("ajax:success", function(xhr) {
+        $('#rule-modal').modal('hide');
+      })
+      .on("ajax:complete", function(xhr, status) {
+        $('#spinner').hide();
+      });
+  };

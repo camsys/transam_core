@@ -1,0 +1,93 @@
+#-------------------------------------------------------------------------------
+#
+# PolicyAssetTypeRule
+#
+# Policy rule for an asset type for an organiation
+#
+#-------------------------------------------------------------------------------
+class PolicyAssetTypeRule < ActiveRecord::Base
+
+  # Include the numeric sanitizers mixin
+  include TransamNumericSanitizers
+
+  #------------------------------------------------------------------------------
+  # Callbacks
+  #------------------------------------------------------------------------------
+  after_initialize :set_defaults
+
+  #-----------------------------------------------------------------------------
+  # Associations
+  #-----------------------------------------------------------------------------
+  # Every policy rule belongs to a policy, and thus an organization
+  belongs_to  :policy
+  # Every one of these rules applies to an asset type
+  belongs_to  :asset_type
+  # Every asset type rule has a service life calculator
+  belongs_to  :service_life_calculation_type
+  # Every asset type rule has a replacement cost calculator
+  belongs_to  :replacement_cost_calculation_type, :class_name => "CostCalculationType"
+
+  #------------------------------------------------------------------------------
+  # Validations
+  #------------------------------------------------------------------------------
+  validates :policy,                        :presence => true
+  validates :asset_type,                    :presence => true
+  validates :service_life_calculation_type, :presence => true
+  validates :replacement_cost_calculation_type, :presence => true
+  validates :annual_inflation_rate,         :presence => true,  :numericality => {:greater_than_or_equal_to => 1.0, :less_than_or_equal_to => 100}
+  validates :pcnt_residual_value,           :presence => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0, :less_than_or_equal_to => 100}
+
+  #------------------------------------------------------------------------------
+  # List of hash parameters allowed by the controller
+  #------------------------------------------------------------------------------
+  FORM_PARAMS = [
+    :policy_id,
+    :asset_type_id,
+    :service_life_calculation_type_id,
+    :replacement_cost_calculation_type_id,
+    :annual_inflation_rate,
+    :pcnt_residual_value
+  ]
+
+  #------------------------------------------------------------------------------
+  #
+  # Class Methods
+  #
+  #------------------------------------------------------------------------------
+  def self.allowable_params
+    FORM_PARAMS
+  end
+
+  #------------------------------------------------------------------------------
+  #
+  # Instance Methods
+  #
+  #------------------------------------------------------------------------------
+
+  def to_s
+    name
+  end
+  def name
+    "Policy Rule #{Asset_subtype}"
+  end
+  # Override setters to remove any extraneous formats from the number strings eg $, etc.
+  def annual_inflation_rate=(num)
+    self[:annual_inflation_rate] = sanitize_to_float(num)
+  end
+  def pcnt_residual_value=(num)
+    self[:pcnt_residual_value] = sanitize_to_int(num)
+  end
+  #------------------------------------------------------------------------------
+  #
+  # Protected Methods
+  #
+  #------------------------------------------------------------------------------
+  protected
+
+  # Set resonable defaults for a new policy
+  def set_defaults
+    self.annual_inflation_rate ||= 1.1
+    self.pcnt_residual_value ||= 0
+  end
+
+end
