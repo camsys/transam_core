@@ -24,15 +24,13 @@ class ServiceLifeCalculator < Calculator
     # Iterate over all the condition update events from earliest to latest
     # and find the first year (if any) that the  policy replacement became
     # effective
-    policy_item = asset.policy_rule
-    Rails.logger.debug "policy_item = asset.policy_rule: #{policy_item}"
     events = asset.condition_updates(true)
-
+    condition_threshold = asset.policy_analyzer.get_condition_threshold
     Rails.logger.debug "Found #{events.count} events."
-    Rails.logger.debug "Condition threshold = #{asset.policy.condition_threshold}."
+    Rails.logger.debug "Condition threshold = #{condition_threshold}."
     events.each do |event|
       Rails.logger.debug "Event date = #{event.event_date}, Rating = #{event.assessed_rating}."
-      if event.assessed_rating <= asset.policy.condition_threshold
+      if event.assessed_rating <= condition_threshold
         Rails.logger.debug "returning #{fiscal_year_year_on_date(event.event_date)}"
         return fiscal_year_year_on_date(event.event_date)
       end

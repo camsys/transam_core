@@ -16,8 +16,8 @@ class Form < ActiveRecord::Base
   # Include the object key mixin
   include TransamObjectKey
 
-  # default scope
-  default_scope { where(:active => true) }
+  # Allow selection of active instances
+  scope :active, -> { where(:active => true) }
 
   def to_s
     name

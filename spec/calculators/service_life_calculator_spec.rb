@@ -31,8 +31,6 @@ RSpec.describe ServiceLifeCalculator, :type => :calculator do
       @policy_item.max_service_life_months = 0
       @policy_item.save
 
-      @test_asset.initialize_policy_items(@policy)
-
       expect(test_calculator.send(:by_age,@test_asset)).to eq(2000)
 
     end

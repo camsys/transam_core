@@ -5,15 +5,14 @@ class Customer < ActiveRecord::Base
   has_one     :license_holder, -> { where('license_holder = true')}, :class_name => 'Organization'
   has_many    :organizations
   has_many    :users
-    
+
   #attr_accessible :license_type_id, :active
-    
-  # default scope
-  default_scope { where(:active => true) }
+
+  # Allow selection of active instances
+  scope :active, -> { where(:active => true) }
 
   def to_s
     name
   end
-  
+
 end
-      

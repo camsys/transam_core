@@ -170,13 +170,6 @@ RSpec.describe Asset, :type => :model do
     end
   end
 
-  describe "#initialize_policy_items" do
-    class TestOrg < Organization
-      def get_policy
-        return Policy.where("`organization_id` = ?",self.id).order('created_at').last
-      end
-    end
-
     class Vehicle < Asset; end
 
     before(:all) do
@@ -186,10 +179,6 @@ RSpec.describe Asset, :type => :model do
     end
 
     it 'sets expected useful life if policy and policy item exists' do
-      @policy_item = create(:policy_item, :policy => @policy, :asset_subtype => @test_asset.asset_subtype, :max_service_life_months => 123)
-
-      @test_asset.initialize_policy_items
-      expect(@test_asset.expected_useful_life).to eq(@policy_item.max_service_life_months)
     end
 
   end

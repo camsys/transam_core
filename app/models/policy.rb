@@ -50,10 +50,9 @@ class Policy < ActiveRecord::Base
   #------------------------------------------------------------------------------
 
   # default scope
-  default_scope { where(:active => true) }
 
   # set named scopes
-  scope :current, -> { where(:current => true) }
+  scope :active, -> { where(:active => true) }
 
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [

@@ -243,9 +243,6 @@ class AssetsController < AssetAwareController
       @asset.organization = @organization
     end
 
-    # Force the asset to initialize any internal values such as expected_useful_life from the policy
-    @asset.initialize_policy_items @asset.organization.get_policy
-
     respond_to do |format|
       format.html # new.html.erb
       format.json { render :json => @asset }

@@ -2,7 +2,6 @@ class AssetSubtype < ActiveRecord::Base
 
   # Associations
   belongs_to :asset_type
-  has_one    :policy_item
 
   # Validations
   validates :asset_type, presence: true

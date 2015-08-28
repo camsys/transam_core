@@ -23,10 +23,7 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
     min_rating = ConditionType.min_rating  # Usually 1.0 for FTA applications
 
     # this is the rating that indicates the asset is at the end of its useful life. Usually 2.5 for FTA applications
-    condition_threshold = asset.policy.condition_threshold
-
-    # Get what we need from the policy
-    policy_item = asset.policy_rule
+    condition_threshold = asset.policy_analyzer.get_condition_threshold
 
     # determine the minimum estimated rating, this is the one with the most negative slope
     slopes = calculate_slope(asset, min_rating, max_rating)
@@ -58,7 +55,7 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
     min_rating = ConditionType.min_rating  # Usually 1.0 for FTA applications
 
     # this is the rating that indicates the asset is at the end of its useful life. Usually 2.5 for FTA applications
-    condition_threshold = asset.policy.condition_threshold
+    condition_threshold = asset.policy_analyzer.get_condition_threshold
 
     years_policy    = asset.expected_useful_life.nil? ? asset.policy_rule.max_service_life_months / 12.0 : asset.expected_useful_life / 12.0
     years_mileage   = INFINITY

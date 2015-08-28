@@ -120,8 +120,6 @@ class PoliciesController < OrganizationAwareController
     new_policy.current = false
     new_policy.active = true
 
-    new_policy.policy_items.clear
-
     new_policy.save!
 
     # now attempt to load the newly created record
