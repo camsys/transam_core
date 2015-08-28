@@ -12,14 +12,14 @@ class RehabilitationYearCalculator < Calculator
   def calculate(asset)
 
     Rails.logger.debug "RehabilitationYearCalculator.calculate(asset)"
-    # The policy rehabilitation year identifies the year of the assets service
+    # The policy rehabilitation month identifies the month of the assets service
     # that a rehabiliation should be performed. If not set, no rehabiliation
-    # will be scheduled otherwise find the fiscal year that is x years after the
+    # will be scheduled otherwise find the fiscal year that is x months after the
     # fiscal year the asset was placed in service
-    years_into_service = asset.policy_rule.rehabilitation_year
-    if years_into_service.to_i > 0
+    months_into_service = asset.policy_analyzer.rehabilitation_service_month
+    if months_into_service.to_i > 0
       # return the in service fiscal year plus the policy rehab year
-      fiscal_year_year_on_date(asset.in_service_date) + years_into_service
+      fiscal_year_year_on_date(asset.in_service_date) + (months_into_service / 12)
     else
       nil
     end
