@@ -35,7 +35,7 @@ class PolicyAnalyzer
       # Strip off the decorator and see who can handle the real request
       actual_method_sym = method_sym.to_s[4..-1].to_sym
       if policy.respond_to? actual_method_sym
-        method_object = asset_type_rule.method(actual_method_sym)
+        method_object = policy.method(actual_method_sym)
         method_object.call(*arguments)
       elsif asset_type_rule.respond_to? actual_method_sym
         method_object = asset_type_rule.method(actual_method_sym)

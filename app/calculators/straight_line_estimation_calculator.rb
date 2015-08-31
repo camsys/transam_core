@@ -30,9 +30,10 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
 
     # determine the scale factor to make the mileage in the same interval as condition
     scale_factor = 1.0
-    if asset.policy_rule.respond_to? :max_service_life_miles
-      if policy_item.max_service_life_miles > 0
-        scale_factor = (max_rating - condition_threshold) / policy_item.max_service_life_miles
+    max_service_life_miles = asset.policy_analyzer.get_max_service_life_miles
+    unless max_service_life_miles.nil?
+      if max_service_life_miles > 0
+        scale_factor = (max_rating - condition_threshold) / max_service_life_miles
       end
     end
 
@@ -57,7 +58,10 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
     # this is the rating that indicates the asset is at the end of its useful life. Usually 2.5 for FTA applications
     condition_threshold = asset.policy_analyzer.get_condition_threshold
 
-    years_policy    = asset.expected_useful_life.nil? ? asset.policy_rule.max_service_life_months / 12.0 : asset.expected_useful_life / 12.0
+    # get max service life in months
+    max_service_life_months = asset.policy_analyzer.get_max_service_life_miles
+
+    years_policy    = asset.expected_useful_life.nil? ? max_service_life_months / 12.0 : asset.expected_useful_life / 12.0
     years_mileage   = INFINITY
     years_condition = INFINITY
 
@@ -81,10 +85,11 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
     end
 
     # mileage
-    if asset.policy_rule.respond_to? :max_service_life_miles
+    max_service_life_miles = asset.policy_analyzer.get_max_service_life_miles
+    unless max_service_life_miles.nil?
       m = slopes[:mileage_slope]
       if m.abs.between?(0.00001, 0.99999)
-        b = asset.policy_rule.max_service_life_miles
+        b = max_service_life_miles
         y = 0
         x = (y - b) / m
         # Take care of any rounding errors
@@ -111,11 +116,12 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
       condition_threshold = asset.policy.condition_threshold
 
       # Get what we need from the policy
-      policy_item = asset.policy_rule
+      max_service_life_months = asset.policy_analyzer.get_max_service_life_months
+      max_service_life_miles = asset.policy_analyzer.get_max_service_life_miles
 
       # this is the max number of years for the asset, i.e. the number of years before the asset's rating is expected to
       # reach the condition_threshold value
-      years_policy = asset.expected_useful_life.nil? ? asset.policy_rule.max_service_life_months / 12.0 : asset.expected_useful_life / 12.0
+      years_policy = asset.expected_useful_life.nil? ? max_service_life_months / 12.0 : asset.expected_useful_life / 12.0
 
       Rails.logger.debug "asset.age=#{asset.age}, threshold=#{condition_threshold}, min_rating=#{min_rating}, max_rating=#{max_rating}"
 
@@ -151,12 +157,12 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
         Rails.logger.debug "Slope = #{condition_slope}."
 
         # See if we can do a mileage calculation
-        if policy_item.respond_to? :max_service_life_miles
-          if policy_item.max_service_life_miles && age_at_report > 0
+        unless max_service_life_miles.nil?
+          if max_service_life_miles && age_at_report > 0
             # Here the slope is based on the number of miles remaining. This keeps the
             # slope in the same direction
-            y1 = policy_item.max_service_life_miles
-            y2 = policy_item.max_service_life_miles - (asset.reported_mileage.nil? ? 0 : asset.reported_mileage)
+            y1 = max_service_life_miles
+            y2 = max_service_life_miles - (asset.reported_mileage.nil? ? 0 : asset.reported_mileage)
             # get the slope
             mileage_slope = slope(x1, y1, x2, y2)
           end
