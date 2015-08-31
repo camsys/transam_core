@@ -14,12 +14,13 @@ RSpec.describe StraightLineEstimationCalculator, :type => :calculator do
     @organization = create(:organization)
     @asset_subtype = create(:asset_subtype)
     @policy = create(:policy, :organization => @organization)
-    @policy_item = create(:policy_item, :policy => @policy, :asset_subtype => @asset_subtype)
   end
 
   before(:each) do
     @test_asset = create(:buslike_asset, :organization => @organization, :asset_type => @asset_subtype.asset_type, :asset_subtype => @asset_subtype)
     @condition_update_event = @test_asset.condition_updates.create(attributes_for(:test_condition_update_event))
+    create(:policy_asset_type_rule, :policy => @policy, :asset_type => @test_asset.asset_type)
+    create(:policy_asset_subtype_rule, :policy => @policy, :asset_subtype => @test_asset.asset_subtype)
   end
 
   let(:test_calculator) { StraightLineEstimationCalculator.new }
@@ -57,7 +58,7 @@ RSpec.describe StraightLineEstimationCalculator, :type => :calculator do
     end
 
     it 'is not greater than max life year' do
-      max_life_year = @test_asset.in_service_date.year + @test_asset.policy_rule.max_service_life_years
+      max_life_year = @test_asset.in_service_date.year + @test_asset.policy_analyzer.get_max_service_life_months
       expect(test_calculator.last_servicable_year(@test_asset)).to be < max_life_year
     end
 

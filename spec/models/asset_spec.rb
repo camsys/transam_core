@@ -170,17 +170,15 @@ RSpec.describe Asset, :type => :model do
     end
   end
 
-    class Vehicle < Asset; end
+  class Vehicle < Asset; end
 
-    before(:all) do
-      @organization = create(:organization)
-      @test_asset = create(:buslike_asset, :organization => @organization)
-      @policy = create(:policy, :organization => @organization)
-    end
+  before(:all) do
+    @organization = create(:organization)
+    @test_asset = create(:buslike_asset, :organization => @organization)
+    @policy = create(:policy, :organization => @organization)
+  end
 
-    it 'sets expected useful life if policy and policy item exists' do
-    end
-
+  it 'sets expected useful life if policy and policy item exists' do
   end
 
   describe '#copy' do
@@ -190,9 +188,9 @@ RSpec.describe Asset, :type => :model do
 
         %w(class organization_id asset_type_id asset_subtype_id manufacturer_id manufacturer_model manufacture_year
           purchase_date expected_useful_miles fuel_type_id).each do |attribute_name|
-          expect(copied_bus.send(attribute_name)).to eq(buslike_asset.send(attribute_name)),
-          "#{attribute_name} expected: #{persisted_buslike_asset.send(attribute_name)}\n         got: #{copied_bus.send(attribute_name)}"
-        end
+            expect(copied_bus.send(attribute_name)).to eq(buslike_asset.send(attribute_name)),
+            "#{attribute_name} expected: #{persisted_buslike_asset.send(attribute_name)}\n         got: #{copied_bus.send(attribute_name)}"
+          end
       end
 
       it 'clears out cleansable_fields' do
@@ -203,9 +201,9 @@ RSpec.describe Asset, :type => :model do
           in_backlog reported_condition_type_id reported_condition_rating reported_condition_date reported_mileage
           estimated_condition_type_id estimated_condition_rating service_status_type_id
           disposition_type_id disposition_date license_plate).each do |attribute_name|
-          expect(copied_bus.send(attribute_name)).to be_blank,
-          "expected '#{attribute_name}' to be blank, got #{copied_bus.send(attribute_name)}"
-        end
+            expect(copied_bus.send(attribute_name)).to be_blank,
+            "expected '#{attribute_name}' to be blank, got #{copied_bus.send(attribute_name)}"
+          end
       end
     end
 

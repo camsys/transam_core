@@ -15,25 +15,15 @@ RSpec.describe ServiceLifeCalculator, :type => :calculator do
     @organization = create(:organization)
     @test_asset = create(:buslike_asset, :organization => @organization)
     @policy = create(:policy, :organization => @organization)
-    @policy_item = create(:policy_item, :policy => @policy, :asset_subtype => @test_asset.asset_subtype)
     @condition_update_event = ConditionUpdateEvent.create(:asset => @test_asset)
+    create(:policy_asset_type_rule, :policy => @policy, :asset_type => @test_asset.asset_type)
+    create(:policy_asset_subtype_rule, :policy => @policy, :asset_subtype => @test_asset.asset_subtype)
   end
 
   let(:test_calculator) { ServiceLifeCalculator.new }
 
-  describe '#by_age' do
-    it 'calculates' do
-      expect(test_calculator.send(:by_age,@test_asset)).to eq(2010)
-    end
-
-    it 'is equal to in service year if policy max life is 0 and asset expected life was not assigned' do
-
-      @policy_item.max_service_life_months = 0
-      @policy_item.save
-
-      expect(test_calculator.send(:by_age,@test_asset)).to eq(2000)
-
-    end
+  it '#by_age' do
+    expect(test_calculator.send(:by_age,@test_asset)).to eq(2010)
   end
 
   describe '#by_condition' do

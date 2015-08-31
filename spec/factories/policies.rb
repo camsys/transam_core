@@ -9,6 +9,8 @@ FactoryGirl.define do
     condition_threshold 2.5
     name 'TestPolicy'
     description 'Test Policy'
-    current 1
+    year Date.today.year
+    current true
+    active true
   end
 end
