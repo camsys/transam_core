@@ -30,7 +30,7 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
   validates :policy,                  :presence => true
   validates :asset_subtype,           :presence => true
 
-  validates :max_service_life_months,  :presence => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
+  validates :min_service_life_months,  :presence => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
   validates :replacement_cost,         :presence => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
   validates :cost_fy_year,             :presence => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
   validates_inclusion_of :replace_with_new, :in => [true, false]
@@ -49,7 +49,7 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
   FORM_PARAMS = [
     :policy_id,
     :asset_subtype_id,
-    :max_service_life_months,
+    :min_service_life_months,
     :replacement_cost,
     :cost_fy_year,
     :replace_with_new,
@@ -84,8 +84,8 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
   end
 
   # Override setters to remove any extraneous formats from the number strings eg $, etc.
-  def max_service_life_months=(num)
-    self[:max_service_life_months] = sanitize_to_int(num)
+  def min_service_life_months=(num)
+    self[:min_service_life_months] = sanitize_to_int(num)
   end
   def replacement_cost=(num)
     self[:replacement_cost] = sanitize_to_int(num)
@@ -115,7 +115,7 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
 
   # Set resonable defaults for a new policy
   def set_defaults
-    self.max_service_life_months ||= 0
+    self.min_service_life_months ||= 0
     self.replacement_cost ||= 0
     self.lease_length_months ||= 0
     self.rehabilitation_service_month ||= 0
