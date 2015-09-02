@@ -42,7 +42,7 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
   validates :rehabilitation_cost,      :allow_nil => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
   validates :extended_service_life_months, :allow_nil => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
 
-
+  validates :min_used_purchase_service_life_months, :presence => true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0}
   #------------------------------------------------------------------------------
   # List of hash parameters allowed by the controller
   #------------------------------------------------------------------------------
@@ -59,7 +59,9 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
 
     :rehabilitation_service_month,
     :rehabilitation_cost,
-    :extended_service_life_months
+    :extended_service_life_months,
+
+    :min_used_purchase_service_life_months
   ]
 
   #------------------------------------------------------------------------------
@@ -100,6 +102,9 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
   def extended_service_life_months=(num)
     self[:extended_service_life_months] = sanitize_to_int(num)
   end
+  def min_used_purchase_service_life_months=(num)
+    self[:min_used_purchase_service_life_months] = sanitize_to_int(num)
+  end
 
   #------------------------------------------------------------------------------
   #
@@ -116,6 +121,7 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
     self.rehabilitation_service_month ||= 0
     self.rehabilitation_cost ||= 0
     self.extended_service_life_months ||= 0
+    self.min_used_purchase_service_life_months ||= 0
     self.cost_fy_year ||= current_planning_year_year
   end
 

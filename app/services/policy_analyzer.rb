@@ -9,7 +9,11 @@
 #
 # The service exposes a set of get_xxxxx methods which delegate to the underlying
 # models without the caller needing to know which object contains the actual
-# property being accessed
+# property being accessed. Any methods which match the method signature and that
+# are not found will return nil and a warning message will be generated.
+#
+# Any warnings are stacked into the @warnings property and can be tested
+# by calling warnings?
 #
 # Direct access to the model details can be obtained through the attr_reader
 # properties
@@ -44,8 +48,8 @@ class PolicyAnalyzer
         method_object = asset_subtype_rule.method(actual_method_sym)
         method_object.call(*arguments)
       else
-        # Pass the call on -- probably generates a method not found exception
-        super
+        @warnings << "Method #{method_sym.to_s} not valid."
+        nil
       end
     else
       # Pass the call on -- probably generates a method not found exception
@@ -57,13 +61,13 @@ class PolicyAnalyzer
   # See if we respond to the method request
   #-----------------------------------------------------------------------------
   def respond_to?(method_sym, include_private = false)
+
     if method_sym.to_s =~ DECORATOR_METHOD_SIGNATURE
       actual_method_sym = method_sym.to_s[4..-1].to_sym
       if policy.respond_to? actual_method_sym or asset_type_rule.respond_to? actual_method_sym or asset_subtype_rule .respond_to? actual_method_sym
         true
       else
-        # Pass it up the chain
-        super
+        @warnings << "Method #{method_sym.to_s} not valid."
       end
     else
       # Pass it up the chain
@@ -77,10 +81,19 @@ class PolicyAnalyzer
   def initialize(asset, policy)
     @asset = asset
     @policy = policy
+    @warnings = []
     if @policy.present? and @asset.present?
       @asset_type_rule = @policy.policy_asset_type_rules.find_by(:asset_type_id => asset.asset_type_id)
       @asset_subtype_rule = @policy.policy_asset_subtype_rules.find_by(:asset_subtype_id => asset.asset_subtype_id)
+    else
+      @warnings << "Policy not found for asset #{asset} with class #{asset.asset_type}" if @policy.blank?
+      @warnings << "Asset Type Rule not found for asset #{asset} with class #{asset.asset_type}" if @asset_type_rule.blank?
+      @warnings << "Asset Subtype Rule not found for asset #{asset} with class #{asset.asset_type}" if @asset_subtype_rule.blank?
     end
+  end
+
+  def warnings?
+    @warnings.present?
   end
 
   #------------------------------------------------------------------------------
