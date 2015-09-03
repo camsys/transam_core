@@ -13,90 +13,93 @@
   my_completed_tasks = @closed_tasks.where('assigned_to_user_id = ? AND state = ?', current_user.id, 'completed')
   my_cancelled_tasks = @closed_tasks.where('assigned_to_user_id = ? AND state = ?', current_user.id, 'cancelled')
 
-.row
-  .col-lg-8.col-md-8.col-sm-10.col-xs-12.col-lg-offset-2.col-md-offset-2.col-sm-offset-1{:style => 'margin-top: 10px;'}
+.col-xs-12.col-sm-8.col-sm-offset-2
+  .page-header
+    %h2 My Tasks
+  .row
+    .col-xs-12
 
-    = link_to user_tasks_path(current_user), :class => "btn btn-default", :role => 'button' do
-      %i.fa.fa-refresh
-      = " Refresh"
+      = link_to user_tasks_path(current_user), :class => "btn btn-default", :role => 'button' do
+        %i.fa.fa-refresh
+        = " Refresh"
 
-    = link_to new_user_task_path(current_user), :class => "btn btn-info", :role => 'button' do
-      %i.fa.fa-calendar
-      = " New Task"
+      = link_to new_user_task_path(current_user), :class => "btn btn-info", :role => 'button' do
+        %i.fa.fa-calendar
+        = " New Task"
 
-.row
-  .col-lg-8.col-md-8.col-sm-10.col-xs-12.col-lg-offset-2.col-md-offset-2.col-sm-offset-1{:style => 'margin-top: 15px;'}
-    %ul.nav.nav-tabs
-      %li
-        %a{:href => "#my_open", :data =>{:toggle => 'tab'}}
-          %span.badge.pull-right= my_tasks.count
-          %i.fa.fa-user
-          = " My Open Tasks"
+  .row{:style => 'margin-top: 15px'}
+    .col-xs-12
+      %ul.nav.nav-tabs
+        %li
+          %a{:href => "#my_open", :data =>{:toggle => 'tab'}}
+            %span.badge.pull-right= my_tasks.count
+            %i.fa.fa-user
+            = " My Open Tasks"
 
-      %li
-        %a{:href => "#my_completed", :data =>{:toggle => 'tab'}}
-          %span.badge.pull-right= my_completed_tasks.count
-          %i.fa.fa-check-square-o
-          = " My Completed Tasks"
+        %li
+          %a{:href => "#my_completed", :data =>{:toggle => 'tab'}}
+            %span.badge.pull-right= my_completed_tasks.count
+            %i.fa.fa-check-square-o
+            = " My Completed Tasks"
 
-      %li
-        %a{:href => "#others", :data =>{:toggle => 'tab'}}
-          %span.badge.pull-right= others_tasks.count
-          %i.fa.fa-users
-          = " Tasks Assigned to Others"
+        %li
+          %a{:href => "#others", :data =>{:toggle => 'tab'}}
+            %span.badge.pull-right= others_tasks.count
+            %i.fa.fa-users
+            = " Tasks Assigned to Others"
 
-      %li
-        %a{:href => "#unass", :data =>{:toggle => 'tab'}}
-          %span.badge.pull-right= unassigned_tasks.count
-          %i.fa.fa-calendar
-          = " Unassigned Tasks"
+        %li
+          %a{:href => "#unass", :data =>{:toggle => 'tab'}}
+            %span.badge.pull-right= unassigned_tasks.count
+            %i.fa.fa-calendar
+            = " Unassigned Tasks"
 
-      %li
-        %a{:href => "#cancelled", :data =>{:toggle => 'tab'}}
-          %span.badge.pull-right= my_cancelled_tasks.count
-          %i.fa.fa-times-circle
-          = " Cancelled Tasks"
+        %li
+          %a{:href => "#cancelled", :data =>{:toggle => 'tab'}}
+            %span.badge.pull-right= my_cancelled_tasks.count
+            %i.fa.fa-times-circle
+            = " Cancelled Tasks"
 
-    .tab-content
-      .tab-pane.fade.in#my_open
-        .list-group
-          - if my_tasks.empty?
-            %p You have no tasks waiting
-          - else
-            - my_tasks.each do |task|
-              = render :partial => 'task_detail', :locals => {:task => task}
+      .tab-content
+        .tab-pane.fade.in#my_open
+          .list-group
+            - if my_tasks.empty?
+              %p You have no tasks waiting
+            - else
+              - my_tasks.each do |task|
+                = render :partial => 'task_detail', :locals => {:task => task}
 
-      .tab-pane.fade.in#my_completed
-        .list-group
-          - if my_completed_tasks.empty?
-            %p You have no completed tasks
-          - else
-            - my_completed_tasks.each do |task|
-              = render :partial => 'task_detail', :locals => {:task => task}
+        .tab-pane.fade.in#my_completed
+          .list-group
+            - if my_completed_tasks.empty?
+              %p You have no completed tasks
+            - else
+              - my_completed_tasks.each do |task|
+                = render :partial => 'task_detail', :locals => {:task => task}
 
-      .tab-pane.fade.in#others
-        .list-group
-          - if others_tasks.empty?
-            %p No tasks found
-          - else
-            - others_tasks.each do |task|
-              = render :partial => 'task_detail', :locals => {:task => task}
+        .tab-pane.fade.in#others
+          .list-group
+            - if others_tasks.empty?
+              %p No tasks found
+            - else
+              - others_tasks.each do |task|
+                = render :partial => 'task_detail', :locals => {:task => task}
 
-      .tab-pane.fade.in#unass
-        .list-group
-          - if unassigned_tasks.empty?
-            %p No tasks unassigned
-          - else
-            - unassigned_tasks.each do |task|
-              = render :partial => 'task_detail', :locals => {:task => task}
+        .tab-pane.fade.in#unass
+          .list-group
+            - if unassigned_tasks.empty?
+              %p No tasks unassigned
+            - else
+              - unassigned_tasks.each do |task|
+                = render :partial => 'task_detail', :locals => {:task => task}
 
-      .tab-pane.fade.in#cancelled
-        .list-group
-          - if my_cancelled_tasks.empty?
-            %p No tasks unassigned
-          - else
-            - my_cancelled_tasks.each do |task|
-              = render :partial => 'task_detail', :locals => {:task => task}
+        .tab-pane.fade.in#cancelled
+          .list-group
+            - if my_cancelled_tasks.empty?
+              %p No tasks unassigned
+            - else
+              - my_cancelled_tasks.each do |task|
+                = render :partial => 'task_detail', :locals => {:task => task}
 
 :javascript
 

@@ -1,3 +1,6 @@
-.row
-  .col-md-12
-    = render :partial => 'index_table', :locals => {:show_actions => 1}
+.col-xs-12.col-sm-8.col-sm-offset-2
+  .page-header
+    %h2 Activity Log
+  .row
+    .col-xs-12
+      = render :partial => 'index_table', :locals => {:show_actions => 1}
