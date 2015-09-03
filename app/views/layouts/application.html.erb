@@ -20,7 +20,6 @@
 		<%= javascript_include_tag "application" %>
 
 		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -31,11 +30,8 @@
 		<!-- Begin header -->
 		<%= render 'shared/header' %>
 
-		<!-- Main Nav -->
-		<%= render 'shared/main_nav' %>
-
 		<!-- Begin page content -->
-		<div id="view" class="container-fluid">
+		<div id='view' class="container-fluid">
 			<!-- Main Page Content -->
 			<%= render 'shared/breadcrumbs' %>
 			<%= render 'shared/messages' %>
@@ -43,9 +39,9 @@
 		</div>
 
 		<!-- Begin footer content -->
-		<div id="footer" class="footer">
+		<footer class="footer">
 			<%= render 'shared/footer' %>
-		</div>
+		</footer>
 
 		<!-- push the java script to the bottom so the page loads faster -->
 		<%= render 'shared/javascript' %>
@@ -54,6 +50,6 @@
 		<% unless ENV['GOOGLE_ANALYTICS_ACCOUNT'].blank? %>
 			<%= render 'shared/analytics' %>
 		<% end %>
-		
+
 	</body>
 </html>

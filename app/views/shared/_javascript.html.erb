@@ -1,26 +1,22 @@
 <!-- Add any globally applicable javascript here -->
 <script type="text/javascript">
-		
+
 	$(document).ready(function() {
 
-		// Float the footer to the bottom of every page
-		transam.fix_page_footer('#footer');
-		
 		// install click handlers for navigable objects
 		transam.install_quick_link_handlers();
-		
+
 		// Render any info icons as popovers
 		transam.enable_info_popups('.info-icon');
 
 		// Enable any date pickers etc
 		transam.enable_date_pickers();
-				
+
 		// Check for any message divs and fade them out
-		elem = $('#message');
-		if (elem) {
+   		if (elem) {
 			elem.fadeOut(5000);
-		}	
-				
+		}
+
    });
-  		
+
 </script>
