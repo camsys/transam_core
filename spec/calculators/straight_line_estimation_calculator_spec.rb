@@ -57,9 +57,9 @@ RSpec.describe StraightLineEstimationCalculator, :type => :calculator do
       expect(test_calculator.last_servicable_year(@test_asset)).to eq(2010)
     end
 
-    it 'is not greater than max life year' do
-      max_life_year = @test_asset.in_service_date.year + @test_asset.policy_analyzer.get_max_service_life_months
-      expect(test_calculator.last_servicable_year(@test_asset)).to be < max_life_year
+    it 'is not greater than min life year' do
+      min_life_year = @test_asset.in_service_date.year + @test_asset.policy_analyzer.get_min_service_life_months
+      expect(test_calculator.last_servicable_year(@test_asset)).to be < min_life_year
     end
 
     it 'is greater than in service year' do
