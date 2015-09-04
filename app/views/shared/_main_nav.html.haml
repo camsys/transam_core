@@ -1,23 +1,18 @@
-%nav.navbar.navbar-default.navbar-fixed-top.main-nav.center{:style => 'margin-top: 40px;'}
-  .container-fluid
-    %ul.nav.navbar-nav
-      %li.nav-item{:class => get_nav_link_class('dashboards') }
-        = link_to dashboards_path do
-          %i.fa.fa-home.fa-2x
-          %br
-          Home
+%ul.nav.navbar-nav
+  %li{:class => get_nav_link_class('dashboards') }
+    = link_to dashboards_path do
+      %i.fa.fa-home.fa-2x
 
-      -# render the engine main nav components if there are any
-      - SystemConfig.transam_module_names.each do |mod|
-        = render :partial => "shared/#{mod}_main_nav" rescue nil
+  -# render the engine main nav components if there are any
+  - SystemConfig.transam_module_names.each do |mod|
+    = render :partial => "shared/#{mod}_main_nav" rescue nil
 
-      -# render the application main nav components if there are any
-      = render :partial => 'shared/app_main_nav' rescue nil
+  -# render the application main nav components if there are any
+  = render :partial => 'shared/app_main_nav' rescue nil
 
-      = render 'shared/policy_nav'
-      = render 'shared/forms_nav'
-      = render 'shared/reports_nav'
+  = render 'shared/policy_nav'
+  = render 'shared/forms_nav'
+  = render 'shared/reports_nav'
 
-    - if current_user.has_role? :admin
-      %ul.nav.navbar-nav.pull-right
-        = render 'shared/admin_nav'
+  - if current_user.has_role? :admin
+    = render 'shared/admin_nav'

@@ -1,34 +1,37 @@
 %nav.navbar.navbar-fixed-top.navbar-inverse{:role => 'navigation', :style => 'z-index:1033'}
-  .navbar-header
-    %button.navbar-toggle{:data => {:toggle => "collapse", :target => ".navbar-ex1-collapse"}}
-      %span.sr-only Toggle Navigation
-      %span.icon-bar
-      %span.icon-bar
-      %span.icon-bar
+  .container-fluid
+    .navbar-header
+      %button.navbar-toggle{:data => {:toggle => "collapse", :target => ".navbar-collapse"}}
+        %span.sr-only Toggle Navigation
+        %span.icon-bar
+        %span.icon-bar
+        %span.icon-bar
 
-    = link_to app_title, "/", :class => 'navbar-brand', :rel => 'Home'
+      = link_to app_title, "/", :class => 'navbar-brand', :rel => 'Home'
 
-  .collapse.navbar-collapse.navbar-ex1-collapse
-    %ul.nav.navbar-nav.pull-right
-      %li.dropdown
-        = link_to "#", :class => 'dropdown-toggle', :data => {:toggle => 'dropdown'} do
-          %i.fa.fa-user
-          = current_user.name
-          %b.caret
-        %ul.dropdown-menu.dropdown-menu-right
-          - SystemConfig.transam_module_names.each do |mod|
-            = render :partial => "shared/#{mod}_user_menu" rescue nil
+    = render 'shared/main_nav'
 
-          %li.divider
-          %li.text-left
-            = link_to destroy_user_session_path, :method => 'delete' do
-              %i.fa.fa-sign-out
-              = " Logout"
+    .collapse.navbar-collapse.navbar-collapse
+      %ul.nav.navbar-nav.pull-right
+        %li.dropdown
+          = link_to "#", :class => 'dropdown-toggle', :data => {:toggle => 'dropdown'} do
+            %i.fa.fa-user
+            = current_user.name
+            %b.caret
+          %ul.dropdown-menu.dropdown-menu-right
+            - SystemConfig.transam_module_names.each do |mod|
+              = render :partial => "shared/#{mod}_user_menu" rescue nil
 
-    .col-sm-3.col-md-3.pull-right
-      = form_tag keyword_searches_path, :id => 'asset_search_form', :class => 'navbar-form search-form', :role => 'search' do
-        .input-group
-          = text_field_tag :search_text, nil, :class => 'form-control search-control', :placeholder => 'keywords...', :id => 'search_text'
-          .input-group-btn
-            = button_tag :type => 'submit', :class => 'btn' do
-              %i.fa.fa-search
+            %li.divider
+            %li.text-left
+              = link_to destroy_user_session_path, :method => 'delete' do
+                %i.fa.fa-sign-out
+                = " Logout"
+
+      .col-sm-3.col-md-3.pull-right
+        = form_tag keyword_searches_path, :id => 'asset_search_form', :class => 'navbar-form search-form', :role => 'search' do
+          .input-group
+            = text_field_tag :search_text, nil, :class => 'form-control search-control', :placeholder => 'keywords...', :id => 'search_text'
+            .input-group-btn
+              = button_tag :type => 'submit', :class => 'btn' do
+                %i.fa.fa-search

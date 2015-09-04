@@ -31,9 +31,9 @@
 			</div>
 		</nav>
 		<!-- Begin page content -->
-		<div id="view" class="container-fluid" style="margin-top:-60px">
+		<div id="view" class="container-fluid">
 			<div class="row">
-				<div class="col-md-12" style="margin-top:20px;">
+				<div class="col-xs-12" style="margin-top:20px;">
 					<% flash.each do |type, message| %>
 						<% if type == :success || type == :alert %>
 							<%= content_tag :div, message, :class => "alert fade in #{bootstrap_class_for(type)}" unless message.blank? %>
