@@ -55,6 +55,7 @@ class NoticesController < OrganizationAwareController
     @notice.display_datetime = DateTime.current.beginning_of_hour
     @notice.end_datetime = @notice.display_datetime.advance(:hours => duration)
     @notice.active = true
+    @notice.save
 
     render "new"
   end
