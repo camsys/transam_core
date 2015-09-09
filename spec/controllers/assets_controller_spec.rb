@@ -4,13 +4,14 @@ RSpec.describe AssetsController, :type => :controller do
   include Devise::TestHelpers
 
   before(:each) do
+    User.destroy_all
     sign_in FactoryGirl.create(:admin)
   end
 
 
   describe "GET Index" do
     it 'returns in less than 30 seconds' do
-      
+
       t_start = Time.now
       get 'index'
       t_finish = Time.now
