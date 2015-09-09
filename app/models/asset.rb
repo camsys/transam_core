@@ -9,6 +9,8 @@
 class Asset < ActiveRecord::Base
 
   OBJECT_CACHE_EXPIRE_SECONDS = Rails.application.config.object_cache_expire_seconds
+  # The policy analyzer to use comes from the Rails config
+  POLICY_ANALYZER = Rails.application.config.policy_analyzer
 
   #-----------------------------------------------------------------------------
   # Behaviors
@@ -589,7 +591,8 @@ class Asset < ActiveRecord::Base
       if policy_to_use.blank?
         policy_to_use = policy
       end
-      cached_policy_analyzer = PolicyAnalyzer.new(self, policy_to_use)
+      # initialize the geocoding service based on the Rails config
+      cached_policy_analyzer = POLICY_ANALYZER.constantize.new(self, policy_to_use)
       cache_object("policy_analyzer", cached_policy_analyzer)
     end
     cached_policy_analyzer

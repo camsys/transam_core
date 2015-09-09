@@ -64,7 +64,7 @@ class PolicyAnalyzer
 
     if method_sym.to_s =~ DECORATOR_METHOD_SIGNATURE
       actual_method_sym = method_sym.to_s[4..-1].to_sym
-      if policy.respond_to? actual_method_sym or asset_type_rule.respond_to? actual_method_sym or asset_subtype_rule .respond_to? actual_method_sym
+      if policy.respond_to? actual_method_sym or asset_type_rule.respond_to? actual_method_sym or asset_subtype_rule.respond_to? actual_method_sym
         true
       else
         @warnings << "Method #{method_sym.to_s} not valid."
@@ -88,7 +88,7 @@ class PolicyAnalyzer
     else
       @warnings << "Policy not found for asset #{asset} with class #{asset.asset_type}" if @policy.blank?
       @warnings << "Asset Type Rule not found for asset #{asset} with class #{asset.asset_type}" if @asset_type_rule.blank?
-      @warnings << "Asset Subtype Rule not found for asset #{asset} with class #{asset.asset_type}" if @asset_subtype_rule.blank?
+      @warnings << "Asset Subtype Rule not found for asset #{asset} with class #{asset.asset_subtype}" if @asset_subtype_rule.blank?
     end
   end
 
