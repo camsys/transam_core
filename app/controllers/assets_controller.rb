@@ -586,20 +586,28 @@ class AssetsController < AssetAwareController
     #Grantors Policies do not have parents, and we do not need to add new rules
     if grantor_policy.present?
       grantor_policy.policy_asset_type_rules.each do |rule|
-        asset_count = Asset.where(organization_id: policy.organization.id, asset_type: rule.asset_type).count
-        if asset_count > 0
-          new_rule = rule.dup
-          new_rule.policy = policy
-          new_rule.save!
+
+        # Only create rules for the new asset.
+        if rule.asset_type == asset.asset_type
+          asset_count = Asset.where(organization_id: policy.organization.id, asset_type: rule.asset_type).count
+          if asset_count > 0
+            new_rule = rule.dup
+            new_rule.policy = policy
+            new_rule.save!
+          end
         end
       end
 
       grantor_policy.policy_asset_subtype_rules.each do |rule|
-        asset_count = Asset.where(organization_id: policy.organization.id, asset_subtype: rule.asset_subtype).count
-        if asset_count > 0
-          new_rule = rule.dup
-          new_rule.policy = policy
-          new_rule.save!
+
+        # Only create rules for the new asset.
+        if rule.asset_subtype == asset.asset_subtype
+          asset_count = Asset.where(organization_id: policy.organization.id, asset_subtype: rule.asset_subtype).count
+          if asset_count > 0
+            new_rule = rule.dup
+            new_rule.policy = policy
+            new_rule.save!
+          end
         end
       end
     end
