@@ -590,7 +590,9 @@ class AssetsController < AssetAwareController
         # Only create rules for the new asset.
         if rule.asset_type == asset.asset_type
           asset_count = Asset.where(organization_id: policy.organization.id, asset_type: rule.asset_type).count
-          if asset_count > 0
+
+          # Only create rules if this is the first asset of this type.
+          if asset_count == 1
             new_rule = rule.dup
             new_rule.policy = policy
             new_rule.save!
@@ -603,7 +605,9 @@ class AssetsController < AssetAwareController
         # Only create rules for the new asset.
         if rule.asset_subtype == asset.asset_subtype
           asset_count = Asset.where(organization_id: policy.organization.id, asset_subtype: rule.asset_subtype).count
-          if asset_count > 0
+
+          # Only create rules if this is the first asset of this subtype
+          if asset_count == 1
             new_rule = rule.dup
             new_rule.policy = policy
             new_rule.save!
