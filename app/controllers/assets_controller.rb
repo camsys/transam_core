@@ -595,7 +595,7 @@ class AssetsController < AssetAwareController
           if asset_count == 1
             new_rule = rule.dup
             new_rule.policy = policy
-            new_rule.save!
+            new_rule.save
           end
         end
       end
@@ -610,7 +610,7 @@ class AssetsController < AssetAwareController
           if asset_count == 1
             new_rule = rule.dup
             new_rule.policy = policy
-            new_rule.save!
+            new_rule.save
           end
         end
       end
