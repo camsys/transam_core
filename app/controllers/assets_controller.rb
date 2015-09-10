@@ -278,6 +278,7 @@ class AssetsController < AssetAwareController
 
     respond_to do |format|
       if @asset.save
+        ensure_policy_rules_for_asset(@asset)
         # If the asset was successfully saved, schedule update the condition and disposition asynchronously
         Delayed::Job.enqueue AssetUpdateJob.new(@asset.object_key), :priority => 0
 
@@ -576,6 +577,33 @@ class AssetsController < AssetAwareController
         end
       end
     end
+  end
+
+  def ensure_policy_rules_for_asset(asset)
+    policy = asset.policy
+    grantor_policy = policy.parent
+
+    #Grantors Policies do not have parents, and we do not need to add new rules
+    if grantor_policy.present?
+      grantor_policy.policy_asset_type_rules.each do |rule|
+        asset_count = Asset.where(organization_id: policy.organization.id, asset_type: rule.asset_type).count
+        if asset_count > 0
+          new_rule = rule.dup
+          new_rule.policy = policy
+          new_rule.save!
+        end
+      end
+
+      grantor_policy.policy_asset_subtype_rules.each do |rule|
+        asset_count = Asset.where(organization_id: policy.organization.id, asset_subtype: rule.asset_subtype).count
+        if asset_count > 0
+          new_rule = rule.dup
+          new_rule.policy = policy
+          new_rule.save!
+        end
+      end
+    end
+
   end
 
   #------------------------------------------------------------------------------
