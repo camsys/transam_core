@@ -583,6 +583,7 @@ class AssetsController < AssetAwareController
     policy = asset.policy
     grantor_policy = policy.parent
 
+    #Grantors Policies do not have parents, and we do not need to add new rules
     if grantor_policy.present?
       grantor_policy.policy_asset_type_rules.each do |rule|
         asset_count = Asset.where(organization_id: policy.organization.id, asset_type: rule.asset_type).count
