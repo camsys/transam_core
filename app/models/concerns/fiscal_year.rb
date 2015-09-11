@@ -2,7 +2,7 @@
 #
 # FiscalYear
 #
-# Mixin that adds a fiscal year methods to a class
+# Mixin that adds fiscal year methods to a class
 #
 #------------------------------------------------------------------------------
 module FiscalYear
