@@ -783,23 +783,20 @@ class Asset < ActiveRecord::Base
     a
   end
 
-  def update_estimated_replacement_cost(on_date=nil)
+  def calculate_estimated_replacement_cost(on_date=nil)
 
     return if disposed?
 
     # Make sure we are working with a concrete asset class
     asset = is_typed? ? self : Asset.get_typed_asset(self)
 
-    # Get the policy to use
-    policy = asset.policy
-    class_name = policy.cost_calculation_type.class_name
-
+    # Get the calculator class from the policy analyzer
+    class_name = asset.policy_analyzer.get_cost_calculation_type.class_name
     # create an instance of this class and call the method
     calculator_instance = class_name.constantize.new
     Rails.logger.debug "Instance created #{calculator_instance}"
-
-    asset.estimated_replacement_cost = calculator_instance.calculate_on_date(asset,on_date)
-    asset.save(:validate => false)
+    #TODO This should be abstracted to use the calculate method -- someday!
+    calculator_instance.calculate_on_date(asset, on_date)
 
   end
 
@@ -811,17 +808,14 @@ class Asset < ActiveRecord::Base
 
     # Make sure we are working with a concrete asset class
     asset = is_typed? ? self : Asset.get_typed_asset(self)
-
-    # Get the policy to use
-    policy = policy.nil? ? asset.policy : policy
-    class_name = policy.service_life_calculation_type.class_name
+    # Get the calculator class from the policy analyzer
+    class_name = asset.policy_analyzer.get_service_life_calculation_type.class_name
     # determine the last year that the vehicle is viable based on the policy
-    last_year_for_service = calculate(asset, policy, class_name)
+    last_year_for_service = calculate(asset, class_name)
     # the asset will need replacing the next year
-    return last_year_for_service + 1
+    last_year_for_service + 1
 
   end
-
 
   # calculate the estimated year that the asset will need replacing based on
   # a policy
@@ -832,13 +826,12 @@ class Asset < ActiveRecord::Base
     # Make sure we are working with a concrete asset class
     asset = is_typed? ? self : Asset.get_typed_asset(self)
 
-    # Get the policy to use
-    policy = policy.nil? ? asset.policy : policy
-    class_name = policy.condition_estimation_type.class_name
+    # Get the calculator class from the policy analyzer
+    class_name = asset.policy_analyzer.get_condition_estimation_type.class_name
     # estimate the last year that the asset will be servicable
-    last_year_for_service = calculate(asset, policy, class_name, 'last_servicable_year')
+    last_year_for_service = calculate(asset, class_name, 'last_servicable_year')
     # the asset will need replacing the next year
-    return last_year_for_service + 1
+    last_year_for_service + 1
 
   end
 
@@ -923,21 +916,15 @@ class Asset < ActiveRecord::Base
     # Make sure we are working with a concrete asset class
     asset = is_typed? ? self : Asset.get_typed_asset(self)
 
-    # Get the policy to use
-    policy = policy.nil? ? asset.policy : policy
-
-    # exit if we can find a policy to work on
-    if policy.nil?
-      Rails.logger.warn "Can't find a policy for asset = #{object_key}"
-      return
-    end
+    # Get the policy analyzer
+    policy_analyzer = asset.policy_analyzer
 
     # returns the year in which the asset should be replaced based on the policy and asset
     # characteristics
     begin
       # see what metric we are using to determine the service life of the asset
-      class_name = policy.service_life_calculation_type.class_name
-      asset.policy_replacement_year = calculate(asset, policy, class_name)
+      class_name = policy_analyzer.get_service_life_calculation_type.class_name
+      asset.policy_replacement_year = calculate(asset, class_name)
 
       # If the asset is in backlog set the scheduled year to the current FY year
       if asset.policy_replacement_year < current_planning_year_year
@@ -953,10 +940,14 @@ class Asset < ActiveRecord::Base
       Rails.logger.warn e.message
     end
 
-    # Estimate the year that the asset will need replacing
+    # Estimate the year that the asset will need replacing amd the estimated
+    # condition of the asset
     begin
-      class_name = policy.condition_estimation_type.class_name
-      asset.estimated_replacement_year = calculate(asset, policy, class_name, 'last_servicable_year')
+      class_name = policy_analyzer.get_condition_estimation_type.class_name
+      asset.estimated_replacement_year = calculate(asset, class_name, 'last_servicable_year')
+
+      asset.estimated_condition_rating = calculate(asset, class_name)
+      asset.estimated_condition_type = ConditionType.from_rating(asset.estimated_condition_rating)
     rescue Exception => e
       Rails.logger.warn e.message
     end
@@ -970,28 +961,24 @@ class Asset < ActiveRecord::Base
       Rails.logger.warn e.message
     end
 
-    # Update the estimated condition
-    begin
-      # see what metric we are using to estimate the condition of the asset
-      class_name = policy.condition_estimation_type.class_name
-      asset.estimated_condition_rating = calculate(asset, policy, class_name)
-      asset.estimated_condition_type = ConditionType.from_rating(asset.estimated_condition_rating)
-    rescue Exception => e
-      Rails.logger.warn e.message
-    end
-
     # Update the estimated replacement cost. This should be set for the start of
     # the fiscal year in which the asset is scheduled to be replaced
     begin
-      if self.scheduled_replacement_year.present?
-        update_estimated_replacement_cost start_of_fiscal_year(scheduled_replacement_year)
+      if asset.scheduled_replacement_year.present?
+
+        # Get the calculator class from the policy analyzer
+        class_name = asset.policy_analyzer.get_replacement_cost_calculation_type.class_name
+        calculator_instance = class_name.constantize.new
+        asset.estimated_replacement_cost = calculator_instance.calculate_on_date(asset)
       end
     rescue Exception => e
       Rails.logger.warn e.message
     end
 
     # save changes to this asset
-    asset.save
+    if asset.changed?
+      asset.save(:validate => false)
+    end
   end
 
   def cleansable_fields
@@ -1016,7 +1003,7 @@ class Asset < ActiveRecord::Base
   # Calls a calculate method on a Calculator class to perform a condition or cost calculation
   # for the asset. The method name defaults to x.calculate(asset) but other methods
   # with the same signature can be passed in
-  def calculate(asset, policy, class_name, target_method = 'calculate')
+  def calculate(asset, class_name, target_method = 'calculate')
     begin
       Rails.logger.debug "#{class_name}, #{target_method}"
       # create an instance of this class and call the method

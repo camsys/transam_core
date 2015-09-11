@@ -21,27 +21,6 @@ class Equipment < Asset
   default_scope { where(:asset_type_id => AssetType.where(:class_name => self.name).pluck(:id)) }
 
   #------------------------------------------------------------------------------
-  # Lists. These lists are used by derived classes to make up lists of attributes
-  # that can be used for operations like full text search etc. Each derived class
-  # can add their own fields to the list
-  #------------------------------------------------------------------------------
-
-  SEARCHABLE_FIELDS = [
-    :description,
-    :serial_number
-  ]
-
-  CLEANSABLE_FIELDS = [
-    :quantity
-  ]
-
-  # List of hash parameters specific to this class that are allowed by the controller
-  FORM_PARAMS = [
-    :quantity,
-    :quantity_units
-  ]
-
-  #------------------------------------------------------------------------------
   #
   # Class Methods
   #
@@ -76,20 +55,22 @@ class Equipment < Asset
   def searchable_fields
     a = []
     a << super
-    SEARCHABLE_FIELDS.each do |field|
-      a << field
-    end
+    a += [
+      :description,
+      :serial_number
+    ]
     a.flatten
   end
 
   def cleansable_fields
     a = []
     a << super
-    CLEANSABLE_FIELDS.each do |field|
-      a << field
-    end
+    a += [
+      :quantity
+    ]
     a.flatten
   end
+
   # The cost of a equipment asset is the purchase cost
   def cost
     purchase_cost
