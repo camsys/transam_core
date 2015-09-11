@@ -8,21 +8,20 @@
   :file => :vertical_file_input,
   :boolean => :vertical_boolean}) do |f|
 
-  -if @rule.id
-    = f.input :id, :as => :hidden, :input_html => { :value => @rule.id }
+  = f.input :id, :as => :hidden
 
   .row
     .col-xs-6
-      = f.association :service_life_calculation_type
+      = f.association :service_life_calculation_type, :include_blank => false
 
     .col-xs-6
-      = f.association :replacement_cost_calculation_type
+      = f.association :replacement_cost_calculation_type, :include_blank => false
 
     .col-xs-4
-      = f.input :annual_inflation_rate, :input_html => {:min => 0, :max => 100}
+      = f.input :annual_inflation_rate, :input_html => {:required => true, :min => 0, :max => 100}
 
     .col-xs-4
-      = f.input :pcnt_residual_value, :input_html => {:min => 0, :max => 100}
+      = f.input :pcnt_residual_value, :input_html => {:required => true, :min => 0, :max => 100}
 
   .row
     = f.button :submit, "Update", :class => 'btn btn-primary'
@@ -33,24 +32,9 @@
   // validate the form before submittal
   $('#edit-form').validate({
     submitHandler: function(form) {
+      $('#rule-modal').modal('hide');
       // Show the spinner while the form request is being handled
       $("#spinner").show();
       $(form).ajaxSubmit();
-      $('#rule-modal').hide();
     }
-  });
-  $('#policy_asset_type_rule_service_life_calculation_type_id').rules("add", {
-    required: true
-  });
-
-  $('#policy_asset_type_rule_replacement_cost_calculation_type_id').rules("add", {
-    required: true
-  });
-
-  $('#policy_asset_type_rule_annual_inflation_rate').rules("add", {
-    required: true
-  });
-
-  $('#policy_asset_type_rule_pcnt_residual_value').rules("add", {
-    required: true
   });

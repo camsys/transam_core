@@ -1,27 +1,10 @@
-<div class="row">
-	<%= simple_form_for(@policy, 
-		:html => {:class => 'form-horizontal' },  
-		:wrapper => :horizontal_form, 
-		:wrapper_mappings => {:check_boxes => :horizontal_radio_and_checkboxes, :radio_buttons => :horizontal_radio_and_checkboxes, :file => :horizontal_file_input, :boolean => :horizontal_boolean}
-		) do |f| %>
-		<div class="col-md-6">
-			<%= dialog_tag('Policy', {:icon => 'fa fa-book', :class => "form-part"}) do %>
-				<%= f.input :name, :placeholder => "Enter a name for this policy..." %>
-				<%= f.input :year, :label => 'Effective Fiscal Year', :collection => @policy.get_fiscal_years, :prompt => "Select the effective fiscal year..." %>
-				<%= f.input :description, :input_html => { :rows => 6 }, :placeholder => "Enter a description for the policy..." %>
-			<% end %>
-		</div>
-		<div class="col-md-6">
-			<%= dialog_tag('Calculators', {:icon => 'fa fa-usd', :class => "form-part"}) do %>
-				<%= f.input :interest_rate, :label => "Interest Rate" %>
-				<%= f.association :service_life_calculation_type, :label => "Service Life Calculator", :prompt => "Select..." %>
-				<%= f.association :cost_calculation_type, :label => "Cost Calculator", :prompt => "Select..." %>
-				<%= f.association :condition_estimation_type, :label => "Condition Estimator", :prompt => "Select..." %>
-				<%= f.input :condition_threshold, :label => "Condition Threshold" %>
-			<% end %>
-		</div>
-		<div class="col-md-12">
-			<%= f.button :submit, :class => "btn btn-primary" %>
-		</div>
-	<% end %>
-</div>
+<%= simple_form_for(@policy,
+  :html => {:class => 'form-vertical' },
+  :wrapper => :vertical_form,
+  :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}
+  ) do |f| %>
+  <%= f.input :description, :as => :text, :input_html => { :rows => 3 }, :placeholder => "Enter a description for the policy..." %>
+  <%= f.association :condition_estimation_type, :label => "Condition Estimator", :prompt => "Select..." %>
+  <%= f.input :condition_threshold, :label => "Condition Threshold" %>
+  <%= f.button :submit, :class => "btn btn-primary" %>
+<% end %>

@@ -41,6 +41,7 @@ class PolicyAssetTypeRule < ActiveRecord::Base
   # List of hash parameters allowed by the controller
   #------------------------------------------------------------------------------
   FORM_PARAMS = [
+    :id,
     :policy_id,
     :asset_type_id,
     :service_life_calculation_type_id,
@@ -65,11 +66,13 @@ class PolicyAssetTypeRule < ActiveRecord::Base
   #------------------------------------------------------------------------------
 
   def to_s
-    name
+    "#{asset_type}"
   end
+
   def name
-    "Policy Rule #{Asset_subtype}"
+    "Policy Rule #{asset_type}"
   end
+
   # Override setters to remove any extraneous formats from the number strings eg $, etc.
   def annual_inflation_rate=(num)
     self[:annual_inflation_rate] = sanitize_to_float(num)

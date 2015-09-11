@@ -47,6 +47,7 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
   # List of hash parameters allowed by the controller
   #------------------------------------------------------------------------------
   FORM_PARAMS = [
+    :id,
     :policy_id,
     :asset_subtype_id,
     :min_service_life_months,
@@ -80,7 +81,11 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
   #------------------------------------------------------------------------------
 
   def to_s
-    "#{asset_subtype}"
+    "#{asset_subtype.asset_type}: #{asset_subtype}"
+  end
+
+  def name
+    "Policy Rule #{asset_subtype}"
   end
 
   # Override setters to remove any extraneous formats from the number strings eg $, etc.

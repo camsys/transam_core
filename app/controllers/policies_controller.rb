@@ -34,9 +34,9 @@ class PoliciesController < OrganizationAwareController
 
     @type = params[:type]
     if @type == 'asset_type'
-      @rule = @policy.policy_asset_type_rules.find(params[:rule_id])
+      @rule = @policy.policy_asset_type_rules.find(params[:rule])
     elsif @type == 'asset_subtype'
-      @rule = @policy.policy_asset_subtype_rules.find(params[:rule_id])
+      @rule = @policy.policy_asset_subtype_rules.find(params[:rule])
     end
 
   end
@@ -234,11 +234,11 @@ class PoliciesController < OrganizationAwareController
   end
 
   def asset_subtype_rule_form_params
-    params.require(:policy_asset_subtype_rule).permit(PolicyAssetSubtypeRule.allowable_params)
+    params.require(:policy_asset_subtype_rule).permit(policy_asset_subtype_rule_allowable_params)
   end
 
   def asset_type_rule_form_params
-    params.require(:policy_asset_type_rule).permit(PolicyAssetTypeRule.allowable_params)
+    params.require(:policy_asset_type_rule).permit(policy_asset_type_rule_allowable_params)
   end
 
   def get_policy
