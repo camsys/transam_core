@@ -46,7 +46,11 @@ namespace :transam do
     asset_set.find_each do |a|
       typed_asset = Asset.get_typed_asset(a)
       typed_asset.update_methods.each do |m|
-        typed_asset.send(m)
+        begin
+          typed_asset.send(m)
+        rescue Exception => e
+          Rails.logger.warn e.message
+        end
       end
       assets_run += 1
       Rails.logger.debug "#{assets_run} (#{((assets_run / total_num) * 100).to_i}%)"
