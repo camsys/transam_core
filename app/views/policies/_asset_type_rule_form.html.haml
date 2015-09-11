@@ -36,6 +36,7 @@
       // Show the spinner while the form request is being handled
       $("#spinner").show();
       $(form).ajaxSubmit();
+      $('#rule-modal').hide();
     }
   });
   $('#policy_asset_type_rule_service_life_calculation_type_id').rules("add", {

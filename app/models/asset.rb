@@ -643,7 +643,10 @@ class Asset < ActiveRecord::Base
           asset.service_status_type = asset.service_status_updates.last.service_status_type
         end
       end
-      asset.save(:validate => false)
+      # save changes to this asset
+      if asset.changed?
+        asset.save(:validate => false)
+      end
     end
   end
 
@@ -661,7 +664,10 @@ class Asset < ActiveRecord::Base
         self.parent_id = event.parent_id
         self.location_comments = event.comments
       end
-      save
+      # save changes to this asset
+      if self.changed?
+        save
+      end
     end
   end
 
@@ -679,7 +685,10 @@ class Asset < ActiveRecord::Base
         asset.last_rehabilitation_date = asset.rehabilitation_updates.last.event_date
         asset.scheduled_rehabilitation_year = nil
       end
-      asset.save(:validate => false)
+      # save changes to this asset
+      if asset.changed?
+        asset.save(:validate => false)
+      end
     end
   end
 
@@ -700,7 +709,10 @@ class Asset < ActiveRecord::Base
         asset.service_status_date = event.event_date
         asset.service_status_type = event.service_status_type
       end
-      asset.save(:validate => false)
+      # save changes to this asset
+      if asset.changed?
+        asset.save(:validate => false)
+      end
     end
   end
 
@@ -721,7 +733,10 @@ class Asset < ActiveRecord::Base
         self.reported_condition_rating = event.assessed_rating
         self.reported_condition_type = ConditionType.from_rating(event.assessed_rating)
       end
-      save(:validate => false)
+      # save changes to this asset
+      if self.changed?
+        save(:validate => false)
+      end
     end
 
   end
@@ -740,7 +755,10 @@ class Asset < ActiveRecord::Base
         self.scheduled_replacement_year = event.replacement_year unless event.replacement_year.nil?
         self.replacement_reason_type_id = event.replacement_reason_type_id unless event.replacement_reason_type_id.nil?
       end
-      save(:validate => false)
+      # save changes to this asset
+      if self.changed?
+        save(:validate => false)
+      end
     end
   end
 
@@ -756,7 +774,10 @@ class Asset < ActiveRecord::Base
         event = schedule_rehabilitation_updates.last
         self.scheduled_rehabilitation_year = event.rebuild_year
       end
-      save(:validate => false)
+      # save changes to this asset
+      if self.changed?
+        save(:validate => false)
+      end
     end
   end
 
@@ -772,7 +793,10 @@ class Asset < ActiveRecord::Base
         event = schedule_disposition_updates.last
         self.scheduled_disposition_year = event.disposition_year
       end
-      save(:validate => false)
+      # save changes to this asset
+      if self.changed?
+        save(:validate => false)
+      end
     end
   end
 
