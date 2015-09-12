@@ -88,6 +88,7 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
     "Policy Rule #{asset_subtype}"
   end
 
+
   # Override setters to remove any extraneous formats from the number strings eg $, etc.
   def min_service_life_months=(num)
     self[:min_service_life_months] = sanitize_to_int(num)

@@ -1,1 +1,0 @@
-$('#rules').html("<%= escape_javascript(render 'rules') %>");

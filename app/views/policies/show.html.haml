@@ -16,37 +16,53 @@
 
 .row
   .col-sm-12
-    .panel.panel-default
-      .panel-heading
-        .row
-          .col-md-6
-            %h3.panel-title
-              %i.fa.fa-book
-              Policy
-          .col-md-6
-            = render 'actions'
-      .panel-body
-        = render 'summary'
+    %fieldset
+      %legend Asset Replacement/Rehabilitation Policy
+      = render 'summary'
 
 .col-lg-12.col-md-12.col-sm-12.col-xs-12
   #spinner
     = loader_panel_tag({:message => "Working...", :size => 3, :spinner => "refresh"})
 
 .row
-  .col-sm-12
-    %fieldset
-      %legend Asset Type Rules
-      .row
-        .col-sm-12#asset-type-rules-container
-          = render 'asset_type_rules'
-.row
-  .col-sm-12
-    %fieldset
-      %legend Asset Subtype Rules
-      .row
-        .col-sm-12#asset-subtype-rules-container
-          = render 'asset_subtype_rules'
+  .col-sm-12#rules-container
+    = render 'rules'
 
 .modal.fade#rule-modal{:tabindex => -1, :role => 'dialog', :aria => {:hidden => true}}
 
 = render 'table_edit_scripts'
+
+:javascript
+
+  var tab_key = 'policy_order_tab_key';
+
+  $(document).ready(function() {
+
+    // Manage the tabs
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+      // save the latest tab
+      var this_tab = $(this).attr('href');
+      transam.set_ui_key_value(tab_key, this_tab);
+    });
+
+    reset_view();
+  });
+
+  function reset_view() {
+    // Make the tabs responsive if the viewport gets smaller than the displayed tabs
+    $('.responsive-tabs').tabdrop({
+      text: '<i class="fa fa-align-justify"></i>'
+    });
+
+    show_last_tab();
+  };
+
+  function show_last_tab() {
+    var last_tab = transam.get_ui_key_value(tab_key);
+    if (last_tab) {
+      $('a[href='+last_tab+']').tab('show');
+    } else {
+      // Default to the first tab if no tab is stored
+      $('a[data-toggle="tab"]:first').tab('show');
+    }
+  };

@@ -21,9 +21,8 @@
         %th.center
 
     %tbody
-      - @policy.policy_asset_subtype_rules.each_with_index do |rule, idx|
+      - rules.each do |rule|
         %tr
-          %td.center= rule.asset_subtype.asset_type
           %td.center= rule.asset_subtype
           %td.center= rule.fuel_type
           %td.center.nowrap= format_as_integer(rule.min_service_life_months)
@@ -40,5 +39,5 @@
           %td.center= format_as_integer(rule.extended_service_life_miles)
           %td.center= format_as_integer(rule.min_used_purchase_service_life_months)
           %td.center
-            = link_to show_edit_form_policy_path(@policy, :rule => rule.id, :type => 'asset_subtype'), :remote => true, :title => "Alter rule..." do
+            = link_to show_edit_form_policy_path(policy, :rule => rule.id, :type => 'asset_subtype'), :remote => true, :title => "Alter rule..." do
               %i.fa.fa-edit.fa-1-5x.text-success

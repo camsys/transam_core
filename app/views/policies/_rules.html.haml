@@ -1,14 +1,14 @@
-.panel.panel-default
-  .panel-heading
-    .row
-      .col-md-6
-        %h3.panel-title
-          %i.fa.fa-folder-open
-          Rules
-      .col-md-6
-        = render 'filter_actions'
+%fieldset
+  %legend Policy Rules
+  %ul.nav.nav-tabs.responsive-tabs
+    - @policy.policy_asset_type_rules.each do |at|
+      %li
+        %a{:href => "#at_#{at.asset_type.id}", :data =>{:toggle => 'tab'}}
+          = "#{at.asset_type}"
 
-  .panel-body
-    = render 'details'
-
-= render 'scripts'
+  .tab-content
+    - @policy.policy_asset_type_rules.each do |at|
+      .tab-pane.fade{:id => "at_#{at.asset_type.id}"}
+        = render :partial => 'asset_type_rules', :locals => {:rules => [at], :policy => @policy}
+        %hr
+        = render :partial => 'asset_subtype_rules', :locals => {:rules => @policy.policy_asset_subtype_rules.joins(asset_subtype: :asset_type).where("asset_types.id = ?", at.asset_type.id), :policy => @policy}
