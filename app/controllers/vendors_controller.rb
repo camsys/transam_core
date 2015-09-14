@@ -124,8 +124,7 @@ class VendorsController < OrganizationAwareController
   end
 
   def destroy
-    if @vendor.assets.count == 0 && @vendor.expenditures.count == 0
-      @vendor.destroy
+    if @vendor.destroy
       redirect_to vendors_url, notice: 'Vendor was successfully destroyed.'
     else
       redirect_to @vendor, notice: 'Vendor cannot be destroyed as there are assets and expenditures associated with it.'
