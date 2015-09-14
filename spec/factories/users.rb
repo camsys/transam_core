@@ -41,7 +41,7 @@ FactoryGirl.define do
     factory :admin do
       first_name "jill"
       last_name  "admin"
-      email 'jill@example.com'
+      sequence(:email) {|n| "jill#{n}@example.com"}
 
       after(:build) do |u|
         u.add_role :admin

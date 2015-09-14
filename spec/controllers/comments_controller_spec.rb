@@ -49,6 +49,7 @@ RSpec.describe CommentsController, :type => :controller do
 
   it 'POST create' do
     request.env["HTTP_REFERER"] = root_path
+    Comment.destroy_all
     post :create, {:inventory_id => bus.object_key, :comment => attributes_for(:comment)}
     bus.reload
 

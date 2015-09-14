@@ -49,6 +49,7 @@ RSpec.describe DocumentsController, :type => :controller do
 
   it 'POST create' do
     request.env["HTTP_REFERER"] = root_path
+    Document.destroy_all
     post :create, {:inventory_id => bus.object_key, :document => attributes_for(:document)}
     bus.reload
 
