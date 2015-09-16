@@ -50,19 +50,6 @@ var transam = new function() {
 		});
 	};
 
-	// Fix the page footer to the bottom of the page
-	this.fix_page_footer = function(footer_div) {
-
-		var docHeight = $(window).height();
-   		var footerHeight = $(footer_div).height();
-   		var footerTop = $(footer_div).position().top + footerHeight;
-   		//alert(docHeight + "," + footerHeight + "," + footerTop);
-   		if (footerTop < docHeight) {
-    		$(footer_div).css('margin-top', (docHeight - footerTop) + 'px');
-   			//alert("Adjusted: " + docHeight + "," + footerHeight + "," + footerTop);
-   		}
-	};
-
 	// validate a file size
 	this.validate_file_size = function(inputFile, max_file_size_mb) {
 		var warning_message = "This file exceeds the maximum allowed file size (" + max_file_size_mb + " MB). Please select a smaller file.";
@@ -86,9 +73,12 @@ var transam = new function() {
 		}
 		$.gritter.add({
 			title: title,
-			class_name: class_name,
-			text: message
-		});
+      :value => message,
+      :time => 5000,
+      :class_name => class_name,
+      :image => false,
+      :sticky => false
+    });
 	};
 
 	// Converts a table to a datatable
