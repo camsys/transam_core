@@ -105,7 +105,7 @@ web_browser_types = [
   {:active => 1, :name => 'Microsoft IE 9',      :description => 'IE 9'},
   {:active => 1, :name => 'Microsoft IE 10',     :description => 'IE 10'},
   {:active => 1, :name => 'Microsoft IE 11',     :description => 'IE 11'},
-  {:active => 1, :name => 'Microsoft Spartan',   :description => 'Spartan'},
+  {:active => 1, :name => 'Microsoft Edge',      :description => 'Microsoft Edge'},
   {:active => 1, :name => 'Apple Safari',        :description => 'Safari'},
   {:active => 1, :name => 'Google Chrome',       :description => 'Chrome'},
   {:active => 1, :name => 'Mozilla Firefox',     :description => 'Firefox'},
