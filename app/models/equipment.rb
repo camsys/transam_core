@@ -1,8 +1,5 @@
 class Equipment < Asset
 
-  # Enable auditing of this model type. Only monitor uodate and destroy events
-  #has_paper_trail :on => [:update, :destroy]
-
   # Callbacks
   after_initialize :set_defaults
 
