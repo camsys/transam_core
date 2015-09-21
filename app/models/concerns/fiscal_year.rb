@@ -125,7 +125,7 @@ module FiscalYear
   # Returns a select array of fiscal years
   def get_fiscal_years(date = nil, num_forecasting_years = nil)
     if date
-      current_year = date.year
+      current_year = fiscal_year_year_on_date(date)
     else
       current_year = current_planning_year_year
     end
