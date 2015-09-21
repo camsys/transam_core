@@ -50,12 +50,13 @@ module FiscalYear
 
   # returns the year for a fiscal year string
   def to_year(fy_str, century = 2000)
-    elems = fy_str.split('0')
+    elems = fy_str.split(' ') # split "FY" substring from year
+
+    # get year. returns century if invalid string
     if elems.size == 2
-      year = century + elems[0].split(' ').last.to_i
-    else
-      nil
+      year = elems.last
     end
+    century + year.to_i
   end
 
   # Returns the fiscal year on a given date
