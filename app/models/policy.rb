@@ -90,6 +90,45 @@ class Policy < ActiveRecord::Base
     name
   end
 
+  def require_type_rules_for_asset_type?(asset_type)
+    # We should only create rules when the organization first acquires an asset type
+    !Asset.exists?(organization: self.organization, asset_type: asset_type)
+  end
+
+  def require_subtype_rules_for_asset_subtype?(asset_subtype)
+    # We should only create rules when the organization first acquires an asset subtype
+    !Asset.exists?(organization: self.organization, asset_subtype: asset_subtype)
+  end
+
+  def load_type_rules_from_parent(asset_type)
+
+    if parent.present?
+      parent_rules = parent.policy_asset_type_rules.where(asset_type: asset_type)
+      parent_rules.each do |parent_rule|
+        new_rule = parent_rule.dup
+        new_rule.policy = self
+        new_rule.save
+      end
+    end
+  end
+
+  def load_subtype_rules_from_parent(asset_subtype)
+
+    if parent.present?
+      parent_rules = parent.policy_asset_subtype_rules.where(asset_subtype: asset_subtype)
+      parent_rules.each do |parent_rule|
+        new_rule = parent_rule.dup
+        new_rule.policy = self
+        new_rule.save
+      end
+    end
+  end
+
+  def ensure_rules_for_asset(asset)
+    load_type_rules_from_parent(asset.asset_type) if require_type_rules_for_asset_type?(asset.asset_type)
+    load_subtype_rules_from_parent(asset.asset_subtype) if require_subtype_rules_for_asset_subtype?(asset.asset_subtype)
+  end
+
   #------------------------------------------------------------------------------
   #
   # Protected Methods
