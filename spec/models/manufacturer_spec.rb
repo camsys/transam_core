@@ -5,6 +5,10 @@ RSpec.describe Manufacturer, :type => :model do
   let(:test_manufacturer) { create(:manufacturer) }
   let(:bus) { create(:buslike_asset) }
 
+  before(:each) do
+    Manufacturer.destroy_all
+  end
+
   describe 'associations' do
     it 'has many assets' do
       expect(Asset.column_names).to include('manufacturer_id')
