@@ -34,6 +34,13 @@ class TransamController < ApplicationController
   end
 
   #-----------------------------------------------------------------------------
+  # Customize the 401 Access Denied error message
+  #-----------------------------------------------------------------------------
+  rescue_from CanCan::AccessDenied do |exception|
+    redirect_to '/401', :alert => exception.message
+  end
+
+  #-----------------------------------------------------------------------------
   # Centralized message sender that can be overriden by an implementation
   #-----------------------------------------------------------------------------
   def notify_user(type, message)

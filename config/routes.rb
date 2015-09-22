@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   get "/pages/*id" => 'pages#show', :as => :page, :format => false
 
   # route errors to the appropriate pages
-  %w( 404 403 500 ).each do |code|
+  %w( 401 403 404 500 ).each do |code|
     get code, :to => "errors#show", :code => code
   end
 
