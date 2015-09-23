@@ -103,7 +103,7 @@ class Policy < ActiveRecord::Base
   def load_type_rules_from_parent(asset_type)
 
     if parent.present?
-      parent_rules = parent.policy_asset_type_rules.where(asset_type: asset_type)
+      parent_rules = parent.policy_asset_type_rules.find_by(asset_type: asset_type)
       parent_rules.each do |parent_rule|
         new_rule = parent_rule.dup
         new_rule.policy = self
