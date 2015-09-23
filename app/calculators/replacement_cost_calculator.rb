@@ -13,4 +13,10 @@ class ReplacementCostCalculator < CostCalculator
 
   end
 
+  # As we are using the schedule, there is no difference using the date so we
+  # simply delegate to the calculate method
+  def calculate_on_date(asset,on_date=nil)
+    calculate(asset)
+  end
+
 end
