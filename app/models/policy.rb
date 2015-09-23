@@ -92,12 +92,12 @@ class Policy < ActiveRecord::Base
 
   def require_type_rules_for_asset_type?(asset_type)
     # We should only create rules when the organization first acquires an asset type
-    !Asset.exists?(organization: self.organization, asset_type: asset_type)
+    !PolicyAssetTypeRule.exists?(policy: self, asset_type: asset_type)
   end
 
   def require_subtype_rules_for_asset_subtype?(asset_subtype)
     # We should only create rules when the organization first acquires an asset subtype
-    !Asset.exists?(organization: self.organization, asset_subtype: asset_subtype)
+    !PolicyAssetSubtypeRule.exists?(policy: self, asset_subtype: asset_subtype)
   end
 
   def load_type_rules_from_parent(asset_type)
