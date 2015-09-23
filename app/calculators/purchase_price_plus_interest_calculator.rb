@@ -30,8 +30,8 @@ class PurchasePricePlusInterestCalculator < CostCalculator
     end
     Rails.logger.debug "num_years_to_replacement #{num_years_to_replacement}"
 
-    # inflation rate
-    inflation_rate = asset.policy_analyzer.get_annual_inflation_rate
+    # inflation rate as decimal
+    inflation_rate = asset.policy_analyzer.get_annual_inflation_rate / 100.0
     cost_in_future = future_cost(initial_cost, num_years_to_replacement, inflation_rate)
     (cost_in_future + 0.5).floor # even rounds up
   end
