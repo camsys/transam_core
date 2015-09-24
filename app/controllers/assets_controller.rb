@@ -270,6 +270,10 @@ class AssetsController < AssetAwareController
     @asset.creator = current_user
     @asset.updator = current_user
 
+    # Create policy rules if the organization needs new rules for that asset type or subtype
+    policy = @asset.policy
+    policy.ensure_rules_for_asset(@asset) if @asset.valid?
+
     #Rails.logger.debug @asset.inspect
 
     add_breadcrumb "#{asset_type.name}".pluralize(2), inventory_index_path(:asset_type => asset_subtype.asset_type)
