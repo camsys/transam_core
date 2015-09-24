@@ -115,7 +115,7 @@ class Policy < ActiveRecord::Base
 
   def load_subtype_rules_from_parent(asset_subtype)
     # When initially creating rules for a new subtype, look to the parent policy to create the default rules for that subtype
-        # This method uses a rescue block to handle cases where the parent policy does not have an appropriate rule
+    # This method uses a rescue block to handle cases where the parent policy does not have an appropriate rule
     begin
       parent_rule = parent.policy_asset_subtype_rules.find_by(asset_subtype: asset_subtype)
       new_rule = parent_rule.dup
@@ -126,9 +126,30 @@ class Policy < ActiveRecord::Base
     end
   end
 
+  def check_for_type_rule(asset_type)
+    raise Exception.new("This policy does not have a asset type rule for #{asset_type}") if !PolicyAssetTypeRule.exists?(policy: self, asset_type: asset_type)
+  end
+
+  def check_for_subtype_rule(asset_subtype)
+    raise Exception.new("This policy does not have a asset type rule for #{asset_subtype}") if !PolicyAssetTypeRule.exists?(policy: self, asset_subtype: asset_subtype)
+  end
+
+  def check_for_asset_rules(asset)
+    begin
+      check_for_type_rule(asset.asset_type)
+      check_for_subtype_rule(asset.asset_subtype)
+    rescue Exception
+      Rails.logger.warn Exception
+    end
+  end
+
   def ensure_rules_for_asset(asset)
-    load_type_rules_from_parent(asset.asset_type) if require_type_rules_for_asset_type?(asset.asset_type)
-    load_subtype_rules_from_parent(asset.asset_subtype) if require_subtype_rules_for_asset_subtype?(asset.asset_subtype)
+    if parent.present?
+      load_type_rules_from_parent(asset.asset_type) if require_type_rules_for_asset_type?(asset.asset_type)
+      load_subtype_rules_from_parent(asset.asset_subtype) if require_subtype_rules_for_asset_subtype?(asset.asset_subtype)
+    else
+      check_for_asset_rules(asset)
+    end
   end
 
   #------------------------------------------------------------------------------
