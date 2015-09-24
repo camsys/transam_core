@@ -102,21 +102,27 @@ class Policy < ActiveRecord::Base
 
   def load_type_rules_from_parent(asset_type)
     # When initially creating rules for a new asset type, look to the parent policy to create the default rules for that subtype
-    if parent.present?
+    # This method uses a rescue block to handle cases where the parent policy does not have an appropriate rule
+    begin
       parent_rule = parent.policy_asset_type_rules.find_by(asset_type: asset_type)
       new_rule = parent_rule.dup
       new_rule.policy = self
       new_rule.save
+    rescue Exception => e
+      Rails.logger.warn e.message
     end
   end
 
   def load_subtype_rules_from_parent(asset_subtype)
     # When initially creating rules for a new subtype, look to the parent policy to create the default rules for that subtype
-    if parent.present?
+        # This method uses a rescue block to handle cases where the parent policy does not have an appropriate rule
+    begin
       parent_rule = parent.policy_asset_subtype_rules.find_by(asset_subtype: asset_subtype)
       new_rule = parent_rule.dup
       new_rule.policy = self
       new_rule.save
+    rescue Exception => e
+      Rails.logger.warn e.message
     end
   end
 
