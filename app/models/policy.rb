@@ -127,6 +127,7 @@ class Policy < ActiveRecord::Base
   end
 
   def check_self_for_asset_rules(asset)
+    # This method is for parent policies.  It checks to see if the parent policy has the right rules for the asset.
     if missing_type_rules_for_asset_type?(asset.asset_type)
       raise StandardError.new("#{ self } is missing rules for #{ asset.asset_type.pluralize }.")
     elsif missing_subtype_rules_for_asset_subtype?(asset.asset_subtype)
