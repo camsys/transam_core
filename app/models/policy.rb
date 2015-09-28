@@ -90,13 +90,13 @@ class Policy < ActiveRecord::Base
     name
   end
 
-  def require_type_rules_for_asset_type?(asset_type)
-    # We should only create rules when the organization first acquires an asset type
+  def missing_type_rules_for_asset_type?(asset_type)
+    # This method checks to see if this policy has the right rule for this asset type
     !PolicyAssetTypeRule.exists?(policy: self, asset_type: asset_type)
   end
 
-  def require_subtype_rules_for_asset_subtype?(asset_subtype)
-    # We should only create rules when the organization first acquires an asset subtype
+  def missing_subtype_rules_for_asset_subtype?(asset_subtype)
+    # This method checks to see if this policy has the right rule for this asset subtype
     !PolicyAssetSubtypeRule.exists?(policy: self, asset_subtype: asset_subtype)
   end
 
@@ -104,7 +104,7 @@ class Policy < ActiveRecord::Base
     # When initially creating rules for a new asset type, look to the parent policy to create the default rules for that subtype
     # This method uses a rescue block to handle cases where the parent policy does not have an appropriate rule
     begin
-      parent_rule = parent.policy_asset_type_rules.find_by(asset_type: asset_type)
+      parent_rule = PolicyAssetTypeRule.find_by(policy: parent, asset_type: asset_type)
       new_rule = parent_rule.dup
       new_rule.policy = self
       new_rule.save
@@ -114,10 +114,10 @@ class Policy < ActiveRecord::Base
   end
 
   def load_subtype_rules_from_parent(asset_subtype)
-    # When initially creating rules for a new subtype, look to the parent policy to create the default rules for that subtype
+    # When initially creating rules for a new asset type, look to the parent policy to create the default rules for that subtype
     # This method uses a rescue block to handle cases where the parent policy does not have an appropriate rule
     begin
-      parent_rule = parent.policy_asset_subtype_rules.find_by(asset_subtype: asset_subtype)
+      parent_rule = PolicyAssetSubtypeRule.find_by(policy: parent, asset_subtype: asset_subtype)
       new_rule = parent_rule.dup
       new_rule.policy = self
       new_rule.save
@@ -126,29 +126,23 @@ class Policy < ActiveRecord::Base
     end
   end
 
-  def check_for_type_rule(asset_type)
-    raise Exception.new("This policy does not have a asset type rule for #{asset_type}") if !PolicyAssetTypeRule.exists?(policy: self, asset_type: asset_type)
-  end
-
-  def check_for_subtype_rule(asset_subtype)
-    raise Exception.new("This policy does not have a asset type rule for #{asset_subtype}") if !PolicyAssetTypeRule.exists?(policy: self, asset_subtype: asset_subtype)
-  end
-
-  def check_for_asset_rules(asset)
-    begin
-      check_for_type_rule(asset.asset_type)
-      check_for_subtype_rule(asset.asset_subtype)
-    rescue Exception
-      Rails.logger.warn Exception
+  def check_self_for_asset_rules(asset)
+    if missing_type_rules_for_asset_type?(asset.asset_type)
+      raise StandardError.new("#{ self } is missing rules for #{ asset.asset_type.pluralize }.")
+    elsif missing_subtype_rules_for_asset_subtype?(asset.asset_subtype)
+      raise StandardError.new("#{ self } is missing rules for #{ asset.asset_subtype.pluralize }.")
     end
   end
 
   def ensure_rules_for_asset(asset)
+    # This method checks to see if this policy is a parent policy.  If it is, it checks to see if it has the right rules for the asset.
+    # If this policy is not a parent policy, then it checks to see if it has the right rules for the asset, and then loads missing rules from the parent.
+
     if parent.present?
-      load_type_rules_from_parent(asset.asset_type) if require_type_rules_for_asset_type?(asset.asset_type)
-      load_subtype_rules_from_parent(asset.asset_subtype) if require_subtype_rules_for_asset_subtype?(asset.asset_subtype)
+      load_type_rules_from_parent(asset.asset_type) if missing_type_rules_for_asset_type?(asset.asset_type)
+      load_subtype_rules_from_parent(asset.asset_subtype) if missing_subtype_rules_for_asset_subtype?(asset.asset_subtype)
     else
-      check_for_asset_rules(asset)
+      check_self_for_asset_rules(asset)
     end
   end
 
