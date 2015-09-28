@@ -9,6 +9,8 @@ class User < ActiveRecord::Base
 
   # Enable user roles for this use
   rolify
+  has_many :users_roles
+  has_many :roles, :through => :users_roles
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable

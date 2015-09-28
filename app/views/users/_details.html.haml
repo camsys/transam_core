@@ -8,6 +8,9 @@
         System Settings
   - if current_user.has_role? :admin
     %li
+      %a{:href => "#roles", :data =>{:toggle => 'tab'}}
+        Role History
+    %li
       %a{:href => "#activity", :data =>{:toggle => 'tab'}}
         Activity
 .tab-content
@@ -19,6 +22,9 @@
       .tab-content
         = render 'user_settings'
   - if current_user.has_role? :admin
+    .tab-pane.fade#roles
+      .tab-content
+        = render :partial => 'role_history', :locals => {:user_roles => @user.users_roles}
     .tab-pane.fade#activity
       .tab-content
         = render 'activity'

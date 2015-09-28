@@ -10,9 +10,9 @@ class AssetEventAssetSubsystem < ActiveRecord::Base
   # Associations
   #-----------------------------------------------------------------------------
   # Every sign_order_sign belongs to a sign
-  belongs_to  :rehabilitation_update_event, 
-                :class_name  => 'RehabilitationUpdateEvent', 
-                :foreign_key => "asset_event_id", 
+  belongs_to  :rehabilitation_update_event,
+                :class_name  => 'RehabilitationUpdateEvent',
+                :foreign_key => "asset_event_id",
                 :inverse_of  => :asset_event_asset_subsystems
 
   # Every asset_event_subsystem belongs to a subsystem
