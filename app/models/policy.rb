@@ -138,11 +138,15 @@ class Policy < ActiveRecord::Base
     # This method checks to see if this policy is a parent policy.  If it is, it checks to see if it has the right rules for the asset.
     # If this policy is not a parent policy, then it checks to see if it has the right rules for the asset, and then loads missing rules from the parent.
 
-    if parent.present?
-      load_type_rules_from_parent(asset.asset_type) if missing_type_rules_for_asset_type?(asset.asset_type)
-      load_subtype_rules_from_parent(asset.asset_subtype) if missing_subtype_rules_for_asset_subtype?(asset.asset_subtype)
-    else
-      check_self_for_asset_rules(asset)
+    begin
+      if parent.present?
+        load_type_rules_from_parent(asset.asset_type) if missing_type_rules_for_asset_type?(asset.asset_type)
+        load_subtype_rules_from_parent(asset.asset_subtype) if missing_subtype_rules_for_asset_subtype?(asset.asset_subtype)
+      else
+        check_self_for_asset_rules(asset)
+      end
+    rescue Exception => e
+      Rails.logger.warn e.message
     end
   end
 
