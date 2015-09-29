@@ -36,7 +36,7 @@ class TasksController < NestedResourceController
       if t.assigned_to_user.nil?
         task_title = t.subject
       else
-        task_title = "(#{t.assigned_to_user.initials}) #{t.subject}"
+        task_title = "(#{t.assigned_to_user.get_initials}) #{t.subject}"
       end
       events << {
         :id => t.id,
