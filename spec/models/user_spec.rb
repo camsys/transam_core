@@ -49,11 +49,11 @@ RSpec.describe User, :type => :model do
     end
   end
 
-  describe ".initials" do
+  describe ".get_initials" do
     it 'returns the correct initials for a User' do
-      expect(normal_user.initials).to eql("JN")
-      expect(manager_user.initials).to eql("KM")
-      expect(guest_user.initials).to eql("BG")
+      expect(normal_user.get_initials).to eql("JN")
+      expect(manager_user.get_initials).to eql("KM")
+      expect(guest_user.get_initials).to eql("BG")
     end
   end
 
