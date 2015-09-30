@@ -2,26 +2,26 @@
   %li
     %a{:href => "#contact", :data =>{:toggle => 'tab'}}
       Corporate
-  -if @user.eql? current_user or current_user.has_role? :admin
-    %li
-      %a{:href => "#settings", :data =>{:toggle => 'tab'}}
-        System Settings
-  - if current_user.has_role? :admin
+  %li
+    %a{:href => "#settings", :data =>{:toggle => 'tab'}}
+      System Settings
+
+  -if can? :manage, @user
     %li
       %a{:href => "#roles", :data =>{:toggle => 'tab'}}
         Role History
     %li
       %a{:href => "#activity", :data =>{:toggle => 'tab'}}
         Activity
+
 .tab-content
   .tab-pane.fade#contact
     .tab-content
       = render 'contact'
-  -if @user.eql? current_user or current_user.has_role? :admin
-    .tab-pane.fade#settings
-      .tab-content
-        = render 'user_settings'
-  - if current_user.has_role? :admin
+  .tab-pane.fade#settings
+    .tab-content
+      = render 'user_settings'
+  -if can? :manage, @user
     .tab-pane.fade#roles
       .tab-content
         = render :partial => 'role_history', :locals => {:user_roles => @user.users_roles}
