@@ -18,14 +18,12 @@
               = " Assign #{@user.first_name} a task"
             - else
               = " Assign myself a task"
-    - if current_user == @user or current_user.has_role? :admin
+    - if can? :update, @user
       %li.divider
-      %li
-        = link_to profile_photo_user_path(@user) do
-          %i.fa.fa-camera-retro.fa-fw
-          - if @user.id != current_user.id
-            = " Update #{@user.first_name}'s Profile Picture"
-          - else
+      - if @user.id == current_user.id
+        %li
+          = link_to profile_photo_user_path(@user) do
+            %i.fa.fa-camera-retro.fa-fw
             = " Update my profile picture"
       %li
         = link_to settings_user_path(@user) do
@@ -34,25 +32,24 @@
             = "Update #{@user.first_name}'s settings"
           -else
             = " Update my settings"
-      -if can? :update, @user
-        %li
-          = link_to edit_user_path(@user) do
-            %i.fa.fa-edit.fa-fw
-            - if @user.id != current_user.id
-              = " Update #{@user.first_name}'s information"
-            - else
-              = " Update my profile"
+      %li
+        = link_to edit_user_path(@user) do
+          %i.fa.fa-edit.fa-fw
+          - if @user.id != current_user.id
+            = " Update #{@user.first_name}'s information"
+          - else
+            = " Update my profile"
       %li
         = link_to change_password_user_path(@user) do
           %i.fa.fa-key.fa-fw
           - if @user.id != current_user.id
-            = " Update #{@user.first_name}'s password"
+            = " Change #{@user.first_name}'s password"
           - else
-            = " Update my password"
+            = " Change my password"
 
     - if can? :destroy, @user and @user != current_user
       %li.divider
       %li
-        = link_to user_path(@user), :method => :delete, :data => {:confirm => "Are you sure?. The action cannot be undone!."}  do
-          %i.fa.fa-trash-o.fa-fw
-          = " Delete this user"
+        = link_to user_path(@user), :method => :delete, :data => {:confirm => "Are you sure you want to deactivate this user?."}  do
+          %i.fa.fa-minus-circle.fa-fw
+          = " Deactivate this user"
