@@ -1,14 +1,14 @@
-#------------------------------------------------------------------------------
-#
+#-------------------------------------------------------------------------------
 # User
 #
 # Base class for all users. This class represents a generic user.
-#
-#------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 class User < ActiveRecord::Base
 
   # Enable user roles for this use
   rolify
+  has_many :users_roles
+  has_many :roles, :through => :users_roles
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -17,17 +17,17 @@ class User < ActiveRecord::Base
   # Include the object key mixin
   include TransamObjectKey
 
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   # Callbacks
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   after_initialize  :set_defaults
 
   # Clean up any HABTM associations before the user is destroyed
   before_destroy { :clean_habtm_relationships }
 
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   # Associations
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
 
   # every user belongs to a single organizations
   belongs_to :organization
@@ -58,9 +58,9 @@ class User < ActiveRecord::Base
   has_many    :asset_tags
   has_many    :assets, :through => :asset_tags
 
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   # Validations
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   validates :first_name,    :presence => true,  :length => { maximum: 64 }
   validates :last_name,     :presence => true,  :length => { maximum: 64 }
   validates :external_id,   :allow_nil => true, :length => { maximum: 32 }
@@ -80,11 +80,17 @@ class User < ActiveRecord::Base
   validates :num_table_rows,:presence => true,  :numericality => {:only_integer => :true, :greater_than_or_equal_to => 5}
   validates :organization,  :presence => true
 
+  #-----------------------------------------------------------------------------
+  # Scopes
+  #-----------------------------------------------------------------------------
   # default scope
   default_scope { order(:last_name) }
   # Scope only active users
   scope :active, -> { where(active: true) }
 
+  #-----------------------------------------------------------------------------
+  # Lists
+  #-----------------------------------------------------------------------------
   SEARCHABLE_FIELDS = [
     :first_name,
     :last_name,
@@ -119,21 +125,17 @@ class User < ActiveRecord::Base
     :role_ids => []
   ]
 
-  #------------------------------------------------------------------------------
-  #
+  #-----------------------------------------------------------------------------
   # Class Methods
-  #
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
 
   def self.allowable_params
     FORM_PARAMS
   end
 
-  #------------------------------------------------------------------------------
-  #
+  #-----------------------------------------------------------------------------
   # Instance Methods
-  #
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
 
   # Returns the default weather code for the users dashboard
   def default_weather_code
@@ -167,7 +169,8 @@ class User < ActiveRecord::Base
     assigned_tasks.where(:state => "halted")
   end
 
-  def initials
+  # Returns the initials for this user
+  def get_initials
     "#{first_name[0]}#{last_name[0]}".upcase
   end
 
@@ -210,9 +213,9 @@ class User < ActiveRecord::Base
     SEARCHABLE_FIELDS
   end
 
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   # Devise hooks
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
 
   # check if the user is active and can log in
   def active_for_authentication?
@@ -240,13 +243,11 @@ class User < ActiveRecord::Base
     super
     Rails.logger.info "Unlocking account for user with email #{email} at #{Time.now}"
   end
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
 
-  #------------------------------------------------------------------------------
-  #
+  #-----------------------------------------------------------------------------
   # Protected Methods
-  #
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   protected
 
   # Set resonable defaults for a new user
@@ -263,11 +264,9 @@ class User < ActiveRecord::Base
     organizations.clear
   end
 
-  #------------------------------------------------------------------------------
-  #
+  #-----------------------------------------------------------------------------
   # Private Methods
-  #
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   private
 
 end

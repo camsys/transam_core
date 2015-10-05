@@ -30,8 +30,8 @@ class ReplacementCostPlusInterestCalculator < ReplacementCostCalculator
     num_years_to_replacement = [replacement_year - asset.policy_analyzer.get_cost_fy_year, 0].max
     Rails.logger.debug "num_years_to_replacement #{num_years_to_replacement}"
 
-    # interest rate
-    inflation_rate = asset.policy_analyzer.get_annual_inflation_rate
+    # interest rate as decimal
+    inflation_rate = asset.policy_analyzer.get_annual_inflation_rate / 100.0
 
     future_cost(initial_cost, num_years_to_replacement, inflation_rate)
   end
