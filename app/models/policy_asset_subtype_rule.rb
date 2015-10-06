@@ -114,15 +114,15 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
     self[:min_used_purchase_service_life_months] = sanitize_to_int(num)
   end
 
-  def minimum_value(symbol, default = 0)
+  def minimum_value(attr, default = 0)
     # This method determines the minimum value allowed for an input for a particular attribute.
     # It allows us to set the appropriate minimum value for the inputs on the form.
 
     if policy.parent.present?
-      parent_rule = PolicyAssetSubtypeRule.find_by(policy: policy.parent, asset_subtype: self.asset_subtype)
-      return parent_rule.send(symbol)
+      parent_rule = policy.parent.policy_asset_subtype_rules.find_by(asset_subtype: self.asset_subtype)
+      parent_rule.send attr.to_s
     else
-      return default
+      default
     end
   end
 
@@ -134,20 +134,15 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
     if policy.parent.present?
       attributes_to_compare = [
         :min_service_life_months,
-        :replacement_cost,
-        :lease_length_months,
-        :rehabilitation_service_month,
-        :rehabilitation_cost,
-        :extended_service_life_months,
         :min_used_purchase_service_life_months
       ]
 
-      parent_rule = PolicyAssetSubtypeRule.find_by(policy: policy.parent, asset_subtype: self.asset_subtype)
+      parent_rule = policy.parent.policy_asset_subtype_rules.find_by(asset_subtype: self.asset_subtype)
 
       attributes_to_compare.each do |attribute|
         parent_value = parent_rule.send(attribute)
         if self.send(attribute) < parent_value
-          errors.add(attribute, "cannot be less than #{ parent_value }, which is the minimum set by #{ policy.parent.organization.short_name}'s policy")
+          errors.add(attribute, " cannot be less than #{parent_value}, which is the minimum set by #{ policy.parent.organization.short_name}'s policy")
         end
       end
     end
