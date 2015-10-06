@@ -115,12 +115,21 @@ class PoliciesController < OrganizationAwareController
     new_policy.object_key = nil
     new_policy.parent = @policy
     new_policy.organization = @organization
-    new_policy.name = "Copy of " + @policy.name
     new_policy.description = "Copy of " + @policy.description
-    new_policy.current = false
-    new_policy.active = true
+    new_policy.active = false
 
     new_policy.save!
+    # Copy all the records
+    @policy.policy_asset_type_rules.each do |r|
+      rule = r.dup
+      rule.policy = new_policy
+      rule.save
+    end
+    @policy.policy_asset_subtype_rules.each do |r|
+      rule = r.dup
+      rule.policy = new_policy
+      rule.save
+    end
 
     # now attempt to load the newly created record
     @policy = Policy.find(new_policy.id)
