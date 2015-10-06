@@ -1,5 +1,4 @@
 class CostCalculationType < ActiveRecord::Base
-  has_many :policies
 
   # All types that are available
   scope :active, -> { where(:active => true) }
