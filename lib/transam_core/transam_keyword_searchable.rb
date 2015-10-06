@@ -5,7 +5,7 @@
 # Adds ability to index a model for keyword based searches. All models that use
 # this plugin can be searched generically using the Transam keyword search
 #
-# To protect the priovacy of organization sepcific data, each searchable object
+# To protect the privacy of organization sepcific data, each searchable object
 # must implement an organization method that returns the organization that owns
 # the object being searched. Implementations can determine through the database
 # schema wether to allow null organization_id values or not. Each object must
@@ -19,6 +19,9 @@ module TransamKeywordSearchable
 
     # Always re-index the object after a save event
     after_save :update_index
+
+    # Always remove the object from the index before it is destroyed
+    before_destroy :remove_index
 
   end
 
@@ -39,6 +42,16 @@ module TransamKeywordSearchable
   #
   #------------------------------------------------------------------------------
 
+  #------------------------------------------------------------------------------
+  # Removes the existing object from the index
+  def remove_from_index
+    kwsi = KeywordSearchIndex.find_by(object_key: object_key)
+    if kwsi.present?
+      kwsi.destroy
+    end
+  end
+  #------------------------------------------------------------------------------
+  # Writes the existing object to the index
   def write_to_index
 
     text_blob = ""
@@ -88,8 +101,15 @@ module TransamKeywordSearchable
     end
   end
 
+  # Creates a job to remove the object from the index. This is done in the background so the
+  # current transaction does not get blocked. Default priority is 10
+  def remove_index
+    job = KeywordIndexDeleteJob.new(self.class.name, object_key)
+    Delayed::Job.enqueue job, :priority => 10
+  end
+
   # Creates a job to udpate the index. This is done in the background so the
-  # current transaction does not get bloacked. Default priority is 10
+  # current transaction does not get blocked. Default priority is 10
   def update_index
     job = KeywordIndexUpdateJob.new(self.class.name, object_key)
     Delayed::Job.enqueue job, :priority => 10
