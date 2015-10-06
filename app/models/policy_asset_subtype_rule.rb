@@ -1,19 +1,19 @@
-#------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #
 # PolicyAssetSubtypeRule
 #
 # Policy rule for an asset type for an organiation
 #
-#------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 class PolicyAssetSubtypeRule < ActiveRecord::Base
 
   # Include the numeric sanitizers mixin
   include TransamNumericSanitizers
   include FiscalYear
 
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   # Callbacks
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   after_initialize :set_defaults
 
   #-----------------------------------------------------------------------------
@@ -24,9 +24,9 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
   # Every one of these rules applies to an asset type
   belongs_to  :asset_subtype
 
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   # Validations
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   validates :policy,                  :presence => true
   validates :asset_subtype,           :presence => true
 
@@ -40,14 +40,16 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
 
   validates :rehabilitation_service_month,     :presence => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
   validates :rehabilitation_cost,      :allow_nil => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
-  validates :extended_service_life_months, :allow_nil => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
+  validates :extended_service_life_months, :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
 
   validates :min_used_purchase_service_life_months, :presence => true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0}
-  validate :greater_or_equal_to_parent_value
 
-  #------------------------------------------------------------------------------
+  # Custom validator for checking values against parent policies
+  validate :min_allowable_policy_values
+
+  #-----------------------------------------------------------------------------
   # List of hash parameters allowed by the controller
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   FORM_PARAMS = [
     :id,
     :policy_id,
@@ -67,20 +69,20 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
     :min_used_purchase_service_life_months
   ]
 
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   #
   # Class Methods
   #
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   def self.allowable_params
     FORM_PARAMS
   end
 
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   #
   # Instance Methods
   #
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
 
   def to_s
     "#{asset_subtype.asset_type}: #{asset_subtype}"
@@ -114,6 +116,7 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
     self[:min_used_purchase_service_life_months] = sanitize_to_int(num)
   end
 
+  #-----------------------------------------------------------------------------
   def minimum_value(attr, default = 0)
     # This method determines the minimum value allowed for an input for a particular attribute.
     # It allows us to set the appropriate minimum value for the inputs on the form.
@@ -126,34 +129,9 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
     end
   end
 
-
-  private
-
-  def greater_or_equal_to_parent_value
-    # This method validates that values for child orgs are not less than the value set by the parent org
-    if policy.parent.present?
-      attributes_to_compare = [
-        :min_service_life_months,
-        :min_used_purchase_service_life_months
-      ]
-
-      parent_rule = policy.parent.policy_asset_subtype_rules.find_by(asset_subtype: self.asset_subtype)
-
-      attributes_to_compare.each do |attribute|
-        parent_value = parent_rule.send(attribute)
-        if self.send(attribute) < parent_value
-          errors.add(attribute, " cannot be less than #{parent_value}, which is the minimum set by #{ policy.parent.organization.short_name}'s policy")
-        end
-      end
-    end
-
-  end
-
-  #------------------------------------------------------------------------------
-  #
+  #-----------------------------------------------------------------------------
   # Protected Methods
-  #
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   protected
 
   # Set resonable defaults for a new policy
@@ -166,6 +144,41 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
     self.extended_service_life_months ||= 0
     self.min_used_purchase_service_life_months ||= 0
     self.cost_fy_year ||= current_planning_year_year
+  end
+
+  #-----------------------------------------------------------------------------
+  private
+  #-----------------------------------------------------------------------------
+
+  def min_allowable_policy_values
+    # This method validates that values for child orgs are not less than the value
+    # set by the parent org
+    return_value = true
+
+    if policy.parent.present?
+      attributes_to_compare = [
+        :min_service_life_months,
+        :extended_service_life_months,
+        :min_used_purchase_service_life_months
+      ]
+
+      parent_rule = policy.parent.policy_asset_subtype_rules.find_by(asset_subtype: self.asset_subtype)
+
+      attributes_to_compare.each do |attr|
+        # Make sure we don't try to test nil values. Other validations should
+        # take care of these
+        if self.send(attr).blank?
+          next
+        end
+
+        parent_value = parent_rule.send(attr)
+        if self.send(attr) < parent_value
+          errors.add(attr, " cannot be less than #{parent_value}, which is the minimum set by #{ policy.parent.organization.short_name}'s policy")
+          return_value = false
+        end
+      end
+    end
+    return_value
   end
 
 end

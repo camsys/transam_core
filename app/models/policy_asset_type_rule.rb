@@ -81,9 +81,7 @@ class PolicyAssetTypeRule < ActiveRecord::Base
     self[:pcnt_residual_value] = sanitize_to_int(num)
   end
   #------------------------------------------------------------------------------
-  #
   # Protected Methods
-  #
   #------------------------------------------------------------------------------
   protected
 
