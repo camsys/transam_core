@@ -88,43 +88,65 @@ class Policy < ActiveRecord::Base
     name
   end
 
-  def require_type_rules_for_asset_type?(asset_type)
-    # We should only create rules when the organization first acquires an asset type
-    !Asset.exists?(organization: self.organization, asset_type: asset_type)
+  def missing_type_rules_for_asset_type?(asset_type)
+    # This method checks to see if this policy has the right rule for this asset type
+    !PolicyAssetTypeRule.exists?(policy: self, asset_type: asset_type)
   end
 
-  def require_subtype_rules_for_asset_subtype?(asset_subtype)
-    # We should only create rules when the organization first acquires an asset subtype
-    !Asset.exists?(organization: self.organization, asset_subtype: asset_subtype)
+  def missing_subtype_rules_for_asset_subtype?(asset_subtype)
+    # This method checks to see if this policy has the right rule for this asset subtype
+    !PolicyAssetSubtypeRule.exists?(policy: self, asset_subtype: asset_subtype)
   end
 
   def load_type_rules_from_parent(asset_type)
-
-    if parent.present?
-      parent_rules = parent.policy_asset_type_rules.where(asset_type: asset_type)
-      parent_rules.each do |parent_rule|
-        new_rule = parent_rule.dup
-        new_rule.policy = self
-        new_rule.save
-      end
+    # When initially creating rules for a new asset type, look to the parent policy to create the default rules for that subtype
+    # This method uses a rescue block to handle cases where the parent policy does not have an appropriate rule
+    begin
+      parent_rule = PolicyAssetTypeRule.find_by(policy: parent, asset_type: asset_type)
+      new_rule = parent_rule.dup
+      new_rule.policy = self
+      new_rule.save
+    rescue Exception => e
+      Rails.logger.warn e.message
     end
   end
 
   def load_subtype_rules_from_parent(asset_subtype)
+    # When initially creating rules for a new asset type, look to the parent policy to create the default rules for that subtype
+    # This method uses a rescue block to handle cases where the parent policy does not have an appropriate rule
+    begin
+      parent_rule = PolicyAssetSubtypeRule.find_by(policy: parent, asset_subtype: asset_subtype)
+      new_rule = parent_rule.dup
+      new_rule.policy = self
+      new_rule.save
+    rescue Exception => e
+      Rails.logger.warn e.message
+    end
+  end
 
-    if parent.present?
-      parent_rules = parent.policy_asset_subtype_rules.where(asset_subtype: asset_subtype)
-      parent_rules.each do |parent_rule|
-        new_rule = parent_rule.dup
-        new_rule.policy = self
-        new_rule.save
-      end
+  def check_self_for_asset_rules(asset)
+    # This method is for parent policies.  It checks to see if the parent policy has the right rules for the asset.
+    if missing_type_rules_for_asset_type?(asset.asset_type)
+      raise StandardError.new("#{ self } is missing rules for #{ asset.asset_type.pluralize }.")
+    elsif missing_subtype_rules_for_asset_subtype?(asset.asset_subtype)
+      raise StandardError.new("#{ self } is missing rules for #{ asset.asset_subtype.pluralize }.")
     end
   end
 
   def ensure_rules_for_asset(asset)
-    load_type_rules_from_parent(asset.asset_type) if require_type_rules_for_asset_type?(asset.asset_type)
-    load_subtype_rules_from_parent(asset.asset_subtype) if require_subtype_rules_for_asset_subtype?(asset.asset_subtype)
+    # This method checks to see if this policy is a parent policy.  If it is, it checks to see if it has the right rules for the asset.
+    # If this policy is not a parent policy, then it checks to see if it has the right rules for the asset, and then loads missing rules from the parent.
+
+    begin
+      if parent.present?
+        load_type_rules_from_parent(asset.asset_type) if missing_type_rules_for_asset_type?(asset.asset_type)
+        load_subtype_rules_from_parent(asset.asset_subtype) if missing_subtype_rules_for_asset_subtype?(asset.asset_subtype)
+      else
+        check_self_for_asset_rules(asset)
+      end
+    rescue Exception => e
+      Rails.logger.warn e.message
+    end
   end
 
   #------------------------------------------------------------------------------

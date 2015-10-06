@@ -270,10 +270,6 @@ class AssetsController < AssetAwareController
     @asset.creator = current_user
     @asset.updator = current_user
 
-    # Create policy rules if the organization needs new rules for that asset type or subtype
-    policy = @asset.policy
-    policy.ensure_rules_for_asset(@asset) if @asset.valid?
-
     #Rails.logger.debug @asset.inspect
 
     add_breadcrumb "#{asset_type.name}".pluralize(2), inventory_index_path(:asset_type => asset_subtype.asset_type)
@@ -282,6 +278,11 @@ class AssetsController < AssetAwareController
 
     respond_to do |format|
       if @asset.save
+        # If this policy is a parent policy, check to see if it has rules for this asset.
+        # For other policies, add rules from the parent policy if this policy lacks rules for this asset.
+
+        policy = @asset.policy
+        policy.ensure_rules_for_asset(@asset)
         # If the asset was successfully saved, schedule update the condition and disposition asynchronously
         Delayed::Job.enqueue AssetUpdateJob.new(@asset.object_key), :priority => 0
 
