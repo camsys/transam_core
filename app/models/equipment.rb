@@ -9,7 +9,7 @@ class Equipment < Asset
 
   validates :quantity,        :presence => :true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 1}
   validates :quantity_units,  :presence => true
-  validates :description,     :presence => true
+  validates :quantity_units,     :presence => true
 
   #------------------------------------------------------------------------------
   # Scopes
@@ -24,7 +24,11 @@ class Equipment < Asset
   #------------------------------------------------------------------------------
 
   def self.allowable_params
-    FORM_PARAMS
+    [
+      :quantity,
+      :quantity_units,
+      :quantity_units
+    ]
   end
 
   #------------------------------------------------------------------------------
@@ -84,6 +88,8 @@ class Equipment < Asset
   # Set resonable defaults for a suppoert facility
   def set_defaults
     super
+    self.quantity ||= 1
+    self.quantity_units ||= Uom::UNIT
   end
 
 end
