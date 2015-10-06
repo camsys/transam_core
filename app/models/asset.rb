@@ -461,7 +461,7 @@ class Asset < ActiveRecord::Base
     return false if disposed?
     # otherwise check the policy year and see if it is less than or equal to
     # the curret planning year
-    (policy_year <= current_planning_year_year)
+    (policy_replacement_year <= current_planning_year_year)
   end
 
   # Returns true if an asset is scheduled for disposition
