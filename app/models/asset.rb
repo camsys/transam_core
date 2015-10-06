@@ -455,6 +455,15 @@ class Asset < ActiveRecord::Base
     (in_service_date.present? and disposed? == false)
   end
 
+  # Returns true if the asset can be disposed in the next planning cycle,
+  # false otherwise
+  def disposable?
+    return false if disposed?
+    # otherwise check the policy year and see if it is less than or equal to
+    # the curret planning year
+    (policy_year <= current_planning_year_year)
+  end
+
   # Returns true if an asset is scheduled for disposition
   def scheduled_for_disposition?
     (scheduled_disposition_year.present? and disposed? == false)
