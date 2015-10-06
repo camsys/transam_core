@@ -43,6 +43,8 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
   validates :extended_service_life_months, :allow_nil => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
 
   validates :min_used_purchase_service_life_months, :presence => true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0}
+  validate :greater_or_equal_to_parent_value
+
   #------------------------------------------------------------------------------
   # List of hash parameters allowed by the controller
   #------------------------------------------------------------------------------
@@ -110,6 +112,46 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
   end
   def min_used_purchase_service_life_months=(num)
     self[:min_used_purchase_service_life_months] = sanitize_to_int(num)
+  end
+
+  def minimum_value(symbol, default = 0)
+    # This method determines the minimum value allowed for an input for a particular attribute.
+    # It allows us to set the appropriate minimum value for the inputs on the form.
+
+    if policy.parent.present?
+      parent_rule = PolicyAssetSubtypeRule.find_by(policy: policy.parent, asset_subtype: self.asset_subtype)
+      return parent_rule.send(symbol)
+    else
+      return default
+    end
+  end
+
+
+  private
+
+  def greater_or_equal_to_parent_value
+    # This method validates that values for child orgs are not less than the value set by the parent org
+    if policy.parent.present?
+      attributes_to_compare = [
+        :min_service_life_months,
+        :replacement_cost,
+        :lease_length_months,
+        :rehabilitation_service_month,
+        :rehabilitation_cost,
+        :extended_service_life_months,
+        :min_used_purchase_service_life_months
+      ]
+
+      parent_rule = PolicyAssetSubtypeRule.find_by(policy: policy.parent, asset_subtype: self.asset_subtype)
+
+      attributes_to_compare.each do |attribute|
+        parent_value = parent_rule.send(attribute)
+        if self.send(attribute) < parent_value
+          errors.add(attribute, "cannot be less than #{ parent_value }, which is the minimum set by #{ policy.parent.organization.short_name}'s policy")
+        end
+      end
+    end
+
   end
 
   #------------------------------------------------------------------------------
