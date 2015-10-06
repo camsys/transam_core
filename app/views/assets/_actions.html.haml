@@ -25,7 +25,7 @@
             %i.fa.fa-fw.fa-copy
             = " Make a copy"
 
-      - if can :dispose, @asset
+      - if can? :dispose, @asset
         %li.divider
         %li
           = link_to new_inventory_asset_event_path(@asset, :event_type => DispositionUpdateEvent.asset_event_type.id) do

@@ -460,7 +460,9 @@ class Asset < ActiveRecord::Base
   def disposable?
     return false if disposed?
     # otherwise check the policy year and see if it is less than or equal to
-    # the curret planning year
+    # the current planning year
+    return false if policy_replacement_year.blank?
+    
     (policy_replacement_year <= current_planning_year_year)
   end
 
