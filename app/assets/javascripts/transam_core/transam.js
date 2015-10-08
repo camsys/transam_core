@@ -73,7 +73,7 @@ var transam = new function() {
 		}
 		$.gritter.add({
 			title: title,
-      value: message,
+      text: message,
       time: 5000,
       class_name: class_name,
       image: false,
