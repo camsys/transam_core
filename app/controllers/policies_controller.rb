@@ -70,7 +70,7 @@ class PoliciesController < OrganizationAwareController
       @rule = PolicyAssetSubtypeRule.new
     end
 
-    render 'show_edit_form'
+    render 'new_rule'
   end
 
   # Sets the current policy for an organization
