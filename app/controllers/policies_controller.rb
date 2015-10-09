@@ -65,9 +65,9 @@ class PoliciesController < OrganizationAwareController
     @type = params[:type]
 
     if @type == 'asset_type'
-      @rule = PolicyAssetTypeRule.new
+      @rule = PolicyAssetTypeRule.new(policy: @policy)
     else
-      @rule = PolicyAssetSubtypeRule.new
+      @rule = PolicyAssetSubtypeRule.new(policy: @policy)
     end
 
     render 'new_rule'
