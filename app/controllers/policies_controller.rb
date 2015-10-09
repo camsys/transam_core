@@ -60,7 +60,7 @@ class PoliciesController < OrganizationAwareController
   #-----------------------------------------------------------------------------
   # Adds a policy rule to the current policy. Called via ajax
   #-----------------------------------------------------------------------------
-  def add_policy_rule
+  def new_policy_rule
 
     @type = params[:type]
 

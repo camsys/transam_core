@@ -165,7 +165,7 @@ Rails.application.routes.draw do
       get   'make_current'
       patch  'update_policy_rule'
       post  'update_policy_rule'
-      get 'add_policy_rule'
+      get   'new_policy_rule'
       post  'add_policy_rule'
     end
   end
