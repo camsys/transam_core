@@ -62,19 +62,15 @@ class PoliciesController < OrganizationAwareController
   #-----------------------------------------------------------------------------
   def add_policy_rule
 
-    if params[:policy_asset_type_rule].present?
-      rule = PolicyAssetTypeRule.new(asset_type_rule_form_params)
+    @type = params[:type]
+
+    if @type == 'asset_type'
+      @rule = PolicyAssetTypeRule.new
     else
-      rule = PolicyAssetSubtypeRule.new(asset_subtype_rule_form_params)
+      @rule = PolicyAssetSubtypeRule.new
     end
 
-    if rule.present?
-      rule.policy = @policy
-      rule.save
-    end
-
-    render 'update_policy_rules'
-
+    render 'show_edit_form'
   end
 
   # Sets the current policy for an organization
