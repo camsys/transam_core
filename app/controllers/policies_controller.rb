@@ -60,6 +60,23 @@ class PoliciesController < OrganizationAwareController
   #-----------------------------------------------------------------------------
   # Adds a policy rule to the current policy. Called via ajax
   #-----------------------------------------------------------------------------
+  def add_policy_rule
+
+    if params[:policy_asset_type_rule].present?
+      rule = PolicyAssetTypeRule.new(asset_type_rule_form_params)
+    else
+      rule = PolicyAssetSubtypeRule.new(asset_subtype_rule_form_params)
+    end
+
+    if rule.present?
+      rule.policy = @policy
+      rule.save
+    end
+
+    render 'update_policy_rules'
+
+  end
+
   def new_policy_rule
 
     @type = params[:type]

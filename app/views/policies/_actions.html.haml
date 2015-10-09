@@ -42,13 +42,13 @@
             %i.fa.fa-trash-o.fa-fw
             = " Remove this policy"
 
-      - if !@policy.parent.present?
+      - if !@policy.parent.present? && @policy.missing_type_rules?
         %li.divider
         %li
           = link_to new_policy_rule_policy_path(@policy, :type => 'asset_type'), :remote => true do
             %i.fa.fa-plus.fa-fw
             = " Add an Asset Type Rule"
-
+      - if !@policy.parent.present? && @policy.missing_subtype_rules?
         %li.divider
         %li
           = link_to new_policy_rule_policy_path(@policy, :type => 'asset_subtype'), :remote => true do

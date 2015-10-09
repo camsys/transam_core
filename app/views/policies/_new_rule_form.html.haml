@@ -6,10 +6,4 @@
       %h3.modal-title
         = "Add a #{ @type.titleize } Rule"
     .modal-body
-      = render "#{@type}_rule_form"
-
-:javascript
-
-  console.log($('#type-selector :input'));
-  $('#type-selector :input').removeAttr('disabled');
-  $('#type-selector').removeClass('hidden');
+      = render "new_#{@type}_rule_form"
