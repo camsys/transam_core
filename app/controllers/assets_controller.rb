@@ -441,7 +441,7 @@ class AssetsController < AssetAwareController
     end
 
     # If the asset type and subtypes are not set we default to the asset base class
-    if @id_filter_list or (@asset_type == 0 and @asset_subtype == 0)
+    if @id_filter_list.present? or (@asset_type == 0 and @asset_subtype == 0)
       @asset_class_name = SystemConfig.instance.asset_base_class_name
     elsif @asset_subtype > 0
       # we have an asset subtype so get it and get the asset type from it. We also set the filter form
@@ -455,6 +455,12 @@ class AssetsController < AssetAwareController
       @asset_class_name = asset_type.class_name
     end
     @view = "#{@asset_class_name.underscore}_index"
+
+    Rails.logger.debug "@fmt = #{@fmt}"
+    Rails.logger.debug "@asset_type = #{@asset_type}"
+    Rails.logger.debug "@asset_subtype = #{@asset_subtype}"
+    Rails.logger.debug "@asset_class_name = #{@asset_class_name}"
+    Rails.logger.debug "@view = #{@view}"
 
   end
 
