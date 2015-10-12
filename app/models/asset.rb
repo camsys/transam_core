@@ -177,15 +177,8 @@ class Asset < ActiveRecord::Base
     :object_key,
     :asset_tag,
     :external_id,
-
-    :asset_type,
-    :asset_subtype,
-
-    :manufacturer,
-    :manufacturer_model,
-    :manufacture_year,
-
-    :vendor
+    :description,
+    :manufacturer_model
   ]
 
   # List of fields that should be nilled when a copy is made
@@ -462,7 +455,7 @@ class Asset < ActiveRecord::Base
     # otherwise check the policy year and see if it is less than or equal to
     # the current planning year
     return false if policy_replacement_year.blank?
-    
+
     (policy_replacement_year <= current_planning_year_year)
   end
 

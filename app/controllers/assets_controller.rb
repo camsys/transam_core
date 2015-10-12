@@ -405,6 +405,13 @@ class AssetsController < AssetAwareController
       @manufacturer_id = params[:manufacturer_id].to_i
     end
 
+    # Check to see if we got a service status to sub select on.
+    if params[:service_status].nil?
+      @service_status = 0
+    else
+      @service_status = params[:service_status].to_i
+    end
+
     # Check to see if we got a search text and search param to filter on
     if params[:search_text].nil?
       # See if one is stored in the session
@@ -488,6 +495,11 @@ class AssetsController < AssetAwareController
     unless @manufacturer_id == 0
       clauses << ['manufacturer_id = ?']
       values << @manufacturer_id
+    end
+
+    unless @service_status == 0
+      clauses << ['service_status_type_id = ?']
+      values << @service_status
     end
 
     if @disposition_year.blank?
