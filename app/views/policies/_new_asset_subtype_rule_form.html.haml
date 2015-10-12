@@ -33,6 +33,12 @@
 
         = f.input :replace_with_leased
 
+      .col-sm-3.used
+        = f.input :min_used_purchase_service_life_months, :required => true, :label => "ESL (Mo)", :input_html =>{ min:  @rule.minimum_value(:min_used_purchase_service_life_months, 48) }
+      .col-sm-3.leased
+        = f.input :lease_length_months, :input_html => { min: @rule.minimum_value(:lease_length_months) }
+
+
   %fieldset
     %legend Rehabilitation
 
@@ -45,7 +51,7 @@
             %i.fa.fa-usd
           = f.input_field :rehabilitation_cost, required: true, :class => "form-control", :min => @rule.minimum_value(:rehabilitation_cost)
       .col-sm-3
-        = f.input :extended_service_life_months, required: true, :label => "Change in ESL (Mi)", :input_html => { :min => @rule.minimum_value(:extended_service_life_months) }
+        = f.input :extended_service_life_months, required: true, :label => "Change in ESL (Mo)", :input_html => { :min => @rule.minimum_value(:extended_service_life_months) }
 
   .row
     = f.button :submit, "Create", :class => 'btn btn-primary'
@@ -59,7 +65,6 @@
     replace_with_new_action(checked);
     var checked = $('#policy_asset_subtype_rule_replace_with_leased').is(':checked');
     replace_with_leased_action(checked);
-    show_appropriate_fields();
 
   });
 
@@ -101,3 +106,5 @@
     var checked = $(this).is(':checked');
     replace_with_leased_action(checked);
   });
+
+
