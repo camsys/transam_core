@@ -54,7 +54,7 @@
         = f.input :extended_service_life_months, required: true, :label => "Change in ESL (Mo)", :input_html => { :min => @rule.minimum_value(:extended_service_life_months) }
 
   .row
-    = f.button :submit, "Create", :class => 'btn btn-primary'
+    = f.button :submit, "Update", :class => 'btn btn-primary'
     %button.btn.btn-default{:data => {:dismiss => "modal"}} Cancel
 
 :javascript
