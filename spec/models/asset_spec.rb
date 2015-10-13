@@ -140,19 +140,7 @@ RSpec.describe Asset, :type => :model do
 
   describe "#searchable_fields" do
     it 'inherits down the tree' do
-      asset_searchables = [
-        :object_key,
-        :asset_tag,
-        :external_id,
-
-        :asset_type,
-        :asset_subtype,
-
-        :manufacturer,
-        :manufacturer_model,
-        :manufacture_year,
-        :vendor
-      ]
+      asset_searchables = [:object_key, :asset_tag, :external_id, :description, :manufacturer_model]
 
       expect(buslike_asset.searchable_fields).to eql(asset_searchables)
     end
