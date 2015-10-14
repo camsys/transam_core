@@ -43,6 +43,8 @@ class Image < ActiveRecord::Base
   validates :image,               :presence => true, :file_size => { :maximum => MAX_UPLOAD_FILE_SIZE.megabytes.to_i }
   validates :created_by_id,       :presence => true
 
+  default_scope { order('created_at DESC') }
+
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
     :documentable_id,

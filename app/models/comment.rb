@@ -29,6 +29,8 @@ class Comment < ActiveRecord::Base
   validates :comment,             :presence => true
   validates :created_by_id,       :presence => true
 
+  default_scope { order('created_at DESC') }
+
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
     :comment,

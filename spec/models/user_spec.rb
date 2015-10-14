@@ -59,6 +59,7 @@ RSpec.describe User, :type => :model do
 
   describe ".has_role?" do
     it 'checks the roles correctly for a User' do
+      normal_user = create(:normal_user)
       normal_user.add_role :user
       expect(normal_user.has_role? 'user').to eql(true)
       expect(normal_user.has_role? :user).to eql(true)
