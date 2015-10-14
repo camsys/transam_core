@@ -20,10 +20,12 @@
               = " Assign myself a task"
     - if can? :update, @user
       %li.divider
-      - if @user.id == current_user.id
-        %li
-          = link_to profile_photo_user_path(@user) do
-            %i.fa.fa-camera-retro.fa-fw
+      %li
+        = link_to profile_photo_user_path(@user) do
+          %i.fa.fa-camera-retro.fa-fw
+          - if @user.id != current_user.id
+            = "Update #{@user.first_name}'s profile picture"
+          - else
             = " Update my profile picture"
       %li
         = link_to settings_user_path(@user) do

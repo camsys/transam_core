@@ -6,44 +6,27 @@ class UsersController < OrganizationAwareController
   add_breadcrumb "Home",  :root_path
   add_breadcrumb "Users", :users_path
 
-  before_action :set_user, :only => [:show, :edit, :settings, :update, :destroy, :set_current_org, :change_password, :update_password, :profile_photo, :reset_password]
+  before_action :set_user, :only => [:show, :edit, :settings, :update, :destroy, :change_password, :update_password, :profile_photo, :reset_password]
   before_filter :check_for_cancel, :only => [:create, :update, :update_password]
 
   INDEX_KEY_LIST_VAR    = "user_key_list_cache_var"
   SESSION_VIEW_TYPE_VAR = 'users_subnav_view_type'
 
-  # User has selected an alternative org to view. This method sets a session variable
-  # which is used by OrganizationAwareController to set the @organization variable
-  # for subsequent views.
-  def set_current_org
-    org = @user.organizations.find_by_short_name(params[:orgs][:org_id])
-    if org.nil?
-      notify_user(:alert, "Record not found!")
-      redirect_to :back
-      return
-    end
-    # Set the user's selected org
-    set_selected_organization(org)
-
-    notify_user(:notice, "You are now viewing #{org.name}")
-    # send the user back to the view they were looking at. This might
-    # cause another redirect if the view is not associated with the
-    # newly selected organization
-    redirect_to :back
-
-  end
   # GET /users
   # GET /users.json
   def index
+
+    @organization_id = params[:organization_id].to_i
+    @search_text = params[:search_text]
+    @role = params[:role]
+    @id_filter_list = params[:ids]
 
     # Start to set up the query
     conditions  = []
     values      = []
 
     # See if we got an organization id
-    @organization_id = params[:organization_id]
-    if @organization_id.present?
-      @organization_id = @organization_id.to_i
+    if @organization_id > 0
       conditions << 'organization_id = ?'
       values << @organization_id
     else
@@ -51,8 +34,39 @@ class UsersController < OrganizationAwareController
       values << @organization_list
     end
 
+    unless @search_text.blank?
+      # get the list of searchable fields from the asset class
+      searchable_fields = User.new.user_searchable_fields
+      # create an OR query for each field
+      query_str = []
+      first = true
+      # parameterize the search based on the selected search parameter
+      search_value = get_search_value(@search_text, @search_param)
+      # Construct the query based on the searchable fields for the model
+      searchable_fields.each do |field|
+        if first
+          first = false
+          query_str << '('
+        else
+          query_str << ' OR '
+        end
+
+        query_str << field
+        query_str << ' LIKE ? '
+        # add the value in for this sub clause
+        values << search_value
+      end
+      query_str << ')' unless searchable_fields.empty?
+
+      conditions << [query_str.join]
+    end
+
+    unless @id_filter_list.blank?
+      conditions << 'object_key in (?)'
+      values << @id_filter_list
+    end
+
     # Get the Users but check to see if a role was selected
-    @role = params[:role]
     if @role.blank?
       @users = User.active.where(conditions.join(' AND '), *values).order(:organization_id, :last_name)
     else
@@ -60,7 +74,7 @@ class UsersController < OrganizationAwareController
     end
 
     # Set the breadcrumbs
-    if @organization_id.present?
+    if @organization_id > 0
       org = Organization.find(@organization_id)
       add_breadcrumb org.short_name, users_path(:organization_id => org.id)
     end

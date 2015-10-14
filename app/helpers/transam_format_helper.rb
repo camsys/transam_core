@@ -3,6 +3,32 @@ module TransamFormatHelper
   # Include the fiscal year mixin
   include FiscalYear
 
+  # Formats a text field, truncating at maxlen characters 
+  def format_as_text(val, maxlen = 64)
+    if val.present?
+      if val.length > maxlen
+        sanitize val.truncate(maxlen)
+      else
+        val
+      end
+    end
+  end
+
+  # Formats a user name and provides message link and optional messaging options
+  # available via the options hash
+  def format_as_message_link(user, options = {})
+    html = ''
+    subject = options[:subject].present? ? options[:subject] : ''
+    body = options[:body].present? ? options[:body] : ''
+    message_url = new_user_message_path(current_user, :to_user => user, :subject => subject, :body => body)
+    html = "<a href='#{message_url}'>#{user.email}"
+    html << '&nbsp;'
+    html << "<i class = 'fa fa-envelope'></i>"
+    html << "</a>"
+    html.html_safe
+  end
+
+
   # Formats a user name and provides an optional (defaulted) message link and
   # messaging options
   def format_as_user_link(user, options = {})

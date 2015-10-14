@@ -23,10 +23,10 @@ class UsersRole < ActiveRecord::Base
   belongs_to  :role
 
   # Every user role can have a granted by user
-  belongs_to  :granted_by_user, :class_name => :user, :foreign_key => :granted_by_user_id
+  belongs_to  :granted_by_user, :class_name => "User", :foreign_key => :granted_by_user_id
 
   # Every user role can have a revoked by user
-  belongs_to  :revoked_by_user, :class_name => :user, :foreign_key => :revoked_by_user_id
+  belongs_to  :revoked_by_user, :class_name => 'User', :foreign_key => :revoked_by_user_id
 
   #------------------------------------------------------------------------------
   # Validations
