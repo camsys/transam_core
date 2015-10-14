@@ -13,7 +13,7 @@ FactoryGirl.define do
       last_name  "guest"
       email 'bob@example.com'
 
-      after(:build) do |u|
+      after(:create) do |u|
         u.add_role :guest
       end
     end
@@ -23,7 +23,7 @@ FactoryGirl.define do
       last_name  "normal"
       sequence(:email) {|n| "joe#{n}@example.com"}
 
-      after(:build) do |u|
+      after(:create) do |u|
         u.add_role :user
       end
     end
@@ -33,7 +33,7 @@ FactoryGirl.define do
       last_name  "manager"
       sequence(:email) {|n| "kate#{n}@example.com"}
 
-      after(:build) do |u|
+      after(:create) do |u|
         u.add_role :manager
       end
     end
@@ -43,7 +43,7 @@ FactoryGirl.define do
       last_name  "admin"
       sequence(:email) {|n| "jill#{n}@example.com"}
 
-      after(:build) do |u|
+      after(:create) do |u|
         u.add_role :admin
       end
     end
