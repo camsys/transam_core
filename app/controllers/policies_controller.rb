@@ -77,6 +77,23 @@ class PoliciesController < OrganizationAwareController
 
   end
 
+  #-----------------------------------------------------------------------------
+  # Shows the form for new policy rules. Called via ajax
+  #-----------------------------------------------------------------------------
+
+  def new_policy_rule
+
+    @type = params[:type]
+
+    if @type == 'asset_type'
+      @rule = PolicyAssetTypeRule.new(policy: @policy)
+    else
+      @rule = PolicyAssetSubtypeRule.new(policy: @policy)
+    end
+
+    render 'new_rule'
+  end
+
   # Sets the current policy for an organization
   def make_current
 
