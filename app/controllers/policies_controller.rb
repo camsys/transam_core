@@ -37,6 +37,7 @@ class PoliciesController < OrganizationAwareController
       @rule = @policy.policy_asset_type_rules.find(params[:rule])
     elsif @type == 'asset_subtype'
       @rule = @policy.policy_asset_subtype_rules.find(params[:rule])
+      @asset_type = @rule.asset_subtype.asset_type
     end
 
   end
@@ -90,13 +91,13 @@ class PoliciesController < OrganizationAwareController
         @valid_types << at unless @policy.asset_type_rule? at
       end
     else
+      @asset_type = AssetType.find(params[:asset_type])
       @rule = PolicyAssetSubtypeRule.new(:policy => @policy)
       @rule_type = 'asset_subtype'
-      AssetSubtype.active.each do |at|
+      AssetSubtype.active.where(:asset_type_id => @asset_type).each do |at|
         @valid_types << at unless @policy.asset_subtype_rule? at
       end
     end
-
     render 'new_rule'
   end
 
@@ -136,7 +137,7 @@ class PoliciesController < OrganizationAwareController
     old_policy_name = @policy.name
     new_policy = @policy.dup
     new_policy.object_key = nil
-    new_policy.parent = @policy
+    new_policy.parent = @policy.parent
     new_policy.organization = @organization
     new_policy.description = "Copy of " + @policy.description
     new_policy.active = false

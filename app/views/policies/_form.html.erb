@@ -5,6 +5,6 @@
   ) do |f| %>
   <%= f.input :description, :as => :text, :input_html => { :rows => 3 }, :placeholder => "Enter a description for the policy..." %>
   <%= f.association :condition_estimation_type, :label => "Condition Estimator", :prompt => "Select..." %>
-  <%= f.input :condition_threshold, :label => "Condition Threshold" %>
+  <%= f.input :condition_threshold, :requried => true, :input_html => {:min => ConditionType.min_rating, :max => ConditionType.max_rating}, :label => "Condition Threshold" %>
   <%= f.button :submit, :class => "btn btn-primary" %>
 <% end %>

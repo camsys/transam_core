@@ -30,13 +30,13 @@
 
 .modal.fade#rule-modal{:tabindex => -1, :role => 'dialog', :aria => {:hidden => true}}
 
-= render 'table_edit_scripts'
-
 :javascript
 
   var tab_key = 'policy_asset_types_tab_key';
 
   $(document).ready(function() {
+
+    $('#spinner').hide();
 
     // Manage the tabs
     $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
@@ -54,6 +54,9 @@
       text: '<i class="fa fa-align-justify"></i>'
     });
 
+    // Activate the button actions
+    enable_button_actions();
+
     show_last_tab();
   };
 
@@ -65,4 +68,26 @@
       // Default to the first tab if no tab is stored
       $('a[data-toggle="tab"]:first').tab('show');
     }
+  };
+
+  // Adds handlers for the row actions
+  function enable_button_actions() {
+    // Enable click handlers for the row actions
+    $('.button-action').on('click', function() {
+      var url = $(this).data('url');
+      // Show the spinner
+      $("#spinner").show();
+      $.ajax({
+        url: url,
+        success: function(result) {
+          //console.log('Success');
+          $('#spinner').hide();
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+          // If there is an error, remove the row
+          //remove_form();
+          alert("We are sorry but something went wrong. " + xhr.status + " " + thrownError);
+        }
+      });
+    });
   };

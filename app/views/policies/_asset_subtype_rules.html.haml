@@ -14,7 +14,8 @@
         %th.center Rehab Cost
         %th.center Change in ESL (Mo)
         %th.center ESL Used (Mo)
-        %th.center
+        - if can? :update, @policy
+          %th.center
 
     %tbody
       - rules.each do |rule|
@@ -30,6 +31,7 @@
           %td.center.nowrap= format_as_currency(rule.rehabilitation_cost)
           %td.center= format_as_integer(rule.extended_service_life_months)
           %td.center= format_as_integer(rule.min_used_purchase_service_life_months)
-          %td.center
-            = link_to show_edit_form_policy_path(policy, :rule => rule.id, :type => 'asset_subtype'), :remote => true, :title => "Alter rule..." do
-              %i.fa.fa-edit.fa-1-5x.text-success
+          - if can? :update, @policy
+            %td.center
+              = link_to show_edit_form_policy_path(policy, :rule => rule.id, :type => 'asset_subtype'), :remote => true, :title => "Alter rule..." do
+                %i.fa.fa-edit.fa-1-5x.text-success

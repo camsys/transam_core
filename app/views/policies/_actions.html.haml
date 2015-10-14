@@ -41,15 +41,9 @@
           = link_to policy_path(@policy), :method => :delete, :data => {:confirm => "Are you sure?. The action cannot be undone!."}  do
             %i.fa.fa-trash-o.fa-fw
             = " Remove this policy"
-      - if can? :create, PolicyAssetTypeRule
+      - if can? :create_rules, @policy
         %li.divider
         %li
-          = link_to new_policy_rule_policy_path(@policy, :type => 2), :remote => true do
+          = link_to new_policy_rule_policy_path(@policy, :type => 1), :remote => true do
             %i.fa.fa-plus.fa-fw
             = " Add an Asset Type Rule"
-      - if can? :create, PolicyAssetTypeRule
-        %li.divider
-        %li
-          = link_to new_policy_rule_policy_path(@policy, :type => 2), :remote => true do
-            %i.fa.fa-plus.fa-fw
-            = " Add an Asset Subtype Rule"

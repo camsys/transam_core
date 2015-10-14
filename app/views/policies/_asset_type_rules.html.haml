@@ -7,7 +7,8 @@
         %th.center Annual Inflation Rate
         %th.center Pcnt Residual Value
         %th.center Last Updated
-        %th.center
+        - if can? :update, @policy
+          %th.center
     %tbody
       - rules.each do |rule|
         %tr
@@ -16,6 +17,7 @@
           %td.center= format_as_decimal(rule.annual_inflation_rate, 2)
           %td.center= format_as_percentage(rule.pcnt_residual_value)
           %td.center= format_as_date_time(rule.updated_at)
-          %td.center
-            = link_to show_edit_form_policy_path(policy, :rule => rule.id, :type => 'asset_type'), :remote => true, :title => "Alter rule..." do
-              %i.fa.fa-edit.fa-1-5x.text-success
+          - if can? :update, @policy
+            %td.center
+              = link_to show_edit_form_policy_path(policy, :rule => rule.id, :type => 'asset_type'), :remote => true, :title => "Alter rule..." do
+                %i.fa.fa-edit.fa-1-5x.text-success
