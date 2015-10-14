@@ -1,0 +1,101 @@
+= simple_form_for(@rule,
+  :url => add_policy_rule_policy_path(@policy),
+  :remote => true,
+  :html => {:class => 'form-vertical', :autocomplete => 'off', :id => 'edit-form'},
+  :wrapper => :vertical_form,
+  :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes,
+  :radio_buttons => :vertical_radio_and_checkboxes,
+  :file => :vertical_file_input,
+  :boolean => :vertical_boolean}) do |f|
+
+  %fieldset
+    %legend Replacement
+    .row
+      .col-xs-12
+        = f.association :asset_subtype, :collection => AssetSubtype.active.select{ |subtype| !PolicyAssetSubtypeRule.exists?(policy: @policy, asset_subtype: subtype) }.map { |subtype| [subtype.name, subtype.id, { :class => subtype.asset_type.class_name }] }, :include_blank => false
+      .col-sm-3
+        = f.input :min_service_life_months, :wrapper => :vertical_append, :label => "ESL (Mo)" do
+          = f.input_field :min_service_life_months, :class => "form-control", :required => true, min: @rule.minimum_value(:min_service_life_months, 1)
+          %span.input-group-addon
+            %i.fa Mo
+
+      .col-sm-3
+        = f.input :replacement_cost, :wrapper=> :vertical_prepend  do
+          %span.input-group-addon
+            %i.fa.fa-usd
+          = f.input_field :replacement_cost, :class => "form-control", :required => true, :min => 0
+
+      .col-sm-3
+        = f.input :cost_fy_year, :required => true, :collection => get_fiscal_years, :include_blank => false
+
+      .col-sm-3
+        = f.input :replace_with_new
+
+        = f.input :replace_with_leased
+
+      .col-sm-3.used
+        = f.input :min_used_purchase_service_life_months, :required => true, :label => "ESL (Mo)", :input_html =>{ min:  @rule.minimum_value(:min_used_purchase_service_life_months, 48) }
+      .col-sm-3.leased
+        = f.input :lease_length_months, :input_html => { min: @rule.minimum_value(:lease_length_months) }
+
+
+  %fieldset
+    %legend Rehabilitation
+
+    .row
+      .col-sm-3
+        = f.input :rehabilitation_service_month, required: true, :label => "Rehab Month", :input_html => { min: @rule.minimum_value(:rehabilitation_service_month) }
+      .col-sm-3
+        = f.input :rehabilitation_cost, :wrapper=> :vertical_prepend  do
+          %span.input-group-addon
+            %i.fa.fa-usd
+          = f.input_field :rehabilitation_cost, required: true, :class => "form-control", :min => @rule.minimum_value(:rehabilitation_cost)
+      .col-sm-3
+        = f.input :extended_service_life_months, required: true, :label => "Change in ESL (Mo)", :input_html => { :min => @rule.minimum_value(:extended_service_life_months) }
+
+  .row
+    = f.button :submit, "Create", :class => 'btn btn-primary'
+    %button.btn.btn-default{:data => {:dismiss => "modal"}} Cancel
+
+:javascript
+  $(document).ready(function() {
+    // Setup form state
+    var checked = $('#policy_asset_subtype_rule_replace_with_new').is(':checked');
+    replace_with_new_action(checked);
+    var checked = $('#policy_asset_subtype_rule_replace_with_leased').is(':checked');
+    replace_with_leased_action(checked);
+  });
+  // validate the form before submittal
+  $('#edit-form').validate({
+    submitHandler: function(form) {
+      $('#rule-modal').modal('hide');
+      // Show the spinner while the form request is being handled
+      $("#spinner").show();
+      $(form).ajaxSubmit();
+    }
+  });
+  function replace_with_new_action(checked) {
+    if (checked) {
+      $('.used').hide().find(':input').val('').attr('disabled', true).removeClass('required');
+    } else {
+      $('.used').fadeIn().find(':input').val('').attr('disabled', false).addClass('required');
+    }
+  };
+  function replace_with_leased_action(checked) {
+    if (checked) {
+      $("label[for = policy_asset_subtype_rule_replacement_cost]").html('<abbr title="required">*</abbr> Lease Cost ');
+      $("label[for = policy_asset_subtype_rule_lease_length_months]").html('<abbr title="required">*</abbr> Lease Length Months ');
+      $('.leased').fadeIn().find(':input').val('').attr('disabled', false).addClass("required");
+    } else {
+      $("label[for = policy_asset_subtype_rule_replacement_cost]").html('<abbr title="required">*</abbr> Replacement Cost ');
+      $('.leased').hide().find(':input').val('').attr('disabled', true).removeClass('required');
+    }
+  };
+  $('#policy_asset_subtype_rule_replace_with_new').on('click', function() {
+    var checked = $(this).is(':checked');
+    replace_with_new_action(checked);
+  });
+  $('#policy_asset_subtype_rule_replace_with_leased').on('click', function() {
+    var checked = $(this).is(':checked');
+    replace_with_leased_action(checked);
+  });
