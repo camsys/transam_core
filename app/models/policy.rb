@@ -162,18 +162,6 @@ class Policy < ActiveRecord::Base
     rule
   end
 
-  # This method determines if this policy is missing any asset type rules.  It is used to determine whether or not
-  # The user should be able to add a new asset type rule.
-  def missing_type_rules?
-    AssetType.active.any? { |asset_type| !PolicyAssetTypeRule.exists?(policy: self, asset_type: asset_type) }
-  end
-
-  # This method determines if this policy is missing any asset subtype rules.  It is used to determine whether or not
-  # The user should be able to add a new asset subtype rule.
-  def missing_subtype_rules?
-    AssetSubtype.active.any? { |asset_subtype| !PolicyAssetSubtypeRule.exists?(policy: self, asset_subtype: asset_subtype) }
-  end
-
   #------------------------------------------------------------------------------
   #
   # Protected Methods

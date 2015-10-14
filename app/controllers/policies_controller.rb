@@ -80,15 +80,21 @@ class PoliciesController < OrganizationAwareController
   #-----------------------------------------------------------------------------
   # Shows the form for new policy rules. Called via ajax
   #-----------------------------------------------------------------------------
-
   def new_policy_rule
 
-    @type = params[:type]
-
-    if @type == 'asset_type'
-      @rule = PolicyAssetTypeRule.new(policy: @policy)
+    @valid_types = []
+    if params[:type] == '1'
+      @rule = PolicyAssetTypeRule.new(:policy => @policy)
+      @rule_type = 'asset_type'
+      AssetType.active.each do |at|
+        @valid_types << at unless @policy.asset_type_rule? at
+      end
     else
-      @rule = PolicyAssetSubtypeRule.new(policy: @policy)
+      @rule = PolicyAssetSubtypeRule.new(:policy => @policy)
+      @rule_type = 'asset_subtype'
+      AssetSubtype.active.each do |at|
+        @valid_types << at unless @policy.asset_subtype_rule? at
+      end
     end
 
     render 'new_rule'
