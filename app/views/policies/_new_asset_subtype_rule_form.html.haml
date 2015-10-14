@@ -1,5 +1,5 @@
 = simple_form_for(@rule,
-  :url => update_policy_rule_policy_path(@policy),
+  :url => add_policy_rule_policy_path(@policy),
   :remote => true,
   :html => {:class => 'form-vertical', :autocomplete => 'off', :id => 'edit-form'},
   :wrapper => :vertical_form,
@@ -8,11 +8,11 @@
   :file => :vertical_file_input,
   :boolean => :vertical_boolean}) do |f|
 
-  = f.input :id, :as => :hidden
-
   %fieldset
     %legend Replacement
     .row
+      .col-xs-12
+        = f.association :asset_subtype, :collection => AssetSubtype.active.select{ |subtype| !PolicyAssetSubtypeRule.exists?(policy: @policy, asset_subtype: subtype) }.map { |subtype| [subtype.name, subtype.id, { :class => subtype.asset_type.class_name }] }, :include_blank => false
       .col-sm-3
         = f.input :min_service_life_months, :wrapper => :vertical_append, :label => "ESL (Mo)" do
           = f.input_field :min_service_life_months, :class => "form-control", :required => true, min: @rule.minimum_value(:min_service_life_months, 1)
@@ -54,7 +54,7 @@
         = f.input :extended_service_life_months, required: true, :label => "Change in ESL (Mo)", :input_html => { :min => @rule.minimum_value(:extended_service_life_months) }
 
   .row
-    = f.button :submit, "Update", :class => 'btn btn-primary'
+    = f.button :submit, "Create", :class => 'btn btn-primary'
     %button.btn.btn-default{:data => {:dismiss => "modal"}} Cancel
 
 :javascript
@@ -106,4 +106,5 @@
     var checked = $(this).is(':checked');
     replace_with_leased_action(checked);
   });
+
 
