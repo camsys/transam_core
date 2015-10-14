@@ -37,6 +37,8 @@ class Document < ActiveRecord::Base
   # Each comment was created by a user
   belongs_to :creator, :class_name => "User", :foreign_key => "created_by_id"
 
+  default_scope { order('created_at DESC') }
+
   validates :description,         :presence => true
   validates :original_filename,   :presence => true
   validates :document,            :presence => true, :file_size => { :maximum => MAX_UPLOAD_FILE_SIZE.megabytes.to_i }
