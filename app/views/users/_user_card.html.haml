@@ -2,7 +2,7 @@
   .row
     .col-md-4.text-center
       -if user.images.length != 0
-        = image_tag user.images.last.image.url(:thumb), alt: user.name, class: "img-circle img-responsive"
+        = image_tag user.images.first.image.url(:thumb), alt: user.name, class: "img-circle img-responsive"
       -else
         %i.fa.fa-user.fa-7x
     .col-md-8
