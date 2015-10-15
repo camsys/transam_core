@@ -146,7 +146,7 @@ class Policy < ActiveRecord::Base
     if rule.blank?
       # Check the parent
       if parent.present?
-        parent_rule = parent.policy_asset_subtype_rules.find_by(:asset_subtype_id => asset_subtype.id, :default => true)
+        parent_rule = parent.policy_asset_subtype_rules.find_by(:asset_subtype_id => asset_subtype.id, :default_rule => true)
         # Check to see of we got a rule
         if parent_rule.present?
           rule = parent_rule.dup
