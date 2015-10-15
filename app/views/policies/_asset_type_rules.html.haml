@@ -19,5 +19,5 @@
           %td.center= format_as_date_time(rule.updated_at)
           - if can? :update, @policy
             %td.center
-              = link_to show_edit_form_policy_path(policy, :rule => rule.id, :type => 'asset_type'), :remote => true, :title => "Alter rule..." do
+              = link_to show_edit_form_policy_path(policy, :rule => rule.id, :type => 'asset_type'), :class => "button btn-xs", :remote => true, :title => "Alter rule..." do
                 %i.fa.fa-edit.fa-1-5x.text-success

@@ -166,6 +166,7 @@ Rails.application.routes.draw do
       post  'update_policy_rule'
       get   'new_policy_rule'
       post  'add_policy_rule'
+      delete 'remove_policy_rule'
     end
   end
 

@@ -27,9 +27,9 @@ class PolicyAssetTypeRule < ActiveRecord::Base
   # Every asset type rule has a replacement cost calculator
   belongs_to  :replacement_cost_calculation_type, :class_name => "CostCalculationType"
 
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   # Validations
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   validates :policy,                        :presence => true
   validates :asset_type,                    :presence => true
   validates :service_life_calculation_type, :presence => true
@@ -37,9 +37,14 @@ class PolicyAssetTypeRule < ActiveRecord::Base
   validates :annual_inflation_rate,         :presence => true,  :numericality => {:greater_than_or_equal_to => 0.01, :less_than_or_equal_to => 100}
   validates :pcnt_residual_value,           :presence => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0, :less_than_or_equal_to => 100}
 
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
+  # Scopes
+  #-----------------------------------------------------------------------------
+  default_scope { order(:asset_type_id) }
+
+  #-----------------------------------------------------------------------------
   # List of hash parameters allowed by the controller
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   FORM_PARAMS = [
     :id,
     :policy_id,

@@ -1,3 +1,6 @@
 $('#rules-container').html("<%= escape_javascript(render 'rules') %>");
 $('#spinner').hide();
 reset_view();
+<% if @message.present? %>
+  transam.show_popup_message("<%= @title %>", "<%= @message %>", "<%= @alert_class %>");
+<% end %>

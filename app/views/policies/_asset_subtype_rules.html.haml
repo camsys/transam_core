@@ -33,5 +33,5 @@
           %td.center= format_as_integer(rule.min_used_purchase_service_life_months)
           - if can? :update, @policy
             %td.center
-              = link_to show_edit_form_policy_path(policy, :rule => rule.id, :type => 'asset_subtype'), :remote => true, :title => "Alter rule..." do
+              = link_to show_edit_form_policy_path(policy, :rule => rule.id, :type => 'asset_subtype'), :class => "button btn-xs", :remote => true, :title => "Alter rule..." do
                 %i.fa.fa-edit.fa-1-5x.text-success

@@ -38,6 +38,13 @@ class PoliciesController < OrganizationAwareController
     elsif @type == 'asset_subtype'
       @rule = @policy.policy_asset_subtype_rules.find(params[:rule])
       @asset_type = @rule.asset_subtype.asset_type
+      # Check to see if the user wants to create a copy
+      if params[:copy].to_i == 1
+        rule = @rule.dup
+        rule.default_rule = false
+        rule.save
+        @rule = rule
+      end
     end
 
   end
@@ -58,6 +65,26 @@ class PoliciesController < OrganizationAwareController
     render 'update_policy_rules'
 
   end
+
+  #-----------------------------------------------------------------------------
+  # Removes a policy rule from the current policy. Called via ajax
+  #-----------------------------------------------------------------------------
+  def remove_policy_rule
+
+    rule = @policy.policy_asset_subtype_rules.find(params[:rule])
+    if rule.nil?
+      notify_user_immediately "Can't find the rule in policy #{@policy}", "warning"
+    elsif rule.default_rule
+      notify_user_immediately "Can't remove a default rule from #{@policy}", "warning"
+    else
+      rule.destroy
+      notify_user_immediately "Rule was sucessfully removed from #{@policy}"
+    end
+
+    render 'update_policy_rules'
+
+  end
+
   #-----------------------------------------------------------------------------
   # Adds a policy rule to the current policy. Called via ajax
   #-----------------------------------------------------------------------------

@@ -3,7 +3,7 @@ module TransamFormatHelper
   # Include the fiscal year mixin
   include FiscalYear
 
-  # Formats a text field, truncating at maxlen characters 
+  # Formats a text field, truncating at maxlen characters
   def format_as_text(val, maxlen = 64)
     if val.present?
       if val.length > maxlen
@@ -263,7 +263,7 @@ module TransamFormatHelper
     html << "<div class='col-xs-7 display-value'>"
     html << value.to_s unless value.nil?
     unless popover_text.nil?
-      html << "<i class='fa fa-info-circle info-icon' data-toggle='popover' data-trigger='hover' title='Information' data-placement='right' data-content='#{popover_text}'></i>"
+      html << "<i class='fa fa-info-circle info-icon' data-toggle='popover' data-trigger='hover' title='#{label}' data-placement='right' data-content='#{popover_text}'></i>"
     end
     html << "</div>"
     html << "</div>"

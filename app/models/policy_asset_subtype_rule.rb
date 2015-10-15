@@ -23,6 +23,8 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
   belongs_to  :policy
   # Every one of these rules applies to an asset type
   belongs_to  :asset_subtype
+  # Every one of these rules applies to an asset type
+  belongs_to  :replace_asset_subtype, :class_name => 'AssetSubtype', :foreign_key => :replace_asset_subtype_id
 
   #-----------------------------------------------------------------------------
   # Validations
@@ -39,13 +41,19 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
   validates :lease_length_months,       :allow_nil => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
 
   validates :rehabilitation_service_month,     :presence => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
-  validates :rehabilitation_cost,      :allow_nil => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
+  validates :rehabilitation_labor_cost,     :allow_nil => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
+  validates :rehabilitation_parts_cost,     :allow_nil => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
   validates :extended_service_life_months, :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
 
   validates :min_used_purchase_service_life_months, :presence => true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0}
 
   # Custom validator for checking values against parent policies
   validate :min_allowable_policy_values
+
+  #------------------------------------------------------------------------------
+  # Scopes
+  #------------------------------------------------------------------------------
+  default_scope { order(:asset_subtype_id) }
 
   #-----------------------------------------------------------------------------
   # List of hash parameters allowed by the controller
@@ -59,11 +67,13 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
     :cost_fy_year,
     :replace_with_new,
     :replace_with_leased,
+    :replace_asset_subtype_id,
     :replacement_cost,
     :lease_length_months,
 
     :rehabilitation_service_month,
-    :rehabilitation_cost,
+    :rehabilitation_labor_cost,
+    :rehabilitation_parts_cost,
     :extended_service_life_months,
 
     :min_used_purchase_service_life_months
@@ -106,8 +116,11 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
   def rehabilitation_service_month=(num)
     self[:rehabilitation_service_month] = sanitize_to_int(num)
   end
-  def rehabilitation_cost=(num)
-    self[:rehabilitation_cost] = sanitize_to_int(num)
+  def rehabilitation_labor_cost=(num)
+    self[:rehabilitation_labor_cost] = sanitize_to_int(num)
+  end
+  def rehabilitation_parts_cost=(num)
+    self[:rehabilitation_parts_cost] = sanitize_to_int(num)
   end
   def extended_service_life_months=(num)
     self[:extended_service_life_months] = sanitize_to_int(num)
@@ -123,7 +136,11 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
 
     if policy.parent.present?
       parent_rule = policy.parent.policy_asset_subtype_rules.find_by(asset_subtype: self.asset_subtype)
-      parent_rule.send attr.to_s
+      if parent_rule.present?
+        parent_rule.send attr.to_s
+      else
+        default
+      end
     else
       default
     end
@@ -140,7 +157,8 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
     self.replacement_cost ||= 0
     self.lease_length_months ||= 0
     self.rehabilitation_service_month ||= 0
-    self.rehabilitation_cost ||= 0
+    self.rehabilitation_labor_cost ||= 0
+    self.rehabilitation_parts_cost ||= 0
     self.extended_service_life_months ||= 0
     self.min_used_purchase_service_life_months ||= 0
     self.cost_fy_year ||= current_planning_year_year
