@@ -545,10 +545,17 @@ class Asset < ActiveRecord::Base
       (on_date.year * 12 + on_date.month) - (in_service_date.year * 12 + in_service_date.month)
     end
   end
+  
+  # returns the number of months since the asset was rehabilitated
+  def months_since_rehabilitation(on_date=Date.today)
+    if date_last_rehabilitated.nil?
+      0
+    else
+      (on_date.year * 12 + on_date.month) - (date_last_rehabilitated.year * 12 + date_last_rehabilitated.month)
+    end
+  end
 
-  # returns the number of years since the asset was manufactured. It can't be less than 0
-  # returns in fiscal year
-  # need to rethink as manufacture year is not by fiscal year
+  # returns the number of years since the asset was placed in service.
   def age(on_date=Date.today)
     age_in_years = months_in_service(on_date)/12.0
     [(age_in_years).floor, 0].max

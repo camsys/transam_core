@@ -2,7 +2,7 @@ class ConditionType < ActiveRecord::Base
 
   # All types that are available
   scope :active, -> { where(:active => true) }
- 
+
   def self.max_rating
     order("rating DESC").first.rating
   end
