@@ -60,7 +60,7 @@ module TransamWorkflow
         # Test it
         method_object = obj.method(target_method)
         if method_object.call
-          # poisitive response to keep this state
+          # positive response to keep this state
           a << s
         end
       end
