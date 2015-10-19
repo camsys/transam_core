@@ -93,6 +93,10 @@ class DocumentsController < NestedResourceController
   # Use callbacks to share common setup or constraints between actions.
   def set_document
     @document = Document.find_by(:object_key => params[:id])
+    if @document.nil?
+      redirect_to '/404'
+      return
+    end
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.

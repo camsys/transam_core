@@ -274,6 +274,10 @@ class TasksController < NestedResourceController
   # Callbacks to share common setup or constraints between actions.
   def set_task
     @task = params[:id].nil? ? nil : Task.find_by(:object_key => params[:id])
+    if @task.nil?
+      redirect_to '/404'
+      return
+    end
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.

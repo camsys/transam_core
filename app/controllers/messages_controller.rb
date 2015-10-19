@@ -236,6 +236,10 @@ class MessagesController < OrganizationAwareController
   # Callbacks to share common setup or constraints between actions.
   def set_message
     @message = Message.find_by_object_key(params[:id]) unless params[:id].nil?
+    if @message.nil?
+      redirect_to '/404'
+      return
+    end
   end
 
 end

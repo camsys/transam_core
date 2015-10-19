@@ -339,6 +339,10 @@ class UsersController < OrganizationAwareController
   # Callbacks to share common setup or constraints between actions.
   def set_user
     @user = User.find_by_object_key(params[:id])
+    if @user.nil?
+      redirect_to '/404'
+      return
+    end
   end
 
   def add_user_breadcrumb(page)

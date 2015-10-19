@@ -303,6 +303,11 @@ class PoliciesController < OrganizationAwareController
 
   def get_policy
     @policy = Policy.find_by(:object_key => params[:id]) unless params[:id].nil?
+    if @policy.nil?
+      redirect_to '/404'
+      return
+    end
+
   end
 
 end

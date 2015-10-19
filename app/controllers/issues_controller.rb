@@ -1,5 +1,5 @@
 class IssuesController < OrganizationAwareController
-  
+
   before_action :set_issue, only: [:show, :edit, :update, :destroy, :success]
 
   add_breadcrumb "Home", :root_path
@@ -21,7 +21,7 @@ class IssuesController < OrganizationAwareController
   # GET /issues/new
   def new
     add_breadcrumb "Report an issue"
-    
+
     @issue = Issue.new
   end
 
@@ -33,7 +33,7 @@ class IssuesController < OrganizationAwareController
   def create
     @issue = Issue.new(issue_params)
     @issue.creator = current_user
-    
+
     add_breadcrumb "Report an issue"
 
     if @issue.save
@@ -62,6 +62,10 @@ class IssuesController < OrganizationAwareController
     # Use callbacks to share common setup or constraints between actions.
     def set_issue
       @issue = Issue.find_by_object_key(params[:id]) unless params[:id].nil?
+      if @issue.nil?
+        redirect_to '/404'
+        return
+      end
     end
 
     # Only allow a trusted parameter "white list" through.

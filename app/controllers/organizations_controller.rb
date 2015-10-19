@@ -153,6 +153,9 @@ class OrganizationsController < OrganizationAwareController
     end
     if org
       @org = get_typed_organization(org)
+    else
+      redirect_to '/404'
+      return
     end
   end
 

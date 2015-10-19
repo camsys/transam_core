@@ -132,8 +132,7 @@ class NoticesController < OrganizationAwareController
     # if not found or the object does not belong to the users
     # send them back to index.html.erb
     if @notice.nil?
-      notify_user(:alert, 'Record not found!')
-      redirect_to notices_url
+      redirect_to '/404'
       return
     end
 

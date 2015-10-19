@@ -44,6 +44,10 @@ class ActivityLogsController < OrganizationAwareController
   # Use callbacks to share common setup or constraints between actions.
   def set_activity
     @activity = ActivityLog.find(params[:id]) unless params[:id].nil?
+    if @activity.nil?
+      redirect_to '/404'
+      return
+    end
   end
 
 end

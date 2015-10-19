@@ -113,6 +113,10 @@ class AssetGroupsController < OrganizationAwareController
     # Use callbacks to share common setup or constraints between actions.
     def set_asset_group
       @asset_group = AssetGroup.find_by_object_key(params[:id]) unless params[:id].nil?
+      if @asset_group.nil?
+        redirect_to '/404'
+        return
+      end
     end
 
     # Only allow a trusted parameter "white list" through.
