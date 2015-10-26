@@ -42,7 +42,7 @@ module TransamWorkflow
     end
 
     # Returns the list of states that can precurse an event
-    def self.event_predecessors event
+    def event_predecessors event
       a = []
       # state machine provides a set of can_xxxxx? properties to test if an event
       # can be fired for an object instance in a specific state. Here xxxxx is
