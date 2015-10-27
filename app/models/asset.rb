@@ -545,13 +545,13 @@ class Asset < ActiveRecord::Base
       (on_date.year * 12 + on_date.month) - (in_service_date.year * 12 + in_service_date.month)
     end
   end
-  
+
   # returns the number of months since the asset was rehabilitated
   def months_since_rehabilitation(on_date=Date.today)
-    if date_last_rehabilitated.nil?
+    if last_rehabilitation_date.nil?
       0
     else
-      (on_date.year * 12 + on_date.month) - (date_last_rehabilitated.year * 12 + date_last_rehabilitated.month)
+      (on_date.year * 12 + on_date.month) - (last_rehabilitation_date.year * 12 + last_rehabilitation_date.month)
     end
   end
 
