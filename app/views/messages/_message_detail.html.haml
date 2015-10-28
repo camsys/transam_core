@@ -1,7 +1,7 @@
 :ruby
 	sent ||= false
 
-= link_to user_message_path(current_user, msg), :class => 'list-group-item' do
+= link_to user_message_path(current_user, msg, :filter => filter), :class => 'list-group-item' do
 	%span.fa{:class => get_message_priority_icon(msg)}
 	%span.fa{:class => get_tag_icon(msg)}
 	%span.name{:style => "min-width: 180px;display: inline-block;"}
@@ -11,4 +11,7 @@
 			= msg.user.name
 
 	%span= msg.subject
-	%span.pull-right.text-muted.small= format_as_date_time(msg.created_at)
+	%span.pull-right.text-right.text-muted.small
+		= "Sent: #{format_as_date_time(msg.created_at)}"
+		<br/>
+		= msg.opened_at.present? ? "Opened: #{format_as_date_time(msg.opened_at)}" : "Unopened"

@@ -30,8 +30,10 @@
 					- else
 						= "To: #{@message.to_user.name}"
 
-				%span.pull-right.text-muted.small
-					= format_as_date_time(@message.created_at)
+				%span.pull-right.text-right.text-muted.small
+					= "Sent: #{format_as_date_time(@message.created_at)}"
+					<br/>
+					= @message.opened_at.present? ? "Opened: #{format_as_date_time(@message.opened_at)}" : "Unopened"
 				%hr
 				%span.name{:style => "display: inline-block;"}
 					= @message.body.html_safe
