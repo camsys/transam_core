@@ -1,4 +1,5 @@
 :css
+  .tab-pane .list-group-item {padding-bottom: 15px;}
   .tab-pane .list-group-item:first-child {border-top-right-radius: 0px; border-top-left-radius: 0px; border-top: 0px}
   .tab-pane .list-group-item:last-child {border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;}
   .btn+.btn {margin-left: 10px;}
@@ -7,7 +8,7 @@
   .tab-content {padding: 0px;}
 
 .row
-  .col-lg-10.col-md-10.col-sm-12.col-xs-12.col-lg-offset-1.col-md-offset-1{:style => 'margin-top: 10px;'}
+  .col-lg-8.col-md-10.col-sm-12.col-xs-12.col-lg-offset-2.col-md-offset-1{:style => 'margin-top: 10px;'}
 
     = link_to user_messages_path(current_user), :class => "btn btn-default", :role => 'button' do
       %i.fa.fa-refresh
@@ -18,7 +19,7 @@
       = " Compose"
 
 .row
-  .col-lg-10.col-md-10.col-sm-12.col-xs-12.col-lg-offset-1.col-md-offset-1{:style => 'margin-top: 15px;'}
+  .col-lg-8.col-md-10.col-sm-12.col-xs-12.col-lg-offset-2.col-md-offset-1{:style => 'margin-top: 15px;'}
     %ul.nav.nav-tabs
       %li
         %a{:href => "#new", :data =>{:toggle => 'tab'}}
@@ -51,7 +52,7 @@
             %p No new messages
           - else
             - @new_messages.each do |msg|
-              = render :partial => 'message_detail', :locals => {:msg => msg}
+              = render :partial => 'message_detail', :locals => {:msg => msg, :filter => MessagesController::NEW_MESSAGE_FILTER}
 
       .tab-pane.fade.in#flag
         .list-group
@@ -59,7 +60,7 @@
             %p No flagged messages
           - else
             - @flagged_messages.each do |msg|
-              = render :partial => 'message_detail', :locals => {:msg => msg}
+              = render :partial => 'message_detail', :locals => {:msg => msg, :filter => MessagesController::FLAGGED_MESSAGE_FILTER}
 
       .tab-pane.fade.in#inbox
         .list-group
@@ -67,7 +68,7 @@
             %p No messages
           - else
             - @all_messages.each do |msg|
-              = render :partial => 'message_detail', :locals => {:msg => msg}
+              = render :partial => 'message_detail', :locals => {:msg => msg, :filter => MessagesController::ALL_MESSAGE_FILTER}
 
       .tab-pane.fade.in#sent
         .list-group
@@ -75,7 +76,7 @@
             %p No sent messages
           - else
             - @sent_messages.each do |msg|
-              = render :partial => 'message_detail', :locals => {:msg => msg, :sent => true}
+              = render :partial => 'message_detail', :locals => {:msg => msg, :sent => true, :filter => MessagesController::SENT_MESSAGE_FILTER}
 
 :javascript
 

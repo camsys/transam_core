@@ -3,22 +3,19 @@ class MessagesController < OrganizationAwareController
   add_breadcrumb "Home", :root_path
 
   before_action :set_message, :only => [:show, :edit, :update, :destroy, :tag, :reply]
-  before_filter :check_for_cancel, :only => [:create]
+  before_action :check_for_cancel, :only => [:create]
 
-  # Enumerables for message filters
-  MESSAGE_TYPE_NEW    = 1
-  MESSAGE_TYPE_OLD    = 2
-  MESSAGE_TYPE_SENT   = 3
+  # Session Variables
+  INDEX_KEY_LIST_VAR          = "messages_list_cache_var"
 
-  SESSION_FILTER_TYPE_VAR = 'messages_filter_type'
+  NEW_MESSAGE_FILTER          = '1'
+  FLAGGED_MESSAGE_FILTER      = '2'
+  ALL_MESSAGE_FILTER          = '3'
+  SENT_MESSAGE_FILTER         = '4'
 
   def index
 
     add_breadcrumb "My Messages", user_messages_path(current_user)
-
-    # Get the filter
-    @filter = get_filter_type(SESSION_FILTER_TYPE_VAR)
-    #puts @filter
 
     # Start to set up the query
     conditions  = []
@@ -34,6 +31,12 @@ class MessagesController < OrganizationAwareController
     @new_messages = @messages.where('opened_at IS NULL')
     @flagged_messages = current_user.messages
     @sent_messages = Message.where(:user_id => current_user.id).order("created_at DESC")
+
+    # cache the set of asset ids in case we need them later
+    cache_list(@all_messages, "#{ALL_MESSAGE_FILTER}_#{INDEX_KEY_LIST_VAR}")
+    cache_list(@new_messages, "#{NEW_MESSAGE_FILTER}_#{INDEX_KEY_LIST_VAR}")
+    cache_list(@flagged_messages, "#{FLAGGED_MESSAGE_FILTER}_#{INDEX_KEY_LIST_VAR}")
+    cache_list(@sent_messages, "#{SENT_MESSAGE_FILTER}_#{INDEX_KEY_LIST_VAR}")
 
     respond_to do |format|
       format.html # index.html.erb
@@ -58,14 +61,6 @@ class MessagesController < OrganizationAwareController
 
   def show
 
-    # if not found or the object does not belong to the users
-    # send them back to index.html.erb
-    if @message.nil?
-      notify_user(:alert, 'Record not found!')
-      redirect_to(user_messages_url(current_user))
-      return
-    end
-
     add_breadcrumb "My Messages", user_messages_path(current_user)
     add_breadcrumb @message.subject, user_message_path(current_user, @message)
 
@@ -74,13 +69,16 @@ class MessagesController < OrganizationAwareController
     @response.user = current_user
     @response.priority_type = @message.priority_type
 
-    @page_title = 'Message'
-
     # Mark this message as opened if not opened previously
     if @message.opened_at.nil?
       @message.opened_at = Time.current
       @message.save
     end
+
+    # get the @prev_record_path and @next_record_path view vars
+    get_next_and_prev_object_keys(@message, "#{params[:filter]}_#{INDEX_KEY_LIST_VAR}")
+    @prev_record_path = @prev_record_key.nil? ? "#" : user_message_path(current_user, @prev_record_key, :filter => params[:filter])
+    @next_record_path = @next_record_key.nil? ? "#" : user_message_path(current_user, @next_record_key, :filter => params[:filter])
 
     respond_to do |format|
       format.js # show.html.erb
@@ -90,8 +88,6 @@ class MessagesController < OrganizationAwareController
   end
 
   def new
-
-    @page_title = 'New Message'
 
     add_breadcrumb "My Messages", user_messages_path(current_user)
     add_breadcrumb "New"
@@ -203,18 +199,6 @@ class MessagesController < OrganizationAwareController
   #
   #------------------------------------------------------------------------------
   private
-
-  # returns the filter type for the current controller and sets the session variable
-  # to store any change in fitler type for the controller
-  def get_filter_type(session_var)
-    filter_type = params[:filter].nil? ? session[session_var].to_i : params[:filter].to_i
-    if filter_type.nil?
-      filter_type = MESSAGE_TYPE_NEW
-    end
-    # remember the view type in the session
-    session[session_var] = filter_type
-    return filter_type
-  end
 
   def check_for_cancel
     unless params[:cancel].blank?
