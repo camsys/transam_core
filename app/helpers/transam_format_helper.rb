@@ -190,6 +190,11 @@ module TransamFormatHelper
     end
   end
 
+  # Formats a date as a day date eg Mon 24 Oct
+  def format_as_day_date(date)
+    date.strftime("%a %d %b") unless date.nil?
+  end
+
   # formats a date/time as a distance in words. e.g. 6 days ago
   def format_as_date_time_distance(datetime)
     dist = distance_of_time_in_words_to_now(datetime)
