@@ -47,6 +47,16 @@ FactoryGirl.define do
         u.add_role :admin
       end
     end
+
+    factory :technical_contact do
+      first_name "tom"
+      last_name  "technical"
+      sequence(:email) {|n| "tom#{n}@example.com"}
+
+      after(:create) do |u|
+        u.add_role :technical_contact
+      end
+    end
   end
 
 end
