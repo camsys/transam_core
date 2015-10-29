@@ -49,7 +49,6 @@ RSpec.describe MessagesController, :type => :controller do
     get :show, {:user_id => subject.current_user.object_key, :id => test_msg.object_key}
 
     expect(assigns(:message)).to eq(test_msg)
-    expect(assigns(:page_title)).to eq('Message')
     expect(assigns(:response).to_json).to eq(Message.new(:organization => assigns(:organization), :user => subject.current_user, :priority_type => assigns(:message).priority_type).to_json)
     expect(assigns(:message).opened_at.strftime('%m/%d/%Y')).to eq(Time.current.strftime('%m/%d/%Y'))
   end
@@ -58,7 +57,6 @@ RSpec.describe MessagesController, :type => :controller do
     receiver = create(:normal_user)
     get :new, {:user_id => subject.current_user.object_key, :to_user => receiver.object_key, :subject => 'Test Subject', :body => 'Test Body'}
 
-    expect(assigns(:page_title)).to eq('New Message')
     expect(assigns(:message_proxy).priority_type_id).to eq(PriorityType.default.id)
     expect(assigns(:message_proxy).to_user_ids).to include(receiver.id)
     expect(assigns(:message_proxy).available_agencies).to eq((assigns(:organization_list)+subject.current_user.organization_ids).uniq)
