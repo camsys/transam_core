@@ -4,7 +4,6 @@ rvm:
 branches:
   only:
   - master
-  - fix_travis
 env:
 - TEST_SUITE=rspec RAILS_VERSION=4.1.9
 - TEST_SUITE=cucumber RAILS_VERSION=4.1.9
