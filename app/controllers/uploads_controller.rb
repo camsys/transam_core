@@ -182,7 +182,8 @@ class UploadsController < OrganizationAwareController
       if template_proxy.organization_id.blank?
         org = @organization
       else
-        org = Organization.find(template_proxy.organization_id)
+        o = Organization.find(template_proxy.organization_id)
+        org = Organization.get_typed_organization(o)
       end
 
       # The form defines the FileContentType which identifies the builder to use
@@ -199,7 +200,7 @@ class UploadsController < OrganizationAwareController
       end
       if params[:asset_group]
         asset_group = AssetGroup.find_by_object_key(params[:asset_group])
-        org = asset_group.organization
+        org = Organization.get_typed_organization(asset_group.organization)
         if asset_group.homogeneous?
           asset_types = [AssetType.find(asset_group.asset_type_ids.first)]
         end
