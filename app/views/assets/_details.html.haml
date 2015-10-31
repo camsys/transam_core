@@ -1,8 +1,10 @@
 %ul.nav.nav-tabs.responsive-tabs
   - # Load module specific tabs if they exist
   - SystemConfig.transam_module_names.each do |mod|
-    - if lookup_context.template_exists?("#{mod}_detail_tabs", 'assets', true)
-      = render :partial => "assets/#{mod}_detail_tabs"
+    - view_component = "#{mod}_detail_tabs"
+    - Rails.logger.debug "Checking for #{view_component}: Results = #{lookup_context.template_exists?(view_component, 'assets', true)}"
+    - if lookup_context.template_exists?(view_component, 'assets', true)
+      = render :partial => "assets/#{view_component}"
 
 .tab-content
   - # Load module specific tab content if they exist
@@ -16,5 +18,7 @@
 
 - # Load module specific tab if they exist
 - SystemConfig.transam_module_names.each do |mod|
-  - if lookup_context.template_exists?("#{mod}_detail_tabs_scripts", 'assets', true)
-    = render :partial => "assets/#{mod}_detail_tabs_scripts"
+  - view_component = "#{mod}_detail_tabs_scripts"
+  - Rails.logger.debug "Checking for #{view_component}: Results = #{lookup_context.template_exists?(view_component, 'assets', true)}"
+  - if lookup_context.template_exists?(view_component, 'assets', true)
+    = render :partial => "assets/#{view_component}"

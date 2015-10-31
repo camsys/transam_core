@@ -94,6 +94,11 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
   #
   #-----------------------------------------------------------------------------
 
+  # Returns the total rehabilitation cost for the asset type
+  def total_rehabilitation_cost
+    rehabilitation_labor_cost.to_i + rehabilitation_parts_cost.to_i
+  end
+
   def to_s
     "#{asset_subtype.asset_type}: #{asset_subtype}"
   end
