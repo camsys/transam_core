@@ -60,8 +60,7 @@
   // Document Ready
   $(document).ready(function(){
     $('[data-behavior~=datepicker]').datepicker({
-      format: "mm/dd/yyyy"
-    }).attr( 'readOnly' , 'true' );
+    });
     $('#vendor_name').on('focus', function() {
       _typeahead_source_url = $(this).data('url');
     });

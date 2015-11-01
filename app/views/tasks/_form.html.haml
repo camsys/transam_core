@@ -13,7 +13,7 @@
       = f.association :assigned_to_user, :collection => current_user.organizations, :as => :grouped_select, :group_method => :users, :label => "Assigned To"
     .col-md-3
       = f.input :complete_by, :wrapper => :vertical_append, :label => "Complete By" do
-        = f.input_field :complete_by, :as => :string, :class => 'datepicker form-control', :data => {'behavior' => 'datepicker'}, :value => f.object.complete_by.nil? ? "" : format_as_date(f.object.complete_by)
+        = f.input_field :complete_by, :as => :string, :class => 'datepicker form-control', :data => {'behavior' => 'datepicker'}, :value => format_as_date(f.object.complete_by)
         %span.input-group-addon
           %i.fa.fa-calendar
     .col-md-3
@@ -28,6 +28,5 @@
 :javascript
   $(document).ready(function(){
     $('[data-behavior~=datepicker]').datepicker({
-      format: "mm/dd/yyyy"
-    }).attr( 'readOnly' , 'true' );
+    });
   });
