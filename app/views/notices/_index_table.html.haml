@@ -32,7 +32,7 @@
       %tr{:id => notice.object_key, :class => 'action-path'}
         %td.left= notice.object_key
         %td.left= notice.notice_type
-        %td.left= notice.subject
+        %td.left= link_to notice.subject, notice_path(notice)
         %td.left= notice.summary.html_safe
         %td.center= format_as_boolean(notice.visible?)
         %td.right= format_as_date_time(notice.display_datetime)
@@ -53,5 +53,3 @@
             - if can? :destroy, notice
               = link_to notice_path(notice), :title => "Remove this notice", :method => :delete, :data => {:confirm => "Are you sure you want to remove this notice? The action can't be undone."} do
                 %i.fa.fa-fw.fa-trash-o.action-icon.text-danger
-
-= render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :path_pattern => notice_path("xxx")}

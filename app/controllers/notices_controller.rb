@@ -14,7 +14,7 @@ class NoticesController < OrganizationAwareController
   def index
 
     if current_user.has_role? :admin
-      @notices = Notice.active.order(:display_datetime)
+      @notices = Notice.all.order(:display_datetime)
     else
       @notices = Notice.visible.order(:display_datetime)
     end
