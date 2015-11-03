@@ -1,0 +1,10 @@
+= render :layout => "update_event_form" do |f|
+
+  = f.input :maintenance_type_id, :collection => MaintenanceType.active, :label => "Maintenance type performed". :include_blank => false
+  = f.input :event_date, :label => 'Date of Report', :wrapper => :vertical_append do
+    = f.input_field :event_date, :class => "form-control", :as => :string, :data => {'behavior' => 'datepicker'}, :value => format_as_date(f.object.event_date)
+    %span.input-group-addon
+      %i.fa.fa-calendar
+  = f.input :comments, :input_html => { :rows => 6 }, :placeholder => "Enter any additional comments..."
+  .form-group
+    = f.button :submit, "Record maintenance", :class => 'btn btn-primary'

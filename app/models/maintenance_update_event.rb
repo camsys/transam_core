@@ -1,0 +1,66 @@
+#
+# Maintenance update event.
+
+# This event is placed in core but Asset does not include it by default allowing
+# concrete implementations use it as needed in individual asset classes
+#
+class MaintenanceUpdateEvent < AssetEvent
+
+  # Callbacks
+  after_initialize :set_defaults
+
+  # Associations
+
+  # Condition of the asset
+  belongs_to  :maintenance_type
+
+  validates :maintenance_type, :presence => true
+
+  #------------------------------------------------------------------------------
+  # Scopes
+  #------------------------------------------------------------------------------
+
+  # set the default scope
+  default_scope { where(:asset_event_type => asset_event_type).order(:event_date, :created_at) }
+
+  # List of hash parameters allowed by the controller
+  FORM_PARAMS = [
+    :maintenance_type_id
+  ]
+
+  #------------------------------------------------------------------------------
+  #
+  # Class Methods
+  #
+  #------------------------------------------------------------------------------
+
+  def self.allowable_params
+    FORM_PARAMS
+  end
+
+  #returns the asset event type for this type of event
+  def self.asset_event_type
+    AssetEventType.find_by_class_name(self.name)
+  end
+
+  #------------------------------------------------------------------------------
+  #
+  # Instance Methods
+  #
+  #------------------------------------------------------------------------------
+
+  # This must be overriden otherwise a stack error will occur
+  def get_update
+    "#{maintenance_type} at #{current_mileage}" unless maintenance_type.nil?
+  end
+
+  protected
+
+  # Set resonable defaults for a new condition update event
+  # Should be overridden by any form fields during save
+  def set_defaults
+    super
+    self.asset_event_type ||= AssetEventType.find_by_class_name(self.name)
+  end
+
+end
