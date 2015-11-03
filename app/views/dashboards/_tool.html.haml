@@ -1,2 +1,5 @@
-= link_to action_path, :title => title do
+:ruby
+  target ||= ''
+
+= link_to action_path, :title => title, :target => target do
   %i.fa.fa-2x{:class => icon, :style => 'border: 2px solid; width: 1.9em; border-radius: 50%; padding: 10px; text-align: center;'}
