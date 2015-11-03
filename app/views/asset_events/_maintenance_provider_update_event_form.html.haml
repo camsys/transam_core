@@ -1,5 +1,5 @@
 = render :layout => "update_event_form" do |f|
-  = f.association :maintenance_provider_type, :label => "Maintenance Provider Type"
+  = f.input :maintenance_provider_type_id, :collection => MaintenanceProviderType.active, :label => "Maintenance Provider Type", :include_blank => false
   = f.input :event_date, :label => 'Date of Report', :wrapper => :vertical_append do
     = f.input_field :event_date, :as => :string, :class => 'form-control datepicker', :data => {'behavior' => 'datepicker'}, :value => format_as_date(f.object.event_date)
     %span.input-group-addon
