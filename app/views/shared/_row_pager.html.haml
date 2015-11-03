@@ -1,14 +1,17 @@
-.breadcrumb.clearfix{:style => "padding:3.5px 15px;"}
-  - if @next_record_path == "#"
-    %i.fa.fa-chevron-circle-right.text-muted.fa-2x.navbar-right
-  - else
-    = link_to @next_record_path, :title => 'Next record', :remote => @row_pager_remote.nil? ? false : @row_pager_remote  do
-      %i.fa.fa-chevron-circle-right.fa-2x.navbar-right
+%ol.breadcrumb.row-pager
+  %li
+    - if @prev_record_path == "#"
+      %i.fa.fa-chevron-circle-left.text-muted.text-left
+    - else
+      = link_to @prev_record_path, :title => 'Previous record', :remote => @row_pager_remote.nil? ? false : @row_pager_remote  do
+        %i.fa.fa-chevron-circle-left.text-left
 
-  %span.navbar-right{:style => 'padding: 5px 10px;'} #{@row_number} of #{@total_rows}
+  %li.active
+    = "<small>#{@row_number} of #{@total_rows}</small>".html_safe
 
-  - if @prev_record_path == "#"
-    %i.fa.fa-chevron-circle-left.text-muted.fa-2x.navbar-right
-  - else
-    = link_to @prev_record_path, :title => 'Previous record', :remote => @row_pager_remote.nil? ? false : @row_pager_remote  do
-      %i.fa.fa-chevron-circle-left.fa-2x.navbar-right
+  %li
+    - if @next_record_path == "#"
+      %i.fa.fa-chevron-circle-right.text-muted.text-right
+    - else
+      = link_to @next_record_path, :title => 'Next record', :remote => @row_pager_remote.nil? ? false : @row_pager_remote  do
+        %i.fa.fa-chevron-circle-right.text-right
