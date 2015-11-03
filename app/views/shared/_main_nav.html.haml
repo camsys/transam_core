@@ -5,10 +5,16 @@
 
   -# render the engine main nav components if there are any
   - SystemConfig.transam_module_names.each do |mod|
-    = render :partial => "shared/#{mod}_main_nav" rescue nil
+    - view_component = "#{mod}_main_nav"
+    - Rails.logger.debug "Checking for #{view_component}: Results = #{lookup_context.template_exists?(view_component, 'shared', true)}"
+    - if lookup_context.template_exists?(view_component, 'shared', true)
+      = render :partial => "shared/#{view_component}"
 
   -# render the application main nav components if there are any
-  = render :partial => 'shared/app_main_nav' rescue nil
+  - view_component = "app_main_nav"
+  - Rails.logger.debug "Checking for #{view_component}: Results = #{lookup_context.template_exists?(view_component, 'shared', true)}"
+  - if lookup_context.template_exists?(view_component, 'shared', true)
+    = render :partial => "shared/#{view_component}"
 
   = render 'shared/policy_nav'
   = render 'shared/forms_nav'
