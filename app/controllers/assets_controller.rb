@@ -216,7 +216,7 @@ class AssetsController < AssetAwareController
 
     @page_title = 'New Asset'
     # Get the asset types for the filter dropdown
-    @asset_types = AssetType.all
+    @asset_types = AssetType.active
 
   end
 

@@ -1,7 +1,7 @@
 = render :layout => "search_panel" do |f|
   %fieldset
     %legend.panel-legend Organization
-    .col-md-6        
-      = f.input :organization_type_id, :collection => OrganizationType.all, :include_blank => "Any...", :label => "Organization Type"
+    .col-md-6
+      = f.input :organization_type_id, :collection => OrganizationType.active, :include_blank => "Any...", :label => "Organization Type"
     .col-md-6
       = f.input :keywords, :label => "Keywords"

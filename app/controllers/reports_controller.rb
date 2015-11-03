@@ -47,7 +47,7 @@ class ReportsController < OrganizationAwareController
 
     @report_filter_type = params[:report_filter_type]
     @asset_types = []
-    AssetType.all.each do |at|
+    AssetType.active.each do |at|
       count = Asset.where('assets.organization_id IN (?) AND assets.asset_type_id = ?', @organization_list, at.id).count
       if count > 0
         @asset_types << [at.name, at.id]
