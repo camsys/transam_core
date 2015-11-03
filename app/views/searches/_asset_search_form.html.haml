@@ -5,8 +5,8 @@
         %legend.panel-legend Asset
         = f.input :organization_id, :collection => Organization.where(id: @organization_list), :label_method => 'coded_name' unless @organization_list.count < 2
         = f.input :keyword, :placeholder => "Enter A Query Term"
-        = f.input :asset_type_id, :collection => AssetType.all, input_html: { multiple: true }, :label => "Type"
-        = f.input :asset_subtype_id, :collection => AssetSubtype.all, :label => "Subtype", input_html: { multiple: true }
+        = f.input :asset_type_id, :collection => AssetType.active, input_html: { multiple: true }, :label => "Type"
+        = f.input :asset_subtype_id, :collection => AssetSubtype.active, :label => "Subtype", input_html: { multiple: true }
         = f.input :disposition_date, :collection => get_fiscal_years
         = f.input :in_backlog, :as => :boolean, :label => "In Backlog"
     .col-lg-3.col-md-6
@@ -87,6 +87,6 @@
                 %a{:data => {:compare => "1"}} After
             = f.input_field :policy_replacement_year_comparator, :as => :hidden, :value => '0'
           = f.input_field :policy_replacement_year, :collection => get_fiscal_years, :class => "form-control"
-        = f.input :estimated_condition_type_id, :label => "Estimated Condition Type", :collection => ConditionType.all, input_html: { multiple: true }
-        = f.input :reported_condition_type_id, :label => "Reported Condition Type", :collection => ConditionType.all, input_html: { multiple: true }
-        = f.input :service_status_type_id, :label => "Service Status", :collection => ServiceStatusType.all, input_html: { multiple: true }
+        = f.input :estimated_condition_type_id, :label => "Estimated Condition Type", :collection => ConditionType.active, input_html: { multiple: true }
+        = f.input :reported_condition_type_id, :label => "Reported Condition Type", :collection => ConditionType.active, input_html: { multiple: true }
+        = f.input :service_status_type_id, :label => "Service Status", :collection => ServiceStatusType.active, input_html: { multiple: true }

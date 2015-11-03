@@ -7,7 +7,7 @@
 
     <%= f.input :file_content_type_id, :collection => FileContentType.active, :include_blank => false, :label => "File Content Type" %>
     <%# Only make available the AssetTypes handled in StatusUpdateFileHandler AND DispositionUpdateFileHandler %>
-     <%= f.input :asset_types, :collection => AssetType.all, :label => "Asset Type", :include_blank => false %>
+     <%= f.input :asset_types, :collection => AssetType.active, :label => "Asset Type", :include_blank => false %>
     <div class='col-sm-offset-3 class-sm-9'>
       <%= f.button :submit, 'Download Template', :class => 'btn btn-primary' %>
     </div>
