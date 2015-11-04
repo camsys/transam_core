@@ -1,25 +1,23 @@
 <script type="text/javascript">
-  
+
   var user_tab_key = 'org_tab_key';
-  
+
   $(document).ready(function() {
 
-    transam.make_same_height('.header-part');
-    
     var previous_tab = transam.get_ui_key_value(user_tab_key);
     if (previous_tab) {
       $('a[href='+previous_tab+']').tab('show');
     } else {
       // Default to the first tab if no tab is stored
       $('a[data-toggle="tab"]:first').tab('show');
-    }   
+    }
 
     // Register event handlers on tabs
     $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
       // save the latest tab
       var this_tab = $(this).attr('href');
       transam.set_ui_key_value(user_tab_key, this_tab);
-    });    
-  }); 
-  
+    });
+  });
+
 </script>

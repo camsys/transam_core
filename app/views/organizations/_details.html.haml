@@ -1,15 +1,24 @@
 %ul.nav.nav-tabs
   - # Load module specific tabs if they exist
   - SystemConfig.transam_module_names.each do |mod|
-    = render :partial => "organizations/#{mod}_detail_tabs" rescue nil
+    - view_component = "#{mod}_detail_tabs"
+    - Rails.logger.debug "Checking for #{view_component}: Results = #{lookup_context.template_exists?(view_component, 'organizations', true)}"
+    - if lookup_context.template_exists?(view_component, 'organizations', true)
+      = render :partial => "organizations/#{view_component}"
 
 .tab-content
   - # Load module specific tab content if they exist
   - SystemConfig.transam_module_names.each do |mod|
-    = render :partial => "organizations/#{mod}_detail_tabs_content" rescue nil
+    - view_component = "#{mod}_detail_tabs_content"
+    - Rails.logger.debug "Checking for #{view_component}: Results = #{lookup_context.template_exists?(view_component, 'organizations', true)}"
+    - if lookup_context.template_exists?(view_component, 'organizations', true)
+      = render :partial => "organizations/#{view_component}"
 
 = render 'detail_scripts'
 
 - # Load module specific tab if they exist
 - SystemConfig.transam_module_names.each do |mod|
-  = render :partial => "organizations/#{mod}_detail_tabs_scripts" rescue nil
+  - view_component = "#{mod}_detail_tabs_scripts"
+  - Rails.logger.debug "Checking for #{view_component}: Results = #{lookup_context.template_exists?(view_component, 'organizations', true)}"
+  - if lookup_context.template_exists?(view_component, 'organizations', true)
+    = render :partial => "organizations/#{view_component}"

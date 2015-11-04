@@ -1,25 +1,16 @@
 .row
-  .col-md-3
-    .panel.panel-default.header-part
+  .col-sm-12.col-lg-3
+    .panel.panel-default
       .panel-heading
         .row
-          .col-md-6
+          .col-sm-10
             %h3.panel-title
-              %i.fa.fa-list
-              Organization
-          .col-md-6
+              %i.fa.fa-building
+              = @org.name
+          .col-sm-2
             = render 'actions'
-      .panel-body    
-        = render :partial => 'summary', :locals => {:org => @org} 
-        
-  .col-md-9
-    .panel.panel-default.header-part
-      .panel-heading
-        .row
-          .col-md-12
-            %h3.panel-title
-              %i.fa.fa-folder-open
-              Details
-                
       .panel-body
-        = render 'details'
+        = render :partial => 'summary', :locals => {:org => @org}
+
+  .col-sm-12.col-lg-9
+    = render 'details'
