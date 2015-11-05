@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe NoticesController, :type => :controller do
-  include Devise::TestHelpers
 
   class TestOrg < Organization
     def get_policy

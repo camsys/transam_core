@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe AssetsController, :type => :controller do
-  include Devise::TestHelpers
 
   before(:each) do
     User.destroy_all
