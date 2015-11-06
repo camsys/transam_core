@@ -18,7 +18,7 @@ RSpec.describe StraightLineEstimationCalculator, :type => :calculator do
 
   before(:each) do
     @test_asset = create(:buslike_asset, :organization => @organization, :asset_type => @asset_subtype.asset_type, :asset_subtype => @asset_subtype)
-    @condition_update_event = @test_asset.condition_updates.create(attributes_for(:test_condition_update_event))
+    @condition_update_event = @test_asset.condition_updates.create(attributes_for(:condition_update_event))
     create(:policy_asset_type_rule, :policy => @policy, :asset_type => @test_asset.asset_type)
     create(:policy_asset_subtype_rule, :policy => @policy, :asset_subtype => @test_asset.asset_subtype)
   end

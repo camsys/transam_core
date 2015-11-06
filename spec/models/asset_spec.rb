@@ -124,8 +124,8 @@ RSpec.describe Asset, :type => :model do
 
       event = AssetEvent.as_typed_event persisted_buslike_asset.history.first
       expect(event.condition_type.name).to eq("Adequate")
-      expect(event.assessed_rating).to eq(3)
-      expect(event.current_mileage).to eq(25000)
+      expect(event.assessed_rating).to eq(2)
+      expect(event.current_mileage).to eq(300000)
     end
 
     it 'nullifies disposition fields if disposition update is deleted' do

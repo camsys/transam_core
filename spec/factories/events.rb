@@ -1,5 +1,5 @@
 FactoryGirl.define do
-    
+
   trait :basic_event_traits do
     association :asset, :factory => :bus
   end
@@ -17,12 +17,12 @@ FactoryGirl.define do
     basic_event_traits
     asset_event_type_id { ConditionUpdateEvent.asset_event_type.id }
     condition_type_id { ConditionType.find_by(:name => "Adequate").id }
-    assessed_rating 3
-    event_date "2014-01-01 12:00:00"
-    current_mileage 25000
+    assessed_rating 2.0
+    event_date Date.today
+    current_mileage 300000
   end
 
-  factory :disposition_update_event do 
+  factory :disposition_update_event do
     basic_event_traits
     asset_event_type_id { DispositionUpdateEvent.asset_event_type.id }
     disposition_type_id 2
@@ -60,5 +60,10 @@ FactoryGirl.define do
     basic_event_traits
     asset_event_type_id 11
     # Note that this can have either a replacement or a rebuild year, but it needs at least one
+  end
+
+  factory :rehabilitation_update_event do
+    basic_event_traits
+    event_date Date.today
   end
 end
