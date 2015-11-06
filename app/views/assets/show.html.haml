@@ -1,36 +1,16 @@
 .row
-  .col-md-3
-    .panel.panel-default.header-part
+  .col-sm-12.col-lg-3
+    .panel.panel-default
       .panel-heading
         .row
-          .col-md-6
+          .col-sm-6
             %h3.panel-title
               %i.fa{:class => get_tag_icon(@asset), :data => {:id => @asset.object_key}}
-              = Asset
-          .col-md-6
+              = @asset
+          .col-sm-6
             = render 'actions'
       .panel-body
-        = render 'summary'
+        = render :partial => 'summary', :locals => {:project => @project}
 
-  .col-md-9
-    .panel.panel-default.header-part
-      .panel-heading
-        .row
-          .col-md-12
-            %span.pull-right.text-muted
-              %h3.panel-title= @asset.object_key
-            %h3.panel-title
-              %i.fa.fa-folder-open
-              Details
-
-      .panel-body
-        = render 'details'
-
-:javascript
-
-  $(document).ready(function() {
-    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-      transam.make_same_height('.header-part');
-    });
-    transam.make_same_height('.header-part');
-  });
+  .col-sm-12.col-lg-9
+    = render 'details'

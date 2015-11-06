@@ -22,31 +22,31 @@ var transam = new function() {
 		$(class_name).popover({
 			trigger: 'hover',
 			container: 'body',
-    		animation: 'true',
-    		html: 'true'
+    	animation: 'true',
+    	html: 'true'
 		});
 	};
 
 	// Activate server side processing of info popups
 	this.activate_info_popups = function(class_name) {
 		$(class_name).bind({
-	    	mouseenter: function() {
-	        	var el=$(this);
-	        		$.ajax({
-	          			type: "GET",
-	          			url: el.attr("data-url"),
-	          			dataType: "html",
-	          			success: function(data) {
-					    			$(".popover").popover("hide");
-	            			el.attr("data-content", data);
-	            			el.popover('show');
-	          			}
-	        		});
-	   		},
-	      	mouseleave: function() {
-	        	var el=$(this);
-	        	el.popover('hide');
-	   		}
+    	mouseenter: function() {
+      	var el=$(this);
+    		$.ajax({
+    			type: "GET",
+    			url: el.attr("data-url"),
+    			dataType: "html",
+    			success: function(data) {
+	    			$(".popover").popover("hide");
+      			el.attr("data-content", data);
+      			el.popover('show');
+    			}
+				});
+			},
+	  	mouseleave: function() {
+	    	var el=$(this);
+	      el.popover('hide');
+	   	}
 		});
 	};
 
