@@ -48,9 +48,8 @@ class OrganizationsController < OrganizationAwareController
 
   def show
 
-    if @org.nil?
-      notify_user(:alert, "Record not found.")
-      redirect_to organizations_url
+    if cannot? :read, @org
+      redirect_to '/403'
       return
     end
 
@@ -149,9 +148,9 @@ class OrganizationsController < OrganizationAwareController
     if params[:id].nil?
       org = current_user.organization
     else
-      org = current_user.organizations.find_by_short_name(params[:id])
+      org = Organization.find_by(:short_name => params[:id])
     end
-    if org
+    if org.present?
       @org = get_typed_organization(org)
     else
       redirect_to '/404'
