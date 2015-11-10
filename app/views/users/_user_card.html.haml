@@ -1,10 +1,10 @@
 .well.well-sm#user_card
   .row
-    .col-md-4.text-center
-      -if user.images.length != 0
+    .col-xs-4.text-center
+      - if user.images.length != 0
         = image_tag user.images.first.image.url(:thumb), alt: user.name, class: "img-circle img-responsive"
-      -else
+      - else
         %i.fa.fa-user.fa-7x
-    .col-md-8
+    .col-xs-8.text-center
       %h4= user.name
       %p= user.title

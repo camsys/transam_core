@@ -1,19 +1,18 @@
 .row
-  .col-md-3
-    .panel.panel-default.header-part
+  .col-sm-12.col-lg-3
+    .panel.panel-default
       .panel-heading
         .row
-          .col-md-6
+          .col-sm-10
             %h3.panel-title
               %i.fa.fa-user
-              = "User Info"
-          .col-md-6
+              = @user
+          .col-sm-2
             = render 'actions'
       .panel-body
-        = render partial: "user_details", locals: {user: @user}
+        = render :partial => 'user_details', :locals => {:user => @user}
 
-
-  .col-md-9
+  .col-sm-12.col-lg-9
     = render 'details'
 
 = render 'scripts'
