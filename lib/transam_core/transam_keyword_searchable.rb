@@ -1,4 +1,4 @@
-#------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 #
 # Transam Keyword Searchable
 #
@@ -11,60 +11,65 @@
 # schema wether to allow null organization_id values or not. Each object must
 # also return an Object Key.
 #
-#------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 module TransamKeywordSearchable
   extend ActiveSupport::Concern
 
   included do
 
+    # Run a check before saving to see if any of the search properties are changed
+    before_save     :check_for_changes
+
     # Always re-index the object after a save event
-    after_save :update_index
+    after_save      :update_index
 
     # Always remove the object from the index before it is destroyed
-    before_destroy :remove_index
+    before_destroy  :remove_index
+
+    # Set a local instance variable to determine if the index needs to be updated
+    attr_accessor   :is_dirty
 
   end
 
-  #------------------------------------------------------------------------------
-  #
+  #-----------------------------------------------------------------------------
   # Class Methods
-  #
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
 
   # Returns a collection of classes that implement TransamKeywordSearchable
   def self.implementors
     ObjectSpace.each_object(Class).select { |klass| klass < TransamKeywordSearchable }
   end
 
-  #------------------------------------------------------------------------------
-  #
+  #-----------------------------------------------------------------------------
   # Instance Methods
-  #
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
 
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   # Removes the existing object from the index
+  #-----------------------------------------------------------------------------
   def remove_from_index
     kwsi = KeywordSearchIndex.find_by(object_key: object_key)
     if kwsi.present?
       kwsi.destroy
     end
   end
-  #------------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   # Writes the existing object to the index
+  #-----------------------------------------------------------------------------
   def write_to_index
 
-    text_blob = ""
+    # Create a blob of unique search keys for this instance
+    a = []
     separator = " "
     searchable_fields.each { |searchable_field|
-      text_blob += self.send(searchable_field).to_s
-      text_blob += separator
+      a << self.send(searchable_field).to_s
     }
+    text = a.uniq.compact.join(' ')
 
     kwsi = KeywordSearchIndex.find_or_create_by(object_key: object_key) do |keyword_search_index|
-      keyword_search_index.organization = self.organization
+      keyword_search_index.organization_id = self.respond_to? :organization_id ? self.organization_id : 0
       keyword_search_index.context = self.class.name
-      keyword_search_index.search_text = text_blob
+      keyword_search_index.search_text = text
       if self.is_a?(Asset)
         keyword_search_index.object_class = "Asset"
       else
@@ -84,12 +89,25 @@ module TransamKeywordSearchable
     save_with_exception_handler kwsi
 
   end
-  #------------------------------------------------------------------------------
-  #
-  # Instance Methods
-  #
-  #------------------------------------------------------------------------------
+
+
+  #-----------------------------------------------------------------------------
+  # Protected Methods
+  #-----------------------------------------------------------------------------
   protected
+
+  # Checks the pre-saved instance for changes and sets the dirty flag is any
+  # changes are detected
+  def check_for_changes
+    self.is_dirty = false
+    searchable_fields.each do |searchable_field|
+      if self.changes.include? searchable_field.to_s
+        self.is_dirty = true
+        break
+      end
+    end
+    self.is_dirty
+  end
 
   # Wrap the save method in an exception handler so that any schema-level problems
   # bubble up and can be caught without terminating the current transaction
@@ -101,6 +119,7 @@ module TransamKeywordSearchable
     end
   end
 
+
   # Creates a job to remove the object from the index. This is done in the background so the
   # current transaction does not get blocked. Default priority is 10
   def remove_index
@@ -111,8 +130,11 @@ module TransamKeywordSearchable
   # Creates a job to udpate the index. This is done in the background so the
   # current transaction does not get blocked. Default priority is 10
   def update_index
-    job = KeywordIndexUpdateJob.new(self.class.name, object_key)
-    Delayed::Job.enqueue job, :priority => 10
+    if self.is_dirty
+      job = KeywordIndexUpdateJob.new(self.class.name, object_key)
+      Delayed::Job.enqueue job, :priority => 10
+      self.is_dirty = false
+    end
   end
 
 end
