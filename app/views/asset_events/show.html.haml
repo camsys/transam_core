@@ -9,9 +9,9 @@
               Asset
           .col-md-6
             = render 'actions'
-      .panel-body    
-        = render 'assets/summary'
-        
+      .panel-body
+        = render :partial => 'assets/summary', :locals => {:asset => @asset}
+
   .col-md-8
     = dialog_tag(@asset_event.asset_event_type.name, {:icon => "#{@asset_event.asset_event_type.display_icon_name}", :class => "header-part"}) do
       = render "#{@asset_event.class.name.underscore}_view"
