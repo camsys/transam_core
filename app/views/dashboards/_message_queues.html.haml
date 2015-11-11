@@ -22,7 +22,7 @@
 
       .tab-content{:style => 'min-height: 200px'}
         .tab-pane.fade{:id => "new"}
-          = render :partial => 'message_queue', :locals => {:name => "New Messages", :messages => new_messages}
+          = render :partial => 'message_queue', :locals => {:name => "New Messages", :messages => new_messages, :filter => MessagesController::NEW_MESSAGE_FILTER}
 
         .tab-pane.fade{:id => "flag"}
-          = render :partial => 'message_queue', :locals => {:name => "Inbox", :messages => flagged_messages}
+          = render :partial => 'message_queue', :locals => {:name => "Inbox", :messages => flagged_messages, :filter => MessagesController::FLAGGED_MESSAGE_FILTER} 

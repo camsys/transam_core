@@ -5,4 +5,4 @@
   - else
     %ul.list-group
       - messages.each do |msg|
-        = render :partial => 'messages/message_detail_compact', :locals => {:msg => msg}
+        = render :partial => 'messages/message_detail', :locals => {:msg => msg, :filter => filter}
