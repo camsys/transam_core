@@ -1,8 +1,0 @@
-= link_to user_message_path(current_user, message), :class => 'list-group-item' do
-  -if message.user.images.length != 0
-    = image_tag message.user.images.first.image.url(:thumb), alt: message.user.name, class: "pull-left media-object img-circle img-responsive"
-  -else
-    %i.fa.fa-user.fa-2x.pull-left.media-object
-  .media-body
-    %h4.media-heading= message.user.name
-    %p= message.subject.html_safe
