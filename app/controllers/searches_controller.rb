@@ -73,7 +73,7 @@ class SearchesController < OrganizationAwareController
       values = []
       # The organization is scoped to search across all objects that are owned by
       # the user's list of organizations
-      orgs = @organization_list
+      orgs = @organization_list.dup
       # add org = 0 to get objects that are not indexed by org and are by
       # contract available to users of all organizations
       orgs << 0
