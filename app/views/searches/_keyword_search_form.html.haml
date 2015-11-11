@@ -1,0 +1,8 @@
+= form_tag keyword_searches_path, :id => 'search_form', :class => '', :role => 'search' do
+  .form-group
+    %label.sr-only{:for => 'search-text'}
+    .input-group
+      = text_field_tag :search_text, nil, :value => @search_text, :class => 'form-control input-lg', :placeholder => 'Search for...', :id => 'search_text'
+      .input-group-btn
+        = button_tag :type => 'submit', :class => 'btn btn-primary btn-lg' do
+          %i.fa.fa-search

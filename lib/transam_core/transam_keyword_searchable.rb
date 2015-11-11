@@ -67,7 +67,7 @@ module TransamKeywordSearchable
     text = a.uniq.compact.join(' ')
 
     kwsi = KeywordSearchIndex.find_or_create_by(object_key: object_key) do |keyword_search_index|
-      keyword_search_index.organization_id = self.respond_to? :organization_id ? self.organization_id : 0
+      keyword_search_index.organization_id = self.respond_to? :organization_id ? 0 : self.organization_id
       keyword_search_index.context = self.class.name
       keyword_search_index.search_text = text
       if self.is_a?(Asset)
@@ -99,14 +99,16 @@ module TransamKeywordSearchable
   # Checks the pre-saved instance for changes and sets the dirty flag is any
   # changes are detected
   def check_for_changes
+    Rails.logger.debug "checking for changes"
     self.is_dirty = false
     searchable_fields.each do |searchable_field|
+      Rails.logger.debug "Testing property #{searchable_field}"
       if self.changes.include? searchable_field.to_s
+        Rails.logger.debug "#{searchable_field.to_s} has changed"
         self.is_dirty = true
         break
       end
     end
-    self.is_dirty
   end
 
   # Wrap the save method in an exception handler so that any schema-level problems

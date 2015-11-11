@@ -1,6 +1,9 @@
-.col-lg-8.col-md-8.col-sm-10.col-xs-12.col-lg-offset-2.col-md-offset-2.col-sm-offset-1
+.col-lg-8.col-md-10.col-sm-12.col-xs-12.col-lg-offset-2.col-md-offset-1
 
-  = render 'dashboards/search'
+  .page-header
+    .h2 Keyword Search
+
+  = render 'keyword_search_form'
 
   %fieldset
     %legend.panel-legend= "#{@num_rows} found."
@@ -28,7 +31,7 @@
 
   function query_params(params) {
     params.search_text = '#{@search_text}';
-    console.log(JSON.stringify(params));
+    //console.log(JSON.stringify(params));
     return params;
   };
 
