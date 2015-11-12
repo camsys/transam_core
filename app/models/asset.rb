@@ -583,6 +583,10 @@ class Asset < ActiveRecord::Base
     AssetEvent.unscoped.where('asset_id = ?', id).order('event_date DESC')
   end
 
+  def estimated_rehabilitation_cost(on_date = Date.today)
+    calculate_estimated_rehabilitation_cost(on_date)
+  end
+
   # Returns the total amount spent rehabilitating the asset
   def rehabilitation_cost
     if rehabilitation_updates.empty?
@@ -833,6 +837,23 @@ class Asset < ActiveRecord::Base
     #TODO This should be abstracted to use the calculate method -- someday!
     calculator_instance.calculate_on_date(asset, on_date)
 
+  end
+
+  #-----------------------------------------------------------------------------
+  # Calcualtes and returns the estimated rehabilitaiton cost of this asset
+  #-----------------------------------------------------------------------------
+  def calculate_estimated_rehabilitation_cost(on_date=nil)
+
+    return if disposed?
+
+    # Make sure we are working with a concrete asset class
+    asset = is_typed? ? self : Asset.get_typed_asset(self)
+
+    # Get the cost from the policy
+    cost = asset.policy_analyzer.get_total_rehabilitation_cost
+    # TODO - we should use the cost calculator to project this cost to the
+    # on_date
+    cost
   end
 
   # calculate the year that the asset will need replacing based on
