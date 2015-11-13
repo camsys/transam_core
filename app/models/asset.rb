@@ -830,7 +830,7 @@ class Asset < ActiveRecord::Base
     asset = is_typed? ? self : Asset.get_typed_asset(self)
 
     # Get the calculator class from the policy analyzer
-    class_name = asset.policy_analyzer.get_cost_calculation_type.class_name
+    class_name = asset.policy_analyzer.get_replacement_cost_calculation_type.class_name
     # create an instance of this class and call the method
     calculator_instance = class_name.constantize.new
     Rails.logger.debug "Instance created #{calculator_instance}"
