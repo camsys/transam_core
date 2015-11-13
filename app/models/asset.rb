@@ -840,7 +840,7 @@ class Asset < ActiveRecord::Base
   end
 
   #-----------------------------------------------------------------------------
-  # Calcualtes and returns the estimated rehabilitaiton cost of this asset
+  # Calculates and returns the estimated rehabilitaiton cost of this asset
   #-----------------------------------------------------------------------------
   def calculate_estimated_rehabilitation_cost(on_date=nil)
 
