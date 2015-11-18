@@ -1,5 +1,9 @@
 :ruby
-  url = @rule.new_record? ? add_policy_rule_policy_path(@policy) : update_policy_rule_policy_path(@policy)
+  if @rule.new_record?
+    url = add_policy_rule_policy_path(@policy)
+  else
+    url = update_policy_rule_policy_path(@policy)
+  end
 
 = simple_form_for(@rule,
   :url => url,
@@ -32,7 +36,7 @@
       = f.input :pcnt_residual_value, :required => true, :input_html => {:min => 0, :max => 100}
 
   .row
-    = f.button :submit, :class => 'btn btn-primary'
+    = f.button :submit, "Save", :class => 'btn btn-primary'
     %button.btn.btn-default{:data => {:dismiss => "modal"}} Cancel
 
 :javascript
