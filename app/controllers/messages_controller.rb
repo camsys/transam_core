@@ -69,8 +69,9 @@ class MessagesController < OrganizationAwareController
     @response.user = current_user
     @response.priority_type = @message.priority_type
 
-    # Mark this message as opened if not opened previously
-    if @message.opened_at.nil?
+    # Mark this message as opened if not opened previously as long as the current_user
+    # is the message recipient
+    if @message.opened_at.nil? and current_user == @message.to_user
       @message.opened_at = Time.current
       @message.save
     end
