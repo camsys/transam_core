@@ -222,6 +222,16 @@ class TasksController < NestedResourceController
     end
   end
 
+  def destroy
+    @task.destroy
+    notify_user(:notice, "Task was successfully removed.")
+    respond_to do |format|
+      format.html { redirect_to tasks_url }
+      format.json { head :no_content }
+    end
+  end
+
+
   #------------------------------------------------------------------------------
   #
   # Protected Methods
