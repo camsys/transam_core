@@ -45,6 +45,7 @@ RSpec.describe MessagesController, :type => :controller do
   end
 
   it 'GET show' do
+    test_msg.update!(:to_user => subject.current_user)
     get :show, {:user_id => subject.current_user.object_key, :id => test_msg.object_key}
 
     expect(assigns(:message)).to eq(test_msg)
