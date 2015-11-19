@@ -59,7 +59,8 @@ cost_calculation_types = [
 service_life_calculation_types = [
   {:active => 1, :name => 'Age Only',          :class_name => 'ServiceLifeAgeOnly',         :description => 'Calculate the replacement year based on the age of the asset.'},
   {:active => 1, :name => 'Condition Only',    :class_name => 'ServiceLifeConditionOnly',   :description => 'Calculate the replacement year based on the condition of the asset.'},
-  {:active => 1, :name => 'Age and Condition', :class_name => 'ServiceLifeAgeAndCondition', :description => 'Calculate the replacement year based on the age of the asset or condition whichever minimizes asset life.'}
+  {:active => 1, :name => 'Age and Condition', :class_name => 'ServiceLifeAgeAndCondition', :description => 'Calculate the replacement year based on the age of the asset and condition constraints being met.'},
+  {:active => 1, :name => 'Age or Condition',  :class_name => 'ServiceLifeAgeOrCondition',  :description => 'Calculate the replacement year based on the age of the asset or condition constraints being met.'}
 ]
 
 condition_estimation_types = [
