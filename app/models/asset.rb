@@ -601,28 +601,17 @@ class Asset < ActiveRecord::Base
   # default policy for the asset is used
   #-----------------------------------------------------------------------------
   def policy_analyzer(policy_to_use=nil)
-    cached_policy_analyzer = get_cached_object("policy_analyzer")
-    if cached_policy_analyzer.blank?
-      if policy_to_use.blank?
-        policy_to_use = policy
-      end
-      # initialize the geocoding service based on the Rails config
-      cached_policy_analyzer = POLICY_ANALYZER.constantize.new(self, policy_to_use)
-      cache_object("policy_analyzer", cached_policy_analyzer)
+    if policy_to_use.blank?
+      policy_to_use = policy
     end
-    cached_policy_analyzer
+    policy_analyzer = POLICY_ANALYZER.constantize.new(self, policy_to_use)
   end
   #-----------------------------------------------------------------------------
   # returns the the organizations's policy that governs the replacement of this
   # asset. This needs to upcast the organization type to a class that owns assets
   #-----------------------------------------------------------------------------
   def policy
-    cached_policy = get_cached_object("policy")
-    if cached_policy.blank?
-      cached_policy = Organization.get_typed_organization(organization).get_policy
-      cache_object("policy", cached_policy)
-    end
-    cached_policy
+    Organization.get_typed_organization(organization).get_policy
   end
 
   #-----------------------------------------------------------------------------
