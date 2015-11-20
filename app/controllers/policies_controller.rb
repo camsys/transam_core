@@ -248,7 +248,7 @@ class PoliciesController < OrganizationAwareController
     add_breadcrumb "Asset Updater", updater_policy_path(@policy)
 
     @builder_proxy = AssetUpdaterProxy.new(:policy => @policy)
-    @message = "Updating selected assets. This process might take a while."
+    @message = "Applying policy to selected assets. I'm doing a lot of math stuff so please be patient!."
   end
 
   def update_assets

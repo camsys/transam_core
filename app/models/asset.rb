@@ -809,13 +809,50 @@ class Asset < ActiveRecord::Base
     end
   end
 
-  # Creates a duplicate that has all asset-specific attributes nilled
-  def copy(cleanse = true)
-    a = dup
-    a.cleanse if cleanse
-    a
+
+  def update_estimated_replacement_cost
+
+    return if disposed?
+
+    if self.policy_replacement_year < current_planning_year_year
+      start_date = start_of_fiscal_year(scheduled_replacement_year)
+    else
+      start_date = start_of_fiscal_year(policy_replacement_year)
+    end
+    self.estimated_replacement_cost = calculate_estimated_replacement_cost(start_date)
+    # save changes to this asset
+    if self.changed?
+      save(:validate => false)
+    end
+
   end
 
+  #-----------------------------------------------------------------------------
+  # Calculates and stores the scheduled replacement for the asset based on the
+  # scheduled replacement year
+  #-----------------------------------------------------------------------------
+  def update_scheduled_replacement_cost
+
+    return if disposed?
+
+    if self.scheduled_replacement_year.blank?
+      start_date = start_of_fiscal_year(policy_replacement_year)
+    else
+      start_date = start_of_fiscal_year(scheduled_replacement_year)
+    end
+    self.scheduled_replacement_cost = calculate_estimated_replacement_cost(start_date)
+
+    # save changes to this asset
+    if self.changed?
+      save(:validate => false)
+    end
+
+  end
+
+  #-----------------------------------------------------------------------------
+  # Calculates and returns the estimated replacement cost of this asset on the
+  # current date or another date if given
+  #-----------------------------------------------------------------------------
   def calculate_estimated_replacement_cost(on_date=nil)
 
     return if disposed?
@@ -827,14 +864,13 @@ class Asset < ActiveRecord::Base
     class_name = asset.policy_analyzer.get_replacement_cost_calculation_type.class_name
     # create an instance of this class and call the method
     calculator_instance = class_name.constantize.new
-    Rails.logger.debug "Instance created #{calculator_instance}"
-    #TODO This should be abstracted to use the calculate method -- someday!
     calculator_instance.calculate_on_date(asset, on_date)
 
   end
 
   #-----------------------------------------------------------------------------
-  # Calculates and returns the estimated rehabilitaiton cost of this asset
+  # Calculates and returns the estimated rehabilitaiton cost of this asset on the
+  # current date or another date if given
   #-----------------------------------------------------------------------------
   def calculate_estimated_rehabilitation_cost(on_date=nil)
 
@@ -885,6 +921,13 @@ class Asset < ActiveRecord::Base
 
   end
 
+  # Creates a duplicate that has all asset-specific attributes nilled
+  def copy(cleanse = true)
+    a = dup
+    a.cleanse if cleanse
+    a
+  end
+
   def searchable_fields
     SEARCHABLE_FIELDS
   end
@@ -907,6 +950,12 @@ class Asset < ActiveRecord::Base
 
   # Update the SOGR for an asset
   def update_sogr(policy = nil)
+    unless disposed?
+      update_asset_state(policy)
+    end
+  end
+  # Update the replacement costs for an asset
+  def update_sogr_costs
     unless disposed?
       update_asset_state(policy)
     end

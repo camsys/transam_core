@@ -35,7 +35,7 @@ class AssetUpdateJobBuilder
     end
 
     # Rip through the organizations assets, creating a job for each type requested
-    org_assets.each {|x| x.update_sogr}
+    org_assets.each {|x| x.update_sogr; x.update_estimated_replacement_cost; x.update_scheduled_replacement_cost}
     org_assets.count
   end
 
