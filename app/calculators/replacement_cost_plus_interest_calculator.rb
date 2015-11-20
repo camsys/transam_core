@@ -16,8 +16,8 @@ class ReplacementCostPlusInterestCalculator < ReplacementCostCalculator
     Rails.logger.debug "ReplacementCostPlusInterestCalculator.calculate(asset)"
 
     # Get the replacement cost of the asset
-    initial_cost = asset.cost
-    Rails.logger.debug "initial_cost #{initial_cost}"
+    replacement_cost = asset.policy_analyzer.get_replacement_cost
+    Rails.logger.debug "initial_cost #{replacement_cost}"
 
     if on_date.nil?
       replacement_year = current_planning_year_year
@@ -33,7 +33,7 @@ class ReplacementCostPlusInterestCalculator < ReplacementCostCalculator
     # interest rate as decimal
     inflation_rate = asset.policy_analyzer.get_annual_inflation_rate / 100.0
 
-    future_cost(initial_cost, num_years_to_replacement, inflation_rate)
+    future_cost(replacement_cost, num_years_to_replacement, inflation_rate)
   end
 
 
