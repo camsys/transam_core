@@ -1,7 +1,7 @@
 require 'rails_helper'
 include FiscalYear
 
-RSpec.describe ServiceLifeAgeAndCondition, :type => :calculator do
+RSpec.describe ServiceLifeAgeOrCondition, :type => :calculator do
 
   class TestOrg < Organization
     def get_policy
@@ -20,10 +20,10 @@ RSpec.describe ServiceLifeAgeAndCondition, :type => :calculator do
     create(:policy_asset_subtype_rule, :policy => @policy, :asset_subtype => @test_asset.asset_subtype)
   end
 
-  let(:test_calculator) { ServiceLifeAgeAndCondition.new }
+  let(:test_calculator) { ServiceLifeAgeOrCondition.new }
 
   it 'calculates' do
-    expect(test_calculator.calculate(@test_asset)).to eq(2015)
+    expect(test_calculator.calculate(@test_asset)).to eq(2010)
   end
 
 end
