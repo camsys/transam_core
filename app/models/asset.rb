@@ -27,6 +27,10 @@ class Asset < ActiveRecord::Base
   # Clean up any HABTM associations before the asset is destroyed
   before_destroy { asset_groups.clear }
 
+  # Before the asset is updated we may need to update things like estimated
+  # replacement cost if they updated other things
+  before_update   :before_update_callback, :except => :create
+
   before_update :clear_cache
 
   #-----------------------------------------------------------------------------
@@ -211,6 +215,7 @@ class Asset < ActiveRecord::Base
     :update_scheduled_replacement,
     :update_scheduled_rehabilitation,
     :update_scheduled_disposition,
+    :update_estimated_replacement_cost,
     :update_location,
     :update_sogr
   ]
@@ -902,7 +907,6 @@ class Asset < ActiveRecord::Base
 
   # Update the SOGR for an asset
   def update_sogr(policy = nil)
-
     unless disposed?
       update_asset_state(policy)
     end
@@ -922,6 +926,46 @@ class Asset < ActiveRecord::Base
   #
   #-----------------------------------------------------------------------------
   protected
+
+  # Callback to update the asset when things change
+  def before_update_callback
+
+    Rails.logger.debug "In before_save_callback"
+    # Get the policy analyzer
+
+    this_policy_analyzer = self.policy_analyzer
+
+    # If the policy replacement year changes we need to check to see if the asset
+    # is in backlog and update the scheduled replacement year to the first planning
+    # year
+    if self.changes.include? "policy_replacement_year"
+      Rails.logger.debug "New policy_replacement_year = #{self.policy_replacement_year}"
+
+      if self.policy_replacement_year < current_planning_year_year
+        self.scheduled_replacement_year = current_planning_year_year
+        self.in_backlog = true
+        start_date = start_of_fiscal_year(scheduled_replacement_year)
+      else
+        start_date = start_of_fiscal_year(policy_replacement_year)
+      end
+      # Update the estimated replacement costs
+      Rails.logger.debug "Start Date = #{start_date}"
+      class_name = this_policy_analyzer.get_replacement_cost_calculation_type.class_name
+      calculator_instance = class_name.constantize.new
+      self.estimated_replacement_cost = calculator_instance.calculate_on_date(self, start_date)
+      Rails.logger.debug "estimated_replacement_cost = #{self.estimated_replacement_cost}"
+    end
+    if self.changes.include? "scheduled_replacement_year"
+      Rails.logger.debug "New scheduled_replacement_year = #{self.scheduled_replacement_year}"
+      # Get the calculator class from the policy analyzer
+      class_name = this_policy_analyzer.get_replacement_cost_calculation_type.class_name
+      calculator_instance = class_name.constantize.new
+      start_date = start_of_fiscal_year(scheduled_replacement_year)
+      Rails.logger.debug "Start Date = #{start_date}"
+      self.scheduled_replacement_cost = calculator_instance.calculate_on_date(self, start_date)
+    end
+    true
+  end
 
   # Return an object that has been cached against this asset
   def get_cached_object(key)
@@ -1002,20 +1046,6 @@ class Asset < ActiveRecord::Base
       # Use the calculator to calculate the policy rehabilitation fiscal year
       calculator = RehabilitationYearCalculator.new
       asset.policy_rehabilitation_year = calculator.calculate(asset)
-    rescue Exception => e
-      Rails.logger.warn e.message
-    end
-
-    # Update the estimated replacement cost. This should be set for the start of
-    # the fiscal year in which the asset is scheduled to be replaced
-    begin
-      if asset.scheduled_replacement_year.present?
-
-        # Get the calculator class from the policy analyzer
-        class_name = asset.policy_analyzer.get_replacement_cost_calculation_type.class_name
-        calculator_instance = class_name.constantize.new
-        asset.estimated_replacement_cost = calculator_instance.calculate_on_date(asset)
-      end
     rescue Exception => e
       Rails.logger.warn e.message
     end
