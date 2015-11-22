@@ -31,8 +31,13 @@ class Role < ActiveRecord::Base
   #-----------------------------------------------------------------------------
   # Instance Methods
   #-----------------------------------------------------------------------------
+
   def to_s
     name
   end
 
+  def privilege?
+    (privilege)
+  end
+  
 end

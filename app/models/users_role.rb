@@ -42,9 +42,22 @@ class UsersRole < ActiveRecord::Base
   # tasks which are currently active based on the workflow
   scope :active, -> { where(:active => true) }
 
+  # List of allowable form param hash keys
+  FORM_PARAMS = [
+    :id,
+    :user_id,
+    :role_id,
+    :granted_by_user_id,
+    :revoked_by_user_id,
+  ]
+
   #------------------------------------------------------------------------------
   # Class Methods
   #------------------------------------------------------------------------------
+
+  def self.allowable_params
+    FORM_PARAMS
+  end
 
   #------------------------------------------------------------------------------
   # Instance Methods

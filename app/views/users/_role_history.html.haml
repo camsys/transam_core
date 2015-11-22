@@ -1,7 +1,4 @@
-:ruby
-  table_dom_id = SecureRandom.hex
-
-%table.table.table-hover{:id => table_dom_id, :data => {:toggle => 'table',
+%table.table.table-hover{:id => 'user_role_table', :data => {:toggle => 'table',
   :pagination => 'true',
   :show_pagination_switch => 'true',
   :page_list => "[5, 10, 20, 50, 100, 200]",
@@ -23,12 +20,42 @@
 
   %tbody
     - user_roles.each do |r|
-      %tr
-        %td= r.role
-        %td= r.granted_by_user
-        %td= format_as_date(r.granted_on_date)
-        %td= r.revoked_by_user
-        %td= format_as_date(r.revoked_on_date)
-        %td= format_as_boolean(r.active)
+      - if r.role.privilege? == false
+        %tr
+          %td.left= r.role.name.titleize
+          %td.left= r.granted_by_user
+          %td= format_as_date(r.granted_on_date)
+          %td.left= r.revoked_by_user
+          %td= format_as_date(r.revoked_on_date)
+          %td= format_as_boolean(r.active)
 
-= render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :path_pattern => ''}
+%table.table.table-hover{:id => 'user_privilege_table', :data => {:toggle => 'table',
+  :pagination => 'true',
+  :show_pagination_switch => 'true',
+  :page_list => "[5, 10, 20, 50, 100, 200]",
+  :page_size => current_user.num_table_rows,
+  :search => 'false',
+  :toolbar => "#table_actions",
+  :export_types => "['csv', 'txt', 'excel']",
+  :show_export => 'true',
+  :show_columns => 'true',
+  :show_toggle => 'true'}}
+  %thead
+    %tr
+      %th.center.nowrap{:data => {:sortable => 'true'}} Privilege
+      %th.center.nowrap{:data => {:sortable => 'true'}} Granted By
+      %th.center.nowrap{:data => {:sortable => 'true'}} Granted On
+      %th.center.nowrap{:data => {:sortable => 'true'}} Revoked By
+      %th.center.nowrap{:data => {:sortable => 'true'}} Revoked On
+      %th.center.nowrap{:data => {:sortable => 'true'}} Active
+
+  %tbody
+    - user_roles.each do |r|
+      - if r.role.privilege?
+        %tr
+          %td.left= r.role.name.titleize
+          %td.left= r.granted_by_user
+          %td= format_as_date(r.granted_on_date)
+          %td.left= r.revoked_by_user
+          %td= format_as_date(r.revoked_on_date)
+          %td= format_as_boolean(r.active)

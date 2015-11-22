@@ -1,5 +1,9 @@
-= render(:partial => 'shared/form_errors', :locals => {:obj => @user}) unless @user.errors.empty?
+.col-sm-12.col-md-10.col-md-offset-1.col-lg-8.col-lg-offset-2
+  .page-header
+    %h2= "Update #{@user}"
 
-= render 'form'
+  = render(:partial => 'shared/form_errors', :locals => {:obj => @user}) unless @user.errors.empty?
+
+  = render 'form'
 
 = render 'scripts'

@@ -1,53 +1,57 @@
-.row
-  .col-lg-6.col-md-6.col-sm-8.col-xs-12.col-lg-offset-3.col-md-offset-3.col-sm-offset-2
-    = simple_form_for(@user, :html => {:class => 'form-vertical user_form' }, :wrapper => :vertical_form, :wrapper_mappings => {:boolean => :vertical_boolean}) do |f|
+= simple_form_for(@user,
+  :html => {:class => 'form-vertical'},
+  :wrapper => :vertical_form,
+  :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes,
+  :radio_buttons => :vertical_radio_and_checkboxes,
+  :file => :vertical_file_input,
+  :boolean => :vertical_boolean}) do |f|
 
-      %fieldset
-        %legend User Details
-        - if current_user.organizations.count > 1
-          = f.association :organization, :collection => current_user.organizations, :label_method => 'coded_name'
-        - else
-          = f.association :organization, :placeholder => current_user.organization.id, :as => :hidden
+  %fieldset
+    %legend User Details
+    - if current_user.organizations.count > 1
+      = f.association :organization, :collection => current_user.organizations, :label_method => 'coded_name'
+    - else
+      = f.association :organization, :placeholder => current_user.organization.id, :as => :hidden
 
-        .row
-          .col-lg-6.col-md-6.col-sm-6.col-xs-12
-            = f.input :first_name, :placeholder => "User's first name...", :label => "First Name"
-          .col-lg-6.col-md-6.col-sm-6.col-xs-12
-            = f.input :last_name, :placeholder => "User's last name...", :label => "Last Name"
+    .row
+      .col-lg-6.col-md-6.col-sm-6.col-xs-12
+        = f.input :first_name, :placeholder => "User's first name...", :label => "First Name"
+      .col-lg-6.col-md-6.col-sm-6.col-xs-12
+        = f.input :last_name, :placeholder => "User's last name...", :label => "Last Name"
 
-        = f.input :email, :as => :email, :placeholder => "User's business email address...", :hint => 'Enter only business email addresses'
-        = f.input :title, :placeholder => "User's title..."
+    = f.input :email, :as => :email, :placeholder => "User's business email address...", :hint => 'Enter only business email addresses'
+    = f.input :title, :placeholder => "User's title..."
 
-        .row
-          .col-lg-4.col-md-4.col-sm-6.col-xs-12
-            = f.input :external_id, :placeholder => "User's ID number...", :label => "ID Number"
-          - if current_user.has_role? :admin
-            .col-lg-8.col-md-8.col-sm-6.col-xs-12
-              = f.input :role_ids, :collection => Role.all.collect{|x| [x.name.titleize, x.id]}, :as => :check_boxes
+    .row
+      .col-lg-4.col-md-4.col-sm-6.col-xs-12
+        = f.input :external_id, :placeholder => "User's ID number...", :label => "ID Number"
+      - if current_user.has_role? :admin
+        .col-lg-8.col-md-8.col-sm-6.col-xs-12
+          = f.input :role_ids, :collection => Role.all.collect{|x| [x.name.titleize, x.id]}, :as => :check_boxes
 
-      %fieldset
-        %legend Contact Info
+  %fieldset
+    %legend Contact Info
 
-        .row
-          .col-lg-4.col-md-4.col-sm-6.col-xs-6
-            = f.input :phone, :as => :tel, :placeholder => "Users primary phone number...", :hint => 'Format 123-456-7890'
-          .col-lg-2.col-md-2.col-sm-2.col-xs-3
-            = f.input :phone_ext, :label => "Ext."
-          .col-lg-6col-md-6.col-sm-6.col-xs-6
-            = f.input :timezone, :as => :time_zone, priority: /US/, :prompt => "Select timezone..."
+    .row
+      .col-lg-4.col-md-4.col-sm-6.col-xs-6
+        = f.input :phone, :as => :tel, :placeholder => "Users primary phone number...", :hint => 'Format 123-456-7890'
+      .col-lg-2.col-md-2.col-sm-2.col-xs-3
+        = f.input :phone_ext, :label => "Ext."
+      .col-lg-6col-md-6.col-sm-6.col-xs-6
+        = f.input :timezone, :as => :time_zone, priority: /US/, :prompt => "Select timezone..."
 
 
-        = f.input :address1
-        = f.input :address2
-        .row
-          .col-sm-6
-            = f.input :city
-          .col-sm-3
-            = f.input :state, :as => :select, :collection => Country['US'].states, :include_blank => false
-          .col-sm-3
-            = f.input :zip
+    = f.input :address1
+    = f.input :address2
+    .row
+      .col-sm-6
+        = f.input :city
+      .col-sm-3
+        = f.input :state, :as => :select, :collection => Country['US'].states, :include_blank => false
+      .col-sm-3
+        = f.input :zip
 
-        = f.button :submit, :class => "btn btn-primary"
+    = f.button :submit, :class => "btn btn-primary"
 
 
 :javascript

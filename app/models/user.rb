@@ -7,8 +7,6 @@ class User < ActiveRecord::Base
 
   # Enable user roles for this use
   rolify
-  has_many :users_roles, -> { active }
-  has_many :roles, :through => :users_roles
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -28,6 +26,10 @@ class User < ActiveRecord::Base
   #-----------------------------------------------------------------------------
   # Associations
   #-----------------------------------------------------------------------------
+
+  has_many :users_roles, -> { active }
+  has_many :roles,      :through => :users_roles
+  has_many :privileges, :through => :users_roles, :source => :user
 
   # every user belongs to a single organizations
   belongs_to :organization
@@ -122,7 +124,8 @@ class User < ActiveRecord::Base
     :city,
     :state,
     :zip,
-    :role_ids => []
+    :role_ids,
+    :privilege_ids
   ]
 
   #-----------------------------------------------------------------------------

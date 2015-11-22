@@ -109,14 +109,6 @@ class UsersController < OrganizationAwareController
   # GET /users/1.json
   def show
 
-    # if not found or the object does not belong to the users
-    # send them back to index.html.erb
-    if @user.nil?
-      notify_user(:alert, "Record not found!")
-      redirect_to users_url
-      return
-    end
-
     if @user.id == current_user.id
       add_breadcrumb "My Profile"
     else
@@ -152,14 +144,6 @@ class UsersController < OrganizationAwareController
   # GET /users/1/edit
   def edit
 
-    # if not found or the object does not belong to the users
-    # send them back to index.html.erb
-    if @user.nil?
-      notify_user(:alert, "Record not found!")
-      redirect_to users_url
-      return
-    end
-
     add_user_breadcrumb('Profile')
     add_breadcrumb 'Update'
 
@@ -167,14 +151,6 @@ class UsersController < OrganizationAwareController
 
   # Sends a reset password email to the user. This is an admin function
   def reset_password
-
-    # if not found or the object does not belong to the users
-    # send them back to index.html.erb
-    if @user.nil?
-      notify_user(:alert, "Record not found!")
-      redirect_to users_url
-      return
-    end
 
     @user.send_reset_password_instructions
     notify_user(:notice, "Instructions for resetting their password was sent to #{@user} at #{@user.email}")
@@ -186,28 +162,12 @@ class UsersController < OrganizationAwareController
   # GET /users/1/edit
   def change_password
 
-    # if not found or the object does not belong to the users
-    # send them back to index.html.erb
-    if @user.nil?
-      notify_user(:alert, "Record not found!")
-      redirect_to users_url
-      return
-    end
-
     add_user_breadcrumb('Profile')
     add_breadcrumb 'Change Password'
 
   end
 
   def settings
-
-    # if not found or the object does not belong to the users
-    # send them back to index.html.erb
-    if @user.nil?
-      notify_user(:alert, "Record not found!")
-      redirect_to users_url
-      return
-    end
 
     add_user_breadcrumb('Profile')
     add_breadcrumb 'Update'
@@ -216,6 +176,11 @@ class UsersController < OrganizationAwareController
   # POST /users
   # POST /users.json
   def create
+
+    # Get the role_ids and privelege ids and remove them from the params hash
+    # as we dont want these managed by the rails associations
+    role_ids = params[:user][:role_ids]
+    privilege_ids = params[:user][:privilege_ids]
 
     # Get a new user service to invoke any business logic associated with creating
     # new users
@@ -230,6 +195,13 @@ class UsersController < OrganizationAwareController
       if @user.save
         # Perform an post-creation tasks such as sending emails, etc.
         new_user_service.post_process(@user)
+
+        # Assign the role and privileges
+        @user.users_roles.create(:role => Role.find(role_ids), :active => true, :granted_by_user => current_user, :granted_on_date => Date.today)
+        privilege_ids.each do |r|
+          @user.users_roles.create(:role => Role.find(r), :active => true, :granted_by_user => current_user, :granted_on_date => Date.today) unless r.blank?
+        end
+
         notify_user(:notice, "User #{@user.name} was successfully created.")
         format.html { redirect_to user_url(@user) }
         format.json { render :json => @user, :status => :created, :location => @user }
@@ -242,19 +214,23 @@ class UsersController < OrganizationAwareController
 
   def update
 
-    # if not found or the object does not belong to the users
-    # send them back to index.html.erb
-    if @user.nil?
-      notify_user(:alert, "Record not found!")
-      redirect_to users_url
-      return
-    end
+    # Get the role_ids and privelege ids and remove them from the params hash
+    # as we dont want these managed by the rails associations
+    role_ids = params[:user][:role_ids]
+    privilege_ids = params[:user][:privilege_ids]
 
     add_user_breadcrumb('Profile')
     add_breadcrumb 'Update'
 
     respond_to do |format|
       if @user.update_attributes(form_params)
+
+        # Assign the role and privileges
+        @user.users_roles.create(:role => Role.find(role_ids), :active => true, :granted_by_user => current_user, :granted_on_date => Date.today)
+        privilege_ids.each do |r|
+          @user.users_roles.create(:role => Role.find(r), :active => true, :granted_by_user => current_user, :granted_on_date => Date.today) unless r.blank?
+        end
+
         if @user.id == current_user.id
           notify_user(:notice, "Your profile was successfully updated.")
         else
@@ -270,14 +246,6 @@ class UsersController < OrganizationAwareController
   end
 
   def update_password
-
-    # if not found or the object does not belong to the users
-    # send them back to index.html.erb
-    if @user.nil?
-      notify_user(:alert, "Record not found!")
-      redirect_to users_url
-      return
-    end
 
     add_user_breadcrumb('Profile')
     add_breadcrumb 'Change Password'
@@ -302,14 +270,6 @@ class UsersController < OrganizationAwareController
 
 
   def destroy
-
-    # if not found or the object does not belong to the users
-    # send them back to index.html.erb
-    if @user.nil?
-      notify_user(:alert, "Record not found!")
-      redirect_to users_url
-      return
-    end
 
     @user.active = false
     @user.save(:validate => :false)
