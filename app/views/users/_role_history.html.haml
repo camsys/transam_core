@@ -14,9 +14,9 @@
       %th.center.nowrap{:data => {:sortable => 'true'}} Role
       %th.center.nowrap{:data => {:sortable => 'true'}} Granted By
       %th.center.nowrap{:data => {:sortable => 'true'}} Granted On
-      %th.center.nowrap{:data => {:sortable => 'true'}} Revoked By
-      %th.center.nowrap{:data => {:sortable => 'true'}} Revoked On
-      %th.center.nowrap{:data => {:sortable => 'true'}} Active
+      -# %th.center.nowrap{:data => {:sortable => 'true'}} Revoked By
+      -# %th.center.nowrap{:data => {:sortable => 'true'}} Revoked On
+      -# %th.center.nowrap{:data => {:sortable => 'true'}} Active
 
   %tbody
     - user_roles.each do |r|
@@ -25,9 +25,9 @@
           %td.left= r.role.name.titleize
           %td.left= r.granted_by_user
           %td= format_as_date(r.granted_on_date)
-          %td.left= r.revoked_by_user
-          %td= format_as_date(r.revoked_on_date)
-          %td= format_as_boolean(r.active)
+          -# %td.left= r.revoked_by_user
+          -# %td= format_as_date(r.revoked_on_date)
+          -# %td= format_as_boolean(r.active)
 
 %table.table.table-hover{:id => 'user_privilege_table', :data => {:toggle => 'table',
   :pagination => 'true',
@@ -45,9 +45,9 @@
       %th.center.nowrap{:data => {:sortable => 'true'}} Privilege
       %th.center.nowrap{:data => {:sortable => 'true'}} Granted By
       %th.center.nowrap{:data => {:sortable => 'true'}} Granted On
-      %th.center.nowrap{:data => {:sortable => 'true'}} Revoked By
-      %th.center.nowrap{:data => {:sortable => 'true'}} Revoked On
-      %th.center.nowrap{:data => {:sortable => 'true'}} Active
+      -# %th.center.nowrap{:data => {:sortable => 'true'}} Revoked By
+      -# %th.center.nowrap{:data => {:sortable => 'true'}} Revoked On
+      -# %th.center.nowrap{:data => {:sortable => 'true'}} Active
 
   %tbody
     - user_roles.each do |r|
@@ -56,6 +56,6 @@
           %td.left= r.role.name.titleize
           %td.left= r.granted_by_user
           %td= format_as_date(r.granted_on_date)
-          %td.left= r.revoked_by_user
-          %td= format_as_date(r.revoked_on_date)
-          %td= format_as_boolean(r.active)
+          -# %td.left= r.revoked_by_user
+          -# %td= format_as_date(r.revoked_on_date)
+          -# %td= format_as_boolean(r.active)

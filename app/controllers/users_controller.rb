@@ -1,19 +1,26 @@
 class UsersController < OrganizationAwareController
 
+  #-----------------------------------------------------------------------------
   # Protect controller methods using the cancan ability
+  #-----------------------------------------------------------------------------
   authorize_resource
 
+  #-----------------------------------------------------------------------------
   add_breadcrumb "Home",  :root_path
   add_breadcrumb "Users", :users_path
 
+  #-----------------------------------------------------------------------------
   before_action :set_user, :only => [:show, :edit, :settings, :update, :destroy, :change_password, :update_password, :profile_photo, :reset_password]
   before_filter :check_for_cancel, :only => [:create, :update, :update_password]
 
+  #-----------------------------------------------------------------------------
   INDEX_KEY_LIST_VAR    = "user_key_list_cache_var"
   SESSION_VIEW_TYPE_VAR = 'users_subnav_view_type'
 
+  #-----------------------------------------------------------------------------
   # GET /users
   # GET /users.json
+  #-----------------------------------------------------------------------------
   def index
 
     @organization_id = params[:organization_id].to_i
@@ -105,8 +112,10 @@ class UsersController < OrganizationAwareController
 
   end
 
+  #-----------------------------------------------------------------------------
   # GET /users/1
   # GET /users/1.json
+  #-----------------------------------------------------------------------------
   def show
 
     if @user.id == current_user.id
@@ -126,8 +135,10 @@ class UsersController < OrganizationAwareController
     end
   end
 
+  #-----------------------------------------------------------------------------
   # GET /users/new
   # GET /users/new.json
+  #-----------------------------------------------------------------------------
   def new
 
     add_breadcrumb 'New'
@@ -149,7 +160,9 @@ class UsersController < OrganizationAwareController
 
   end
 
+  #-----------------------------------------------------------------------------
   # Sends a reset password email to the user. This is an admin function
+  #-----------------------------------------------------------------------------
   def reset_password
 
     @user.send_reset_password_instructions
@@ -159,7 +172,9 @@ class UsersController < OrganizationAwareController
 
   end
 
+  #-----------------------------------------------------------------------------
   # GET /users/1/edit
+  #-----------------------------------------------------------------------------
   def change_password
 
     add_user_breadcrumb('Profile')
@@ -167,19 +182,23 @@ class UsersController < OrganizationAwareController
 
   end
 
+  #-----------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   def settings
 
     add_user_breadcrumb('Profile')
     add_breadcrumb 'Update'
   end
 
+  #-----------------------------------------------------------------------------
   # POST /users
   # POST /users.json
+  #-----------------------------------------------------------------------------
   def create
 
     # Get the role_ids and privelege ids and remove them from the params hash
     # as we dont want these managed by the rails associations
-    role_ids = params[:user][:role_ids]
+    role_id = params[:user][:role_ids]
     privilege_ids = params[:user][:privilege_ids]
 
     # Get a new user service to invoke any business logic associated with creating
@@ -193,14 +212,14 @@ class UsersController < OrganizationAwareController
 
     respond_to do |format|
       if @user.save
+
         # Perform an post-creation tasks such as sending emails, etc.
-        new_user_service.post_process(@user)
+        new_user_service.post_process @user
 
         # Assign the role and privileges
-        @user.users_roles.create(:role => Role.find(role_ids), :active => true, :granted_by_user => current_user, :granted_on_date => Date.today)
-        privilege_ids.each do |r|
-          @user.users_roles.create(:role => Role.find(r), :active => true, :granted_by_user => current_user, :granted_on_date => Date.today) unless r.blank?
-        end
+        role_service = get_user_role_service
+        role_service.set_roles_and_privileges @user, current_user, role_id, privilege_ids
+        role_service.post_process @user
 
         notify_user(:notice, "User #{@user.name} was successfully created.")
         format.html { redirect_to user_url(@user) }
@@ -212,24 +231,28 @@ class UsersController < OrganizationAwareController
     end
   end
 
+  #-----------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   def update
-
-    # Get the role_ids and privelege ids and remove them from the params hash
-    # as we dont want these managed by the rails associations
-    role_ids = params[:user][:role_ids]
-    privilege_ids = params[:user][:privilege_ids]
 
     add_user_breadcrumb('Profile')
     add_breadcrumb 'Update'
 
+    # Get the role_ids and privelege ids and remove them from the params hash
+    # as we dont want these managed by the rails associations
+    role_id = params[:user][:role_ids]
+    privilege_ids = params[:user][:privilege_ids]
+    Rails.logger.debug "role_id = #{role_id}, privilege_ids = #{privilege_ids}"
+
     respond_to do |format|
       if @user.update_attributes(form_params)
 
+        #-----------------------------------------------------------------------
         # Assign the role and privileges
-        @user.users_roles.create(:role => Role.find(role_ids), :active => true, :granted_by_user => current_user, :granted_on_date => Date.today)
-        privilege_ids.each do |r|
-          @user.users_roles.create(:role => Role.find(r), :active => true, :granted_by_user => current_user, :granted_on_date => Date.today) unless r.blank?
-        end
+        #-----------------------------------------------------------------------
+        role_service = get_user_role_service
+        role_service.set_roles_and_privileges @user, current_user, role_id, privilege_ids
+        role_service.post_process @user
 
         if @user.id == current_user.id
           notify_user(:notice, "Your profile was successfully updated.")
@@ -242,9 +265,12 @@ class UsersController < OrganizationAwareController
         format.html { render :action => "edit" }
         format.json { render :json => @user.errors, :status => :unprocessable_entity }
       end
+
     end
   end
 
+  #-----------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   def update_password
 
     add_user_breadcrumb('Profile')
@@ -269,8 +295,9 @@ class UsersController < OrganizationAwareController
   end
 
 
+  #-----------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   def destroy
-
     @user.active = false
     @user.save(:validate => :false)
     respond_to do |format|
@@ -280,23 +307,38 @@ class UsersController < OrganizationAwareController
     end
   end
 
+  #-----------------------------------------------------------------------------
+  #-----------------------------------------------------------------------------
   def profile_photo
     add_user_breadcrumb('Profile')
     add_breadcrumb 'Profile Photo'
   end
+
   #------------------------------------------------------------------------------
-  #
+  # Protected Methods
+  #------------------------------------------------------------------------------
+  protected
+
+
+  #------------------------------------------------------------------------------
   # Private Methods
-  #
   #------------------------------------------------------------------------------
   private
 
+  #-----------------------------------------------------------------------------
   # Never trust parameters from the scary internet, only allow the white list through.
+  #-----------------------------------------------------------------------------
   def form_params
+    # Remove role and privilege ids as these are managed by the app not by
+    # the active record associations
+    params[:user].delete :role_ids
+    params[:user].delete :privilege_ids
     params.require(:user).permit(user_allowable_params)
   end
 
+  #-----------------------------------------------------------------------------
   # Callbacks to share common setup or constraints between actions.
+  #-----------------------------------------------------------------------------
   def set_user
     @user = User.find_by_object_key(params[:id])
     if @user.nil?
@@ -305,6 +347,7 @@ class UsersController < OrganizationAwareController
     end
   end
 
+  #-----------------------------------------------------------------------------
   def add_user_breadcrumb(page)
     if @user.id == current_user.id
       add_breadcrumb "My #{page}", user_path(@user)
@@ -313,18 +356,32 @@ class UsersController < OrganizationAwareController
     end
   end
 
+  #-----------------------------------------------------------------------------
   def check_for_cancel
     unless params[:cancel].blank?
       redirect_to user_url(current_user)
     end
   end
 
+  #-----------------------------------------------------------------------------
   # Get the configured service to handle user creation, defaulting
+  #-----------------------------------------------------------------------------
   def get_new_user_service
-    if Rails.application.config.new_user_service
+    if defined? Rails.application.config.new_user_service
       Rails.application.config.new_user_service.constantize.new
     else
       NewUserService.new
+    end
+  end
+
+  #-----------------------------------------------------------------------------
+  # Get the configured service to handle user role management, defaulting
+  #-----------------------------------------------------------------------------
+  def get_user_role_service
+    if defined? Rails.application.config.user_role_service
+      Rails.application.config.user_role_service.constantize.new
+    else
+      UserRoleService.new
     end
   end
 end

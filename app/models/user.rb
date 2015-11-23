@@ -29,7 +29,6 @@ class User < ActiveRecord::Base
 
   has_many :users_roles, -> { active }
   has_many :roles,      :through => :users_roles
-  has_many :privileges, :through => :users_roles, :source => :user
 
   # every user belongs to a single organizations
   belongs_to :organization
@@ -59,6 +58,10 @@ class User < ActiveRecord::Base
   # Assets that have been tagged by the user
   has_many    :asset_tags
   has_many    :assets, :through => :asset_tags
+
+  #-----------------------------------------------------------------------------
+  # Transients
+  #-----------------------------------------------------------------------------
 
   #-----------------------------------------------------------------------------
   # Validations
@@ -139,6 +142,16 @@ class User < ActiveRecord::Base
   #-----------------------------------------------------------------------------
   # Instance Methods
   #-----------------------------------------------------------------------------
+
+  # Getter for privileges
+  def privileges
+    roles.where(:privilege => true)
+  end
+  def privilege_ids
+    a = []
+    roles.each{|x| a << x.id}
+    a
+  end
 
   # Returns the default weather code for the users dashboard
   def default_weather_code
