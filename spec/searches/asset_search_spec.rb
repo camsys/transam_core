@@ -1,9 +1,24 @@
 require 'rails_helper'
 
 RSpec.describe AssetSearcher, :type => :model do
-  let(:asset) { create(:equipment_asset, :organization_id => 1) }
-  let(:all_assets) { Asset.where('organization_id = 1') }
-  let(:searcher) { AssetSearcher.new(:organization_id => asset.organization_id) }
+
+  class TestOrg < Organization
+    def get_policy
+      return Policy.where("`organization_id` = ?",self.id).order('created_at').last
+    end
+  end
+
+  before(:all) do
+    @test_org = create(:organization)
+    test_policy = create(:policy, :organization => @test_org)
+    @type_rule = create(:policy_asset_type_rule, :policy => test_policy)
+    @subtype_rule = create(:policy_asset_subtype_rule, :policy => test_policy)
+  end
+
+  let(:asset) { create(:equipment_asset, :organization => @test_org, :asset_type => @type_rule.asset_type, :asset_subtype => @subtype_rule.asset_subtype) }
+  let(:lesser) { create(:equipment_asset, :organization => @test_org, :asset_type => @type_rule.asset_type, :asset_subtype => @subtype_rule.asset_subtype) }
+  let(:all_assets) { Asset.where('organization_id = ?', @test_org.id) }
+  let(:searcher) { AssetSearcher.new(:organization_id => @test_org.id) }
 
   #------------------------------------------------------------------------------
   #
@@ -57,7 +72,7 @@ RSpec.describe AssetSearcher, :type => :model do
   # #------------------------------------------------------------------------------
   it 'should be able to search by purchase cost' do
     asset.update!(:purchase_cost => '10000')
-    lesser = create(:equipment_asset, :purchase_cost => '2000', :organization_id => 1)
+    lesser.update!(:purchase_cost => '2000')
 
     searcher.purchase_cost = asset.purchase_cost
     searcher.purchase_cost_comparator = '0'
@@ -73,7 +88,7 @@ RSpec.describe AssetSearcher, :type => :model do
 
   it 'should be able to search by scheduled replacement year' do
     asset.update!(:scheduled_replacement_year => 2020)
-    lesser = create(:equipment_asset, :scheduled_replacement_year => 2010, :organization_id => 1)
+    lesser.update!(:scheduled_replacement_year => 2010)
 
     searcher.scheduled_replacement_year = asset.scheduled_replacement_year
     searcher.scheduled_replacement_year_comparator ='0'
@@ -90,7 +105,7 @@ RSpec.describe AssetSearcher, :type => :model do
 
   it 'should be able to search by policy replacement year' do
     asset.update!(:policy_replacement_year => 2020)
-    lesser = create(:equipment_asset, :policy_replacement_year => 2010, :organization_id => 1)
+    lesser.update!(:policy_replacement_year => 2010)
 
     searcher = AssetSearcher.new(:policy_replacement_year => asset.policy_replacement_year, :policy_replacement_year_comparator => '0', :organization_id => asset.organization_id )
     expect(searcher.respond_to?(:policy_replacement_year)).to be true
@@ -104,8 +119,8 @@ RSpec.describe AssetSearcher, :type => :model do
   end
 
   it 'should be able to search by purchase date' do
-    asset = create(:equipment_asset, :purchase_date => Date.today, :organization_id => 1)
-    lesser = create(:equipment_asset, :purchase_date => Date.new(2000,1,1), :organization_id => 1)
+    asset.update!(:purchase_date => Date.today)
+    lesser.update!(:purchase_date => Date.new(2000,1,1))
 
     searcher = AssetSearcher.new(:purchase_date => asset.purchase_date, :purchase_date_comparator => '0', :organization_id => asset.organization_id )
     expect(searcher.respond_to?(:purchase_date)).to be true
@@ -119,8 +134,8 @@ RSpec.describe AssetSearcher, :type => :model do
   end
 
   it 'should be able to search by manufacture year' do
-    asset = create(:equipment_asset, :manufacture_year => 2010, :organization_id => 1)
-    lesser = create(:equipment_asset, :manufacture_year => 2000, :organization_id => 1)
+    asset.update!(:manufacture_year => 2010)
+    lesser.update!(:manufacture_year => 2000)
 
     searcher = AssetSearcher.new(:manufacture_year => asset.manufacture_year, :manufacture_year_comparator => '0', :organization_id => asset.organization_id )
     expect(searcher.respond_to?(:manufacture_year)).to be true
@@ -134,8 +149,8 @@ RSpec.describe AssetSearcher, :type => :model do
   end
 
   it 'should be able to search by in service date' do
-    asset = create(:equipment_asset, :in_service_date => Date.today, :organization_id => 1)
-    lesser = create(:equipment_asset, :in_service_date => Date.new(2000,1,1), :organization_id => 1)
+    asset.update!(:in_service_date => Date.today)
+    lesser.update!(:in_service_date => Date.new(2000,1,1))
 
     searcher = AssetSearcher.new(:in_service_date => asset.in_service_date, :in_service_date_comparator => '0', :organization_id => asset.organization_id )
     expect(searcher.respond_to?(:in_service_date)).to be true
@@ -155,7 +170,7 @@ RSpec.describe AssetSearcher, :type => :model do
   # #------------------------------------------------------------------------------
 
   it 'should be able to search by in backlog status' do
-    asset = create(:equipment_asset, :in_backlog => true, :organization_id => 1)
+    asset.update!(:in_backlog => true)
 
     searcher = AssetSearcher.new(:in_backlog => "1", :organization_id => asset.organization_id )
     expect(searcher.respond_to?(:in_backlog)).to be true
@@ -164,7 +179,7 @@ RSpec.describe AssetSearcher, :type => :model do
   end
 
   it 'should be able to search by in purchased new' do
-    asset = create(:equipment_asset, :purchased_new => true, :organization_id => 1)
+    asset.update!(:purchased_new => true)
 
     searcher = AssetSearcher.new(:purchased_new => '1', :organization_id => asset.organization_id )
     expect(searcher.respond_to?(:purchased_new)).to be true
@@ -178,7 +193,7 @@ RSpec.describe AssetSearcher, :type => :model do
   # #
   # #------------------------------------------------------------------------------
   it 'should be able to search by manufacturer model' do
-    asset = create(:equipment_asset, :manufacturer_model => 'test', :organization_id => 1)
+    asset.update!(:manufacturer_model => 'test')
 
     searcher = AssetSearcher.new(:manufacturer_model => asset.manufacturer_model, :organization_id => asset.organization_id )
     expect(searcher.respond_to?(:manufacturer_model)).to be true

@@ -150,7 +150,7 @@ RSpec.describe UsersController, :type => :controller do
   end
 
   it 'POST create' do
-    post :create, {"user" => {"first_name"=>"Lydia", "last_name"=>"Chang", "email"=>"lchang@camsys.com", "title"=>"Software Engineer", "external_id"=>"", "phone"=>"617-354-1067", "phone_ext"=>"", "timezone"=>"Eastern Time (US & Canada)", "address1"=>"400 CambridgePark Drive", "address2"=>"", "city"=>"Cambridge", "state"=>"MA", "zip"=>"02140", "organization_id"=>"1", "role_ids"=>[Role.find_by(:name => 'manager').id.to_s]}}
+    post :create, {"user" => {:password => SecureRandom.base64(64), "first_name"=>"Lydia", "last_name"=>"Chang", "email"=>"lchang@camsys.com", "title"=>"Software Engineer", "external_id"=>"", "phone"=>"617-354-1067", "phone_ext"=>"", "timezone"=>"Eastern Time (US & Canada)", "address1"=>"400 CambridgePark Drive", "address2"=>"", "city"=>"Cambridge", "state"=>"MA", "zip"=>"02140", "organization_id"=>"1", "role_ids"=>Role.find_by(:name => 'manager').id.to_s, :privilege_ids => []}}
 
     expect(assigns(:user).first_name).to eq('Lydia')
     expect(assigns(:user).last_name).to eq('Chang')
@@ -168,13 +168,13 @@ RSpec.describe UsersController, :type => :controller do
 
   describe 'PUT update' do
     it 'can update ownself' do
-      put :update, {"id" => subject.current_user.object_key, "user"=>{'title' => 'new promotion'}}
+      put :update, {"id" => subject.current_user.object_key, "user"=>{'title' => 'new promotion', :role_ids => 2, :privilege_ids => []}}
 
       expect(assigns(:user).title).to eq('new promotion')
     end
 
     it 'a support can update anyone' do
-      put :update, {"id" => test_user2.object_key, "user"=>{'title' => 'test user2 new promotion'}}
+      put :update, {"id" => test_user2.object_key, "user"=>{'title' => 'test user2 new promotion', :role_ids => 2, :privilege_ids => []}}
 
       expect(assigns(:user).title).to eq('test user2 new promotion')
     end
