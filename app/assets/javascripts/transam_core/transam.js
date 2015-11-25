@@ -177,20 +177,24 @@ var transam = new function() {
 	//
 	// get a key value, if the key does not exist the default value is returned
 	this.get_ui_key_value = function(key, default_val) {
-	    var value;
-	    try {
-	        value = window.sessionStorage.getItem(key);
-	    } catch(e) {
-	        value = default_val;
-	    }
+    var value;
+    try {
+      value = window.sessionStorage.getItem(key);
+    } catch(e) {
+      value = default_val;
+    }
 		//alert('getting value for ' + key + '; val = ' + value);
-	    return value;
+    return value;
 	};
 
 	// Set a key value. Keys must be unique strings
 	this.set_ui_key_value = function(key, value) {
 		//alert('setting value for ' + key + ' to ' + value);
-	    window.sessionStorage.setItem(key, value);
+    window.sessionStorage.setItem(key, value);
+	};
+	// Remove a key value.
+	this.remove_ui_key_value = function(key) {
+    window.sessionStorage.removeItem(key);
 	};
 
 	// Used to remove any existing banner messages
