@@ -122,11 +122,11 @@ module TransamHelper
   def bootstrap_class_priority_type priority_type
     case priority_type.id
     when 1
-      "panel-default"
+      "text-default"
     when 2
-      "panel-info"
+      "text-info"
     when 3
-      "panel-warning"
+      "text-danger"
     else
       ""
     end
