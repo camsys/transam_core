@@ -4,7 +4,7 @@
       .media-left
         = link_to image_tag(p.image.url(:thumb)), p.image.url,  :class => "img-responsive gallery-image", :data => {:lightbox => "gallery"}
       .media-body
-        = p.description.html_safe
+        = simple_format(p.description)
         %p.title.text-muted.small= "#{p.creator.name}<br/>#{format_as_date_time(p.created_at)}".html_safe
       .media-right
         .btn-group-vertical.btn-group-xs{:role => "group"}

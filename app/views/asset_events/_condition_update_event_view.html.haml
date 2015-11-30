@@ -1,4 +1,4 @@
 = format_field("Reported Condition", @asset_event.condition_type.nil? ? 'Unknown' : @asset_event.condition_type.name)
 = format_field("Reported Rating", format_as_decimal(@asset_event.assessed_rating))
 = format_field("Reported On", format_as_date(@asset_event.event_date))
-= format_field("Comments", @asset_event.comments.html_safe) unless @asset_event.comments.blank?
+= format_field("Comments", simple_format(@asset_event.comments))

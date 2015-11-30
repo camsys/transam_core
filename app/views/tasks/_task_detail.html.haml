@@ -41,7 +41,7 @@
 
 
   .panel-body.collapse{:id => "#{task.object_key}_panel_body"}
-    %p= task.body.html_safe
+    = simple_format(task.body)
 
   .panel-footer.clearfix
     %span.pull-right.text-muted

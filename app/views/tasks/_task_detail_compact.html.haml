@@ -1,6 +1,6 @@
 = link_to user_task_path(current_user, task), :class => 'list-group-item' do
-	%span.fa{:class => bootstrap_class_priority_type(task.priority_type)}
+	%span.fa.fa-exclamation{:class => bootstrap_class_priority_type(task.priority_type)}
 	%span.name{:style => "min-width: 180px;display: inline-block;"}= task.subject
 	%span.pull-right.text-muted.small= format_as_date_time_distance(task.complete_by)
 	%br
-	%span= task.body.html_safe
+	%span= task.body
