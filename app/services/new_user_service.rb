@@ -10,7 +10,9 @@ class NewUserService
   # Override this method to invoke business logic for creating new users.
   def build(params)
 
+    Rails.logger.debug "In Core NewUserService"
     user = User.new(params)
+    Rails.logger.debug user.inspect
     user
 
   end

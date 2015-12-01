@@ -248,12 +248,15 @@ class UsersController < OrganizationAwareController
       if @user.update_attributes(form_params)
 
         #-----------------------------------------------------------------------
-        # Assign the role and privileges
+        # Assign the role and privileges but only on a profile form, not a
+        # settings form
         #-----------------------------------------------------------------------
-        role_service = get_user_role_service
-        role_service.set_roles_and_privileges @user, current_user, role_id, privilege_ids
-        role_service.post_process @user
-
+        unless role_id.blank?
+          role_service = get_user_role_service
+          role_service.set_roles_and_privileges @user, current_user, role_id, privilege_ids
+          role_service.post_process @user
+        end
+        
         if @user.id == current_user.id
           notify_user(:notice, "Your profile was successfully updated.")
         else
@@ -367,21 +370,13 @@ class UsersController < OrganizationAwareController
   # Get the configured service to handle user creation, defaulting
   #-----------------------------------------------------------------------------
   def get_new_user_service
-    if defined? Rails.application.config.new_user_service
-      Rails.application.config.new_user_service.constantize.new
-    else
-      NewUserService.new
-    end
+    Rails.application.config.new_user_service.constantize.new
   end
 
   #-----------------------------------------------------------------------------
   # Get the configured service to handle user role management, defaulting
   #-----------------------------------------------------------------------------
   def get_user_role_service
-    if defined? Rails.application.config.user_role_service
-      Rails.application.config.user_role_service.constantize.new
-    else
-      UserRoleService.new
-    end
+    Rails.application.config.user_role_service.constantize.new
   end
 end
