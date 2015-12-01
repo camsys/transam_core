@@ -7,13 +7,13 @@
 # on a schedule.
 #
 #
-# 
+#
 #------------------------------------------------------------------------------
 class Activity < ActiveRecord::Base
-  
+
   # Include the object key mixin
   include TransamObjectKey
-  
+
   #------------------------------------------------------------------------------
   # Callbacks
   #------------------------------------------------------------------------------
@@ -30,8 +30,7 @@ class Activity < ActiveRecord::Base
   #------------------------------------------------------------------------------
   # Validations
   #------------------------------------------------------------------------------
-    
-  validates :organization_type, :presence => true, :allow_nil => true
+
   validates :name,              :presence => true
   validates :description,       :presence => true
   validates :start,             :presence => true
@@ -42,7 +41,7 @@ class Activity < ActiveRecord::Base
   validates :escalate,          :presence => true
   validates :job_name,          :presence => true
 
-  # List of allowable form param hash keys  
+  # List of allowable form param hash keys
   FORM_PARAMS = [
     :organization_type_id,
     :name,
@@ -66,26 +65,26 @@ class Activity < ActiveRecord::Base
   # Class Methods
   #
   #------------------------------------------------------------------------------
-      
+
   def self.allowable_params
     FORM_PARAMS
   end
-            
+
   #------------------------------------------------------------------------------
   #
   # Instance Methods
   #
   #------------------------------------------------------------------------------
-  
+
   def due_datetime
     Chronic.parse(due)
   end
-  
+
   def to_s
     name
   end
-    
-  # Returns a reminder job instance that is configured for this activity  
+
+  # Returns a reminder job instance that is configured for this activity
   def job
 
     job_name.constantize.new({
@@ -97,7 +96,7 @@ class Activity < ActiveRecord::Base
       :alert => alert,
       :escalate => escalate
       })
-    
+
   end
   #------------------------------------------------------------------------------
   #
@@ -109,7 +108,6 @@ class Activity < ActiveRecord::Base
   # Set resonable defaults for a new organization
   def set_defaults
     self.active ||= true
-  end    
-  
+  end
+
 end
-      
