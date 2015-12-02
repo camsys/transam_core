@@ -36,7 +36,7 @@
 					= @message.opened_at.present? ? "Opened: #{format_as_date_time(@message.opened_at)}" : "Unopened"
 				%hr
 				%span.name{:style => "display: inline-block;"}
-					= simple_format(@message.body)
+					= format_as_text(@message.body)
 
 - if is_to_me
 	.row

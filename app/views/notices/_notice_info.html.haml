@@ -3,4 +3,4 @@
   = notice_endpoints(@notice)
   %h4.media-heading{:class => @notice.notice_type.display_class}= notice_title(@notice)
   %p= @notice.summary.html_safe
-  = simple_format(@notice.details)
+  = format_as_text(@notice.details)

@@ -9,7 +9,7 @@
 			- else
 				- @policies.each do |p|
 					= action_thumbnail_tag({:class => 'col-sm-4', :icon => "fa fa-book", :title => p.name, :path => policy_path(p)}) do
-						= simple_format(p.description)
+						= format_as_text(p.description)
 						- if p.active
 							%p= "<strong>Current</strong>".html_safe
 

@@ -3,15 +3,11 @@ module TransamFormatHelper
   # Include the fiscal year mixin
   include FiscalYear
 
-  # Formats a text field, truncating at maxlen characters
-  def format_as_text(val, maxlen = 64)
-    if val.present?
-      if val.length > maxlen
-        sanitize val.truncate(maxlen)
-      else
-        val
-      end
-    end
+  #-----------------------------------------------------------------------------
+  # Formats a text field
+  #-----------------------------------------------------------------------------
+  def format_as_text(val, sanitize=false)
+    simple_format(val, sanitize)
   end
 
   # Formats a user name and provides message link and optional messaging options
