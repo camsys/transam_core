@@ -3,4 +3,4 @@
 	%span.name{:style => "min-width: 180px;display: inline-block;"}= task.subject
 	%span.pull-right.text-muted.small= format_as_date_time_distance(task.complete_by)
 	%br
-	%span= task.body
+	%span= format_as_text(task.body)
