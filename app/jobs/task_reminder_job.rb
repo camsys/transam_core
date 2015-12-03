@@ -32,11 +32,11 @@ class TaskReminderJob < Job
     tasks.each do |task|
       # Send a message to the assigned user for each task
       msg = Message.new
-      msg.organization  = task.for_organization
+      msg.organization  = task.organization
       msg.user          = sys_user
-      msg.to_user       = task.assigned_to
+      msg.to_user       = task.assigned_to_user
       msg.subject       = 'Incomplete Task Reminder'
-      msg.body          = "<p>Task <strong>#{task.subject}</strong> is incomplete and is due to be completed by <strong>#{task.complete_by.strftime("%m/%d/%Y")}</strong>.</p><p>You can view this task by clicking <a href='#{user_task_path(task.assigned_to, task)}'>here</a></p>"
+      msg.body          = "<p>Task <strong>#{task.subject}</strong> is incomplete and is due to be completed by <strong>#{task.complete_by.strftime("%m/%d/%Y")}</strong>.</p><p>You can view this task by clicking <a href='#{user_task_path(task.assigned_to_user, task)}'>here</a></p>"
       msg.priority_type = priority_type
       msg.save
     end
