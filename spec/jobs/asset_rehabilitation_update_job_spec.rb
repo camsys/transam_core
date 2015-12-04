@@ -8,13 +8,19 @@ RSpec.describe AssetRehabilitationUpdateJob, :type => :job do
     end
   end
 
+  let(:test_asset) { create(:equipment_asset) }
+
   it '.run' do
-    test_asset = create(:equipment_asset)
     test_event = test_asset.rehabilitation_updates.create!(attributes_for(:rehabilitation_update_event))
     AssetRehabilitationUpdateJob.new(test_asset.object_key).run
     test_asset.reload
 
     expect(test_asset.last_rehabilitation_date).to eq(Date.today)
     expect(test_asset.scheduled_rehabilitation_year).to be nil
+  end
+
+  it '.prepare' do
+    expect(Rails.logger).to receive(:debug).with("Executing AssetRehabilitationUpdateJob at #{Time.now.to_s} for Asset #{test_asset.object_key}")
+    AssetRehabilitationUpdateJob.new(test_asset.object_key).prepare
   end
 end

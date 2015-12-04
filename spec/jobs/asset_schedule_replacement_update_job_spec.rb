@@ -8,8 +8,9 @@ RSpec.describe AssetScheduleReplacementUpdateJob, :type => :job do
     end
   end
 
+  let(:test_asset) { create(:equipment_asset) }
+
   it '.run' do
-    test_asset = create(:equipment_asset)
     test_event = test_asset.schedule_replacement_updates.create!(attributes_for(:schedule_replacement_update_event))
     test_policy = create(:policy, :organization => test_asset.organization)
     create(:policy_asset_type_rule, :policy => test_policy, :asset_type => test_asset.asset_type)
@@ -20,5 +21,10 @@ RSpec.describe AssetScheduleReplacementUpdateJob, :type => :job do
 
     expect(test_asset.scheduled_replacement_year).to eq(test_event.replacement_year)
     expect(test_asset.replacement_reason_type).to eq(test_event.replacement_reason_type)
+  end
+
+  it '.prepare' do
+    expect(Rails.logger).to receive(:debug).with("Executing AssetScheduleReplacementUpdateJob at #{Time.now.to_s} for Asset #{test_asset.object_key}")
+    AssetScheduleReplacementUpdateJob.new(test_asset.object_key).prepare
   end
 end

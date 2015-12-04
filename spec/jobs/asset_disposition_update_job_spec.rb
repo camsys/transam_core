@@ -8,8 +8,9 @@ RSpec.describe AssetDispositionUpdateJob, :type => :job do
     end
   end
 
+  let(:test_asset) { create(:equipment_asset) }
+
   it '.run' do
-    test_asset = create(:equipment_asset)
     test_event = test_asset.disposition_updates.create!(attributes_for(:disposition_update_event))
     AssetDispositionUpdateJob.new(test_asset.object_key).run
     test_asset.reload
@@ -17,5 +18,10 @@ RSpec.describe AssetDispositionUpdateJob, :type => :job do
     expect(test_asset.disposition_date).to eq(Date.today)
     expect(test_asset.disposition_type).to eq(test_event.disposition_type)
     expect(test_asset.service_status_type).to eq(ServiceStatusType.find_by(:code => 'D'))
+  end
+
+  it '.prepare' do
+    expect(Rails.logger).to receive(:debug).with("Executing AssetDispositionUpdateJob at #{Time.now.to_s} for Asset #{test_asset.object_key}")
+    AssetDispositionUpdateJob.new(test_asset.object_key).prepare
   end
 end

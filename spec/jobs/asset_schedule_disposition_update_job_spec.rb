@@ -8,13 +8,19 @@ RSpec.describe AssetScheduleDispositionUpdateJob, :type => :job do
     end
   end
 
+  let(:test_asset) { create(:equipment_asset) }
+
   it '.run' do
-    test_asset = create(:equipment_asset)
     test_event = test_asset.schedule_disposition_updates.create!(attributes_for(:schedule_disposition_update_event))
     AssetScheduleDispositionUpdateJob.new(test_asset.object_key).run
     test_asset.reload
 
     expect(test_asset.scheduled_disposition_year).to eq(test_event.disposition_year)
 
+  end
+
+  it '.prepare' do
+    expect(Rails.logger).to receive(:debug).with("Executing AssetScheduleDispositionUpdateJob at #{Time.now.to_s} for Asset #{test_asset.object_key}")
+    AssetScheduleDispositionUpdateJob.new(test_asset.object_key).prepare
   end
 end
