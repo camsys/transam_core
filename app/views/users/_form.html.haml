@@ -20,14 +20,21 @@
         = f.input :last_name, :placeholder => "User's last name...", :label => "Last Name"
 
     = f.input :email, :as => :email, :placeholder => "User's business email address...", :hint => 'Enter only business email addresses'
-    = f.input :title, :placeholder => "User's title..."
-
     .row
-      .col-lg-4.col-md-4.col-sm-6.col-xs-12
+      .col-lg-6.col-md-6.col-sm-6.col-xs-12
+        = f.input :title, :placeholder => "User's title..."
+      .col-lg-6.col-md-6.col-sm-6.col-xs-12
         = f.input :external_id, :placeholder => "User's ID number...", :label => "ID Number"
-      - if current_user.has_role? :admin
-        .col-lg-8.col-md-8.col-sm-6.col-xs-12
-          = f.input :role_ids, :collection => Role.all.collect{|x| [x.name.titleize, x.id]}, :as => :check_boxes
+
+    - if current_user.has_role? :admin
+      %fieldset
+        %legend Roles & Prvileges
+
+        .row
+          .col-lg-6.col-md-6.col-sm-6.col-xs-12
+            = f.input :role_ids, :label => "User Role", :collection => Role.roles.where("name != 'user'").collect{|x| [x.name.titleize, x.id]}, :include_blank => false
+          .col-lg-6.col-md-6.col-sm-6.col-xs-12
+            = f.input :privilege_ids, :label => "User Privileges", :collection => Role.privileges.where("name != 'admin'").collect{|x| [x.name.titleize, x.id]}, :as => :check_boxes, :input_html => { :multiple => true }
 
   %fieldset
     %legend Contact Info
