@@ -5,8 +5,8 @@ branches:
   only:
   - master
 env:
-- TEST_SUITE=rspec RAILS_VERSION=4.1.13
-- TEST_SUITE=cucumber RAILS_VERSION=4.1.13
+- TEST_SUITE=rspec
+- TEST_SUITE=cucumber
 script:
 - bundle exec rake app:transam_core:prepare_rspec
 - bundle exec $TEST_SUITE
