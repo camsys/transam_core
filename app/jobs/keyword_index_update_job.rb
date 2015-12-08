@@ -26,7 +26,7 @@ class KeywordIndexUpdateJob < Job
   end
 
   def prepare
-    Rails.logger.debug "Executing KeywordIndexUpdateJob at #{Time.now.to_s} for Upload #{object_key}"
+    Rails.logger.info "Executing KeywordIndexUpdateJob at #{Time.now.to_s} for Keyword Index #{object_key}"
   end
 
   def check
