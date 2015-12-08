@@ -47,6 +47,7 @@ RSpec.describe TaskReminderJob, :type => :job do
   end
 
   it '.prepare' do
+    allow(Time).to receive(:now).and_return(Time.utc(2000,"jan",1,20,15,1))
     expect(Rails.logger).to receive(:info).with("Executing TaskReminderJob at #{Time.now.to_s} for tasks due in 1 days.")
     TaskReminderJob.new(1, PriorityType.first).prepare
   end

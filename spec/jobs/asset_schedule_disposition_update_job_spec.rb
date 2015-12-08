@@ -20,6 +20,9 @@ RSpec.describe AssetScheduleDispositionUpdateJob, :type => :job do
   end
 
   it '.prepare' do
+    test_asset.save!
+    allow(Time).to receive(:now).and_return(Time.utc(2000,"jan",1,20,15,1))
+
     expect(Rails.logger).to receive(:debug).with("Executing AssetScheduleDispositionUpdateJob at #{Time.now.to_s} for Asset #{test_asset.object_key}")
     AssetScheduleDispositionUpdateJob.new(test_asset.object_key).prepare
   end

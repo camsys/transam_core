@@ -9,6 +9,8 @@ RSpec.describe SendMessageAsEmailJob, :type => :job do
 
   it '.prepare' do
     test_msg = create(:message)
+    allow(Time).to receive(:now).and_return(Time.utc(2000,"jan",1,20,15,1))
+
     expect(Rails.logger).to receive(:debug).with("Executing SendMessageAsEmailJob at #{Time.now.to_s} for Message #{test_msg.object_key}"  )
     SendMessageAsEmailJob.new(test_msg.object_key).prepare
   end
