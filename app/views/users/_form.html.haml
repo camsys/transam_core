@@ -26,7 +26,7 @@
       .col-lg-6.col-md-6.col-sm-6.col-xs-12
         = f.input :external_id, :placeholder => "User's ID number...", :label => "ID Number"
 
-    - if current_user.has_role? :admin
+    - if can? :assign_roles, User
       %fieldset
         %legend Roles & Prvileges
 
