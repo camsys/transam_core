@@ -13,5 +13,6 @@ script:
 before_script:
 - cp spec/dummy/config/database.travis.yml spec/dummy/config/database.yml
 before_install:
+- export TZ="America/New_York" # set timezone
 - mysql -e "create database IF NOT EXISTS transam_core_testing;" -uroot
 - openssl aes-256-cbc -K $encrypted_8b7ffff52cb7_key -iv $encrypted_8b7ffff52cb7_iv -in spec/dummy/db/schema.rb.enc -out spec/dummy/db/schema.rb -d
