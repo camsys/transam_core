@@ -4,29 +4,29 @@
 		<b class="caret"></b>
 	<% end %>
 	<ul class="dropdown-menu multi-level" role="menu">
-		<li class="text-left">
-			<%= link_to reports_path  do %>
-				<i class="fa fa-bar-chart-o fa-fw"></i> All
-			<% end %>
-		</li>
-		<li class="divider"></li>
-		<% ReportType.all.each do | rt | %>
-			<% reports = get_user_menu_reports(rt) %>
-			<% if reports.size > 0 %>
-				<li class="text-left dropdown-submenu">
-					<%= link_to reports_path(:report_type => rt.id)  do %>
-						<i class="<%= rt.display_icon_name %> fa-fw"></i> <%= rt.name.pluralize(2) %>
-					<% end %>
-					<ul class="dropdown-menu">
-						<% reports.each do |report| %>
-							<li class="text-left">
-								<%= link_to report_path(report)  do %>
-									<i class="<%= report.report_type.display_icon_name %> fa-fw"></i> <%= report.name %>
-								<% end %>
-							</li>
+		<% ReportType.active.joins(:reports).where(reports: {show_in_nav: true}).uniq.each do | rt | %>
+			<% if rt.reports.count > 0 %>
+				<% num = 0 %>
+				<% reports = rt.reports.where(show_in_nav: true) %>
+				<% reports.each{|x| num += (current_user.is_in_roles? x.role_names) ? 1 : 0} %>
+				<% if num > 0 %>
+					<li class="text-left dropdown-submenu">
+						<%= link_to reports_path(:report_type => rt.id)  do %>
+							<i class="<%= rt.display_icon_name %> fa-fw"></i> <%= rt.name.pluralize(2) %>
 						<% end %>
-					</ul>
-				</li>
+						<ul class="dropdown-menu">
+							<% reports.each do |report| %>
+								<% if current_user.is_in_roles? report.role_names %>
+									<li class="text-left">
+										<%= link_to report_path(report)  do %>
+											<i class="<%= report.report_type.display_icon_name %> fa-fw"></i> <%= report.name %>
+										<% end %>
+									</li>
+								<% end %>
+							<% end %>
+						</ul>
+					</li>
+				<% end %>
 			<% end %>
 		<% end %>
 	</ul>
