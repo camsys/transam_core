@@ -16,15 +16,20 @@
 
 .row
   .col-sm-12
+    .page-header
+      .btn-toolbar.pull-right{:style => 'margin-top: 7px;'}
+        = render 'actions'
+      %h2= @policy.name
+
+  .col-sm-12
     %fieldset
       %legend Asset Replacement/Rehabilitation Policy
       = render 'summary'
 
-.col-lg-12.col-md-12.col-sm-12.col-xs-12
-  #spinner
-    = loader_panel_tag({:message => "Working...", :size => 3, :spinner => "refresh"})
+  .col-sm-12
+    #spinner
+      = loader_panel_tag({:message => "Working...", :size => 3, :spinner => "refresh"})
 
-.row
   .col-sm-12#rules-container
     = render 'rules'
 

@@ -242,12 +242,13 @@ class PoliciesController < OrganizationAwareController
     end
   end
 
-  def updater
+  def runner
     add_breadcrumb "Policies", policies_path
     add_breadcrumb @policy.name, policy_path(@policy)
-    add_breadcrumb "Asset Updater", updater_policy_path(@policy)
+    add_breadcrumb "Policy Runner", runner_policy_path(@policy)
 
     @builder_proxy = AssetUpdaterProxy.new(:policy => @policy)
+    @asset_types = AssetType.active.where(id: @organization.asset_type_counts.keys)
     @message = "Applying policy to selected assets. I'm doing a lot of math so please be patient!."
   end
 
@@ -262,7 +263,6 @@ class PoliciesController < OrganizationAwareController
       # Run the builder
       options = {}
       options[:asset_type_ids] = @builder_proxy.asset_types
-      options[:asset_group_ids] = @builder_proxy.asset_groups
 
       builder = AssetUpdateJobBuilder.new
       num_to_update = builder.build(@organization, options)

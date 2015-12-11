@@ -1,0 +1,33 @@
+= render(:partial => 'shared/form_errors', :locals => {:obj => @builder_proxy}) unless @builder_proxy.errors.empty?
+
+.row
+  .col-md-6.col-md-offset-3
+    .page-header
+      %h2 Policy Runner
+
+#processing
+  = render :partial => 'shared/running_process', :locals => {:message => @message}
+
+.row#form
+  .col-md-6.col-md-offset-3
+    .row
+      .col-sm-12
+        = render 'policy_runner_notes'
+      .col-sm-12
+        = render 'policy_runner_form'
+
+:javascript
+
+  // Document Ready
+  $(document).ready(function(){
+    // Hide the processing div and show the form
+    $('#processing').hide();
+    $('#form').show();
+
+    // install a submit handler for the form
+    $('#new_asset_updater_proxy').submit(function() {
+      $('#processing').show();
+      $('#form').hide();
+      return true;
+    });
+  });

@@ -1,0 +1,47 @@
+= simple_form_for(@builder_proxy,
+  :html => {:class => 'form-vertical'},
+  :url => update_assets_policy_path(@policy),
+  :wrapper => :vertical_form,
+  :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes,
+  :radio_buttons => :vertical_radio_and_checkboxes,
+  :file => :vertical_file_input,
+  :boolean => :vertical_boolean}) do |f|
+
+  .row
+    .col-md-6
+      = f.input :asset_types, :collection => @asset_types, :requried => true, :multiple => true, :as => :check_boxes, :input_html => {:class => 'asset_type_selector'}
+
+  - if @organization.capital_projects.sogr.count > 0
+    .row
+      .col-md-12
+        = render 'policy_runner_warning'
+
+  = f.submit "Run...", :class => "btn btn-primary", :id => "submit_button"
+
+:javascript
+
+  var num_selected = 0;
+  $(document).ready(function(){
+
+    // Create a click handler for the checkboxes
+    $(".asset_type_selector").on( "change", function() {
+      if( $(this).is(':checked')) {
+        num_selected += 1;
+      } else {
+        num_selected -= 1;
+      }
+      if (num_selected > 0) {
+        transam.enable_element("submit_button");
+      } else {
+        transam.disable_element("submit_button");
+      }
+      //console.log('num_selected = ' + num_selected);
+    });
+
+    // Check all the asset types
+    $(".asset_type_selector").each(function() {
+      $(this).prop( "checked", true );
+      num_selected += 1;
+    });
+
+  });

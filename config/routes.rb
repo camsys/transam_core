@@ -157,16 +157,16 @@ Rails.application.routes.draw do
 
   resources :policies do
     member do
-      get  'show_edit_form'
-      get   'updater'
-      post  'update_assets'
-      get   'copy'
-      get   'make_current'
-      patch  'update_policy_rule'
-      post  'update_policy_rule'
-      get   'new_policy_rule'
-      post  'add_policy_rule'
-      delete 'remove_policy_rule'
+      get     'show_edit_form'
+      get     'runner'
+      post    'update_assets'
+      get     'copy'
+      get     'make_current'
+      patch   'update_policy_rule'
+      post    'update_policy_rule'
+      get     'new_policy_rule'
+      post    'add_policy_rule'
+      delete  'remove_policy_rule'
     end
   end
 
