@@ -5,7 +5,7 @@
       = " Actions"
       %span.caret
     %ul.dropdown-menu{:role => 'menu'}
-      - if current_user == @task.user or current_user.has_role? :admin
+      - if can? :update, @task
         %li
           = link_to edit_user_task_path(current_user, @task) do
             %i.fa.fa-fw.fa-edit
