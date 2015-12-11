@@ -6,6 +6,11 @@ class TasksController < NestedResourceController
   before_action :set_task, :only => [:show, :edit, :update, :destroy, :fire_workflow_event, :change_owner]
   before_filter :reformat_date_field, :only => [:create, :update]
 
+  #-----------------------------------------------------------------------------
+  # Protect controller methods using the cancan ability
+  #-----------------------------------------------------------------------------
+  authorize_resource
+
   # Ajax callback returning a list of tasks as JSON calendar events
   def filter
     filter_start_time = DateTime.parse(params[:start])
