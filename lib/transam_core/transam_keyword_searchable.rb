@@ -67,7 +67,7 @@ module TransamKeywordSearchable
     text = a.uniq.compact.join(' ')
 
     kwsi = KeywordSearchIndex.find_or_create_by(object_key: object_key) do |keyword_search_index|
-      keyword_search_index.organization_id = self.respond_to? :organization_id ? 0 : self.organization_id
+      keyword_search_index.organization_id = self.respond_to? :organization_id ? self.organization_id : 0
       keyword_search_index.context = self.class.name
       keyword_search_index.search_text = text
       if self.is_a?(Asset)

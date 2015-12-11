@@ -29,11 +29,24 @@
 
 :javascript
 
+  var search_text = '#{@search_text}';
+  var search_pattern = new RegExp(search_text, 'gi');
+
   function query_params(params) {
-    params.search_text = '#{@search_text}';
+    params.search_text = search_text;
     //console.log(JSON.stringify(params));
     return params;
   };
+
+  // After loading the table, mark any highlightd text
+  $('#search_results_table').on('post-body.bs.table', function() {
+    $('.search-results-text').each(function() {
+      var text = $(this).text();
+      //console.log(text);
+      var text = text.replace(search_pattern, "<mark>" + search_text + "</mark>");
+      $(this).html(text);
+    });
+  });
 
   $(window).resize(function() {
     $('#search_results_table').bootstrapTable('resetView');
