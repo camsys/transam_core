@@ -91,11 +91,13 @@ class Document < ActiveRecord::Base
     SEARCHABLE_FIELDS
   end
 
-  # Return the organiation of the owning object so instances can be index using
+  # Return the organization of the owning object so instances can be index using
   # the keyword indexer
   def organization
     if documentable.respond_to? :organization
       documentable.organization
+    else
+      creator.organization
     end
   end
 
