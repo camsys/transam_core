@@ -26,9 +26,6 @@ class Comment < ActiveRecord::Base
   # Each comment was created by a user
   belongs_to :creator, :class_name => "User", :foreign_key => "created_by_id"
 
-  # Need to support creating keyword_searchables, which require an org
-  delegate :organization, :organization_id, to: :creator
-
   validates :comment,             :presence => true
   validates :created_by_id,       :presence => true
 
