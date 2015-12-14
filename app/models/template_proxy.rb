@@ -9,7 +9,7 @@ class TemplateProxy < Proxy
   attr_accessor   :organization_id
 
   # Type of asset to process
-  attr_accessor    :asset_types
+  attr_accessor    :asset_type_id
 
   # Basic validations. Just checking that the form is complete
   validates :file_content_type_id, :presence => true
@@ -19,8 +19,6 @@ class TemplateProxy < Proxy
     attrs.each do |k, v|
       self.send "#{k}=", v
     end
-
-    @asset_types ||= []
 
   end
 

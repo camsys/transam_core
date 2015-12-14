@@ -1,13 +1,13 @@
 - if can? :create, Upload
-  = link_to templates_uploads_path, :class => 'btn btn-default' do
+  = link_to templates_uploads_path, :class => 'btn btn-default btn-group' do
     %i.fa.fa-fw.fa-download
     = " Create a new Template"
 
-  = link_to new_upload_path, :class => 'btn btn-default' do
+  = link_to new_upload_path, :class => 'btn btn-default btn-group' do
     %i.fa.fa-fw.fa-upload
     = " Upload a Template"
 
-  .btn-group{:style => 'margin-left: 0!important;'}
+  .btn-group
     %button.btn.btn-default.dropdown-toggle{:data => {:toggle => 'dropdown'}, :aria => {:exapanded => 'false'}}
       Filter Status
       %span.caret

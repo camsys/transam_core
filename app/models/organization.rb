@@ -125,24 +125,29 @@ class Organization < ActiveRecord::Base
     users.with_role role_name
   end
 
-  # Returns a hash of asset-type_ids and the counts per non-zero type
+  #-----------------------------------------------------------------------------
+  # Returns a hash of asset_type_ids and the counts per non-zero type
+  #-----------------------------------------------------------------------------
   def asset_type_counts(active_only=true)
     if active_only
-      Asset.operational.where(:organization_id => id).group(:asset_type_id).count
+      assets.operational.group(:asset_type_id).count
     else
-      Asset.where(:organization_id => id).group(:asset_type_id).count
+      assets.group(:asset_type_id).count
     end
   end
 
+  #-----------------------------------------------------------------------------
   # Returns a hash of asset subtype ids and the counts per non-zero type
+  #-----------------------------------------------------------------------------
   def asset_subtype_counts(asset_type_id, active_only=true)
     if active_only
-      Asset.operational.where(:organization_id => id, :asset_type_id => asset_type_id).group(:asset_subtype_id).count
+      assets.operational.where(:asset_type_id => asset_type_id).group(:asset_subtype_id).count
     else
-      Asset.where(:organization_id => id, :asset_type_id => asset_type_id).group(:asset_subtype_id).count
+      assets.where(:asset_type_id => asset_type_id).group(:asset_subtype_id).count
     end
   end
 
+  #-----------------------------------------------------------------------------
   # Returns true if the organization is of the specified class or has the specified class as
   # and ancestor (superclass).
   #
@@ -152,6 +157,7 @@ class Organization < ActiveRecord::Base
   #    a class name eg Grantee
   #    a string eg "grantee"
   #
+  #-----------------------------------------------------------------------------
   def type_of?(type)
     begin
       self.class.ancestors.include?(type.to_s.classify.constantize)

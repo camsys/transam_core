@@ -3,7 +3,7 @@
   show_actions ||= 0
 
 - if show_actions == 1
-  #table_actions.btn-group
+  #table_actions.btn-toolbar
     = render :partial => "uploads/index_actions"
 
 %table.table.table-hover{:id => table_dom_id, :data => {:toggle => 'table',
@@ -55,4 +55,3 @@
         %td.right= format_as_date_time(f.created_at)
 
 = render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :path_pattern => upload_path("xxx")}
-  

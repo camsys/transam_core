@@ -132,23 +132,26 @@ class UploadsController < OrganizationAwareController
 
   end
 
+  #-----------------------------------------------------------------------------
+  # Display the download template form. User can select the type of update they
+  # want and the list of asset types
+  #-----------------------------------------------------------------------------
   def templates
 
     add_breadcrumb "Download Template"
 
     @message = "Creating inventory template. This process might take a while."
 
-    # Prepare a list of just the asset types of the current organization. We only
-    # pick up assets that are not disposed (i.e. operational)
+    # Prepare a list of the asset types for the current organization where at least
+    # one asset type is operational
     @asset_types = []
-    AssetType.all.each do |at|
-      count = Asset.operational.where('organization_id in (?) AND asset_type_id = ?', @organization_list, at.id).count
-      if count > 0
-        @asset_types << at
-      end
-    end
+    @organization.asset_type_counts.each{|x| @asset_types << AssetType.find(x[0])}
+
   end
 
+  #-----------------------------------------------------------------------------
+  # Send a file to the user
+  #-----------------------------------------------------------------------------
   def download_file
 
     # Send it to the user
@@ -166,7 +169,7 @@ class UploadsController < OrganizationAwareController
   # template form -- sets the params[:template] param
   # from an asset group -- sets the params[:file_content_type] param
   #
-
+  #-----------------------------------------------------------------------------
   def create_template
 
     add_breadcrumb "Download Template"
@@ -177,6 +180,7 @@ class UploadsController < OrganizationAwareController
     if params[:template_proxy]
       # Inflate the proxy
       template_proxy = TemplateProxy.new(params[:template_proxy])
+      Rails.logger.debug template_proxy.inspect
 
       # See if an org was set, use the default otherwise
       if template_proxy.organization_id.blank?
@@ -188,8 +192,9 @@ class UploadsController < OrganizationAwareController
 
       # The form defines the FileContentType which identifies the builder to use
       file_content_type = FileContentType.find(template_proxy.file_content_type_id)
-      # asset_types are an array or class names that will be used in the builder
-      asset_types = template_proxy.asset_types
+      # asset_types are an array of asset types
+      asset_types = [AssetType.find(template_proxy.asset_type_id)]
+
     elsif params[:file_content_type]
       # The request came from the group controller -- the user is attempting to
       # use an asset group to drive the template assets
@@ -227,7 +232,7 @@ class UploadsController < OrganizationAwareController
 
       # Save the template to a temporary file and render a success/download view
       file = Tempfile.new ['template', '.tmp'], "#{Rails.root}/tmp"
-      #ObjectSpace.undefine_finalizer(file)
+      ObjectSpace.undefine_finalizer(file)
       #You can uncomment this line when debugging locally to prevent Tempfile from disappearing before download.
       @filepath = file.path
       @filename = "#{org.short_name.downcase}_#{file_content_type.class_name.underscore}_#{Date.today}.xlsx"
@@ -238,7 +243,8 @@ class UploadsController < OrganizationAwareController
       ensure
         file.close
       end
-      # Ensure you're cleaning up appropriately...something wonky happened with Tempfiles not disappearing during testing
+      # Ensure you're cleaning up appropriately...something wonky happened with
+      # Tempfiles not disappearing during testing
       respond_to do |format|
         format.js
         format.html
