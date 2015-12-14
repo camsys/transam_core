@@ -130,9 +130,9 @@ class Organization < ActiveRecord::Base
   #-----------------------------------------------------------------------------
   def asset_type_counts(active_only=true)
     if active_only
-      assets.operational.group(:asset_type_id).count
+      Asset.operational.where(:organization => self).group(:asset_type_id).count
     else
-      assets.group(:asset_type_id).count
+      Asset.where(:organization => self).group(:asset_type_id).count
     end
   end
 
@@ -141,9 +141,9 @@ class Organization < ActiveRecord::Base
   #-----------------------------------------------------------------------------
   def asset_subtype_counts(asset_type_id, active_only=true)
     if active_only
-      assets.operational.where(:asset_type_id => asset_type_id).group(:asset_subtype_id).count
+      Asset.operational.where(:organization => self, :asset_type_id => asset_type_id).group(:asset_subtype_id).count
     else
-      assets.where(:asset_type_id => asset_type_id).group(:asset_subtype_id).count
+      Asset.where(:organization => self, :asset_type_id => asset_type_id).group(:asset_subtype_id).count
     end
   end
 
