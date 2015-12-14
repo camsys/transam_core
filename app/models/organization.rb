@@ -126,13 +126,21 @@ class Organization < ActiveRecord::Base
   end
 
   # Returns a hash of asset-type_ids and the counts per non-zero type
-  def asset_type_counts
-    Asset.unscoped.where(:organization_id => id).group(:asset_type_id).count
+  def asset_type_counts(active_only=true)
+    if active_only
+      Asset.operational.where(:organization_id => id).group(:asset_type_id).count
+    else
+      Asset.where(:organization_id => id).group(:asset_type_id).count
+    end
   end
 
   # Returns a hash of asset subtype ids and the counts per non-zero type
-  def asset_subtype_counts(asset_type_id)
-    Asset.where(:organization_id => id, :asset_type_id => asset_type_id).group(:asset_subtype_id).count
+  def asset_subtype_counts(asset_type_id, active_only=true)
+    if active_only
+      Asset.operational.where(:organization_id => id, :asset_type_id => asset_type_id).group(:asset_subtype_id).count
+    else
+      Asset.where(:organization_id => id, :asset_type_id => asset_type_id).group(:asset_subtype_id).count
+    end
   end
 
   # Returns true if the organization is of the specified class or has the specified class as
@@ -181,6 +189,19 @@ class Organization < ActiveRecord::Base
   # true
   def is_typed?
     self.class.to_s == organization_type.class_name
+  end
+
+  # Returns the organization sub-heirarchy rooted at this organization. The
+  # method returns this organization and all below it
+  def organization_hierarchy
+    a = []
+    # Perform a depth-first traversal of the org tree
+    a << self
+    children = Organization.where(:parent_id => self.id)
+    children.each do |child|
+      a += child.organization_hierarchy
+    end
+    a.uniq
   end
 
   #------------------------------------------------------------------------------
