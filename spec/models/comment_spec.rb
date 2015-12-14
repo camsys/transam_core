@@ -48,7 +48,7 @@ RSpec.describe Comment, :type => :model do
     it 'commentable does not have org' do
       test_comment.commentable = create(:asset_event)
 
-      expect(test_comment.organization).to be nil
+      expect(test_comment.organization).to eq(test_comment.creator.organization)
     end
     it 'commentable has org' do
       test_asset = create(:buslike_asset)

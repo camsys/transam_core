@@ -61,7 +61,7 @@ RSpec.describe Document, :type => :model do
     it 'documentable does not have org' do
       test_doc.documentable = create(:asset_event)
 
-      expect(test_doc.organization).to be nil
+      expect(test_doc.organization).to eq(test_doc.creator.organization)
     end
     it 'documentable has org' do
       test_asset = create(:buslike_asset)
