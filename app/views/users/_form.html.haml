@@ -1,3 +1,7 @@
+:ruby
+  assignable_roles = UserRoleService.new.assignable_roles(current_user)
+  assignable_privileges = UserRoleService.new.assignable_privileges(current_user)
+
 = simple_form_for(@user,
   :html => {:class => 'form-vertical'},
   :wrapper => :vertical_form,
@@ -32,9 +36,9 @@
 
         .row
           .col-lg-6.col-md-6.col-sm-6.col-xs-12
-            = f.input :role_ids, :label => "User Role", :collection => Role.roles.where("name != 'user'").collect{|x| [x.name.titleize, x.id]}, :include_blank => false
+            = f.input :role_ids, :label => "User Role", :collection => assignable_roles.collect{|x| [x.name.titleize, x.id]}, :include_blank => false
           .col-lg-6.col-md-6.col-sm-6.col-xs-12
-            = f.input :privilege_ids, :label => "User Privileges", :collection => Role.privileges.where("name != 'admin'").collect{|x| [x.name.titleize, x.id]}, :as => :check_boxes, :input_html => { :multiple => true }
+            = f.input :privilege_ids, :label => "User Privileges", :collection => assignable_privileges.collect{|x| [x.name.titleize, x.id]}, :as => :check_boxes, :input_html => { :multiple => true }
 
   %fieldset
     %legend Contact Info

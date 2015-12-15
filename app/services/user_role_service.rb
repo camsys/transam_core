@@ -9,6 +9,23 @@
 class UserRoleService
 
   #-----------------------------------------------------------------------------
+  # Returns the set of roles a user can assign to another user
+  #-----------------------------------------------------------------------------
+  def assignable_roles user
+    Role.roles.where('weight <= ?', user.primary_role)
+  end
+  #-----------------------------------------------------------------------------
+  # Returns the set of roles a user can assign to another user. Only admins can
+  # assign an admin privilege
+  #-----------------------------------------------------------------------------
+  def assignable_privileges user
+    if user.has_role? :admin
+      Role.privileges
+    else
+      Role.privileges.where('name <> ?', "admin")
+    end
+  end
+  #-----------------------------------------------------------------------------
   # Override this method to invoke business logic for managing roles. Params
   # are:
   #   user      - the user being updated

@@ -143,16 +143,6 @@ class User < ActiveRecord::Base
   # Instance Methods
   #-----------------------------------------------------------------------------
 
-  # Getter for privileges
-  def privileges
-    roles.where(:privilege => true)
-  end
-  def privilege_ids
-    a = []
-    roles.each{|x| a << x.id}
-    a
-  end
-
   # Returns the default weather code for the users dashboard
   def default_weather_code
     if weather_code
@@ -188,6 +178,24 @@ class User < ActiveRecord::Base
   # Returns the initials for this user
   def get_initials
     "#{first_name[0]}#{last_name[0]}".upcase
+  end
+
+  # Getter for privileges
+  def privileges
+    roles.privileges
+  end
+  # Getter for privileges
+  def privilege_ids
+    a = []
+    privileges.each{|x| a << x.id}
+    a
+  end
+
+  # Returns the user's primary role. This is the role which has the highest
+  # weight. User < Manager < Regional Manager < CMO < CEO where CEO has the
+  # highest weight
+  def primary_role
+    roles.roles.order(:weight).last
   end
 
   # Returns true if the user is in a specified role, false otherwise

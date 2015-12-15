@@ -19,6 +19,7 @@ class Role < ActiveRecord::Base
   #-----------------------------------------------------------------------------
   # Scopes
   #-----------------------------------------------------------------------------
+  default_scope { order(:weight) }
   # True roles
   scope :roles, -> { where(privilege: false) }
   # Privilege roles
@@ -39,5 +40,5 @@ class Role < ActiveRecord::Base
   def privilege?
     (privilege)
   end
-  
+
 end
