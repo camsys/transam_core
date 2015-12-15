@@ -1,3 +1,4 @@
 = format_field("Maintenance Type", @asset_event.maintenance_type)
+= format_field("Current Mileage", format_as_integer(@asset_event.current_mileage)) if @asset.respond_to? :mileage_updates
 = format_field("Reported On", format_as_date(@asset_event.event_date))
 = format_field("Comments", @asset_event.comments.html_safe) unless @asset_event.comments.blank?

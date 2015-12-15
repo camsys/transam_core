@@ -6,18 +6,24 @@
 	  ) do |f| %>
 
 		<% if current_user.organizations.count > 1 %>
+		<div class="row">
 			<div class='col-sm-6'>
 				<%= f.association :organization, :collection => current_user.organizations, :label_method => 'coded_name' %>
 			</div>
+		</div>
 		<% end %>
+		<div class="row">
 		<div class='col-sm-6'>
 			<%= f.input :file, :label => 'Spreadsheet', :hint => 'Select a spreadsheet that has been downloaded from TransAM, edited, then saved.' %>
 		</div>
 		<div class='col-sm-6'>
 			<%= f.association :file_content_type, :label => 'Spreadsheet Content', :prompt => 'Set the spreadsheet contents...' %>
 		</div>
-		<div class='col-sm-6'>
-			<%= f.button :submit, 'Upload spreadsheet', :class=>"btn btn-primary"  %>
+	</div>
+		<div class="row">
+			<div class='col-sm-6'>
+				<%= f.button :submit, 'Upload spreadsheet', :class=>"btn btn-primary"  %>
+			</div>
 		</div>
 
 	<% end %>

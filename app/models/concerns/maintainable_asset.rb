@@ -1,9 +1,9 @@
-module MaintenanceVehicle
+module MaintainableAsset
   #-----------------------------------------------------------------------------
   #
-  # MaintenanceVehicle
+  # MaintainableAsset
   #
-  # Mixin that adds vehicle maintenance properties to an Asset
+  # Mixin that adds maintenance updates to an Asset
   #
   #-----------------------------------------------------------------------------
   extend ActiveSupport::Concern
@@ -15,7 +15,7 @@ module MaintenanceVehicle
     #---------------------------------------------------------------------------
 
     # each asset has zero or more condition updates
-    has_many   :maintenance_updates, -> {where :asset_event_type_id => VehicleMaintenanceUpdateEvent.asset_event_type.id }, :class_name => "VehicleMaintenanceUpdateEvent"
+    has_many   :maintenance_updates, -> {where :asset_event_type_id => MaintenanceUpdateEvent.asset_event_type.id }, :class_name => "MaintenanceUpdateEvent"
 
     #---------------------------------------------------------------------------
     # Validations
@@ -44,13 +44,14 @@ module MaintenanceVehicle
         event = maintenance_updates.last
         self.last_maintenance_date = event.event_date
 
-        # See if there was a mileage update as well but only if this date is later
-        # than the last reported mileage date
-        if event.current_mileage.to_i > 0 and event.event_date > self.reported_mileage_date
-          self.reported_mileage = event.current_mileage.to_i
-          self.reported_mileage_date = event.event_date
+        if self.respond_to? :mileage_updates
+          # See if there was a mileage update as well but only if this date is later
+          # than the last reported mileage date
+          if event.current_mileage.to_i > 0 and event.event_date > self.reported_mileage_date
+            self.reported_mileage = event.current_mileage.to_i
+            self.reported_mileage_date = event.event_date
+          end
         end
-
       end
       # save changes to this asset
       if self.changed?

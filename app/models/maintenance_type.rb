@@ -5,10 +5,10 @@ class MaintenanceType < ActiveRecord::Base
 
   def self.search(text, exact = true)
     if exact
-      x = where('name = ? OR code = ? OR description = ?', text, text, text).first
+      x = where('name = ? OR description = ?', text, text).first
     else
       val = "%#{text}%"
-      x = where('name = LIKE ? OR code LIKE ? OR description LIKE ?', val, val, val).first
+      x = where('name = LIKE ? OR description LIKE ?', val, val).first
     end
     x
   end

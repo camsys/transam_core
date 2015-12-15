@@ -1,6 +1,9 @@
 = render :layout => "update_event_form" do |f|
 
   = f.input :maintenance_type_id, :collection => MaintenanceType.active, :label => "Maintenance type performed". :include_blank => false
+  - if @asset.respond_to? :mileage_updates
+    = f.input :current_mileage, :label => "Current Mileage", :input_html => { :min => 0  }
+
   = f.input :event_date, :label => 'Date of Report', :wrapper => :vertical_append do
     = f.input_field :event_date, :class => "form-control", :as => :string, :data => {'behavior' => 'datepicker'}, :value => format_as_date(f.object.event_date)
     %span.input-group-addon

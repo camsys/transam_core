@@ -37,7 +37,8 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
         end
         row_data << nil # current_maintenance type
         row_data << nil # current mileage
-        row_data << nil # reprot date
+        row_data << nil # report date
+        row_data << nil # notes
 
         sheet.add_row row_data, :types => row_types
       end
@@ -67,7 +68,7 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
 
     # Merge Cells?
     sheet.merge_cells("A1:F1")
-    sheet.merge_cells("G1:L1")
+    sheet.merge_cells("G1:M1")
 
     # This is used to get the column name of a lookup table based on its length
     alphabet = ('A'..'Z').to_a
@@ -129,6 +130,7 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
         '',
         '',
         '',
+        '',
         ''
       ],
       [
@@ -145,7 +147,8 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
         'Last Maintenance Date',
         'Maintenance Performed',
         'Mileage',
-        'Maintenance Date'
+        'Maintenance Date',
+        'Notes'
       ]
     ]
   end
@@ -164,7 +167,8 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
       {:name => 'maintenance_date_locked',  :column => 8},
       {:name => 'maintenance_type',         :column => 9},
       {:name => 'mileage',                  :column => 10},
-      {:name => 'maintenance_date',         :column => 11}
+      {:name => 'maintenance_date',         :column => 11},
+      {:name => 'maintenance_notes',        :column => 12}
     ]
   end
 
@@ -184,7 +188,8 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
       :date,
       :string,
       :integer,
-      :date
+      :date,
+      :string
     ]
   end
   # Merge the base class styles with BPT specific styles
@@ -193,14 +198,15 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
     a << super
 
     # Header Styles
-    a << {:name => 'asset_id_col', :bg_color => "EBF1DE", :fg_color => '000000', :b => false, :alignment => { :horizontal => :left }}
+    a << {:name => 'asset_id_col', :bg_color => "EBF1DE", :fg_color => '000000', :b => false, :alignment => { :horizontal => :center }}
 
-    a << {:name => 'maintenance_type_locked', :bg_color => "F2DCDB", :alignment => { :horizontal => :center } , :locked => true }
-    a << {:name => 'mileage_locked', :num_fmt => 3, :bg_color => "F2DCDB", :alignment => { :horizontal => :center } , :locked => true }
-    a << {:name => 'maintenance_date_locked', :format_code => 'MM/DD/YYYY', :bg_color => "F2DCDB", :alignment => { :horizontal => :center } , :locked => true }
-    a << {:name => 'maintenance_type', :bg_color => "F2DCDB", :alignment => { :horizontal => :center } , :locked => false }
-    a << {:name => 'mileage', :num_fmt => 3, :bg_color => "F2DCDB", :alignment => { :horizontal => :center } , :locked => false }
-    a << {:name => 'maintenance_date', :format_code => 'MM/DD/YYYY', :bg_color => "F2DCDB", :alignment => { :horizontal => :center } , :locked => false }
+    a << {:name => 'maintenance_type_locked', :bg_color => "b0d6f1", :alignment => { :horizontal => :center } , :locked => true }
+    a << {:name => 'mileage_locked', :num_fmt => 3, :bg_color => "b0d6f1", :alignment => { :horizontal => :center } , :locked => true }
+    a << {:name => 'maintenance_date_locked', :format_code => 'MM/DD/YYYY', :bg_color => "b0d6f1", :alignment => { :horizontal => :center } , :locked => true }
+    a << {:name => 'maintenance_type', :bg_color => "b0d6f1", :alignment => { :horizontal => :center } , :locked => false }
+    a << {:name => 'mileage', :num_fmt => 3, :bg_color => "b0d6f1", :alignment => { :horizontal => :center } , :locked => false }
+    a << {:name => 'maintenance_date', :format_code => 'MM/DD/YYYY', :bg_color => "b0d6f1", :alignment => { :horizontal => :center } , :locked => false }
+    a << {:name => 'maintenance_notes', :bg_color => "b0d6f1", :alignment => { :horizontal => :left } , :locked => false}
 
     a.flatten
   end
