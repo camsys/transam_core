@@ -263,10 +263,10 @@ class UploadsController < OrganizationAwareController
 
   end
 
-  #
+  #-----------------------------------------------------------------------------
   # Create a new upload. If the current user has a list of organizations, they can create
   # an upload for any organization in their list
-  #
+  #-----------------------------------------------------------------------------
   def create
 
     @upload = Upload.new(form_params)

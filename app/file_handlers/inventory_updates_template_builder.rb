@@ -14,7 +14,7 @@ class InventoryUpdatesTemplateBuilder < TemplateBuilder
   # Add a row for each of the asset for the org
   def add_rows(sheet)
     @asset_types.each do |asset_type|
-      assets = @organization.assets.operational.where('asset_type_id = ?', asset_type)
+      assets = @organization.assets.operational.where('asset_type_id = ?', asset_type).order(:asset_type_id, :asset_subtype_id, :asset_tag)
       assets.each do |a|
         asset = Asset.get_typed_asset(a)
         row_data  = []

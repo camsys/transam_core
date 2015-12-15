@@ -12,7 +12,7 @@
         - @upload.asset_events.each do |evt|
           %tr
             %td
-              = link_to evt.asset.object_key, inventory_path(evt.asset)
+              = link_to evt.asset.to_s, inventory_path(evt.asset)
             %td
               = link_to evt.asset_event_type.description, inventory_asset_event_path(evt.asset, evt)
             %td

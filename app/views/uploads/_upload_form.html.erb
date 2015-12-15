@@ -1,14 +1,27 @@
 <%= dialog_tag('Spreadsheet', {:icon => 'fa fa-upload', :class => "header-part"}) do %>
-	<%= simple_form_for(@upload, :html => {:multipart => true, :class => 'form-horizontal' }, :wrapper => :horizontal_form, :wrapper_mappings => {:check_boxes => :horizontal_radio_and_checkboxes, :file => :horizontal_file_input, :boolean => :horizontal_boolean}) do |f| %>
+	<%= simple_form_for(@upload,
+	  :html => {:multipart => true, :class => 'form-vertical' },
+	  :wrapper => :vertical_form,
+	  :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}
+	  ) do |f| %>
+
 		<% if current_user.organizations.count > 1 %>
-			<%= f.association :organization, :collection => current_user.organizations, :label_method => 'coded_name' %>
+			<div class='col-sm-6'>
+				<%= f.association :organization, :collection => current_user.organizations, :label_method => 'coded_name' %>
+			</div>
 		<% end %>
-		<%= f.input :file, :label => 'Spreadsheet', :hint => 'Select a spreadsheet that has been downloaded from TransAM, edited, then saved.' %>
-		<%= f.association :file_content_type, :label => 'Spreadsheet Content', :prompt => 'Set the spreadsheet contents...' %>
-		<div class='col-sm-offset-3 class-sm-9'>
+		<div class='col-sm-6'>
+			<%= f.input :file, :label => 'Spreadsheet', :hint => 'Select a spreadsheet that has been downloaded from TransAM, edited, then saved.' %>
+		</div>
+		<div class='col-sm-6'>
+			<%= f.association :file_content_type, :label => 'Spreadsheet Content', :prompt => 'Set the spreadsheet contents...' %>
+		</div>
+		<div class='col-sm-6'>
 			<%= f.button :submit, 'Upload spreadsheet', :class=>"btn btn-primary"  %>
 		</div>
+
 	<% end %>
+
 <% end %>
 
 <script type="text/javascript">
@@ -23,7 +36,7 @@
 		$('#upload_file').change(function() {
 			transam.validate_file_size(this, max_file_size_mb);
 		});
-				
+
 	});
 
 
