@@ -11,8 +11,8 @@
 class InventoryUpdatesFileHandler < AbstractFileHandler
 
   OBJECT_KEY_COL = 0
-  ASSET_SUBTYPE_COL = 1
-  ASSET_TAG_COL = 2
+  ASSET_SUBTYPE_COL = 2
+  ASSET_TAG_COL = 3
 
   NUM_HEADER_ROWS = 2
   SHEET_NAME = "Updates"
@@ -65,8 +65,8 @@ class InventoryUpdatesFileHandler < AbstractFileHandler
           # asset tags are sometimes stored as numbers
           asset_tag   = cells[ASSET_TAG_COL].to_s
 
-          Rails.logger.info "  Processing row #{row}. Asset ID = '#{object_key}', Subtype = '#{subtype_str}', Asset Tag = '#{asset_tag}'"
-          asset = Asset.where('organization_id = ? AND object_key = ?', organization.id, object_key).first
+          Rails.logger.debug "  Processing row #{row}. Asset ID = '#{object_key}', Subtype = '#{subtype_str}', Asset Tag = '#{asset_tag}'"
+          asset = Asset.find_by('organization_id = ? AND object_key = ?', organization.id, object_key)
 
           # Attempt to find the asset
           # complain if we cant find it
@@ -94,7 +94,7 @@ class InventoryUpdatesFileHandler < AbstractFileHandler
           end
 
           # Make sure this row has data otherwise skip it
-          if reader.empty?(4, 24)
+          if reader.empty?(8,8) and reader.empty?(12,12) and reader.empty?(16,16)
             @num_rows_skipped += 1
             add_processing_message(2, 'info', "No data for row. Skipping.")
             next
@@ -105,38 +105,41 @@ class InventoryUpdatesFileHandler < AbstractFileHandler
           # If all the validations have passed, type the asset
           asset = Asset.get_typed_asset(asset)
 
+          #---------------------------------------------------------------------
+          # Service Status
+          #---------------------------------------------------------------------
+          unless reader.empty?(8, 8)
+            add_processing_message(2, 'success', 'Processing Service Status Report')
+            loader = ServiceStatusUpdateEventLoader.new
+            loader.process(asset, cells[8..9])
+            if loader.errors?
+              row_errored = true
+              loader.errors.each { |e| add_processing_message(3, 'warning', e)}
+            end
+            if loader.warnings?
+              loader.warnings.each { |e| add_processing_message(3, 'info', e)}
+            end
 
-          #### Condition Report Block #########################################
-          if asset.type_of? :vehicle or asset.type_of? :support_vehicle
-            unless reader.empty?(4, 4) # Only Current Mileage field is required
-              add_processing_message(2, 'success', 'Processing Mileage Report')
-              loader = MileageUpdateEventLoader.new
-              loader.process(asset, cells[4..6])
-              if loader.errors?
-                row_errored = true
-                loader.errors.each { |e| add_processing_message(3, 'warning', e)}
-              end
-              if loader.warnings?
-                loader.warnings.each { |e| add_processing_message(3, 'info', e)}
-              end
-              # Check for any validation errors
-              event = loader.event
-              if event.valid?
-                event.upload = upload
-                event.save
-                add_processing_message(3, 'success', 'Mileage Update added.')
-                has_new_event = true
-              else
-                Rails.logger.info "Mileage Update did not pass validation."
-                event.errors.full_messages.each { |e| add_processing_message(3, 'warning', e)}
-              end
+            # Check for any validation errors
+            event = loader.event
+            if event.valid?
+              event.upload = upload
+              event.save
+              add_processing_message(3, 'success', 'Service Status updated.')
+              has_new_event = true
+            else
+              Rails.logger.info "Service Status did not pass validation."
+              event.errors.full_messages.each { |e| add_processing_message(3, 'warning', e)}
             end
           end
 
-          unless reader.empty?(5, 5)
+          #---------------------------------------------------------------------
+          # Condition
+          #---------------------------------------------------------------------
+          unless reader.empty?(12, 12)
             add_processing_message(2, 'success', 'Processing Condition Report')
             loader = ConditionUpdateEventLoader.new
-            loader.process(asset, cells[4..7])
+            loader.process(asset, cells[12..13])
             if loader.errors?
               row_errored = true
               loader.errors.each { |e| add_processing_message(3, 'warning', e)}
@@ -158,187 +161,9 @@ class InventoryUpdatesFileHandler < AbstractFileHandler
             end
           end
 
-
-          #### Replacement Report Block########################################
-          unless reader.empty?(8, 8)
-            add_processing_message(2, 'success', 'Processing Replacement/Rebuild Report')
-            loader = ReplacementUpdateEventLoader.new
-            loader.process(asset, cells[8..10])
-            if loader.errors?
-              row_errored = true
-              loader.errors.each { |e| add_processing_message(3, 'warning', e)}
-            end
-            if loader.warnings?
-              loader.warnings.each { |e| add_processing_message(3, 'info', e)}
-            end
-
-            # Check for any validation errors
-            event = loader.event
-            if event.valid?
-              event.upload = upload
-              event.save
-              add_processing_message(3, 'success', 'Replacment Update added.')
-              has_new_event = true
-            else
-              Rails.logger.info "Replacement Update did not pass validation."
-              event.errors.full_messages.each { |e| add_processing_message(3, 'warning', e)}
-            end
-          end
-
-          unless reader.empty?(9, 9)
-            add_processing_message(2, 'success', 'Processing Rebuild Report')
-            loader = RehabilitationUpdateEventLoader.new
-            loader.process(asset, cells[8..10])
-            if loader.errors?
-              row_errored = true
-              loader.errors.each { |e| add_processing_message(3, 'warning', e)}
-            end
-            if loader.warnings?
-              loader.warnings.each { |e| add_processing_message(3, 'info', e)}
-            end
-
-            # Check for any validation errors
-            event = loader.event
-            if event.valid?
-              event.upload = upload
-              event.save
-              add_processing_message(3, 'success', 'Rebuild Update added.')
-              has_new_event = true
-            else
-              Rails.logger.info "Rebuild Update did not pass validation."
-              event.errors.full_messages.each { |e| add_processing_message(3, 'warning', e)}
-            end
-          end
-
-
-          ##### Usage Metrics Report Block ####################################
-          unless reader.empty?(11, 16)
-            add_processing_message(2, 'success', 'Processing Usage Metrics Report')
-            loader = UsageUpdateEventLoader.new
-            loader.process(asset, cells[11..16])
-            if loader.errors?
-              row_errored = true
-              loader.errors.each { |e| add_processing_message(3, 'warning', e)}
-            end
-            if loader.warnings?
-              loader.warnings.each { |e| add_processing_message(3, 'info', e)}
-            end
-
-            # Check for any validation errors
-            event = loader.event
-            if event.valid?
-              event.upload = upload
-              event.save
-              add_processing_message(3, 'success', 'Usage Update added.')
-              has_new_event = true
-            else
-              Rails.logger.info "Usage Update did not pass validation."
-              event.errors.full_messages.each { |e| add_processing_message(3, 'warning', e)}
-            end
-
-            unless reader.empty?(14, 14) # Only Usage Codes field is required
-              loader = UsageCodesUpdateEventLoader.new
-              loader.process(asset, cells[11..16])
-              if loader.errors?
-                row_errored = true
-                loader.errors.each { |e| add_processing_message(3, 'warning', e)}
-              end
-              if loader.warnings?
-                loader.warnings.each { |e| add_processing_message(3, 'info', e)}
-              end
-
-              # Check for any validation errors
-              event = loader.event
-              if event.valid?
-                event.upload = upload
-                event.save
-                add_processing_message(3, 'success', 'Usage Code Update added.')
-                has_new_event = true
-              else
-                Rails.logger.info "Usage Code Update did not pass validation."
-                event.errors.full_messages.each { |e| add_processing_message(3, 'warning', e)}
-              end
-            end
-          end
-
-
-          #### Operational Metrics Report Block ###############################
-          unless reader.empty?(17, 17)
-            add_processing_message(2, 'success', 'Processing Maintentance Provider Report')
-            loader = MaintenanceProviderUpdateEventLoader.new
-            loader.process(asset, cells[17..24])
-            if loader.errors?
-              row_errored = true
-              loader.errors.each { |e| add_processing_message(3, 'warning', e)}
-            end
-            if loader.warnings?
-              loader.warnings.each { |e| add_processing_message(3, 'info', e)}
-            end
-
-            # Check for any validation errors
-            event = loader.event
-            if event.valid?
-              event.upload = upload
-              event.save
-              add_processing_message(3, 'success', 'Maintenance Provider Update added.')
-              has_new_event = true
-            else
-              Rails.logger.info "Maintenance Provider Update did not pass validation."
-              event.errors.full_messages.each { |e| add_processing_message(3, 'warning', e)}
-            end
-          end
-
-          unless reader.empty?(18, 18)
-            add_processing_message(2, 'success', 'Processing Storage Method Report')
-            loader = StorageMethodUpdateEventLoader.new
-            loader.process(asset, cells[17..24])
-            if loader.errors?
-              row_errored = true
-              loader.errors.each { |e| add_processing_message(3, 'warning', e)}
-            end
-            if loader.warnings?
-              loader.warnings.each { |e| add_processing_message(3, 'info', e)}
-            end
-
-            # Check for any validation errors
-            event = loader.event
-            if event.valid?
-              event.upload = upload
-              event.save
-              add_processing_message(3, 'success', 'Storage Method Update added.')
-              has_new_event = true
-            else
-              Rails.logger.info "Storage Method Update did not pass validation."
-              event.errors.full_messages.each { |e| add_processing_message(3, 'warning', e)}
-            end
-          end
-
-          unless reader.empty?(19, 22)
-            add_processing_message(2, 'success', 'Processing Operational Metrics Report')
-            loader = OperationsUpdateEventLoader.new
-            loader.process(asset, cells[17..24])
-            if loader.errors?
-              row_errored = true
-              loader.errors.each { |e| add_processing_message(3, 'warning', e)}
-            end
-            if loader.warnings?
-              loader.warnings.each { |e| add_processing_message(3, 'info', e)}
-            end
-
-            # Check for any validation errors
-            event = loader.event
-            if event.valid?
-              event.upload = upload
-              event.save
-              add_processing_message(3, 'success', 'Operations Update added.')
-              has_new_event = true
-            else
-              Rails.logger.info "Operations Update did not pass validation."
-              event.errors.full_messages.each { |e| add_processing_message(3, 'warning', e)}
-            end
-          end
-
+          #---------------------------------------------------------------------
           # Fire update events for the asset if a new event was added
+          #---------------------------------------------------------------------
           if has_new_event
             @num_rows_added += 1
             Delayed::Job.enqueue AssetUpdateJob.new(asset.object_key), :priority => 10, :run_at => 30.seconds.from_now

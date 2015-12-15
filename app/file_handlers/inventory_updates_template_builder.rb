@@ -129,48 +129,47 @@ class InventoryUpdatesTemplateBuilder < TemplateBuilder
 
   # header rows
   def header_rows
-    [
-      [
-        'Asset',
-        '',
-        '',
-        '',
-        '',
-        '',
-        'Service Status Report',
-        '',
-        '',
-        '',
-        'Condition Report',
-        '',
-        '',
-        ''
-      ],
-      [
-        'Id',
-        'Class',
-        'Subtype',
-        'Tag',
-        'External Id',
-        'Description',
-
-        # Status Report Columns
-        'Current Status',
-        'Reporting Date',
-        'New Status',
-        'Reporting Date',
-
-        # Condition Report Columns
-        'Current Condition',
-        'Reporting Date',
-        'New Condition',
-        'Reporting Date'
-      ]
+    title_row = [
+      'Asset',
+      '',
+      '',
+      '',
+      '',
+      '',
+      'Service Status Report',
+      '',
+      '',
+      '',
+      'Condition Report',
+      '',
+      '',
+      ''
     ]
+    detail_row = [
+      'Id',
+      'Class',
+      'Subtype',
+      'Tag',
+      'External Id',
+      'Description',
+
+      # Status Report Columns
+      'Current Status',
+      'Reporting Date',
+      'New Status',
+      'Reporting Date',
+
+      # Condition Report Columns
+      'Current Condition',
+      'Reporting Date',
+      'New Condition',
+      'Reporting Date'
+    ]
+    [title_row, detail_row]
   end
 
   def column_styles
-    [
+    styles = [
       {:name => 'asset_id_col', :column => 0},
       {:name => 'asset_id_col', :column => 1},
       {:name => 'asset_id_col', :column => 2},
@@ -188,10 +187,11 @@ class InventoryUpdatesTemplateBuilder < TemplateBuilder
       {:name => 'condition_float',        :column => 12},
       {:name => 'condition_date',         :column => 13}
     ]
+    styles
   end
 
   def row_types
-    [
+    types = [
       # Asset Id Block
       :string,
       :string,
@@ -212,6 +212,7 @@ class InventoryUpdatesTemplateBuilder < TemplateBuilder
       :float,
       :date
     ]
+    types
   end
   # Merge the base class styles with BPT specific styles
   def styles
