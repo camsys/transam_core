@@ -1,5 +1,5 @@
 :ruby
-  activities = Activity.where("organization_type_id IN (?)", [0, @organization.organization_type.id])
+  activities = Activity.where("show_in_dashboard = ? AND organization_type_id IN (?)", true, [0, @organization.organization_type.id])
 
 %fieldeset
   %legend Activities
@@ -11,4 +11,4 @@
     - else
       %ul.list-group
         - activities.each do |act|
-          = render :partial => "dashboards/activity_detail", locals: {:activity => act}
+          = render :partial => "activities/activity_detail", locals: {:activity => act}

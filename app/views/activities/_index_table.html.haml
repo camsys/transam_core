@@ -1,0 +1,47 @@
+:ruby
+  table_dom_id = SecureRandom.hex
+
+.table-responsive
+  %table.table.table-hover{:id => table_dom_id, :data => {:toggle => 'table',
+    :pagination => 'true',
+    :show_pagination_switch => 'true',
+    :page_list => "[5, 10, 20, 50, 100, 200]",
+    :page_size => current_user.num_table_rows,
+    :search => 'false',
+    :toolbar => "#table_actions",
+    :export_types => "['csv', 'txt', 'excel']",
+    :show_export => 'false',
+    :show_columns => 'false',
+    :show_toggle => 'false'}}
+    %thead
+      %tr
+        %th.center{:data => {:sortable => 'true'}} Name
+        %th.center{:data => {:sortable => 'true'}} Description
+        %th.center{:data => {:sortable => 'true'}} Schedule
+        %th.center{:data => {:sortable => 'true'}} System
+        %th.center{:data => {:sortable => 'true'}} Dashboard
+        %th.center{:data => {:sortable => 'true'}} Start Date
+        %th.center{:data => {:sortable => 'true'}} End Date
+        %th.center{:data => {:sortable => 'true'}} Job
+        %th.center{:data => {:sortable => 'true'}} Last Run
+        %th.center{:data => {:sortable => 'true'}} Active
+        %th.center{:data => {:visible => 'false', :sortable => 'true'}} Created On
+        %th.center{:data => {:visible => 'false', :sortable => 'true'}} Updated On
+
+    %tbody
+      - activities.each do |a|
+        %tr
+          %td.left= link_to a.name, activity_path(a)
+          %td.left= format_as_text(a.description)
+          %td.left.nowrap= a.schedule
+          %td.center.nowrap= format_as_boolean(a.system_activity)
+          %td.center.nowrap= format_as_boolean(a.show_in_dashboard)
+          %td.center.nowrap= format_as_date(a.start_date)
+          %td.center.nowrap= format_as_date(a.end_date)
+          %td.left= a.job_name
+          %td.center.nowrap= format_as_date_time(a.last_run)
+          %td.center.nowrap= format_as_boolean(a.active)
+          %td.center.nowrap= format_as_date_time(a.created_at)
+          %td.center.nowrap= format_as_date_time(a.updated_at)
+
+= render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :path_pattern => activity_path("xxx")}

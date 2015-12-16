@@ -1,0 +1,8 @@
+%ul.nav.nav-tabs.responsive-tabs
+  %li
+    %a{:href => "#desc", :data =>{:toggle => 'tab'}}
+      = "Description"
+
+.tab-content
+  .tab-pane.fade#desc
+    %p= format_as_text(@activity.description)

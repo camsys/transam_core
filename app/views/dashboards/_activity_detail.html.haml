@@ -1,6 +1,0 @@
-%li.list-group-item
-  .media-body
-    .media-heading.text-success
-      %strong= activity.name
-      %span.pull-right.text-default.text-muted{:style => 'font-size: 0.75em'}= format_as_date_time_distance(activity.due_datetime)
-    %p.text-muted{:style => 'font-size: 0.85em'}= activity.description.html_safe

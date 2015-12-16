@@ -1,0 +1,9 @@
+.col-sm-12.col-md-10.col-md-offset-1.col-lg-8.col-lg-offset-2
+  .page-header
+    %h2 Update Activity
+
+  = render(:partial => 'shared/form_errors', :locals => {:obj => @activity}) unless @activity.errors.empty?
+
+  = render 'form'
+
+= render 'scripts'

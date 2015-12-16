@@ -1,0 +1,15 @@
+.col-sm-12.col-md-10.col-md-offset-1
+  .page-header
+    %h2 Activities
+
+  .row
+    .col-sm-12
+      = render 'search_form'
+
+  .row
+    .col-sm-12
+      - if @activities.empty?
+        %p No matching activities found
+      - else
+        %p Found #{@activities.count} matching activities
+        = render :partial => 'index_table', :locals => {:activities => @activities}

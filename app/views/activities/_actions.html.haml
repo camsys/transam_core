@@ -1,0 +1,18 @@
+- if can? :update, @activity
+  .btn-group.pull-right.panel-action
+    %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
+      %i.fa.fa-cog
+      = " Actions"
+      %span.caret
+    %ul.dropdown-menu{:role => 'menu'}
+      - if can? :update, @activity
+        %li.text-left
+          = link_to edit_activity_path(@activity) do
+            %i.fa.fa-fw.fa-edit
+            = " Update this activity"
+      - if can? :destroy, @activity
+        %li.divider
+        %li
+          = link_to activity_path(@activity), :method => :delete, :data => {:confirm => "Are you sure you want to remove this activity? The action can't be undone."} do
+            %i.fa.fa-trash-o.fa-fw
+            = " Remove this activity"

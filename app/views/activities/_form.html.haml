@@ -1,0 +1,73 @@
+= simple_form_for(@activity,
+  :html => {:class => 'form-vertical'},
+  :wrapper => :vertical_form,
+  :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes,
+  :radio_buttons => :vertical_radio_and_checkboxes,
+  :file => :vertical_file_input,
+  :boolean => :vertical_boolean}) do |f|
+
+  .row
+    .col-sm-12
+      = f.input :name, :label => 'Name', :required => true, :input_html => {:minlength => 4, :maxlength => 64, :data => {:convert => 'uppercase'}}
+
+  .row
+    .col-sm-12
+      = f.input :description, :as => :text, :required => true, :wrapper_html => {:class => 'text-limiter-wrapper'}, :input_html => {:class => 'text-limiter', :rows => 6, :maxlength => 254}
+      %p.text-muted.text-limiter-counter
+        %span#counter
+        characters remaining.
+
+  .row
+    .col-sm-3
+      = f.input :organization_type_id, :collection => OrganizationType.active, :include_blank => true
+    .col-sm-3
+      = f.input :job_name, :required => true
+    .col-sm-2
+      = f.input :frequency_quantity, :required => true, :label => 'Frequency'
+    .col-sm-2
+      = f.input :frequency_type_id, :collection => FrequencyType.active, :include_blank => false
+    .col-sm-2
+      = f.input :execution_time, :required => true
+  .row
+    .col-sm-2
+      = f.input :show_in_dashboard, :collection => [['No', false],['Yes', true]], :include_blank => false
+    .col-sm-2
+      = f.input :active, :collection => [['No', false],['Yes', true]], :include_blank => false
+    .col-sm-2
+      = f.input :start_date, :label => 'Start date', :wrapper => :vertical_append do
+        = f.input_field :start_date, :class => "form-control", :as => :string, :data => {'behavior' => 'constrained-datepicker'}, :value => format_as_date(f.object.start_date)
+        %span.input-group-addon
+          %i.fa.fa-calendar
+    .col-sm-2
+      = f.input :end_date, :label => 'End date', :wrapper => :vertical_append do
+        = f.input_field :start_date, :class => "form-control", :as => :string, :data => {'behavior' => 'constrained-datepicker'}, :value => format_as_date(f.object.end_date)
+        %span.input-group-addon
+          %i.fa.fa-calendar
+
+  .row
+    .col-sm-12
+      = f.button :submit, :class => 'btn btn-primary'
+
+:javascript
+
+  $(document).ready(function() {
+    // Force uppercase text for text inputs
+    $('[data-convert="uppercase"]').keyup(function(evt) {
+      this.value = this.value.toUpperCase();
+    });
+
+    $('.text-limiter').simplyCountable({
+      maxCount: $('.text-limiter').attr('maxlength'),
+      strictMax: false,
+      safeClass: 'text-muted',
+      overClass: 'text-danger'
+    });
+
+  });
+
+
+  $('#new_activity').validate({
+    submitHandler: function(form) {
+      form.submit();
+    }
+  });

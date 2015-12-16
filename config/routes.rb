@@ -22,8 +22,11 @@ Rails.application.routes.draw do
       get 'filter'
     end
   end
+
   resources :manufacturers, :only => [:index]
 
+  resources :activities
+  
   # Forms are a top-level namespace. All concrete forms must be nested within this
   # controller so they can be protected by the RBAC model
   resources :forms, :only => [:index, :show]

@@ -1,0 +1,6 @@
+%li.list-group-item
+  .media-body
+    .media-heading.text-success
+      %strong= activity.name
+    .text-muted{:style => 'font-size: 0.85em'}
+      = format_as_text(activity.description)

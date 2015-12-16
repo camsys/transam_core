@@ -1,0 +1,25 @@
+.hidden-md.hidden-sm.hidden-xs
+  = format_field("Name", activity.name)
+  = format_field("Schedule", activity.schedule)
+  = format_field("Job Name", activity.job_name)
+  %hr
+  = format_field("System Activity", format_as_boolean(activity.system_activity))
+  = format_field("Show in Dashboard", format_as_boolean(activity.show_in_dashboard))
+  = format_field("Active", format_as_boolean(activity.active))
+  %hr
+  = format_field("Last Run", format_as_date_time(activity.last_run))
+  = format_field("Created On", format_as_date(activity.created_at))
+  = format_field("Last Updated", format_as_date(activity.updated_at))
+.hidden-lg
+  .col-sm-4
+    = format_field("Name", activity.name)
+    = format_field("Schedule", activity.schedule)
+    = format_field("Job Name", activity.job_name)
+  .col-sm-4
+    = format_field("System Activity", format_as_boolean(activity.system_activity))
+    = format_field("Show in Dashboard", format_as_boolean(activity.show_in_dashboard))
+    = format_field("Active", format_as_boolean(activity.active))
+  .col-sm-4
+    = format_field("Last Run", format_as_date_time(activity.last_run))
+    = format_field("Created On", format_as_date(activity.created_at))
+    = format_field("Last Updated", format_as_date(activity.updated_at))
