@@ -1,6 +1,6 @@
 = render :layout => "update_event_form" do |f|
 
-  = f.input :maintenance_type_id, :collection => MaintenanceType.active, :label => "Maintenance type performed". :include_blank => false
+  = f.input :maintenance_type_id, :collection => MaintenanceType.active, :label => "Maintenance type performed", :include_blank => false
   - if @asset.respond_to? :mileage_updates
     = f.input :current_mileage, :label => "Current Mileage", :input_html => { :min => 0  }
 
