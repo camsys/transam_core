@@ -26,6 +26,7 @@ class PolicyAnalyzer
   attr_reader :policy
   attr_reader :asset_type_rule
   attr_reader :asset_subtype_rule
+  attr_reader :warnings
 
   #-----------------------------------------------------------------------------
   # Recieves method requests. Anything that does not start with get_ is delegated
@@ -86,10 +87,14 @@ class PolicyAnalyzer
       @asset_type_rule = @policy.policy_asset_type_rules.find_by(:asset_type_id => asset.asset_type_id)
       @asset_subtype_rule = @policy.policy_asset_subtype_rules.find_by(:asset_subtype_id => asset.asset_subtype_id)
     else
-      @warnings << "Policy not found for asset #{asset} with class #{asset.asset_type}" if @policy.blank?
-      @warnings << "Asset Type Rule not found for asset #{asset} with class #{asset.asset_type}" if @asset_type_rule.blank?
-      @warnings << "Asset Subtype Rule not found for asset #{asset} with class #{asset.asset_subtype}" if @asset_subtype_rule.blank?
+      @warnings << "Policy not found for asset #{asset} with class #{asset.asset_type}"
     end
+    @warnings << "Asset Type Rule not found for asset #{asset} with class #{asset.asset_type}" if @asset_type_rule.blank?
+    @warnings << "Asset Subtype Rule not found for asset #{asset} with class #{asset.asset_subtype}" if @asset_subtype_rule.blank?
+  end
+
+  def valid?
+    @warnings.empty?
   end
 
   def warnings?

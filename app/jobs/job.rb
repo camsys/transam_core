@@ -8,11 +8,11 @@
 #
 #------------------------------------------------------------------------------
 class Job
-  
+
   def initialize(*args)
-    
+
   end
-  
+
   # Called by the delayed_jobs scheduler to execute a job
   def perform
     begin
@@ -22,16 +22,26 @@ class Job
       check
       # run the job
       run
+      # perform any post processing`
+      clean_up
     rescue Exception => e
-      Rails.logger.warn e.message      
+      Rails.logger.warn e.message
     end
   end
-  
+
+  def prepare
+  end
+  def check
+  end
+  def clean_up
+    #nothing to do
+  end
+
   protected
-  
+
   # Get the system user
   def get_system_user
     User.where('first_name = ? AND last_name = ?', 'system', 'user').first
   end
-  
+
 end
