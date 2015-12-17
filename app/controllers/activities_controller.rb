@@ -154,8 +154,8 @@ class ActivitiesController < OrganizationAwareController
   end
 
   #-----------------------------------------------------------------------------
-  # DELETE /projects/1
-  # DELETE /projects/1.json
+  # DELETE /activities/1
+  # DELETE /activities/1.json
   #-----------------------------------------------------------------------------
   def destroy
     @activity.destroy

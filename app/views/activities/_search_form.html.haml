@@ -2,14 +2,12 @@
   - if can? :create, Activity
     .pull-right
       = link_to new_activity_path, :class => 'btn btn-success', :style => 'margin-left: 2px;' do
-        %i.fa.fa-plus.fa-1-5x
+        %i.fa.fa-plus
         = " New Activity"
 
 = form_tag activities_path, :id => 'filter_form', :method => "get", :class => 'navbar-form navbar-right panel-action' do
   .form-group
     = select_tag(:activity_flag_filter, options_for_select(ActivitiesController::ACTIVITY_FLAGS, :selected => @activity_flag_filter), :class => "form-control", :multiple => true)
-  .form-group
-    = select_tag(:organization_type_filter, options_for_select(OrganizationType.active.collect{|a| [a.name, a.id]}, :selected => @organizaiton_type_filter), :class => "form-control", :multiple => true)
 
   = button_tag :class => 'btn btn-default', :type => 'submit' do
     %i.fa.fa-filter
@@ -25,17 +23,6 @@
           return 'Activity flags...';
         } else {
           return 'Activity flags - ' + options.length + ' selected';
-        }
-      }
-    });
-    $('#organization_type_filter').multiselect({
-      inheritClass: true,
-      maxHeight: 250,
-      buttonText: function(options, select) {
-        if (options.length === 0) {
-          return 'Org types...';
-        } else {
-          return 'Org types - ' + options.length + ' selected';
         }
       }
     });

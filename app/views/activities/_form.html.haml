@@ -8,7 +8,7 @@
 
   .row
     .col-sm-12
-      = f.input :name, :label => 'Name', :required => true, :input_html => {:minlength => 4, :maxlength => 64, :data => {:convert => 'uppercase'}}
+      = f.input :name, :label => 'Name', :required => true, :input_html => {:minlength => 4, :maxlength => 64}
 
   .row
     .col-sm-12
@@ -51,11 +51,6 @@
 :javascript
 
   $(document).ready(function() {
-    // Force uppercase text for text inputs
-    $('[data-convert="uppercase"]').keyup(function(evt) {
-      this.value = this.value.toUpperCase();
-    });
-
     $('.text-limiter').simplyCountable({
       maxCount: $('.text-limiter').attr('maxlength'),
       strictMax: false,
