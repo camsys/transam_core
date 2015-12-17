@@ -7,7 +7,7 @@ module TransamFormatHelper
   # Formats a text field
   #-----------------------------------------------------------------------------
   def format_as_text(val, sanitize=false)
-    simple_format(val, sanitize)
+    simple_format(val, {}, :sanitize => sanitize)
   end
 
   # Formats a user name and provides message link and optional messaging options
