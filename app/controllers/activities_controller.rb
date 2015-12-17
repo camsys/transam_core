@@ -33,15 +33,6 @@ class ActivitiesController < OrganizationAwareController
     conditions  = []
     values      = []
 
-    # Check to see if we got an organization to sub select on.
-    @organization_type_filter = params[:organization_type_filter]
-    if @organization_type_filter.blank?
-      @organization_type_filter = []
-    else
-      conditions << 'organization_type_id IN (?)'
-      values << @organization_type_filter
-    end
-
     @activity_flag_filter = params[:activity_flag_filter]
     if @activity_flag_filter.blank?
       @activity_flag_filter = []

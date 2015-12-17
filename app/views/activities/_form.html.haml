@@ -19,14 +19,12 @@
 
   .row
     .col-sm-3
-      = f.input :organization_type_id, :collection => OrganizationType.active, :include_blank => true
-    .col-sm-3
       = f.input :job_name, :required => true
-    .col-sm-2
+    .col-sm-3
       = f.input :frequency_quantity, :required => true, :label => 'Frequency'
-    .col-sm-2
+    .col-sm-3
       = f.input :frequency_type_id, :collection => FrequencyType.active, :include_blank => false
-    .col-sm-2
+    .col-sm-3
       = f.input :execution_time, :required => true
   .row
     .col-sm-2

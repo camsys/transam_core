@@ -66,9 +66,12 @@ class Activity < ActiveRecord::Base
   #-----------------------------------------------------------------------------
   # Instance Methods
   #-----------------------------------------------------------------------------
+
+  #-----------------------------------------------------------------------------
   # Returns true if this job is operational on the current day. If the start_date
   # and end date are set the current date should be in the range, if they are not
   # set this always returns true
+  #-----------------------------------------------------------------------------
   def operational?
     if start_date.blank?
       true
