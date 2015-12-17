@@ -93,16 +93,13 @@ class Asset < ActiveRecord::Base
   has_many    :images,      :as => :imagable,       :dependent => :destroy
 
   # Each asset has zero or more documents. Documents are deleted when the asset is deleted
-  has_many    :documents,   :as => :documentable,   :dependent => :destroy
+  has_many    :documents,   :as => :documentable, :dependent => :destroy
 
   # Each asset has zero or more comments. Documents are deleted when the asset is deleted
-  has_many    :comments,    :as => :commentable, :dependent => :destroy
-
-  # Each asset has zero or more audits. Audits are deleted when the asset is deleted
-  has_many    :audits,      :as => :auditable, :dependent => :destroy
+  has_many    :comments,    :as => :commentable,  :dependent => :destroy
 
   # Each asset has zero or more tasks. Tasks are deleted when the asset is deleted
-  has_many    :tasks,       :as => :taskable, :dependent => :destroy
+  has_many    :tasks,       :as => :taskable,     :dependent => :destroy
 
   # Each asset can have 0 or more dependents
   has_many    :dependents,  :class_name => 'Asset', :foreign_key => :parent_id, :dependent => :nullify

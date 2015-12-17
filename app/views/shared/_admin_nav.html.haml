@@ -24,7 +24,12 @@
     %li.text-left
       = link_to activities_path do
         %i.fa.fa-at.fa-fw
-        Activities and Audits
+        Activities
+    - if SystemConfig.transam_module_loaded? :audit
+      %li.text-left
+        = link_to audits_path do
+          %i.fa.fa-line-chart.fa-fw
+          Audits
     %li.divider
     %li.text-left
       = link_to admin_path do

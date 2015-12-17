@@ -7,3 +7,11 @@
       = link_to policies_path do
         %i.fa.fa-book.fa-fw
         Policies
+
+    - if SystemConfig.transam_module_loaded? :audit
+      %li.divider
+      - Audit.active.each do |audit|
+        %li.text-left
+          = link_to audit_results_path do
+            %i.fa.fa-line-chart.fa-fw
+            = "#{audit.name} results"
