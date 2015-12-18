@@ -25,8 +25,8 @@ class InventoryUpdatesTemplateBuilder < TemplateBuilder
         row_data << asset.external_id
         row_data << asset.description
 
-        row_data << (asset.service_status_type || "-") # prev_service_status
-        row_data << (asset.service_status_date || "-") # prev_service_status date
+        row_data << asset.service_status_type # prev_service_status
+        row_data << asset.service_status_date # prev_service_status date
         row_data << nil # current_service_status
         row_data << nil # date
 
