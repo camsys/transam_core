@@ -25,11 +25,14 @@
       = link_to activities_path do
         %i.fa.fa-at.fa-fw
         Activities
-    - if SystemConfig.transam_module_loaded? :audit
-      %li.text-left
-        = link_to audits_path do
-          %i.fa.fa-line-chart.fa-fw
-          Audits
+
+    - # Load module specific tab content if they exist
+    - SystemConfig.transam_module_names.each do |mod|
+      - view_component = "#{mod}_admin_sub_nav"
+      - Rails.logger.debug "Checking for #{view_component}: Results = #{lookup_context.template_exists?(view_component, 'shared', true)}"
+      - if lookup_context.template_exists?(view_component, 'shared', true)
+        = render :partial => "shared/#{view_component}"
+
     %li.divider
     %li.text-left
       = link_to admin_path do
