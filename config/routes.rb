@@ -121,6 +121,7 @@ Rails.application.routes.draw do
       get   'download_file'
       get   'templates'
       post  'create_template'
+      get   'create_template'
     end
     member do
       get   'undo'

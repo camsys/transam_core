@@ -4,7 +4,6 @@ class UploadsController < OrganizationAwareController
   add_breadcrumb "Bulk Updates", :uploads_path
 
   before_action :set_upload, :only => [:show, :destroy, :resubmit, :undo, :download]
-  before_filter :check_for_cancel, :only => [:create, :update, :create_template]
 
   # Session Variables
   INDEX_KEY_LIST_VAR        = "uploads_key_list_cache_var"
@@ -175,9 +174,10 @@ class UploadsController < OrganizationAwareController
     add_breadcrumb "Download Template"
 
     # Figure out which approach was used to access this method
-
+    from_form = true
+    file_content_type = nil
     # From the form. This is managed via a TemplateProxy class
-    if params[:template_proxy]
+    if params[:template_proxy].present?
       # Inflate the proxy
       template_proxy = TemplateProxy.new(params[:template_proxy])
       Rails.logger.debug template_proxy.inspect
@@ -195,62 +195,48 @@ class UploadsController < OrganizationAwareController
       # asset_types are an array of asset types
       asset_types = [AssetType.find(template_proxy.asset_type_id)]
 
-    elsif params[:file_content_type]
-      # The request came from the group controller -- the user is attempting to
-      # use an asset group to drive the template assets
-      file_content_type = FileContentType.find(params[:file_content_type])
-      if params[:asset_type]
-        asset_types = [AssetType.find(params[:asset_type])]
-        org = @organization
-      end
-      if params[:asset_group]
-        asset_group = AssetGroup.find_by_object_key(params[:asset_group])
-        org = Organization.get_typed_organization(asset_group.organization)
-        if asset_group.homogeneous?
-          asset_types = [AssetType.find(asset_group.asset_type_ids.first)]
-        end
-      end
+    elsif params[:targets].present?
+      from_form = false
+      # The request came from the audit results page. We have a list of asset
+      # object keys
+      file_content_type = FileContentType.find(params[:file_content_type_id])
+      assets = Asset.operational.where(:object_key => params[:targets].split(','))
+      asset_types = AssetType.where(:id => assets.pluck(:asset_type_id).uniq)
+      org = @organization
     end
 
-    # Start to build the template. Make sure we know what we need to build
-    if file_content_type and asset_types
-      # Find out which builder is used to construct the template and create an instance
-      builder = file_content_type.builder_name.constantize.new(:organization => org, :asset_types => [*asset_types])
+    # Find out which builder is used to construct the template and create an instance
+    builder = file_content_type.builder_name.constantize.new(:organization => org, :asset_types => [*asset_types])
 
-      # Generate the spreadsheet. This returns a StringIO that has been rewound
-      if asset_group
-        builder.assets = asset_group.assets
-      else
-        asset_params = {}
-        asset_params[:organization] = org
-        asset_params[:asset_type] = asset_types
-        asset_params[:object_key] = params[:ids] if params[:ids]
-
-        builder.assets = Asset.operational.where(asset_params)
-      end
-      stream = builder.build
-
-      # Save the template to a temporary file and render a success/download view
-      file = Tempfile.new ['template', '.tmp'], "#{Rails.root}/tmp"
-      ObjectSpace.undefine_finalizer(file)
-      #You can uncomment this line when debugging locally to prevent Tempfile from disappearing before download.
-      @filepath = file.path
-      @filename = "#{org.short_name.downcase}_#{file_content_type.class_name.underscore}_#{Date.today}.xlsx"
-      begin
-        file << stream.string
-      rescue => ex
-        Rails.logger.warn ex
-      ensure
-        file.close
-      end
-      # Ensure you're cleaning up appropriately...something wonky happened with
-      # Tempfiles not disappearing during testing
-      respond_to do |format|
-        format.js
-        format.html
-      end
+    # Generate the spreadsheet. This returns a StringIO that has been rewound
+    if from_form
+      asset_params = {}
+      asset_params[:organization] = org
+      asset_params[:asset_type] = asset_types
+      asset_params[:object_key] = params[:ids] if params[:ids]
     else
-      render :action => 'templates'
+      builder.assets = assets
+    end
+    stream = builder.build
+
+    # Save the template to a temporary file and render a success/download view
+    file = Tempfile.new ['template', '.tmp'], "#{Rails.root}/tmp"
+    ObjectSpace.undefine_finalizer(file)
+    #You can uncomment this line when debugging locally to prevent Tempfile from disappearing before download.
+    @filepath = file.path
+    @filename = "#{org.short_name.downcase}_#{file_content_type.class_name.underscore}_#{Date.today}.xlsx"
+    begin
+      file << stream.string
+    rescue => ex
+      Rails.logger.warn ex
+    ensure
+      file.close
+    end
+    # Ensure you're cleaning up appropriately...something wonky happened with
+    # Tempfiles not disappearing during testing
+    respond_to do |format|
+      format.js
+      format.html
     end
 
   end
@@ -335,11 +321,5 @@ class UploadsController < OrganizationAwareController
   end
 
   private
-
-  def check_for_cancel
-    unless params[:cancel].blank?
-      redirect_to uploads_url
-    end
-  end
 
 end
