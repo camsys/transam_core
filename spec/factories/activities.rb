@@ -1,14 +1,9 @@
 FactoryGirl.define do
   factory :activity do
-    association :organization_type
     name "Test Name"
     description "Test Description"
-    start "12/24/20"
-    due "12/24/20"
-    notify "12/24/20"
-    warn "12/24/20"
-    alert "12/24/20"
-    escalate "12/24/20"
+    association :frequency_type
     job_name "ActivityJob"
+    execution_time 'one hour'
   end
 end
