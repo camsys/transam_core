@@ -1,4 +1,6 @@
-- if @view_type == FormsController::VIEW_TYPE_TABLE
-	= render 'index_table'
-- else
-	= render 'index_thumbnails'
+.col-sm-12.col-md-10.col-md-offset-1.col-lg-8.col-lg-offset-2
+	.page-header
+		%h2 Forms
+
+	.row
+		= render 'index_thumbnails'

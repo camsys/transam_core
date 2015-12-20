@@ -1,15 +1,16 @@
-.row
-	- @forms.each do |form|
-		= action_thumbnail_tag({:class => 'col-md-3', :icon => "fa fa-file-type-o", :title => form.name, :path => form_path(form) }) do
-			%p
-				= form.description.html_safe
+- if @forms.empty?
+	%p No forms found
+- else
+	- @forms.each do |f|
+		= action_thumbnail_tag({:class => 'col-sm-4', :icon => "fa fa-file-text-o", :title => f.name, :path => form_path(f)}) do
+			= format_as_text(f.description)
 
 :javascript
 
 	$(document).ready(function() {
 		transam.make_same_height('.thumbnail-content');
+	});
 
-		$(window).resize(function() {
-			transam.make_same_height('.thumbnail-content');
-		});
+	$(window).resize(function() {
+		transam.make_same_height('.thumbnail-content');
 	});

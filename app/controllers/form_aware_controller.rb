@@ -1,14 +1,19 @@
+#-------------------------------------------------------------------------------
+# FormAwareController
 #
-# Abstract controller that is used as the base class
-# for any concrete controllers that are based on a form
+# Abstract controller that is used as the base class for any concrete controllers
+# that are based on a form
 #
+#-------------------------------------------------------------------------------
 class FormAwareController < OrganizationAwareController
+
   # set the @form_class variable before any actions are invoked
   before_action :get_form_class
 
-
+  #-------------------------------------------------------------------------------
   # Used by all form controllers to update the form status as it goes thorugh
   # its workflows
+  #-------------------------------------------------------------------------------
   def fire_workflow_event
 
     # Check that this is a valid event name for the state machines
@@ -31,9 +36,13 @@ class FormAwareController < OrganizationAwareController
 
   end
 
+  #-------------------------------------------------------------------------------
   protected
+  #-------------------------------------------------------------------------------
 
+  #-------------------------------------------------------------------------------
   # Returns the selected form
+  #-------------------------------------------------------------------------------
   def get_form_class
     # load this report and create the report instance
     form = Form.find_by(:object_key => params[:form_id]) unless params[:form_id].blank?
@@ -45,7 +54,7 @@ class FormAwareController < OrganizationAwareController
     end
     if @form_type.nil?
       notify_user(:alert, "Can't find form.")
-      redirect_to forms_url
+      redirect_to '/404'
       return
     end
   end
