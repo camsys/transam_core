@@ -6,8 +6,9 @@
   = format_field("System Activity", format_as_boolean(activity.system_activity))
   = format_field("Show in Dashboard", format_as_boolean(activity.show_in_dashboard))
   = format_field("Operational", format_as_boolean(activity.operational?))
-  = format_field("Active", format_as_boolean(activity.active))
+  = format_field("Schedule", "#{format_as_date(activity.start_date)} To #{format_as_date(activity.end_date)}") unless activity.start_date.blank?
   %hr
+  = format_field("Active", format_as_boolean(activity.active))
   = format_field("Last Run", format_as_date_time(activity.last_run))
   = format_field("Created On", format_as_date(activity.created_at))
   = format_field("Last Updated", format_as_date(activity.updated_at))
@@ -20,8 +21,9 @@
     = format_field("System Activity", format_as_boolean(activity.system_activity))
     = format_field("Show in Dashboard", format_as_boolean(activity.show_in_dashboard))
     = format_field("Operational", format_as_boolean(activity.operational?))
-    = format_field("Active", format_as_boolean(activity.active))
+    = format_field("Schedule", "#{format_as_date(activity.start_date)} To #{format_as_date(activity.end_date)}") unless activity.start_date.blank?
   .col-sm-4
+    = format_field("Active", format_as_boolean(activity.active))
     = format_field("Last Run", format_as_date_time(activity.last_run))
     = format_field("Created On", format_as_date(activity.created_at))
     = format_field("Last Updated", format_as_date(activity.updated_at))

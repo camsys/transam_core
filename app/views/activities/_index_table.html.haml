@@ -22,6 +22,7 @@
         %th.center{:data => {:sortable => 'true'}} Dashboard
         %th.center{:data => {:sortable => 'true'}} Start Date
         %th.center{:data => {:sortable => 'true'}} End Date
+        %th.center{:data => {:sortable => 'true'}} Operational
         %th.center{:data => {:sortable => 'true'}} Job
         %th.center{:data => {:sortable => 'true'}} Last Run
         %th.center{:data => {:sortable => 'true'}} Active
@@ -38,6 +39,7 @@
           %td.center.nowrap= format_as_boolean(a.show_in_dashboard)
           %td.center.nowrap= format_as_date(a.start_date)
           %td.center.nowrap= format_as_date(a.end_date)
+          %td.center.nowrap= format_as_boolean(a.operational?)
           %td.left= a.job_name
           %td.center.nowrap= format_as_date_time(a.last_run)
           %td.center.nowrap= format_as_boolean(a.active)

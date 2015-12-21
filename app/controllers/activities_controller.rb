@@ -5,7 +5,8 @@
 #-------------------------------------------------------------------------------
 class ActivitiesController < OrganizationAwareController
 
-  before_action :set_activity, only: [:show, :edit, :update, :destroy]
+  before_action :set_activity,          :only =>  [:show, :edit, :update, :destroy]
+  before_filter :reformat_date_fields,  :only =>  [:create, :update]
 
   INDEX_KEY_LIST_VAR  = "activities_list_cache_var"
   ACTIVE_FLAG         = '1'
@@ -18,6 +19,7 @@ class ActivitiesController < OrganizationAwareController
     ["System", SYSTEM_FLAG]
   ]
 
+  add_breadcrumb "Home", :root_path
   add_breadcrumb "Activities", :activities_path
 
   # Lock down the controller
@@ -134,7 +136,7 @@ class ActivitiesController < OrganizationAwareController
 
     respond_to do |format|
       if @activity.update(activity_params)
-        notify_user :notice, 'Project was successfully updated.'
+        notify_user :notice, 'Activity was successfully updated.'
         format.html { redirect_to @activity }
         format.json { render :show, status: :ok, location: @activity }
       else
@@ -174,4 +176,15 @@ class ActivitiesController < OrganizationAwareController
   def activity_params
     params.require(:activity).permit(Activity.allowable_params)
   end
+
+  def reformat_date(date_str)
+    form_date = Date.strptime(date_str, '%m/%d/%Y')
+    return form_date.strftime('%Y-%m-%d')
+  end
+
+  def reformat_date_fields
+    params[:activity][:start_date]  = reformat_date(params[:activity][:start_date]) unless params[:activity][:start_date].blank?
+    params[:activity][:end_date]    = reformat_date(params[:activity][:end_date]) unless params[:activity][:end_date].blank?
+  end
+
 end

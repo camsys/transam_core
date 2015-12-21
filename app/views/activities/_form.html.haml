@@ -38,7 +38,7 @@
           %i.fa.fa-calendar
     .col-sm-2
       = f.input :end_date, :label => 'End date', :wrapper => :vertical_append do
-        = f.input_field :start_date, :class => "form-control", :as => :string, :data => {'behavior' => 'constrained-datepicker'}, :value => format_as_date(f.object.end_date)
+        = f.input_field :end_date, :class => "form-control", :as => :string, :data => {'behavior' => 'constrained-datepicker'}, :value => format_as_date(f.object.end_date)
         %span.input-group-addon
           %i.fa.fa-calendar
 
@@ -49,6 +49,10 @@
 :javascript
 
   $(document).ready(function() {
+
+    $('[data-behavior~=constrained-datepicker]').datepicker({
+    });
+
     $('.text-limiter').simplyCountable({
       maxCount: $('.text-limiter').attr('maxlength'),
       strictMax: false,
