@@ -13,6 +13,7 @@
 #
 #-------------------------------------------------------------------------------
 module TransamKeywordSearchable
+  
   extend ActiveSupport::Concern
 
   included do

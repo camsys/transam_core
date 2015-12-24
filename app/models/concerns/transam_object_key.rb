@@ -6,6 +6,7 @@
 #
 #------------------------------------------------------------------------------
 module TransamObjectKey
+  
   extend ActiveSupport::Concern
 
   included do
