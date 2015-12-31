@@ -1,6 +1,6 @@
 .row
   .col-md-8.col-md-offset-2.col-sm-10.col-sm-offset-1.col-xs-12
-    = simple_form_for([@documentable, Document.new],
+    = simple_form_for([@commentable, Comment.new],
         :html => {:multipart => true, :class => 'form-vertical' },
         :wrapper => :vertical_form,
         :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}) do |f|
