@@ -96,7 +96,7 @@
         .tab-pane.fade.in#cancelled
           .list-group
             - if my_cancelled_tasks.empty?
-              %p No tasks unassigned
+              %p No tasks cancelled
             - else
               - my_cancelled_tasks.each do |task|
                 = render :partial => 'task_detail', :locals => {:task => task}
