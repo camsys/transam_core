@@ -23,8 +23,6 @@ RSpec.describe LockedAccountInformerJob, :type => :job do
 
       LockedAccountInformerJob.new(test_user.object_key).run
 
-      puts Message.all.to_json
-
       expect(Message.last.user).to eq(sys_user)
       expect(Message.last.to_user).to eq(test_admin)
       expect(Message.last.subject).to eq('User account locked')

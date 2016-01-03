@@ -66,6 +66,7 @@ FactoryGirl.define do
 
   factory :rehabilitation_update_event do
     basic_event_traits
+    asset_event_type { AssetEventType.find_by(:class_name => 'RehabilitationUpdateEvent') }
     event_date Date.today
   end
 
