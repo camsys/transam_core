@@ -3,7 +3,7 @@ require 'rails_helper'
 describe "tasks/_task_detail.html.haml", :type => :view do
   it 'actions and info' do
     test_asset = create(:buslike_asset)
-    test_task = create(:task, :complete_by => Date.today-1.day, :taskable => test_asset)
+    test_task = create(:task, :complete_by => DateTime.current-1.day, :taskable => test_asset)
     test_user = create(:admin)
     assign(:organization, test_user.organization)
     render 'tasks/task_detail', :task => test_task
@@ -14,7 +14,7 @@ describe "tasks/_task_detail.html.haml", :type => :view do
     expect(rendered).to have_content(test_task.subject.upcase)
     expect(rendered).to have_content(test_task.body)
     expect(rendered).to have_link('Open')
-    expect(rendered).to have_content('due 2 days ago')
+    expect(rendered).to have_content('due 1 day ago')
     expect(rendered).to have_link(test_asset.to_s)
   end
 

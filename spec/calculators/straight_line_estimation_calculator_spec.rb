@@ -33,6 +33,7 @@ RSpec.describe StraightLineEstimationCalculator, :type => :calculator do
 
     it 'calculates when no condition update event' do
       @test_asset.condition_updates.destroy_all
+      @test_asset.in_service_date = Date.today - 14.years
       expect(test_calculator.calculate(@test_asset)).to eq(1.5)
     end
 
