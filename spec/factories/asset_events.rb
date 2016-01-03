@@ -19,6 +19,7 @@ FactoryGirl.define do
 
   factory :condition_update_event do
     basic_event_traits
+    asset_event_type { AssetEventType.find_by(:class_name => 'ConditionUpdateEvent') }
     condition_type_id { ConditionType.find_by(:name => "Adequate").id }
     assessed_rating 2.0
     event_date Date.today
