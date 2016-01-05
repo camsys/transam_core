@@ -2,7 +2,7 @@ FactoryGirl.define do
   factory :activity do
     name "Test Name"
     description "Test Description"
-    association :frequency_type
+    frequency_type_id 1
     job_name "ActivityJob"
     execution_time 'one hour'
   end

@@ -11,7 +11,7 @@ FactoryGirl.define do
     factory :guest do
       first_name "bob"
       last_name  "guest"
-      email 'bob@example.com'
+      sequence(:email) {|n| "bob#{n}@example.com"}
 
       after(:create) do |u|
         u.add_role :guest

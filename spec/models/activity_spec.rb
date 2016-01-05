@@ -87,7 +87,7 @@ RSpec.describe Activity, :type => :model do
     expect(test_activity.to_s).to eq(test_activity.name)
   end
   it '.schedule' do
-    expect(test_activity.schedule).to eq("1 Test Frequency Types at one hour")
+    expect(test_activity.schedule).to eq("1 #{FrequencyType.first.to_s}s at one hour")
   end
   it '.frequency' do
     pending('TODO')
