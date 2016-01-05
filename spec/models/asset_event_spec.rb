@@ -1,6 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe AssetEvent, :type => :model do
+
+  class TestOrg < Organization
+    def get_policy
+      return Policy.where("`organization_id` = ?",self.id).order('created_at').last
+    end
+  end
+
   let(:test_asset_event) { create(:asset_event) }
 
   # instantiate asset_event_type class for test_asset_event
@@ -8,9 +15,49 @@ RSpec.describe AssetEvent, :type => :model do
 
   #------------------------------------------------------------------------------
   #
+  # Class Methods
+  #
+  #------------------------------------------------------------------------------
+  describe '.get_new_typed_event' do
+    it "returns a typed asset" do
+      pending "This is coupled to seed data.  Needs review"
+      a = AssetEvent.get_new_typed_event(FactoryGirl.build(:asset_event_subtype))
+
+      expect(a.class).to eq("AssetEventType")
+    end
+  end
+
+  describe '.as_typed_event' do
+    it "types an untyped event" do
+      expect(AssetEvent.as_typed_event(test_asset_event).class).to eq(ConditionUpdateEvent)
+    end
+
+    it "types an already typed event" do
+      test_asset = create(:buslike_asset)
+      test_asset.condition_updates.create!(attributes_for(:condition_update_event, :asset => test_asset))
+      expect(AssetEvent.as_typed_event(test_asset.condition_updates.last).class).to eq(ConditionUpdateEvent)
+    end
+
+    it "returns nil when handed nothing" do
+      expect(AssetEvent.as_typed_event(nil)).to be_nil
+    end
+  end
+
+  #------------------------------------------------------------------------------
+  #
   # Instance Methods
   #
   #------------------------------------------------------------------------------
+
+  describe "#is_typed?" do
+    it 'returns true for strongly typed assets' do
+      expect(ConditionUpdateEvent.new(:asset => build_stubbed(:buslike_asset)).is_typed?).to be(true)
+    end
+
+    it 'returns false for Asset' do
+      expect(test_asset_event.is_typed?).to be(false)
+    end
+  end
 
   it 'should have an asset_event_type' do
     expect(test_asset_event.asset_event_type.nil?).to be false
@@ -93,5 +140,21 @@ RSpec.describe AssetEvent, :type => :model do
 
     expect(test_asset_event.next_event_of_type.nil?).to be true
   end
+
+  it 'returns only previous events of the same type as the caller' do
+      bus = test_asset_event.asset
+      bus.disposition_updates.create(attributes_for(:disposition_update_event, :event_date => Date.today - 10.years))
+      previous_event = test_asset_event.previous_event_of_type
+
+      expect(previous_event).to be_nil
+    end
+
+  it 'returns only next events of the same type as the caller' do
+      bus = test_asset_event.asset
+      bus.disposition_updates.create(attributes_for(:disposition_update_event, :event_date => Date.today)) # condition_update event is in the past
+      next_event = test_asset_event.next_event_of_type
+
+      expect(next_event).to be_nil
+    end
 
 end

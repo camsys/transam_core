@@ -2,11 +2,11 @@ require 'rails_helper'
 
 RSpec.describe User, :type => :model do
 
-  let(:org)           { build_stubbed(:organization) }
-  let(:guest_user)    { build_stubbed(:guest) }
-  let(:normal_user)   { build_stubbed(:normal_user) }
-  let(:manager_user)  { build_stubbed(:manager) }
-  let(:admin_user)    { build_stubbed(:admin) }
+  let(:org)           { create(:organization) }
+  let(:guest_user)    { create(:guest) }
+  let(:normal_user)   { create(:normal_user) }
+  let(:manager_user)  { create(:manager) }
+  let(:admin_user)    { create(:admin) }
 
   #------------------------------------------------------------------------------
   #
@@ -75,23 +75,43 @@ RSpec.describe User, :type => :model do
   describe ".organizations" do
     it 'returns the correct organizations for a User' do
       normal_user.organizations << org
-      #expect(normal_user.organizations.count).to eql(1)
-      #expect(normal_user.organization_ids).to eql([org.id])
-    end
-  end
-
-  describe ".lock_access" do
-    it 'logs when a users account is locked' do
-      #expect(Rails.logger).to receive(:info).with("Locking account for user with email #{normal_user.email} at #{Time.now}")
-      #normal_user.unlock_access!
+      expect(normal_user.organizations.count).to eql(1)
+      expect(normal_user.organization_ids).to eql([org.id])
     end
   end
 
   describe ".unlock_access" do
     it 'logs when a users account is unlocked' do
-      #expect(Rails.logger).to receive(:info).with("Unlocking account for user with email #{normal_user.email} at #{Time.now}")
-      #normal_user.lock_access!
+      expect(Rails.logger).to receive(:info).with("Unlocking account for user with email #{normal_user.email} at #{Time.now}")
+      normal_user.unlock_access!
     end
+  end
+
+  describe ".lock_access" do
+    it 'logs when a users account is locked' do
+      expect(Rails.logger).to receive(:info).with("Locking account for user with email #{normal_user.email} at #{Time.now}")
+      normal_user.lock_access!
+    end
+  end
+
+  it '#is_in_role() works as expected' do
+    guest = create(:guest, email: '1@example.com', organization_id: org.id)
+    normal_user = create(:normal_user, email: '2@example.com', organization_id: org.id)
+    manager = create(:manager, email: '3@example.com', organization_id: org.id)
+    admin = create(:admin, email: '4@example.com', organization_id: org.id)
+
+    puts admin.roles.to_json
+    expect(guest.is_in_role(Role.find_by(:name => 'guest').id)).to eql(true)
+    expect(normal_user.is_in_role(Role.find_by(:name => 'user').id)).to eql(true)
+    expect(manager.is_in_role(Role.find_by(:name => 'manager').id)).to eql(true)
+    expect(admin.is_in_role(Role.find_by(:name => 'admin').id)).to eql(true)
+  end
+
+  it '.name works as expected' do
+    expect(guest_user.name).to eql("bob guest")
+    expect(normal_user.name).to eql("joe normal")
+    expect(manager_user.name).to eql("kate manager")
+    expect(admin_user.name).to eql("jill admin")
   end
 
 end

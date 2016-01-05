@@ -5,8 +5,17 @@ RSpec.describe Message, :type => :model do
   let(:msg) { build(:message)}
   let(:user1) { build(:normal_user)}
   let(:user2) { build(:manager)}
-  
+
   describe '#response_count' do
+
+    it '#response_count works as expected' do
+      msg = build(:message)
+      msg2 = build(:message)
+      msg3 = build(:message)
+      msg.responses << [msg2, msg3]
+      expect(msg.response_count).to eql(2)
+    end
+
     it 'is 0 for a new message' do
       expect(msg.response_count).to eq(0)
     end

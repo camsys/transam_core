@@ -1,9 +1,16 @@
 require 'rails_helper'
 
 RSpec.describe Asset, :type => :model do
-    # policy = build_stubbed(:policy)
-    let(:buslike_asset) { build_stubbed(:buslike_asset) }
-    let(:persisted_buslike_asset) { create(:buslike_asset) }
+
+  class TestOrg < Organization
+    def get_policy
+      return Policy.where("`organization_id` = ?",self.id).order('created_at').last
+    end
+  end
+
+  # policy = build_stubbed(:policy)
+  let(:buslike_asset) { build_stubbed(:buslike_asset) }
+  let(:persisted_buslike_asset) { create(:buslike_asset) }
 
 
   #------------------------------------------------------------------------------
@@ -11,28 +18,28 @@ RSpec.describe Asset, :type => :model do
   # Class Methods
   #
   #------------------------------------------------------------------------------
-  # describe ".new_asset" do # pending
-  #   it "returns a typed asset" do
-  #     pending "There is a coupling here. Do we need to test the seed data?"
-  #     a = Asset.new_asset(FactoryGirl.build(:asset_subtype))
+  describe ".new_asset" do # pending
+    it "returns a typed asset" do
+      pending "There is a coupling here. Do we need to test the seed data?"
+      a = Asset.new_asset(FactoryGirl.build(:asset_subtype))
 
-  #     expect(a.class).to eq("AssetType")
-  #   end
-  # end
+      expect(a.class).to eq("AssetType")
+    end
+  end
 
-  # describe ".get_typed_asset" do
-  #   it "types an untyped asset" do
-  #     expect(Asset.get_typed_asset(buslike_asset).class).to eq(Vehicle)
-  #   end
+  describe ".get_typed_asset" do
+    it "types an untyped asset" do
+      expect(Asset.get_typed_asset(persisted_buslike_asset).class).to eq(Vehicle)
+    end
 
-  #   it "types an already typed asset" do
-  #     expect(Asset.get_typed_asset(buslike_asset).class).to eq(Vehicle)
-  #   end
+    it "types an already typed asset" do
+      expect(Asset.get_typed_asset(persisted_buslike_asset).class).to eq(Vehicle)
+    end
 
-  #   it "returns nil when handed nothing" do
-  #     expect(Asset.get_typed_asset(nil)).to be_nil
-  #   end
-  # end
+    it "returns nil when handed nothing" do
+      expect(Asset.get_typed_asset(nil)).to be_nil
+    end
+  end
 
   describe ".event_classes" do
     it 'returns the right event classes for an asset' do
@@ -282,6 +289,41 @@ RSpec.describe Asset, :type => :model do
       test_asset_event.destroy
 
       expect(buslike_asset.asset_event_ids.include? test_asset_event_id).to be false
+    end
+  end
+
+  describe '.record_disposition' do
+    it 'works as expected' do
+      persisted_buslike_asset.asset_events.create!(attributes_for(:disposition_update_event))
+      persisted_buslike_asset.record_disposition
+      expect(persisted_buslike_asset.disposition_updates.count).to eql(1)
+      persisted_buslike_asset.reload
+      expect(persisted_buslike_asset.disposition_date).to eql(Date.today)
+      expect(persisted_buslike_asset.disposition_type).to eql(DispositionType.find(2))
+    end
+
+    it 'logs correct information' do
+      persisted_buslike_asset.asset_events.create!(attributes_for(:disposition_update_event))
+      expect(Rails.logger).to receive(:info).with("Recording final disposition for asset = #{persisted_buslike_asset.object_key}")
+      persisted_buslike_asset.record_disposition
+    end
+  end
+
+  describe '.update_service_status' do
+    it 'works as expected' do
+      persisted_buslike_asset.asset_events.create!(attributes_for(:service_status_update_event))
+      persisted_buslike_asset.update_service_status
+      expect(persisted_buslike_asset.service_status_updates.count).to eql(1)
+      persisted_buslike_asset.reload
+      expect(persisted_buslike_asset.service_status_date).to eql(Date.today)
+      expect(persisted_buslike_asset.service_status_type).to eql(ServiceStatusType.find(2))
+    end
+
+    it '#update_service_status logs correct information', :skip do
+      update = build(:ss_update1, :asset_id => @bus.id)
+      @bus.service_status_updates << update
+      expect(Rails.logger).to receive(:info).with("Updating service status for asset = #{@bus.object_key}")
+      @bus.update_service_status
     end
   end
 
