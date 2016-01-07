@@ -5,7 +5,7 @@ RSpec.describe Comment, :type => :model do
 
   describe 'associations' do
     it 'has a creator' do
-      expect(Comment.column_names).to include('created_by_id')
+      expect(test_comment).to belong_to(:creator)
     end
   end
 

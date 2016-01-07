@@ -3,16 +3,16 @@ require 'rails_helper'
 RSpec.describe UsersRole, :type => :model do
   describe 'associations' do
     it 'belongs to user' do
-      expect(UsersRole.column_names).to include('user_id')
+      expect(UsersRole.new).to belong_to(:user)
     end
     it 'belongs to role' do
-      expect(UsersRole.column_names).to include('role_id')
+      expect(UsersRole.new).to belong_to(:role)
     end
     it 'has a grantor' do
-      expect(UsersRole.column_names).to include('granted_by_user_id')
+      expect(UsersRole.new).to belong_to(:granted_by_user)
     end
     it 'has a revoker' do
-      expect(UsersRole.column_names).to include('revoked_by_user_id')
+      expect(UsersRole.new).to belong_to(:revoked_by_user)
     end
   end
 

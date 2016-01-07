@@ -5,10 +5,10 @@ RSpec.describe Customer, :type => :model do
 
   describe 'associations' do
     it 'has a license type' do
-      expect(Customer.column_names).to include('license_type_id')
+      expect(test_customer).to belong_to(:license_type)
     end
     it 'has orgs' do
-      expect(Organization.column_names).to include('customer_id')
+      expect(test_customer).to have_many(:organizations)
     end
   end
 

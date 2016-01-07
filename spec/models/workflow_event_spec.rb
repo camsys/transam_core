@@ -5,15 +5,14 @@ RSpec.describe WorkflowEvent, :type => :model do
   let(:test_event) { WorkflowEvent.new }
 
   it 'is an event of an object' do
-    expect(WorkflowEvent.column_names).to include("accountable_id")
+    expect(test_event).to belong_to(:accountable)
   end
   it 'must have a creator' do
-    expect(WorkflowEvent.column_names).to include("created_by_id")
+    expect(test_event).to belong_to(:creator)
     test_event.creator = nil
     expect(test_event.valid?).to be false
   end
   it 'must have an event type' do
-    expect(WorkflowEvent.column_names).to include("event_type")
     test_event.event_type = nil
     expect(test_event.valid?).to be false
   end

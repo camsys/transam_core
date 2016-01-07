@@ -6,10 +6,10 @@ RSpec.describe ActivityLog, :type => :model do
 
   describe 'associations' do
     it 'has an org' do
-      expect(ActivityLog.column_names).to include('organization_id')
+      expect(test_log).to belong_to(:organization)
     end
     it 'has a user' do
-      expect(ActivityLog.column_names).to include('user_id')
+      expect(test_log).to belong_to(:user)
     end
   end
   describe 'validations' do
@@ -23,5 +23,5 @@ RSpec.describe ActivityLog, :type => :model do
   it '.to_s' do
     expect(test_log.to_s).to eq(test_log.item_type)
   end
-  
+
 end

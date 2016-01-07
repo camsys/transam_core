@@ -6,7 +6,7 @@ RSpec.describe ScheduleReplacementUpdateEvent, :type => :model do
 
   describe 'associations' do
     it 'has a replacement reason' do
-      expect(ScheduleReplacementUpdateEvent.column_names).to include('replacement_reason_type_id')
+      expect(test_event).to belong_to(:replacement_reason_type)
     end
   end
 

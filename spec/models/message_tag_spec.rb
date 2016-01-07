@@ -7,10 +7,10 @@ RSpec.describe MessageTag, :type => :model do
 
   describe 'associations' do
     it 'has a user' do
-      expect(MessageTag.column_names).to include('user_id')
+      expect(test_msg_tag).to belong_to(:user)
     end
     it 'has a message' do
-      expect(MessageTag.column_names).to include('message_id')
+      expect(test_msg_tag).to belong_to(:message)
     end
   end
 

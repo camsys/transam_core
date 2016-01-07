@@ -6,19 +6,19 @@ RSpec.describe Upload, :type => :model do
 
   describe 'associations' do
     it 'has a user' do
-      expect(Upload.column_names).to include('user_id')
+      expect(test_upload).to belong_to(:user)
     end
     it 'has an org' do
-      expect(Upload.column_names).to include('organization_id')
+      expect(test_upload).to belong_to(:organization)
     end
     it 'has a file status type' do
-      expect(Upload.column_names).to include('file_status_type_id')
+      expect(test_upload).to belong_to(:file_status_type)
     end
     it 'has a file content type' do
-      expect(Upload.column_names).to include('file_content_type_id')
+      expect(test_upload).to belong_to(:file_content_type)
     end
     it 'has many asset events' do
-      expect(AssetEvent.column_names).to include('upload_id')
+      expect(test_upload).to have_many(:asset_events)
     end
   end
 

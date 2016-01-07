@@ -6,7 +6,7 @@ RSpec.describe AssetSubtype, :type => :model do
 
   describe 'associations' do
     it 'has an asset type' do
-      expect(AssetSubtype.column_names).to include('asset_type_id')
+      expect(test_subtype).to belong_to(:asset_type)
     end
   end
 

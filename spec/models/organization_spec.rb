@@ -8,8 +8,8 @@ RSpec.describe Organization, :type => :model do
   end
 
   it 'associations' do
-    expect(test_org.attributes).to include('customer_id')
-    expect(test_org.attributes).to include('organization_type_id')
+    expect(test_org).to belong_to(:customer)
+    expect(test_org).to belong_to(:organization_type)
   end
 
   describe 'validations' do

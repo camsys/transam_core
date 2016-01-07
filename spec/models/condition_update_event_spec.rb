@@ -6,7 +6,7 @@ RSpec.describe ConditionUpdateEvent, :type => :model do
 
   describe 'associations' do
     it 'has a type' do
-      expect(ConditionUpdateEvent.column_names).to include('condition_type_id')
+      expect(test_event).to belong_to(:condition_type)
     end
   end
 

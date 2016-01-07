@@ -6,10 +6,10 @@ RSpec.describe RehabilitationUpdateEvent, :type => :model do
 
   describe 'associations' do
     it 'has many asset event subsystems' do
-      expect(AssetEventAssetSubsystem.column_names).to include('asset_event_id')
+      expect(test_event).to have_many(:asset_event_asset_subsystems)
     end
     it 'has many asset subsystems' do
-      expect(AssetEventAssetSubsystem.column_names).to include('asset_subsystem_id')
+      expect(test_event).to have_many(:asset_subsystems)
     end
   end
   describe 'validations' do

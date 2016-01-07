@@ -5,7 +5,7 @@ RSpec.describe ServiceStatusUpdateEvent, :type => :model do
 
   describe 'associations' do
     it 'must have a status type' do
-      expect(ServiceStatusUpdateEvent.column_names).to include('service_status_type_id')
+      expect(test_event).to belong_to(:service_status_type)
     end
   end
   describe 'validations' do

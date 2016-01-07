@@ -6,7 +6,7 @@ RSpec.describe Activity, :type => :model do
 
   describe 'association' do
     it 'has a frequenct type' do
-      expect(Activity.column_names).to include('frequency_type_id')
+      expect(test_activity).to belong_to(:frequency_type)
     end
   end
 

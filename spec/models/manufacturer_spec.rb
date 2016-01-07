@@ -11,7 +11,7 @@ RSpec.describe Manufacturer, :type => :model do
 
   describe 'associations' do
     it 'has many assets' do
-      expect(Asset.column_names).to include('manufacturer_id')
+      expect(test_manufacturer).to have_many(:assets)
 
       bus.update!(:manufacturer => test_manufacturer)
       bus2 = create(:buslike_asset, :manufacturer => create(:manufacturer))

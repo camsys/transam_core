@@ -6,7 +6,7 @@ RSpec.describe DispositionUpdateEvent, :type => :model do
 
   describe 'associations' do
     it 'has a type' do
-      expect(DispositionUpdateEvent.column_names).to include('disposition_type_id')
+      expect(test_event).to belong_to(:disposition_type)
     end
   end
   describe 'validations' do

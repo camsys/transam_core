@@ -6,7 +6,7 @@ RSpec.describe Report, :type => :model do
 
   describe 'associations' do
     it 'has a type' do
-      expect(Report.column_names).to include('report_type_id')
+      expect(test_report).to belong_to(:report_type)
     end
   end
 

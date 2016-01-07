@@ -5,7 +5,7 @@ RSpec.describe Vendor, :type => :model do
   let(:test_vendor) { create(:vendor) }
 
   it 'must have an org' do
-    expect(Vendor.column_names).to include("organization_id")
+    expect(test_vendor).to belong_to(:organization)
     test_vendor.organization = nil
     expect(test_vendor.valid?).to be false
   end

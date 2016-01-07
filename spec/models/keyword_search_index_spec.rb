@@ -7,7 +7,7 @@ RSpec.describe KeywordSearchIndex, :type => :model do
 
   describe 'associations' do
     it 'must have an org' do
-      expect(KeywordSearchIndex.column_names).to include('organization_id')
+      expect(test_search).to belong_to(:organization)
     end
   end
 

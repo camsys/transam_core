@@ -6,7 +6,7 @@ RSpec.describe Document, :type => :model do
 
   describe 'associations' do
     it 'has a creator' do
-      expect(Document.column_names).to include('created_by_id')
+      expect(test_doc).to belong_to(:creator)
     end
   end
   describe 'validations' do

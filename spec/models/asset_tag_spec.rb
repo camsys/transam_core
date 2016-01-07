@@ -7,10 +7,10 @@ RSpec.describe AssetTag, :type => :model do
 
   describe 'associations' do
     it 'has an asset' do
-      expect(AssetTag.column_names).to include('asset_id')
+      expect(test_tag).to belong_to(:asset)
     end
     it 'has a user' do
-      expect(AssetTag.column_names).to include('user_id')
+      expect(test_tag).to belong_to(:user)
     end
   end
 

@@ -9,11 +9,11 @@ RSpec.describe Task, :type => :model do
   end
 
   it 'associations' do
-    expect(Task.column_names).to include('taskable_id')
-    expect(Task.column_names).to include('user_id')
-    expect(Task.column_names).to include('organization_id')
-    expect(Task.column_names).to include('assigned_to_user_id')
-    expect(Task.column_names).to include('priority_type_id')
+    expect(test_task).to belong_to(:taskable)
+    expect(test_task).to belong_to(:user)
+    expect(test_task).to belong_to(:organization)
+    expect(test_task).to belong_to(:assigned_to_user)
+    expect(test_task).to belong_to(:priority_type)
   end
 
   describe 'validations' do

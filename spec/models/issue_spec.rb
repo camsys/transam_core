@@ -6,13 +6,13 @@ RSpec.describe Issue, :type => :model do
 
   describe 'associations' do
     it 'must have a creator' do
-      expect(Issue.column_names).to include('created_by_id')
+      expect(test_issue).to belong_to(:creator)
     end
     it 'has a type' do
-      expect(Issue.column_names).to include('issue_type_id')
+      expect(test_issue).to belong_to(:issue_type)
     end
     it 'has a web browser type' do
-      expect(Issue.column_names).to include('web_browser_type_id')
+      expect(test_issue).to belong_to(:web_browser_type)
     end
   end
 

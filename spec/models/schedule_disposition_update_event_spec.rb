@@ -6,7 +6,8 @@ RSpec.describe ScheduleDispositionUpdateEvent, :type => :model do
 
   describe 'validations' do
     it 'has a year' do
-      expect(ScheduleDispositionUpdateEvent.column_names).to include('disposition_year')
+      test_event.disposition_year = nil
+      expect(test_event.valid?).to be false
     end
   end
 

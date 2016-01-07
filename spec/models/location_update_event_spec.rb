@@ -6,7 +6,7 @@ RSpec.describe LocationUpdateEvent, :type => :model do
 
   describe 'associations' do
     it 'has a parent' do
-      expect(LocationUpdateEvent.column_names).to include('parent_id')
+      expect(test_event).to belong_to(:parent)
     end
   end
   describe 'validations' do

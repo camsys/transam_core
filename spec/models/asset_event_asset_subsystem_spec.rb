@@ -6,10 +6,10 @@ RSpec.describe AssetEventAssetSubsystem, :type => :model do
 
   describe 'associations' do
     it 'belongs to rehabilitation update event' do
-      expect(AssetEventAssetSubsystem.column_names).to include('asset_event_id')
+      expect(test_subsystem).to belong_to(:rehabilitation_update_event)
     end
     it 'belongs to an asset subsystem' do
-      expect(AssetEventAssetSubsystem.column_names).to include('asset_subsystem_id')
+      expect(test_subsystem).to belong_to(:asset_subsystem)
     end
   end
 
