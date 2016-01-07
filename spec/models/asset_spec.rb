@@ -128,9 +128,8 @@ RSpec.describe Asset, :type => :model do
     it 'is ordered correctly' do
       persisted_buslike_asset.update!(:purchased_new => false)
       persisted_buslike_asset.condition_updates.create!(attributes_for :condition_update_event)
-
       event = AssetEvent.as_typed_event persisted_buslike_asset.history.first
-      expect(event.condition_type.name).to eq("Adequate")
+      expect(event.condition_type.name).to eq("Marginal")
       expect(event.assessed_rating).to eq(2)
       expect(event.current_mileage).to eq(300000)
     end
@@ -317,6 +316,25 @@ RSpec.describe Asset, :type => :model do
       persisted_buslike_asset.reload
       expect(persisted_buslike_asset.service_status_date).to eql(Date.today)
       expect(persisted_buslike_asset.service_status_type).to eql(ServiceStatusType.find(2))
+    end
+
+    it '#update_service_status logs correct information', :skip do
+      update = build(:ss_update1, :asset_id => @bus.id)
+      @bus.service_status_updates << update
+      expect(Rails.logger).to receive(:info).with("Updating service status for asset = #{@bus.object_key}")
+      @bus.update_service_status
+    end
+  end
+
+  describe '.update_condition' do
+    it 'works as expected' do
+      persisted_buslike_asset.asset_events.create!(attributes_for(:condition_update_event))
+      persisted_buslike_asset.update_condition
+      expect(persisted_buslike_asset.condition_updates.count).to eql(1)
+      persisted_buslike_asset.reload
+      expect(persisted_buslike_asset.reported_condition_date).to eql(Date.today)
+      expect(persisted_buslike_asset.reported_condition_rating).to eql(2.0)
+      expect(persisted_buslike_asset.reported_condition_type).to eql(ConditionType.find_by(:name => 'Marginal'))
     end
 
     it '#update_service_status logs correct information', :skip do
