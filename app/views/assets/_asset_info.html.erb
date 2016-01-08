@@ -7,7 +7,7 @@
 	<% end %>
 	<%= dialog_tag('Condition', {:icon => 'fa fa-refresh', :class => "header_part col-md-4"}) do %>
 		<%= format_field("Reported condition", @asset.reported_condition_type.nil? ? 'Unknown' : @asset.reported_condition_type.name ) %>
-		<%= format_field("Reported on", format_date(@asset.reported_condition_date) ) %>
+		<%= format_field("Reported on", format_as_date(@asset.reported_condition_date) ) %>
 		<%= format_field("Est. rating", format_as_decimal(@asset.estimated_condition_rating, 1)) %>
 		<%= format_field("Est. condition", @asset.estimated_condition_type.nil? ? 'Unknown' : @asset.estimated_condition_type.name ) %>
 	<% end %>
