@@ -345,4 +345,15 @@ RSpec.describe Asset, :type => :model do
     end
   end
 
+  it '#policy returns the correct policy' do
+    create(:policy, :organization => persisted_buslike_asset.organization)
+    expect(persisted_buslike_asset.policy.name).to eql("#{persisted_buslike_asset.organization.short_name} Policy")
+    expect(persisted_buslike_asset.policy.year).to eql(Date.today.year)
+    expect(persisted_buslike_asset.policy.service_life_calculation_type_id).to eql(1)
+    expect(persisted_buslike_asset.policy.cost_calculation_type_id).to eql(1)
+    expect(persisted_buslike_asset.policy.condition_estimation_type_id).to eql(1)
+    expect(persisted_buslike_asset.policy.condition_threshold).to eql(2.5)
+    expect(persisted_buslike_asset.policy.interest_rate).to eql(0.05)
+  end
+
 end
