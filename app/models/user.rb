@@ -27,7 +27,7 @@ class User < ActiveRecord::Base
   # Associations
   #-----------------------------------------------------------------------------
 
-  has_many :users_roles, -> { active }
+  has_many :users_roles, -> { active }, :inverse_of => :user
   has_many :roles,      :through => :users_roles
 
   # every user belongs to a single organizations
