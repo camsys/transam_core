@@ -122,9 +122,9 @@ replacement_reason_types = [
 ]
 
 roles = [
-  {:privilege => false, :name => 'guest'},
-  {:privilege => false, :name => 'user'},
-  {:privilege => true, :name => 'manager'},
+  {:privilege => false, :name => 'guest', :weight => 1},
+  {:privilege => false, :name => 'user', :weight => 1},
+  {:privilege => false, :name => 'manager', :weight => 7},
   {:privilege => true, :name => 'admin'},
 
   {:privilege => true, :name => 'technical_contact'}

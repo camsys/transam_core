@@ -12,7 +12,7 @@ class UserRoleService
   # Returns the set of roles a user can assign to another user
   #-----------------------------------------------------------------------------
   def assignable_roles user
-    Role.roles.where('weight <= ?', user.primary_role)
+    Role.roles.where('weight <= ?', user.primary_role.weight)
   end
   #-----------------------------------------------------------------------------
   # Returns the set of roles a user can assign to another user. Only admins can
