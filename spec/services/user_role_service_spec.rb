@@ -11,21 +11,21 @@ RSpec.describe UserRoleService, :type => :service do
 
   describe '.assignable_roles' do
     it 'guest' do
-        expect((test_service.assignable_roles test_guest).to_json).to eq(Role.where("name = 'guest' OR name = 'user'").to_json)
+        expect((test_service.assignable_roles test_guest).to_json).to eq(Role.where("name = 'guest' OR name = 'user'").order(:weight).to_json)
     end
     it 'user' do
-      expect((test_service.assignable_roles test_user).to_json).to eq(Role.where("name = 'guest' OR name = 'user'").to_json)
+      expect((test_service.assignable_roles test_user).to_json).to eq(Role.where("name = 'guest' OR name = 'user'").order(:weight).to_json)
     end
     it 'manager' do
-      expect((test_service.assignable_roles test_manager).to_json).to eq(Role.roles.to_json)
+      expect((test_service.assignable_roles test_manager).to_json).to eq(Role.roles.order(:weight).to_json)
     end
   end
   describe '.assignable_privileges' do
     it 'admin' do
-      expect((test_service.assignable_privileges test_admin).to_json).to eq(Role.privileges.to_json)
+      expect((test_service.assignable_privileges test_admin).to_json).to eq(Role.privileges.order(:weight).to_json)
     end
     it 'not admin' do
-      expect((test_service.assignable_privileges test_tech).to_json).to eq(Role.where("name = 'technical_contact'").to_json)
+      expect((test_service.assignable_privileges test_tech).to_json).to eq(Role.where("name = 'technical_contact'").order(:weight).to_json)
     end
   end
 
