@@ -6,7 +6,8 @@ Rails.application.config.policy_analyzer = "PolicyAnalyzer"
 
 Rails.configuration.to_prepare do
   # Inject the search behavior into the searchable classes
-  Equipment.class_eval do
+  Asset.class_eval do
     include TransamKeywordSearchable
+    include MaintainableAsset
   end
 end

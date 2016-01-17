@@ -77,6 +77,7 @@ FactoryGirl.define do
   factory :maintenance_update_event do
     basic_event_traits
     asset_event_type { AssetEventType.find_by(:class_name => 'MaintenanceUpdateEvent') }
+    association :maintenance_type
   end
 
 end
