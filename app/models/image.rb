@@ -47,8 +47,8 @@ class Image < ActiveRecord::Base
 
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
-    :documentable_id,
-    :documentable_type,
+    :imagable_id,
+    :imagable_type,
     :image,
     :description,
     :original_filename,
