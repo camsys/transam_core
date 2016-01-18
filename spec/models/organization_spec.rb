@@ -7,9 +7,28 @@ RSpec.describe Organization, :type => :model do
     expect(test_org.to_param).to eq(test_org.short_name)
   end
 
-  it 'associations' do
-    expect(test_org).to belong_to(:customer)
-    expect(test_org).to belong_to(:organization_type)
+  describe 'associations' do
+    it 'has a customer' do
+      expect(test_org).to belong_to(:customer)
+    end
+    it 'has a type' do
+      expect(test_org).to belong_to(:organization_type)
+    end
+    it 'has users' do
+      expect(test_org).to have_many(:users)
+    end
+    it 'has messages' do
+      expect(test_org).to have_many(:messages)
+    end
+    it 'has uploads' do
+      expect(test_org).to have_many(:uploads)
+    end
+    it 'has asset groups' do
+      expect(test_org).to have_many(:asset_groups)
+    end
+    it 'has vendors' do
+      expect(test_org).to have_many(:vendors)
+    end
   end
 
   describe 'validations' do
@@ -104,12 +123,15 @@ RSpec.describe Organization, :type => :model do
   end
 
   it '.asset_type_counts' do
+    test_asset_type = create(:asset_type)
+
     expect(test_org.asset_type_counts).to eq({})
 
-    test_asset_type = create(:asset_type)
     create(:buslike_asset, :asset_type => test_asset_type, :organization => test_org)
+    create(:buslike_asset, :asset_type => test_asset_type, :organization => test_org, :disposition_date => Date.today)
 
     expect(test_org.asset_type_counts).to eq({test_asset_type.id=>1})
+    expect(test_org.asset_type_counts false).to eq({test_asset_type.id=>2})
   end
   it '.asset_subtype_counts' do
     test_asset_type = create(:asset_type)
@@ -118,8 +140,10 @@ RSpec.describe Organization, :type => :model do
     expect(test_org.asset_subtype_counts test_asset_type).to eq({})
 
     create(:buslike_asset, :asset_type => test_asset_type, :asset_subtype => test_asset_subtype, :organization => test_org)
+    create(:buslike_asset, :asset_type => test_asset_type, :asset_subtype => test_asset_subtype, :organization => test_org, :disposition_date => Date.today)
 
-    expect(test_org.asset_subtype_counts test_asset_type.id).to eq({test_asset_subtype.id=>1})
+    expect(test_org.asset_subtype_counts(test_asset_type.id)).to eq({test_asset_subtype.id=>1})
+    expect(test_org.asset_subtype_counts(test_asset_type.id, false)).to eq({test_asset_subtype.id=>2})
   end
 
   it '.coded_name' do
@@ -134,5 +158,14 @@ RSpec.describe Organization, :type => :model do
 
   it '.has_assets?' do
     expect(test_org.has_assets?).to be false
+  end
+
+  it '.is_typed?' do
+    expect(test_org.is_typed?).to be false
+  end
+
+  it '.set_defaults' do
+    expect(Organization.new.active).to be true
+    expect(Organization.new.state).to eq(SystemConfig.instance.default_state_code)
   end
 end
