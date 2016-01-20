@@ -18,7 +18,7 @@
               = " Assign #{@user.first_name} a task"
             - else
               = " Assign myself a task"
-    - if can? :update, @user
+    - if can? :profile_photo, @user
       %li.divider
       %li
         = link_to profile_photo_user_path(@user) do
@@ -27,6 +27,7 @@
             = "Update #{@user.first_name}'s profile picture"
           - else
             = " Update my profile picture"
+    - if can? :settings, @user
       %li
         = link_to settings_user_path(@user) do
           %i.fa.fa-cog.fa-fw
@@ -34,6 +35,7 @@
             = "Update #{@user.first_name}'s settings"
           -else
             = " Update my settings"
+    - if can? :update, @user
       %li
         = link_to edit_user_path(@user) do
           %i.fa.fa-edit.fa-fw
@@ -41,6 +43,7 @@
             = " Update #{@user.first_name}'s profile"
           - else
             = " Update my profile"
+    - if can? :change_password, @user
       %li
         = link_to change_password_user_path(@user) do
           %i.fa.fa-key.fa-fw
