@@ -811,7 +811,7 @@ class Asset < ActiveRecord::Base
 
     return if disposed?
 
-    if self.policy_replacement_year < current_planning_year_year && self.scheduled_replacement_year.present?
+    if self.policy_replacement_year < current_planning_year_year
       start_date = start_of_fiscal_year(scheduled_replacement_year)
     else
       start_date = start_of_fiscal_year(policy_replacement_year)
