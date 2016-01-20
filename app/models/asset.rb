@@ -210,14 +210,14 @@ class Asset < ActiveRecord::Base
  ]
 
   UPDATE_METHODS = [
+    :update_sogr,
     :update_service_status,
     :update_condition,
     :update_scheduled_replacement,
     :update_scheduled_rehabilitation,
     :update_scheduled_disposition,
     :update_estimated_replacement_cost,
-    :update_location,
-    :update_sogr
+    :update_location
   ]
 
   # List of hash parameters allowed by the controller
@@ -814,7 +814,7 @@ class Asset < ActiveRecord::Base
 
     return if disposed?
 
-    if self.policy_replacement_year < current_planning_year_year
+    if self.policy_replacement_year < current_planning_year_year && self.scheduled_replacement_year.present?
       start_date = start_of_fiscal_year(scheduled_replacement_year)
     else
       start_date = start_of_fiscal_year(policy_replacement_year)
@@ -1009,7 +1009,7 @@ class Asset < ActiveRecord::Base
       # Get the calculator class from the policy analyzer
       class_name = this_policy_analyzer.get_replacement_cost_calculation_type.class_name
       calculator_instance = class_name.constantize.new
-      start_date = start_of_fiscal_year(scheduled_replacement_year)
+      start_date = start_of_fiscal_year(scheduled_replacement_year) unless scheduled_replacement_year.blank?
       Rails.logger.debug "Start Date = #{start_date}"
       self.scheduled_replacement_cost = calculator_instance.calculate_on_date(self, start_date)
     end
