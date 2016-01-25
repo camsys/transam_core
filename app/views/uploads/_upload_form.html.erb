@@ -17,7 +17,7 @@
 			<%= f.input :file, :label => 'Spreadsheet', :hint => 'Select a spreadsheet that has been downloaded from TransAM, edited, then saved.' %>
 		</div>
 		<div class='col-sm-6'>
-			<%= f.association :file_content_type, :label => 'Spreadsheet Content', :prompt => 'Set the spreadsheet contents...' %>
+			<%= f.association :file_content_type, :collection => FileContentType.active, :label => 'Spreadsheet Content', :prompt => 'Set the spreadsheet contents...' %>
 		</div>
 	</div>
 		<div class="row">
