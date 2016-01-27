@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe "users/_form.html.haml", :type => :view do
   it 'fields' do
-    allow(controller).to receive(:current_user).and_return(create(:admin))
+    allow(controller).to receive(:current_user).and_return(create(:manager))
     assign(:user, User.new)
     render
 
