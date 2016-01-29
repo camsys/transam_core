@@ -1,9 +1,9 @@
 = simple_form_for(@vendor,
-  :html => {:class => 'form-vertical' },
+  :html => {:class => 'form-vertical vendor_form' },
   :wrapper => :vertical_form,
   :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}) do |f|
 
-  = f.input :name
+  = f.input :name, :required => true
   = f.input :address1, :label => "Address 1"
   = f.input :address2, :label => "Address 2"
   .row
@@ -21,6 +21,11 @@
   = f.button :submit, :class => "btn btn-primary"
 
 :javascript
-  $(document).ready(function(){
-    transam.make_same_height('.header-part');
+
+  // jquery validations
+  $('.vendor_form').validate({
+    ignore: [], //validate hidden fields
+    submitHandler: function(form) {
+      form.submit();
+    }
   });
