@@ -9,11 +9,20 @@
 
     .row
       .col-sm-6.col-xs-12
-        = f.association :issue_type
+        = f.association :issue_type, :required => true
       .col-sm-6.col-xs-12
-        = f.association :web_browser_type
+        = f.association :web_browser_type, :required => true
     .row
       .col-sm-12.col-xs-12
-        = f.input :comments, :input_html => { :rows => 6 }, :placeholder => "Please provide as much detail as you can..."
+        = f.input :comments, :required => true, :input_html => { :rows => 6 }, :placeholder => "Please provide as much detail as you can..."
 
     = f.button :submit, :class => 'btn btn-primary'
+
+:javascript
+  // jquery validations
+  $('#new_issue').validate({
+    ignore: [], //validate hidden fields
+    submitHandler: function(form) {
+      form.submit();
+    }
+  });
