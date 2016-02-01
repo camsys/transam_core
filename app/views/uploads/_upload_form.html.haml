@@ -1,0 +1,38 @@
+= dialog_tag('Spreadsheet', {:icon => 'fa fa-upload', :class => "header-part"}) do
+  = simple_form_for(@upload,
+    :html => {:multipart => true, :class => 'form-vertical' },                                                                                                                            :wrapper => :vertical_form,                                                                                                                                                           :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}) do |f|
+
+    - if current_user.organizations.count > 1
+      .row
+        .col-sm-6
+          = f.association :organization, :required => true, :collection => current_user.organizations, :label_method => 'coded_name'
+    .row
+      .col-sm-6
+        = f.input :file, :required => true, :label => 'Spreadsheet', :hint => 'Select a spreadsheet that has been downloaded from TransAM, edited, then saved.'
+      .col-sm-6
+        = f.association :file_content_type, :required => true, :label => 'Spreadsheet Content', :prompt => 'Set the spreadsheet contents...'
+    .row
+      .col-sm-6
+        = f.button :submit, 'Upload spreadsheet', :class=>"btn btn-primary"
+
+:javascript
+  var max_file_size_mb = #{Rails.application.config.max_upload_file_size};
+
+	$(document).ready(function() {
+
+  	transam.make_same_height('.header-part');
+
+		// Insert a change listener to validate the file size before uploading.
+		$('#upload_file').change(function() {
+			transam.validate_file_size(this, max_file_size_mb);
+		});
+
+	});
+
+  // jquery validations
+  $('#new_upload').validate({
+    ignore: [], //validate hidden fields
+    submitHandler: function(form) {
+      form.submit();
+    }
+  });

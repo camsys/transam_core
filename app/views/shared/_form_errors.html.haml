@@ -1,0 +1,11 @@
+.row
+  .col-md-12
+    .alert.alert-error.alert-block
+      %button.close{"data-dismiss" => "alert", :type => "button"}
+        &times;
+      %h4
+        = "#{pluralize(obj.errors.count, "error")} prohibited this #{obj.class} from being saved."
+      - if Rails.env.development?
+        - obj.errors.full_messages.each do |msg|
+          %p
+            = msg

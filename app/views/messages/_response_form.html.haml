@@ -8,7 +8,7 @@
   :wrapper => :vertical_form,
   :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}) do |f|
 
-  = f.input :body, :label => false, :placeholder => "Enter your reply...", :as => :ckeditor, :input_html => { :ckeditor => {:toolbar => 'mini'}, :class => "form-control"}
+  = f.input :body, :required => true, :label => false, :placeholder => "Enter your reply...", :as => :ckeditor, :input_html => { :ckeditor => {:toolbar => 'mini'}, :class => "form-control"}
   = f.button :submit, 'Send Reply', :class => "btn btn-primary", :style => "margin-top:10px;"
 
 :javascript
