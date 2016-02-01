@@ -13,13 +13,8 @@ class KeywordIndexDeleteJob < Job
   def run
     klass = class_name.constantize
     if klass
-      klass_instance = klass.find_by(:object_key => object_key)
-      if klass_instance
-        # If we got the class then call the update method
-        klass_instance.remove_from_index
-      else
-        raise RuntimeError, "Can't find #{class_name} with object_key #{object_key}"
-      end
+      # If we got the class then call the update method
+      klass.remove_from_index object_key    
     else
       raise RuntimeError, "Can't instantiate class #{class_name}"
     end
