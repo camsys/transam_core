@@ -61,7 +61,6 @@ class UserRoleService
         revoke_role user, role, manager
       end
     end
-
   end
 
   #-----------------------------------------------------------------------------
@@ -99,11 +98,12 @@ class UserRoleService
   # Revokes a single role or privilege from a user
   #-----------------------------------------------------------------------------
   def revoke_role user, role, manager
-
-    users_role = UsersRole.find_by(:user => user, :role => role)
+    # must search by WHERE because no primary key ID for .destroy. Use .delete_all
+    users_role = UsersRole.where(:user => user, :role => role)
     if users_role.present?
       Rails.logger.debug "Revoking role #{role} for user #{user}. #{users_role.inspect}"
-      user.remove_role role.name
+      users_role.delete_all
+      #user.remove_role role.name
       # users_role.active = false
       # users_role.revoked_by_user = manager
       # users_role.revoked_on_date = Date.today
