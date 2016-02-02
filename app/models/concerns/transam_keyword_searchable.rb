@@ -13,7 +13,7 @@
 #
 #-------------------------------------------------------------------------------
 module TransamKeywordSearchable
-  
+
   extend ActiveSupport::Concern
 
   included do
@@ -30,6 +30,18 @@ module TransamKeywordSearchable
     # Set a local instance variable to determine if the index needs to be updated
     attr_accessor   :is_dirty
 
+    #-----------------------------------------------------------------------------
+    # Removes the existing object from the index
+    #-----------------------------------------------------------------------------
+    def self.remove_from_index object_key
+      kwsi = KeywordSearchIndex.find_by(object_key: object_key)
+      if kwsi.present?
+        kwsi.destroy
+      else
+        raise RuntimeError, "Can't find #{self.name} with object_key #{object_key}"
+      end
+    end
+
   end
 
   #-----------------------------------------------------------------------------
@@ -45,15 +57,6 @@ module TransamKeywordSearchable
   # Instance Methods
   #-----------------------------------------------------------------------------
 
-  #-----------------------------------------------------------------------------
-  # Removes the existing object from the index
-  #-----------------------------------------------------------------------------
-  def remove_from_index
-    kwsi = KeywordSearchIndex.find_by(object_key: object_key)
-    if kwsi.present?
-      kwsi.destroy
-    end
-  end
   #-----------------------------------------------------------------------------
   # Writes the existing object to the index
   #-----------------------------------------------------------------------------
