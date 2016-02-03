@@ -1,22 +1,23 @@
-.btn-group.pull-right.panel-action
-  %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
-    %i.fa.fa-cog
-    = " Actions"
-    %span.caret
-  %ul.dropdown-menu{:role => 'menu'}
+- if (can? :update, @org) || (can? :create, User)
+  .btn-group.pull-right.panel-action
+    %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
+      %i.fa.fa-cog
+      = " Actions"
+      %span.caret
+    %ul.dropdown-menu{:role => 'menu'}
 
-    - # Load module specific actions if they exist
-    - SystemConfig.transam_module_names.each do |mod|
-      = render :partial => "organizations/#{mod}_detail_actions" rescue nil
+      - # Load module specific actions if they exist
+      - SystemConfig.transam_module_names.each do |mod|
+        = render :partial => "organizations/#{mod}_detail_actions" rescue nil
 
-    - if can? :update, @org
-      %li
-        = link_to edit_organization_path(@org) do
-          %i.fa.fa-edit.fa-fw
-          = " Update this organization"
-    - if can? :create, User
-      %li.divider
-      %li
-        = link_to new_user_path do
-          %i.fa.fa-user-plus.fa-fw
-          = " Add a user"
+      - if can? :update, @org
+        %li
+          = link_to edit_organization_path(@org) do
+            %i.fa.fa-edit.fa-fw
+            = " Update this organization"
+      - if can? :create, User
+        %li.divider
+        %li
+          = link_to new_user_path do
+            %i.fa.fa-user-plus.fa-fw
+            = " Add a user"
