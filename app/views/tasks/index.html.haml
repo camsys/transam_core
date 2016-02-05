@@ -23,9 +23,10 @@
         %i.fa.fa-refresh
         = " Refresh"
 
-      = link_to new_user_task_path(current_user), :class => "btn btn-info", :role => 'button' do
-        %i.fa.fa-calendar
-        = " New Task"
+      - if can? :create, Task
+        = link_to new_user_task_path(current_user), :class => "btn btn-info", :role => 'button' do
+          %i.fa.fa-calendar
+          = " New Task"
 
   .row{:style => 'margin-top: 15px'}
     .col-xs-12
