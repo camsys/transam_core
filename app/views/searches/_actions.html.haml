@@ -1,4 +1,4 @@
-- if @search_type == SearchesController::ASSET_SEARCH_TYPE
+- if @search_type == SearchesController::ASSET_SEARCH_TYPE and can? :create, AssetGroup
   .btn-group.pull-right.panel-action{:style => "padding-right: 5px;"}
     %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
       %i.fa.fa-cog
