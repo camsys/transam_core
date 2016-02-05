@@ -1,19 +1,20 @@
-.btn-group.pull-right.panel-action
-  %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
-    %i.fa.fa-cog
-    = " Actions"
-    %span.caret
-  %ul.dropdown-menu{:role => 'menu'}
+- if (can? :update, @asset_event) || (can? :destroy, @asset_event)
+  .btn-group.pull-right.panel-action
+    %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
+      %i.fa.fa-cog
+      = " Actions"
+      %span.caret
+    %ul.dropdown-menu{:role => 'menu'}
 
-    - if can? :update, @asset_event
-      %li
-        = link_to edit_inventory_asset_event_path(@asset, @asset_event) do
-          %i.fa.fa-fw.fa-edit
-          = " Update this record"
+      - if can? :update, @asset_event
+        %li
+          = link_to edit_inventory_asset_event_path(@asset, @asset_event) do
+            %i.fa.fa-fw.fa-edit
+            = " Update this record"
 
-    - if can? :destroy, @asset_event
-      %li.divider
-      %li
-        = link_to inventory_asset_event_path(@asset, @asset_event), :method => :delete, :data => {:confirm => "Are you sure you want to remove this update? The action can't be undone."} do
-          %i.fa.fa-fw.fa-trash-o
-          = " Remove this update"
+      - if can? :destroy, @asset_event
+        %li.divider
+        %li
+          = link_to inventory_asset_event_path(@asset, @asset_event), :method => :delete, :data => {:confirm => "Are you sure you want to remove this update? The action can't be undone."} do
+            %i.fa.fa-fw.fa-trash-o
+            = " Remove this update"

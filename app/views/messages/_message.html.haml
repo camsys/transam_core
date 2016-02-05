@@ -12,9 +12,10 @@
 			%i.fa.fa-arrow-circle-left
 			= " Messages"
 
-		= link_to new_user_message_path(current_user), :class => "btn btn-info" do
-			%i.fa.fa-envelope
-			= " Compose"
+		- if can? :create, Message
+			= link_to new_user_message_path(current_user), :class => "btn btn-info" do
+				%i.fa.fa-envelope
+				= " Compose"
 
 .row{:style => 'margin-top: 10px;'}
 	.col-lg-12.col-md-12.col-sm-12.col-xs-12
@@ -38,7 +39,7 @@
 				%span.name{:style => "display: inline-block;"}
 					= format_as_text(@message.body)
 
-- if is_to_me
+- if is_to_me and can? :create, Message
 	.row
 		.col-lg-12.col-md-12.col-sm-12.col-xs-12
 			= render 'response_form'

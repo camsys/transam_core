@@ -1,17 +1,18 @@
-.btn-group.pull-right.panel-action
-  %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
-    %i.fa.fa-cog
-    = " Actions"
-    %span.caret
-  %ul.dropdown-menu{:role => 'menu'}
-    - if can? :update, @asset_group
-      %li
-        = link_to edit_asset_group_path(@asset_group) do
-          %i.fa.fa-edit.fa-fw
-          = " Update this group"
-    - if can? :destroy, @asset_group
-      %li.divider
-      %li
-        = link_to asset_group_path(@asset_group), :method => :delete, :data => {:confirm => "Are you sure you want to remove this group? The action can't be undone."} do
-          %i.fa.fa-trash-o.fa-fw
-          = " Remove this group"
+- if can? :update, @asset_group or can? :destroy, @asset_group
+  .btn-group.pull-right.panel-action
+    %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
+      %i.fa.fa-cog
+      = " Actions"
+      %span.caret
+    %ul.dropdown-menu{:role => 'menu'}
+      - if can? :update, @asset_group
+        %li
+          = link_to edit_asset_group_path(@asset_group) do
+            %i.fa.fa-edit.fa-fw
+            = " Update this group"
+      - if can? :destroy, @asset_group
+        %li.divider
+        %li
+          = link_to asset_group_path(@asset_group), :method => :delete, :data => {:confirm => "Are you sure you want to remove this group? The action can't be undone."} do
+            %i.fa.fa-trash-o.fa-fw
+            = " Remove this group"

@@ -5,34 +5,35 @@
     - else
       = render :partial => 'shared/tasks', :locals => {:tasks => @asset.tasks}
 
-.row
-  .col-md-12
-    %fieldset
-      %legend Add Task
-      = simple_form_for([@asset, Task.new],
-        :html => {:class => 'form-vertical' },
-        :url => inventory_tasks_path(@asset, Task.new),
-        :wrapper => :vertical_form,
-        :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}) do |f|
+- if can? :create, @asset.tasks.build
+  .row
+    .col-md-12
+      %fieldset
+        %legend Add Task
+        = simple_form_for([@asset, Task.new],
+          :html => {:class => 'form-vertical' },
+          :url => inventory_tasks_path(@asset, Task.new),
+          :wrapper => :vertical_form,
+          :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}) do |f|
 
-        = f.input :subject, :label => 'Task', :placeholder => "Task..."
+          = f.input :subject, :label => 'Task', :placeholder => "Task..."
 
-        .row
-          .col-md-3
-            = f.association :assigned_to_user, :collection => current_user.organizations, :as => :grouped_select, :group_method => :users, :label => "Assigned To"
-          .col-md-3
-            = f.input :complete_by, :wrapper => :vertical_append, :label => "Complete By" do
-              = f.input_field :complete_by, :as => :string, :class => 'datepicker form-control', :data => {'behavior' => 'datepicker'}, :value => format_as_date(f.object.complete_by)
-              %span.input-group-addon
-                %i.fa.fa-calendar
-          .col-md-3
-            = f.association :priority_type, :include_blank => false, :label => "Priority"
-          .col-md-3
-            = f.input :send_reminder, :label => "Send Reminder"
+          .row
+            .col-md-3
+              = f.association :assigned_to_user, :collection => current_user.organizations, :as => :grouped_select, :group_method => :users, :label => "Assigned To"
+            .col-md-3
+              = f.input :complete_by, :wrapper => :vertical_append, :label => "Complete By" do
+                = f.input_field :complete_by, :as => :string, :class => 'datepicker form-control', :data => {'behavior' => 'datepicker'}, :value => format_as_date(f.object.complete_by)
+                %span.input-group-addon
+                  %i.fa.fa-calendar
+            .col-md-3
+              = f.association :priority_type, :include_blank => false, :label => "Priority"
+            .col-md-3
+              = f.input :send_reminder, :label => "Send Reminder"
 
-        = f.input :body, :label => 'Details', :input_html => { :rows => 3 }, :placeholder => "Enter any details about this task..."
+          = f.input :body, :label => 'Details', :input_html => { :rows => 3 }, :placeholder => "Enter any details about this task..."
 
-        = f.button :submit, :class => "btn btn-primary"
+          = f.button :submit, :class => "btn btn-primary"
 
 :javascript
   $(document).ready(function(){

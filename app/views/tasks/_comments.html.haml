@@ -5,11 +5,12 @@
     - else
       = render :partial => 'shared/comments', :locals => {:comments => @task.comments}
 
-.row
-  .col-md-12
-    %fieldset
-      %legend Add Comment
-      = form_for [@task, Comment.new], :url => task_comments_path(@task, Comment.new), :role => 'form' do |f|
-        .form-group
-          = f.text_area :comment, :class => 'form-control', :placeholder => 'Enter a new comment...', :required => true, :minlength => 10, :maxlength => 254
-        = f.submit :class => 'btn btn-primary'
+- if can? :create, @task.comments.build
+  .row
+    .col-md-12
+      %fieldset
+        %legend Add Comment
+        = form_for [@task, Comment.new], :url => task_comments_path(@task, Comment.new), :role => 'form' do |f|
+          .form-group
+            = f.text_area :comment, :class => 'form-control', :placeholder => 'Enter a new comment...', :required => true, :minlength => 10, :maxlength => 254
+          = f.submit :class => 'btn btn-primary'

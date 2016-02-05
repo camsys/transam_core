@@ -14,9 +14,10 @@
       %i.fa.fa-refresh
       = " Refresh"
 
-    = link_to new_user_message_path(current_user), :class => "btn btn-info", :role => 'button' do
-      %i.fa.fa-envelope
-      = " Compose"
+    - if can? :create, Message
+      = link_to new_user_message_path(current_user), :class => "btn btn-info", :role => 'button' do
+        %i.fa.fa-envelope
+        = " Compose"
 
 .row
   .col-lg-8.col-md-10.col-sm-12.col-xs-12.col-lg-offset-2.col-md-offset-1{:style => 'margin-top: 15px;'}
