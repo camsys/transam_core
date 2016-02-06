@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 describe "tasks/_task_detail.html.haml", :type => :view do
+  before(:each) do
+    allow(controller).to receive(:current_ability).and_return(Ability.new(create(:admin)))
+  end
+  
   it 'actions and info' do
     test_asset = create(:buslike_asset)
     test_task = create(:task, :complete_by => DateTime.current-1.day, :taskable => test_asset)
