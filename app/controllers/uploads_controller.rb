@@ -141,10 +141,17 @@ class UploadsController < OrganizationAwareController
 
     @message = "Creating inventory template. This process might take a while."
 
-    # Prepare a list of the asset types for the current organization where at least
+    # Prepare a list of the asset types for the current organization list where at least
     # one asset type is operational
     @asset_types = []
-    @organization.asset_type_counts.each{|x| @asset_types << AssetType.find(x[0])}
+    #@organization.asset_type_counts.each{|x| @asset_types << AssetType.find(x[0])}
+
+    AssetType.all.each do |type|
+      klass = type.class_name.constantize
+      if klass.where(organization: @organization_list).count > 0
+        @asset_types << type
+      end
+    end
 
   end
 
