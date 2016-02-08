@@ -179,7 +179,7 @@ reports = [
     :view_name => "user_login_report_table",
     :show_in_nav => 0,
     :show_in_dashboard => 0,
-    :roles => 'manager,admin',
+    :roles => 'admin',
     :description => 'Displays a summary of user logins by organization.'
   },
   {
@@ -190,7 +190,7 @@ reports = [
     :view_name => "issues_report_table",
     :show_in_nav => 0,
     :show_in_dashboard => 0,
-    :roles => 'manager',
+    :roles => 'admin',
     :description => 'Displays a list of reported user issues.'
   }
 ]
