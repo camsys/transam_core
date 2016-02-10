@@ -38,7 +38,7 @@
       - if can? :destroy, @policy
         %li.divider
         %li
-          = link_to policy_path(@policy), :method => :delete, :data => {:confirm => "Are you sure?. The action cannot be undone!"}  do
+          = link_to policy_path(@policy), :method => :delete, :data => {:confirm => "Are you sure? The action cannot be undone!"}  do
             %i.fa.fa-trash-o.fa-fw
             = " Remove this policy"
       - if can? :create_rules, @policy

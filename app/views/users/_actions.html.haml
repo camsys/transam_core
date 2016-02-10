@@ -55,6 +55,6 @@
     - if can? :destroy, @user and @user != current_user
       %li.divider
       %li
-        = link_to user_path(@user), :method => :delete, :data => {:confirm => "Are you sure you want to deactivate this user?."}  do
+        = link_to user_path(@user), :method => :delete, :data => {:confirm => "Are you sure you want to deactivate this user?"}  do
           %i.fa.fa-minus-circle.fa-fw
           = " Deactivate this user"
