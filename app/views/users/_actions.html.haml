@@ -5,7 +5,7 @@
     %span.caret
   %ul.dropdown-menu{:role => 'menu'}
     - if current_user.organization_users.include? @user
-      - if current_user != @user
+      - if current_user != @user and can? :create, Message
         %li
           = link_to new_user_message_path(current_user, to_user: @user) do
             %i.fa.fa-envelope.fa-fw
