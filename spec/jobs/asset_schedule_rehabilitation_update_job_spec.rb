@@ -10,6 +10,10 @@ RSpec.describe AssetScheduleRehabilitationUpdateJob, :type => :job do
 
   let(:test_asset) { create(:equipment_asset) }
 
+  it 'sogr update' do
+    expect(AssetScheduleRehabilitationUpdateJob.new(0).requires_sogr_update?).to be true
+  end
+
   it '.run' do
     test_event = test_asset.schedule_rehabilitation_updates.create!(attributes_for(:schedule_rehabilitation_update_event))
     AssetScheduleRehabilitationUpdateJob.new(test_asset.object_key).run
