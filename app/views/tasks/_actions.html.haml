@@ -12,13 +12,13 @@
             = " Update this task"
         %li.divider
 
-      %li.dropdown-submenu
-        = link_to "#" do
-          %i.fa.fa-fw.fa-chevron-right
-          = " Update this status..."
-        %ul.dropdown-menu
-          - @task.allowable_events.each do |evt|
-            %li
-              = link_to fire_workflow_event_task_path(@task, :event => evt) do
-                %i.fa.fa-fw{:class => get_workflow_event_icon(evt)}
-                = "#{evt.titleize} this task"
+        %li.dropdown-submenu
+          = link_to "#" do
+            %i.fa.fa-fw.fa-chevron-right
+            = " Update this status..."
+          %ul.dropdown-menu
+            - @task.allowable_events.each do |evt|
+              %li
+                = link_to fire_workflow_event_task_path(@task, :event => evt) do
+                  %i.fa.fa-fw{:class => get_workflow_event_icon(evt)}
+                  = "#{evt.titleize} this task"
