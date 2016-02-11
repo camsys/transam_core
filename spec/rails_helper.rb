@@ -4,8 +4,8 @@ ENV["RAILS_ENV"] ||= 'test'
 require "codeclimate-test-reporter"
 CodeClimate::TestReporter.start
 
-require 'coveralls'
-Coveralls.wear!
+require 'simplecov'
+SimpleCov.start 'rails'
 
 require 'spec_helper'
 require File.expand_path("../dummy/config/environment", __FILE__)

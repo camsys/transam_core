@@ -16,4 +16,4 @@ gem 'countries', "~> 0.11.5"  # lock gem for dummy app
 gem 'mysql2', '~> 0.3.20' # lock gem for dummy app
 gem 'ckeditor'
 gem "codeclimate-test-reporter", require: nil
-gem 'coveralls', require: false
+gem 'simplecov', :require => false
