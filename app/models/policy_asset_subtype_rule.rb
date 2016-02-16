@@ -37,7 +37,6 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
   validates :cost_fy_year,             :presence => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
   validates_inclusion_of :replace_with_new, :in => [true, false]
   validates_inclusion_of :replace_with_leased, :in => [true, false]
-  validates :replacement_cost,          :allow_nil => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
   validates :lease_length_months,       :allow_nil => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
 
   validates :rehabilitation_service_month,     :presence => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
