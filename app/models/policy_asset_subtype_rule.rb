@@ -177,7 +177,7 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
     # set by the parent org
     return_value = true
 
-    if policy.parent.present?
+    if policy.present? and policy.parent.present?
       attributes_to_compare = [
         :min_service_life_months,
         :extended_service_life_months,
@@ -185,18 +185,19 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
       ]
 
       parent_rule = policy.parent.policy_asset_subtype_rules.find_by(asset_subtype: self.asset_subtype)
+      if parent_rule.present?
+        attributes_to_compare.each do |attr|
+          # Make sure we don't try to test nil values. Other validations should
+          # take care of these
+          if self.send(attr).blank?
+            next
+          end
 
-      attributes_to_compare.each do |attr|
-        # Make sure we don't try to test nil values. Other validations should
-        # take care of these
-        if self.send(attr).blank?
-          next
-        end
-
-        parent_value = parent_rule.send(attr)
-        if self.send(attr) < parent_value
-          errors.add(attr, " cannot be less than #{parent_value}, which is the minimum set by #{ policy.parent.organization.short_name}'s policy")
-          return_value = false
+          parent_value = parent_rule.send(attr)
+          if self.send(attr) < parent_value
+            errors.add(attr, " cannot be less than #{parent_value}, which is the minimum set by #{ policy.parent.organization.short_name}'s policy")
+            return_value = false
+          end
         end
       end
     end
