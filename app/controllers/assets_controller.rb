@@ -243,6 +243,11 @@ class AssetsController < AssetAwareController
       @asset.organization = @organization
     end
 
+    # default service life
+    policy_analyzer = @asset.policy_analyzer
+    @asset.expected_useful_life = policy_analyzer.get_min_service_life_months
+    @asset.expected_useful_miles = policy_analyzer.get_min_service_life_miles
+
     respond_to do |format|
       format.html # new.html.erb
       format.json { render :json => @asset }
