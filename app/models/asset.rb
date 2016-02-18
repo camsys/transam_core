@@ -121,7 +121,7 @@ class Asset < ActiveRecord::Base
   validates     :asset_subtype_id,    :presence => true
   validates     :created_by_id,       :presence => true
   validates     :manufacture_year,    :presence => true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 1900}
-  validates     :expected_useful_life, :numericality => {:only_integer => :true, :greater_than => 0}, :presence => true
+  validates     :expected_useful_life, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0}, :presence => true
   validates_inclusion_of :purchased_new, :in => [true, false]
   validates     :purchase_cost,       :presence => :true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0}
   validates     :purchase_date,       :presence => :true
@@ -1054,6 +1054,9 @@ class Asset < ActiveRecord::Base
     # Get the policy analyzer
     policy_analyzer = asset.policy_analyzer
 
+    # Use policy to update service life values
+    update_service_life asset
+
     # returns the year in which the asset should be replaced based on the policy and asset
     # characteristics
     begin
@@ -1101,6 +1104,14 @@ class Asset < ActiveRecord::Base
       asset.save(:validate => false)
     end
   end
+
+  def update_service_life typed_asset
+    # Get the policy analyzer
+    policy_analyzer = typed_asset.policy_analyzer
+
+    typed_asset.expected_useful_life = policy_analyzer.get_min_service_life_months
+  end
+
 
   def cleansable_fields
     CLEANSABLE_FIELDS
