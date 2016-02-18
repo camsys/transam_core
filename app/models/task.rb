@@ -180,7 +180,7 @@ class Task < ActiveRecord::Base
   # Set resonable defaults for a new asset
   def set_defaults
     self.state ||= :new
-    self.send_reminder ||= true
+    self.send_reminder = self.send_reminder.nil? ? true : self.send_reminder
     self.complete_by ||= Date.today + 1.week
   end
 
