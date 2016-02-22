@@ -16,6 +16,7 @@
   :boolean => :vertical_boolean}) do |f|
 
   = f.input :id, :as => :hidden
+  = hidden_field_tag :copied_rule, @copy
 
   %fieldset
     %legend Replacement

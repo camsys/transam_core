@@ -40,10 +40,11 @@ class PoliciesController < OrganizationAwareController
       @asset_type = @rule.asset_subtype.asset_type
       # Check to see if the user wants to create a copy
       if params[:copy].to_i == 1
+        @copy = @rule.id
         rule = @rule.dup
-        rule.default_rule = false
-        rule.save
+        #rule.save
         @rule = rule
+
       end
     end
 
@@ -92,6 +93,10 @@ class PoliciesController < OrganizationAwareController
 
     if params[:policy_asset_type_rule].present?
       rule = PolicyAssetTypeRule.new(asset_type_rule_form_params)
+    elsif params[:copied_rule].present? # if the rule is copied, copy from old rule and overwrite with form
+      rule = PolicyAssetSubtypeRule.find(params[:copied_rule]).dup
+      rule.default_rule = false
+      rule.assign_attributes(asset_subtype_rule_form_params)
     else
       rule = PolicyAssetSubtypeRule.new(asset_subtype_rule_form_params)
     end
