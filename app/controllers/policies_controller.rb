@@ -158,7 +158,22 @@ class PoliciesController < OrganizationAwareController
 
     add_breadcrumb "Policies", policies_path
     add_breadcrumb @policy.name, policy_path(@policy)
-    add_breadcrumb 'Modify', edit_policy_path(@policy)
+
+    if params[:copy].to_i == 1
+      add_breadcrumb 'Copy', edit_policy_path(@policy, :copy => '1')
+
+      @copy = @policy.object_key
+      new_policy = @policy.dup
+      new_policy.object_key = nil
+      new_policy.parent = @policy.parent
+      new_policy.organization = @organization
+      new_policy.description = "Copy of " + @policy.description
+      new_policy.active = false
+      @policy = new_policy #set policy to newly copied policy
+
+    else
+      add_breadcrumb 'Modify', edit_policy_path(@policy)
+    end
 
   end
 
@@ -171,8 +186,9 @@ class PoliciesController < OrganizationAwareController
     new_policy.object_key = nil
     new_policy.parent = @policy.parent
     new_policy.organization = @organization
-    new_policy.description = "Copy of " + @policy.description
     new_policy.active = false
+
+    new_policy.assign_attributes(form_params)
 
     new_policy.save!
     # Copy all the records
@@ -192,18 +208,16 @@ class PoliciesController < OrganizationAwareController
     respond_to do |format|
       if @policy
         notify_user(:notice, "Policy #{old_policy_name} was successfully copied.")
-        format.html { redirect_to edit_policy_url(@policy) }
+        format.html { redirect_to policy_url(@policy) }
         format.json { render :json => @policy, :status => :created, :location => @policy }
       else
         format.html { render :action => "edit" }
         format.json { render :json => @policy.errors, :status => :unprocessable_entity }
       end
     end
-
   end
 
   def create
-
     @policy = Policy.new(form_params)
     @policy.organization = @organization
 

@@ -164,7 +164,7 @@ Rails.application.routes.draw do
       get     'show_edit_form'
       get     'runner'
       post    'update_assets'
-      get     'copy'
+      post    'copy'
       get     'make_current'
       patch   'update_policy_rule'
       post    'update_policy_rule'

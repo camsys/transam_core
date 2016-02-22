@@ -31,7 +31,7 @@
       - if can? :create, @policy
         %li.divider
         %li
-          = link_to copy_policy_path(@policy) do
+          = link_to edit_policy_path(@policy, :copy => '1') do
             %i.fa.fa-copy.fa-fw
             = " Make a copy"
 
