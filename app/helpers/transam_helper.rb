@@ -25,6 +25,16 @@ module TransamHelper
     Gem.loaded_specs['transam_core'].version
   end
 
+  # Return a string of included TransAM engines and versions suitable for a tooltip
+  def transam_engines_and_versions
+    result = ""
+    Rails::Engine.subclasses.each do |e|
+      name = e.name.split('::')[0].underscore
+      result += "#{name}: #{Gem.loaded_specs[name].version.to_s}\n" if name.include?('transam')
+    end
+    result
+  end
+  
   # Returns the application version. This is the version defined in the host app
   # not the version of transam
   def app_version
