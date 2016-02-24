@@ -48,5 +48,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "mysql2"
   s.add_development_dependency "cucumber-rails"
   s.add_development_dependency "shoulda-matchers"
+  s.add_development_dependency "codacy-coverage"
+  s.add_development_dependency "simplecov"
 
 end
