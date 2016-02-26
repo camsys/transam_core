@@ -53,9 +53,9 @@ namespace :transam do
         end
       end
       assets_run += 1
-      Rails.logger.debug "#{assets_run} (#{((assets_run / total_num) * 100).to_i}%)"
+      puts "#{assets_run} (#{((assets_run / total_num) * 100).to_i}%)"
     end
     t_finish = Time.now
-    Rails.logger.debug "Completed in #{t_finish - t_start} seconds"
+    puts "Completed in #{t_finish - t_start} seconds"
   end
 end
