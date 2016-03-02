@@ -11,7 +11,8 @@
       .tab-pane.fade{:id => "at_#{at.asset_type.id}"}
         = render :partial => 'asset_type_rules', :locals => {:rules => [at], :policy => @policy}
 
-        - if can? :create_rules, @policy
+        - asset_subtypes = AssetSubtype.active.where(:asset_type_id => at.asset_type.id)
+        - if (can? :create_rules, @policy) and (@policy.policy_asset_subtype_rules.where(:asset_subtype => asset_subtypes).count != asset_subtypes.count)
           %button.btn.btn-primary.button-action{:data => {:url => new_policy_rule_policy_path(@policy, :asset_type => at.asset_type.id, :type => 2)}}
             %i.fa.fa-fw.fa-plus
             = " Add an Asset Subtype Rule"
