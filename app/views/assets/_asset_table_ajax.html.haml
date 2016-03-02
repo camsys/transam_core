@@ -107,9 +107,10 @@
 
   function boolean_formatter(value) {
     if (value) {
-      return '<i class="fa fa-check"></i>';
+      // add hidden div for exporting
+      return '<i class="fa fa-check"></i><div style = "visibility: hidden;">Yes</div>';
     } else {
-      return '';
+      return '<div style = "visibility: hidden;">No</div>';
     }
   };
 
