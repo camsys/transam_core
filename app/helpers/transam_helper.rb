@@ -34,7 +34,18 @@ module TransamHelper
     end
     result
   end
-  
+
+  # Return a hash of included TransAM engines and versions
+  def transam_engines_and_versions_list
+    result = Hash.new
+    transam_engines_and_versions.split("\n").each do |engine|
+      engine_info = engine.split(": ")
+      result[engine_info[0]] = engine_info[1]
+    end
+    result
+  end
+
+
   # Returns the application version. This is the version defined in the host app
   # not the version of transam
   def app_version

@@ -1,0 +1,15 @@
+.container
+  .page-header
+    %h2 About TransAM
+  %p
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
+    sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+  .col-sm-12
+    %fieldset
+      %legend= "TransAM Engines"
+      - transam_engines_and_versions_list.each do |engine, version|
+        = action_thumbnail_tag({:class => 'col-sm-4', :icon => "fa fa-code-fork", :title => engine, :path => "https://github.com/camsys/#{engine}/wiki"}) do
+          = format_as_text(version)
