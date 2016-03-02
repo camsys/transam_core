@@ -280,7 +280,8 @@ class PoliciesController < OrganizationAwareController
       sleep 2
 
       # Rip through the organizations assets, creating a job for each type requested
-      assets = @organization.assets.operational.where(asset_type: @builder_proxy.asset_types)
+      org = Organization.get_typed_organization(@policy.organization)
+      assets = org.assets.operational.where(asset_type: @builder_proxy.asset_types)
       count = assets.count
       assets.find_each do |a|
         typed_asset = Asset.get_typed_asset(a)
@@ -298,7 +299,7 @@ class PoliciesController < OrganizationAwareController
         msg = "#{count} assets have been updated using policy #{@policy}."
         notify_user(:notice, msg)
         # Add a row into the activity table
-        ActivityLog.create({:organization_id => @organization.id, :user_id => current_user.id, :item_type => "Policy Asset Update", :activity => msg, :activity_time => Time.current})
+        ActivityLog.create({:organization_id => @policy.organization.id, :user_id => current_user.id, :item_type => "Policy Asset Update", :activity => msg, :activity_time => Time.current})
       else
         notify_user(:notice, "No assets were updated.")
       end
