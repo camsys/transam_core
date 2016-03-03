@@ -10,6 +10,6 @@
   .col-sm-12
     %fieldset
       %legend= "TransAM Engines"
-      - transam_engines_and_versions_list.each do |engine, version|
-        = action_thumbnail_tag({:class => 'col-sm-4', :icon => "fa fa-code-fork", :title => engine, :path => "https://github.com/camsys/#{engine}/wiki"}) do
-          = format_as_text(version)
+      - SystemConfig.transam_modules.each do |engine|
+        = action_thumbnail_tag({:class => 'col-sm-4', :icon => "fa fa-code-fork", :title => engine.name, :path => "https://github.com/camsys/#{engine.name}/wiki"}) do
+          = format_as_text(engine.version.to_s)
