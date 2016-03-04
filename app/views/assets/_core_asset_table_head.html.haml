@@ -15,15 +15,15 @@
 %th.center{:data => {:field => "description", :align => 'left', :sortable => 'false', :searchable => 'false'}} Description
 %th.center{:data => {:field => "parent_id", :sort_name => 'parent_id', :align => 'left', :sortable => 'true',  :searchable => 'true'}} Parent
 %th.center{:data => {:field => "service_status_type_id", :sort_name => 'service_status_type_id', :align => 'center', :sortable => 'true',  :searchable => 'true'}} Status
-%th.center{:data => {:field => "age",  :sort_name => 'in_service_date', :align => 'right', :sortable => 'false',  :searchable => 'true'}} Age
+%th.center{:data => {:field => "age",  :sort_name => 'in_service_date', :align => 'right', :sortable => 'true',  :searchable => 'true'}} Age
 %th.center{:data => {:field => "reported_condition_rating", :align => 'center',  :sortable => 'true',  :searchable => 'true'}} Condition
 %th.center.nowrap{:data => {:field => "scheduled_rehabilitation_year", :align => 'center', :sortable => 'true',  :searchable => 'true'}} Rehab
 %th.center.nowrap{:data => {:field => "scheduled_replacement_year",  :align => 'center', :sortable => 'true',  :searchable => 'true'}} Replace
 
-%th.center{:data => {:field => "purchased_new", :align => 'center', :visible => 'false', :formatter => 'boolean_formatter'}} Purchased New
-%th.center{:data => {:field => "purchase_cost", :align => 'right', :visible => 'false', :formatter => 'currency_formatter'}} Cost
-%th.center{:data => {:field => "purchase_date", :align => 'right', :visible => 'false', :formatter => 'date_formatter'}} Purchase Date
-%th.center{:data => {:field => "warranty_date", :align => 'right', :visible => 'false', :formatter => 'date_formatter'}} Warranty Date
-%th.center{:data => {:field => "in_service_date", :align => 'right', :visible => 'false', :formatter => 'date_formatter'}} In Service Date
+%th.center{:data => {:field => "purchased_new", :align => 'center',  :sortable => 'true', :visible => 'false', :formatter => 'boolean_formatter'}} Purchased New
+%th.center{:data => {:field => "purchase_cost", :align => 'right',  :sortable => 'true', :visible => 'false', :formatter => 'currency_formatter'}} Cost
+%th.center{:data => {:field => "purchase_date", :align => 'right',  :sortable => 'true', :visible => 'false', :formatter => 'date_formatter'}} Purchase Date
+%th.center{:data => {:field => "warranty_date", :align => 'right',  :sortable => 'true', :visible => 'false', :formatter => 'date_formatter'}} Warranty Date
+%th.center{:data => {:field => "in_service_date", :align => 'right',  :sortable => 'true', :visible => 'false', :formatter => 'date_formatter'}} In Service Date
 
 %th.center{:data => {:field => "vendor_id", :sort_name => 'vendor_id', :align => 'left', :sortable => 'true',  :searchable => 'true'}} Vendor
