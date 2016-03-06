@@ -1,11 +1,15 @@
 - if @policies.empty?
 	%p No policies found
 - else
-	- @policies.each do |p|
-		= action_thumbnail_tag({:class => 'col-sm-4', :icon => "fa fa-book", :title => p.name, :path => policy_path(p)}) do
-			= format_as_text(p.description)
-			- if p.active
-				%p= "<strong>Current</strong>".html_safe
+	- @policies.each do |org, policies|
+		.col-sm-12
+			%fieldset
+				%legend= org
+				- policies.each do |p|
+					= action_thumbnail_tag({:class => 'col-sm-4', :icon => "fa fa-book", :title => p.name, :path => policy_path(p)}) do
+						= format_as_text(p.description)
+						- if p.active
+							%p= "<strong>Current</strong>".html_safe
 
 :javascript
 

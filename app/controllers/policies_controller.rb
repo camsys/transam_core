@@ -11,8 +11,14 @@ class PoliciesController < OrganizationAwareController
 
     add_breadcrumb "Policies", policies_path
 
-    # get the policies for this agency
-    @policies = @organization.policies
+    # create hash to store policies from organization_list
+    policies = Hash.new
+    @organization_list.each do |o|
+		  org = Organization.get_typed_organization(Organization.find(o))
+      policies[org.short_name] = org.policies
+    end
+
+    @policies = policies
 
   end
 
