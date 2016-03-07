@@ -1,25 +1,33 @@
-.row
-  .col-md-12{:style => 'height:150px;overflow-y:auto;'}
-    - if @asset.documents.empty?
-      %p There are no documents for this asset.
-    - else
-      = render :partial => 'shared/documents', :locals => {:documents => @asset.documents}
-
-- if can? :create, @asset.documents.build
+#processing-document
+  = render :partial => 'shared/running_process', :locals => {:message => "Uploading document. This process might take a while."}
+#documents
   .row
-    .col-md-12
-      %fieldset
-        %legend Add Document
-        = simple_form_for([@asset, Document.new],
-            :html => {:multipart => true, :class => 'form-vertical document_form' },
-            :url => inventory_documents_path(@asset, Document.new),
-            :wrapper => :vertical_form,
-            :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}) do |f|
-          = f.input :document, :required => true, :input_html => { :extension => "pdf,xls,xlsx,doc,docx,ppt" }
-          = f.input :description, :as => :text, :placeholder => 'Enter a brief description of the document...', :required => true, :input_html => { :minlength => 10, :maxlength => 254 }
-          = f.submit "Add Document", :class => 'btn btn-primary', :id => "document_submit"
+    .col-md-12{:style => 'height:150px;overflow-y:auto;'}
+      - if @asset.documents.empty?
+        %p There are no documents for this asset.
+      - else
+
+        = render :partial => 'shared/documents', :locals => {:documents => @asset.documents}
+
+  - if can? :create, @asset.documents.build
+    .row
+      .col-md-12
+        %fieldset
+          %legend Add Document
+          = simple_form_for([@asset, Document.new],
+              :html => {:multipart => true, :class => 'form-vertical document_form' },
+              :url => inventory_documents_path(@asset, Document.new),
+              :wrapper => :vertical_form,
+              :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}) do |f|
+            = f.input :document, :required => true, :input_html => { :extension => "pdf,xls,xlsx,doc,docx,ppt" }
+            = f.input :description, :as => :text, :placeholder => 'Enter a brief description of the document...', :required => true, :input_html => { :minlength => 10, :maxlength => 254 }
+            = f.submit "Add Document", :class => 'btn btn-primary', :id => "document_submit"
 
 :javascript
+
+  // Hide the processing div and show the form
+  $('#processing-document').hide();
+  $('#documents').show();
 
   $.extend(jQuery.validator.messages, {
       extension: "Please attach a file with a valid extension {0}."
@@ -29,6 +37,8 @@
   $('.document_form').validate({
     ignore: [], //validate hidden fields
     submitHandler: function(form) {
+      $('#processing-document').show();
+      $('#documents').hide();
       form.submit();
     }
   });
