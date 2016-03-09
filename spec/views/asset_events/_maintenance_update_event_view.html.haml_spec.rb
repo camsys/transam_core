@@ -1,11 +1,7 @@
 require 'rails_helper'
 
 describe "asset_events/_maintenance_update_event_view.html.haml", :type => :view do
-
-  class Vehicle < Asset
-    has_many :mileage_updates
-  end
-
+  
   it 'info' do
     test_asset = create(:buslike_asset)
     test_type = create(:maintenance_type)

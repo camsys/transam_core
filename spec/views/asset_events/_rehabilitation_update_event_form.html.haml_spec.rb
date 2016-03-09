@@ -2,8 +2,6 @@ require 'rails_helper'
 
 describe "asset_events/_rehabilitation_update_event_form.html.haml", :type => :view do
 
-  class Vehicle < Asset; end
-
   it 'fields' do
     allow_any_instance_of(Asset).to receive(:type_of?).and_return(true)
 

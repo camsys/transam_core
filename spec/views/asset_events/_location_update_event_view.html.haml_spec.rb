@@ -2,8 +2,6 @@ require 'rails_helper'
 
 describe "asset_events/_location_update_event_view.html.haml", :type => :view do
 
-  class Vehicle < Asset; end
-
   it 'info' do
     test_asset = create(:buslike_asset)
     test_parent = create(:buslike_asset)

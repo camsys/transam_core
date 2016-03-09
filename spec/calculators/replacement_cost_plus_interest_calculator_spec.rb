@@ -2,18 +2,6 @@ require 'rails_helper'
 
 RSpec.describe ReplacementCostPlusInterestCalculator, :type => :calculator do
 
-  class TestOrg < Organization
-    def get_policy
-      return Policy.where("`organization_id` = ?",self.id).order('created_at').last
-    end
-  end
-
-  class Vehicle < Asset
-    def cost
-      purchase_cost
-    end
-  end
-
   before(:each) do
     @organization = create(:organization)
     @test_asset = create(:buslike_asset, :organization => @organization)

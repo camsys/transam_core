@@ -2,12 +2,6 @@ require 'rails_helper'
 
 RSpec.describe AssetEndOfServiceService, :type => :service do
 
-  class TestOrg < Organization
-    def get_policy
-      return Policy.where("`organization_id` = ?",self.id).order('created_at').last
-    end
-  end
-
   let(:test_service) { AssetEndOfServiceService.new }
 
   it '.list' do

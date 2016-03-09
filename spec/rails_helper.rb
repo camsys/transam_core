@@ -49,3 +49,21 @@ Shoulda::Matchers.configure do |config|
 end
 
 module TransamMapMarkers; end
+
+# declare concrete Organization class for tests
+class TestOrg < Organization
+  has_many :assets,   :foreign_key => 'organization_id'
+
+  def get_policy
+    return Policy.where("`organization_id` = ?",self.id).order('created_at').last
+  end
+end
+
+# declare concrete Asset class for tests
+class Vehicle < Asset
+  has_many :mileage_updates
+  
+  def cost
+    purchase_cost
+  end
+end

@@ -1,11 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe UsersController, :type => :controller do
-  class TestOrg < Organization
-    def get_policy
-      return Policy.where("`organization_id` = ?",self.id).order('created_at').last
-    end
-  end
 
   let(:test_user)  { create(:admin) }
   let(:test_user2) { create(:normal_user) }

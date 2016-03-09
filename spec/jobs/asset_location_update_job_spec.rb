@@ -2,12 +2,6 @@ require 'rails_helper'
 
 RSpec.describe AssetLocationUpdateJob, :type => :job do
 
-  class TestOrg < Organization
-    def get_policy
-      return Policy.where("`organization_id` = ?",self.id).order('created_at').last
-    end
-  end
-
   let(:test_asset) { create(:equipment_asset, :parent => create(:equipment_asset)) }
 
   it '.run' do

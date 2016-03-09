@@ -2,12 +2,6 @@ require 'rails_helper'
 
 RSpec.describe AssetGroupsController, :type => :controller do
 
-  class TestOrg < Organization
-    def get_policy
-      return Policy.where("`organization_id` = ?",self.id).order('created_at').last
-    end
-  end
-
   let(:test_group) { create(:asset_group) }
 
   before(:each) do
