@@ -1,12 +1,12 @@
 = simple_form_for([current_user, @task],
-  :html => {:class => 'form-vertical'},
+  :html => {:class => 'form-vertical task_form'},
   :wrapper => :vertical_form,
   :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes,
   :radio_buttons => :vertical_radio_and_checkboxes,
   :file => :vertical_file_input,
   :boolean => :vertical_boolean}) do |f|
 
-  = f.input :subject, :label => 'Task', :placeholder => "Task..."
+  = f.input :subject, :required => true, :label => 'Task', :placeholder => "Task..."
 
   .row
     .col-md-3
@@ -17,11 +17,11 @@
         %span.input-group-addon
           %i.fa.fa-calendar
     .col-md-3
-      = f.association :priority_type, :include_blank => false, :label => "Priority"
+      = f.association :priority_type, :required => true, :include_blank => false, :label => "Priority"
     .col-md-3
       = f.input :send_reminder, :label => "Send Reminder"
 
-  = f.input :body, :label => false, :as => :ckeditor, :input_html => { :ckeditor => {:toolbar => 'mini'}}
+  = f.input :body, :required => true, :label => false, :as => :ckeditor, :input_html => { :ckeditor => {:toolbar => 'mini'}}
 
   = f.button :submit, :class => "btn btn-primary"
 
@@ -29,4 +29,19 @@
   $(document).ready(function(){
     $('[data-behavior~=datepicker]').datepicker({
     });
+  });
+
+  // jquery validations
+  $('.task_form').validate({
+    ignore: [], //validate hidden fields
+    submitHandler: function(form) {
+      form.submit();
+    }
+  });
+
+  $('#task_body').rules("add", {
+    required: function()
+    {
+      CKEDITOR.instances.task_body.updateElement();
+    }
   });
