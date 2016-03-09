@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe "uploads/_templates_form.html.erb", :type => :view do
+describe "uploads/_templates_form.html.haml", :type => :view do
   it 'form' do
     test_user = create(:admin)
     test_user.organizations = [test_user.organization, create(:organization)]
