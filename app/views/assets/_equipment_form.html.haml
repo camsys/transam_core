@@ -3,7 +3,7 @@
   :as => :asset,
   :url => @asset.new_record? ? inventory_index_path : inventory_path,
   :method => @asset.new_record? ? 'post' : 'put',
-  :html => {:class => 'form-vertical'},
+  :html => {:class => 'form-vertical equipment_form'},
   :wrapper => :vertical_form,
   :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes,
     :radio_buttons => :vertical_radio_and_checkboxes,
@@ -79,4 +79,10 @@
         return item.name;
       }
     });
+  });
+
+  $('.equipment_form').validate({
+    submitHandler: function(form) {
+      form.submit();
+    }
   });
