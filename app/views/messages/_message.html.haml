@@ -25,8 +25,9 @@
 			.list-group-item
 				%span.fa{:class => get_message_priority_icon(@message)}
 				%span.fa{:class => get_tag_icon(@message)}
-				%span
-					= link_to '<i class="fa fa-trash-o"></i>'.html_safe, user_message_path(current_user, @message), :method => :delete, :data => {:confirm => "Are you sure? The action cannot be undone!"}
+				- if is_to_me
+					%span
+						= link_to '<i class="fa fa-trash-o"></i>'.html_safe, user_message_path(current_user, @message), :method => :delete, :data => {:confirm => "Are you sure? The action cannot be undone!"}
 				%span.name{:style => "min-width: 180px;display: inline-block;"}
 					- if is_to_me
 						= "From: #{@message.user.name}"
