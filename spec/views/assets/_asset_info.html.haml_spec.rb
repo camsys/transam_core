@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe "assets/_asset_info.html.erb", :type => :view do
+describe "assets/_asset_info.html.haml", :type => :view do
   it 'info' do
     test_asset = create(:buslike_asset, :in_service_date => Date.today - 14.years, :service_status_type_id => 1, :reported_condition_type_id => 1, :reported_condition_date => Date.today - 2.days, :estimated_condition_rating => 4, :policy_replacement_year => 2026, :estimated_replacement_year => 2027, :estimated_replacement_cost => 4444)
     assign(:asset, test_asset)
