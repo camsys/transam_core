@@ -28,7 +28,7 @@ class Message < ActiveRecord::Base
   validates :subject,           :presence => true
   validates :body,              :presence => true
 
-  default_scope { order('created_at DESC') }
+  default_scope { where(active: true).order('created_at DESC') }
 
   # List of allowable form param hash keys
   FORM_PARAMS = [
@@ -69,6 +69,7 @@ class Message < ActiveRecord::Base
 
   # Set resonable defaults for a new message
   def set_defaults
+    self.active = self.active.nil? ? true : self.active
   end
 
   # If the to_user has elected to receive emails, send them upon message creation

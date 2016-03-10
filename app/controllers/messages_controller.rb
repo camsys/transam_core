@@ -2,7 +2,7 @@ class MessagesController < OrganizationAwareController
 
   add_breadcrumb "Home", :root_path
 
-  before_action :set_message, :only => [:show, :edit, :update, :destroy, :tag, :reply]
+  before_action :set_message, :only => [:show, :edit, :update, :destroy, :tag, :reply, :destroy]
   before_action :check_for_cancel, :only => [:create]
 
   # Session Variables
@@ -193,6 +193,17 @@ class MessagesController < OrganizationAwareController
       end
     end
   end
+
+  def destroy
+    @message.active = false
+    @message.save(:validate => :false)
+    respond_to do |format|
+      notify_user(:notice, "Message has been deleted.")
+      format.html { redirect_to user_messages_url(current_user) }
+      format.json { head :no_content }
+    end
+  end
+
 
   #------------------------------------------------------------------------------
   #
