@@ -9,12 +9,6 @@ Background:
     And an [equipment] exists
     And I am at the [equipment] detail page
 
-Scenario: Updating the master record for an [equipment]
-  When I press the link "Update the master record"
-    And I update an [equipment] with {'external_id' => "EXTERNALID TEST 1"}
-  Then I am at the [equipment] detail page
-    And I will see "EXTERNALID TEST 1"
-
 Scenario: Updating the condition event
   When I press the link "Update the condition"
     And I create an [condition_update_event] with {:assessed_rating => "4.0"}
