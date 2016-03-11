@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151217192004) do
+ActiveRecord::Schema.define(version: 20160310161407) do
 
   create_table "activities", force: true do |t|
     t.string   "object_key",           limit: 12
@@ -528,6 +528,7 @@ ActiveRecord::Schema.define(version: 20151217192004) do
     t.integer  "thread_message_id"
     t.string   "subject",           limit: 64, null: false
     t.text     "body"
+    t.boolean  "active"
     t.datetime "opened_at"
     t.datetime "created_at",                   null: false
   end
