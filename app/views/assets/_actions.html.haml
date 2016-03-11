@@ -1,23 +1,49 @@
-- if can? :update, @asset or can? :destroy, @asset
+- if can? :update, @asset or can? :dispose, @asset or can? :destroy, @asset
   .btn-group.pull-right.panel-action
     %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
       %i.fa.fa-cog
       = " Actions"
       %span.caret
     %ul.dropdown-menu.multi-level{:role => 'menu'}
-
-      - # Load module specific tabs if they exist
-      - SystemConfig.transam_module_names.each do |mod|
-        - if lookup_context.template_exists?("#{mod}_detail_actions", 'assets', true)
-          = render :partial => "assets/#{mod}_detail_actions"
-
-      - # Load other core actions last into the menu
       - if can? :update, @asset
-        %li.divider
-        %li
-          = link_to edit_inventory_path(@asset) do
+        - # Add in event actions. These are discovered from the asset
+        %li.text-left.dropdown-submenu
+          = link_to '#' do
             %i.fa.fa-fw.fa-edit
-            = " Update the master record"
+            = " Update"
+          %ul.dropdown-menu.scrollable-menu
+            - @asset.event_classes.each do |klass|
+              - unless klass.name == 'DispositionUpdateEvent'
+                - if klass.asset_event_type.active
+                  %li.text-left
+                    = link_to new_inventory_asset_event_path(@asset, :event_type => klass.asset_event_type.id) do
+                      %i.fa.fa-fw{:class => klass.asset_event_type.display_icon_name}
+                      = klass.asset_event_type.name
+
+        %li.text-left.dropdown-submenu
+          = link_to '#' do
+            %i.fa.fa-fw.fa-edit
+            = " Edit"
+          %ul.dropdown-menu.scrollable-menu
+            - # Load module specific tabs if they exist
+            - SystemConfig.transam_module_names.each do |mod|
+              - if lookup_context.template_exists?("#{mod}_detail_actions", 'assets', true)
+                = render :partial => "assets/#{mod}_detail_actions"
+
+        - # Add in asset groups if 1 or more asset groups are defined for this org
+        - if @organization.asset_groups.count > 0
+          %li.divider
+          %li.text-left.dropdown-submenu
+            = link_to '#' do
+              %i.fa.fa-fw.fa-tags
+              = " Add to group"
+            %ul.dropdown-menu.scrollable-menu
+              - @organization.asset_groups.each do |grp|
+                - unless @asset.asset_groups.include? grp
+                  %li.text-left
+                    = link_to add_to_group_inventory_path(@asset, :asset_group => grp) do
+                      %i.fa.fa-fw.fa-tag
+                      = grp.name
 
         %li.divider
         %li
