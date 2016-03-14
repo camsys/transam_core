@@ -25,17 +25,6 @@ class DispositionUpdatesTemplateBuilder < TemplateBuilder
         row_data << asset.description
 
         # Disposition report
-        row_data << asset.scheduled_disposition_year
-        row_data << nil
-        row_data << nil
-        row_data << nil
-        row_data << nil
-        row_data << nil
-
-        # New owner block
-        row_data << nil
-        row_data << nil
-        row_data << nil
         row_data << nil
         row_data << nil
         row_data << nil
@@ -65,10 +54,12 @@ class DispositionUpdatesTemplateBuilder < TemplateBuilder
   # Performing post-processing
   def post_process(sheet)
 
-    # Merge Cells?
+    # protect sheet so you cannot update cells that are locked
+    sheet.sheet_protection
+
+    # Merge Cells
     sheet.merge_cells("A1:F1")
-    sheet.merge_cells("G1:L1")
-    sheet.merge_cells("M1:R1")
+    sheet.merge_cells("G1:I1")
 
     # Add data validation constraints
 
@@ -77,7 +68,7 @@ class DispositionUpdatesTemplateBuilder < TemplateBuilder
     earliest_date = SystemConfig.instance.epoch
 
     # Disposition Date
-    sheet.add_data_validation("H3:H1000", {
+    sheet.add_data_validation("G3:G1000", {
       :type => :time,
       :operator => :greaterThan,
       :formula1 => earliest_date.strftime("%-m/%d/%Y"),
@@ -90,20 +81,20 @@ class DispositionUpdatesTemplateBuilder < TemplateBuilder
       :prompt => "Date must be after #{earliest_date.strftime("%-m/%d/%Y")}"})
 
     # Disposition Type
-    sheet.add_data_validation("I3:I1000", {
+    sheet.add_data_validation("H3:H1000", {
       :type => :list,
       :formula1 => "lists!$A$1:$#{alphabet[@disposition_types.size]}$1",
       :allow_blank => true,
       :showErrorMessage => true,
       :errorTitle => 'Wrong input',
       :error => 'Select a value from the list',
-      :errorStyle => :information,
+      :errorStyle => :stop,
       :showInputMessage => true,
       :promptTitle => 'Disposition Type',
       :prompt => 'Only values in the list are allowed'})
 
     # Sales proceeds
-    sheet.add_data_validation("J3:J1000", {
+    sheet.add_data_validation("I3:I1000", {
       :type => :whole,
       :operator => :greaterThanOrEqual,
       :formula1 => '0',
@@ -111,37 +102,9 @@ class DispositionUpdatesTemplateBuilder < TemplateBuilder
       :showErrorMessage => true,
       :errorTitle => 'Wrong input',
       :error => 'Value must be greater than 0.',
-      :errorStyle => :information,
+      :errorStyle => :stop,
       :showInputMessage => true,
       :promptTitle => 'Sales proceeds',
-      :prompt => 'Enter a value greater than or equal to 0'})
-
-    # Age
-    sheet.add_data_validation("K3:K1000", {
-      :type => :whole,
-      :operator => :greaterThanOrEqual,
-      :formula1 => '0',
-      :allow_blank => true,
-      :showErrorMessage => true,
-      :errorTitle => 'Wrong input',
-      :error => 'Value must be greater than 0.',
-      :errorStyle => :information,
-      :showInputMessage => true,
-      :promptTitle => 'Sales proceeds',
-      :prompt => 'Enter a value greater than or equal to 0'})
-
-    # Mileage
-    sheet.add_data_validation("L3:L1000", {
-      :type => :whole,
-      :operator => :greaterThanOrEqual,
-      :formula1 => '0',
-      :allow_blank => true,
-      :showErrorMessage => true,
-      :errorTitle => 'Wrong input',
-      :error => 'Value must be greater than 0.',
-      :errorStyle => :information,
-      :showInputMessage => true,
-      :promptTitle => 'Mileage at disposition',
       :prompt => 'Enter a value greater than or equal to 0'})
 
   end
@@ -158,15 +121,6 @@ class DispositionUpdatesTemplateBuilder < TemplateBuilder
         '',
         'Disposition Report',
         '',
-        '',
-        '',
-        '',
-        '',
-        'New Owner',
-        '',
-        '',
-        '',
-        '',
         ''
       ],
       [
@@ -177,19 +131,9 @@ class DispositionUpdatesTemplateBuilder < TemplateBuilder
         'External Id',
         'Description',
         # Disposition Update Columns
-        'Scheduled Year',
         'Disposition Date',
         'Disposition Type',
-        'Sales Proceeds',
-        'Age at Disposition',
-        'Mileage at Disposition',
-        # New Owner
-        'Name',
-        'Street Address',
-        'City',
-        'State',
-        'Zip',
-        'Comments'
+        'Sales Proceeds'
       ]
     ]
   end
@@ -203,19 +147,9 @@ class DispositionUpdatesTemplateBuilder < TemplateBuilder
       {:name => 'asset_id_col', :column => 4},
       {:name => 'asset_id_col', :column => 5},
 
-      {:name => 'disposition_report_integer_locked', :column => 6},
-      {:name => 'disposition_report_date', :column => 7},
-      {:name => 'disposition_report', :column => 8},
-      {:name => 'disposition_report_currency', :column => 9},
-      {:name => 'disposition_report_integer', :column => 10},
-      {:name => 'disposition_report_integer', :column => 11},
-
-      {:name => 'new_owner', :column => 12},
-      {:name => 'new_owner', :column => 13},
-      {:name => 'new_owner', :column => 14},
-      {:name => 'new_owner', :column => 15},
-      {:name => 'new_owner', :column => 16},
-      {:name => 'new_owner', :column => 17}
+      {:name => 'disposition_report_date', :column => 6},
+      {:name => 'disposition_report', :column => 7},
+      {:name => 'disposition_report_currency', :column => 8}
     ]
   end
   def row_types
@@ -230,16 +164,7 @@ class DispositionUpdatesTemplateBuilder < TemplateBuilder
       # Disposition Report Block
       :integer,
       :string,
-      :integer,
-      :integer,
-      :integer,
-      # New Owner Block
-      :string,
-      :string,
-      :string,
-      :string,
-      :string,
-      :string
+      :integer
     ]
   end
 
@@ -248,16 +173,11 @@ class DispositionUpdatesTemplateBuilder < TemplateBuilder
     a = []
     a << super
 
-    a << {:name => 'asset_id_col', :bg_color => "EBF1DE", :fg_color => '000000', :b => false, :alignment => { :horizontal => :center }}
+    a << {:name => 'asset_id_col', :bg_color => "EBF1DE", :fg_color => '000000', :b => false, :alignment => { :horizontal => :center }, :locked => true}
 
-    a << {:name => 'disposition_report', :bg_color => "F2F2F2", :alignment => { :horizontal => :center } }
-    a << {:name => 'disposition_report_year', :num_fmt => 14, :bg_color => "F2F2F2", :alignment => { :horizontal => :center } }
-    a << {:name => 'disposition_report_currency', :num_fmt => 5, :bg_color => "F2F2F2", :alignment => { :horizontal => :center } }
-    a << {:name => 'disposition_report_integer', :num_fmt => 3, :bg_color => "F2F2F2", :alignment => { :horizontal => :center } , :locked => false }
-    a << {:name => 'disposition_report_integer_locked', :num_fmt => 3, :bg_color => "F2F2F2", :alignment => { :horizontal => :center } , :locked => true }
+    a << {:name => 'disposition_report', :bg_color => "F2F2F2", :alignment => { :horizontal => :center }, :locked => false }
+    a << {:name => 'disposition_report_currency', :num_fmt => 5, :bg_color => "F2F2F2", :alignment => { :horizontal => :center }, :locked => false }
     a << {:name => 'disposition_report_date', :format_code => 'MM/DD/YYYY', :bg_color => "F2F2F2", :alignment => { :horizontal => :center } , :locked => false }
-
-    a << {:name => 'new_owner', :bg_color => "DCE6F1", :b => false, :alignment => { :horizontal => :center } }
 
     a.flatten
   end
