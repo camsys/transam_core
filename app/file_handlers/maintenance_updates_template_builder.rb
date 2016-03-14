@@ -66,6 +66,9 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
   # Performing post-processing
   def post_process(sheet)
 
+    # protect sheet so you cannot update cells that are locked
+    sheet.sheet_protection
+
     # Merge Cells?
     sheet.merge_cells("A1:F1")
     sheet.merge_cells("G1:M1")
@@ -82,7 +85,7 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
       :showErrorMessage => true,
       :errorTitle => 'Wrong input',
       :error => 'Select a value from the list',
-      :errorStyle => :information,
+      :errorStyle => :stop,
       :showInputMessage => true,
       :promptTitle => 'Maintenance type',
       :prompt => 'Only values in the list are allowed'})
@@ -95,7 +98,7 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
       :showErrorMessage => true,
       :errorTitle => 'Wrong input',
       :error => 'Milage must be > 0',
-      :errorStyle => :information,
+      :errorStyle => :stop,
       :showInputMessage => true,
       :promptTitle => 'Current mileage',
       :prompt => 'Only values greater than 0'})
@@ -108,7 +111,7 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
       :allow_blank => true,
       :errorTitle => 'Wrong input',
       :error => "Date must be after #{earliest_date.strftime("%-m/%d/%Y")}",
-      :errorStyle => :information,
+      :errorStyle => :stop,
       :showInputMessage => true,
       :promptTitle => 'Maintenance Date',
       :prompt => "Date must be after #{earliest_date.strftime("%-m/%d/%Y")}"})
