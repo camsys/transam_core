@@ -28,7 +28,7 @@ class FormAwareController < OrganizationAwareController
 
         # if notification enabled, then send out
         if @form.class.try(:workflow_notification_enabled?)
-          @form.notify_event_by(current_user, event)
+          @form.notify_event_by(current_user, event_name)
         end
       else
         notify_user(:alert, "Could not #{event_name.humanize} form #{@form}")
