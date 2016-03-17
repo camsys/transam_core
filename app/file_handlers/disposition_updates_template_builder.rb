@@ -152,6 +152,13 @@ class DispositionUpdatesTemplateBuilder < TemplateBuilder
       {:name => 'disposition_report_currency', :column => 8}
     ]
   end
+
+  def column_widths
+    # set specific width to last 4 columns to avoid cut-off text
+    [nil] * 5 + 
+    [20] * 4
+  end
+
   def row_types
     [
       # Asset Id Block

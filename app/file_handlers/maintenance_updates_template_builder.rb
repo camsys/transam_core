@@ -175,6 +175,12 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
     ]
   end
 
+  def column_widths
+    # set specific width to last 8 columns to avoid cut-off text
+    [nil] * 5 + 
+    [20] * 8
+  end
+
   def row_types
     [
       # Asset Id Block
