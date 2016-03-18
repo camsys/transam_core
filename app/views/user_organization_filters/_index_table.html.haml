@@ -31,7 +31,7 @@
       %th.right{:data => {:visible => 'false', :sortable => 'true', :order => 'desc'}} Last Updated
 
   %tbody
-    - @user_organization_filters.each do |f|
+    - @user_organization_filters.sorted.each do |f|
       %tr{:id => f.object_key, :class => 'action-path'}
         %td.left= f.object_key
         %td.left= f.name

@@ -4,7 +4,7 @@
 :javascript
 
   function boolean_formatter(value) {
-    if (value) {
+    if (parseInt(value)) {
       // hidden div for exporting
       return '<i class="fa fa-check"></i><div style = "visibility: hidden;">Yes</div>';
     } else {
