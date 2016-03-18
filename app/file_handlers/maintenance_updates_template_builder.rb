@@ -16,6 +16,7 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
     @asset_types.each do |asset_type|
       assets = @organization.assets.operational.where('asset_type_id = ?', asset_type)
       assets.each do |a|
+
         asset = Asset.get_typed_asset(a)
         row_data  = []
         row_data << asset.object_key
@@ -25,8 +26,8 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
         row_data << asset.external_id
         row_data << asset.description
 
-        if a.type_of? :maintenance_vehicle and a.maintenance_updates.present?
-          event = a.maintenance_updates.last
+        if asset.respond_to? :maintenance_updates and asset.maintenance_updates.present?
+          event = asset.maintenance_updates.last
           row_data << event.maintenance_type.name
           row_data << event.current_mileage
           row_data << event.event_date
