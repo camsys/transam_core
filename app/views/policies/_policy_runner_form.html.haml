@@ -11,11 +11,6 @@
     .col-md-6
       = f.input :asset_types, :collection => @asset_types, :requried => true, :multiple => true, :as => :check_boxes, :input_html => {:class => 'asset_type_selector'}
 
-  - if @organization.try(:capital_projects) && @organization.capital_projects.sogr.count > 0
-    .row
-      .col-md-12
-        = render 'policy_runner_warning'
-
   = f.submit "Run...", :class => "btn btn-primary", :id => "submit_button"
 
 :javascript
