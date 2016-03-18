@@ -1,0 +1,18 @@
+.row
+  = simple_form_for([current_user, @user_organization_filter], :html => {:id => 'filter_form', :class => 'form-vertical' }, :wrapper => :vertical_form, :wrapper_mappings => {:boolean => :vertical_boolean}) do |f|
+    .col-md-6
+      = dialog_tag('Details', {:icon => 'fa fa-list', :class => "form-part"}) do
+        = f.input :name, :placeholder => "Enter a name for this filter"
+        = f.input :description, :as => :text, :placeholder => "Enter a description for this filter.", :rows => 3
+        = f.input :organization_ids, :as => :hidden
+
+    .col-md-6
+      = dialog_tag('Organizations Filter', {:icon => 'fa fa-list', :class => "form-part"}) do
+        #org_select.input-xlarge
+
+ 
+    .col-md-12
+      = f.button :submit, "Update Organization Filter", :class => "btn btn-primary"
+
+
+= render 'form_scripts'

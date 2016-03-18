@@ -1,0 +1,18 @@
+.row
+  .col-md-3
+    .panel.panel-default.header-part
+      .panel-heading
+        .row
+          .col-md-6
+            %h3.panel-title
+              %i.fa.fa-filter
+              Filter
+          .col-md-6
+            = render 'actions'
+      .panel-body
+        = render :partial => 'summary', :locals => {:filter => @user_organization_filter}
+
+  .col-md-9.header-part
+    = render 'details'
+
+= render 'scripts'

@@ -1,0 +1,46 @@
+:ruby
+  table_dom_id = SecureRandom.hex
+
+- if show_actions == 1
+  #table_actions.btn-group
+    = render :partial => "user_organization_filters/index_actions"
+
+%table.table.table-hover{:id => table_dom_id, :data => {:toggle => 'table',
+  :card_view => "false",
+  :pagination => 'true',
+  :page_list => "[5, 10, 20, 50, 100, 200]",
+  :page_size => current_user.num_table_rows,
+  :show_pagination_switch => 'true',
+  :search => 'false',
+  :toolbar => "#table_actions",
+  :show_columns => 'true',
+  :show_export => 'true',
+  :show_toggle => 'true',
+  :resizable => 'true',
+  :search => 'false'}}
+  %thead
+    %tr
+      %th.left{:data => {:visible => 'false'}} Object Key
+      %th.left{:data => {:sortable => 'true', :order => 'desc'}} Name
+      %th.left{:data => {:sortable => 'true', :order => 'desc'}} Description
+      %th.center{:data => {:sortable => 'true', :order => 'desc', :formatter => 'boolean_formatter'}} System
+      %th.right{:data => {:sortable => 'true', :order => 'desc'}} Org Count
+
+      %th.left{:data => {:sortable => 'true', :order => 'desc'}} Created By
+      %th.right{:data => {:visible => 'false', :sortable => 'true', :order => 'desc'}} Created On
+      %th.right{:data => {:visible => 'false', :sortable => 'true', :order => 'desc'}} Last Updated
+
+  %tbody
+    - @user_organization_filters.each do |f|
+      %tr{:id => f.object_key, :class => 'action-path'}
+        %td.left= f.object_key
+        %td.left= f.name
+        %td.left= f.description
+        %td.center= (f.system_filter? ? 1 : 0)
+        %td.right= f.organizations.count
+
+        %td.left= f.user
+        %td.right= format_as_date_time(f.created_at)
+        %td.right= format_as_date_time(f.updated_at)
+
+= render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :path_pattern => user_user_organization_filter_path(current_user, "xxx")}
