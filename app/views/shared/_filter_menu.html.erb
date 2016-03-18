@@ -5,7 +5,7 @@
 			<i class="fa fa-filter fa-fw"></i> Filters
 		<% end %>
 		<ul class="dropdown-menu" style="overflow-y:scroll;height:400px;">
-			<% UserOrganizationFilter.all.each do |filter| %>
+			<% UserOrganizationFilter.all.sorted.each do |filter| %>
 				<li class="">
 					<%= link_to user_user_organization_filter_use_path(current_user, filter) do %>
 						<i class="fa fa-filter fa-fw"></i>
