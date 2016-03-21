@@ -131,7 +131,8 @@ class User < ActiveRecord::Base
     :state,
     :zip,
     :role_ids,
-    :privilege_ids
+    :privilege_ids,
+    :user_organization_filter_id
   ]
 
   #-----------------------------------------------------------------------------

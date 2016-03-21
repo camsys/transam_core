@@ -14,6 +14,11 @@ RSpec.describe User, :type => :model do
   #
   #------------------------------------------------------------------------------
 
+  describe 'associations' do
+    it 'has a filter' do
+      expect(normal_user).to belong_to(:user_organization_filter)
+    end
+  end
 
   #------------------------------------------------------------------------------
   #
