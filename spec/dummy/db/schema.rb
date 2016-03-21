@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160310161407) do
+ActiveRecord::Schema.define(version: 20160318215151) do
 
   create_table "activities", force: true do |t|
     t.string   "object_key",           limit: 12
@@ -827,6 +827,27 @@ ActiveRecord::Schema.define(version: 20160310161407) do
   add_index "uploads", ["object_key"], name: "uploads_idx1", using: :btree
   add_index "uploads", ["organization_id"], name: "uploads_idx2", using: :btree
   add_index "uploads", ["user_id"], name: "uploads_idx3", using: :btree
+
+  create_table "user_organization_filters", force: true do |t|
+    t.string   "object_key",  limit: 12,  null: false
+    t.integer  "user_id",                 null: false
+    t.string   "name",        limit: 64,  null: false
+    t.string   "description", limit: 254, null: false
+    t.boolean  "active",                  null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "sort_order"
+  end
+
+  add_index "user_organization_filters", ["object_key"], name: "user_organization_filters_idx1", using: :btree
+  add_index "user_organization_filters", ["user_id"], name: "user_organization_filters_idx2", using: :btree
+
+  create_table "user_organization_filters_organizations", id: false, force: true do |t|
+    t.integer "user_organization_filter_id", null: false
+    t.integer "organization_id",             null: false
+  end
+
+  add_index "user_organization_filters_organizations", ["user_organization_filter_id", "organization_id"], name: "user_organization_filters_idx1", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "object_key",                  limit: 12,  null: false
