@@ -184,4 +184,11 @@ Rails.application.routes.draw do
   # default root for the site -- will be /org/:organization_id/dashboards
   root :to => 'dashboards#index'
 
+  resources :users, only: [] do
+  # Add user organization filters
+    resources :user_organization_filters do
+      get 'use'
+    end
+  end
+
 end

@@ -27,6 +27,15 @@
               = link_to destroy_user_session_path, :method => 'delete' do
                 %i.fa.fa-sign-out
                 = " Logout"
+      - if current_user.has_role? :manager
+        .navbar-header.navbar-right
+          %ul.nav.navbar-nav.pull-right
+            %li.dropdown
+              = link_to "#", :class => 'dropdown-toggle', :data => {:toggle => 'dropdown'} do
+                %i.fa.fa-filter
+                = " #{session[:user_organization_filter]}"
+                %b.caret
+              = render 'shared/filter_menu'
 
       .col-sm-3.col-md-3.pull-right
         = form_tag keyword_searches_path, :id => 'asset_search_form', :class => 'navbar-form search-form', :role => 'search' do
