@@ -72,12 +72,7 @@ class TransamController < ApplicationController
   # Stores the object keys of a list of objects in the session
   #-----------------------------------------------------------------------------
   def cache_list(objs, cache_key)
-    list = []
-    unless objs.nil?
-      objs.each do |a|
-        list << a.object_key
-      end
-    end
+    list = objs.pluck(:object_key)
     cache_objects(cache_key, list)
   end
 

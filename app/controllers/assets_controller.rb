@@ -99,19 +99,9 @@ class AssetsController < AssetAwareController
       format.json {
         # check that an order param was provided otherwise use asset_tag as the default
         params[:sort] ||= 'asset_tag'
-        data = []
-        @assets.order("#{params[:sort]} #{params[:order]}").limit(params[:limit]).offset(params[:offset]).each do |asset|
-          jsn = asset.as_json
-          jsn.merge!({:tagged => (asset.tagged? current_user) ? '1' : '0'})
-          if asset.respond_to? :book_value
-            a = Asset.get_typed_asset asset
-            jsn.merge! a.depreciable_as_json
-          end
-          data << jsn
-        end
         render :json => {
           :total => @assets.count,
-          :rows => data
+          :rows =>  @assets.order("#{params[:sort]} #{params[:order]}").limit(params[:limit]).offset(params[:offset]).as_json(user: current_user)
           }
         }
       format.xls
@@ -552,7 +542,7 @@ class AssetsController < AssetAwareController
     end
 
     unless @asset_type == 0
-      clauses << ['asset_type_id = ?']
+      clauses << ['assets.asset_type_id = ?']
       values << [@asset_type]
     end
 
@@ -574,6 +564,7 @@ class AssetsController < AssetAwareController
 
     # send the query
     klass.where(clauses.join(' AND '), *values)
+      .includes(:asset_type, :organization, :asset_subtype, :service_status_type, :manufacturer)
   end
 
   # stores the just-created list of asset ids in the session

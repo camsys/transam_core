@@ -365,7 +365,7 @@ class Asset < ActiveRecord::Base
 
   # Render the asset as a JSON object -- overrides the default json encoding
   def as_json(options={})
-    {
+    json = {
       :id => self.id,
       :object_key => self.object_key,
       :asset_tag => self.asset_tag,
@@ -402,9 +402,15 @@ class Asset < ActiveRecord::Base
       :tasks => self.tasks.active.count,
       :comments => self.comments.count,
       :documents => self.documents.count,
-      :photos => self.images.count
+      :photos => self.images.count,
 
+      :tagged => self.tagged?(options[:user]) ? 1 : 0
     }
+    if self.respond_to? :book_value
+      a = Asset.get_typed_asset self
+      json.merge! a.depreciable_as_json
+    end
+    json
   end
 
   # Override to_s to return a reasonable default
