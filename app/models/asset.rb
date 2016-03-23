@@ -196,7 +196,7 @@ class Asset < ActiveRecord::Base
     'estimated_replacement_year',
     'estimated_replacement_cost',
     'scheduled_replacement_year',
-    'rearly_replacement_reason',
+    'early_replacement_reason',
     'scheduled_rehabilitation_year',
     'scheduled_disposition_year',
     'replacement_reason_type_id',
