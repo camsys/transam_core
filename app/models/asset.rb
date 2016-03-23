@@ -170,6 +170,8 @@ class Asset < ActiveRecord::Base
   scope :operational, -> { where('assets.disposition_date IS NULL') }
   # Returns a list of asset that operational and are marked as being in service
   scope :in_service,  -> { where('assets.disposition_date IS NULL AND assets.service_status_type_id = 1')}
+  # Returns a list of asset that in early replacement
+  scope :early_replacement, -> { where('policy_replacement_year is not NULL and scheduled_replacement_year is not NULL and scheduled_replacement_year < policy_replacement_year') }
   #-----------------------------------------------------------------------------
   # Lists. These lists are used by derived classes to make up lists of attributes
   # that can be used for operations like full text search etc. Each derived class
@@ -930,6 +932,10 @@ class Asset < ActiveRecord::Base
     else
       self.early_replacement_reason = nil
     end
+  end
+
+  def formatted_early_replacement_reason
+    early_replacement_reason || '(Reason not provided)'
   end
 
   # Creates a duplicate that has all asset-specific attributes nilled
