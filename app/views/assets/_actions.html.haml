@@ -45,6 +45,7 @@
                       %i.fa.fa-fw.fa-tag
                       = grp.name
 
+      - if can? :create, Asset
         %li.divider
         %li
           = link_to copy_inventory_path(@asset) do
