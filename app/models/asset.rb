@@ -170,6 +170,8 @@ class Asset < ActiveRecord::Base
   scope :operational, -> { where('assets.disposition_date IS NULL') }
   # Returns a list of asset that operational and are marked as being in service
   scope :in_service,  -> { where('assets.disposition_date IS NULL AND assets.service_status_type_id = 1')}
+  # Returns a list of asset that in early replacement
+  scope :early_replacement, -> { where('policy_replacement_year is not NULL and scheduled_replacement_year is not NULL and scheduled_replacement_year < policy_replacement_year') }
   #-----------------------------------------------------------------------------
   # Lists. These lists are used by derived classes to make up lists of attributes
   # that can be used for operations like full text search etc. Each derived class
@@ -194,6 +196,7 @@ class Asset < ActiveRecord::Base
     'estimated_replacement_year',
     'estimated_replacement_cost',
     'scheduled_replacement_year',
+    'early_replacement_reason',
     'scheduled_rehabilitation_year',
     'scheduled_disposition_year',
     'replacement_reason_type_id',
@@ -924,6 +927,23 @@ class Asset < ActiveRecord::Base
 
   end
 
+  # if scheduled replacement year is earlier than the policy year
+  def is_early_replacement?
+    policy_replacement_year && scheduled_replacement_year && scheduled_replacement_year < policy_replacement_year
+  end
+
+  def update_early_replacement_reason(reason = nil)
+    if is_early_replacement?
+      self.early_replacement_reason = reason
+    else
+      self.early_replacement_reason = nil
+    end
+  end
+
+  def formatted_early_replacement_reason
+    early_replacement_reason || '(Reason not provided)'
+  end
+
   # Creates a duplicate that has all asset-specific attributes nilled
   def copy(cleanse = true)
     a = dup
@@ -991,6 +1011,7 @@ class Asset < ActiveRecord::Base
     # is in backlog and update the scheduled replacement year to the first planning
     # year
     if self.changes.include? "policy_replacement_year"
+      check_early_replacement = true
       Rails.logger.debug "New policy_replacement_year = #{self.policy_replacement_year}"
 
       if self.policy_replacement_year < current_planning_year_year
@@ -1007,7 +1028,9 @@ class Asset < ActiveRecord::Base
       self.estimated_replacement_cost = calculator_instance.calculate_on_date(self, start_date)
       Rails.logger.debug "estimated_replacement_cost = #{self.estimated_replacement_cost}"
     end
+
     if self.changes.include? "scheduled_replacement_year"
+      check_early_replacement = true
       Rails.logger.debug "New scheduled_replacement_year = #{self.scheduled_replacement_year}"
       # Get the calculator class from the policy analyzer
       class_name = this_policy_analyzer.get_replacement_cost_calculation_type.class_name
@@ -1016,6 +1039,9 @@ class Asset < ActiveRecord::Base
       Rails.logger.debug "Start Date = #{start_date}"
       self.scheduled_replacement_cost = calculator_instance.calculate_on_date(self, start_date)
     end
+
+    self.early_replacement_reason = nil if check_early_replacement && !is_early_replacement?
+
     true
   end
 
