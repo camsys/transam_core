@@ -1,0 +1,73 @@
+%li{:class => "dropdown #{get_nav_link_class('assets')}"}
+  = link_to "#", :class => "dropdown-toggle", :data => {"toggle" => "dropdown"} do
+    %i.fa.fa-bus.fa-2x
+    %b.caret
+  %ul.dropdown-menu.multi-level{:role => "menu"}
+    - Asset.unscoped.where(:organization_id => @organization_list).group(:asset_type_id).count.each do | at, count |
+      - asset_type = AssetType.find(at)
+      %li.text-left.dropdown-submenu
+        = link_to inventory_index_path(:asset_type => asset_type, :asset_subtype => 0, :asset_group => 0)  do
+          %i{:class => "#{asset_type.display_icon_name} fa-fw"}
+          = asset_type.name.pluralize(2)
+        %ul.dropdown-menu
+          - Asset.where(:organization_id => @organization_list, :asset_type_id => at).group(:asset_subtype_id).count.each do |as, count |
+            - asset_subtype = AssetSubtype.find(as)
+            %li.text-left
+              = link_to asset_subtype.name, inventory_index_path(:asset_subtype => asset_subtype, :asset_group => 0)
+    %li.divider
+    %li.text-left.dropdown-submenu
+      = link_to manufacturers_path do
+        %i.fa.fa-fw.fa-star
+        Manufacturers
+      %ul.dropdown-menu
+        - Manufacturer.joins(:assets).where(assets: {organization_id: @organization_list}).distinct.each do | manufacturer |
+          %li.text-left
+            = link_to inventory_index_path(:manufacturer_id => manufacturer) do
+              %i.fa.fa-star.fa-fw
+              = manufacturer.name
+        %li.divider
+        %li.text-left
+          = link_to manufacturers_path do
+            %i.fa.fa-star.fa-fw
+            All Manufacturers
+    %li.divider
+    %li.text-left.dropdown-submenu
+      = link_to asset_groups_path do
+        %i.fa.fa-tags.fa-fw
+        Groups
+      %ul.dropdown-menu
+        - @organization.asset_groups.each do |grp|
+          %li.text-left
+            = link_to asset_group_path(grp) do
+              %i.fa.fa-tag.fa-fw
+              = grp.name
+        %li.divider
+        %li.text-left
+          = link_to asset_groups_path do
+            %i.fa.fa-tags.fa-fw
+            Manage Groups
+    %li.divider
+    %li.text-left
+      = link_to new_search_path(:search_type => SearchesController::ASSET_SEARCH_TYPE) do
+        %i.fa.fa-search.fa-fw
+        Query
+    - if can? :create, Asset
+      %li.divider
+      %li.text-left
+        = link_to new_asset_inventory_index_path do
+          %i.fa.fa-plus.fa-fw
+          Add Asset
+      %li.divider
+      %li.text-left.dropdown-submenu
+        = link_to uploads_path do
+          %i.fa.fa-file-excel-o.fa-fw
+          Bulk Updates
+        %ul.dropdown-menu
+          %li.text-left
+            = link_to templates_uploads_path do
+              %i.fa.fa-download.fa-fw
+              Download Template
+          %li.text-left
+            = link_to new_upload_path do
+              %i.fa.fa-upload.fa-fw
+              Upload Template
