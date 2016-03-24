@@ -1,0 +1,11 @@
+%div{:data_action_path => organization_path(organization)}
+  .well.well-small
+    .caption
+      %i.fa.fa-building-o.fa-3x.pull-left
+      %h4= organization.name
+    = content_tag address do
+      = organization.address1
+      %br
+      = "#{organization.city}, #{organization.state} #{organization.zip}"
+      %br
+      = format_as_phone_number(organization.phone)
