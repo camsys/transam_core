@@ -941,7 +941,7 @@ class Asset < ActiveRecord::Base
   end
 
   def formatted_early_replacement_reason
-    early_replacement_reason || '(Reason not provided)'
+    early_replacement_reason.blank? ? '(Reason not provided)' : early_replacement_reason
   end
 
   # Creates a duplicate that has all asset-specific attributes nilled
