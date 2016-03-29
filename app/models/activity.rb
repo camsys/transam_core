@@ -100,6 +100,11 @@ class Activity < ActiveRecord::Base
     frequency_quantity.send(frequency_type.name.pluralize)
   end
 
+  # Used by clockwork to specify when to trigger an event
+  def at
+    execution_time
+  end
+
   # Returns the job that will be executed
   def job
     job_name.constantize.new({
