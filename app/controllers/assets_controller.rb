@@ -155,7 +155,7 @@ class AssetsController < AssetAwareController
     get_next_and_prev_object_keys(@asset, INDEX_KEY_LIST_VAR)
     @prev_record_path = @prev_record_key.nil? ? "#" : inventory_path(@prev_record_key)
     @next_record_path = @next_record_key.nil? ? "#" : inventory_path(@next_record_key)
-
+    
     respond_to do |format|
       format.html # show.html.erb
       format.json { render :json => @asset }

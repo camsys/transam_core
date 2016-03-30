@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160318215151) do
+ActiveRecord::Schema.define(version: 20160330130515) do
 
   create_table "activities", force: true do |t|
     t.string   "object_key",           limit: 12
@@ -100,14 +100,12 @@ ActiveRecord::Schema.define(version: 20160318215151) do
     t.integer  "annual_dollars_generated"
     t.integer  "sales_proceeds"
     t.string   "new_owner_name",                 limit: 64
-    t.string   "address1",                       limit: 128
-    t.string   "address2",                       limit: 128
-    t.string   "city",                           limit: 64
-    t.string   "state",                          limit: 2
-    t.string   "zip",                            limit: 10
     t.text     "comments"
     t.datetime "created_at",                                                         null: false
     t.datetime "updated_at",                                                         null: false
+    t.string   "state",                          limit: 32
+    t.string   "document",                       limit: 128
+    t.string   "original_filename",              limit: 128
   end
 
   add_index "asset_events", ["asset_event_type_id"], name: "asset_events_idx3", using: :btree
@@ -204,6 +202,7 @@ ActiveRecord::Schema.define(version: 20160318215151) do
     t.integer  "scheduled_rehabilitation_year"
     t.integer  "scheduled_disposition_year"
     t.integer  "scheduled_replacement_cost"
+    t.text     "early_replacement_reason"
     t.boolean  "scheduled_replace_with_new"
     t.integer  "scheduled_rehabilitation_cost"
     t.integer  "replacement_reason_type_id"

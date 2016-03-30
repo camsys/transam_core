@@ -1,0 +1,9 @@
+= format_field("Requested On", format_as_date(@asset_event.event_date))
+= format_field("Status", @asset_event.state.titleize)
+= format_field("Reason", @asset_event.comments.html_safe) unless @asset_event.comments.blank?
+- unless @asset_event.document.blank?
+  .row.control-group
+    .col-xs-5.display-label
+      Attachment
+    .col-xs-7.display-value
+      =link_to @asset_event.original_filename, @asset_event.document.url, target: '_blank'
