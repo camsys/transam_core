@@ -117,6 +117,23 @@ class EarlyDispositionRequestUpdateEvent < AssetEvent
     "Early disposition request was made"
   end
 
+  def get_latest_update
+    state_desc = case state.to_s
+    when 'new'
+      "made"
+    when 'transfer_approved'
+      "approved via transfer"
+    else
+      state
+    end
+
+    "Early disposition request was #{state_desc}"
+  end
+
+  def is_new?
+    state == "new"
+  end
+
   def is_unconditional_approved?
     state == "approved"
   end
