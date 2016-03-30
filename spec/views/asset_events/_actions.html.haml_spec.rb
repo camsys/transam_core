@@ -10,6 +10,6 @@ describe "asset_events/_actions.html.haml", :type => :view do
     render
 
     expect(rendered).to have_link('Update this record')
-    expect(rendered).to have_link('Remove this update')
+    expect(rendered).to have_link('Remove this record')
   end
 end

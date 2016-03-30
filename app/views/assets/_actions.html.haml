@@ -1,4 +1,6 @@
-- if can? :update, @asset or can? :dispose, @asset or can? :destroy, @asset
+- can_dispose_asset = can? :create, @asset.disposition_updates.build
+- can_request_early_disposition = can? :create, @asset.early_disposition_requests.build
+- if can? :update, @asset or can_dispose or can_request_early_disposition or can? :destroy, @asset
   .btn-group.pull-right.panel-action
     %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
       %i.fa.fa-cog
@@ -52,12 +54,20 @@
             %i.fa.fa-fw.fa-copy
             = " Make a copy"
 
-      - if can? :dispose, @asset
+      - if can_dispose_asset
         %li.divider
         %li
-          = link_to new_inventory_asset_event_path(@asset, :event_type => DispositionUpdateEvent.asset_event_type.id) do
-            %i.fa.fa-fw{:class => DispositionUpdateEvent.asset_event_type.display_icon_name}
-            = " Record final disposition"
+          - event_type = DispositionUpdateEvent.asset_event_type
+          = link_to new_inventory_asset_event_path(@asset, :event_type => event_type.id) do
+            %i.fa.fa-fw{:class => event_type.display_icon_name}
+            = " #{event_type.name}"
+      - elsif can_request_early_disposition
+        %li.divider
+        %li
+          - event_type = EarlyDispositionRequestUpdateEvent.asset_event_type
+          = link_to new_inventory_asset_event_path(@asset, :event_type => event_type.id) do
+            %i.fa.fa-fw{:class => event_type.display_icon_name}
+            = " #{event_type.name}"
 
       - if can? :destroy, @asset
         %li.divider

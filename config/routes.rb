@@ -49,7 +49,11 @@ Rails.application.routes.draw do
         get 'popup'
       end
 
-    resources :asset_events
+    resources :asset_events do 
+      member do
+        get 'fire_workflow_event'
+      end
+    end
 
     resources :tasks,       :only => [:create, :update, :edit, :new, :destroy]
     resources :comments,    :only => [:create, :update, :edit, :new, :destroy]

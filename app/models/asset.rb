@@ -86,6 +86,9 @@ class Asset < ActiveRecord::Base
   # each asset has zero or more disposition updates
   has_many   :disposition_updates, -> {where :asset_event_type_id => DispositionUpdateEvent.asset_event_type.id }, :class_name => "DispositionUpdateEvent"
 
+  # each asset has zero or more early disposition requests
+  has_many   :early_disposition_requests, -> {where :asset_event_type_id => EarlyDispositionRequestUpdateEvent.asset_event_type.id }, :class_name => "EarlyDispositionRequestUpdateEvent"
+
   # each asset has zero or more location updates.
   has_many   :location_updates, -> {where :asset_event_type_id => LocationUpdateEvent.asset_event_type.id }, :class_name => "LocationUpdateEvent"
 
@@ -464,13 +467,42 @@ class Asset < ActiveRecord::Base
 
   # Returns true if the asset can be disposed in the next planning cycle,
   # false otherwise
-  def disposable?
+  def disposable?( include_early_disposal_request_approved_via_transfer = false)
     return false if disposed?
     # otherwise check the policy year and see if it is less than or equal to
     # the current planning year
-    return false if policy_replacement_year.blank?
+    return false if estimated_replacement_year.blank?
 
-    (policy_replacement_year <= current_planning_year_year)
+    if estimated_replacement_year <= current_planning_year_year
+      # After ESL disposal
+      true
+    else
+      # Prior ESL disposal request
+      last_request = early_disposition_requests.last 
+      if include_early_disposal_request_approved_via_transfer
+        last_request.try(:is_approved?)
+      else
+        last_request.try(:is_unconditional_approved?)
+      end 
+    end
+  end
+
+  # Returns true if the asset can be requested for early disposal
+  def eligible_for_early_disposition_request?
+    return false if disposed?
+    # otherwise check the policy year and see if it is less than or equal to
+    # the current planning year
+    return false if estimated_replacement_year.blank?
+
+    if estimated_replacement_year <= current_planning_year_year
+      # Eligible for after ESL disposal
+      false
+    else
+      # Prior ESL disposal request
+      last_request = early_disposition_requests.last 
+      # No previous request or was rejected
+      !last_request || last_request.try(:is_rejected?)
+    end
   end
 
   # Returns true if an asset is scheduled for disposition
