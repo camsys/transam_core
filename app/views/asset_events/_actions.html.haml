@@ -17,4 +17,13 @@
         %li
           = link_to inventory_asset_event_path(@asset, @asset_event), :method => :delete, :data => {:confirm => "Are you sure you want to remove this update? The action can't be undone."} do
             %i.fa.fa-fw.fa-trash-o
-            = " Remove this update"
+            = " Remove this record"
+
+      - if @asset_event.class.name == "EarlyDispositionRequestUpdateEvent" 
+        %li.divider
+        - @asset_event.allowable_events.each do |evt|
+          - if can? evt.to_sym, @asset_event
+            %li
+              = link_to fire_workflow_event_inventory_asset_event_path(@asset_event.asset, @asset_event, :event => evt) do
+                %i.fa.fa-fw{:class => get_workflow_event_icon(evt)}
+                = "#{evt.titleize}"

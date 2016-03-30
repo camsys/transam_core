@@ -101,10 +101,12 @@ module TransamHelper
       'fa-pause'
     elsif event_name == 'retract'
       'fa-reply'
-    elsif event_name == 'return' || event_name == 'unapprove'
+    elsif event_name == 'return' || event_name == 'reject' || event_name == 'unapprove'
       'fa-chevron-circle-left'
     elsif event_name == 'approve'
       'fa-plus-square'
+    elsif event_name == 'approve_via_transfer'
+      'fa-chevron-circle-right'
     else
       ''
     end

@@ -23,6 +23,7 @@ asset_event_types = [
   {:active => 1, :name => 'Update the location',       :display_icon_name => "fa fa-map-marker",       :description => 'Location Update',       :class_name => 'LocationUpdateEvent',      :job_name => 'AssetLocationUpdateJob'},
   {:active => 1, :name => 'Record a rebuild/rehabilitation',       :display_icon_name => "fa fa-wrench",       :description => 'Rehabilitation Update',       :class_name => 'RehabilitationUpdateEvent',      :job_name => 'AssetRehabilitationUpdateJob'},
   {:active => 1, :name => 'Record final disposition',     :display_icon_name => "fa fa-ban",      :description => 'Disposition Update',     :class_name => 'DispositionUpdateEvent',    :job_name => 'AssetDispositionUpdateJob'},
+  {:active => 1, :name => 'Request early disposition',     :display_icon_name => "fa fa-ban",      :description => 'Early Disposition Request',     :class_name => 'EarlyDispositionRequestUpdateEvent',    :job_name => ''},
   {:active => 1, :name => "Update maintenance history",          :display_icon_name => "fa fa-wrench",            :description => "Maintenance/Service Update",    :class_name => "MaintenanceUpdateEvent", :job_name => "AssetMaintenanceUpdateJob"}
 ]
 
