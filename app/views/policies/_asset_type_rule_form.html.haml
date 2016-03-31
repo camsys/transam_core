@@ -5,6 +5,8 @@
     url = update_policy_rule_policy_path(@policy)
   end
 
+  parent_rule = @policy.parent.policy_asset_type_rules.find_by(asset_type: @rule.asset_type) if @policy.parent
+
 = simple_form_for(@rule,
   :url => url,
   :remote => true,
@@ -24,7 +26,7 @@
 
   .row
     .col-xs-6
-      = f.association :service_life_calculation_type, :include_blank => false
+      = f.association :service_life_calculation_type, :include_blank => false, :disabled => parent_rule.present?
 
     .col-xs-6
       = f.association :replacement_cost_calculation_type, :include_blank => false
