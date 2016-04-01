@@ -152,7 +152,7 @@ class EarlyDispositionRequestUpdateEvent < AssetEvent
       # notify managers
       manager_role = Role.find_by_name(:manager)
       manager_role.try(:users) || []
-    when :return, :approve_via_transfer, :approve
+    when :reject, :approve_via_transfer, :approve
       # notify managers and creator
       manager_role = Role.find_by_name(:manager)
       managers = (manager_role.try(:users) || [])
