@@ -1,6 +1,6 @@
 - can_dispose_asset = can? :create, @asset.disposition_updates.build
 - can_request_early_disposition = can? :create, @asset.early_disposition_requests.build
-- if can? :update, @asset or can_dispose or can_request_early_disposition or can? :destroy, @asset
+- if can? :update, @asset or can_dispose_asset or can_request_early_disposition or can? :destroy, @asset
   .btn-group.pull-right.panel-action
     %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
       %i.fa.fa-cog
