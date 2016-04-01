@@ -147,6 +147,11 @@ class AssetEventsController < AssetAwareController
         # The event was removed so we need to update the asset
         fire_asset_update_event(@asset_event.asset_event_type, @asset)
 
+        # if notification enabled, then send out
+        if @asset_event.class.try(:workflow_notification_enabled?)
+          @asset_event.notify_event_by(current_user, :new)
+        end
+
         format.html { redirect_to inventory_url(@asset) }
         format.json { render :json => @asset_event, :status => :created, :location => @asset_event }
       else

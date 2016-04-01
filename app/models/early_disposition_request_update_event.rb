@@ -147,7 +147,7 @@ class EarlyDispositionRequestUpdateEvent < AssetEvent
   end
 
   def notification_recipients(event)
-    case event
+    case event.try(:to_sym)
     when :new
       # notify managers
       manager_role = Role.find_by_name(:manager)
@@ -165,7 +165,7 @@ class EarlyDispositionRequestUpdateEvent < AssetEvent
   end
 
   def event_in_passive_tense(event)
-    case event
+    case event.try(:to_sym)
     when :new
       'created'
     when :reject
@@ -183,7 +183,7 @@ class EarlyDispositionRequestUpdateEvent < AssetEvent
     event_desc = event_in_passive_tense(event)
 
     event_url = Rails.application.routes.url_helpers.inventory_asset_event_path self.try(:asset), self
-
+    
     notification_recipients(event).uniq.each do |to_user|
       if to_user && to_user != sender
         msg = Message.new
