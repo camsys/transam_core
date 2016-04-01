@@ -7,6 +7,25 @@ class PoliciesController < OrganizationAwareController
 
   SESSION_VIEW_TYPE_VAR = 'policies_subnav_view_type'
 
+  def get_subtype_minimum_value
+
+    rule = @policy.parent.policy_asset_subtype_rules.find_by(asset_subtype_id: params[:asset_subtype_id].to_i)
+
+    valid = true
+    min = 0
+    if rule.present?
+      params[:policy_asset_subtype_rule].each do |key, val|
+        min = rule.send(key)
+        valid = (min <= val.to_i)
+      end
+    end
+
+    results = (valid ? valid : "Please enter a value greater than or equal to #{min}.").to_json
+    respond_to do |format|
+     format.json { render :json =>  results}
+    end
+  end
+
   def index
 
     add_breadcrumb "Policies", policies_path

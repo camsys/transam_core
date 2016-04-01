@@ -165,6 +165,7 @@ Rails.application.routes.draw do
 
   resources :policies do
     member do
+      get     'get_subtype_minimum_value'
       get     'show_edit_form'
       get     'runner'
       post    'update_assets'
