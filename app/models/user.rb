@@ -62,6 +62,9 @@ class User < ActiveRecord::Base
   has_many    :asset_tags
   has_many    :assets, :through => :asset_tags
 
+  # AssetEvents that have been tagged by the user
+  has_many    :asset_events,  :foreign_key => :created_by_id
+
   #-----------------------------------------------------------------------------
   # Transients
   #-----------------------------------------------------------------------------

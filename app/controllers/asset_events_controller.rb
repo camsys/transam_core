@@ -134,6 +134,7 @@ class AssetEventsController < AssetAwareController
     asset_event_type = AssetEventType.find(params[:event_type])
     unless asset_event_type.blank?
       @asset_event = @asset.build_typed_event(asset_event_type.class_name.constantize)
+      @asset_event.creator = current_user
     end
 
     add_new_show_create_breadcrumbs

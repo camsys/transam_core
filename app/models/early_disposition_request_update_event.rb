@@ -146,22 +146,20 @@ class EarlyDispositionRequestUpdateEvent < AssetEvent
     state == "rejected"
   end
 
-  def notification_recipients(event)
-    case event.try(:to_sym)
+  # default recipients
+  # if :notification_recipients is defined, then :notification_recipients takes precedence 
+  def default_notification_recipients(event)
+    recipients = case event.try(:to_sym)
     when :new
       # notify managers
-      manager_role = Role.find_by_name(:manager)
-      manager_role.try(:users) || []
+      Role.find_by_name(:manager).try(:users)
+
     when :reject, :approve_via_transfer, :approve
       # notify managers and creator
-      manager_role = Role.find_by_name(:manager)
-      managers = (manager_role.try(:users) || [])
-      transit_manager_role = Role.find_by_name(:transit_manager)
-      if transit_manager_role
-        transit_managers = transit_manager_role.users.where(organization: asset.try(:organization))
-      end
-      managers + (transit_managers || [])
+      (Role.find_by_name(:manager).try(:users) || []) + [creator]
     end
+
+    recipients || []
   end
 
   def event_in_passive_tense(event)
@@ -184,7 +182,12 @@ class EarlyDispositionRequestUpdateEvent < AssetEvent
 
     event_url = Rails.application.routes.url_helpers.inventory_asset_event_path self.try(:asset), self
     
-    notification_recipients(event).uniq.each do |to_user|
+    recipients = if self.respond_to?(:notification_recipients)
+      notification_recipients(event)
+    else
+      default_notification_recipients(event)
+    end
+    (recipients || []).uniq.each do |to_user|
       if to_user && to_user != sender
         msg = Message.new
         msg.user          = sender
