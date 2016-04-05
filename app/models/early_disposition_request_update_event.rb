@@ -29,7 +29,7 @@ class EarlyDispositionRequestUpdateEvent < AssetEvent
   # set the default scope
   default_scope { where(:asset_event_type_id => AssetEventType.find_by_class_name(self.name).id).order(:event_date, :created_at) }
   # tasks which are currently active based on the workflow
-  scope :active, -> { where("state == 'new' ") }
+  scope :active, -> { where(state: 'new') }
 
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [

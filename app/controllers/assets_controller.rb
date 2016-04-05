@@ -70,7 +70,9 @@ class AssetsController < AssetAwareController
     @spatial_filter = nil
 
     @assets = get_assets
-    if @asset_group.present?
+    if @early_disposition
+      add_breadcrumb "Early disposition proposed"
+    elsif @asset_group.present?
       asset_group = AssetGroup.find_by_object_key(@asset_group)
       add_breadcrumb asset_group
     elsif @search_text.present?
@@ -101,7 +103,7 @@ class AssetsController < AssetAwareController
         params[:sort] ||= 'asset_tag'
         render :json => {
           :total => @assets.count,
-          :rows =>  @assets.order("#{params[:sort]} #{params[:order]}").limit(params[:limit]).offset(params[:offset]).as_json(user: current_user)
+          :rows =>  @assets.order("#{params[:sort]} #{params[:order]}").limit(params[:limit]).offset(params[:offset]).as_json(user: current_user, include_early_disposition: @early_disposition)
           }
         }
       format.xls
@@ -442,6 +444,11 @@ class AssetsController < AssetAwareController
       @fmt = 'html'
     end
 
+    # Check to see if search for early dispostion proposed assets only
+    if params[:early_disposition] == '1'
+      @early_disposition = true
+    end
+
     # If the asset type and subtypes are not set we default to the asset base class
     if @id_filter_list.present? or (@asset_type == 0 and @asset_subtype == 0)
       @asset_class_name = SystemConfig.instance.asset_base_class_name
@@ -478,7 +485,6 @@ class AssetsController < AssetAwareController
     # here we build the query one clause at a time based on the input params
     clauses = []
     values = []
-
     unless @org_id == 0
       clauses << ['organization_id = ?']
       values << @org_id
@@ -498,9 +504,9 @@ class AssetsController < AssetAwareController
     end
 
     if @disposition_year.blank?
-      clauses << ['disposition_date IS NULL']
+      clauses << ['assets.disposition_date IS NULL']
     else
-      clauses << ['YEAR(disposition_date) = ?']
+      clauses << ['YEAR(assets.disposition_date) = ?']
       values << @disposition_year
     end
 
@@ -560,6 +566,11 @@ class AssetsController < AssetAwareController
     unless @asset_group.blank?
       asset_group = AssetGroup.find_by_object_key(@asset_group)
       klass = asset_group.assets unless asset_group.nil?
+    end
+
+    # Search for only early dispostion proposed assets if flag is on
+    if @early_disposition
+      klass = klass.joins(:early_disposition_requests).where(asset_events: {state: 'new'})
     end
 
     # send the query

@@ -412,6 +412,9 @@ class Asset < ActiveRecord::Base
 
       :tagged => self.tagged?(options[:user]) ? 1 : 0
     }
+
+    json[:early_disposition_notes] = self.early_disposition_notes if options[:include_early_disposition]
+
     if self.respond_to? :book_value
       a = Asset.get_typed_asset self
       json.merge! a.depreciable_as_json
@@ -503,6 +506,12 @@ class Asset < ActiveRecord::Base
       # No previous request or was rejected
       !last_request || last_request.try(:is_rejected?)
     end
+  end
+
+  # Return early disposition reason 
+  # (this method is needed to show the reason in asset table)
+  def early_disposition_notes
+    early_disposition_requests.active.last.try(:comments) || ""
   end
 
   # Returns true if an asset is scheduled for disposition

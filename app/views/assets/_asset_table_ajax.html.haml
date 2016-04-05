@@ -44,6 +44,9 @@
           - if lookup_context.template_exists?("#{mod}_asset_table_head", 'assets', true)
             = render :partial => "assets/#{mod}_asset_table_head"
 
+        - if @early_disposition
+          %th.center{:data => {:field => "early_disposition_notes", :sort_name => 'early_disposition_notes', :align => 'left', :sortable => 'true',  :searchable => 'true'}} Early Disposition Reason
+
         %th.center.flag-column{:data => {:field => 'tasks', :formatter => 'tasks_formatter'}}
           %i.fa.fa-flag
         %th.center.flag-column{:data => {:field => 'comments', :visible => 'false', :formatter => 'comments_formatter'}}
@@ -52,7 +55,6 @@
           %i.fa.fa-files-o
         %th.center.flag-column{:data => {:field => 'photos', :visible => 'false', :formatter => 'images_formatter'}}
           %i.fa.fa-image
-
 :javascript
 
   var manufacturer_id = #{@manufacturer_id.to_i};
@@ -60,6 +62,7 @@
   var asset_subtype = #{@asset_subtype.to_i};
   var asset_group = #{@asset_group.to_i};
   var org_id = #{@org_id.to_i};
+  var early_disposition = #{@early_disposition || false};
   var path = '#{inventory_path("x")}';
 
 
@@ -87,6 +90,9 @@
     }
     if (ids.length > 0){
       params.ids = ids;
+    }
+    if (early_disposition) {
+      params.early_disposition = 1;
     }
     return params;
   }
