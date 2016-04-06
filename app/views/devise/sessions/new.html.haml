@@ -1,0 +1,14 @@
+%form#new_user.navbar-form.navbar-right{"accept-charset" => "UTF-8", :action => "/users/sign_in", :method => "post", :novalidate => "novalidate", :role => "form"}
+  %div{:style => "margin:0;padding:0;display:inline"}
+    %input{:name => "utf8", :type => "hidden", :value => "✓"}/
+    %input{:name => "authenticity_token", :type => "hidden", :value => "Rm1Nje97STEfMS+AT/8jbMqy9F69EW1NeNPSh7mR5Ms="}/
+  .form-group
+    %label.sr-only{:for => "user_email"}
+      %abbr{:title => "required"} *
+      Email
+    %input#user_email.form-control{:autofocus => "autofocus", :name => "user[email]", :placeholder => "Enter email", :type => "email"}/
+  .form-group
+    %label.sr-only{:for => "user_password"} Password
+    %input#user_password.form-control{:name => "user[password]", :placeholder => "Password", :type => "password"}/
+  %button.btn.btn-primary{:type => "submit"} Sign in
+= link_to "Forgot Your Password?", new_password_path(resource_name), :class => 'navbar-right navbar-text'

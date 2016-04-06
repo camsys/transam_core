@@ -49,7 +49,7 @@ class SearchesController < OrganizationAwareController
     add_breadcrumb "Query"
 
     respond_to do |format|
-      format.html # new.html.erb
+      format.html # new.html.haml this had been an erb and is now an haml the change should just be caught
     end
   end
 

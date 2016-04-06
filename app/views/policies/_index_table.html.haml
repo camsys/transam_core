@@ -1,0 +1,20 @@
+.row
+  .col-md-12
+    %table.table.table-hover
+      %thead
+        %tr
+          %th Owning Agency
+          %th Name
+          %th Effective Year
+          %th Current
+          %th Created
+          %th Last Updated
+      %tbody
+        - @policies.each do |p|
+          %tr{"data-action-path" => policy_path(p)}
+            %td= p.organization.name
+            %td= p.name
+            %td= p.year
+            %td.center= format_as_boolean(p.active)
+            %td= format_as_date_time(p.created_at)
+            %td= format_as_date_time(p.updated_at)

@@ -249,7 +249,7 @@ class AssetsController < AssetAwareController
     @asset.expected_useful_miles = policy_analyzer.get_min_service_life_miles
 
     respond_to do |format|
-      format.html # new.html.erb
+      format.html # new.html.haml this had been an erb and is now an haml the change should just be caught
       format.json { render :json => @asset }
     end
   end

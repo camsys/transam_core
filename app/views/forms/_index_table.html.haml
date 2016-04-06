@@ -1,0 +1,11 @@
+.row
+  .col-md-12
+    %table.table.table-hover
+      %thead
+        %th Report
+        %th Description
+      %tbody
+        - @reports.each do |report|
+          %tr{"data-action-path" => report_path(report.id)}
+            %td= report.name
+            %td= report.description

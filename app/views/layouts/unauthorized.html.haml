@@ -1,0 +1,48 @@
+!!!
+%html{:lang => "en"}
+  %head
+    %meta{:charset => "utf-8"}/
+    %meta{:content => "IE=edge", "http-equiv" => "X-UA-Compatible"}/
+    %meta{:content => "width=device-width, initial-scale=1", :name => "viewport"}/
+    / The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags
+    %title= app_title
+    = csrf_meta_tags
+    = stylesheet_link_tag    "application", :media => "all"
+    = javascript_include_tag "application"
+    / HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries
+    /[if lt IE 9]
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  %body
+    / Header
+    %nav.navbar.navbar-fixed-top.navbar-inverse{:role => "navigation"}
+      .container-fluid
+        .navbar-header
+          = link_to app_title, "/", :class => "navbar-brand"
+        = yield
+    / Begin page content
+    #view.container-fluid
+      .row
+        .col-xs-12{:style => "margin-top:20px;"}
+          - flash.each do |type, message|
+            - if type == :success || type == :alert
+              = content_tag :div, message, :class => "alert fade in #{bootstrap_class_for(type)}" unless message.blank?
+      .jumbotron
+        .container
+          = image_tag "logo.png", :class => "image pull-left", :style => "margin-left:-50px;height:300px;width:300px;"
+          %h1.text-center{:style => "margin-left:320px;"}= app_title
+          .text-center{:style => "margin-left:320px;padding-top:20px;"}
+            = credits
+      .container
+        = render 'shared/marketing'
+    :javascript
+      $(document).ready(function() {
+      	transam.make_same_height('.content-body');
+      });
+    / Begin footer content
+    %footer.footer= render 'shared/footer'
+    / push the java script to the bottom so the page loads faster
+    = render 'shared/javascript'
+    / Begin analytics
+    - unless ENV['GOOGLE_ANALYTICS_ACCOUNT'].blank?
+      = render 'shared/analytics'

@@ -1,0 +1,9 @@
+= dialog_tag("Resend unlock instructions", "fa fa-key") do
+  .row
+    .col-md-10.col-md-offset-1
+      = simple_form_for(resource, :as => resource_name, :url => user_unlock_path, :html => {:class => 'form-vertical' }) do |f|
+        = f.error_notification
+        = f.input :email, :autofocus => true
+        .form-actions
+          = f.button :submit, "Resend unlock instructions", :class => 'btn-primary'
+      = render "devise/shared/links"
