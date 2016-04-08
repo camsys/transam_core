@@ -5,7 +5,7 @@
     - if current_user.organizations.count > 1
       .row
         .col-sm-6
-          = f.association :organization, :required => true, :collection => Organization.where(id: @organization_list), :label_method => 'coded_name'
+          = f.association :organization, :required => true, :collection => current_user.organizations, :label_method => 'coded_name'
     .row
       .col-sm-6
         = f.input :file, :required => true, :label => 'Spreadsheet', :hint => 'Select a spreadsheet that has been downloaded from TransAM, edited, then saved.'

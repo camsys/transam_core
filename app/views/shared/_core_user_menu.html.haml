@@ -1,0 +1,29 @@
+%li.text-left
+  = link_to user_tasks_path(current_user, :state => "all")  do
+    %i.fa.fa-calendar.fa-fw
+    = " My tasks (#{current_user.assigned_tasks.count})"
+%li.text-left
+  = link_to user_messages_path(current_user) do
+    %i.fa.fa-envelope.fa-fw
+    = " My messages (#{current_user.new_messages.count})"
+%li.divider.text-left
+%li.text-left
+  = link_to organization_path(current_user.organization)  do
+    %i.fa.fa-building-o.fa-fw
+    My organization
+%li.divider.text-left
+%li.text-left
+  = link_to user_path(current_user)  do
+    %i.fa.fa-user.fa-fw
+    My settings
+- if can? :read, ActivityLog
+  %li.divider.text-left
+  %li.text-left
+    = link_to activity_logs_path  do
+      %i.fa.fa-clock-o.fa-fw
+      Activity Log
+%li.divider.text-left
+%li.text-left
+  = link_to new_issue_path  do
+    %i.fa.fa-bug.fa-fw
+    Report an issue

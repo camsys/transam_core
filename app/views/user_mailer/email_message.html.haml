@@ -1,0 +1,12 @@
+%h1
+  Message from #{@message.user.name}
+%p
+  The following message was sent to you via TransAM.
+  %br/
+%p
+  = @message.body.html_safe
+%p You can check the message by clicking on the link below or copying it into a browser.
+%p
+  %a{:href => ""}
+  = user_message_url(@message.to_user, @message)
+  '>#{@message.subject}

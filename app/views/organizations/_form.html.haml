@@ -3,7 +3,7 @@
   :as => :organization,
   :url => @org.new_record? ? organizations_path : organization_path,
   :method => @org.new_record? ? 'post' : 'put',
-  :html => {:class => 'form-vertical'},
+  :html => {:class => 'form-vertical org_form'},
   :wrapper => :vertical_form,
   :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes,
     :radio_buttons => :vertical_radio_and_checkboxes,
@@ -11,24 +11,34 @@
     :boolean => :vertical_boolean}) do |f|
     .col-md-6
       = dialog_tag('Corporate', {:icon => 'fa fa-book', :class => "header-part"}) do
-        = f.input :name
-        = f.input :short_name, :label => "Short Name"
+        = f.input :name, :required => true
+        = f.input :short_name, :required => true, :label => "Short Name"
         = f.input :external_id, :label => "External ID"
     .col-md-6
       = dialog_tag('Contact', {:icon => 'fa fa-book', :class => "header-part"}) do
-        = f.input :phone, :as => :tel
+        = f.input :phone, :required => true, :as => :tel
         = f.input :fax, :as => :tel
-        = f.input :url, :as => :url
-        = f.input :address1, :label => "Address 1"
+        = f.input :url, :required => true, :as => :url
+        = f.input :address1, :required => true, :label => "Address 1"
         = f.input :address2, :label => "Address 2"
         .row
           .col-sm-6
-            = f.input :city
+            = f.input :city, :required => true
           .col-sm-3
-            = f.input :state, :as => :select, :collection => Country['US'].states
+            = f.input :state, :required => true, :as => :select, :collection => Country['US'].states
           .col-sm-3
-            = f.input :zip
+            = f.input :zip, :required => true
 
     .col-md-12
       = f.button :submit, :class => 'btn btn-primary'
       = submit_tag 'Cancel', :name => 'cancel', :class=>"btn btn-warning"
+
+:javascript
+
+  // jquery validations
+  $('.org_form').validate({
+    ignore: [], //validate hidden fields
+    submitHandler: function(form) {
+      form.submit();
+    }
+  });

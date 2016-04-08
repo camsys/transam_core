@@ -1,14 +1,9 @@
+.row
+  .col-md-12
+    #timeline.well.well-small{:style => "height:175px;"}
+= render 'index_table'
 
-<div class="row">
-	<div class="col-md-12">
-		<div id="timeline" class="well well-small" style="height:175px;"></div>
-	</div>
-</div>
-
-<%= render 'index_table' %>
-
-<script type="text/javascript">
-
+:javascript
 	google.load("visualization", "1");
 
 	// Set callback to run when API is loaded
@@ -26,38 +21,38 @@
 
 		// Create a JSON data table
 		data = [
-			<% @events.each do |e| %>
+			- @events.each do |e|
 				{
 				'start': new Date(<%= js_date(e.event_date) %>),
 				'content': ' <%= e.asset_event_type.name %>'
 				},
-			<% end %>
-			<% unless @asset.policy_replacement_year.nil? %>
+			- end
+			- unless @asset.policy_replacement_year.nil?
 				{
 				'start': new Date(<%= js_year(@asset.policy_replacement_year) %>),
 				'content': 'End of Useful Life'
 				},
-			<% end %>
-			<% unless @asset.estimated_replacement_year.nil? %>
+			- end
+			- unless @asset.estimated_replacement_year.nil?
 				{
 				'start': new Date(<%= js_year(@asset.estimated_replacement_year) %>),
 				'content': 'Est. End of Service'
 				}
-			<% end %>
+			- end
 		];
-	
+
 		// specify options
 		options = {
 			"width" : "100%",
 			"height" : "100%",
 			"style" : "box" // optional
 		};
-	
+
 		// Instantiate our timeline object.
 		timeline = new links.Timeline(document.getElementById('timeline'));
-	
+
 		// Draw our timeline with the created data and options
 		timeline.draw(data, options);
 	};
 
-</script>
+
