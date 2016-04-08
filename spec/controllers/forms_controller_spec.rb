@@ -2,12 +2,6 @@ require 'rails_helper'
 
 RSpec.describe FormsController, :type => :controller do
 
-  class TestOrg < Organization
-    def get_policy
-      return Policy.where("`organization_id` = ?",self.id).order('created_at').last
-    end
-  end
-
   before(:each) do
     sign_in create(:admin)
   end

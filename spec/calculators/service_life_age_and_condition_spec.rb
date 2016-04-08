@@ -3,14 +3,6 @@ include FiscalYear
 
 RSpec.describe ServiceLifeAgeAndCondition, :type => :calculator do
 
-  class TestOrg < Organization
-    def get_policy
-      return Policy.where("`organization_id` = ?",self.id).order('created_at').last
-    end
-  end
-
-  class Vehicle < Asset; end
-
   before(:each) do
     @organization = create(:organization)
     @test_asset = create(:buslike_asset, :organization => @organization)

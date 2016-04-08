@@ -1,0 +1,4 @@
+- if can? :create, UserOrganizationFilter
+  = link_to new_user_user_organization_filter_path(current_user), :class => 'btn btn-default' do
+    %i.fa.fa-fw.fa-filter
+    = " Add a filter"

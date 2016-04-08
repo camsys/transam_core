@@ -16,7 +16,7 @@ class ServiceLifeCalculator < Calculator
 
     year = fiscal_year_year_on_date(asset.in_service_date) + (asset.expected_useful_life / 12)
     if asset.last_rehabilitation_date.present?
-      year += asset.policy_analyzer.extended_service_life_months.to_i / 12
+      year += asset.policy_analyzer.get_extended_service_life_months.to_i / 12
     end
     year
 

@@ -2,12 +2,6 @@ require 'rails_helper'
 
 RSpec.describe AssetEvent, :type => :model do
 
-  class TestOrg < Organization
-    def get_policy
-      return Policy.where("`organization_id` = ?",self.id).order('created_at').last
-    end
-  end
-
   let(:test_asset_event) { create(:asset_event) }
 
   # instantiate asset_event_type class for test_asset_event

@@ -2,14 +2,6 @@ require 'rails_helper'
 
 RSpec.describe StraightLineEstimationCalculator, :type => :calculator do
 
-  class TestOrg < Organization
-    def get_policy
-      return Policy.where("`organization_id` = ?",self.id).order('created_at').last
-    end
-  end
-
-  class Vehicle < Asset; end
-
   before(:all) do
     @organization = create(:organization)
     @asset_subtype = create(:asset_subtype)

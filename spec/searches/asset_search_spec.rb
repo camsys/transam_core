@@ -2,12 +2,6 @@ require 'rails_helper'
 
 RSpec.describe AssetSearcher, :type => :model do
 
-  class TestOrg < Organization
-    def get_policy
-      return Policy.where("`organization_id` = ?",self.id).order('created_at').last
-    end
-  end
-
   before(:all) do
     @test_org = create(:organization)
     test_policy = create(:policy, :organization => @test_org)

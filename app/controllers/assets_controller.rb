@@ -70,7 +70,9 @@ class AssetsController < AssetAwareController
     @spatial_filter = nil
 
     @assets = get_assets
-    if @asset_group.present?
+    if @early_disposition
+      add_breadcrumb "Early disposition proposed"
+    elsif @asset_group.present?
       asset_group = AssetGroup.find_by_object_key(@asset_group)
       add_breadcrumb asset_group
     elsif @search_text.present?
@@ -99,19 +101,9 @@ class AssetsController < AssetAwareController
       format.json {
         # check that an order param was provided otherwise use asset_tag as the default
         params[:sort] ||= 'asset_tag'
-        data = []
-        @assets.order("#{params[:sort]} #{params[:order]}").limit(params[:limit]).offset(params[:offset]).each do |asset|
-          jsn = asset.as_json
-          jsn.merge!({:tagged => (asset.tagged? current_user) ? '1' : '0'})
-          if asset.respond_to? :book_value
-            a = Asset.get_typed_asset asset
-            jsn.merge! a.depreciable_as_json
-          end
-          data << jsn
-        end
         render :json => {
           :total => @assets.count,
-          :rows => data
+          :rows =>  @assets.order("#{params[:sort]} #{params[:order]}").limit(params[:limit]).offset(params[:offset]).as_json(user: current_user, include_early_disposition: @early_disposition)
           }
         }
       format.xls
@@ -165,7 +157,7 @@ class AssetsController < AssetAwareController
     get_next_and_prev_object_keys(@asset, INDEX_KEY_LIST_VAR)
     @prev_record_path = @prev_record_key.nil? ? "#" : inventory_path(@prev_record_key)
     @next_record_path = @next_record_key.nil? ? "#" : inventory_path(@next_record_key)
-
+    
     respond_to do |format|
       format.html # show.html.erb
       format.json { render :json => @asset }
@@ -452,6 +444,11 @@ class AssetsController < AssetAwareController
       @fmt = 'html'
     end
 
+    # Check to see if search for early dispostion proposed assets only
+    if params[:early_disposition] == '1'
+      @early_disposition = true
+    end
+
     # If the asset type and subtypes are not set we default to the asset base class
     if @id_filter_list.present? or (@asset_type == 0 and @asset_subtype == 0)
       @asset_class_name = SystemConfig.instance.asset_base_class_name
@@ -488,7 +485,6 @@ class AssetsController < AssetAwareController
     # here we build the query one clause at a time based on the input params
     clauses = []
     values = []
-
     unless @org_id == 0
       clauses << ['organization_id = ?']
       values << @org_id
@@ -508,9 +504,9 @@ class AssetsController < AssetAwareController
     end
 
     if @disposition_year.blank?
-      clauses << ['disposition_date IS NULL']
+      clauses << ['assets.disposition_date IS NULL']
     else
-      clauses << ['YEAR(disposition_date) = ?']
+      clauses << ['YEAR(assets.disposition_date) = ?']
       values << @disposition_year
     end
 
@@ -552,7 +548,7 @@ class AssetsController < AssetAwareController
     end
 
     unless @asset_type == 0
-      clauses << ['asset_type_id = ?']
+      clauses << ['assets.asset_type_id = ?']
       values << [@asset_type]
     end
 
@@ -572,8 +568,14 @@ class AssetsController < AssetAwareController
       klass = asset_group.assets unless asset_group.nil?
     end
 
+    # Search for only early dispostion proposed assets if flag is on
+    if @early_disposition
+      klass = klass.joins(:early_disposition_requests).where(asset_events: {state: 'new'})
+    end
+
     # send the query
     klass.where(clauses.join(' AND '), *values)
+      .includes(:asset_type, :organization, :asset_subtype, :service_status_type, :manufacturer)
   end
 
   # stores the just-created list of asset ids in the session

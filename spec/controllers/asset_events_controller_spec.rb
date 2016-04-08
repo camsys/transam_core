@@ -2,14 +2,6 @@ require 'rails_helper'
 
 RSpec.describe AssetEventsController, :type => :controller do
 
-  class TestOrg < Organization
-    def get_policy
-      return Policy.where("`organization_id` = ?",self.id).order('created_at').last
-    end
-  end
-
-  class Vehicle < Asset; end
-
   let(:test_user) { create(:admin) }
   let(:bus) { create(:buslike_asset, :organization => subject.current_user.organization) }
   let(:test_event) { create(:asset_event) }

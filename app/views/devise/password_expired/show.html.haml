@@ -1,0 +1,33 @@
+.row
+  .col-xs-4
+    .panel.panel-default.header-part
+      .panel-heading
+        .row
+          .col-md-12
+            %h3.panel-title
+              %i.fa.fa-list
+              Instructions
+      .panel-body
+        = render 'devise/passwords/edit_instructions'
+
+  .col-xs-8
+    .panel.panel-default.header-part
+      .panel-heading
+        .row
+          .col-md-12
+            %h3.panel-title
+              %i.fa.fa-key
+              Your password has expired and must be renewed
+
+      .panel-body
+        = simple_form_for(resource, :as => resource_name, :url => [resource_name, :password_expired], :html => { :method => :put }) do |f|
+          = devise_error_messages!
+          = f.input :current_password, :as => :password
+          = f.input :password, :as => :password
+          = f.input :password_confirmation, label: "Confirm new password", :as => :password
+          = f.submit "Change my password", class: "btn btn-primary"
+
+:javascript
+  $(document).ready(function() {
+    transam.make_same_height('.header-part');
+  })

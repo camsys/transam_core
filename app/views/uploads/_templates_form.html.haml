@@ -4,10 +4,20 @@
 
     - if current_user.organizations.count > 1
       .col-sm-6
-        = f.input :organization_id, :collection => Organization.where(id: @organization_list), :label_method => 'coded_name', :required => true
+        = f.input :organization_id, :required => true, :collection => Organization.where(id: @organization_list), :label_method => 'coded_name', :required => true
     .col-sm-6
-      = f.input :file_content_type_id, :collection => FileContentType.active, :include_blank => false, :label => "Template Type"
+      = f.input :file_content_type_id, :required => true, :collection => FileContentType.active, :include_blank => false, :label => "Template Type"
     .col-sm-6
-      = f.input :asset_type_id, :collection => @asset_types, :label => "Asset Type", :include_blank => false
+      = f.input :asset_type_id, :required => true, :collection => @asset_types, :label => "Asset Type", :include_blank => false
     .col-sm-6
       = f.button :submit, 'Create template', :class => 'btn btn-primary'
+
+:javascript
+
+  // jquery validations
+  $('#new_template_proxy').validate({
+    ignore: [], //validate hidden fields
+    submitHandler: function(form) {
+      form.submit();
+    }
+  });

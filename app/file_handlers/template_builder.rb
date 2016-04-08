@@ -47,6 +47,9 @@ class TemplateBuilder
       sheet.col_style col_style[:column], style_cache[col_style[:name]]
     end
 
+    # set column widths
+    sheet.column_widths *column_widths
+
     # Perform any additional processing
     post_process(sheet)
 
@@ -86,6 +89,12 @@ class TemplateBuilder
     []
   end
 
+  # Override this to add custom column widths
+  # Only allow: nil, or numeric values
+  def column_widths
+    []
+  end
+
   # Override this to provide the worksheet name
   def worksheet_name
     'default'
@@ -100,6 +109,11 @@ class TemplateBuilder
 
   # Override this at rows to the sheet
   def add_rows(sheet)
+    # Do nothing
+  end
+
+  # Override this to process post processing
+  def post_process(sheet)
     # Do nothing
   end
 

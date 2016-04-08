@@ -1,0 +1,32 @@
+<ul class="dropdown-menu dropdown-menu-right" role="menu">
+
+	<li class="dropdown-submenu dropdown-submenu-right">
+		<%= link_to user_user_organization_filters_path(current_user), :tabindex => "-1"  do %>
+			<i class="fa fa-filter fa-fw"></i> Filters
+		<% end %>
+		<ul class="dropdown-menu" style="overflow-y:scroll;height:400px;">
+			<% UserOrganizationFilter.all.sorted.each do |filter| %>
+				<li class="">
+					<%= link_to user_user_organization_filter_use_path(current_user, filter) do %>
+						<i class="fa fa-filter fa-fw"></i>
+						<%= filter.name %>
+					<% end %>
+				</li>
+			<% end %>
+		</ul>
+	</li>
+	<li class="divider"></li>
+	<li class="text-left">
+		<%= link_to user_user_organization_filters_path(current_user) do %>
+			<i class="fa fa-list-alt fa-fw"></i>
+			Manage Filters
+		<% end %>
+	</li>
+	<li class="divider"></li>
+	<li class="text-left">
+		<%= link_to new_user_user_organization_filter_path(current_user) do %>
+			<i class="fa fa-plus fa-fw"></i>
+			New Filter
+		<% end %>
+	</li>
+</ul>

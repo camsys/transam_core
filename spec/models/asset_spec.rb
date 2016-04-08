@@ -2,12 +2,6 @@ require 'rails_helper'
 
 RSpec.describe Asset, :type => :model do
 
-  class TestOrg < Organization
-    def get_policy
-      return Policy.where("`organization_id` = ?",self.id).order('created_at').last
-    end
-  end
-
   # policy = build_stubbed(:policy)
   let(:buslike_asset) { build_stubbed(:buslike_asset) }
   let(:persisted_buslike_asset) { create(:buslike_asset) }
@@ -43,7 +37,7 @@ RSpec.describe Asset, :type => :model do
 
   describe ".event_classes" do
     it 'returns the right event classes for an asset' do
-      expect(Asset.event_classes.count).to eq(9) # should enumerate those tests...
+      expect(Asset.event_classes.count).to eq(10) # should enumerate those tests...
       # List of classes:
       # Equipment
       # Vehicle
@@ -163,8 +157,6 @@ RSpec.describe Asset, :type => :model do
       expect(buslike_asset.type_of?(Asset)).to be true
     end
   end
-
-  class Vehicle < Asset; end
 
   before(:all) do
     @organization = create(:organization)

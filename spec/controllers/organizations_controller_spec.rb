@@ -2,14 +2,6 @@ require 'rails_helper'
 
 RSpec.describe OrganizationsController, :type => :controller do
 
-  class TestOrg < Organization
-    has_many :assets,   :foreign_key => 'organization_id'
-
-    def get_policy
-      return Policy.where("`organization_id` = ?",self.id).order('created_at').last
-    end
-  end
-
   before(:each) do
     test_user = create(:admin)
     test_user.organizations << test_user.organization

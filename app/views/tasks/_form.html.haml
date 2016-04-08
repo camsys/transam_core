@@ -38,3 +38,10 @@
       form.submit();
     }
   });
+
+  $('#task_body').rules("add", {
+    required: function()
+    {
+      CKEDITOR.instances.task_body.updateElement();
+    }
+  });

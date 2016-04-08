@@ -18,16 +18,15 @@
 :javascript
   var max_file_size_mb = #{Rails.application.config.max_upload_file_size};
 
-	$(document).ready(function() {
+  $(document).ready(function() {
 
-  	transam.make_same_height('.header-part');
+    transam.make_same_height('.header-part');
 
-		// Insert a change listener to validate the file size before uploading.
-		$('#upload_file').change(function() {
-			transam.validate_file_size(this, max_file_size_mb);
-		});
-
-	});
+    // Insert a change listener to validate the file size before uploading.
+    $('#upload_file').change(function() {
+      transam.validate_file_size(this, max_file_size_mb);
+    });
+  });
 
   // jquery validations
   $('#new_upload').validate({

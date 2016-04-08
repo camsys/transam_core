@@ -16,6 +16,7 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
     @asset_types.each do |asset_type|
       assets = @organization.assets.operational.where('asset_type_id = ?', asset_type)
       assets.each do |a|
+
         asset = Asset.get_typed_asset(a)
         row_data  = []
         row_data << asset.object_key
@@ -25,8 +26,8 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
         row_data << asset.external_id
         row_data << asset.description
 
-        if a.type_of? :maintenance_vehicle and a.maintenance_updates.present?
-          event = a.maintenance_updates.last
+        if asset.respond_to? :maintenance_updates and asset.maintenance_updates.present?
+          event = asset.maintenance_updates.last
           row_data << event.maintenance_type.name
           row_data << event.current_mileage
           row_data << event.event_date
@@ -66,6 +67,9 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
   # Performing post-processing
   def post_process(sheet)
 
+    # protect sheet so you cannot update cells that are locked
+    sheet.sheet_protection
+
     # Merge Cells?
     sheet.merge_cells("A1:F1")
     sheet.merge_cells("G1:M1")
@@ -82,7 +86,7 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
       :showErrorMessage => true,
       :errorTitle => 'Wrong input',
       :error => 'Select a value from the list',
-      :errorStyle => :information,
+      :errorStyle => :stop,
       :showInputMessage => true,
       :promptTitle => 'Maintenance type',
       :prompt => 'Only values in the list are allowed'})
@@ -95,7 +99,7 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
       :showErrorMessage => true,
       :errorTitle => 'Wrong input',
       :error => 'Milage must be > 0',
-      :errorStyle => :information,
+      :errorStyle => :stop,
       :showInputMessage => true,
       :promptTitle => 'Current mileage',
       :prompt => 'Only values greater than 0'})
@@ -108,7 +112,7 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
       :allow_blank => true,
       :errorTitle => 'Wrong input',
       :error => "Date must be after #{earliest_date.strftime("%-m/%d/%Y")}",
-      :errorStyle => :information,
+      :errorStyle => :stop,
       :showInputMessage => true,
       :promptTitle => 'Maintenance Date',
       :prompt => "Date must be after #{earliest_date.strftime("%-m/%d/%Y")}"})
@@ -170,6 +174,12 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
       {:name => 'maintenance_date',         :column => 11},
       {:name => 'maintenance_notes',        :column => 12}
     ]
+  end
+
+  def column_widths
+    # set specific width to last 8 columns to avoid cut-off text
+    [nil] * 5 + 
+    [20] * 8
   end
 
   def row_types

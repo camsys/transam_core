@@ -3,7 +3,7 @@ class AssetEventsController < AssetAwareController
   add_breadcrumb "Home", :root_path
 
   # set the @asset_event variable before any actions are invoked
-  before_filter :get_asset_event,       :only => [:show, :edit, :update, :destroy]
+  before_filter :get_asset_event,       :only => [:show, :edit, :update, :destroy, :fire_workflow_event]
   before_filter :check_for_cancel,      :only => [:create, :update]
   before_filter :reformat_date_field,   :only => [:create, :update]
 
@@ -134,6 +134,7 @@ class AssetEventsController < AssetAwareController
     asset_event_type = AssetEventType.find(params[:event_type])
     unless asset_event_type.blank?
       @asset_event = @asset.build_typed_event(asset_event_type.class_name.constantize)
+      @asset_event.creator = current_user
     end
 
     add_new_show_create_breadcrumbs
@@ -146,6 +147,11 @@ class AssetEventsController < AssetAwareController
 
         # The event was removed so we need to update the asset
         fire_asset_update_event(@asset_event.asset_event_type, @asset)
+
+        # if notification enabled, then send out
+        if @asset_event.class.try(:workflow_notification_enabled?)
+          @asset_event.notify_event_by(current_user, :new)
+        end
 
         format.html { redirect_to inventory_url(@asset) }
         format.json { render :json => @asset_event, :status => :created, :location => @asset_event }
@@ -181,6 +187,41 @@ class AssetEventsController < AssetAwareController
     end
   end
 
+  def fire_workflow_event
+
+    # Check that this is a valid event name for the state machines
+    asset_event_class = @asset_event.class
+    if asset_event_class.try(:event_names) && asset_event_class.event_names.include?(params[:event])
+      event_name = params[:event]
+      if @asset_event.fire_state_event(event_name)
+        event = WorkflowEvent.new
+        event.creator = current_user
+        event.accountable = @asset_event
+        event.event_type = event_name
+        event.save
+
+        # if notification enabled, then send out
+        if asset_event_class.try(:workflow_notification_enabled?)
+          @asset_event.notify_event_by(current_user, event_name)
+        end
+
+        # special cases
+        # jump to final dispositin page if a manager approves an early disposition request via transfer
+        if asset_event_class.name == 'EarlyDispositionRequestUpdateEvent' && event_name == "approve_via_transfer"
+          is_redirected = true
+          redirect_to new_inventory_asset_event_path(@asset_event.asset, :event_type => DispositionUpdateEvent.asset_event_type.id) 
+        end
+      else
+        notify_user(:alert, "Could not #{event_name.humanize} asset event #{@asset_event}")
+      end
+    else
+      notify_user(:alert, "#{params[:event_name]} is not a valid event for a #{asset_event_class.name}")
+    end
+
+    redirect_to(:back) unless is_redirected
+
+  end
+
   #------------------------------------------------------------------------------
   #
   # Protected Methods
@@ -192,7 +233,7 @@ class AssetEventsController < AssetAwareController
   # type of event that was modified. If the job requires the asset SOGR metrics be updated
   # then the SOGR update job is queued for the asset
   def fire_asset_update_event(asset_event_type, asset, priority = 0)
-    if asset_event_type and asset
+    if asset_event_type && asset && !asset_event_type.job_name.blank?
       klass = asset_event_type.job_name.constantize
       job = klass.new(asset.object_key)
       begin
@@ -226,8 +267,10 @@ class AssetEventsController < AssetAwareController
 
   def reformat_date_field
     date_str = params[:asset_event][:event_date]
-    form_date = Date.strptime(date_str, '%m/%d/%Y')
-    params[:asset_event][:event_date] = form_date.strftime('%Y-%m-%d')
+    if date_str.present?
+      form_date = Date.strptime(date_str, '%m/%d/%Y')
+      params[:asset_event][:event_date] = form_date.strftime('%Y-%m-%d')
+    end
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.

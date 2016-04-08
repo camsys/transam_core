@@ -47,7 +47,7 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
   validates :min_used_purchase_service_life_months, :presence => true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0}
 
   # Custom validator for checking values against parent policies
-  validate :min_allowable_policy_values
+  validate :validate_min_allowable_policy_values
 
   #------------------------------------------------------------------------------
   # Scopes
@@ -150,6 +150,29 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
     end
   end
 
+  def min_allowable_policy_values(subtype=nil)
+    subtype = self.asset_subtype if subtype.nil?
+    # This method gets the min values for child orgs that are not less than the value
+    # set by the parent org
+    results = Hash.new
+
+    if policy.present? and policy.parent.present?
+      attributes_to_compare = [
+        :min_service_life_months,
+        :extended_service_life_months,
+        :min_used_purchase_service_life_months
+      ]
+
+      parent_rule = policy.parent.policy_asset_subtype_rules.find_by(asset_subtype: subtype)
+
+      if parent_rule.present?
+        attributes_to_compare.each do |attr|
+          results[attr] = parent_rule.send(attr)
+        end
+      end
+    end
+    results
+  end
   #-----------------------------------------------------------------------------
   # Protected Methods
   #-----------------------------------------------------------------------------
@@ -172,35 +195,24 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
   private
   #-----------------------------------------------------------------------------
 
-  def min_allowable_policy_values
+  def validate_min_allowable_policy_values
     # This method validates that values for child orgs are not less than the value
     # set by the parent org
     return_value = true
 
-    if policy.present? and policy.parent.present?
-      attributes_to_compare = [
-        :min_service_life_months,
-        :extended_service_life_months,
-        :min_used_purchase_service_life_months
-      ]
+    min_allowable_policy_values.each do |attr, val|
+      # Make sure we don't try to test nil values. Other validations should
+      # take care of these
+      if self.send(attr).blank?
+        next
+      end
 
-      parent_rule = policy.parent.policy_asset_subtype_rules.find_by(asset_subtype: self.asset_subtype)
-      if parent_rule.present?
-        attributes_to_compare.each do |attr|
-          # Make sure we don't try to test nil values. Other validations should
-          # take care of these
-          if self.send(attr).blank?
-            next
-          end
-
-          parent_value = parent_rule.send(attr)
-          if self.send(attr) < parent_value
-            errors.add(attr, " cannot be less than #{parent_value}, which is the minimum set by #{ policy.parent.organization.short_name}'s policy")
-            return_value = false
-          end
-        end
+      if self.send(attr) < val
+        errors.add(attr, "cannot be less than #{val}, which is the minimum set by #{ policy.parent.organization.short_name}'s policy")
+        return_value = false
       end
     end
+
     return_value
   end
 

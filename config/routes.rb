@@ -49,7 +49,11 @@ Rails.application.routes.draw do
         get 'popup'
       end
 
-    resources :asset_events
+    resources :asset_events do 
+      member do
+        get 'fire_workflow_event'
+      end
+    end
 
     resources :tasks,       :only => [:create, :update, :edit, :new, :destroy]
     resources :comments,    :only => [:create, :update, :edit, :new, :destroy]
@@ -161,6 +165,7 @@ Rails.application.routes.draw do
 
   resources :policies do
     member do
+      get     'get_subtype_minimum_value'
       get     'show_edit_form'
       get     'runner'
       post    'update_assets'
@@ -183,5 +188,12 @@ Rails.application.routes.draw do
 
   # default root for the site -- will be /org/:organization_id/dashboards
   root :to => 'dashboards#index'
+
+  resources :users, only: [] do
+  # Add user organization filters
+    resources :user_organization_filters do
+      get 'use'
+    end
+  end
 
 end

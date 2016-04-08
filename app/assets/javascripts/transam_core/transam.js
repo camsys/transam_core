@@ -254,4 +254,19 @@ var transam = new function() {
 		var len = $.trim(val).length;
 		return len;
 	};
+
+	// Popup a modal dialog to provide comments
+	this.bootbox_comment_dialog = function(title, callback) {
+	  title = title || "Enter Comments";
+	  bootbox.prompt({
+	    title: title,
+	    inputType: 'textarea',
+	    buttons: {
+	      confirm: {
+	          label: 'Submit'
+	      }
+	    },
+	    callback: callback
+	  });
+	};
 }();

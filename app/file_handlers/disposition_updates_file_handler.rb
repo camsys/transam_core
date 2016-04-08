@@ -94,7 +94,7 @@ class DispositionUpdatesFileHandler < AbstractFileHandler
           end
 
           # Make sure this row has data otherwise skip it
-          if reader.empty?(7,11)
+          if reader.empty?(6,9)
             @num_rows_skipped += 1
             add_processing_message(2, 'info', "No data for row. Skipping.")
             next
@@ -106,29 +106,31 @@ class DispositionUpdatesFileHandler < AbstractFileHandler
           #---------------------------------------------------------------------
           # Disposition
           #---------------------------------------------------------------------
-          add_processing_message(2, 'success', 'Processing Disposition Report')
-          loader = DispositionUpdateEventLoader.new
-          loader.process(asset, cells[7..17])
-          if loader.errors?
-            row_errored = true
-            loader.errors.each { |e| add_processing_message(3, 'warning', e)}
-          end
-          if loader.warnings?
-            loader.warnings.each { |e| add_processing_message(3, 'info', e)}
-          end
+          unless reader.empty?(6,6)
+            add_processing_message(2, 'success', 'Processing Disposition Report')
+            loader = DispositionUpdateEventLoader.new
+            loader.process(asset, cells[6..9])
+            if loader.errors?
+              row_errored = true
+              loader.errors.each { |e| add_processing_message(3, 'warning', e)}
+            end
+            if loader.warnings?
+              loader.warnings.each { |e| add_processing_message(3, 'info', e)}
+            end
 
-          # Check for any validation errors
-          event = loader.event
-          if event.valid?
-            event.upload = upload
-            event.save
-            add_processing_message(3, 'success', 'Disposition Update added.')
-            Delayed::Job.enqueue AssetDispositionUpdateJob.new(asset.object_key), :priority => 10
-            @num_rows_added += 1
-          else
-            Rails.logger.info "Disposition Update did not pass validation."
-            event.errors.full_messages.each { |e| add_processing_message(3, 'warning', e)}
-            @num_rows_failed += 1
+            # Check for any validation errors
+            event = loader.event
+            if event.valid?
+              event.upload = upload
+              event.save
+              add_processing_message(3, 'success', 'Disposition Update added.')
+              Delayed::Job.enqueue AssetDispositionUpdateJob.new(asset.object_key), :priority => 10
+              @num_rows_added +=  1
+            else
+              Rails.logger.info "Disposition Update did not pass validation."
+              event.errors.full_messages.each { |e| add_processing_message(3, 'warning', e)}
+              @num_rows_failed += 1
+            end
           end
         end
       end

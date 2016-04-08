@@ -1,5 +1,5 @@
 %li{:class => "dropdown #{get_nav_link_class('assets')}"}
-  = link_to "#", :class => "dropdown-toggle", :data => {"toggle" => "dropdown"} do
+  = link_to "#", :class => "dropdown-toggle", :data => {"toggle" => "dropdown"}, :title => 'Inventory' do
     %i.fa.fa-bus.fa-2x
     %b.caret
   %ul.dropdown-menu.multi-level{:role => "menu"}
@@ -25,11 +25,11 @@
             = link_to inventory_index_path(:manufacturer_id => manufacturer) do
               %i.fa.fa-star.fa-fw
               = manufacturer.name
-      %li.divider
-      %li.text-left
-        = link_to manufacturers_path do
-          %i.fa.fa-star.fa-fw
-          All Manufacturers
+        %li.divider
+        %li.text-left
+          = link_to manufacturers_path do
+            %i.fa.fa-star.fa-fw
+            All Manufacturers
     %li.divider
     %li.text-left.dropdown-submenu
       = link_to asset_groups_path do
@@ -46,6 +46,13 @@
           = link_to asset_groups_path do
             %i.fa.fa-tags.fa-fw
             Manage Groups
+    %li.divider
+    - if can?(:manage, EarlyDispositionRequestUpdateEvent)
+      %li.text-left
+        - event_type = EarlyDispositionRequestUpdateEvent.asset_event_type
+        = link_to inventory_index_path(:early_disposition => 1) do
+          %i.fa.fa-fw{:class => event_type.display_icon_name}
+          Early Disposition Proposed
     %li.divider
     %li.text-left
       = link_to new_search_path(:search_type => SearchesController::ASSET_SEARCH_TYPE) do

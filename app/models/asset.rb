@@ -86,6 +86,9 @@ class Asset < ActiveRecord::Base
   # each asset has zero or more disposition updates
   has_many   :disposition_updates, -> {where :asset_event_type_id => DispositionUpdateEvent.asset_event_type.id }, :class_name => "DispositionUpdateEvent"
 
+  # each asset has zero or more early disposition requests
+  has_many   :early_disposition_requests, -> {where :asset_event_type_id => EarlyDispositionRequestUpdateEvent.asset_event_type.id }, :class_name => "EarlyDispositionRequestUpdateEvent"
+
   # each asset has zero or more location updates.
   has_many   :location_updates, -> {where :asset_event_type_id => LocationUpdateEvent.asset_event_type.id }, :class_name => "LocationUpdateEvent"
 
@@ -170,6 +173,8 @@ class Asset < ActiveRecord::Base
   scope :operational, -> { where('assets.disposition_date IS NULL') }
   # Returns a list of asset that operational and are marked as being in service
   scope :in_service,  -> { where('assets.disposition_date IS NULL AND assets.service_status_type_id = 1')}
+  # Returns a list of asset that in early replacement
+  scope :early_replacement, -> { where('policy_replacement_year is not NULL and scheduled_replacement_year is not NULL and scheduled_replacement_year < policy_replacement_year') }
   #-----------------------------------------------------------------------------
   # Lists. These lists are used by derived classes to make up lists of attributes
   # that can be used for operations like full text search etc. Each derived class
@@ -194,6 +199,7 @@ class Asset < ActiveRecord::Base
     'estimated_replacement_year',
     'estimated_replacement_cost',
     'scheduled_replacement_year',
+    'early_replacement_reason',
     'scheduled_rehabilitation_year',
     'scheduled_disposition_year',
     'replacement_reason_type_id',
@@ -365,7 +371,7 @@ class Asset < ActiveRecord::Base
 
   # Render the asset as a JSON object -- overrides the default json encoding
   def as_json(options={})
-    {
+    json = {
       :id => self.id,
       :object_key => self.object_key,
       :asset_tag => self.asset_tag,
@@ -402,9 +408,18 @@ class Asset < ActiveRecord::Base
       :tasks => self.tasks.active.count,
       :comments => self.comments.count,
       :documents => self.documents.count,
-      :photos => self.images.count
+      :photos => self.images.count,
 
+      :tagged => self.tagged?(options[:user]) ? 1 : 0
     }
+
+    json[:early_disposition_notes] = self.early_disposition_notes if options[:include_early_disposition]
+
+    if self.respond_to? :book_value
+      a = Asset.get_typed_asset self
+      json.merge! a.depreciable_as_json
+    end
+    json
   end
 
   # Override to_s to return a reasonable default
@@ -455,13 +470,48 @@ class Asset < ActiveRecord::Base
 
   # Returns true if the asset can be disposed in the next planning cycle,
   # false otherwise
-  def disposable?
+  def disposable?( include_early_disposal_request_approved_via_transfer = false)
     return false if disposed?
     # otherwise check the policy year and see if it is less than or equal to
     # the current planning year
-    return false if policy_replacement_year.blank?
+    return false if estimated_replacement_year.blank?
 
-    (policy_replacement_year <= current_planning_year_year)
+    if estimated_replacement_year <= current_planning_year_year
+      # After ESL disposal
+      true
+    else
+      # Prior ESL disposal request
+      last_request = early_disposition_requests.last 
+      if include_early_disposal_request_approved_via_transfer
+        last_request.try(:is_approved?)
+      else
+        last_request.try(:is_unconditional_approved?)
+      end 
+    end
+  end
+
+  # Returns true if the asset can be requested for early disposal
+  def eligible_for_early_disposition_request?
+    return false if disposed?
+    # otherwise check the policy year and see if it is less than or equal to
+    # the current planning year
+    return false if estimated_replacement_year.blank?
+
+    if estimated_replacement_year <= current_planning_year_year
+      # Eligible for after ESL disposal
+      false
+    else
+      # Prior ESL disposal request
+      last_request = early_disposition_requests.last 
+      # No previous request or was rejected
+      !last_request || last_request.try(:is_rejected?)
+    end
+  end
+
+  # Return early disposition reason 
+  # (this method is needed to show the reason in asset table)
+  def early_disposition_notes
+    early_disposition_requests.active.last.try(:comments) || ""
   end
 
   # Returns true if an asset is scheduled for disposition
@@ -918,6 +968,23 @@ class Asset < ActiveRecord::Base
 
   end
 
+  # if scheduled replacement year is earlier than the policy year
+  def is_early_replacement?
+    policy_replacement_year && scheduled_replacement_year && scheduled_replacement_year < policy_replacement_year
+  end
+
+  def update_early_replacement_reason(reason = nil)
+    if is_early_replacement?
+      self.early_replacement_reason = reason
+    else
+      self.early_replacement_reason = nil
+    end
+  end
+
+  def formatted_early_replacement_reason
+    early_replacement_reason.blank? ? '(Reason not provided)' : early_replacement_reason
+  end
+
   # Creates a duplicate that has all asset-specific attributes nilled
   def copy(cleanse = true)
     a = dup
@@ -985,6 +1052,7 @@ class Asset < ActiveRecord::Base
     # is in backlog and update the scheduled replacement year to the first planning
     # year
     if self.changes.include? "policy_replacement_year"
+      check_early_replacement = true
       Rails.logger.debug "New policy_replacement_year = #{self.policy_replacement_year}"
 
       if self.policy_replacement_year < current_planning_year_year
@@ -1001,7 +1069,9 @@ class Asset < ActiveRecord::Base
       self.estimated_replacement_cost = calculator_instance.calculate_on_date(self, start_date)
       Rails.logger.debug "estimated_replacement_cost = #{self.estimated_replacement_cost}"
     end
+
     if self.changes.include? "scheduled_replacement_year"
+      check_early_replacement = true
       Rails.logger.debug "New scheduled_replacement_year = #{self.scheduled_replacement_year}"
       # Get the calculator class from the policy analyzer
       class_name = this_policy_analyzer.get_replacement_cost_calculation_type.class_name
@@ -1010,6 +1080,9 @@ class Asset < ActiveRecord::Base
       Rails.logger.debug "Start Date = #{start_date}"
       self.scheduled_replacement_cost = calculator_instance.calculate_on_date(self, start_date)
     end
+
+    self.early_replacement_reason = nil if check_early_replacement && !is_early_replacement?
+
     true
   end
 

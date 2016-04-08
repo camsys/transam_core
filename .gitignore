@@ -10,7 +10,6 @@
 /coverage/
 /log/*
 /public/system/*
-spec/dummy/db/schema.rb
 spec/dummy/log/*
 spec/dummy/tmp/*
 spec/log/*
@@ -24,3 +23,5 @@ pickle-email-*.html
 rerun.txt
 .DS_Store
 *.idea
+
+TAGS

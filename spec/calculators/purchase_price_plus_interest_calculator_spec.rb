@@ -2,20 +2,6 @@ require 'rails_helper'
 
 RSpec.describe PurchasePricePlusInterestCalculator, :type => :calculator do
 
-  class TestOrg < Organization
-    has_many :assets,   :foreign_key => 'organization_id'
-
-    def get_policy
-      return Policy.where("`organization_id` = ?",self.id).order('created_at').last
-    end
-  end
-
-  class Vehicle < Asset
-    def cost
-      purchase_cost
-    end
-  end
-
   before(:all) do
     @organization = create(:organization)
     @asset_subtype = create(:asset_subtype)

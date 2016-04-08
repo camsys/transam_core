@@ -255,7 +255,7 @@ module TransamFormatHelper
   end
 
   # format for a field
-  def format_field(label, value, popover_text=nil)
+  def format_field(label, value, popover_text=nil, popover_iconcls=nil, popover_label=nil)
 
     html = "<div class='row control-group'>"
     html << "<div class='col-xs-5 display-label'>"
@@ -264,7 +264,9 @@ module TransamFormatHelper
     html << "<div class='col-xs-7 display-value'>"
     html << value.to_s unless value.nil?
     unless popover_text.nil?
-      html << "<i class='fa fa-info-circle info-icon' data-toggle='popover' data-trigger='hover' title='#{label}' data-placement='right' data-content='#{popover_text}'></i>"
+      popover_iconcls = 'fa fa-info-circle info-icon' unless popover_iconcls
+      popover_label = label unless popover_label
+      html << "<i class='#{popover_iconcls} info-icon' data-toggle='popover' data-trigger='hover' title='#{popover_label}' data-placement='right' data-content='#{popover_text}'></i>"
     end
     html << "</div>"
     html << "</div>"

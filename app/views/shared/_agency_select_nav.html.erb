@@ -1,0 +1,93 @@
+<li class="dropdown <%= get_nav_link_class('organizations') %>">
+	<%= link_to organizations_path, :class => "dropdown-toggle", :data => {"toggle" => "dropdown"} do %>
+		<i class="fa fa-users fa-2x"></i>
+		<b class="caret"></b>
+	<% end %>
+
+	<ul class="dropdown-menu multi-level" role="menu">
+
+		<li class="text-left dropdown-submenu">
+			<%= link_to organizations_path, :tabindex => "-1"  do %>
+				<i class="fa fa-list fa-fw"></i> My Filters
+			<% end %>
+			<ul class="dropdown-menu">
+				<li class="text-left">
+					<%= link_to "My Filter 1", organizations_path(:my_filter_id => 0) %>
+				</li>
+				<li class="text-left">
+					<%= link_to "My Filter 2", organizations_path(:my_filter_id => 0) %>
+				</li>
+				<li class="text-left">
+					<%= link_to "My Filter 3", organizations_path(:my_filter_id => 0) %>
+				</li>
+			</ul>
+		</li>
+		<li class="divider"></li>
+		<li class="text-left dropdown-submenu">
+			<%= link_to organizations_path, :tabindex => "-1"  do %>
+				<i class="fa fa-filter fa-fw"></i> Agency
+			<% end %>
+			<ul class="dropdown-menu">
+				<% Grantee.all.each do |d| %>
+					<li class="text-left">
+						<%= link_to d.coded_name, organizations_path(:organization_id => d) %>
+					</li>
+				<% end %>
+			</ul>
+		</li>
+
+		<li class="divider"></li>
+		<li class="text-left">
+			<%= link_to organizations_path, :tabindex => "-1"  do %>
+				<i class="fa fa-filter fa-fw"></i> Rural Agencies
+			<% end %>
+		</li>
+		<li class="text-left">
+			<%= link_to organizations_path, :tabindex => "-1"  do %>
+				<i class="fa fa-filter fa-fw"></i> Urban Agencies
+			<% end %>
+		</li>
+		<li class="text-left dropdown-submenu">
+			<%= link_to organizations_path, :tabindex => "-1"  do %>
+				<i class="fa fa-filter fa-fw"></i> UZAs
+			<% end %>
+			<ul class="dropdown-menu">
+				<% District.where('district_type_id = ?', 3).each do |d| %>
+					<li class="text-left">
+						<%= link_to d.name, organizations_path(:district_id => d) %>
+					</li>
+				<% end %>
+			</ul>
+		</li>
+		<li class="text-left dropdown-submenu">
+			<%= link_to organizations_path, :tabindex => "-1"  do %>
+				<i class="fa fa-filter fa-fw"></i> MPO/RPO
+			<% end %>
+			<ul class="dropdown-menu">
+				<% District.where('district_type_id = ?', 7).each do |d| %>
+					<li class="text-left">
+						<%= link_to d.name, organizations_path(:district_id => d) %>
+					</li>
+				<% end %>
+			</ul>
+		</li>
+		<li class="text-left dropdown-submenu">
+			<%= link_to organizations_path, :tabindex => "-1"  do %>
+				<i class="fa fa-filter fa-fw"></i> County
+			<% end %>
+			<ul class="dropdown-menu">
+				<% District.where('district_type_id = ?', 4).each do |d| %>
+					<li class="text-left">
+						<%= link_to d.name, organizations_path(:district_id => d) %>
+					</li>
+				<% end %>
+			</ul>
+		</li>
+		<li class="divider"></li>
+		<li class="text-left">
+			<%= link_to organizations_path, :tabindex => "-1"  do %>
+				<i class="fa fa-filter fa-fw"></i> Custom
+			<% end %>
+		</li>
+	</ul>
+</li>
