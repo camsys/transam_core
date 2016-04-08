@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160331192758) do
+ActiveRecord::Schema.define(version: 20160404194415) do
 
   create_table "activities", force: true do |t|
     t.string   "object_key",           limit: 12
@@ -106,10 +106,12 @@ ActiveRecord::Schema.define(version: 20160331192758) do
     t.string   "state",                          limit: 32
     t.string   "document",                       limit: 128
     t.string   "original_filename",              limit: 128
+    t.integer  "created_by_id"
   end
 
   add_index "asset_events", ["asset_event_type_id"], name: "asset_events_idx3", using: :btree
   add_index "asset_events", ["asset_id"], name: "asset_events_idx2", using: :btree
+  add_index "asset_events", ["created_by_id"], name: "asset_events_creator_idx", using: :btree
   add_index "asset_events", ["event_date"], name: "asset_events_idx4", using: :btree
   add_index "asset_events", ["object_key"], name: "asset_events_idx1", using: :btree
   add_index "asset_events", ["upload_id"], name: "asset_events_idx5", using: :btree
