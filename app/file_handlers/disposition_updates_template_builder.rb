@@ -16,6 +16,8 @@ class DispositionUpdatesTemplateBuilder < TemplateBuilder
     @asset_types.each do |asset_type|
       assets = @organization.assets.operational.where('asset_type_id = ?', asset_type).order(:asset_type_id, :asset_subtype_id, :asset_tag)
       assets.each do |asset|
+        next unless asset.disposable? 
+        
         row_data  = []
         row_data << asset.object_key
         row_data << asset.asset_type.name
