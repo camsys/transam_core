@@ -32,6 +32,7 @@ class UpdatedTemplateBuilder
     # Add headers
     category_row = []
     header_row = []
+    default_row = []
     idx = 0
     @header_category_row.each do |key, fields|
       category_row << key
@@ -40,6 +41,7 @@ class UpdatedTemplateBuilder
           category_row << ''
         end
         header_row << i
+        default_row << @default_values[i]
 
         unless @data_validations[i].empty?
           column_letter = convert_index_to_letter(idx)
@@ -54,17 +56,15 @@ class UpdatedTemplateBuilder
     #merge header category row and add column header styles
     start = 0
     @header_category_row.each do |key, fields|
-      puts start
       fields.each_with_index do |val, index|
         sheet.col_style start+index, @column_styles[val]
       end
       sheet.merge_cells("#{convert_index_to_letter(start)}1:#{convert_index_to_letter(start+fields.length-1)}1")
       start += fields.length
     end
-    puts start
 
-    # add default row
-    sheet.add_row Array.new(idx){ 'SET DEFAULT' }, :style => wb.styles.add_style({:bg_color => 'EEA2AD'})
+    # add default row after to override column styles
+    sheet.add_row default_row, :style => wb.styles.add_style({:bg_color => 'EEA2AD'})
 
     # add the rows
     add_rows(sheet)
@@ -89,6 +89,7 @@ class UpdatedTemplateBuilder
     @header_category_row = {}
     @column_styles = {}
     @data_validations = {}
+    @default_values = {}
   end
 
   # Override this to provide lookups
@@ -117,7 +118,7 @@ class UpdatedTemplateBuilder
     ######### END MODIFY THIS SECTION ##############
   end
 
-  def add_column(sheet, name, name_category, col_style, data_validation={})
+  def add_column(sheet, name, name_category, col_style, data_validation={}, default_val=nil)
     # add column to header row
     if @header_category_row[name_category].blank?
       @header_category_row[name_category] = [name]
@@ -137,6 +138,9 @@ class UpdatedTemplateBuilder
 
     # add data validation
     @data_validations[name] = data_validation
+
+    # add default
+    @default_values[name] = default_val.present? ? default_val : 'SET DEFAULT'
 
   end
 
