@@ -51,6 +51,9 @@ class UpdatedTemplateBuilder
     sheet.add_row category_row
     sheet.add_row header_row
 
+    # add the rows; must be added before to get column styles
+    add_rows(sheet)
+
     #merge header category row and add column header styles
     start = 0
     @header_category_row.each do |key, fields|
@@ -60,9 +63,6 @@ class UpdatedTemplateBuilder
       sheet.merge_cells("#{convert_index_to_letter(start)}1:#{convert_index_to_letter(start+fields.length-1)}1")
       start += fields.length
     end
-
-    # add the rows
-    add_rows(sheet)
 
     # set column widths
     sheet.column_widths *column_widths
