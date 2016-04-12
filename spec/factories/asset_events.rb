@@ -27,6 +27,16 @@ FactoryGirl.define do
     event_date Date.today
   end
 
+  factory :early_disposition_request_update_event do
+    basic_event_traits
+    asset_event_type { AssetEventType.find_by(:class_name => 'EarlyDispositionRequestUpdateEvent') }
+    event_date Date.today
+    document { Rack::Test::UploadedFile.new(File.join(TransamCore::Engine.root, 'spec', 'support', 'test_files', 'test_doc.pdf')) }
+    original_filename "test_doc.pdf"
+    comments "Early disposition comments"
+    association :creator, :factory => :normal_user
+  end
+
   factory :service_status_update_event do
     basic_event_traits
     asset_event_type { AssetEventType.find_by(:class_name => 'ServiceStatusUpdateEvent') }

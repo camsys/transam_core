@@ -79,4 +79,34 @@ RSpec.describe AssetEventsController, :type => :controller do
 
     expect(AssetEvent.find_by(:object_key => test_event.object_key)).to be nil
   end
+
+  describe "workflow events" do
+    let(:early_disp_event) { create(:early_disposition_request_update_event) }
+
+    before(:each) do 
+      request.env["HTTP_REFERER"] = root_path
+    end
+
+    it 'fire workflow event' do
+      expect{
+        get :fire_workflow_event, :inventory_id => bus.object_key, :id => early_disp_event.object_key, :event => 'approve'
+        }.to change {WorkflowEvent.count}.by(1)
+    end
+
+    it 'refresh current page' do 
+      get :fire_workflow_event, :inventory_id => bus.object_key, :id => early_disp_event.object_key, :event => 'approve'
+
+      expect(response).to redirect_to(root_path)
+    end
+
+    it 'redirect to final disposition page if an early disposition event was approved via transfer ' do 
+      bus.asset_events << early_disp_event
+      bus.save!
+
+      get :fire_workflow_event, :inventory_id => bus.object_key, :id => early_disp_event.object_key, :event => 'approve_via_transfer'
+
+      expect(response).to redirect_to(new_inventory_asset_event_path(bus, :event_type => DispositionUpdateEvent.asset_event_type.id))
+    end
+
+  end
 end
