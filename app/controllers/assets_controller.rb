@@ -235,11 +235,6 @@ class AssetsController < AssetAwareController
       @asset.organization = @organization
     end
 
-    # default service life
-    policy_analyzer = @asset.policy_analyzer
-    @asset.expected_useful_life = policy_analyzer.get_min_service_life_months
-    @asset.expected_useful_miles = policy_analyzer.get_min_service_life_miles
-
     respond_to do |format|
       format.html # new.html.haml this had been an erb and is now an haml the change should just be caught
       format.json { render :json => @asset }
