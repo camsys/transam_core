@@ -32,7 +32,6 @@ class UpdatedTemplateBuilder
     # Add headers
     category_row = []
     header_row = []
-    default_row = []
     idx = 0
     @header_category_row.each do |key, fields|
       category_row << key
@@ -41,7 +40,6 @@ class UpdatedTemplateBuilder
           category_row << ''
         end
         header_row << i
-        default_row << @default_values[i]
 
         unless @data_validations[i].empty?
           column_letter = convert_index_to_letter(idx)
@@ -62,9 +60,6 @@ class UpdatedTemplateBuilder
       sheet.merge_cells("#{convert_index_to_letter(start)}1:#{convert_index_to_letter(start+fields.length-1)}1")
       start += fields.length
     end
-
-    # add default row after to override column styles
-    sheet.add_row default_row, :style => wb.styles.add_style({:bg_color => 'EEA2AD'})
 
     # add the rows
     add_rows(sheet)
@@ -89,7 +84,6 @@ class UpdatedTemplateBuilder
     @header_category_row = {}
     @column_styles = {}
     @data_validations = {}
-    @default_values = {}
   end
 
   # Override this to provide lookups
@@ -118,7 +112,7 @@ class UpdatedTemplateBuilder
     ######### END MODIFY THIS SECTION ##############
   end
 
-  def add_column(sheet, name, name_category, col_style, data_validation={}, default_val=nil)
+  def add_column(sheet, name, name_category, col_style, data_validation={}, *other_args)
     # add column to header row
     if @header_category_row[name_category].blank?
       @header_category_row[name_category] = [name]
@@ -139,8 +133,13 @@ class UpdatedTemplateBuilder
     # add data validation
     @data_validations[name] = data_validation
 
-    # add default
-    @default_values[name] = default_val.present? ? default_val : 'SET DEFAULT'
+    # set any other variables
+    unless other_args.empty?
+      (0..other_args.length/2-1).each do |arg_idx|
+        instance_variable_set("@#{other_args[arg_idx*2]}", instance_variable_get("@#{other_args[arg_idx*2]}").merge({name => other_args[arg_idx*2+1]}))
+
+      end
+    end
 
   end
 
