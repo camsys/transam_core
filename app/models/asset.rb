@@ -1182,7 +1182,9 @@ class Asset < ActiveRecord::Base
     # Get the policy analyzer
     policy_analyzer = typed_asset.policy_analyzer
 
-    typed_asset.expected_useful_life = policy_analyzer.get_min_service_life_months
+    typed_asset.purchased_new ?
+        typed_asset.expected_useful_life = policy_analyzer.get_min_service_life_months :
+        typed_asset.expected_useful_life = policy_analyzer.min_used_purchase_service_life_months
   end
 
 
