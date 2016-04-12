@@ -20,11 +20,11 @@
       = link_to sessions_users_path do
         %i.fa.fa-users.fa-fw
         Online Users
-    %li.divider
-    %li.text-left
-      = link_to activities_path do
-        %i.fa.fa-at.fa-fw
-        Activities
+    -# %li.divider
+    -# %li.text-left
+    -#   = link_to activities_path do
+    -#     %i.fa.fa-at.fa-fw
+    -#     Activities
 
     - # Load module specific tab content if they exist
     - SystemConfig.transam_module_names.each do |mod|
