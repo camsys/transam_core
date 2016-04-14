@@ -481,12 +481,12 @@ class Asset < ActiveRecord::Base
       true
     else
       # Prior ESL disposal request
-      last_request = early_disposition_requests.last 
+      last_request = early_disposition_requests.last
       if include_early_disposal_request_approved_via_transfer
         last_request.try(:is_approved?)
       else
         last_request.try(:is_unconditional_approved?)
-      end 
+      end
     end
   end
 
@@ -502,13 +502,13 @@ class Asset < ActiveRecord::Base
       false
     else
       # Prior ESL disposal request
-      last_request = early_disposition_requests.last 
+      last_request = early_disposition_requests.last
       # No previous request or was rejected
       !last_request || last_request.try(:is_rejected?)
     end
   end
 
-  # Return early disposition reason 
+  # Return early disposition reason
   # (this method is needed to show the reason in asset table)
   def early_disposition_notes
     early_disposition_requests.active.last.try(:comments) || ""
@@ -703,9 +703,7 @@ class Asset < ActiveRecord::Base
         end
       end
       # save changes to this asset
-      if asset.changed?
-        asset.save(:validate => false)
-      end
+      asset.save(:validate => false)
     end
   end
 
@@ -724,9 +722,7 @@ class Asset < ActiveRecord::Base
         self.location_comments = event.comments
       end
       # save changes to this asset
-      if self.changed?
-        save
-      end
+      save
     end
   end
 
@@ -745,9 +741,7 @@ class Asset < ActiveRecord::Base
         asset.scheduled_rehabilitation_year = nil
       end
       # save changes to this asset
-      if asset.changed?
-        asset.save(:validate => false)
-      end
+      asset.save(:validate => false)
     end
   end
 
@@ -769,9 +763,7 @@ class Asset < ActiveRecord::Base
         asset.service_status_type = event.service_status_type
       end
       # save changes to this asset
-      if asset.changed?
-        asset.save(:validate => false)
-      end
+      asset.save(:validate => false)
     end
   end
 
@@ -793,9 +785,7 @@ class Asset < ActiveRecord::Base
         self.reported_condition_type = ConditionType.from_rating(event.assessed_rating)
       end
       # save changes to this asset
-      if self.changed?
-        save(:validate => false)
-      end
+      save(:validate => false)
     end
 
   end
@@ -812,9 +802,7 @@ class Asset < ActiveRecord::Base
         self.replacement_reason_type_id = event.replacement_reason_type_id unless event.replacement_reason_type_id.nil?
       end
       # save changes to this asset
-      if self.changed?
-        save(:validate => false)
-      end
+      save(:validate => false)
     end
   end
 
@@ -831,9 +819,7 @@ class Asset < ActiveRecord::Base
         self.scheduled_rehabilitation_year = event.rebuild_year
       end
       # save changes to this asset
-      if self.changed?
-        save(:validate => false)
-      end
+      save(:validate => false)
     end
   end
 
@@ -850,9 +836,7 @@ class Asset < ActiveRecord::Base
         self.scheduled_disposition_year = event.disposition_year
       end
       # save changes to this asset
-      if self.changed?
-        save(:validate => false)
-      end
+      save(:validate => false)
     end
   end
 
@@ -868,9 +852,7 @@ class Asset < ActiveRecord::Base
     end
     self.estimated_replacement_cost = calculate_estimated_replacement_cost(start_date)
     # save changes to this asset
-    if self.changed?
-      save(:validate => false)
-    end
+    save(:validate => false)
 
   end
 
@@ -890,9 +872,7 @@ class Asset < ActiveRecord::Base
     self.scheduled_replacement_cost = calculate_estimated_replacement_cost(start_date)
 
     # save changes to this asset
-    if self.changed?
-      save(:validate => false)
-    end
+    save(:validate => false)
 
   end
 
@@ -1173,9 +1153,7 @@ class Asset < ActiveRecord::Base
     end
 
     # save changes to this asset
-    if asset.changed?
-      asset.save(:validate => false)
-    end
+    asset.save(:validate => false)
   end
 
   def update_service_life typed_asset

@@ -53,9 +53,7 @@ module MaintainableAsset
         end
       end
       # save changes to this asset
-      if self.changed?
-        save(:validate => false)
-      end
+      save(:validate => false)
     end
 
   end
