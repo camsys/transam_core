@@ -1,6 +1,7 @@
 = dialog_tag('Select Template and Asset Type', {:icon => 'fa fa-download', :class => "header-part"}) do
   = simple_form_for(:template_proxy,
-    :url => create_template_uploads_url,                                                                                                                                                  :html => {:id => 'template_form', :class => 'form-vertical' },                                                                                                                        :wrapper => :vertical_form,                                                                                                                                                           :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}) do |f|
+    :url => create_template_uploads_url,
+    :html => {:id => 'template_form', :class => 'form-vertical' },                                                                                                                        :wrapper => :vertical_form,                                                                                                                                                           :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}) do |f|
 
     - if current_user.organizations.count > 1
       .col-sm-6
@@ -8,11 +9,41 @@
     .col-sm-6
       = f.input :file_content_type_id, :required => true, :collection => FileContentType.active, :include_blank => false, :label => "Template Type"
     .col-sm-6
-      = f.input :asset_type_id, :required => true, :collection => @asset_types, :label => "Asset Type", :include_blank => false
+      = f.input :asset_type_id, :required => true, :collection => @asset_types.map{|type| [type[:name], type[:id]]}, :label => "Asset Type", :include_blank => false
     .col-sm-6
       = f.button :submit, 'Create template', :class => 'btn btn-primary'
 
 :javascript
+  var org_id = 0;
+  var asset_types = JSON.parse('#{@asset_types.to_json}');
+
+  //console.log(asset_types);
+
+  // Detect changes in the org selected
+  $('#template_proxy_organization_id').on('change', function(event) {
+    var id = $(this).val();
+
+    if (id != org_id) {
+      // store the selected org
+      org_id = id;
+
+      // Reset the asset type
+      $('#template_proxy_asset_type_id').val('');
+
+      // Set asset types of org only
+      var options = '<option value=""></option>';
+      for (var j = 0; j < asset_types.length; j++){
+        type = asset_types[j]
+
+        if ($.inArray( parseInt(id), type.orgs ) >= 0) {
+          options += '<option value="' + type.id + '">' + type.name + '</option>';
+        }
+
+        //console.log(options);
+        $('#template_proxy_asset_type_id').html(options);
+      }
+    }
+  });
 
   // jquery validations
   $('#new_template_proxy').validate({
