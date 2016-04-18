@@ -30,6 +30,13 @@ namespace :transam do
     end
   end
 
+  desc "Updates the SOGR of every asset"
+  task update_sogr: :environment do
+    Asset.find_each do |a|
+      a.update_sogr
+    end
+  end
+
   desc "Updates all updateable attributes.  Can accept a sql fragment to restrict"
   task :update_all, [:sql_frag] => [:environment] do |t, args|
     t_start = Time.now
