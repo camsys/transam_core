@@ -275,13 +275,6 @@ class AssetsController < AssetAwareController
         policy = @asset.policy
         policy.find_or_create_asset_type_rule @asset.asset_type
 
-        if @asset.respond_to? :fuel_type
-          policy.find_or_create_asset_subtype_rule @asset.asset_subtype, @asset.fuel_type
-        else
-          policy.find_or_create_asset_subtype_rule @asset.asset_subtype, nil
-        end
-
-
         # If the asset was successfully saved, schedule update the condition and disposition asynchronously
         Delayed::Job.enqueue AssetUpdateJob.new(@asset.object_key), :priority => 0
 

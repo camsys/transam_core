@@ -33,6 +33,8 @@ class Asset < ActiveRecord::Base
 
   before_update :clear_cache
 
+  after_create :check_policy_rule
+
   #-----------------------------------------------------------------------------
   # Associations common to all asset types
   #-----------------------------------------------------------------------------
@@ -332,6 +334,15 @@ class Asset < ActiveRecord::Base
   # Instance Methods
   #
   #-----------------------------------------------------------------------------
+
+  def check_policy_rule
+    typed_asset = Asset.get_typed_asset self
+    if (typed_asset.respond_to? :fuel_type)
+      policy.find_or_create_asset_subtype_rule asset_type, fuel_type
+    else
+      policy.find_or_create_asset_subtype_rule asset_subtype
+    end
+  end
 
   # Returns true if the user has tagged this asset
   def tagged? user
