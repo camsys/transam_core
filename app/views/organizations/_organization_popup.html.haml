@@ -3,7 +3,7 @@
     .caption
       %i.fa.fa-building-o.fa-3x.pull-left
       %h4= organization.name
-    = content_tag address do
+    = content_tag :address do
       = organization.address1
       %br
       = "#{organization.city}, #{organization.state} #{organization.zip}"
