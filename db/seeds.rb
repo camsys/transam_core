@@ -69,6 +69,13 @@ condition_estimation_types = [
   {:active => 1, :name => 'Straight Line',  :class_name => 'StraightLineEstimationCalculator',  :description => 'Asset condition is estimated using a straight-line approximation.'}
 ]
 
+file_content_types = [
+  {:active => 1, :name => 'Inventory Updates',    :class_name => 'InventoryUpdatesFileHandler',  :builder_name => "InventoryUpdatesTemplateBuilder",    :description => 'Worksheet records updated condition, status, and mileage for existing inventory.'},
+  {:active => 1, :name => 'Maintenance Updates',  :class_name => 'MaintenanceUpdatesFileHandler',:builder_name => "MaintenanceUpdatesTemplateBuilder",  :description => 'Worksheet records latest maintenance updates for assets'},
+  {:active => 1, :name => 'Disposition Updates',  :class_name => 'DispositionUpdatesFileHandler',       :builder_name => "DispositionUpdatesTemplateBuilder", :description => 'Worksheet contains final disposition updates for existing inventory.'},
+  {:active => 1, :name => 'New Inventory',    :class_name => 'NewInventoryFileHandler',   :builder_name => "NewInventoryTemplateBuilder",  :description => 'Worksheet records updated condition, status, and mileage for existing inventory.'}
+]
+
 license_types = [
   {:active => 1, :name => 'Full',              :asset_manager => 1, :web_services => 1, :description => 'Access to application and web services.'},
   {:active => 1, :name => 'Application Only',  :asset_manager => 1, :web_services => 0, :description => 'Access to application only.'},
@@ -147,7 +154,7 @@ frequency_types = [
 
 
 lookup_tables = %w{asset_event_types condition_types disposition_types cost_calculation_types license_types priority_types
-  file_status_types report_types service_status_types
+  file_content_types file_status_types report_types service_status_types
   service_life_calculation_types condition_estimation_types
   issue_types web_browser_types replacement_reason_types roles notice_types frequency_types
   }

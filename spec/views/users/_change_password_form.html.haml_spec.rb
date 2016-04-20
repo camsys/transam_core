@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe "users/_change_password_form.html.erb", :type => :view do
+describe "users/_change_password_form.html.haml", :type => :view do
   it 'fields' do
     assign(:user, create(:normal_user))
     render

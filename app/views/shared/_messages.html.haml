@@ -1,2 +1,13 @@
-- flash.each do |type, message|
-	= content_tag :div, message, :id => "message", :class => "alert fade in #{bootstrap_class_for(type)}" unless message.blank?
+#messages
+  - flash.each do |type, msg|
+    - next if type.to_s =~ /^local_/ || msg.blank?
+    - alert_class = case type.to_sym
+    - when :success, :info, :warning, :danger
+      - "alert-#{type}"
+    - when :notice
+      - "alert-success"
+    - else
+      - "alert-danger"
+    %div{:class => "alert #{alert_class} fade in #{bootstrap_class_for(type)}"}
+      %a.close{"data-dismiss" => "alert"} ×
+      = content_tag :div, msg, :id => "flash_#{type}"
