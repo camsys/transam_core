@@ -338,7 +338,7 @@ class Asset < ActiveRecord::Base
   def check_policy_rule
     typed_asset = Asset.get_typed_asset self
     if (typed_asset.respond_to? :fuel_type)
-      policy.find_or_create_asset_subtype_rule asset_type, typed_asset.fuel_type
+      policy.find_or_create_asset_subtype_rule asset_type, fuel_type
     else
       policy.find_or_create_asset_subtype_rule asset_subtype
     end
