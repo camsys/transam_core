@@ -5,23 +5,30 @@
 # Contains business logic associated with creating new users
 #
 #------------------------------------------------------------------------------
+
 class NewUserService
 
-  # Override this method to invoke business logic for creating new users.
-  def build(params)
+  def build(form_params)
 
-    Rails.logger.debug "In Core NewUserService"
-    user = User.new(params)
-    Rails.logger.debug user.inspect
-    user
+    user = User.new(form_params)
+    # Set up a default password for thewm
+    user.password = SecureRandom.base64(64)
+    # Activate the account immediately
+    user.active = true
+    # Override opt-in for email notifications
+    user.notify_via_email = true
 
+    user.organizations << user.organization
+    return user
   end
 
-  # Override this method to invoke any business logic for post processing after
-  # a user has been created and saved. For example, sending welcome emails,
-  # configuring accounts, etc.
+  # Steps to take if the user was valid
   def post_process(user)
-    # No actions
-  end
+    # Make sure the user has at least a user role
+    unless user.has_role? :user
+      user.add_role :user
+    end
 
+    UserMailer.send_email_on_user_creation(user).deliver
+  end
 end
