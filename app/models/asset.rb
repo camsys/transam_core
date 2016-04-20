@@ -424,7 +424,10 @@ class Asset < ActiveRecord::Base
       :tagged => self.tagged?(options[:user]) ? 1 : 0
     }
 
-    json[:early_disposition_notes] = self.early_disposition_notes if options[:include_early_disposition]
+    if options[:include_early_disposition]
+      json[:early_disposition_notes] = self.early_disposition_notes 
+      json[:early_disposition_event_object_key] = self.early_disposition_requests.last.try(:object_key) 
+    end
 
     if self.respond_to? :book_value
       a = Asset.get_typed_asset self
