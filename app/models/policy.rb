@@ -99,11 +99,14 @@ class Policy < ActiveRecord::Base
 
   # Returns true of the policy has a rule for the asset subtype. false otherwise`
   def asset_subtype_rule? asset_subtype
-    asset_subtype_rule(asset_subtype).present?
+    asset_subtype_rule(asset_subtype, nil).present?
   end
   # Returns the policy subtype rule for the asset subtype. Nil if it does not exist
-  def asset_subtype_rule asset_subtype
-    policy_asset_subtype_rules.find_by(:asset_subtype_id => asset_subtype.id)
+  def asset_subtype_rule asset_subtype, fuel_type=nil
+    fuel_type.nil? ?
+      policy_asset_subtype_rules.find_by(:asset_subtype_id => asset_subtype.id) :
+      policy_asset_subtype_rules.find_by(:asset_subtype_id => asset_subtype.id, :fuel_type => fuel_type.id)
+
   end
 
   # Returns the policy asset type rule for a given asset. If the asset type rule
@@ -118,6 +121,9 @@ class Policy < ActiveRecord::Base
     if rule.blank?
       # Check the parent
       if parent.present?
+
+
+
         parent_rule = parent.policy_asset_type_rules.find_by(:asset_type_id => asset_type.id)
         # Chrck to see of we got a rule
         if parent_rule.present?
@@ -140,17 +146,31 @@ class Policy < ActiveRecord::Base
   #
   # Raises a runtime error if the policy is a top level policy (no parent) or the
   # parent does not contain the rule
-  def find_or_create_asset_subtype_rule asset_subtype
+  def find_or_create_asset_subtype_rule asset_subtype, fuel_type=nil
 
-    rule = asset_subtype_rule asset_subtype
+    rule = asset_subtype_rule asset_subtype, fuel_type
     if rule.blank?
       # Check the parent
       if parent.present?
-        parent_rule = parent.policy_asset_subtype_rules.find_by(:asset_subtype_id => asset_subtype.id, :default_rule => true)
+
+        if fuel_type.present?
+          parent_rule = parent.policy_asset_subtype_rules.find_by(:asset_subtype_id => asset_subtype.id, :fuel_type => fuel_type.id)
+        end
+
+        if parent_rule.nil?
+          parent_rule = parent.policy_asset_subtype_rules.find_by(:asset_subtype_id => asset_subtype.id, :default_rule => true)
+        end
+
         # Check to see of we got a rule
         if parent_rule.present?
           rule = parent_rule.dup
           rule.policy = self
+
+          #If we picked up the default subtype rule then make sure we set the fuel rule here so there is on for this asset now and in the future.
+          if fuel_type.present? && rule.fuel_type_id != fuel_type.id
+            rule.fuel_type_id = fuel_type.id
+          end
+
           rule.save
         else
           raise "Rule for asset subtype #{asset_subtype} was not found in the parent policy."

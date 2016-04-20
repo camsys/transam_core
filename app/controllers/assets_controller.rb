@@ -157,7 +157,7 @@ class AssetsController < AssetAwareController
     get_next_and_prev_object_keys(@asset, INDEX_KEY_LIST_VAR)
     @prev_record_path = @prev_record_key.nil? ? "#" : inventory_path(@prev_record_key)
     @next_record_path = @next_record_key.nil? ? "#" : inventory_path(@next_record_key)
-    
+
     respond_to do |format|
       format.html # show.html.erb
       format.json { render :json => @asset }
@@ -274,7 +274,6 @@ class AssetsController < AssetAwareController
         # Make sure the policy has rules for this asset
         policy = @asset.policy
         policy.find_or_create_asset_type_rule @asset.asset_type
-        policy.find_or_create_asset_subtype_rule @asset.asset_subtype
 
         # If the asset was successfully saved, schedule update the condition and disposition asynchronously
         Delayed::Job.enqueue AssetUpdateJob.new(@asset.object_key), :priority => 0
