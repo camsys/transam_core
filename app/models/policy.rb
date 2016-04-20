@@ -99,7 +99,7 @@ class Policy < ActiveRecord::Base
 
   # Returns true of the policy has a rule for the asset subtype. false otherwise`
   def asset_subtype_rule? asset_subtype
-    asset_subtype_rule(asset_subtype, nil).present?
+    asset_subtype_rule(asset_subtype).present?
   end
   # Returns the policy subtype rule for the asset subtype. Nil if it does not exist
   def asset_subtype_rule asset_subtype, fuel_type=nil
@@ -121,9 +121,6 @@ class Policy < ActiveRecord::Base
     if rule.blank?
       # Check the parent
       if parent.present?
-
-
-
         parent_rule = parent.policy_asset_type_rules.find_by(:asset_type_id => asset_type.id)
         # Chrck to see of we got a rule
         if parent_rule.present?
