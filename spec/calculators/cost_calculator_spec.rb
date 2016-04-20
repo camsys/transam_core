@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe CostCalculator, :type => :calculator do
-  let(:policy) { build_stubbed(:policy) }
+  let(:policy) { build_stubbed(:policy, nil, nil) }
   let(:test_calculator) { CostCalculator.new }
   let(:test_asset) { build_stubbed(:buslike_asset) }
 

@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe ScheduleReplacementUpdateEvent, :type => :model do
-
   let(:test_event) { create(:schedule_replacement_update_event) }
 
   describe 'associations' do
@@ -43,7 +42,6 @@ RSpec.describe ScheduleReplacementUpdateEvent, :type => :model do
   it '.set_defaults' do
     test_event = ScheduleReplacementUpdateEvent.new
     year = Date.today.month > 6 ? Date.today.year + 1 : Date.today.year
-
     expect(test_event.replacement_year).to eq(year)
     expect(test_event.asset_event_type).to eq(AssetEventType.find_by_class_name('ScheduleReplacementUpdateEvent'))
     expect(test_event.replacement_reason_type).to eq(ReplacementReasonType.find_by(:name => "Reached policy EUL"))

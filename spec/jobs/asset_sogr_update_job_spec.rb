@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe AssetSogrUpdateJob, :type => :job do
   
-  let(:test_asset) { create(:equipment_asset) }
+  let(:test_asset) { create(:equipment_asset_basic_org) }
 
   it '.run' do
     expect(test_asset.policy_replacement_year).to be nil

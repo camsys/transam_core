@@ -59,6 +59,23 @@ class TestOrg < Organization
   end
 end
 
+#declaring a concrete organization for tests that doesn't ever pull from the database
+class StubOrg < Organization
+  has_many :assets,   :foreign_key => 'organization_id'
+
+  def get_policy
+    return StubPolicy.new
+  end
+end
+
+class StubPolicy < Policy
+
+  def find_or_create_asset_subtype_rule a, b=nil
+
+  end
+
+end
+
 # declare concrete Asset class for tests
 class Vehicle < Asset
   has_many :mileage_updates

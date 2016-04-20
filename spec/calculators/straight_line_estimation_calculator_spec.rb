@@ -3,9 +3,14 @@ require 'rails_helper'
 RSpec.describe StraightLineEstimationCalculator, :type => :calculator do
 
   before(:all) do
-    @organization = create(:organization)
     @asset_subtype = create(:asset_subtype)
-    @policy = create(:policy, :organization => @organization)
+    @parent_organization = create(:organization_basic)
+    @organization = create(:organization_basic)
+
+    @parent_policy = create(:policy, :organization => @parent_organization, :parent => nil)
+    @policy_asset_subtype_rule = create(:policy_asset_subtype_rule, :asset_subtype => @asset_subtype, :policy => @parent_policy)
+    @policy = create(:policy, :organization => @organization, :parent => @parent_policy)
+    @policy.policy_asset_subtype_rules << @policy_asset_subtype_rule
   end
 
   before(:each) do

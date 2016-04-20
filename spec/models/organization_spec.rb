@@ -123,27 +123,40 @@ RSpec.describe Organization, :type => :model do
   end
 
   it '.asset_type_counts' do
-    test_asset_type = create(:asset_type)
+    asset_subtype = create(:asset_subtype)
+    parent_organization = create(:organization_basic)
+    organization = create(:organization_basic)
 
-    expect(test_org.asset_type_counts).to eq({})
+    expect(organization.asset_type_counts).to eq({})
 
-    create(:buslike_asset, :asset_type => test_asset_type, :organization => test_org)
-    create(:buslike_asset, :asset_type => test_asset_type, :organization => test_org, :disposition_date => Date.today)
+    parent_policy = create(:policy, :organization => parent_organization, :parent => nil)
+    policy_asset_subtype_rule = create(:policy_asset_subtype_rule, :asset_subtype => asset_subtype, :policy => parent_policy)
+    policy = create(:policy, :organization => organization, :parent => parent_policy)
+    policy.policy_asset_subtype_rules << policy_asset_subtype_rule
 
-    expect(test_org.asset_type_counts).to eq({test_asset_type.id=>1})
-    expect(test_org.asset_type_counts false).to eq({test_asset_type.id=>2})
+    create(:buslike_asset_basic_org, :organization => organization, :asset_type => asset_subtype.asset_type, :asset_subtype => asset_subtype)
+    create(:buslike_asset_basic_org, :organization => organization, :asset_type => asset_subtype.asset_type, :asset_subtype => asset_subtype, :disposition_date => Date.today)
+
+    expect(organization.asset_type_counts).to eq({asset_subtype.asset_type.id=>1})
+    expect(organization.asset_type_counts false).to eq({asset_subtype.asset_type.id=>2})
   end
   it '.asset_subtype_counts' do
-    test_asset_type = create(:asset_type)
-    test_asset_subtype = create(:asset_subtype, :asset_type => test_asset_type)
+    asset_subtype = create(:asset_subtype)
+    parent_organization = create(:organization_basic)
+    organization = create(:organization_basic)
 
-    expect(test_org.asset_subtype_counts test_asset_type).to eq({})
+    expect(organization.asset_type_counts).to eq({})
 
-    create(:buslike_asset, :asset_type => test_asset_type, :asset_subtype => test_asset_subtype, :organization => test_org)
-    create(:buslike_asset, :asset_type => test_asset_type, :asset_subtype => test_asset_subtype, :organization => test_org, :disposition_date => Date.today)
+    parent_policy = create(:policy, :organization => parent_organization, :parent => nil)
+    policy_asset_subtype_rule = create(:policy_asset_subtype_rule, :asset_subtype => asset_subtype, :policy => parent_policy)
+    policy = create(:policy, :organization => organization, :parent => parent_policy)
+    policy.policy_asset_subtype_rules << policy_asset_subtype_rule
 
-    expect(test_org.asset_subtype_counts(test_asset_type.id)).to eq({test_asset_subtype.id=>1})
-    expect(test_org.asset_subtype_counts(test_asset_type.id, false)).to eq({test_asset_subtype.id=>2})
+    create(:buslike_asset_basic_org, :organization => organization, :asset_type => asset_subtype.asset_type, :asset_subtype => asset_subtype)
+    create(:buslike_asset_basic_org, :organization => organization, :asset_type => asset_subtype.asset_type, :asset_subtype => asset_subtype, :disposition_date => Date.today)
+
+    expect(organization.asset_subtype_counts(asset_subtype.id)).to eq({asset_subtype.id=>1})
+    expect(organization.asset_subtype_counts(asset_subtype.id, false)).to eq({asset_subtype.id=>2})
   end
 
   it '.coded_name' do

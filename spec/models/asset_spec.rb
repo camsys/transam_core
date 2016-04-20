@@ -5,7 +5,7 @@ RSpec.describe Asset, :type => :model do
   # policy = build_stubbed(:policy)
   let(:buslike_asset) { build_stubbed(:buslike_asset) }
   let(:persisted_buslike_asset) { create(:buslike_asset) }
-
+  let(:persisted_buslike_asset_with_policies) { create(:buslike_asset_basic_org) }
 
   #------------------------------------------------------------------------------
   #
@@ -338,14 +338,25 @@ RSpec.describe Asset, :type => :model do
   end
 
   it '#policy returns the correct policy' do
-    create(:policy, :organization => persisted_buslike_asset.organization)
-    expect(persisted_buslike_asset.policy.name).to eql("#{persisted_buslike_asset.organization.short_name} Policy")
-    expect(persisted_buslike_asset.policy.year).to eql(Date.today.year)
-    expect(persisted_buslike_asset.policy.service_life_calculation_type_id).to eql(1)
-    expect(persisted_buslike_asset.policy.cost_calculation_type_id).to eql(1)
-    expect(persisted_buslike_asset.policy.condition_estimation_type_id).to eql(1)
-    expect(persisted_buslike_asset.policy.condition_threshold).to eql(2.5)
-    expect(persisted_buslike_asset.policy.interest_rate).to eql(0.05)
+
+    asset_subtype = create(:asset_subtype)
+    parent_organization = create(:organization_basic)
+    organization = create(:organization_basic)
+
+    parent_policy = create(:policy, :organization => parent_organization, :parent => nil)
+    policy_asset_subtype_rule = create(:policy_asset_subtype_rule, :asset_subtype => asset_subtype, :policy => parent_policy)
+    policy = create(:policy, :organization => organization, :parent => parent_policy)
+    policy.policy_asset_subtype_rules << policy_asset_subtype_rule
+
+    test_asset = create(:buslike_asset_basic_org, :organization => organization, :asset_type => asset_subtype.asset_type, :asset_subtype => asset_subtype)
+
+    expect(test_asset.policy.name).to eql("#{test_asset.organization.short_name} Policy")
+    expect(test_asset.policy.year).to eql(Date.today.year)
+    expect(test_asset.policy.service_life_calculation_type_id).to eql(1)
+    expect(test_asset.policy.cost_calculation_type_id).to eql(1)
+    expect(test_asset.policy.condition_estimation_type_id).to eql(1)
+    expect(test_asset.policy.condition_threshold).to eql(2.5)
+    expect(test_asset.policy.interest_rate).to eql(0.05)
   end
 
 end
