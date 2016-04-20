@@ -11,8 +11,8 @@ class NewUserService
   def build(form_params)
 
     user = User.new(form_params)
-    # Set up a default password for thewm
-    user.password = SecureRandom.base64(64)
+    # Set up a default password for them
+    user.password = SecureRandom.base64(8)
     # Activate the account immediately
     user.active = true
     # Override opt-in for email notifications
