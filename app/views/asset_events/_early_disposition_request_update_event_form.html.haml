@@ -5,7 +5,7 @@
       This asset has not reached its ESL. Further permission is required to dispose this asset.
 
   = f.input :comments, :label => "Explanation", :input_html => { :rows => 6 }, :required => true, :placeholder => "Please explain why..."
-  = f.input :document, :label => 'Attachment', :required => true
+  = f.input :document, :label => 'Attachment', :required => false
   .form-group
     = f.button :submit, "Request early disposition", :class => 'btn btn-primary'
 

@@ -21,7 +21,7 @@ class EarlyDispositionRequestUpdateEvent < AssetEvent
 
   # Validations
   validates :comments,            :presence => true
-  validates :document,            :presence => true, :file_size => { :maximum => MAX_UPLOAD_FILE_SIZE.megabytes.to_i }
+  validates :document,            :file_size => { :maximum => MAX_UPLOAD_FILE_SIZE.megabytes.to_i }
 
   #------------------------------------------------------------------------------
   # Scopes

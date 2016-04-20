@@ -5,10 +5,6 @@ RSpec.describe EarlyDispositionRequestUpdateEvent, :type => :model do
   let(:test_event) { create(:buslike_asset).early_disposition_requests.create!(attributes_for(:early_disposition_request_update_event)) }
 
   describe 'validations' do
-    it 'must have a document' do
-      new_event = build_stubbed(:early_disposition_request_update_event, :document => nil)
-      expect(new_event.valid?).to be false
-    end
     it 'must have comments' do
       test_event.comments = nil
       expect(test_event.valid?).to be false
