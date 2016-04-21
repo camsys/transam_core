@@ -99,7 +99,9 @@ RSpec.describe EarlyDispositionRequestUpdateEvent, :type => :model do
     end
 
     describe "sending notifications" do 
-      before(:all) do 
+      before(:all) do
+        User.destroy_all
+
         @new_event = create(:early_disposition_request_update_event)
         @new_event.creator = create(:normal_user)
         @new_event.save
