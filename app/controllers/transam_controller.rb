@@ -43,13 +43,17 @@ class TransamController < ApplicationController
   #-----------------------------------------------------------------------------
   # Centralized message sender that can be overriden by an implementation
   #-----------------------------------------------------------------------------
-  def notify_user(type, message)
+  def notify_user(type, message, now = false)
     # if there is a notify_user method in ApplicationController use it otherwise
     # use this one
     if defined?(super)
       super
     else
-      flash[type] = message
+      if now
+        flash.now[type] = message
+      else
+        flash[type] = message
+      end
     end
   end
 
