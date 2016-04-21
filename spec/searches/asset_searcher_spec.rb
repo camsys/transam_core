@@ -3,14 +3,14 @@ require 'rails_helper'
 RSpec.describe AssetSearcher, :type => :model do
 
   before(:all) do
-    @test_org = create(:organization)
+    @test_org = create(:organization_basic)
     test_policy = create(:policy, :organization => @test_org)
     @type_rule = create(:policy_asset_type_rule, :policy => test_policy)
     @subtype_rule = create(:policy_asset_subtype_rule, :policy => test_policy)
   end
 
-  let(:asset) { create(:equipment_asset, :organization => @test_org, :asset_type => @type_rule.asset_type, :asset_subtype => @subtype_rule.asset_subtype) }
-  let(:lesser) { create(:equipment_asset, :organization => @test_org, :asset_type => @type_rule.asset_type, :asset_subtype => @subtype_rule.asset_subtype) }
+  let(:asset) { create(:equipment_asset_basic_org, :organization => @test_org, :asset_type => @type_rule.asset_type, :asset_subtype => @subtype_rule.asset_subtype) }
+  let(:lesser) { create(:equipment_asset_basic_org, :organization => @test_org, :asset_type => @type_rule.asset_type, :asset_subtype => @subtype_rule.asset_subtype) }
   let(:all_assets) { Asset.where('organization_id = ?', @test_org.id) }
   let(:searcher) { AssetSearcher.new(:organization_id => @test_org.id) }
 
