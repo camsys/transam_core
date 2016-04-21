@@ -6,6 +6,7 @@ RSpec.describe IssuesController, :type => :controller do
   let(:test_issue) { create(:issue) }
 
   before(:each) do
+    Organization.destroy_all
     User.destroy_all
     test_user.organizations << test_user.organization
     test_user.save!

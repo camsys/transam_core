@@ -145,7 +145,8 @@ RSpec.describe UsersController, :type => :controller do
   end
 
   it 'POST create' do
-    post :create, {"user" => {:password => SecureRandom.base64(64), "first_name"=>"Lydia", "last_name"=>"Chang", "email"=>"lchang@camsys.com", "title"=>"Software Engineer", "external_id"=>"", "phone"=>"617-354-1067", "phone_ext"=>"", "timezone"=>"Eastern Time (US & Canada)", "address1"=>"400 CambridgePark Drive", "address2"=>"", "city"=>"Cambridge", "state"=>"MA", "zip"=>"02140", "organization_id"=>"1", "role_ids"=>Role.find_by(:name => 'manager').id.to_s, :privilege_ids => []}}
+    test_org = create(:organization)
+    post :create, {"user" => {:password => SecureRandom.base64(64), "first_name"=>"Lydia", "last_name"=>"Chang", "email"=>"lchang@camsys.com", "title"=>"Software Engineer", "external_id"=>"", "phone"=>"617-354-1067", "phone_ext"=>"", "timezone"=>"Eastern Time (US & Canada)", "address1"=>"400 CambridgePark Drive", "address2"=>"", "city"=>"Cambridge", "state"=>"MA", "zip"=>"02140", "organization_id"=>test_org.id, "role_ids"=>Role.find_by(:name => 'manager').id.to_s, :privilege_ids => []}}
 
     expect(assigns(:user).first_name).to eq('Lydia')
     expect(assigns(:user).last_name).to eq('Chang')
@@ -157,7 +158,7 @@ RSpec.describe UsersController, :type => :controller do
     expect(assigns(:user).city).to eq('Cambridge')
     expect(assigns(:user).state).to eq('MA')
     expect(assigns(:user).zip).to eq('02140')
-    expect(assigns(:user).organization).to eq(Organization.first)
+    expect(assigns(:user).organization).to eq(test_org)
     expect(assigns(:user).has_role? :manager).to be true
   end
 
