@@ -6,7 +6,7 @@
     - ReportType.active.joins(:reports).where(reports: {show_in_nav: true}).uniq.each do | rt |
       - if rt.reports.count > 0
         - num = 0
-        - reports = rt.reports.where(show_in_nav: true)
+        - reports = rt.reports.where(show_in_nav: true, active: true)
         - reports.each{|x| num += (current_user.is_in_roles? x.role_names) ? 1 : 0}
         - if num > 0
           %li.text-left.dropdown-submenu
