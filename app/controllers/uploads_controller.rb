@@ -147,8 +147,8 @@ class UploadsController < OrganizationAwareController
     #@organization.asset_type_counts.each{|x| @asset_types << AssetType.find(x[0])}
 
     AssetType.all.each do |type|
-      klass = type.class_name.constantize
-      @asset_types << {id: type.id, name: type.to_s, orgs: @organization_list.select{|o| klass.where(organization_id: o).count > 0}}
+      assets = Asset.where(asset_type: type)
+      @asset_types << {id: type.id, name: type.to_s, orgs: @organization_list.select{|o| assets.where(organization_id: o).count > 0}}
     end
 
   end
