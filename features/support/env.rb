@@ -65,3 +65,20 @@ Cucumber::Rails::World.use_transactional_fixtures = false
 # The :transaction strategy is faster, but might give you threading problems.
 # See https://github.com/cucumber/cucumber-rails/blob/master/features/choose_javascript_database_strategy.feature
 Cucumber::Rails::Database.javascript_strategy = :truncation
+
+#declaring a concrete organization for tests that doesn't ever pull from the database
+class StubOrg < Organization
+  has_many :assets,   :foreign_key => 'organization_id'
+
+  def get_policy
+    return StubPolicy.new
+  end
+end
+
+class StubPolicy < Policy
+
+  def find_or_create_asset_subtype_rule a, b=nil
+
+  end
+
+end
