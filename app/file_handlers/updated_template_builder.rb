@@ -19,11 +19,11 @@ class UpdatedTemplateBuilder
     p = Axlsx::Package.new
     wb = p.workbook
 
-    # Add the worksheet
-    sheet = wb.add_worksheet(:name => worksheet_name)
-
     # Call back to setup any implementation specific options needed
     setup_workbook(wb)
+
+    # Add the worksheet
+    sheet = wb.add_worksheet(:name => worksheet_name)
 
     setup_lookup_sheet(wb)
 
