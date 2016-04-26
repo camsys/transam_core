@@ -12,6 +12,7 @@ class UpdatedTemplateBuilder
   attr_accessor :organization
   attr_accessor :asset_types
   attr_accessor :assets
+  attr_accessor :organization_list
 
   def build
 
