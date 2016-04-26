@@ -10,12 +10,12 @@ Background:
     And I am at the [equipment] detail page
 
 Scenario: Updating the condition event
-  When I press the link "Update the condition"
+  When I press the link "Condition"
     And I create an [condition_update_event] with {:assessed_rating => "4.0"}
   Then I will see "Good"
 
 Scenario: Updating the service status
-  When I press the link "Update the service status"
+  When I press the link "Service status"
     And I create an [service_status_update_event] with {:service_status_type_id => "In Service"}
   Then I will see "In Service"
 
