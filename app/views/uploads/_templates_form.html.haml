@@ -5,7 +5,7 @@
 
     - if current_user.organizations.count > 1
       .col-sm-6
-        = f.input :organization_id, :required => true, :collection => Organization.where(id: @organization_list), :label_method => 'coded_name', :required => true
+        = f.input :organization_id, :required => true, :collection => Organization.where(id: @organization_list), :include_blank => false, :label_method => 'coded_name', :required => true
     .col-sm-6
       = f.input :file_content_type_id, :required => true, :collection => FileContentType.active, :include_blank => false, :label => "Template Type"
     .col-sm-6
@@ -20,6 +20,8 @@
 
   //console.log(asset_types);
 
+  update_asset_types($('#template_proxy_organization_id').val(), $('#template_proxy_file_content_type_id').val());
+
   // Detect changes in the org selected
   $('#template_proxy_organization_id').on('change', function(event) {
     var id = $(this).val();
@@ -28,48 +30,32 @@
       // store the selected org
       org_id = id;
 
-      update_asset_types(org_id);
+      update_asset_types(org_id, $('#template_proxy_file_content_type_id').val());
     }
   });
 
   // Detect changes if new inventory selected
   $('#template_proxy_file_content_type_id').on('change', function(event) {
     var id = $(this).val();
-    var new_inventory_id = parseInt('#{FileContentType.find_by(name: "New Inventory").id}');
 
-    if (parseInt(id) == new_inventory_id) {
+    if (id != file_content_type_id) {
+      file_content_type_id = id;
 
-      // Set asset types of org only
-      var options = '<option value=""></option>';
-      for (var j = 0; j < asset_types.length; j++){
-        type = asset_types[j]
-        if (parseInt($('#template_proxy_asset_type_id').val()) == parseInt(type.id)) {
-          options += '<option value="' + type.id + '" selected>' + type.name + '</option>';
-        } else {
-          options += '<option value="' + type.id + '">' + type.name + '</option>';
-        }
-      }
+      update_asset_types($('#template_proxy_organization_id').val(), id);
 
-      //console.log(options);
-      $('#template_proxy_asset_type_id').html(options);
-    } else if ((file_content_type_id == new_inventory_id)) { // if change from new inventory to other bulk updates
-      update_asset_types($('#template_proxy_organization_id').val());
     }
-    // if change from bulk update to other bulk update: do nothing
-
-    // store the selected file content type for next time
-    file_content_type_id = id;
   });
 
   // set asset types selection to those that org owns
-  function update_asset_types(org_id) {
+  function update_asset_types(org_id, file_content_type_id) {
 
-    // Set asset types of org only
-    var options = '<option value=""></option>';
+    var new_inventory_id = parseInt('#{FileContentType.find_by(name: "New Inventory").id}');
+
+    var options = '';
     for (var j = 0; j < asset_types.length; j++){
       type = asset_types[j]
 
-      if ($.inArray( parseInt(org_id), type.orgs ) >= 0) {
+      if ((parseInt(file_content_type_id) == new_inventory_id) || ($.inArray( parseInt(org_id), type.orgs ) >= 0)) {
         if (parseInt($('#template_proxy_asset_type_id').val()) == parseInt(type.id)) {
           options += '<option value="' + type.id + '" selected>' + type.name + '</option>';
         } else {
