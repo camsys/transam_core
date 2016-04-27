@@ -14,13 +14,16 @@ module TransamFormatHelper
   # available via the options hash
   def format_as_message_link(user, options = {})
     html = ''
-    subject = options[:subject].present? ? options[:subject] : ''
-    body = options[:body].present? ? options[:body] : ''
-    message_url = new_user_message_path(current_user, :to_user => user, :subject => subject, :body => body)
-    html = "<a href='#{message_url}'>#{user.email}"
-    html << '&nbsp;'
-    html << "<i class = 'fa fa-envelope'></i>"
-    html << "</a>"
+    unless user.blank?
+      options[:to_user] = user
+      options[:subject] = options[:subject] || ''
+      options[:body] = options[:body] || ''
+      message_url = new_user_message_path(current_user, options)
+      html = "<a href='#{message_url}'>#{user.email}"
+      html << '&nbsp;'
+      html << "<i class = 'fa fa-envelope'></i>"
+      html << "</a>"
+    end
     html.html_safe
   end
 
@@ -29,14 +32,15 @@ module TransamFormatHelper
   # messaging options
   def format_as_user_link(user, options = {})
     html = ''
-    from_user = options[:from_user]
-    subject = options[:subject].present? ? options[:subject] : ''
-    body = options[:body].present? ? options[:body] : ''
     unless user.blank?
+      options[:to_user] = user
+      options[:subject] = options[:subject] || ''
+      options[:body] = options[:body] || ''
       user_url = user_path(user)
       html = "<a href='#{user_url}'>#{user}</a>"
+      from_user = options[:from_user]
       if from_user.present?
-        message_url = new_user_message_path(from_user, :to_user => user, :subject => subject, :body => body)
+        message_url = new_user_message_path(from_user, options)
         html << '&nbsp;'
         html << "<span class = 'message-link'>"
         html << "<a href='#{message_url}'>"
