@@ -2,11 +2,12 @@ require 'rails_helper'
 
 describe "users/_form.html.haml", :type => :view do
   it 'fields' do
-    allow(controller).to receive(:current_user).and_return(create(:manager))
+    test_user = create(:manager)
+    allow(controller).to receive(:current_user).and_return(test_user)
     assign(:user, User.new)
     render
 
-    expect(rendered).to have_xpath('//input[@id="user_organization_id"]')
+    expect(rendered).to have_field('user_organization_id')
     expect(rendered).to have_field('user_first_name')
     expect(rendered).to have_field('user_last_name')
     expect(rendered).to have_field('user_email')
