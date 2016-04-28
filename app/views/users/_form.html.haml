@@ -3,7 +3,7 @@
   assignable_privileges = UserRoleService.new.assignable_privileges(current_user)
 
 = simple_form_for(@user,
-  :html => {:class => 'form-vertical'},
+  :html => {:class => 'form-vertical user_form'},
   :wrapper => :vertical_form,
   :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes,
   :radio_buttons => :vertical_radio_and_checkboxes,
@@ -14,6 +14,8 @@
     %legend User Details
     - if current_user.organizations.count > 1
       = f.association :organization, :collection => current_user.organizations, :label_method => 'coded_name'
+    - elsif current_user.has_role?(:manager)
+      = f.association :organization, :collection => Organization.where(active: true).order(:short_name), :label_method => 'coded_name'
     - else
       = f.association :organization, :placeholder => current_user.organization.id, :as => :hidden
 
@@ -86,12 +88,14 @@
     }
   });
 
-  $.validator.addMethod(
-      "regex",
-      function(value, element, regexp) {
-        var re = new RegExp(regexp);
-      return this.optional(element) || re.test(value);
-    },
-    "Must be a valid zip code."
-  );
-  $("input[name='user[zip]']").rules("add", { regex: /^\d{5}([\-]?\d{4})?$/ })
+  $("#user_zip").rules("add", {
+    zipcodeUS: true
+  })
+  $("#user_email").rules("add", {
+    required: true,
+    email: true
+  })
+  $("#user_phone").rules("add", {
+    required: true,
+    phoneUS: true
+  })
