@@ -1,15 +1,16 @@
-%li{:class => "dropdown #{get_nav_link_class('forms')}"}
-  = link_to forms_path, :class => "dropdown-toggle", :data => {"toggle" => "dropdown"}, :title => 'Report Forms' do
-    %i.fa.fa-file-text-o.fa-2x
-    %b.caret
-  %ul.dropdown-menu.multi-level{:role => "menu"}
-    %li.text-left
-      = link_to forms_path  do
-        %i.fa.fa-file-text-o.fa-fw
-        All
-    %li.divider
-    - Form.all.each do | frm |
-      %li
-        = link_to form_path(frm)  do
+- if Form.count > 0
+  %li{:class => "dropdown #{get_nav_link_class('forms')}"}
+    = link_to forms_path, :class => "dropdown-toggle", :data => {"toggle" => "dropdown"}, :title => 'Report Forms' do
+      %i.fa.fa-file-text-o.fa-2x
+      %b.caret
+    %ul.dropdown-menu.multi-level{:role => "menu"}
+      %li.text-left
+        = link_to forms_path  do
           %i.fa.fa-file-text-o.fa-fw
-          = frm.name.pluralize(2)
+          All
+      %li.divider
+      - Form.all.each do | frm |
+        %li
+          = link_to form_path(frm)  do
+            %i.fa.fa-file-text-o.fa-fw
+            = frm.name.pluralize(2)
