@@ -1,7 +1,8 @@
 = dialog_tag('Select Template and Asset Type', {:icon => 'fa fa-download', :class => "header-part"}) do
   = simple_form_for(:template_proxy,
     :url => create_template_uploads_url,
-    :html => {:id => 'template_form', :class => 'form-vertical' },                                                                                                                        :wrapper => :vertical_form,                                                                                                                                                           :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}) do |f|
+    :html => {:id => 'template_form', :class => 'form-vertical' },
+    :wrapper => :vertical_form,                                                                                                                                                           :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}) do |f|
 
     - if current_user.organizations.count > 1
       .col-sm-6
@@ -51,6 +52,10 @@
 
     var new_inventory_id = parseInt('#{FileContentType.find_by(name: "New Inventory").id}');
 
+    if (org_id == null) {
+      org_id = '#{current_user.organization_id}';
+    }
+
     var options = '';
     for (var j = 0; j < asset_types.length; j++){
       type = asset_types[j]
@@ -67,11 +72,3 @@
     //console.log(options);
     $('#template_proxy_asset_type_id').html(options);
   }
-
-  // jquery validations
-  $('#new_template_proxy').validate({
-    ignore: [], //validate hidden fields
-    submitHandler: function(form) {
-      form.submit();
-    }
-  });
