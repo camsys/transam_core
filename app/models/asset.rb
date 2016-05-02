@@ -130,8 +130,6 @@ class Asset < ActiveRecord::Base
   validates     :purchase_date,       :presence => :true
   validates     :serial_number,       uniqueness: {scope: :organization, message: "must be unique within an organization"}, allow_nil: true, allow_blank: true
 
-  #validates     :in_service_date,     :presence => :true
-
   #-----------------------------------------------------------------------------
   # Attributes common to all asset types
   #-----------------------------------------------------------------------------
