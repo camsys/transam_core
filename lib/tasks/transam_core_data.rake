@@ -18,10 +18,16 @@ namespace :transam_core_data do
 
   desc "Add a default asset_subtype/fuel_type rule"
   task default_subtype_with_generic_fuel_rule_data: :environment do
-    %w(transam_core_data:validate_asset_and_fuel_rules_unique transam_core_data:update_assets_without_rules).each do |cmd|
+    %w(transam_core_data:default_parent_fuel_rule_to_nil transam_core_data:validate_asset_and_fuel_rules_unique transam_core_data:update_assets_without_rules).each do |cmd|
       puts "Running #{cmd} for transam_core_data"
       Rake::Task[cmd].invoke
     end
+  end
+
+  desc "Set the Parent Policy Default Asset Type and Fuel Rules to have a nil fuel type"
+  task default_parent_fuel_rule_to_nil: :environment do
+    default_assets_rules = PolicyAssetSubtypeRule.where(policy_id: 1, default_rule: 1)
+    default_assets_rules.update_all(fuel_type_id: nil)
   end
 
   desc "Validate all asset subtype and fuel rules are unique"
