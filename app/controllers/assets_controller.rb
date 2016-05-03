@@ -555,6 +555,7 @@ class AssetsController < AssetAwareController
 
     if @transferred_assets
       clauses << ['assets.service_status_type_id IS NULL']
+      clauses << ['assets.asset_tag = assets.object_key']
     end
 
     unless @spatial_filter.blank?
