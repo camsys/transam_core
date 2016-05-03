@@ -72,6 +72,8 @@ class AssetsController < AssetAwareController
     @assets = get_assets
     if @early_disposition
       add_breadcrumb "Early disposition proposed"
+    elsif @transferred_assets
+        add_breadcrumb "Transferred Assets"
     elsif @asset_group.present?
       asset_group = AssetGroup.find_by_object_key(@asset_group)
       add_breadcrumb asset_group
@@ -443,6 +445,9 @@ class AssetsController < AssetAwareController
     if params[:early_disposition] == '1'
       @early_disposition = true
     end
+    if params[:transferred_assets] == '1'
+      @transferred_assets = true
+    end
 
     # If the asset type and subtypes are not set we default to the asset base class
     if @id_filter_list.present? or (@asset_type == 0 and @asset_subtype == 0)
@@ -470,7 +475,7 @@ class AssetsController < AssetAwareController
 
   # returns a list of assets for an index view (index, map) based on user selections. Called after
   # a call to set_view_vars
-  def get_assets show_fta_status_assets=true
+  def get_assets
 
     # Create a class instance of the asset type which can be used to perform
     # active record queries
@@ -481,10 +486,10 @@ class AssetsController < AssetAwareController
     clauses = []
     values = []
     unless @org_id == 0
-      clauses << ['organization_id = ?']
+      clauses << ['assets.organization_id = ?']
       values << @org_id
     else
-      clauses << ['organization_id IN (?)']
+      clauses << ['assets.organization_id IN (?)']
       values << @organization_list
     end
 
@@ -568,7 +573,7 @@ class AssetsController < AssetAwareController
       klass = klass.joins(:early_disposition_requests).where(asset_events: {state: 'new'})
     end
 
-    unless show_fta_status_assets
+    if @transferred_assets
       clauses << ['assets.service_status_type_id = ?']
       values << nil
     end

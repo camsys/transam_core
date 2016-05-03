@@ -48,9 +48,8 @@
             Manage Groups
     %li.divider
     %li.text-left.dropdown-submenu
-      = link_to asset_groups_path do
-        %i.fa.fa-tags.fa-fw
-        Action Required
+      %i.fa.fa-tags.fa-fw
+      Action Required
       %ul.dropdown-menu
         - if can?(:manage, EarlyDispositionRequestUpdateEvent)
           %li.text-left
@@ -59,7 +58,7 @@
               %i.fa.fa-fw{:class => event_type.display_icon_name}
               Early Disposition Proposed
         %li.text-left
-          = link_to inventory_index_path(:transferred_assets => nil) do
+          = link_to inventory_index_path(:transferred_assets => 1) do
             %i.fa.fa-plus.fa-fw
             Newly Transferred Assets
     %li.divider
