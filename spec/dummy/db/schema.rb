@@ -99,7 +99,7 @@ ActiveRecord::Schema.define(version: 20160404194415) do
     t.integer  "annual_affected_ridership"
     t.integer  "annual_dollars_generated"
     t.integer  "sales_proceeds"
-    t.string   "new_owner_name",                 limit: 64
+    t.string   "organization_id",
     t.text     "comments"
     t.datetime "created_at",                                                         null: false
     t.datetime "updated_at",                                                         null: false

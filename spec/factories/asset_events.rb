@@ -23,7 +23,6 @@ FactoryGirl.define do
     asset_event_type { AssetEventType.find_by(:class_name => 'DispositionUpdateEvent') }
     disposition_type_id 2
     sales_proceeds 25000
-    new_owner_name "Mr Morebucks"
     event_date Date.today
   end
 
