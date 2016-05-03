@@ -58,16 +58,18 @@
         %li.divider
         %li
           - event_type = DispositionUpdateEvent.asset_event_type
-          = link_to new_inventory_asset_event_path(@asset, :event_type => event_type.id) do
-            %i.fa.fa-fw{:class => event_type.display_icon_name}
-            = " #{event_type.name}"
+          - if event_type.active
+            = link_to new_inventory_asset_event_path(@asset, :event_type => event_type.id) do
+              %i.fa.fa-fw{:class => event_type.display_icon_name}
+              = " #{event_type.name}"
       - elsif can_request_early_disposition
         %li.divider
         %li
           - event_type = EarlyDispositionRequestUpdateEvent.asset_event_type
-          = link_to new_inventory_asset_event_path(@asset, :event_type => event_type.id) do
-            %i.fa.fa-fw{:class => event_type.display_icon_name}
-            = " #{event_type.name}"
+          - if event_type.active
+            = link_to new_inventory_asset_event_path(@asset, :event_type => event_type.id) do
+              %i.fa.fa-fw{:class => event_type.display_icon_name}
+              = " #{event_type.name}"
 
       - if can? :destroy, @asset
         %li.divider
