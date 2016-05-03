@@ -15,6 +15,8 @@ $.rails.allowAction = (element) ->
     .removeAttr('data-confirm')
     # We want a button
     .addClass('btn').addClass('btn-success')
+    # add customized class to Yes button if available
+    .addClass(element.data('class'))
     # We want it to sound confirmy
     .html("Yes")
 
