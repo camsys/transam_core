@@ -70,6 +70,7 @@ class AssetsController < AssetAwareController
     @spatial_filter = nil
 
     @assets = get_assets
+
     if @early_disposition
       add_breadcrumb "Early disposition proposed"
     elsif @transferred_assets
@@ -441,7 +442,7 @@ class AssetsController < AssetAwareController
       @fmt = 'html'
     end
 
-    # Check to see if search for early dispostion proposed assets only
+    # Check to see if search for early disposition proposed assets only
     if params[:early_disposition] == '1'
       @early_disposition = true
     end
@@ -552,6 +553,10 @@ class AssetsController < AssetAwareController
       values << [@asset_type]
     end
 
+    if @transferred_assets
+      clauses << ['assets.service_status_type_id IS NULL']
+    end
+
     unless @spatial_filter.blank?
       gis_service = GisService.new
       search_box = gis_service.search_box_from_bbox(@spatial_filter)
@@ -571,11 +576,6 @@ class AssetsController < AssetAwareController
     # Search for only early dispostion proposed assets if flag is on
     if @early_disposition
       klass = klass.joins(:early_disposition_requests).where(asset_events: {state: 'new'})
-    end
-
-    if @transferred_assets
-      clauses << ['assets.service_status_type_id = ?']
-      values << nil
     end
 
     # send the query

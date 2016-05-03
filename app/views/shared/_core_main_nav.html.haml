@@ -48,7 +48,7 @@
             Manage Groups
     %li.divider
     %li.text-left.dropdown-submenu
-      %i.fa.fa-tags.fa-fw
+      %i.fa.fa-exclamation.fa-fw
       Action Required
       %ul.dropdown-menu
         - if can?(:manage, EarlyDispositionRequestUpdateEvent)
@@ -59,7 +59,7 @@
               Early Disposition Proposed
         %li.text-left
           = link_to inventory_index_path(:transferred_assets => 1) do
-            %i.fa.fa-plus.fa-fw
+            %i.fa.fa-refresh.fa-fw
             Newly Transferred Assets
     %li.divider
     %li.text-left
