@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe AssetDispositionUpdateJob, :type => :job do
 
   let(:test_asset) { create(:equipment_asset) }
+  let(:test_org) {create(:organization)}
 
   it '.run' do
     test_event = test_asset.disposition_updates.create!(attributes_for(:disposition_update_event))

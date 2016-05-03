@@ -24,6 +24,7 @@ FactoryGirl.define do
     disposition_type_id 2
     sales_proceeds 25000
     event_date Date.today
+    organization_id 1
   end
 
   factory :early_disposition_request_update_event do
