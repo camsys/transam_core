@@ -49,11 +49,11 @@
     %li.divider
     - if can?(:manage, EarlyDispositionRequestUpdateEvent)
       %li.text-left
-        - if event_type.active
           - event_type = EarlyDispositionRequestUpdateEvent.asset_event_type
-          = link_to inventory_index_path(:early_disposition => 1) do
-            %i.fa.fa-fw{:class => event_type.display_icon_name}
-            Early Disposition Proposed
+          - if event_type.active
+            = link_to inventory_index_path(:early_disposition => 1) do
+              %i.fa.fa-fw{:class => event_type.display_icon_name}
+              Early Disposition Proposed
     %li.divider
     %li.text-left
       = link_to new_search_path(:search_type => SearchesController::ASSET_SEARCH_TYPE) do
