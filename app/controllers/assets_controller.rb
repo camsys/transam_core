@@ -470,7 +470,7 @@ class AssetsController < AssetAwareController
 
   # returns a list of assets for an index view (index, map) based on user selections. Called after
   # a call to set_view_vars
-  def get_assets
+  def get_assets show_fta_status_assets=true
 
     # Create a class instance of the asset type which can be used to perform
     # active record queries
@@ -566,6 +566,11 @@ class AssetsController < AssetAwareController
     # Search for only early dispostion proposed assets if flag is on
     if @early_disposition
       klass = klass.joins(:early_disposition_requests).where(asset_events: {state: 'new'})
+    end
+
+    unless show_fta_status_assets
+      clauses << ['assets.service_status_type_id = ?']
+      values << nil
     end
 
     # send the query

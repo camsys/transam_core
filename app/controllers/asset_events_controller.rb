@@ -206,7 +206,7 @@ class AssetEventsController < AssetAwareController
         end
 
         # special cases
-        # jump to final dispositin page if a manager approves an early disposition request via transfer
+        # jump to final disposition page if a manager approves an early disposition request via transfer
         if asset_event_class.name == 'EarlyDispositionRequestUpdateEvent' && event_name == "approve_via_transfer"
           is_redirected = true
           redirect_to new_inventory_asset_event_path(@asset_event.asset, :event_type => DispositionUpdateEvent.asset_event_type.id) 

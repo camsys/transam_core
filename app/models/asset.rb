@@ -702,6 +702,7 @@ class Asset < ActiveRecord::Base
         event = asset.disposition_updates.last
         asset.disposition_date = event.event_date
         asset.disposition_type = event.disposition_type
+
         # Set the service status to disposed
         asset.service_status_type = ServiceStatusType.find_by(:code => 'D')
       else
@@ -1026,6 +1027,16 @@ class Asset < ActiveRecord::Base
   def cache_clear_all
     clear_cache
   end
+
+  # This is soemthing that should be handled by each asset type individually so we will need to ensure it is
+  # implemented for each type. The model here is the same that organizations use.
+  def transfer new_organization_id
+    typed_asset = Asset.get_typed_asset(self)
+
+    return typed_asset.transfer new_organization_id
+  end
+
+
 
   #-----------------------------------------------------------------------------
   #

@@ -31,6 +31,22 @@ class Equipment < Asset
     ]
   end
 
+  def transfer new_organization_id
+    transferred_asset = self.copy
+    org = Organization.where(:id => new_organization_id).first
+
+    transferred_asset.asset_tag = nil
+    transferred_asset.fta_funding_type = nil
+    transferred_asset.in_service_date = nil
+    transferred_asset.organization = org
+    transferred_asset.purchase_cost = nil
+    transferred_asset.purchase_date = nil
+    transferred_asset.service_status_type = nil
+    transferred_asset.title_owner_organization = nil
+
+    transferred_asset.save(:validate => false)
+  end
+
   #------------------------------------------------------------------------------
   #
   # Instance Methods
