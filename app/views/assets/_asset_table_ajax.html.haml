@@ -63,7 +63,9 @@
   var asset_group = #{@asset_group.to_i};
   var org_id = #{@org_id.to_i};
   var early_disposition = #{@early_disposition || false};
-  var path = '#{@early_disposition ? inventory_asset_event_path("x", "event_key") : inventory_path("x")}';
+  var transferred_assets = #{@transferred_assets || false};
+  -#TODO DO NOT LET THIS REACH PRODUCTION IT IS MESSY
+  var path = '#{@early_disposition ? inventory_asset_event_path("x", "event_key") : @transferred_assets ? edit_inventory_path("x", "event_key") : inventory_path("x")}';
 
 
   var ids = #{ @id_filter_list };
@@ -93,6 +95,9 @@
     }
     if (early_disposition) {
       params.early_disposition = 1;
+    }
+   if (transferred_assets) {
+      params.transferred_assets = 1;
     }
     return params;
   }
