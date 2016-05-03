@@ -33,8 +33,6 @@ class Asset < ActiveRecord::Base
 
   before_update :clear_cache
 
-  after_create :check_policy_rule
-
   #-----------------------------------------------------------------------------
   # Associations common to all asset types
   #-----------------------------------------------------------------------------
@@ -131,8 +129,6 @@ class Asset < ActiveRecord::Base
   validates     :purchase_cost,       :presence => :true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0}
   validates     :purchase_date,       :presence => :true
   validates     :serial_number,       uniqueness: {scope: :organization, message: "must be unique within an organization"}, allow_nil: true, allow_blank: true
-
-  #validates     :in_service_date,     :presence => :true
 
   #-----------------------------------------------------------------------------
   # Attributes common to all asset types
@@ -335,15 +331,6 @@ class Asset < ActiveRecord::Base
   #
   #-----------------------------------------------------------------------------
 
-  def check_policy_rule
-    typed_asset = Asset.get_typed_asset self
-    if (typed_asset.respond_to? :fuel_type)
-      policy.find_or_create_asset_subtype_rule asset_subtype, typed_asset.fuel_type
-    else
-      policy.find_or_create_asset_subtype_rule asset_subtype
-    end
-  end
-
   # Returns true if the user has tagged this asset
   def tagged? user
     users.include? user
@@ -425,8 +412,8 @@ class Asset < ActiveRecord::Base
     }
 
     if options[:include_early_disposition]
-      json[:early_disposition_notes] = self.early_disposition_notes 
-      json[:early_disposition_event_object_key] = self.early_disposition_requests.last.try(:object_key) 
+      json[:early_disposition_notes] = self.early_disposition_notes
+      json[:early_disposition_event_object_key] = self.early_disposition_requests.last.try(:object_key)
     end
 
     if self.respond_to? :book_value
