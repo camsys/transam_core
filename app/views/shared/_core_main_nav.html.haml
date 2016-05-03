@@ -46,11 +46,12 @@
           = link_to asset_groups_path do
             %i.fa.fa-tags.fa-fw
             Manage Groups
-    %li.divider
+
     - if can?(:manage, EarlyDispositionRequestUpdateEvent)
-      %li.text-left
-        - event_type = EarlyDispositionRequestUpdateEvent.asset_event_type
-        - if event_type.active
+      - event_type = EarlyDispositionRequestUpdateEvent.asset_event_type
+      - if event_type.active
+        %li.divider
+        %li.text-left
           = link_to inventory_index_path(:early_disposition => 1) do
             %i.fa.fa-fw{:class => event_type.display_icon_name}
             Early Disposition Proposed
