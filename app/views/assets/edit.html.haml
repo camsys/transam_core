@@ -3,6 +3,13 @@
 = render "#{@asset.class.name.underscore}_form"
 
 :javascript
+
   $(document).ready(function() {
     transam.make_same_height('.form_part');
     });
+
+  var service_status_type_id = "#{@asset.service_status_type_id}";
+  if (service_status_type_id == '' && #{@asset.asset_tag == @asset.object_key} )
+  {
+    #{@asset.service_status_type_id = 1}
+  }
