@@ -292,7 +292,7 @@ class PoliciesController < OrganizationAwareController
     add_breadcrumb "Policy Runner", runner_policy_path(@policy)
 
     @builder_proxy = AssetUpdaterProxy.new(:policy => @policy)
-    @asset_types = AssetType.active.where(id: @organization.asset_type_counts.keys)
+    @asset_types = AssetType.active.where(id: @policy.organization.asset_type_counts.keys)
     @message = "Applying policy to selected assets. This may take a while..."
   end
 
