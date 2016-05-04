@@ -65,7 +65,7 @@
   var early_disposition = #{@early_disposition || false};
   var transferred_assets = #{@transferred_assets || false};
 
-  -#TODO writing this out with a longer notation takes considerably more time.
+  //TODO writing this out with a longer notation takes considerably more time.
   var path = '#{@early_disposition ? inventory_asset_event_path("x", "event_key") : @transferred_assets ? edit_inventory_path("x") : inventory_path("x")}';
 
   var ids = #{ @id_filter_list };
