@@ -28,7 +28,7 @@ class AssetDispositionUpdateJob < AbstractAssetUpdateJob
     sys_user = get_system_user
 
     # Get the admin users
-    admins = find_users asset
+    admins = get_users_for_organization asset.organization
 
     # Get the priority
     priority_type = PriorityType.find_by_name('Normal')
@@ -46,20 +46,32 @@ class AssetDispositionUpdateJob < AbstractAssetUpdateJob
     end
   end
 
-
-  def find_users asset
+  # TODO there is probably a better way
+  def get_users_for_organization organization
     user_role = Role.where(:name => 'transit_manager').first
 
-    users = asset.organization.users_with_role user_role.name
+    users = find_users(organization, user_role)
 
     if users.empty?
       Role.where(:name => 'manager').first
-      users = asset.organization.users_with_role user_role
-    elsif users.empty?
-      Role.where(:name => 'admin').first
-      users = asset.organization.users_with_role user_role
+      users = find_users(organization, user_role)
+      if users.empty?
+        Role.where(:name => 'admin').first
+        users = find_users(organization, user_role)
+      end
     end
 
     return users
   end
+
+
+  def find_users(organization, user_role)
+    users = []
+    unless user_role.nil?
+      users = organization.users_with_role user_role.name
+    end
+
+    return users
+  end
+
 end

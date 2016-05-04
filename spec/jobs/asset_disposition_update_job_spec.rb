@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe AssetDispositionUpdateJob, :type => :job do
 
+  let(:test_role) {create(:role)}
   let(:test_asset) { create(:equipment_asset) }
   let(:test_org) { create(:organization_basic) }
 
