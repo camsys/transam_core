@@ -47,21 +47,23 @@
             %i.fa.fa-tags.fa-fw
             Manage Groups
     %li.divider
-    %li.text-left.dropdown-submenu
-      = link_to '#' do
-        %i.fa.fa-exclamation.fa-fw
-        Action Required
-      %ul.dropdown-menu
-        - if can?(:manage, EarlyDispositionRequestUpdateEvent)
+    -#  This should be an additional check on what can or cannot be managed and who can or cannot access the Action Required sub-menu.
+    - if can?(:manage, EarlyDispositionRequestUpdateEvent)
+      %li.text-left.dropdown-submenu
+        = link_to '#' do
+          %i.fa.fa-exclamation.fa-fw
+          Action Required
+        %ul.dropdown-menu
+          - if can?(:manage, EarlyDispositionRequestUpdateEvent)
+            %li.text-left
+              - event_type = EarlyDispositionRequestUpdateEvent.asset_event_type
+              = link_to inventory_index_path(:early_disposition => 1) do
+                %i.fa.fa-fw{:class => event_type.display_icon_name}
+                Early Disposition Proposed
           %li.text-left
-            - event_type = EarlyDispositionRequestUpdateEvent.asset_event_type
-            = link_to inventory_index_path(:early_disposition => 1) do
-              %i.fa.fa-fw{:class => event_type.display_icon_name}
-              Early Disposition Proposed
-        %li.text-left
-          = link_to inventory_index_path(:transferred_assets => 1) do
-            %i.fa.fa-refresh.fa-fw
-            Newly Transferred Assets
+            = link_to inventory_index_path(:transferred_assets => 1) do
+              %i.fa.fa-refresh.fa-fw
+              Newly Transferred Assets
     %li.divider
     %li.text-left
       = link_to new_search_path(:search_type => SearchesController::ASSET_SEARCH_TYPE) do
