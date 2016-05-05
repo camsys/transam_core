@@ -53,6 +53,7 @@ class PolicyAnalyzer
         nil
       end
     else
+      puts "Method #{method_sym.to_s} wiht #{arguments}"
       # Pass the call on -- probably generates a method not found exception
       super
     end
@@ -85,7 +86,13 @@ class PolicyAnalyzer
     @warnings = []
     if @policy.present? and @asset.present?
       @asset_type_rule = @policy.policy_asset_type_rules.find_by(:asset_type_id => asset.asset_type_id)
-      @asset_subtype_rule = @policy.policy_asset_subtype_rules.find_by(:asset_subtype_id => asset.asset_subtype_id)
+
+      typed_asset = Asset.get_typed_asset @asset
+      if (typed_asset.respond_to? :fuel_type)
+        @asset_subtype_rule = @policy.policy_asset_subtype_rules.find_by(:asset_subtype_id => typed_asset.asset_subtype_id, :fuel_type_id => typed_asset.fuel_type)
+      else
+        @asset_subtype_rule = @policy.policy_asset_subtype_rules.find_by(:asset_subtype_id => typed_asset.asset_subtype_id)
+      end
     else
       @warnings << "Policy not found for asset #{asset} with class #{asset.asset_type}"
     end
