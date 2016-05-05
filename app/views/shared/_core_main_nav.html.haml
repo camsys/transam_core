@@ -48,8 +48,9 @@
             Manage Groups
     %li.divider
     %li.text-left.dropdown-submenu
-      %i.fa.fa-exclamation.fa-fw
-      Action Required
+      = link_to '#' do
+        %i.fa.fa-exclamation.fa-fw
+        Action Required
       %ul.dropdown-menu
         - if can?(:manage, EarlyDispositionRequestUpdateEvent)
           %li.text-left
