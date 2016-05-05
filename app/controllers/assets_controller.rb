@@ -172,7 +172,10 @@ class AssetsController < AssetAwareController
 
     add_breadcrumb "#{@asset.asset_type.name}".pluralize(2), inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
     add_breadcrumb "#{@asset.asset_subtype.name}", inventory_index_path(:asset_subtype => @asset.asset_subtype)
-    add_breadcrumb @asset.asset_tag, inventory_path(@asset)
+    # When editing a newly transferred asset this link is invalid so we don't want to show it.
+    unless (@asset.service_status_type_id.nil? && @asset.asset_tag == @asset.object_key)
+      add_breadcrumb @asset.asset_tag, inventory_path(@asset)
+    end
     add_breadcrumb "Update master record", edit_inventory_path(@asset)
 
   end
@@ -556,6 +559,9 @@ class AssetsController < AssetAwareController
     if @transferred_assets
       clauses << ['assets.service_status_type_id IS NULL']
       clauses << ['assets.asset_tag = assets.object_key']
+    else
+      clauses << ['assets.service_status_type_id IS NOT NULL']
+      clauses << ['assets.asset_tag != assets.object_key']
     end
 
     unless @spatial_filter.blank?
