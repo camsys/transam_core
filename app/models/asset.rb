@@ -1125,19 +1125,23 @@ class Asset < ActiveRecord::Base
     # returns the year in which the asset should be replaced based on the policy and asset
     # characteristics
     begin
+      # store old policy replacement year for use later
+      old_policy_replacement_year = asset.policy_replacement_year
+
       # see what metric we are using to determine the service life of the asset
       class_name = policy_analyzer.get_service_life_calculation_type.class_name
       asset.policy_replacement_year = calculate(asset, class_name)
 
-      # If the asset is in backlog set the scheduled year to the current FY year
-      if asset.policy_replacement_year < current_planning_year_year
-        Rails.logger.debug "Asset is in backlog. Setting scheduled replacement year to #{current_planning_year_year}"
-        asset.scheduled_replacement_year = current_planning_year_year
-        asset.in_backlog = true
-      else
+      if asset.scheduled_replacement_year.nil? or asset.scheduled_replacement_year == old_policy_replacement_year
         Rails.logger.debug "Setting scheduled replacement year to #{asset.policy_replacement_year}"
         asset.scheduled_replacement_year = asset.policy_replacement_year
         asset.in_backlog = false
+      end
+      # If the asset is in backlog set the scheduled year to the current FY year
+      if asset.scheduled_replacement_year < current_planning_year_year
+        Rails.logger.debug "Asset is in backlog. Setting scheduled replacement year to #{current_planning_year_year}"
+        asset.scheduled_replacement_year = current_planning_year_year
+        asset.in_backlog = true
       end
     rescue Exception => e
       Rails.logger.warn e.message
