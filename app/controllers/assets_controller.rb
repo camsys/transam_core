@@ -160,7 +160,7 @@ class AssetsController < AssetAwareController
     get_next_and_prev_object_keys(@asset, INDEX_KEY_LIST_VAR)
     @prev_record_path = @prev_record_key.nil? ? "#" : inventory_path(@prev_record_key)
     @next_record_path = @next_record_key.nil? ? "#" : inventory_path(@next_record_key)
-    
+
     respond_to do |format|
       format.html # show.html.erb
       format.json { render :json => @asset }
@@ -173,7 +173,7 @@ class AssetsController < AssetAwareController
     add_breadcrumb "#{@asset.asset_type.name}".pluralize(2), inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
     add_breadcrumb "#{@asset.asset_subtype.name}", inventory_index_path(:asset_subtype => @asset.asset_subtype)
     # When editing a newly transferred asset this link is invalid so we don't want to show it.
-    unless (@asset.service_status_type_id.nil? && @asset.asset_tag == @asset.object_key)
+    unless @asset.asset_tag == @asset.object_key
       add_breadcrumb @asset.asset_tag, inventory_path(@asset)
     end
     add_breadcrumb "Update master record", edit_inventory_path(@asset)
@@ -560,7 +560,6 @@ class AssetsController < AssetAwareController
       clauses << ['assets.service_status_type_id IS NULL']
       clauses << ['assets.asset_tag = assets.object_key']
     else
-      clauses << ['assets.service_status_type_id IS NOT NULL']
       clauses << ['assets.asset_tag != assets.object_key']
     end
 
