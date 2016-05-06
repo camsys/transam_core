@@ -211,7 +211,7 @@ class UploadsController < OrganizationAwareController
     end
 
     # Find out which builder is used to construct the template and create an instance
-    builder = file_content_type.builder_name.constantize.new(:organization => org, :asset_types => [*asset_types], :organization_list => @organization_list)
+    builder = file_content_type.builder_name.constantize.new(:organization => org, :asset_types => [*asset_types])
 
     # Generate the spreadsheet. This returns a StringIO that has been rewound
     if from_form
