@@ -32,7 +32,7 @@ class Equipment < Asset
   end
 
   def transfer new_organization_id
-    transferred_asset = self.copy
+    transferred_asset = self.copy false
     org = Organization.where(:id => new_organization_id).first
 
     transferred_asset.in_service_date = nil
