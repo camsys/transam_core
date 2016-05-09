@@ -6,24 +6,24 @@
 #
 #------------------------------------------------------------------------------
 class AssetDispositionUpdateJob < AbstractAssetUpdateJob
-  
-  
+
+
   def execute_job(asset)
     asset_event_type = AssetEventType.where(:class_name => 'DispositionUpdateEvent').first
     asset_event = AssetEvent.where(:asset_id => asset.id, :asset_event_type_id => asset_event_type.id).last
     if(asset_event.disposition_type_id == 2)
       new_asset = asset.transfer asset_event.organization_id
-      send_asset_trasnferred_message new_asset
+      send_asset_transferred_message new_asset
     end
 
     asset.record_disposition
   end
 
   def prepare
-    Rails.logger.debug "Executing AssetDispositionUpdateJob at #{Time.now.to_s} for Asset #{object_key}"    
+    Rails.logger.debug "Executing AssetDispositionUpdateJob at #{Time.now.to_s} for Asset #{object_key}"
   end
 
-  def send_asset_trasnferred_message asset
+  def send_asset_transferred_message asset
     # Get the system user
     sys_user = get_system_user
 
@@ -33,7 +33,7 @@ class AssetDispositionUpdateJob < AbstractAssetUpdateJob
     # Get the priority
     priority_type = PriorityType.find_by_name('Normal')
 
-    event_url = Rails.application.routes.url_helpers.edit_inventory_path asset
+    event_url = Rails.application.routes.url_helpers.new_inventory_path asset
     # Send a message to the admins for this user organization
     admins.each do |admin|
       msg = Message.new
