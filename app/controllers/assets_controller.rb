@@ -93,17 +93,18 @@ class AssetsController < AssetAwareController
       add_breadcrumb asset_type.name.titleize.pluralize(2)
     end
 
+    # check that an order param was provided otherwise use asset_tag as the default
+    params[:sort] ||= 'asset_tag'
+
     unless @fmt == 'xls'
       # cache the set of asset ids in case we need them later
-      cache_list(@assets, INDEX_KEY_LIST_VAR)
+      cache_list(@assets.order("#{params[:sort]} #{params[:order]}"), INDEX_KEY_LIST_VAR)
     end
 
     respond_to do |format|
       format.html
       format.js
       format.json {
-        # check that an order param was provided otherwise use asset_tag as the default
-        params[:sort] ||= 'asset_tag'
         render :json => {
           :total => @assets.count,
           :rows =>  @assets.order("#{params[:sort]} #{params[:order]}").limit(params[:limit]).offset(params[:offset]).as_json(user: current_user, include_early_disposition: @early_disposition)
