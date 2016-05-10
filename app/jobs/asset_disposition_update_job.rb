@@ -9,14 +9,15 @@ class AssetDispositionUpdateJob < AbstractAssetUpdateJob
 
 
   def execute_job(asset)
+
+    asset.record_disposition
+
     asset_event_type = AssetEventType.where(:class_name => 'DispositionUpdateEvent').first
     asset_event = AssetEvent.where(:asset_id => asset.id, :asset_event_type_id => asset_event_type.id).last
     if(asset_event.disposition_type_id == 2)
       new_asset = asset.transfer asset_event.organization_id
       send_asset_transferred_message new_asset
     end
-
-    asset.record_disposition
   end
 
   def prepare
