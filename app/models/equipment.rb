@@ -37,6 +37,7 @@ class Equipment < Asset
     transferred_asset = self.copy false
     transferred_asset.object_key = nil
 
+    transferred_asset.disposition_date = nil
     transferred_asset.in_service_date = nil
     transferred_asset.organization = org
     transferred_asset.purchase_cost = nil
