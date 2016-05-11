@@ -46,20 +46,20 @@
           = link_to asset_groups_path do
             %i.fa.fa-tags.fa-fw
             Manage Groups
-      - if can?(:manage, EarlyDispositionRequestUpdateEvent) || can?(:accept_transfers, Asset)
+      - event_type = EarlyDispositionRequestUpdateEvent.asset_event_type
+      - can_view_early_disposition = event_type.active and can?(:manage, EarlyDispositionRequestUpdateEvent)
+      - if can_view_early_disposition || can?(:accept_transfers, Asset)
         %li.divider
         %li.text-left.dropdown-submenu
           = link_to '#' do
             %i.fa.fa-exclamation.fa-fw
             Action Required
           %ul.dropdown-menu
-            - if can?(:manage, EarlyDispositionRequestUpdateEvent)
-              - event_type = EarlyDispositionRequestUpdateEvent.asset_event_type
-              - if event_type.active
-                %li.text-left
-                  = link_to inventory_index_path(:early_disposition => 1) do
-                    %i.fa.fa-fw{:class => event_type.display_icon_name}
-                    Early Disposition Proposed
+            - if can_view_early_disposition
+              %li.text-left
+                = link_to inventory_index_path(:early_disposition => 1) do
+                  %i.fa.fa-fw{:class => event_type.display_icon_name}
+                  Early Disposition Proposed
             - if can?(:accept_transfers, Asset)
               %li.text-left
                 = link_to inventory_index_path(:transferred_assets => 1) do
