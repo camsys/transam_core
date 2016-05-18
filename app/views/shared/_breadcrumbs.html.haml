@@ -1,5 +1,5 @@
 .breadcrumbs
-  - if @total_rows.to_i > 0
+  - if @row_number.to_i > 0
     .row
       .col-lg-10.col-md-9.col-sm-8.col.col-xs-12
         = render_breadcrumbs :builder => ::BootstrapBreadcrumbsBuilder, :separator => "&raquo;"
