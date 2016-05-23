@@ -94,7 +94,35 @@ module TransamKeywordSearchable
 
   end
 
+  def build_index_object
+    # Create a blob of unique search keys for this instance
+    a = []
+    separator = " "
+    searchable_fields.each { |searchable_field|
+      a << self.send(searchable_field).to_s
+    }
+    text = a.uniq.compact.join(' ')
 
+    KeywordSearchIndex.new(object_key: object_key) do |keyword_search_index|
+      keyword_search_index.organization_id = self.organization.id
+      keyword_search_index.context = self.class.name
+      keyword_search_index.search_text = text
+      if self.is_a?(Asset)
+        keyword_search_index.object_class = "Asset"
+      else
+        keyword_search_index.object_class = self.class.name
+      end
+
+      if respond_to? :description and self.description.present?
+        keyword_search_index.summary = self.description.truncate(64)
+      elsif respond_to? :name and self.name.present?
+        keyword_search_index.summary = self.name.truncate(64)
+      else
+        keyword_search_index.summary = self.to_s
+      end
+    end
+  end
+  
   #-----------------------------------------------------------------------------
   # Protected Methods
   #-----------------------------------------------------------------------------
