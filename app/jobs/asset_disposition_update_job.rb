@@ -40,8 +40,8 @@ class AssetDispositionUpdateJob < AbstractAssetUpdateJob
       msg = Message.new
       msg.user          = sys_user
       msg.to_user       = admin
-      msg.subject       = "A new asset has been transferred to you"
-      msg.body          = "Before the asset can be used some details need to be updated. The asset can be updated <a href='#{event_url}'>here</a>"
+      msg.subject       = "A new asset has been transferred to #{asset.organization.name}"
+      msg.body          = "Before the asset can be used some details need to be updated. The asset can be updated <a href='#{event_url}'>here</a>, be sure your filters are clear or grant you permissions to access assets for #{asset.organization.name}."
       msg.priority_type = priority_type
       msg.organization  = asset.organization
       msg.save
