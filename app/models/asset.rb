@@ -221,6 +221,7 @@ class Asset < ActiveRecord::Base
     :update_scheduled_rehabilitation,
     :update_scheduled_disposition,
     :update_estimated_replacement_cost,
+    :update_scheduled_replacement_cost,
     :update_location
   ]
 
