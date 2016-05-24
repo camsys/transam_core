@@ -710,6 +710,19 @@ class Asset < ActiveRecord::Base
     end
   end
 
+  # Determines if the asset has been disposes and if a type is passed if it has been disposed by that type
+  def disposed disposition_type=nil
+    asset = is_typed? ? self : Asset.get_typed_asset(self)
+
+    is_disposed = asset.service_status_type == ServiceStatusType.find_by(:code => 'D')
+
+    unless disposition_type.nil?
+      is_disposed = is_disposed || asset.disposition_type.id == disposition_type.id
+    end
+
+    return is_disposed
+  end
+
   # Forces an update of an assets location. This performs an update on the record.
   def update_location
 

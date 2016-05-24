@@ -9,12 +9,15 @@ class AssetDispositionUpdateJob < AbstractAssetUpdateJob
 
 
   def execute_job(asset)
-
-    asset.record_disposition
-
+    # If the asset has already been transferred then this is an update to the disposition and we don't want to create another asset.
     asset_event_type = AssetEventType.where(:class_name => 'DispositionUpdateEvent').first
     asset_event = AssetEvent.where(:asset_id => asset.id, :asset_event_type_id => asset_event_type.id).last
-    if(asset_event.disposition_type_id == 2)
+    disposition_type = DispositionType.where(:id => asset_event.disposition_type_id)
+
+    asset_already_transferred = asset.disposed disposition_type
+
+    asset.record_disposition
+    if(!asset_already_transferred && asset_event.disposition_type_id == 2)
       new_asset = asset.transfer asset_event.organization_id
       send_asset_transferred_message new_asset
     end
@@ -40,7 +43,7 @@ class AssetDispositionUpdateJob < AbstractAssetUpdateJob
       msg = Message.new
       msg.user          = sys_user
       msg.to_user       = admin
-      msg.subject       = "A new asset has been transferred to #{asset.organization.name}"
+      msg.subject       = "A new asset has been transferred to you."
       msg.body          = "Before the asset can be used some details need to be updated. The asset can be updated <a href='#{event_url}'>here</a>, be sure your filters are clear or grant you permissions to access assets for #{asset.organization.name}."
       msg.priority_type = priority_type
       msg.organization  = asset.organization
