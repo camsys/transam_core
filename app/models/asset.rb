@@ -717,7 +717,7 @@ class Asset < ActiveRecord::Base
     is_disposed = asset.service_status_type == ServiceStatusType.find_by(:code => 'D')
 
     unless disposition_type.nil?
-      is_disposed = is_disposed || asset.disposition_type.id == disposition_type.id
+      is_disposed = is_disposed && asset.disposition_type_id == disposition_type.id
     end
 
     return is_disposed
