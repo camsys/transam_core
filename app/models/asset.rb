@@ -724,7 +724,7 @@ class Asset < ActiveRecord::Base
   end
 
   # Forces an update of an assets location. This performs an update on the record.
-  def update_location
+  def update_location(save_asset = true)
 
     Rails.logger.debug "Updating the recorded location for asset = #{object_key}"
 
@@ -738,11 +738,11 @@ class Asset < ActiveRecord::Base
         self.location_comments = event.comments
       end
       # save changes to this asset
-      save
+      save if save_asset
     end
   end
 
-  def update_rehabilitation
+  def update_rehabilitation(save_asset = true)
     Rails.logger.debug "Updating the recorded rehabilitation for asset = #{object_key}"
 
     # Make sure we are working with a concrete asset class
@@ -757,12 +757,12 @@ class Asset < ActiveRecord::Base
         asset.scheduled_rehabilitation_year = nil
       end
       # save changes to this asset
-      asset.save(:validate => false)
+      asset.save(:validate => false) if save_asset
     end
   end
 
   # Forces an update of an assets service status. This performs an update on the record
-  def update_service_status
+  def update_service_status(save_asset = true)
     Rails.logger.debug "Updating service status for asset = #{object_key}"
 
     # Make sure we are working with a concrete asset class
@@ -779,12 +779,12 @@ class Asset < ActiveRecord::Base
         asset.service_status_type = event.service_status_type
       end
       # save changes to this asset
-      asset.save(:validate => false)
+      asset.save(:validate => false) if save_asset
     end
   end
 
   # Forces an update of an assets reported condition. This performs an update on the record.
-  def update_condition
+  def update_condition(save_asset = true)
 
     Rails.logger.debug "Updating condition for asset = #{object_key}"
 
@@ -801,13 +801,13 @@ class Asset < ActiveRecord::Base
         self.reported_condition_type = ConditionType.from_rating(event.assessed_rating)
       end
       # save changes to this asset
-      save(:validate => false)
+      save(:validate => false) if save_asset
     end
 
   end
 
   # Forces an update of an assets scheduled replacement. This performs an update on the record.
-  def update_scheduled_replacement
+  def update_scheduled_replacement(save_asset = true)
 
     Rails.logger.debug "Updating the scheduled replacement year for asset = #{object_key}"
 
@@ -818,12 +818,12 @@ class Asset < ActiveRecord::Base
         self.replacement_reason_type_id = event.replacement_reason_type_id unless event.replacement_reason_type_id.nil?
       end
       # save changes to this asset
-      save(:validate => false)
+      save(:validate => false) if save_asset
     end
   end
 
   # Forces an update of an assets scheduled replacement. This performs an update on the record.
-  def update_scheduled_rehabilitation
+  def update_scheduled_rehabilitation(save_asset = true)
 
     Rails.logger.debug "Updating the scheduled rehabilitation year for asset = #{object_key}"
 
@@ -835,12 +835,12 @@ class Asset < ActiveRecord::Base
         self.scheduled_rehabilitation_year = event.rebuild_year
       end
       # save changes to this asset
-      save(:validate => false)
+      save(:validate => false) if save_asset
     end
   end
 
   # Forces an update of an assets scheduled disposition
-  def update_scheduled_disposition
+  def update_scheduled_disposition(save_asset = true)
 
     Rails.logger.debug "Updating the scheduled disposition for asset = #{object_key}"
 
@@ -852,12 +852,12 @@ class Asset < ActiveRecord::Base
         self.scheduled_disposition_year = event.disposition_year
       end
       # save changes to this asset
-      save(:validate => false)
+      save(:validate => false) if save_asset
     end
   end
 
 
-  def update_estimated_replacement_cost
+  def update_estimated_replacement_cost(save_asset = true)
 
     return if disposed?
 
@@ -868,7 +868,7 @@ class Asset < ActiveRecord::Base
     end
     self.estimated_replacement_cost = calculate_estimated_replacement_cost(start_date)
     # save changes to this asset
-    save(:validate => false)
+    save(:validate => false) if save_asset
 
   end
 
@@ -876,7 +876,7 @@ class Asset < ActiveRecord::Base
   # Calculates and stores the scheduled replacement for the asset based on the
   # scheduled replacement year
   #-----------------------------------------------------------------------------
-  def update_scheduled_replacement_cost
+  def update_scheduled_replacement_cost(save_asset = true)
 
     return if disposed?
 
@@ -888,7 +888,7 @@ class Asset < ActiveRecord::Base
     self.scheduled_replacement_cost = calculate_estimated_replacement_cost(start_date)
 
     # save changes to this asset
-    save(:validate => false)
+    save(:validate => false) if save_asset
 
   end
 
@@ -1009,9 +1009,9 @@ class Asset < ActiveRecord::Base
   end
 
   # Update the SOGR for an asset
-  def update_sogr(policy = nil)
+  def update_sogr(save_asset = true, policy = nil)
     unless disposed?
-      update_asset_state(policy)
+      update_asset_state(save_asset, policy)
     end
   end
   # Update the replacement costs for an asset
@@ -1120,7 +1120,7 @@ class Asset < ActiveRecord::Base
   end
 
   # updates the calculated values of an asset
-  def update_asset_state(policy = nil)
+  def update_asset_state(save_asset = true, policy = nil)
     Rails.logger.debug "Updating SOGR for asset = #{object_key}"
 
     if disposed?
@@ -1183,7 +1183,7 @@ class Asset < ActiveRecord::Base
     end
 
     # save changes to this asset
-    asset.save(:validate => false)
+    asset.save(:validate => false) if save_asset
   end
 
   def update_service_life typed_asset

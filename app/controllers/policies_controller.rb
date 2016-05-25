@@ -312,11 +312,12 @@ class PoliciesController < OrganizationAwareController
         typed_asset = Asset.get_typed_asset(a)
         typed_asset.update_methods.each do |m|
           begin
-            typed_asset.send(m)
+            typed_asset.send(m, false) #dont save until all updates have run
           rescue Exception => e
             Rails.logger.warn e.message
           end
         end
+        typed_asset.save
       end
 
       # Let the user know the results
