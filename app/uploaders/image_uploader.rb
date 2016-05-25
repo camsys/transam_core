@@ -2,12 +2,6 @@ class ImageUploader < TransamAbstractUploader
 
   include CarrierWave::RMagick
 
-  process :convert => 'png'
-
-  def filename
-    super.chomp(File.extname(super)) + '.png' if original_filename.present?
-  end
-
   version :thumb do
     process :resize_to_fill => [150, 150]
   end

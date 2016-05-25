@@ -21,8 +21,9 @@ class AssetUpdateJob < AbstractAssetUpdateJob
     #end
 
     update_methods.each do |method|
-      typed_asset.send(method)
+      typed_asset.send(method, false) #dont save until all updates have run
     end
+    typed_asset.save
   end
 
   def prepare
