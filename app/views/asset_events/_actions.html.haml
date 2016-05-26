@@ -24,6 +24,6 @@
         - @asset_event.allowable_events.each do |evt|
           - if can? evt.to_sym, @asset_event
             %li
-              = link_to fire_workflow_event_inventory_asset_event_path(@asset_event.asset, @asset_event, :event => evt) do
+              = link_to fire_workflow_event_inventory_asset_event_path(@asset_event.asset, @asset_event, :event => evt, :transferred => 1) do
                 %i.fa.fa-fw{:class => get_workflow_event_icon(evt)}
                 = "#{evt.titleize}"

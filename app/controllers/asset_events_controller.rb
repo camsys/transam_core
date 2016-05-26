@@ -58,6 +58,10 @@ class AssetEventsController < AssetAwareController
       @asset_event = @asset.build_typed_event(asset_event_type.class_name.constantize)
     end
 
+    if params[:transferred] == '1'
+      @transferred = true
+    end
+
     add_new_show_create_breadcrumbs
 
     respond_to do |format|
@@ -191,6 +195,7 @@ class AssetEventsController < AssetAwareController
 
     # Check that this is a valid event name for the state machines
     asset_event_class = @asset_event.class
+
     if asset_event_class.try(:event_names) && asset_event_class.event_names.include?(params[:event])
       event_name = params[:event]
       if @asset_event.fire_state_event(event_name)
@@ -209,7 +214,7 @@ class AssetEventsController < AssetAwareController
         # jump to final disposition page if a manager approves an early disposition request via transfer
         if asset_event_class.name == 'EarlyDispositionRequestUpdateEvent' && event_name == "approve_via_transfer"
           is_redirected = true
-          redirect_to new_inventory_asset_event_path(@asset_event.asset, :event_type => DispositionUpdateEvent.asset_event_type.id) 
+          redirect_to new_inventory_asset_event_path(@asset_event.asset, :event_type => DispositionUpdateEvent.asset_event_type.id, :transferred => 1)
         end
       else
         notify_user(:alert, "Could not #{event_name.humanize} asset event #{@asset_event}")
