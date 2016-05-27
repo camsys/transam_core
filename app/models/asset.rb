@@ -771,8 +771,8 @@ class Asset < ActiveRecord::Base
     # can't do this if it is a new record as none of the IDs would be set
     unless asset.new_record? or disposed?
       if asset.service_status_updates.empty?
-        service_status_type = nil
-        service_status_date = nil
+        asset.service_status_type = nil
+        asset.service_status_date = nil
       else
         event = asset.service_status_updates.last
         asset.service_status_date = event.event_date
