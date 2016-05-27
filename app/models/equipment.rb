@@ -9,7 +9,6 @@ class Equipment < Asset
 
   validates :quantity,        :presence => :true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 1}
   validates :quantity_units,  :presence => true
-  validates :quantity_units,     :presence => true
 
   #------------------------------------------------------------------------------
   # Scopes
