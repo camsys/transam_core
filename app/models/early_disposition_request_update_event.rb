@@ -194,7 +194,7 @@ class EarlyDispositionRequestUpdateEvent < AssetEvent
         msg.organization  = sender.try(:organization)
         msg.to_user       = to_user
         msg.subject       = "Early disposition request for #{asset.asset_tag} #{event_desc}"
-        msg.body          = "Early disposition request for #{asset.name} has been #{event_desc} by #{sender}. The request can be viewed at <a href='#{event_url}'>here</a>"
+        msg.body          = "Early disposition request for #{asset.name} has been #{event_desc} by #{sender}. The request can be viewed <a href='#{event_url}'>here</a>"
         msg.priority_type = PriorityType.default
         msg.save
       end
