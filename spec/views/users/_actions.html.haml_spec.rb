@@ -20,7 +20,7 @@ describe "users/_actions.html.haml", :type => :view do
     expect(rendered).to have_link("Update #{test_user.first_name}'s profile picture")
     expect(rendered).to have_link("Update #{test_user.first_name}'s settings")
     expect(rendered).to have_link("Update #{test_user.first_name}'s profile")
-    expect(rendered).to have_link("Change #{test_user.first_name}'s password")
+    expect(rendered).to have_link("Reset #{test_user.first_name}'s password")
     expect(rendered).to have_link("Deactivate this user")
   end
 end
