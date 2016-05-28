@@ -14,7 +14,7 @@ class ServiceLifeCalculator < Calculator
   # in any increase in longevity based on the current policy
   def by_age(asset)
 
-    year = fiscal_year_year_on_date(asset.in_service_date) + (asset.expected_useful_life / 12)
+    year = planning_year_year_on_date(asset.in_service_date) + (asset.expected_useful_life / 12)
     if asset.last_rehabilitation_date.present?
       year += asset.policy_analyzer.get_extended_service_life_months.to_i / 12
     end
@@ -36,7 +36,7 @@ class ServiceLifeCalculator < Calculator
       Rails.logger.debug "Event date = #{event.event_date}, Rating = #{event.assessed_rating}."
       if event.assessed_rating <= condition_threshold
         Rails.logger.debug "returning #{fiscal_year_year_on_date(event.event_date)}"
-        return fiscal_year_year_on_date(event.event_date)
+        return planning_year_year_on_date(event.event_date)
       end
     end
     # if we didn't find a condition event that would make the policy effective

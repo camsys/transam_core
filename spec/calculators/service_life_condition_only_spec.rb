@@ -15,7 +15,7 @@ RSpec.describe ServiceLifeConditionOnly, :type => :calculator do
   let(:test_calculator) { ServiceLifeConditionOnly.new }
 
   it 'calculates' do
-    expect(test_calculator.calculate(@test_asset)).to eq(fiscal_year_year_on_date(Date.today))
+    expect(test_calculator.calculate(@test_asset)).to eq(planning_year_year_on_date(Date.today))
   end
 
 end
