@@ -15,13 +15,13 @@ RSpec.describe ServiceLifeCalculator, :type => :calculator do
   let(:test_calculator) { ServiceLifeCalculator.new }
 
   it '#by_age' do
-    expect(test_calculator.send(:by_age,@test_asset)).to eq(2010)
+    expect(test_calculator.send(:by_age,@test_asset)).to eq(2011)
   end
 
   describe '#by_condition' do
 
     it 'calculates' do
-      expect(test_calculator.send(:by_condition,@test_asset)).to eq(fiscal_year_year_on_date(Date.today))
+      expect(test_calculator.send(:by_condition,@test_asset)).to eq(planning_year_year_on_date(Date.today))
     end
 
     it 'is by age if assessed_rating is greater than condition threshold' do
