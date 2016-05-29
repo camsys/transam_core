@@ -12,7 +12,7 @@
       .col-sm-6
         = f.input :file, :required => true, :label => 'Spreadsheet', :hint => 'Select a spreadsheet that has been downloaded from TransAM, edited, then saved.'
       .col-sm-6
-        = f.input :active, :collection => [['No', false],['Yes', true]], :include_blank => false
+        = f.input :force_update, :collection => [['No', false],['Yes', true]], :include_blank => false
     .row
       .col-sm-6
         = f.button :submit, 'Upload spreadsheet', :class=>"btn btn-primary"
