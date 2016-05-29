@@ -90,7 +90,7 @@ class UploadsController < OrganizationAwareController
     affected_assets = @upload.asset_events.map(&:asset).uniq
 
     @upload.reset
-    @upload.update(force_update: true, file_status_type: FileStatusType.find_by(name: "Reverted"))
+    @upload.update(file_status_type: FileStatusType.find_by(name: "Reverted"))
 
     # re-update the assets which previously had events
     affected_assets.each do |affected|
@@ -262,7 +262,6 @@ class UploadsController < OrganizationAwareController
 
     @upload = Upload.new(form_params)
     @upload.user = current_user
-    @upload.force_update = true
     if @upload.organization.nil?
       @upload.organization = @organization
     end

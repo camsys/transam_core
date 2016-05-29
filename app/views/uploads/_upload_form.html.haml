@@ -2,15 +2,17 @@
   = simple_form_for(@upload,
     :html => {:multipart => true, :class => 'form-vertical' },                                                                                                                            :wrapper => :vertical_form,                                                                                                                                                           :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}) do |f|
 
-    - if current_user.organizations.count > 1
-      .row
+    .row
+      - if current_user.organizations.count > 1
         .col-sm-6
           = f.association :organization, :required => true, :collection => current_user.organizations, :label_method => 'coded_name'
+      .col-sm-6
+        = f.association :file_content_type, :collection => FileContentType.active, :required => true, :label => 'Spreadsheet Content', :prompt => 'Set the spreadsheet contents...'
     .row
       .col-sm-6
         = f.input :file, :required => true, :label => 'Spreadsheet', :hint => 'Select a spreadsheet that has been downloaded from TransAM, edited, then saved.'
       .col-sm-6
-        = f.association :file_content_type, :collection => FileContentType.active, :required => true, :label => 'Spreadsheet Content', :prompt => 'Set the spreadsheet contents...'
+        = f.input :force_update
     .row
       .col-sm-6
         = f.button :submit, 'Upload spreadsheet', :class=>"btn btn-primary"
