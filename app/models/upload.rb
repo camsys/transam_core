@@ -107,6 +107,7 @@ class Upload < ActiveRecord::Base
 
   # Set resonable defaults for a new vehicle
   def set_defaults
+    self.force_update = self.force_update.nil? ? false : self.force_update
     self.file_status_type_id ||= FileStatusType.find_by_name('Unprocessed').id
   end
 

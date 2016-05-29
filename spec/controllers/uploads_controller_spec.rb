@@ -30,7 +30,7 @@ RSpec.describe UploadsController, :type => :controller do
     test_upload.reload
 
     expect(assigns(:upload)).to eq(test_upload)
-    expect(test_upload.force_update).to be true
+    expect(test_upload.force_update).to be false
     expect(test_upload.file_status_type).to eq(FileStatusType.find_by(:name => 'Reverted'))
   end
 
@@ -53,7 +53,7 @@ RSpec.describe UploadsController, :type => :controller do
     expect(assigns(:upload).user).to eq(subject.current_user)
     expect(assigns(:upload).organization).to eq(Organization.get_typed_organization(subject.current_user.organization))
     expect(assigns(:upload).file_content_type_id).to eq(1)
-    expect(assigns(:upload).force_update).to be true
+    expect(assigns(:upload).force_update).to be false
   end
   it 'DELETE destroy' do
     delete :destroy, :id => test_upload.object_key
