@@ -15,7 +15,7 @@ RSpec.describe ServiceLifeAgeAndCondition, :type => :calculator do
   let(:test_calculator) { ServiceLifeAgeAndCondition.new }
 
   it 'calculates' do
-    expect(test_calculator.calculate(@test_asset)).to eq(2016)
+    expect(test_calculator.calculate(@test_asset)).to eq(2015)
   end
 
 end
