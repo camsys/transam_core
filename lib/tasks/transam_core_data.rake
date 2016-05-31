@@ -63,7 +63,7 @@ namespace :transam_core_data do
                 assets.each do |a|
                   asset = Asset.get_typed_asset(a)
                   if asset.fuel_type.id == fuel.id
-                    a.check_policy_rule
+                    asset.check_policy_rule
                     break
                   end
                 end
@@ -78,7 +78,8 @@ namespace :transam_core_data do
             assets = Asset.where(organization_id: policy.organization.id, asset_subtype_id: subtype.id)
             if !assets.nil? && assets.length > 0
               puts "Updating rules for assets with subtype #{subtype.id} and organization #{policy.organization},  #{assets.length} assets had no rules."
-              assets.first.check_policy_rule
+              a = Asset.get_typed_asset(assets.first)
+              a.check_policy_rule
             end
           end
         end
