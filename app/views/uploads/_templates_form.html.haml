@@ -51,6 +51,7 @@
   function update_asset_types(org_id, file_content_type_id) {
 
     var new_inventory_id = parseInt('#{FileContentType.find_by(name: "New Inventory").id}');
+    var equipment_asset_type_id = parseInt('#{AssetType.find_by(class_name: "Equipment").id}');
 
     if (org_id == null) {
       org_id = '#{current_user.organization_id}';
@@ -59,14 +60,25 @@
     var options = '';
     for (var j = 0; j < asset_types.length; j++){
       type = asset_types[j]
+      var add_to_options = false;
 
-      if ((parseInt(file_content_type_id) == new_inventory_id) || ($.inArray( parseInt(org_id), type.orgs ) >= 0)) {
+      if ((parseInt(file_content_type_id) == new_inventory_id) && ((type.name).indexOf('Equipment') == -1)) {
+        add_to_options = true;
+      } else if ($.inArray( parseInt(org_id), type.orgs ) >= 0) {
+        add_to_options = true;
+      }
+
+      if ( add_to_options ) {
         if (parseInt($('#template_proxy_asset_type_id').val()) == parseInt(type.id)) {
           options += '<option value="' + type.id + '" selected>' + type.name + '</option>';
         } else {
           options += '<option value="' + type.id + '">' + type.name + '</option>';
         }
       }
+    }
+
+    if (parseInt(file_content_type_id) == new_inventory_id) {
+      options += '<option value="' + equipment_asset_type_id + '">Equipment</option>';
     }
 
     //console.log(options);
