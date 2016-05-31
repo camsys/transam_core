@@ -73,10 +73,6 @@ module FiscalYear
 
   end
 
-  def planning_year_year_on_date(date)
-    fiscal_year_year_on_date(date) + 1
-  end
-
   # Returns the end date of the fiscal year of a given date
   def fiscal_year_end_date(date=Date.today)
     date_year = fiscal_year_year_on_date(date)
