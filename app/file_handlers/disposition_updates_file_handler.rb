@@ -66,8 +66,12 @@ class DispositionUpdatesFileHandler < AbstractFileHandler
           asset_tag   = cells[ASSET_TAG_COL].to_s
 
           Rails.logger.debug "  Processing row #{row}. Asset ID = '#{object_key}', Subtype = '#{subtype_str}', Asset Tag = '#{asset_tag}'"
-          asset = Asset.find_by('organization_id = ? AND object_key = ?', organization.id, object_key)
 
+          if object_key.present?
+            asset = Asset.find_by('organization_id = ? AND object_key = ?', organization.id, object_key)
+          else
+            asset = Asset.find_by('organization_id = ? AND asset_tag = ?', organization.id, asset_tag)
+          end
           # Attempt to find the asset
           # complain if we cant find it
           if asset.nil?
