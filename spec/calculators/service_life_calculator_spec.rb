@@ -26,8 +26,15 @@ RSpec.describe ServiceLifeCalculator, :type => :calculator do
 
     it 'is by age if assessed_rating is greater than condition threshold' do
       @condition_update_event.assessed_rating = 3.0
+      @test_asset.update!(in_service_date: Date.today - 1.year)
       @condition_update_event.save
       expect(test_calculator.send(:by_condition,@test_asset)).to eq(test_calculator.send(:by_age,@test_asset))
+    end
+
+    it 'is next planning year if asset is in backlog' do
+      @condition_update_event.assessed_rating = 3.0
+      @condition_update_event.save
+      expect(test_calculator.send(:by_condition,@test_asset)).to eq(current_planning_year_year + 1)
     end
 
   end
