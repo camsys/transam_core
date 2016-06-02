@@ -176,6 +176,8 @@ class AssetsController < AssetAwareController
     # When editing a newly transferred asset this link is invalid so we don't want to show it.
     if @asset.asset_tag == @asset.object_key
       @asset.asset_tag = nil
+
+      @asset.fta_ownership_type = nil if @asset.respond_to?(:fta_ownership_type)
     else
       add_breadcrumb @asset.asset_tag, inventory_path(@asset)
     end
