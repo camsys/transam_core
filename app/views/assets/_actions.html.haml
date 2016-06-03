@@ -16,21 +16,21 @@
           %ul.dropdown-menu.scrollable-menu
             - @asset.event_classes.each do |klass|
               - unless klass.name == 'DispositionUpdateEvent' or klass.name == 'EarlyDispositionRequestUpdateEvent'
-                - if klass.asset_event_type.active
+                - if can?(:update, klass) && klass.asset_event_type.try(:active)
                   %li.text-left
                     = link_to new_inventory_asset_event_path(@asset, :event_type => klass.asset_event_type.id) do
                       %i.fa.fa-fw{:class => klass.asset_event_type.display_icon_name}
                       = klass.asset_event_type.name
-
-        %li.text-left.dropdown-submenu
-          = link_to '#' do
-            %i.fa.fa-fw.fa-edit
-            = " Edit"
-          %ul.dropdown-menu.scrollable-menu
-            - # Load module specific tabs if they exist
-            - SystemConfig.transam_module_names.each do |mod|
-              - if lookup_context.template_exists?("#{mod}_detail_actions", 'assets', true)
-                = render :partial => "assets/#{mod}_detail_actions"
+        - unless cannot?(:edit_master_record, @asset)
+          %li.text-left.dropdown-submenu
+            = link_to '#' do
+              %i.fa.fa-fw.fa-edit
+              = " Edit"
+            %ul.dropdown-menu.scrollable-menu
+              - # Load module specific tabs if they exist
+              - SystemConfig.transam_module_names.each do |mod|
+                - if lookup_context.template_exists?("#{mod}_detail_actions", 'assets', true)
+                  = render :partial => "assets/#{mod}_detail_actions"
 
         - # Add in asset groups if 1 or more asset groups are defined for this org
         - if @organization.asset_groups.count > 0
