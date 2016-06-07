@@ -105,6 +105,20 @@ class Upload < ActiveRecord::Base
     assets.destroy_all
   end
 
+  def updates
+    updates = {}
+    assets.each do |a|
+      update[a.object_key] = [a, nil]
+    end
+    asset_events.each do |evt|
+      if assets.map{|a| a.object_key}.include? evt.asset.object_key
+        updates[evt.asset.object_key][1] = evt
+      else
+        update[a.object_key] = [a, evt]
+      end
+    end
+  end
+
   protected
 
   # Set resonable defaults for a new vehicle
