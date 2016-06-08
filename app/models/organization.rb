@@ -35,7 +35,7 @@ class Organization < ActiveRecord::Base
   belongs_to :organization_type
 
   # Every organization can have a set of users
-  has_many  :users
+  has_and_belongs_to_many :users, :join_table => 'users_organizations'
 
   # Every organization can have messages
   has_many  :messages
