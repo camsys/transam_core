@@ -26,4 +26,7 @@
             %li
               = link_to fire_workflow_event_inventory_asset_event_path(@asset_event.asset, @asset_event, :event => evt, :transferred => 1) do
                 %i.fa.fa-fw{:class => get_workflow_event_icon(evt)}
-                = "#{evt.titleize}"
+                -if evt == 'approve_via_transfer'
+                  = 'Approve via Transfer'
+                -else
+                  = "#{evt.titleize}"
