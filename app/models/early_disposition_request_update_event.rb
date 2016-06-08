@@ -59,7 +59,7 @@ class EarlyDispositionRequestUpdateEvent < AssetEvent
     # request is rejected
     state :rejected
 
-    # request is conditionally approved, only allow transfering the asset to another agency
+    # request is conditionally approved, only allow transferring the asset to another agency
     state :transfer_approved
 
     #---------------------------------------------------------------------------
