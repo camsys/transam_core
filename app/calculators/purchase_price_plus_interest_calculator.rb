@@ -25,8 +25,7 @@ class PurchasePricePlusInterestCalculator < CostCalculator
     if on_date.nil?
       num_years_to_replacement = [current_planning_year_year - fiscal_year_year_on_date(purchase_date), 0].max
     else
-      months_to_replacement = (on_date.year * 12 + on_date.month) - (purchase_date.year * 12 + purchase_date.month)
-      num_years_to_replacement = [(months_to_replacement.to_f/12.0+0.5).floor, 0].max
+      num_years_to_replacement = [fiscal_year_year_on_date(on_date)- fiscal_year_year_on_date(purchase_date), 0].max
     end
     Rails.logger.debug "num_years_to_replacement #{num_years_to_replacement}"
 
