@@ -907,7 +907,7 @@ class Asset < ActiveRecord::Base
     class_name = asset.policy_analyzer.get_replacement_cost_calculation_type.class_name
     # create an instance of this class and call the method
     calculator_instance = class_name.constantize.new
-    calculator_instance.calculate_on_date(asset, on_date)
+    (calculator_instance.calculate_on_date(asset, on_date)+0.5).to_i #round
 
   end
 
@@ -1072,7 +1072,7 @@ class Asset < ActiveRecord::Base
       Rails.logger.debug "Start Date = #{start_date}"
       class_name = this_policy_analyzer.get_replacement_cost_calculation_type.class_name
       calculator_instance = class_name.constantize.new
-      self.estimated_replacement_cost = calculator_instance.calculate_on_date(self, start_date)
+      self.estimated_replacement_cost = (calculator_instance.calculate_on_date(self, start_date)+0.5).to_i
       Rails.logger.debug "estimated_replacement_cost = #{self.estimated_replacement_cost}"
     end
 
@@ -1084,7 +1084,7 @@ class Asset < ActiveRecord::Base
       calculator_instance = class_name.constantize.new
       start_date = start_of_fiscal_year(scheduled_replacement_year) unless scheduled_replacement_year.blank?
       Rails.logger.debug "Start Date = #{start_date}"
-      self.scheduled_replacement_cost = calculator_instance.calculate_on_date(self, start_date)
+      self.scheduled_replacement_cost = (calculator_instance.calculate_on_date(self, start_date)+0.5).to_i
     end
 
     self.early_replacement_reason = nil if check_early_replacement && !is_early_replacement?

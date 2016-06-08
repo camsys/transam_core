@@ -25,6 +25,8 @@ describe "tasks/_task_detail.html.haml", :type => :view do
   it 'assign' do
     test_task = create(:task)
     test_user = create(:admin)
+    test_user.organizations << test_user.organization
+    test_user.save!
     assign(:organization, test_user.organization)
     render 'tasks/task_detail', :task => test_task
 

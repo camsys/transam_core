@@ -15,7 +15,7 @@ RSpec.describe Organization, :type => :model do
       expect(test_org).to belong_to(:organization_type)
     end
     it 'has users' do
-      expect(test_org).to have_many(:users)
+      expect(test_org).to have_and_belong_to_many(:users)
     end
     it 'has messages' do
       expect(test_org).to have_many(:messages)
@@ -105,6 +105,8 @@ RSpec.describe Organization, :type => :model do
     end
     it 'technical contact' do
       test_user = create(:technical_contact, :organization => test_org)
+      test_user.organizations << test_user.organization
+      test_user.save!
 
       expect(test_org.technical_contact).to eq(test_user)
     end
@@ -117,6 +119,8 @@ RSpec.describe Organization, :type => :model do
     end
     it 'get users with a role' do
       test_user = create(:admin, :organization => test_org)
+      test_user.organizations << test_user.organization
+      test_user.save!
 
       expect(test_org.users_with_role 'admin').to include(test_user)
     end
