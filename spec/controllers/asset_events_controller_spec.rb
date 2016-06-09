@@ -105,7 +105,7 @@ RSpec.describe AssetEventsController, :type => :controller do
 
       get :fire_workflow_event, :inventory_id => bus.object_key, :id => early_disp_event.object_key, :event => 'approve_via_transfer'
 
-      expect(response).to redirect_to(new_inventory_asset_event_path(bus, :causal_asset_event => bus.asset_events.last.object_key, :causal_asset_event_name => 'approve_via_transfer', :event_type => DispositionUpdateEvent.asset_event_type.id,  :transferred => '1'))
+      expect(response).to redirect_to(new_inventory_asset_event_path(bus :event_type => DispositionUpdateEvent.asset_event_type.id,  :transferred => '1', :causal_asset_event_id => bus.asset_events.last.object_key, :causal_asset_event_name => 'approve_via_transfer'))
     end
 
   end

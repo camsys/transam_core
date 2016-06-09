@@ -62,8 +62,8 @@ class AssetEventsController < AssetAwareController
       @transferred = true
     end
 
-    unless params[:causal_asset_event].nil?
-      @causal_asset_event = AssetEvent.find_by(:object_key => params[:causal_asset_event])
+    unless params[:causal_asset_event_id].nil?
+      @causal_asset_event_id = params[:causal_asset_event_id]
     end
 
     unless params[:causal_asset_event_name].nil?
@@ -149,12 +149,12 @@ class AssetEventsController < AssetAwareController
       @asset_event.creator = current_user
     end
 
-    unless params[:causal_asset_even].nil?
-      @causal_asset_event = AssetEvent.find_by(:object_key => params[:causal_asset_even])
+    unless params[:causal_asset_event_id].nil?
+      @causal_asset_event = AssetEvent.find_by(:object_key => params[:causal_asset_event_id])
     end
 
     unless params[:causal_asset_event_name].nil?
-      @causal_asset_event_name = AssetEvent.find_by(:object_key => params[:causal_asset_event_name])
+      @causal_asset_event_name = params[:causal_asset_event_name]
     end
 
     add_new_show_create_breadcrumbs
@@ -229,7 +229,7 @@ class AssetEventsController < AssetAwareController
       if asset_event_class.name == 'EarlyDispositionRequestUpdateEvent' && event_name == "approve_via_transfer"
         is_redirected = true
         # we do not want to fire approval of the application event approval
-        redirect_to new_inventory_asset_event_path(@asset_event.asset, :event_type => DispositionUpdateEvent.asset_event_type.id, :transferred => 1, :causal_asset_event => @asset_event, :causal_asset_event_name => event_name)
+        redirect_to new_inventory_asset_event_path(@asset_event.asset, :event_type => DispositionUpdateEvent.asset_event_type.id, :transferred => 1, :causal_asset_event_id => @asset_event.object_key, :causal_asset_event_name => event_name)
       elsif @asset_event.fire_state_event(event_name)
         event = WorkflowEvent.new
         event.creator = current_user
