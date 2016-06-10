@@ -188,7 +188,7 @@ class AssetsController < AssetAwareController
   def update
     @asset.updator = current_user
 
-    add_breadcrumb "#{@asset.asset_type.name}".pluralize(2), inventory_index_path
+    add_breadcrumb "#{@asset.asset_type.name}".pluralize(2), inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
     add_breadcrumb @asset.name, inventory_path(@asset)
     add_breadcrumb "Modify", edit_inventory_path(@asset)
 
@@ -228,7 +228,7 @@ class AssetsController < AssetAwareController
     asset_subtype = AssetSubtype.find(params[:asset_subtype])
     if asset_subtype.nil?
       notify_user(:alert, "Asset subtype '#{params[:asset_subtype]}' not found. Can't create new asset!")
-      redirect_to(inventory_index_url )
+      redirect_to(root_url)
       return
     end
 
@@ -654,7 +654,8 @@ class AssetsController < AssetAwareController
     unless params[:cancel].blank?
       @asset = get_selected_asset(true)
       if @asset.nil?
-        redirect_to inventory_index_url
+        notify_user(:alert, 'Record not found!')
+        redirect_to(root_url)
       else
         redirect_to inventory_url(@asset)
       end
