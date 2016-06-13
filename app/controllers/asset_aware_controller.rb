@@ -80,7 +80,7 @@ class AssetAwareController < OrganizationAwareController
     @asset = get_selected_asset(render_typed_assets)
     if @asset.nil?
       notify_user(:alert, 'Record not found!')
-      redirect_to(inventory_index_url)
+      redirect_to(root_url)
       return
     end
   end

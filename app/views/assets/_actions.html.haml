@@ -1,80 +1,90 @@
 - can_dispose_asset = can? :create, @asset.disposition_updates.build
 - can_request_early_disposition = can? :create, @asset.early_disposition_requests.build
 - if can? :update, @asset or can_dispose_asset or can_request_early_disposition or can? :destroy, @asset
-  .btn-group.pull-right.panel-action
-    %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
-      %i.fa.fa-cog
-      = " Actions"
-      %span.caret
-    %ul.dropdown-menu.multi-level{:role => 'menu'}
-      - if can? :update, @asset
-        - # Add in event actions. These are discovered from the asset
-        %li.text-left.dropdown-submenu
-          = link_to '#' do
-            %i.fa.fa-fw.fa-edit
-            = " Update"
-          %ul.dropdown-menu.scrollable-menu
-            - @asset.event_classes.each do |klass|
-              - unless klass.name == 'DispositionUpdateEvent' or klass.name == 'EarlyDispositionRequestUpdateEvent'
-                - if klass.asset_event_type.active
-                  %li.text-left
-                    = link_to new_inventory_asset_event_path(@asset, :event_type => klass.asset_event_type.id) do
-                      %i.fa.fa-fw{:class => klass.asset_event_type.display_icon_name}
-                      = klass.asset_event_type.name
 
-        %li.text-left.dropdown-submenu
-          = link_to '#' do
-            %i.fa.fa-fw.fa-edit
-            = " Edit"
-          %ul.dropdown-menu.scrollable-menu
-            - # Load module specific tabs if they exist
-            - SystemConfig.transam_module_names.each do |mod|
-              - if lookup_context.template_exists?("#{mod}_detail_actions", 'assets', true)
-                = render :partial => "assets/#{mod}_detail_actions"
+  - event_type = EarlyDispositionRequestUpdateEvent.asset_event_type
+  - early_disposition_events = @asset.history.select{ |event| event.state == "new" && event.asset_event_type_id == event_type.id}
+  - can_view_early_disposition = event_type.active and can?(:manage, EarlyDispositionRequestUpdateEvent)
+  -if early_disposition_events.length == 0 || (early_disposition_events.length > 0 && can_view_early_disposition && event_type.active)
+    .btn-group.pull-right.panel-action
+      %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
+        %i.fa.fa-cog
+        = " Actions"
+        %span.caret
+      %ul.dropdown-menu.multi-level{:role => 'menu'}
+        - if early_disposition_events.length > 0
+          -if can_view_early_disposition && event_type.active
+            %li
+              = link_to inventory_asset_event_path(@asset.object_key, early_disposition_events.first.object_key) do
+                %i.fa.fa-fw{:class => event_type.display_icon_name}
+                = "Manage Early Disposition"
+        - else
+          - if can? :update, @asset
+            - # Add in event actions. These are discovered from the asset
+            %li.text-left.dropdown-submenu
+              = link_to '#' do
+                %i.fa.fa-fw.fa-edit
+                = " Update"
+              %ul.dropdown-menu.scrollable-menu
+                - @asset.event_classes.each do |klass|
+                  - unless klass.name == 'DispositionUpdateEvent' or klass.name == 'EarlyDispositionRequestUpdateEvent'
+                    - if klass.asset_event_type.active
+                      %li.text-left
+                        = link_to new_inventory_asset_event_path(@asset, :event_type => klass.asset_event_type.id) do
+                          %i.fa.fa-fw{:class => klass.asset_event_type.display_icon_name}
+                          = klass.asset_event_type.name
 
-        - # Add in asset groups if 1 or more asset groups are defined for this org
-        - if @organization.asset_groups.count > 0
-          %li.divider
-          %li.text-left.dropdown-submenu
-            = link_to '#' do
-              %i.fa.fa-fw.fa-tags
-              = " Add to group"
-            %ul.dropdown-menu.scrollable-menu
-              - @organization.asset_groups.each do |grp|
-                - unless @asset.asset_groups.include? grp
-                  %li.text-left
-                    = link_to add_to_group_inventory_path(@asset, :asset_group => grp) do
-                      %i.fa.fa-fw.fa-tag
-                      = grp.name
+            %li.text-left.dropdown-submenu
+              = link_to '#' do
+                %i.fa.fa-fw.fa-edit
+                = " Edit"
+              %ul.dropdown-menu.scrollable-menu
+                - # Load module specific tabs if they exist
+                - SystemConfig.transam_module_names.each do |mod|
+                  - if lookup_context.template_exists?("#{mod}_detail_actions", 'assets', true)
+                    = render :partial => "assets/#{mod}_detail_actions"
 
-      - if can? :create, Asset
-        %li.divider
-        %li
-          = link_to copy_inventory_path(@asset) do
-            %i.fa.fa-fw.fa-copy
-            = " Make a copy"
+            - # Add in asset groups if 1 or more asset groups are defined for this org
+            - if @organization.asset_groups.count > 0
+              %li.divider
+              %li.text-left.dropdown-submenu
+                = link_to '#' do
+                  %i.fa.fa-fw.fa-tags
+                  = " Add to group"
+                %ul.dropdown-menu.scrollable-menu
+                  - @organization.asset_groups.each do |grp|
+                    - unless @asset.asset_groups.include? grp
+                      %li.text-left
+                        = link_to add_to_group_inventory_path(@asset, :asset_group => grp) do
+                          %i.fa.fa-fw.fa-tag
+                          = grp.name
 
+          - if can? :create, Asset
+            %li.divider
+            %li
+              = link_to copy_inventory_path(@asset) do
+                %i.fa.fa-fw.fa-copy
+                = " Make a copy"
+          - if can_dispose_asset
+            %li.divider
+            %li
+              - event_type = DispositionUpdateEvent.asset_event_type
+              - if event_type.active
+                = link_to new_inventory_asset_event_path(@asset, :event_type => event_type.id) do
+                  %i.fa.fa-fw{:class => event_type.display_icon_name}
+                  = " #{event_type.name}"
+          - elsif can_request_early_disposition
+            %li.divider
+            %li
+              - event_type = EarlyDispositionRequestUpdateEvent.asset_event_type
+              - if event_type.active
+                = link_to new_inventory_asset_event_path(@asset, :event_type => event_type.id) do
+                  %i.fa.fa-fw{:class => event_type.display_icon_name}
+                  = " #{event_type.name}"
 
-      - if can_dispose_asset
-        %li.divider
-        %li
-          - event_type = DispositionUpdateEvent.asset_event_type
-          - if event_type.active
-            = link_to new_inventory_asset_event_path(@asset, :event_type => event_type.id) do
-              %i.fa.fa-fw{:class => event_type.display_icon_name}
-              = " #{event_type.name}"
-      - elsif can_request_early_disposition
-        %li.divider
-        %li
-          - event_type = EarlyDispositionRequestUpdateEvent.asset_event_type
-          - if event_type.active
-            = link_to new_inventory_asset_event_path(@asset, :event_type => event_type.id) do
-              %i.fa.fa-fw{:class => event_type.display_icon_name}
-              = " #{event_type.name}"
-
-      - if can? :destroy, @asset
-        %li.divider
-        %li
-          = link_to inventory_path(@asset), :method => :delete, :data => {:confirm => "Are you sure you want to remove this asset? The action can't be undone."} do
-            %i.fa.fa-fw.fa-trash-o
-            = " Remove this asset"
+          - if can? :destroy, @asset
+            %li.divider
+            %li
+              = link_to inventory_path(@asset), :method => :delete, :data => {:confirm => "Are you sure you want to remove this asset? The action can't be undone."} do
+                %i.fa.fa-fw.fa-trash-o
+                = " Remove this asset"
