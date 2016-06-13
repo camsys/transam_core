@@ -1,3 +1,9 @@
+- event_type = EarlyDispositionRequestUpdateEvent.asset_event_type
+- early_disposition_events = @asset.history.select{ |event| event.state == "new" && event.asset_event_type_id == event_type.id}
+- can_view_early_disposition = event_type.active and can?(:manage, EarlyDispositionRequestUpdateEvent)
+
+
+
 - can_dispose_asset = can? :create, @asset.disposition_updates.build
 - can_request_early_disposition = can? :create, @asset.early_disposition_requests.build
 - if can? :update, @asset or can_dispose_asset or can_request_early_disposition or can? :destroy, @asset
@@ -53,8 +59,14 @@
           = link_to copy_inventory_path(@asset) do
             %i.fa.fa-fw.fa-copy
             = " Make a copy"
-
-      - if can_dispose_asset
+      - if can_view_early_disposition && early_disposition_events.length >= 1
+        %li.divider
+        %li
+          - if event_type.active
+            = link_to inventory_asset_event_path(@asset.object_key, early_disposition_events.first.object_key) do
+              %i.fa.fa-fw{:class => event_type.display_icon_name}
+              = "Manage Early Disposition"
+      - elsif can_dispose_asset
         %li.divider
         %li
           - event_type = DispositionUpdateEvent.asset_event_type
