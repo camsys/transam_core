@@ -1,20 +1,27 @@
 %table.table.table-hover
-	%thead
-		%tr
-			%th.left.nowrap Issue Type
-			%th.left.nowrap Reported On
-			%th.left.nowrap Reported By
-			%th.left.nowrap User Org
-			%th.left.nowrap User Email
-			%th.left.nowrap Browser Type
-			%th.left Comment
-		%tbody
-			- @data.each do |issue|
-				%tr
-					%td.left= issue.issue_type
-					%td.left= format_as_date_time(issue.created_at)
-					%td.left= issue.creator
-					%td.left= issue.creator.organization
-					%td.left= issue.creator.email
-					%td.left= issue.web_browser_type
-					%td.left= issue.comments.html_safe
+  %thead
+    %tr
+      %th.left.nowrap ORGANIZATION
+      %th.left.nowrap TYPE
+      %th.left.nowrap DATE/TIME
+      %th.left.nowrap COMMENTS
+      %th.left.nowrap BROWSER TYPE
+      %th.left.nowrap FIRST NAME
+      %th.left.nowrap LAST NAME
+      %th.left.nowrap PHONE
+      %th.left.nowrap STATUS
+      %th.left.nowrap RESOLUTION COMMENTS
+
+    %tbody
+    - @data.each do |issue|
+      %tr
+        %td.left= issue.creator.organization
+        %td.left= issue.issue_type
+        %td.left= format_as_date_time(issue.created_at)
+        %td.left= issue.comments
+        %td.left= issue.web_browser_type
+        %td.left= issue.creator.first_name
+        %td.left= issue.creator.last_name
+        %td.left= issue.creator.phone
+        %td.left= issue.status_type
+        %td.left= resolution_comments

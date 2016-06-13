@@ -110,6 +110,11 @@ issue_types = [
   {:active => 1, :name => 'Other',        :description => 'Other'}
 ]
 
+issue_status_types = [
+    {:active => 1, :name => 'Open',      :description => 'Open'},
+    {:active => 1, :name => 'Resolved',  :description => 'Resolved.'},
+]
+
 web_browser_types = [
   {:active => 1, :name => 'Microsoft IE 8',      :description => 'IE 8'},
   {:active => 1, :name => 'Microsoft IE 9',      :description => 'IE 9'},
