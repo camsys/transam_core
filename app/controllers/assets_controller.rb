@@ -307,7 +307,7 @@ class AssetsController < AssetAwareController
 
     # make sure we can find the asset we are supposed to be removing and that it belongs to us.
     if @asset.nil?
-      redirect_to(inventory_url, :flash => { :alert => t(:error_404) })
+      redirect_to(inventory_index_url, :flash => { :alert => t(:error_404) })
       return
     end
 
@@ -317,7 +317,7 @@ class AssetsController < AssetAwareController
     notify_user(:notice, "Asset was successfully removed.")
 
     respond_to do |format|
-      format.html { redirect_to(inventory_url) }
+      format.html { redirect_to(inventory_index_url) }
       format.json { head :no_content }
     end
 
