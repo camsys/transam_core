@@ -15,13 +15,13 @@
     %tbody
     - @data.each do |issue|
       %tr
-        %td.left= issue.creator.organization
+        -#%td.left= issue.creator.organization
         %td.left= issue.issue_type
         %td.left= format_as_date_time(issue.created_at)
         %td.left= issue.comments
         %td.left= issue.web_browser_type
-        %td.left= issue.creator.first_name
-        %td.left= issue.creator.last_name
-        %td.left= issue.creator.phone
+        -#%td.left= issue.creator.first_name
+        -#%td.left= issue.creator.last_name
+        -#%td.left= issue.creator.phone
         %td.left= issue.status_type
         %td.left= resolution_comments
