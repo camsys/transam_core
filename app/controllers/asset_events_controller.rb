@@ -176,7 +176,7 @@ class AssetEventsController < AssetAwareController
         #If another event resulted in this event we should provess the other event as well
         unless @causal_asset_event.nil? || @causal_asset_event_name.nil?
           @causal_asset_event = AssetEvent.as_typed_event @causal_asset_event
-          if @causal_asset_event_name == 'approved_via_tranfer' && @causal_asset_event.class.name == 'EarlyDispositionRequestUpdateEvent'
+          if @causal_asset_event_name == 'approve_via_transfer' && @causal_asset_event.class.name == 'EarlyDispositionRequestUpdateEvent'
             @causal_asset_event.state = 'transfer_approved'
             @causal_asset_event.save
           end
