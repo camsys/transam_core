@@ -112,7 +112,7 @@ issue_types = [
 
 issue_status_types = [
     {:active => 1, :name => 'Open',      :description => 'Open'},
-    {:active => 1, :name => 'Resolved',  :description => 'Resolved.'},
+    {:active => 1, :name => 'Resolved',  :description => 'Resolved'},
 ]
 
 web_browser_types = [

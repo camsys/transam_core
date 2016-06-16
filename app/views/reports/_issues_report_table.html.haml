@@ -1,27 +1,22 @@
 %table.table.table-hover
   %thead
     %tr
-      %th.left.nowrap ORGANIZATION
-      %th.left.nowrap TYPE
-      %th.left.nowrap DATE/TIME
-      %th.left.nowrap COMMENTS
-      %th.left.nowrap BROWSER TYPE
-      %th.left.nowrap FIRST NAME
-      %th.left.nowrap LAST NAME
-      %th.left.nowrap PHONE
-      %th.left.nowrap STATUS
-      %th.left.nowrap RESOLUTION COMMENTS
-
+      - @data[:labels][0...-1].each do |label|
+        %th.right= label
     %tbody
-    - @data.each do |issue|
-      %tr
-        -#%td.left= issue.creator.organization
-        %td.left= issue.issue_type
-        %td.left= format_as_date_time(issue.created_at)
-        %td.left= issue.comments
-        %td.left= issue.web_browser_type
-        -#%td.left= issue.creator.first_name
-        -#%td.left= issue.creator.last_name
-        -#%td.left= issue.creator.phone
-        %td.left= issue.status_type
-        %td.left= resolution_comments
+      - @data[:data].each do |row|
+        %tr{:id => "#{row.last}"}
+          - row[0...-1].each do |col|
+            %td.right= format_as_general(col)
+
+
+:javascript
+
+  //Redirect the selected row to the issue edit form
+  $("tr").click(function() {
+
+    var object_key = $(this).attr('id')
+    var path = '#{edit_issue_path("X")}';
+    var url = path.replace("X", object_key);
+    document.location.href = url;
+  });

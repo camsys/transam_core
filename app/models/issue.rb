@@ -16,13 +16,14 @@ class Issue < ActiveRecord::Base
   belongs_to :web_browser_type
 
   # Each issue has a status [Open, Resolved] this list could grow to include under investigation or rejected which is why it isn't a boolean
-  belongs_to :issue_type
+  belongs_to :issue_status_type
+
 
   validates :issue_type_id,                   :presence => true
   validates :web_browser_type_id,             :presence => true
   validates :comments,                        :presence => true
   validates :created_by_id,                   :presence => true
-  validates :resolution_comments,             :presence => true, :if => "issue_status == 'Resolved?"
+  validates :resolution_comments,             :presence => true, :if => "issue_status_type_id == 2"
   # validates_presence_of :resolution_comments, :if :issue_status == 'Resolved'
 
   # List of hash parameters allowed by the controller
@@ -30,7 +31,7 @@ class Issue < ActiveRecord::Base
     :issue_type_id,
     :web_browser_type_id,
     :comments,
-    :issue_status,
+    :issue_status_type_id,
     :resolution_comments
   ]
   
