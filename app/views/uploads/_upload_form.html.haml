@@ -11,7 +11,7 @@
     .row
       .col-sm-6
         = f.input :file, :required => true, :label => 'Spreadsheet', :hint => 'Select a spreadsheet that has been downloaded from TransAM, edited, then saved.'
-      .col-sm-6
+      .col-sm-6.force_update{style: 'display: none;'}
         = f.input :force_update, :collection => [['No', false],['Yes', true]], :include_blank => false
     .row
       .col-sm-6
@@ -36,4 +36,17 @@
     submitHandler: function(form) {
       form.submit();
     }
+  });
+
+  //Hide force_update unless the user is uploading new inventory and then display so the user can choose if they want to force the update
+  var new_inventory_file_content_type_id = #{FileContentType.find_by(:class_name => 'NewInventoryFileHandler').id};
+
+  $(function(){
+    $('#upload_file_content_type_id').change(function() {
+      if($(this).val() == new_inventory_file_content_type_id) {
+        $(".force_update").show();
+      } else {
+        $(".force_update").hide();
+      }
+    });
   });
