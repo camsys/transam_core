@@ -15,6 +15,13 @@
     .row
       .col-sm-12.col-xs-12
         = f.input :comments, :required => true, :input_html => { :rows => 6 }, :placeholder => "Please provide as much detail as you can..."
+    -if @resolving_issue
+      .row
+        .col-sm-12.col-xs-12
+          = f.association :issue_status_type
+      .row
+        .col-sm-12.col-xs-12
+          = f.input :resolution_comments, :input_html => { :rows => 6 }, :placeholder => "Please provide reason for issue resolution..."
 
     = f.button :submit, :class => 'btn btn-primary'
 

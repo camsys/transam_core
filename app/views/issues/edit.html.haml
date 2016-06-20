@@ -1,0 +1,10 @@
+= render(:partial => 'shared/form_errors', :locals => {:obj => @issue}) unless @issue.errors.empty?
+
+.col-xs-12.col-sm-8.col-sm-offset-2
+  .page-header
+    %h2 Resolve an Issue
+  .row
+    .col-xs-12
+      = render 'form'
+
+= render 'scripts'
