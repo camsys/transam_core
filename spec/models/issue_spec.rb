@@ -39,7 +39,9 @@ RSpec.describe Issue, :type => :model do
     expect(Issue.allowable_params).to eq([
       :issue_type_id,
       :web_browser_type_id,
-      :comments
+      :comments,
+      :issue_status_type_id,
+      :resolution_comments
     ])
   end
 end
