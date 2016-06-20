@@ -13,7 +13,7 @@ class AddResolutionColumnsToIssue < ActiveRecord::Migration
       add_column    :issues, :issue_status_type_id, :integer, :after => :comments, :default => 1
     end
     unless column_exists? :issues, :resolution_comments
-      add_column    :issues, :resolution_comments, :text, :after => :issue_status
+      add_column    :issues, :resolution_comments, :text, :after => :issue_status_type_id
     end
 
     issue_report = Report.find_by(id: 2)
