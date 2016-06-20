@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160429134022) do
+ActiveRecord::Schema.define(version: 20160610142004) do
 
   create_table "activities", force: true do |t|
     t.string   "object_key",           limit: 12
@@ -450,6 +450,12 @@ ActiveRecord::Schema.define(version: 20160429134022) do
   add_index "images", ["imagable_id", "imagable_type"], name: "images_idx2", using: :btree
   add_index "images", ["object_key"], name: "images_idx1", using: :btree
 
+  create_table "issue_status_types", force: true do |t|
+    t.string  "name",        limit: 32,  null: false
+    t.string  "description", limit: 254, null: false
+    t.boolean "active"
+  end
+
   create_table "issue_types", force: true do |t|
     t.string  "name",        limit: 64,  null: false
     t.string  "description", limit: 254, null: false
@@ -457,11 +463,13 @@ ActiveRecord::Schema.define(version: 20160429134022) do
   end
 
   create_table "issues", force: true do |t|
-    t.string   "object_key",          limit: 12, null: false
-    t.integer  "issue_type_id",                  null: false
-    t.integer  "web_browser_type_id",            null: false
-    t.integer  "created_by_id",                  null: false
-    t.text     "comments",                       null: false
+    t.string   "object_key",           limit: 12,             null: false
+    t.integer  "issue_type_id",                               null: false
+    t.integer  "web_browser_type_id",                         null: false
+    t.integer  "created_by_id",                               null: false
+    t.text     "comments",                                    null: false
+    t.integer  "issue_status_type_id",            default: 1
+    t.text     "resolution_comments"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
