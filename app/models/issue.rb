@@ -14,17 +14,25 @@ class Issue < ActiveRecord::Base
 
   # Each issue has a web browser type [IE 8, IE 9, IE 10, Chrome, Firefox]
   belongs_to :web_browser_type
-  
-  validates :issue_type_id,       :presence => true
-  validates :web_browser_type_id, :presence => true
-  validates :comments,            :presence => true
-  validates :created_by_id,       :presence => true
+
+  # Each issue has a status [Open, Resolved] this list could grow to include under investigation or rejected which is why it isn't a boolean
+  belongs_to :issue_status_type
+
+
+  validates :issue_type_id,                   :presence => true
+  validates :web_browser_type_id,             :presence => true
+  validates :comments,                        :presence => true
+  validates :created_by_id,                   :presence => true
+  validates :resolution_comments,             :presence => true, :if => "issue_status_type_id == 2"
+  # validates_presence_of :resolution_comments, :if :issue_status == 'Resolved'
 
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
     :issue_type_id,
     :web_browser_type_id,
-    :comments
+    :comments,
+    :issue_status_type_id,
+    :resolution_comments
   ]
   
   #------------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 class IssuesController < OrganizationAwareController
 
-  before_action :set_issue, only: [:show, :edit, :update, :destroy, :success]
+  before_action :set_issue, only: [:show, :edit, :update, :destroy, :success, :review]
 
   add_breadcrumb "Home", :root_path
 
@@ -11,6 +11,12 @@ class IssuesController < OrganizationAwareController
 
   # GET /issues/1
   def show
+    add_breadcrumb "Viewing Issue"
+  end
+
+  # GET /issues/1/review
+  def review
+    add_breadcrumb "Viewing Issue"
   end
 
   # GET /issues/1
@@ -27,6 +33,13 @@ class IssuesController < OrganizationAwareController
 
   # GET /issues/1/edit
   def edit
+    add_breadcrumb "Resolve an issue"
+
+    if can? :manage_issue, @issue
+      @resolving_issue = true
+    else
+      redirect_to review_issue_path(@issue)
+    end
   end
 
   # POST /issues
@@ -46,8 +59,9 @@ class IssuesController < OrganizationAwareController
   # PATCH/PUT /issues/1
   def update
     if @issue.update(issue_params)
-      redirect_to @issue, notice: 'Issue was successfully updated.'
+      redirect_to success_issue_path(@issue)
     else
+      @resolving_issue = true
       render :edit
     end
   end
