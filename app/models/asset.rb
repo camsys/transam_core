@@ -134,10 +134,12 @@ class Asset < ActiveRecord::Base
   # Attributes common to all asset types
   #-----------------------------------------------------------------------------
 
-  # Validations on core attributes
-  validates       :asset_tag,         :presence => true, :length => { :maximum => 12 }
   # Asset tags must be unique within an organization
   validates_uniqueness_of :asset_tag, :scope => :organization
+
+  # Validations on core attributes
+  validates       :asset_tag,         :presence => true, :length => { :maximum => 12 }
+  validate        :object_key_is_not_asset_tag
 
   #-----------------------------------------------------------------------------
   # Attributes that are used to cache asset condition information.
@@ -168,7 +170,7 @@ class Asset < ActiveRecord::Base
   # Returns a list of assets that have been disposed
   scope :disposed,    -> { where('assets.disposition_date IS NOT NULL') }
   # Returns a list of assets that are still operational
-  scope :operational, -> { where('assets.disposition_date IS NULL') }
+  scope :operational, -> { where('assets.disposition_date IS NULL AND assets.asset_tag != assets.object_key') }
   # Returns a list of asset that operational and are marked as being in service
   scope :in_service,  -> { where('assets.disposition_date IS NULL AND assets.service_status_type_id = 1')}
   # Returns a list of asset that in early replacement
@@ -1230,6 +1232,14 @@ class Asset < ActiveRecord::Base
     rescue Exception => e
       Rails.logger.error e.message
       raise RuntimeError.new "#{class_name} calculation failed for asset #{asset.object_key} and policy #{policy.name}"
+    end
+  end
+
+  def object_key_is_not_asset_tag
+    unless self.asset_tag.nil? || self.object_key.nil?
+      if self.asset_tag == self.object_key
+        @errors.add(:asset_tag, "should not be the same as the asset id")
+      end
     end
   end
 

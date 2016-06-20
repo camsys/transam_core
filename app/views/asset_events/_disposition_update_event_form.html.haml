@@ -8,7 +8,7 @@
         %span.input-group-addon
           %i.fa.fa-calendar
     .col-xs-6
-      = f.association :disposition_type, :label => "Disposition Type", :include_blank => false
+      = f.association :disposition_type, :label => "Disposition Type", :collection => DispositionType.active,:include_blank => false
 
   .row
     .col-xs-12

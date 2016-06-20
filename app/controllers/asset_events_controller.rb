@@ -175,11 +175,11 @@ class AssetEventsController < AssetAwareController
 
         #If another event resulted in this event we should provess the other event as well
         unless @causal_asset_event.nil? || @causal_asset_event_name.nil?
-          causal_event = WorkflowEvent.new
-          causal_event.creator = current_user
-          causal_event.accountable = @causal_asset_event
-          causal_event.event_type = @causal_asset_event_name
-          causal_event.save
+          @causal_asset_event = AssetEvent.as_typed_event @causal_asset_event
+          if @causal_asset_event.class.name == 'EarlyDispositionRequestUpdateEvent' && @causal_asset_event_name == 'approve_via_transfer'
+            @causal_asset_event.state = 'transfer_approved'
+            @causal_asset_event.save
+          end
         end
 
         format.html { redirect_to inventory_url(@asset) }
