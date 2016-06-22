@@ -189,7 +189,7 @@ class UploadsController < OrganizationAwareController
 
       # See if an org was set, use the default otherwise
       if template_proxy.organization_id.blank?
-        org = @organization
+        org = nil
       else
         o = Organization.find(template_proxy.organization_id)
         org = Organization.get_typed_organization(o)
@@ -229,7 +229,7 @@ class UploadsController < OrganizationAwareController
     ObjectSpace.undefine_finalizer(file)
     #You can uncomment this line when debugging locally to prevent Tempfile from disappearing before download.
     @filepath = file.path
-    @filename = "#{org.short_name.downcase}_#{file_content_type.class_name.underscore}_#{Date.today}.xlsx"
+    @filename = "#{org.present? ? org.short_name.downcase : ''}_#{file_content_type.class_name.underscore}_#{Date.today}.xlsx"
     begin
       file << stream.string
     rescue => ex
