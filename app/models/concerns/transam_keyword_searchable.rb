@@ -141,6 +141,7 @@ module TransamKeywordSearchable
         break
       end
     end
+    return
   end
 
   # Wrap the save method in an exception handler so that any schema-level problems
