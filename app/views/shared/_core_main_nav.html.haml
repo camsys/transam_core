@@ -3,7 +3,6 @@
     %i.fa.fa-bus.fa-2x
     %b.caret
   %ul.dropdown-menu.multi-level{:role => "menu"}
-    - current_type = nil
     - assets = Asset.unscoped.where(:organization_id => @organization_list).group(:asset_subtype_id).count
     - AssetType.all.each do |type|
       - subtypes = assets.select{|k, v| type.asset_subtypes.ids.include? k}
