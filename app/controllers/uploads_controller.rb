@@ -29,7 +29,8 @@ class UploadsController < OrganizationAwareController
       add_breadcrumb type.name unless type.nil?
     end
 
-    @uploads = Upload.where(conditions.join(' AND '), *values).order(:created_at)
+    asset_ids = Asset.where('organization_id IN (?) AND upload_id IS NOT NULL', @organization_list).ids
+    @uploads = Upload.where('('+conditions.join(' AND ')+') OR id IN (?)', *values, asset_ids).order(:created_at)
 
     # cache the set of asset ids in case we need them later
     cache_list(@uploads, INDEX_KEY_LIST_VAR)
@@ -262,8 +263,8 @@ class UploadsController < OrganizationAwareController
 
     @upload = Upload.new(form_params)
     @upload.user = current_user
-    if @upload.organization.nil?
-      @upload.organization = @organization
+    unless @upload.organization.nil?
+      @upload.organizations << @organization
     end
 
     add_breadcrumb "New Template"

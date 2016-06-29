@@ -5,7 +5,7 @@
     .row
       - if current_user.organizations.count > 1
         .col-sm-6
-          = f.association :organization, :required => false, :collection => current_user.organizations, :label_method => 'coded_name'
+          = f.association :organization, :required => true, :collection => current_user.organizations, :label_method => 'coded_name'
       .col-sm-6
         = f.association :file_content_type, :collection => FileContentType.active, :required => true, :label => 'Spreadsheet Content', :prompt => 'Set the spreadsheet contents...'
     .row
@@ -45,8 +45,12 @@
     $('#upload_file_content_type_id').change(function() {
       if($(this).val() == new_inventory_file_content_type_id) {
         $(".force_update").show();
+        $('#upload_organization_id').removeClass('required');
+        $('label[for="upload_organization_id"] abbr').hide();
       } else {
         $(".force_update").hide();
+        $('#upload_organization_id').addClass('required');
+        $('label[for="upload_organization_id"] abbr').show();
       }
     });
   });

@@ -78,6 +78,10 @@ class Upload < ActiveRecord::Base
     end
   end
 
+  def organizations
+    Organization.where(id: assets.pluck(:organization_id))
+  end
+
   def can_resubmit?
     return false if new_record?
     return false if file_status_type_id < 3
