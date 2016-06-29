@@ -9,15 +9,15 @@
           %th Update
           %th Notes
       %tbody
-        - @upload.asset_events.each do |evt|
+        - @upload.updates.each do |key, update|
           %tr
             %td
-              = link_to evt.asset.to_s, inventory_path(evt.asset)
+              = link_to update[0].to_s, inventory_path(update[0])
             %td
-              = link_to evt.asset_event_type.description, inventory_asset_event_path(evt.asset, evt)
+              = link_to update[1].asset_event_type.description, inventory_asset_event_path(update[0], update[1])
             %td
-              = format_as_date(evt.event_date)
+              = format_as_date(update[1].event_date)
             %td
-              = evt.get_update
+              = update[1].get_update
             %td
-              = evt.comments.blank? ? " " : evt.comments.html_safe
+              = update[1].comments.blank? ? " " : update[1].comments.html_safe

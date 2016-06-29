@@ -13,15 +13,16 @@ class Upload < ActiveRecord::Base
   # Callbacks
   #-----------------------------------------------------------------------------
   after_initialize  :set_defaults
-  before_destroy    :unassociate_events
+  before_destroy    :unassociate_assets_and_events
 
   # Associations
   belongs_to :user
   belongs_to :organization
   belongs_to :file_status_type
   belongs_to :file_content_type
-  # Asset events can be created by bulk update
+  # Asset events and assets can be created by bulk update
   has_many   :asset_events
+  has_many   :assets
 
   # uploader
   mount_uploader :file, ExcelUploader
@@ -105,6 +106,21 @@ class Upload < ActiveRecord::Base
     self.processing_completed_at = nil
     self.processing_started_at = nil
     asset_events.destroy_all
+    assets.destroy_all
+  end
+
+  def updates
+    updates = {}
+    assets.each do |a|
+      update[a.object_key] = [a, nil]
+    end
+    asset_events.each do |evt|
+      if assets.map{|a| a.object_key}.include? evt.asset.object_key
+        updates[evt.asset.object_key][1] = evt
+      else
+        update[a.object_key] = [a, evt]
+      end
+    end
   end
 
   protected
@@ -116,7 +132,8 @@ class Upload < ActiveRecord::Base
   end
 
   # Destroying an upload only removes the upload, events remain, but must be unassociated
-  def unassociate_events
+  def unassociate_assets_and_events
+    assets.update_all(upload_id: nil)
     asset_events.update_all(upload_id: nil)
   end
 
