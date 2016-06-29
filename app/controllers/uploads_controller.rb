@@ -29,7 +29,8 @@ class UploadsController < OrganizationAwareController
       add_breadcrumb type.name unless type.nil?
     end
 
-    @uploads = Upload.where(conditions.join(' AND '), *values).order(:created_at)
+    asset_ids = Asset.where('organization_id IN (?) AND upload_id IS NOT NULL', @organization_list).pluck(:upload_id)
+    @uploads = Upload.where('('+conditions.join(' AND ')+') OR id IN (?) OR user_id = ?', *values, asset_ids, current_user.id).order(:created_at)
 
     # cache the set of asset ids in case we need them later
     cache_list(@uploads, INDEX_KEY_LIST_VAR)
@@ -98,6 +99,7 @@ class UploadsController < OrganizationAwareController
       fire_background_job(job)
     end
 
+
     notify_user(:notice, "Upload has been reverted.")
 
     # show the original upload
@@ -118,7 +120,6 @@ class UploadsController < OrganizationAwareController
     # Make sure the force flag is set and that the model is set back to
     # unprocessed.  reset destroys dependent asset_events
     @upload.reset
-    @upload.force_update = true
     @upload.save(:validate => false)
 
     notify_user(:notice, "File was resubmitted for processing.")
@@ -189,7 +190,7 @@ class UploadsController < OrganizationAwareController
 
       # See if an org was set, use the default otherwise
       if template_proxy.organization_id.blank?
-        org = @organization
+        org = nil
       else
         o = Organization.find(template_proxy.organization_id)
         org = Organization.get_typed_organization(o)
@@ -229,7 +230,7 @@ class UploadsController < OrganizationAwareController
     ObjectSpace.undefine_finalizer(file)
     #You can uncomment this line when debugging locally to prevent Tempfile from disappearing before download.
     @filepath = file.path
-    @filename = "#{org.short_name.downcase}_#{file_content_type.class_name.underscore}_#{Date.today}.xlsx"
+    @filename = "#{org.present? ? org.short_name.downcase : ''}_#{file_content_type.class_name.underscore}_#{Date.today}.xlsx"
     begin
       file << stream.string
     rescue => ex
@@ -262,9 +263,6 @@ class UploadsController < OrganizationAwareController
 
     @upload = Upload.new(form_params)
     @upload.user = current_user
-    if @upload.organization.nil?
-      @upload.organization = @organization
-    end
 
     add_breadcrumb "New Template"
 

@@ -7,8 +7,9 @@
 %p
   Make sure to select the right type of content before uploading the file.
 
-%p
-  If you force the update, be aware that this might overwrite and change existing data.
+- if current_user.has_role? :admin
+  %p
+    If you force the update, be aware that this might overwrite and change existing data that CANNOT be undone.
   
 %p
   Once the file has been uploaded it will be processed by TransAM and the inventory updated which might take a few minutes. You can check the progress

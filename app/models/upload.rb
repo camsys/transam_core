@@ -13,20 +13,21 @@ class Upload < ActiveRecord::Base
   # Callbacks
   #-----------------------------------------------------------------------------
   after_initialize  :set_defaults
-  before_destroy    :unassociate_events
+  before_destroy    :unassociate_assets_and_events
 
   # Associations
   belongs_to :user
   belongs_to :organization
   belongs_to :file_status_type
   belongs_to :file_content_type
-  # Asset events can be created by bulk update
+  # Asset events and assets can be created by bulk update
   has_many   :asset_events
+  has_many   :assets
 
   # uploader
   mount_uploader :file, ExcelUploader
 
-  validates :organization_id,       :presence => true
+  validates :organization_id,       :presence => true, unless: Proc.new { |u| u.file_content_type_id == FileContentType.find_by(name: 'New Inventory').id }
   validates :user_id,               :presence => true
   validates :file_status_type_id,   :presence => true
   validates :file_content_type_id,  :presence => true
@@ -78,6 +79,10 @@ class Upload < ActiveRecord::Base
     end
   end
 
+  def organizations
+    Organization.where(id: assets.pluck(:organization_id))
+  end
+
   def can_resubmit?
     return false if new_record?
     return false if file_status_type_id < 3
@@ -91,16 +96,41 @@ class Upload < ActiveRecord::Base
 
   # Resets the state of the upload and destroys dependent events
   def reset
-    self.file_status_type_id = FileStatusType.find_by_name('Unprocessed').id
-    self.num_rows_processed = nil
-    self.num_rows_added = nil
-    self.num_rows_replaced = nil
-    self.num_rows_failed = nil
-    self.num_rows_skipped = nil
-    self.processing_log = nil
-    self.processing_completed_at = nil
-    self.processing_started_at = nil
-    asset_events.destroy_all
+
+    # you cannot undo changes if you forced them
+    unless force_update
+      self.file_status_type_id = FileStatusType.find_by_name('Unprocessed').id
+      self.num_rows_processed = nil
+      self.num_rows_added = nil
+      self.num_rows_replaced = nil
+      self.num_rows_failed = nil
+      self.num_rows_skipped = nil
+      self.processing_log = nil
+      self.processing_completed_at = nil
+      self.processing_started_at = nil
+      asset_events.destroy_all
+      assets.destroy_all
+    end
+  end
+
+  def updates
+    updates = []
+    assets.each do |a|
+      updates << [a, nil]
+    end
+
+    asset_object_keys = updates.map{|a| a[0].object_key}
+
+    asset_events.each do |evt|
+      idx = asset_object_keys.index(evt.asset.object_key)
+      if idx
+        updates[idx][1] = evt
+      else
+        updates << [evt.asset, evt]
+      end
+    end
+
+    updates
   end
 
   protected
@@ -112,7 +142,8 @@ class Upload < ActiveRecord::Base
   end
 
   # Destroying an upload only removes the upload, events remain, but must be unassociated
-  def unassociate_events
+  def unassociate_assets_and_events
+    assets.update_all(upload_id: nil)
     asset_events.update_all(upload_id: nil)
   end
 
