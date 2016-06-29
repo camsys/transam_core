@@ -96,17 +96,21 @@ class Upload < ActiveRecord::Base
 
   # Resets the state of the upload and destroys dependent events
   def reset
-    self.file_status_type_id = FileStatusType.find_by_name('Unprocessed').id
-    self.num_rows_processed = nil
-    self.num_rows_added = nil
-    self.num_rows_replaced = nil
-    self.num_rows_failed = nil
-    self.num_rows_skipped = nil
-    self.processing_log = nil
-    self.processing_completed_at = nil
-    self.processing_started_at = nil
-    asset_events.destroy_all
-    assets.destroy_all
+
+    # you cannot undo changes if you forced them
+    unless force_update
+      self.file_status_type_id = FileStatusType.find_by_name('Unprocessed').id
+      self.num_rows_processed = nil
+      self.num_rows_added = nil
+      self.num_rows_replaced = nil
+      self.num_rows_failed = nil
+      self.num_rows_skipped = nil
+      self.processing_log = nil
+      self.processing_completed_at = nil
+      self.processing_started_at = nil
+      asset_events.destroy_all
+      assets.destroy_all
+    end
   end
 
   def updates

@@ -5,7 +5,7 @@
       = " Actions"
       %span.caret
     %ul.dropdown-menu{:role => 'menu'}
-      -if current_user.has_role? :admin
+      -if (!@upload.force_update) && (current_user.has_role? :admin)
         %li
           = link_to resubmit_upload_path(@upload), :data => {:confirm => "Are you sure you want to resubmit this file for processing?"} do
             %i.fa.fa-repeat.fa-fw
@@ -16,11 +16,12 @@
           = link_to download_upload_path(@upload) do
             %i.fa.fa-download.fa-fw
             = " Download this file"
-        %li.divider
-        %li
-          = link_to undo_upload_path(@upload), :data => {:confirm => "Are you sure you want to undo changes from this file?"}  do
-            %i.fa.fa-undo.fa-fw
-            = " Undo changes"
+        - unless @upload.force_update
+          %li.divider
+          %li
+            = link_to undo_upload_path(@upload), :data => {:confirm => "Are you sure you want to undo changes from this file?"}  do
+              %i.fa.fa-undo.fa-fw
+              = " Undo changes"
       %li.divider
       - if can? :destroy, @upload
         %li

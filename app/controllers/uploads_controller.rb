@@ -99,6 +99,7 @@ class UploadsController < OrganizationAwareController
       fire_background_job(job)
     end
 
+
     notify_user(:notice, "Upload has been reverted.")
 
     # show the original upload
@@ -119,7 +120,6 @@ class UploadsController < OrganizationAwareController
     # Make sure the force flag is set and that the model is set back to
     # unprocessed.  reset destroys dependent asset_events
     @upload.reset
-    @upload.force_update = true
     @upload.save(:validate => false)
 
     notify_user(:notice, "File was resubmitted for processing.")
