@@ -58,6 +58,9 @@ class Asset < ActiveRecord::Base
   # each belongs to a single manufacturer
   belongs_to  :manufacturer
 
+  # an upload can be added by bulk updates - new inventory
+  belongs_to :upload
+
   # each can belong to a parent
   belongs_to  :parent, :class_name => "Asset",  :foreign_key => :parent_id
 

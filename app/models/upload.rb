@@ -27,7 +27,7 @@ class Upload < ActiveRecord::Base
   # uploader
   mount_uploader :file, ExcelUploader
 
-  validates :organization_id,       :presence => true
+  validates :organization_id,       :presence => true, unless: Proc.new { |u| u.file_content_type_id == FileContentType.find_by(name: 'New Inventory').id }
   validates :user_id,               :presence => true
   validates :file_status_type_id,   :presence => true
   validates :file_content_type_id,  :presence => true
@@ -110,17 +110,23 @@ class Upload < ActiveRecord::Base
   end
 
   def updates
-    updates = {}
+    updates = []
     assets.each do |a|
-      update[a.object_key] = [a, nil]
+      updates << [a, nil]
     end
+
+    asset_object_keys = updates.map{|a| a[0].object_key}
+
     asset_events.each do |evt|
-      if assets.map{|a| a.object_key}.include? evt.asset.object_key
-        updates[evt.asset.object_key][1] = evt
+      idx = asset_object_keys.index(evt.asset.object_key)
+      if idx
+        updates[idx][1] = evt
       else
-        update[a.object_key] = [a, evt]
+        updates << [evt.asset, evt]
       end
     end
+
+    updates
   end
 
   protected

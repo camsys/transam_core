@@ -9,15 +9,21 @@
           %th Update
           %th Notes
       %tbody
-        - @upload.updates.each do |key, update|
+        - @upload.updates.each do |update|
           %tr
             %td
               = link_to update[0].to_s, inventory_path(update[0])
-            %td
-              = link_to update[1].asset_event_type.description, inventory_asset_event_path(update[0], update[1])
-            %td
-              = format_as_date(update[1].event_date)
-            %td
-              = update[1].get_update
-            %td
-              = update[1].comments.blank? ? " " : update[1].comments.html_safe
+            - if update[1].present?
+              %td
+                = link_to update[1].asset_event_type.description, inventory_asset_event_path(update[0], update[1])
+              %td
+                = format_as_date(update[1].event_date)
+              %td
+                = update[1].get_update
+              %td
+                = update[1].comments.blank? ? " " : update[1].comments.html_safe
+            - else
+              %td
+              %td
+              %td
+              %td
