@@ -51,7 +51,6 @@ RSpec.describe UploadsController, :type => :controller do
     post :create, :upload => attributes_for(:upload)
 
     expect(assigns(:upload).user).to eq(subject.current_user)
-    expect(assigns(:upload).organization).to eq(Organization.get_typed_organization(subject.current_user.organization))
     expect(assigns(:upload).file_content_type_id).to eq(1)
     expect(assigns(:upload).force_update).to be false
   end
