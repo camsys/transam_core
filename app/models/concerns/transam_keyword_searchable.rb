@@ -62,6 +62,9 @@ module TransamKeywordSearchable
   #-----------------------------------------------------------------------------
   def write_to_index
 
+    # Boolean to determine if the index should be written (transferred assets that are incomplete should not be)
+    should_write_to_index = true
+
     # Create a blob of unique search keys for this instance
     a = []
     separator = " "
@@ -70,16 +73,21 @@ module TransamKeywordSearchable
     }
     text = a.uniq.compact.join(' ')
 
-    kwsi = KeywordSearchIndex.find_or_create_by(object_key: object_key) do |keyword_search_index|
-      keyword_search_index.organization_id = self.organization.id
-      keyword_search_index.context = self.class.name
-      keyword_search_index.search_text = text
-      if self.is_a?(Asset)
-        keyword_search_index.object_class = "Asset"
-      else
-        keyword_search_index.object_class = self.class.name
-      end
+    keyword_search_index = KeywordSearchIndex.find_or_create_by(object_key: object_key)
 
+    keyword_search_index.organization_id = self.organization.id
+    keyword_search_index.context = self.class.name
+    keyword_search_index.search_text = text
+    if self.is_a?(Asset)
+      # Don't create keyword indexes for keyword assets
+      incomplete_transferred_asset? ? should_write_to_index = false : should_write_to_index = true
+      keyword_search_index.object_class = "Asset"
+    else
+      keyword_search_index.object_class = self.class.name
+    end
+
+    # Save, catching errors
+    if should_write_to_index
       if respond_to? :description and self.description.present?
         keyword_search_index.summary = self.description.truncate(64)
       elsif respond_to? :name and self.name.present?
@@ -87,14 +95,16 @@ module TransamKeywordSearchable
       else
         keyword_search_index.summary = self.to_s
       end
-    end
 
-    # Save, catching errors
-    save_with_exception_handler kwsi
+      save_with_exception_handler keyword_search_index
+    end
 
   end
 
   def build_index_object
+    # Boolean to determine if the index should be written (transferred assets that are incomplete should not be)
+    should_write_to_index = true
+
     # Create a blob of unique search keys for this instance
     a = []
     separator = " "
@@ -103,16 +113,19 @@ module TransamKeywordSearchable
     }
     text = a.uniq.compact.join(' ')
 
-    KeywordSearchIndex.new(object_key: object_key) do |keyword_search_index|
-      keyword_search_index.organization_id = self.organization.id
-      keyword_search_index.context = self.class.name
-      keyword_search_index.search_text = text
-      if self.is_a?(Asset)
-        keyword_search_index.object_class = "Asset"
-      else
-        keyword_search_index.object_class = self.class.name
-      end
+    keyword_search_index = KeywordSearchIndex.new(object_key: object_key)
+    keyword_search_index.organization_id = self.organization.id
+    keyword_search_index.context = self.class.name
+    keyword_search_index.search_text = text
+    if self.is_a?(Asset)
+      incomplete_transferred_asset? ? should_write_to_index = false : should_write_to_index = true
+      keyword_search_index.object_class = "Asset"
+    else
+      keyword_search_index.object_class = self.class.name
+    end
 
+    # Save, catching errors
+    if should_write_to_index
       if respond_to? :description and self.description.present?
         keyword_search_index.summary = self.description.truncate(64)
       elsif respond_to? :name and self.name.present?
@@ -121,6 +134,7 @@ module TransamKeywordSearchable
         keyword_search_index.summary = self.to_s
       end
     end
+
   end
   
   #-----------------------------------------------------------------------------
@@ -135,10 +149,11 @@ module TransamKeywordSearchable
     self.is_dirty = false
     searchable_fields.each do |searchable_field|
       Rails.logger.debug "Testing property #{searchable_field}"
+
       if self.changes.include? searchable_field.to_s
         Rails.logger.debug "#{searchable_field.to_s} has changed"
         self.is_dirty = true
-        break
+        return
       end
     end
     return
@@ -172,4 +187,8 @@ module TransamKeywordSearchable
     end
   end
 
+  # Determines if an asset is transferred
+  def incomplete_transferred_asset?
+    return self.is_a?(Asset) && self.object_key.to_s == self.asset_tag.to_s
+  end
 end
