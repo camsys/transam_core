@@ -155,8 +155,8 @@ class EarlyDispositionRequestUpdateEvent < AssetEvent
       Role.find_by_name(:manager).try(:users)
 
     when :reject, :approve_via_transfer, :approve
-      # notify managers and creator
-      (Role.find_by_name(:manager).try(:users) || []) + [creator]
+      # notify creator
+      [creator]
     end
 
     recipients || []
