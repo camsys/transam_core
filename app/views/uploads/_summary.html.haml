@@ -3,3 +3,4 @@
 = format_field("Uploaded By", upload.user )
 = format_field("Upload Time", format_as_date_time(upload.created_at) )
 = format_field("Status", format_as_label(upload.file_status_type ))
+= format_field("Force Update", format_as_boolean(upload.force_update)) if upload.force_update
