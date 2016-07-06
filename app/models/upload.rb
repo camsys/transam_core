@@ -115,18 +115,21 @@ class Upload < ActiveRecord::Base
 
   def updates
     updates = []
-    assets.each do |a|
-      updates << [a, nil]
-    end
 
-    asset_object_keys = updates.map{|a| a[0].object_key}
-
-    asset_events.each do |evt|
-      idx = asset_object_keys.index(evt.asset.object_key)
-      if idx
-        updates[idx][1] = evt
-      else
+    if assets.empty?
+      asset_events.each do |evt|
         updates << [evt.asset, evt]
+      end
+    else
+      assets.each do |a|
+        events = a.asset_events.where(upload_id: id)
+        if events.empty?
+          updates << [a, nil]
+        else
+          events.each do |evt|
+            updates << [a, evt]
+          end
+        end
       end
     end
 
