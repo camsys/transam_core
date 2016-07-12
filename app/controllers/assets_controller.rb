@@ -192,6 +192,11 @@ class AssetsController < AssetAwareController
     add_breadcrumb @asset.name, inventory_path(@asset)
     add_breadcrumb "Modify", edit_inventory_path(@asset)
 
+    # tranferred assets need to remove notification if exists
+    if @asset.asset_tag == @asset.object_key
+      Notification.where(notifiable_type: 'Asset', notifiable_id: @asset.id).first.update(active:false)
+    end
+
     respond_to do |format|
       if @asset.update_attributes(form_params)
 

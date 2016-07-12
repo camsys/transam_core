@@ -28,49 +28,23 @@ class AssetDispositionUpdateJob < AbstractAssetUpdateJob
   end
 
   def send_asset_transferred_message asset
-    # Get the system user
-    sys_user = get_system_user
 
-    # Get the admin users
-    admins = get_users_for_organization asset.organization
-
-    # Get the priority
-    priority_type = PriorityType.find_by_name('Normal')
+    transit_managers = get_users_for_organization asset.organization
 
     event_url = Rails.application.routes.url_helpers.new_inventory_path asset
-    # Send a message to the admins for this user organization
-    admins.each do |admin|
-      msg = Message.new
-      msg.user          = sys_user
-      msg.to_user       = admin
-      msg.subject       = "A new asset has been transferred to you."
-      msg.body          = "Before the asset can be used some details need to be updated. The asset can be updated <a href='#{event_url}'>here</a>, be sure your filters are clear or grant you permissions to access assets for #{asset.organization.name}."
-      msg.priority_type = priority_type
-      msg.organization  = asset.organization
-      msg.save
+
+    transfer_notification = Notification.create(text: "A new asset has been transferred to you. Please update the asset.", link: event_url, notifiable_type: 'Asset', notifiable_id: asset.id )
+
+    transit_managers.each do |usr|
+      UserNotification.create(notification: transfer_notification, user: usr)
     end
+
   end
 
   # TODO there is probably a better way
   def get_users_for_organization organization
-    user_role = Role.where(:name => 'transit_manager').first
+    user_role = Role.find_by(:name => 'transit_manager')
 
-    users = find_users(organization, user_role)
-
-    if users.empty?
-      Role.where(:name => 'manager').first
-      users = find_users(organization, user_role)
-      if users.empty?
-        Role.where(:name => 'admin').first
-        users = find_users(organization, user_role)
-      end
-    end
-
-    return users
-  end
-
-  def find_users(organization, user_role)
-    users = []
     unless user_role.nil?
       users = organization.users_with_role user_role.name
     end

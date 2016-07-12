@@ -1,0 +1,16 @@
+- num_notifications = current_user.user_notifications.unopened.count
+%li{:class => get_nav_link_class(['notifications'])}
+  = link_to "#", :class => "dropdown-toggle", :data => {"toggle" => "dropdown"}, :title => 'Notifications' do
+    %i.fa.fa-globe.fa-2x
+    - if num_notifications > 0
+      %span.badge{:style => 'position: absolute; left: 25px; top: 3px;'}= num_notifications
+  - if num_notifications > 0
+    %ul.dropdown-menu.multi-level{:role => 'menu'}
+      - current_user.user_notifications.unopened.each do |n|
+        - if n.notification.active
+          %li.text-left
+            = link_to notification_path(n.notification) do
+              %i.fa.fa-angle-right.fa-fw
+              = n.notification.text
+
+

@@ -164,6 +164,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :notifications, only: [:show]
+
   resources :policies do
     member do
       get     'get_subtype_minimum_value'

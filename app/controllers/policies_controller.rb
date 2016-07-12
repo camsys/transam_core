@@ -300,35 +300,13 @@ class PoliciesController < OrganizationAwareController
 
     @builder_proxy = AssetUpdaterProxy.new(params[:asset_updater_proxy])
     if @builder_proxy.valid?
-      # Sleep for a couple of seconds so that the screen can display the waiting
-      # message and the user can read it.
-      sleep 2
 
-      # Rip through the organizations assets, creating a job for each type requested
-      org = Organization.get_typed_organization(@policy.organization)
-      assets = org.assets.operational.where(asset_type: @builder_proxy.asset_types)
-      count = assets.count
-      assets.find_each do |a|
-        typed_asset = Asset.get_typed_asset(a)
-        typed_asset.update_methods.each do |m|
-          begin
-            typed_asset.send(m, false) #dont save until all updates have run
-          rescue Exception => e
-            Rails.logger.warn e.message
-          end
-        end
-        typed_asset.save
-      end
+      Delayed::Job.enqueue AssetUpdateAllJob.new(@policy.organization, @builder_proxy.asset_types, current_user), :priority => 0
 
       # Let the user know the results
-      if count > 0
-        msg = "#{count} assets have been updated using policy #{@policy}."
-        notify_user(:notice, msg)
-        # Add a row into the activity table
-        ActivityLog.create({:organization_id => @policy.organization.id, :user_id => current_user.id, :item_type => "Policy Asset Update", :activity => msg, :activity_time => Time.current})
-      else
-        notify_user(:notice, "No assets were updated.")
-      end
+      msg = "Assets are being updated using policy #{@policy}. You will be notified when the process is complete."
+      notify_user(:notice, msg)
+
       redirect_to policy_path @policy
       return
     else

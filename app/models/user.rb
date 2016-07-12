@@ -58,6 +58,9 @@ class User < ActiveRecord::Base
   has_many    :message_tags
   has_many    :messages, :through => :message_tags
 
+  # Notifications
+  has_many    :user_notifications
+
   # Assets that have been tagged by the user
   has_many    :asset_tags
   has_many    :assets, :through => :asset_tags
