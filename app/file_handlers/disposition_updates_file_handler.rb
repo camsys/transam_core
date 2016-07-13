@@ -70,7 +70,10 @@ class DispositionUpdatesFileHandler < AbstractFileHandler
           if object_key.present?
             asset = Asset.find_by('organization_id = ? AND object_key = ?', organization.id, object_key)
           else
-            asset = Asset.find_by('organization_id = ? AND asset_tag = ?', organization.id, asset_tag)
+            assets = Asset.where('asset_tag = ?', asset_tag)
+            if assets.count == 1
+              asset = assets.first
+            end
           end
           # Attempt to find the asset
           # complain if we cant find it
