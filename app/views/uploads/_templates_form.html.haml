@@ -5,9 +5,8 @@
     :wrapper => :vertical_form,                                                                                                                                                           :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}) do |f|
     .col-sm-6
       = f.input :file_content_type_id, :required => true, :collection => FileContentType.active, :include_blank => false, :label => "Template Type"
-    - if current_user.organizations.count > 1
-      .col-sm-6
-        = f.input :organization_id, :required => true, :collection => Organization.where(id: @organization_list), :label_method => 'coded_name'
+    .col-sm-6
+      = f.input :organization_id, :required => true, :collection => Organization.where(id: @organization_list), :label_method => 'coded_name'
     .col-sm-6
       = f.input :asset_type_id, :required => true, :collection => @asset_types.map{|type| [type[:name], type[:id]]}, :label => "Asset Type", :include_blank => false
     .col-sm-6
@@ -80,7 +79,6 @@
       options += '<option value="' + equipment_asset_type_id + '">Equipment</option>';
       $('label[for="template_proxy_organization_id"] abbr').hide();
       $('#template_proxy_organization_id').removeClass('required');
-      $('#template_proxy_organization_id').val('');
     } else {
     $('label[for="template_proxy_organization_id"] abbr').show();
       $('#template_proxy_organization_id').addClass('required');
