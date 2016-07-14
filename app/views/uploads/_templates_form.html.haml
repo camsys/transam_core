@@ -78,10 +78,11 @@
 
     if (parseInt(file_content_type_id) == new_inventory_id) {
       options += '<option value="' + equipment_asset_type_id + '">Equipment</option>';
+      $('label[for="template_proxy_organization_id"] abbr').hide();
       $('#template_proxy_organization_id').removeClass('required');
       $('#template_proxy_organization_id').val('');
-      $('.template_proxy_organization_id').hide();
     } else {
+    $('label[for="template_proxy_organization_id"] abbr').show();
       $('#template_proxy_organization_id').addClass('required');
       $('.template_proxy_organization_id').show();
     }
