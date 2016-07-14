@@ -149,17 +149,19 @@ class EarlyDispositionRequestUpdateEvent < AssetEvent
   # default recipients
   # if :notification_recipients is defined, then :notification_recipients takes precedence 
   def default_notification_recipients(event)
-    recipients = case event.try(:to_sym)
-    when :new
-      # notify managers
-      Role.find_by_name(:manager).try(:users)
+    # recipients = case event.try(:to_sym)
+    # when :new
+    #   # notify managers
+    #   Role.find_by_name(:manager).try(:users)
+    #
+    # when :reject, :approve_via_transfer, :approve
+    #   # notify creator
+    #   [creator]
+    # end
+    #
+    # recipients || []
 
-    when :reject, :approve_via_transfer, :approve
-      # notify creator
-      [creator]
-    end
-
-    recipients || []
+    (Role.find_by_name(:manager).try(:users) || []) + [creator]
   end
 
   def event_in_passive_tense(event)
@@ -181,7 +183,9 @@ class EarlyDispositionRequestUpdateEvent < AssetEvent
     event_desc = event_in_passive_tense(event)
 
     event_url = Rails.application.routes.url_helpers.inventory_asset_event_path self.try(:asset), self
-    
+
+    early_notification = Notification.create(text: "Early disposition request for #{asset.asset_tag} #{event_desc}", link: event_url, notifiable_type: 'AssetEvent', notifiable_id: self.id)
+
     recipients = if self.respond_to?(:notification_recipients)
       notification_recipients(event)
     else
@@ -189,14 +193,18 @@ class EarlyDispositionRequestUpdateEvent < AssetEvent
     end
     (recipients || []).uniq.each do |to_user|
       if to_user && to_user != sender
-        msg = Message.new
-        msg.user          = sender
-        msg.organization  = sender.try(:organization)
-        msg.to_user       = to_user
-        msg.subject       = "Early disposition request for #{asset.asset_tag} #{event_desc}"
-        msg.body          = "Early disposition request for #{asset.name} has been #{event_desc} by #{sender}. The request can be viewed <a href='#{event_url}'>here</a>"
-        msg.priority_type = PriorityType.default
-        msg.save
+
+        UserNotification.create(notification: early_notification, user: to_user)
+
+
+        # msg = Message.new
+        # msg.user          = sender
+        # msg.organization  = sender.try(:organization)
+        # msg.to_user       = to_user
+        # msg.subject       = "Early disposition request for #{asset.asset_tag} #{event_desc}"
+        # msg.body          = "Early disposition request for #{asset.name} has been #{event_desc} by #{sender}. The request can be viewed <a href='#{event_url}'>here</a>"
+        # msg.priority_type = PriorityType.default
+        # msg.save
       end
     end
   end
