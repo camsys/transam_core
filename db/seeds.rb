@@ -199,7 +199,7 @@ reports = [
     :active => 1,
     :belongs_to => 'report_type', :type => "System Report",
     :name => 'Issues Report',
-    :class_name => "IssuesReport",
+    :class_name => "CustomSqlReport",
     :view_name => "issues_report_table",
     :show_in_nav => 1,
     :show_in_dashboard => 0,
