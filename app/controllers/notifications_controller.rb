@@ -1,6 +1,6 @@
 class NotificationsController < ApplicationController
 
-  before_action :set_notification, :only => [:show]
+  before_action :set_notification, :only => [:show, :update]
 
   # always get all notifications only for the current user logged in
   def index
@@ -13,8 +13,6 @@ class NotificationsController < ApplicationController
   end
 
   def show
-    # update the noification as opend at by the logged in user
-    @notification.user_notifications.find_by(user: current_user).update(opened_at: Time.now)
 
     # if all users of that notification have seen it make notification inactive
     if @notification.user_notifications.count == @notification.user_notifications.opened.count
@@ -24,6 +22,13 @@ class NotificationsController < ApplicationController
     redirect_to @notification.link
   end
 
+  def update
+
+    respond_to do |format|
+      format.js { render text: 'countNotifications();' } # run JS function on main notification nav to recount notifications
+    end
+  end
+
   private
 
   def set_notification
@@ -31,6 +36,9 @@ class NotificationsController < ApplicationController
     if @notification.nil?
       redirect_to '/404'
       return
+    else
+      # update the noification as opend at by the logged in user
+      @notification.user_notifications.find_by(user: current_user).update!(opened_at: Time.now)
     end
   end
 

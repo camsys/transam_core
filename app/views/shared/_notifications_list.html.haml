@@ -4,14 +4,13 @@
   - if num_notifications > 0
     %span.badge{:style => 'position: absolute; left: 25px; top: 3px;'}= num_notifications
 - if num_notifications > 0
-  %ul.dropdown-menu.multi-level{:role => 'menu'}
+  %ul.dropdown-menu.multi-level{:role => 'menu', :style => 'width: 500px;'}
     - notifications.each do |n|
       %li.text-left
-        = link_to notification_path(n.notification) do
-          %i.fa.fa-angle-right.fa-fw
+        = link_to notification_path(n.notification), {:style => 'word-wrap:break-word;white-space: normal;padding-right: 40px;'} do
           = n.notification.text
-        .pull-right
-          = link_to '#' do
+        .pull-right{:style => 'position: relative;top:-22px;'}
+          = link_to notification_path(n.notification), remote: true, method: :put, title: 'Mark as Read', style: 'padding-right: 15px;' do
             %i.fa.fa-check.fa-fw
 
 
