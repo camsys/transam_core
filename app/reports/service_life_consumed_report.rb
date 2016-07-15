@@ -69,7 +69,7 @@ class ServiceLifeConsumedReport < AbstractReport
     num_assets = 0
     assets.each do |asset|
       # Only on age right now
-      pcnt_consumed = (asset.age.to_f / asset.expected_useful_life * 12) * 100.0
+      pcnt_consumed = asset.expected_useful_life > 0 ? ((asset.age.to_f / asset.expected_useful_life * 12) * 100.0) : 0.0
       # Get the column for this asset type, if we only have one it is the first column
       col = report_filter_type > 0 ? 1 : asset_cols[asset.asset_type_id - 1]
       row = [(pcnt_consumed / BUCKET_SIZE).to_i - 1, num_buckets].min
