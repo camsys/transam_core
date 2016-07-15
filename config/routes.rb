@@ -164,7 +164,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :notifications, only: [:show]
+  resources :notifications, only: [:index, :show]
 
   resources :policies do
     member do

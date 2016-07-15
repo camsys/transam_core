@@ -1,0 +1,13 @@
+- num_notifications = notifications.count
+= link_to "#", :class => "dropdown-toggle", :data => {"toggle" => "dropdown"}, :title => 'Notifications' do
+  %i.fa.fa-globe.fa-2x
+  - if num_notifications > 0
+    %span.badge{:style => 'position: absolute; left: 25px; top: 3px;'}= num_notifications
+- if num_notifications > 0
+  %ul.dropdown-menu.multi-level{:role => 'menu'}
+    - notifications.each do |n|
+      %li.text-left
+        = link_to notification_path(n.notification) do
+          %i.fa.fa-angle-right.fa-fw
+          = n.notification.text
+

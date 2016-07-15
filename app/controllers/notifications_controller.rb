@@ -2,6 +2,16 @@ class NotificationsController < ApplicationController
 
   before_action :set_notification, :only => [:show]
 
+  # always get all notifications only for the current user logged in
+  def index
+    @notifications = current_user.user_notifications.unopened
+
+    respond_to do |format|
+      format.js { render :partial => "shared/notifications_list", locals: { :notifications => @notifications } }
+    end
+
+  end
+
   def show
     # update the noification as opend at by the logged in user
     @notification.user_notifications.find_by(user: current_user).update(opened_at: Time.now)
