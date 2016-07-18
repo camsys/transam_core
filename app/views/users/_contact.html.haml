@@ -1,4 +1,4 @@
-= format_field("Organization", link_to(@organization.name, organization_path(@organization)) )
+= format_field("Organization", link_to(@user.organization.name, organization_path(@user.organization)) )
 = format_field("Address", format_as_address(@user.organization) )
 = format_field("Phone", format_as_phone_number(@user.organization.phone) )
 = format_field("Ext.", @user.phone_ext) unless @user.phone_ext.blank?
