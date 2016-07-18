@@ -6,8 +6,6 @@ RSpec.describe AssetDispositionUpdateJob, :type => :job do
   let(:test_org) { create(:organization_basic) }
 
   it '.run' do
-    test_user = create(:normal_user)
-    test_user.add_role :transit_manager
     test_event = test_asset.disposition_updates.create!(attributes_for(:disposition_update_event, :organization_id => test_org.id))
     AssetDispositionUpdateJob.new(test_asset.object_key).run
     test_asset.reload

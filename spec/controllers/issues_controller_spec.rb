@@ -7,7 +7,6 @@ RSpec.describe IssuesController, :type => :controller do
 
   before(:each) do
     Organization.destroy_all
-    User.destroy_all
     test_user.organizations << test_user.organization
     test_user.save!
     sign_in test_user

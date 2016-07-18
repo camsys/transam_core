@@ -3,8 +3,7 @@ require 'rails_helper'
 RSpec.describe AssetsController, :type => :controller do
 
   before(:each) do
-    User.destroy_all
-    sign_in FactoryGirl.create(:admin)
+    sign_in create(:admin)
   end
 
 

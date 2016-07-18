@@ -4,10 +4,6 @@ RSpec.describe Task, :type => :model do
 
   let(:test_task) { create(:task) }
 
-  before(:each) do
-    User.destroy_all
-  end
-
   it 'associations' do
     expect(test_task).to belong_to(:taskable)
     expect(test_task).to belong_to(:user)

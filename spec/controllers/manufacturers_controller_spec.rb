@@ -7,7 +7,6 @@ RSpec.describe ManufacturersController, :type => :controller do
   let(:test_manufacturer) { create(:manufacturer) }
 
   before(:each) do
-    User.destroy_all
     test_user.organizations << test_user.organization
     test_user.save!
     sign_in test_user

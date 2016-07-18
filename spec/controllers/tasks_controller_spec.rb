@@ -6,7 +6,6 @@ RSpec.describe TasksController, :type => :controller do
   let(:test_task) { create(:task) }
 
   before(:each) do
-    User.destroy_all
     test_user.organizations << test_user.organization
     test_user.save!
     sign_in test_user

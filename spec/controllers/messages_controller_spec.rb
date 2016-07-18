@@ -6,7 +6,6 @@ RSpec.describe MessagesController, :type => :controller do
 
   before(:each) do
     Organization.destroy_all
-    User.destroy_all
     sign_in FactoryGirl.create(:admin)
   end
 
