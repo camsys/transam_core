@@ -49,7 +49,7 @@ class AssetDispositionUpdateJob < AbstractAssetUpdateJob
       users = organization.users_with_role user_role.name
     end
 
-    return users
+    return users || []
   end
 
 end
