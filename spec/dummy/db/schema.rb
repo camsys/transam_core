@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160610142004) do
+ActiveRecord::Schema.define(version: 20160711155349) do
 
   create_table "activities", force: true do |t|
     t.string   "object_key",           limit: 12
@@ -571,6 +571,19 @@ ActiveRecord::Schema.define(version: 20160610142004) do
     t.datetime "updated_at"
   end
 
+  create_table "notifications", force: true do |t|
+    t.string   "object_key",      limit: 12, null: false
+    t.string   "text",                       null: false
+    t.string   "link",                       null: false
+    t.integer  "notifiable_id"
+    t.string   "notifiable_type"
+    t.boolean  "active"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "notifications", ["notifiable_id", "notifiable_type"], name: "index_notifications_on_notifiable_id_and_notifiable_type", using: :btree
+
   create_table "organization_types", force: true do |t|
     t.string  "name",              limit: 64,  null: false
     t.string  "class_name",        limit: 64,  null: false
@@ -837,6 +850,17 @@ ActiveRecord::Schema.define(version: 20160610142004) do
   add_index "uploads", ["object_key"], name: "uploads_idx1", using: :btree
   add_index "uploads", ["organization_id"], name: "uploads_idx2", using: :btree
   add_index "uploads", ["user_id"], name: "uploads_idx3", using: :btree
+
+  create_table "user_notifications", force: true do |t|
+    t.integer  "user_id",         null: false
+    t.integer  "notification_id", null: false
+    t.datetime "opened_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "user_notifications", ["notification_id"], name: "index_user_notifications_on_notification_id", using: :btree
+  add_index "user_notifications", ["user_id"], name: "index_user_notifications_on_user_id", using: :btree
 
   create_table "user_organization_filters", force: true do |t|
     t.string   "object_key",  limit: 12,  null: false

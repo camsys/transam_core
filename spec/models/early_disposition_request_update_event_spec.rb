@@ -114,16 +114,16 @@ RSpec.describe EarlyDispositionRequestUpdateEvent, :type => :model do
           expect(@new_event.default_notification_recipients(:new)).to eq([@manager])
         end
 
-        it "approve to notify managers and creator" do
-          expect(@new_event.default_notification_recipients(:approve)).to match_array([@manager, @new_event.creator])
+        it "approve to notify creator" do
+          expect(@new_event.default_notification_recipients(:approve)).to match_array([@new_event.creator])
         end
 
-        it "reject to notify managers and creator" do
-          expect(@new_event.default_notification_recipients(:reject)).to match_array([@manager, @new_event.creator])
+        it "reject to notify creator" do
+          expect(@new_event.default_notification_recipients(:reject)).to match_array([@new_event.creator])
         end
 
-        it "approve_via_transfer to notify managers and creator" do
-          expect(@new_event.default_notification_recipients(:approve_via_transfer)).to match_array([@manager, @new_event.creator])
+        it "approve_via_transfer to notify creator" do
+          expect(@new_event.default_notification_recipients(:approve_via_transfer)).to match_array([@new_event.creator])
         end
       end
 
@@ -133,7 +133,7 @@ RSpec.describe EarlyDispositionRequestUpdateEvent, :type => :model do
         end
 
         it "send notifications to right people" do
-          expect{@new_event.notify_event_by(@sender, :approve)}.to change{Message.count}.by(2) #one to creator, one to the other manager
+          expect{@new_event.notify_event_by(@sender, :approve)}.to change{UserNotification.count}.by(1) #one to creator
         end
 
         it "shouldn't send to sender" do 

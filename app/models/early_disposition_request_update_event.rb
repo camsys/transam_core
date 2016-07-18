@@ -149,19 +149,17 @@ class EarlyDispositionRequestUpdateEvent < AssetEvent
   # default recipients
   # if :notification_recipients is defined, then :notification_recipients takes precedence 
   def default_notification_recipients(event)
-    # recipients = case event.try(:to_sym)
-    # when :new
-    #   # notify managers
-    #   Role.find_by_name(:manager).try(:users)
-    #
-    # when :reject, :approve_via_transfer, :approve
-    #   # notify creator
-    #   [creator]
-    # end
-    #
-    # recipients || []
+    recipients = case event.try(:to_sym)
+    when :new
+      # notify managers
+      Role.find_by_name(:manager).try(:users)
 
-    (Role.find_by_name(:manager).try(:users) || []) + [creator]
+    when :reject, :approve_via_transfer, :approve
+      # notify creator
+      [creator]
+    end
+
+    recipients || []
   end
 
   def event_in_passive_tense(event)
