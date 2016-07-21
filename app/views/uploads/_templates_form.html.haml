@@ -6,7 +6,10 @@
     .col-sm-6
       = f.input :file_content_type_id, :required => true, :collection => FileContentType.active, :include_blank => false, :label => "Template Type"
     .col-sm-6
-      = f.input :organization_id, :required => true, :collection => Organization.where(id: @organization_list), :label_method => 'coded_name'
+      - if @organization_list.count == 1
+        = f.input :organization_id, :as => :hidden, :input_html => { :value => @organization_list.first }
+      - else
+        = f.input :organization_id, :required => true, :collection => Organization.where(id: @organization_list), :label_method => 'coded_name'
     .col-sm-6
       = f.input :asset_type_id, :required => true, :collection => @asset_types.map{|type| [type[:name], type[:id]]}, :label => "Asset Type", :include_blank => false
     .col-sm-6
@@ -79,9 +82,11 @@
       options += '<option value="' + equipment_asset_type_id + '">Equipment</option>';
       $('label[for="template_proxy_organization_id"] abbr').hide();
       $('#template_proxy_organization_id').removeClass('required');
+      $('#template_proxy_organization_id option').first().text('Multi Org');
     } else {
     $('label[for="template_proxy_organization_id"] abbr').show();
       $('#template_proxy_organization_id').addClass('required');
+      $('#template_proxy_organization_id option').first().text('');
       $('.template_proxy_organization_id').show();
     }
 

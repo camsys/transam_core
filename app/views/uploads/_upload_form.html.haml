@@ -47,11 +47,13 @@
         $(".force_update").show();
         $('label[for="upload_organization_id"] abbr').hide();
         $('#upload_organization_id').removeClass('required');
+        $('#upload_organization_id option').first().text("#{@organization_list.count == 1 ? '' : 'Multi Org'}");
         $('#upload_organization_id').val('');
       } else {
         $(".force_update").hide();
         $('label[for="upload_organization_id"] abbr').show();
         $('#upload_organization_id').addClass('required');
+        $('#upload_organization_id option').first().text('');
       }
     });
   });
