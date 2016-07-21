@@ -7,6 +7,7 @@ describe "uploads/_templates_form.html.haml", :type => :view do
     test_user.save!
     allow(controller).to receive(:current_user).and_return(test_user)
     assign(:asset_types, [])
+    assign(:organization_list, [test_user.organization.id, create(:organization).id])
     render
 
     expect(rendered).to have_field('template_proxy_organization_id')
