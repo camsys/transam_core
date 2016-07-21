@@ -1,10 +1,10 @@
-class NotificationsController < ApplicationController
+class NotificationsController < OrganizationAwareController
 
   before_action :set_notification, :only => [:show, :update]
 
   # always get all notifications only for the current user logged in
   def index
-    @notifications = current_user.user_notifications.unopened
+    @notifications = current_user ? current_user.user_notifications.unopened : []
 
     respond_to do |format|
       format.js { render :partial => "shared/notifications_list", locals: { :notifications => @notifications } }
