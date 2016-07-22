@@ -9,14 +9,17 @@ class PoliciesController < OrganizationAwareController
 
   def get_subtype_minimum_value
 
-    rule = @policy.parent.policy_asset_subtype_rules.find_by(asset_subtype_id: params[:asset_subtype_id].to_i)
-
     valid = true
-    min = 0
-    if rule.present?
-      params[:policy_asset_subtype_rule].each do |key, val|
-        min = rule.send(key)
-        valid = (min <= val.to_i)
+
+    if @policy.parent.present?
+      rule = @policy.parent.policy_asset_subtype_rules.find_by(asset_subtype_id: params[:asset_subtype_id].to_i)
+
+      min = 0
+      if rule.present?
+        params[:policy_asset_subtype_rule].each do |key, val|
+          min = rule.send(key)
+          valid = (min <= val.to_i)
+        end
       end
     end
 
