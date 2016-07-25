@@ -1,16 +1,25 @@
-- num_notifications = notifications.count
-= link_to "#", :class => "dropdown-toggle", :data => {"toggle" => "dropdown"}, :title => 'Notifications' do
-  %i.fa.fa-globe.fa-2x
-  - if num_notifications > 0
-    %span.badge{:style => 'position: absolute; left: 25px; top: 3px;'}= num_notifications
-- if num_notifications > 0
-  %ul.dropdown-menu.multi-level{:role => 'menu', :style => 'width: 500px;'}
-    - notifications.each do |n|
-      %li.text-left
-        = link_to notification_path(n.notification), {:style => 'word-wrap:break-word;white-space: normal;padding-right: 40px;'} do
-          = n.notification.text
-        .pull-right{:style => 'position: relative;top:-22px;'}
-          = link_to notification_path(n.notification), remote: true, method: :put, title: 'Mark as Read', style: 'padding-right: 15px;' do
-            %i.fa.fa-check.fa-fw
+.table-responsive
+  %table.table.table-hover{:id => 'notifications_table', :data => {:toggle => 'table',
+    :pagination => 'true',
+    :show_pagination_switch => 'true',
+    :page_list => "[5, 10, 20, 50, 100, 200]",
+    :page_size => current_user.num_table_rows,
+    :search => 'false',
+    :toolbar => "#table_actions",
+    :export_types => "['csv', 'txt', 'excel']",
+    :show_export => 'false',
+    :resizable => 'true',
+    :show_columns => 'false',
+    :show_toggle => 'false',
+    :maintain_selected => 'true',
+    :single_select => 'false'}}
 
-
+    %tbody
+      - notifications.each do |n|
+        %tr
+          %td.left
+            = link_to notification_path(n.notification) do
+              = n.notification.text
+          %td.right
+            = link_to notification_path(n.notification), remote: true, method: :put, title: 'Mark as Read', style: 'padding-right: 15px;' do
+              %i.fa.fa-check.fa-fw

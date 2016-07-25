@@ -1,4 +1,11 @@
-%li#notifications_list{:class => get_nav_link_class(['notifications'])}
+%li#notifications_li{:class => get_nav_link_class(['notifications'])}
+  %span#notification_count
+  = link_to "#", :id => "notificationLink", :class => "dropdown-toggle", :data => {"toggle" => "dropdown"}, :title => 'Notifications' do
+    %i.fa.fa-globe.fa-2x
+  #notificationContainer
+    #notificationsBody.notifications
+    #notificationFooter
+      = link_to 'Mark All as Read', read_all_notifications_path, :remote => true
 
 :javascript
 
@@ -8,12 +15,46 @@
 
   function countNotifications() {
     $.ajax({
+      url: "/notifications/count",
+      type: 'GET',
+      dataType: 'json',
+      data: {},
+      complete: function(response, status) {
+        if (response.responseText == '0') {
+          $('#notification_count').hide();
+        } else {
+          $('#notification_count').html(response.responseText);
+        }
+      }
+    });
+  }
+
+  function getNotifications() {
+    $.ajax({
       url: "/notifications",
       type: 'GET',
       dataType: 'json',
       data: {},
       complete: function(response, status) {
-          $('#notifications_list').html(response.responseText);
+          $('#notificationsBody').html(response.responseText);
       }
     });
   }
+
+  $(document).ready(function() {
+
+    $("#notificationContainer").hide();
+
+    $("#notificationLink").click(function() {
+      $("#notificationContainer").fadeToggle(300);
+      getNotifications();
+      //$("#notification_count").fadeOut("slow");
+      return false;
+    });
+
+    //Document Click
+    $(document).click(function() {
+      $("#notificationContainer").hide();
+    });
+
+  });

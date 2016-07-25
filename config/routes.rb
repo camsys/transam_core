@@ -164,7 +164,12 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :notifications, only: [:index, :show, :update]
+  resources :notifications, only: [:index, :show, :update] do
+    collection do
+      get 'count'
+      get 'read_all'
+    end
+  end
 
   resources :policies do
     member do
