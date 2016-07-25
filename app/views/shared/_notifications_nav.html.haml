@@ -5,7 +5,9 @@
   #notificationContainer
     #notificationsBody.notifications
     #notificationFooter
-      = link_to 'Mark All as Read', read_all_notifications_path, :remote => true
+      = link_to read_all_notifications_path, :remote => true do
+        = 'Mark All as Read'
+        %i.fa.fa-check.fa-fw
 
 :javascript
 
