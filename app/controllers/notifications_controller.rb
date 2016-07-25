@@ -41,7 +41,7 @@ class NotificationsController < OrganizationAwareController
   def update
 
     respond_to do |format|
-      format.js { render text: 'countNotifications();' } # run JS function on main notification nav to recount notifications
+      format.js { render text: 'countNotifications(); getNotifications();' } # run JS function on main notification nav to recount notifications
     end
   end
 

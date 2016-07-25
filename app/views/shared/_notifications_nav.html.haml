@@ -25,6 +25,7 @@
         if (response.responseText == '0') {
           $('#notification_count').hide();
         } else {
+          $('#notification_count').show();
           $('#notification_count').html(response.responseText);
         }
       }
