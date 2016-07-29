@@ -168,7 +168,7 @@ class UpdatedTemplateBuilder
       :errorStyle => :stop,
       :showInputMessage => true,
       :promptTitle => 'Purchase Date',
-      :prompt => "Date must be after #{EARLIEST_DATE.strftime("%-m/%d/%Y")}"}, 'default_values', Date.today.strftime('%m/%d/%Y'))
+      :prompt => "Date must be after #{EARLIEST_DATE.strftime("%-m/%d/%Y")}"}, 'default_values', [Date.today.strftime('%m/%d/%Y')])
   end
 
   # Override this at rows to the sheet
