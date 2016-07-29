@@ -6,7 +6,10 @@
       .col-sm-6
         = f.association :file_content_type, :collection => FileContentType.active, :required => true, :label => 'Spreadsheet Content', :prompt => 'Set the spreadsheet contents...'
     .col-sm-6
-      = f.association :organization, :required => true, :collection => current_user.organizations, :label_method => 'coded_name'
+      - if @organization_list.count == 1
+        = f.input :organization_id, :as => :hidden, :input_html => { :value => @organization_list.first }
+      - else
+        = f.input :organization_id, :required => true, :collection => Organization.where(id: @organization_list), :label_method => 'coded_name'
     .row
       .col-sm-6
         = f.input :file, :required => true, :label => 'Spreadsheet', :hint => 'Select a spreadsheet that has been downloaded from TransAM, edited, then saved.'
