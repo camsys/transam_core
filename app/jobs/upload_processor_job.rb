@@ -23,6 +23,11 @@ class UploadProcessorJob < Job
         Rails.logger.error e.message
         raise RuntimeError.new "Processing failed for Upload #{object_key}"
       end
+
+      event_url = Rails.application.routes.url_helpers.upload_path(upload)
+      upload_notification = Notification.create!(text: "#{upload.file_content_type} #{upload.file_status_type}.", link: event_url, notifiable_type: 'Upload', notifiable_id: upload.id)
+      UserNotification.create!(user: upload.user, notification: upload_notification)
+
     else
       raise RuntimeError, "Can't find upload with object_key #{object_key}"
     end
