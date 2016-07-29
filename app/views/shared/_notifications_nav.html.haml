@@ -1,4 +1,4 @@
-%li#notifications_li{:class => get_nav_link_class(['notifications'])}
+%li#notifications_li
   %span#notification_count
   = link_to "#", :id => "notificationLink", :class => "dropdown-toggle", :data => {"toggle" => "dropdown"}, :title => 'Notifications' do
     %i.fa.fa-globe.fa-2x
@@ -11,6 +11,7 @@
 
 :javascript
 
+  $('#notification_count').hide();
   countNotifications();
 
   setInterval(countNotifications, 10000); // checking for notifications every 10 seconds
