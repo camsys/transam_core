@@ -23,11 +23,11 @@
       dataType: 'json',
       data: {},
       complete: function(response, status) {
-        if (response.responseText == '0') {
-          $('#notification_count').hide();
-        } else {
+        if (parseInt(response.responseText) > 0) {
           $('#notification_count').show();
           $('#notification_count').html(response.responseText);
+        } else {
+          $('#notification_count').hide();
         }
       }
     });
@@ -40,7 +40,11 @@
       dataType: 'json',
       data: {},
       complete: function(response, status) {
+        if (response.status == 200) {
           $('#notificationsBody').html(response.responseText);
+        } else {
+          $('#notificationsBody').html(response.statusText);
+        }
       }
     });
   }
