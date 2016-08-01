@@ -11,7 +11,6 @@
 
 :javascript
 
-  $('#notification_count').hide();
   countNotifications();
 
   setInterval(countNotifications, 10000); // checking for notifications every 10 seconds
@@ -26,6 +25,8 @@
         if (parseInt(response.responseText) > 0) {
           $('#notification_count').show();
           $('#notification_count').html(response.responseText);
+        } else {
+          $('#notification_count').hide();
         }
       }
     });
