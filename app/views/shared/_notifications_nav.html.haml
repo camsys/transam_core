@@ -1,5 +1,5 @@
 %li#notifications_li
-  %span#notification_count
+  %span#notification_count{style: 'display: none;'}
   = link_to "#", :id => "notificationLink", :class => "dropdown-toggle", :data => {"toggle" => "dropdown"}, :title => 'Notifications' do
     %i.fa.fa-globe.fa-2x
   #notificationContainer
@@ -26,8 +26,6 @@
         if (parseInt(response.responseText) > 0) {
           $('#notification_count').show();
           $('#notification_count').html(response.responseText);
-        } else {
-          $('#notification_count').hide();
         }
       }
     });
