@@ -6,7 +6,7 @@ describe "assets/_equipment_form.html.haml", :type => :view do
     render
 
     expect(rendered).to have_xpath('//input[@id="asset_asset_type_id"]')
-    expect(rendered).to have_xpath('//input[@id="asset_asset_subtype_id"]')
+    expect(rendered).to have_xpath('//select[@id="asset_asset_subtype_id"]')
     expect(rendered).to have_xpath('//input[@id="asset_organization_id"]')
     expect(rendered).to have_field("asset_asset_tag")
     expect(rendered).to have_field("asset_external_id")
