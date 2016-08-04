@@ -41,22 +41,24 @@
     }
   });
 
-  //Hide force_update unless the user is uploading new inventory and then display so the user can choose if they want to force the update
-  var new_inventory_file_content_type_id = #{FileContentType.find_by(name: 'New Inventory').id};
+- if @organization_list.count > 1
+  :javascript
+    //Hide force_update unless the user is uploading new inventory and then display so the user can choose if they want to force the update
+    var new_inventory_file_content_type_id = #{FileContentType.find_by(name: 'New Inventory').id};
 
-  $(function(){
-    $('#upload_file_content_type_id').change(function() {
-      if($(this).val() == new_inventory_file_content_type_id) {
-        $(".force_update").show();
-        $('label[for="upload_organization_id"] abbr').hide();
-        $('#upload_organization_id').removeClass('required');
-        $('#upload_organization_id option').first().text("#{@organization_list.count == 1 ? '' : 'Multi Org'}");
-        $('#upload_organization_id').val('');
-      } else {
-        $(".force_update").hide();
-        $('label[for="upload_organization_id"] abbr').show();
-        $('#upload_organization_id').addClass('required');
-        $('#upload_organization_id option').first().text('');
-      }
+    $(function(){
+      $('#upload_file_content_type_id').change(function() {
+        if($(this).val() == new_inventory_file_content_type_id) {
+          $(".force_update").show();
+          $('label[for="upload_organization_id"] abbr').hide();
+          $('#upload_organization_id').removeClass('required');
+          $('#upload_organization_id option').first().text("#{@organization_list.count == 1 ? '' : 'Multi Org'}");
+          $('#upload_organization_id').val('');
+        } else {
+          $(".force_update").hide();
+          $('label[for="upload_organization_id"] abbr').show();
+          $('#upload_organization_id').addClass('required');
+          $('#upload_organization_id option').first().text('');
+        }
+      });
     });
-  });
