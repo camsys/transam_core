@@ -1,0 +1,123 @@
+wb = xlsx_package.workbook
+
+wb.styles do |style|
+    float_cell = style.add_style(:num_fmt => 2)
+    integer_cell = style.add_style(:num_fmt => 3)
+    pcnt_cell = style.add_style(:format_code => "#0.0#%")
+    currency_cell = style.add_style(:num_fmt => 5)
+
+    wb.add_worksheet(name: "Policy") do |sheet|
+        sheet.add_row ['Policy Owner (Agency)', 'Description', 'Current', 'Condition Estimation Method', 'Condition Threshold']
+        sheet.add_row [@policy.organization.to_s, @policy.description, @policy.active ? 'Yes' : 'No', @policy.condition_estimation_type.to_s, format_as_decimal(@policy.condition_threshold)], style: [nil, nil, nil, nil, float_cell]
+    end
+
+    wb.add_worksheet(name: "Asset Type Rules") do |sheet|
+        sheet.add_row ['Asset Type', 'Service Life Calculation Method', 'Replacement Cost Estimation Method', 'Annual Inflation Rate (%)', '% Residual Value at End of Life']
+
+        @policy.policy_asset_type_rules.each do |rule|
+            sheet.add_row [rule.asset_type.to_s, rule.service_life_calculation_type.to_s, rule.replacement_cost_calculation_type.to_s, rule.annual_inflation_rate/100.0, rule.pcnt_residual_value/100.0], style: [nil, nil, nil, pcnt_cell, pcnt_cell]
+        end
+    end
+
+    wb.add_worksheet(name: "Asset Subtype Rules") do |sheet|
+        header_category_row = [
+          'Asset Type',
+          '',
+          'Replacement',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          'Rehabilitation',
+          '',
+          '',
+          ''
+        ]
+        if current_user.has_role? :manager
+            header_category_row = header_category_row + [
+                'ALI Codes',
+                        '',
+                        '',
+                        '',
+                        '',
+                        '',
+                        ''
+            ]
+        end
+        sheet.add_row header_category_row
+
+
+        sheet.merge_cells("A1:B1")
+        sheet.merge_cells("C1:J1")
+        sheet.merge_cells("J1:N1")
+        sheet.merge_cells("O1:U1") if current_user.has_role? :manager
+
+        category_row = [
+           'Asset Type',
+           'Asset Subtype',
+           'Min Service Life',
+           'Replacement Cost',
+           'Cost Year',
+           'Replace With New',
+           'Replace With Leased',
+           'Min Used Purchase Life',
+           'Lease Length',
+           'Asset Subtype',
+           'Month Of Rehab',
+           'Avg. Labor Cost',
+           'Avg. Material Cost',
+           'Ext Months',
+        ]
+        if current_user.has_role? :manager
+            category_row = category_row + [
+               'Eng. Design',
+               'Purchase Replacement',
+               'Lease Replacement',
+               'Purchase Expansion',
+               'Lease Expansion',
+               'Rehabilitation',
+               'Construction'
+            ]
+        end
+        sheet.add_row category_row
+
+        @policy.policy_asset_subtype_rules.each do |rule|
+            rule_row = [
+               rule.asset_subtype.asset_type.to_s,
+               rule.asset_subtype.to_s,
+               rule.fuel_type.to_s,
+               rule.min_service_life_months,
+               rule.min_service_life_miles,
+               rule.replacement_cost,
+               rule.cost_fy_year,
+               rule.replace_with_new? ? 'Y' : 'N',
+               rule.replace_with_leased? ? 'Y' : 'N',
+               rule.min_used_purchase_service_life_months,
+               rule.lease_length_months,
+               rule.replace_asset_subtype.to_s,
+               rule.replace_fuel_type.to_s,
+               rule.rehabilitation_service_month,
+               rule.rehabilitation_labor_cost,
+               rule.rehabilitation_parts_cost,
+               rule.extended_service_life_months,
+               rule.extended_service_life_miles
+            ]
+            if current_user.has_role? :manager
+                rule_row = rule_row + [
+                   rule.engineering_design_code,
+                   rule.purchase_replacement_code,
+                   rule.lease_replacement_code,
+                   rule.purchase_expansion_code,
+                   rule.lease_expansion_code,
+                   rule.rehabilitation_code,
+                   rule.construction_code
+                ]
+            end
+            sheet.add_row rule_row,
+            style: [nil, nil, nil, integer_cell, integer_cell, currency_cell, integer_cell, nil, nil, integer_cell, integer_cell, nil, nil, integer_cell, currency_cell, currency_cell, integer_cell, integer_cell, nil, nil, nil, nil, nil, nil, nil]
+        end
+    end
+end
