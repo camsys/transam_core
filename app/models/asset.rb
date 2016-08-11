@@ -817,10 +817,7 @@ class Asset < ActiveRecord::Base
     Rails.logger.debug "Updating the scheduled replacement year for asset = #{object_key}"
 
     unless new_record? or disposed?
-      if schedule_replacement_updates.empty?
-        self.scheduled_replacement_year = nil
-        self.replacement_reason_type_id = nil
-      else
+      if !schedule_replacement_updates.empty?
         event = schedule_replacement_updates.last
         self.scheduled_replacement_year = event.replacement_year unless event.replacement_year.nil?
         self.replacement_reason_type_id = event.replacement_reason_type_id unless event.replacement_reason_type_id.nil?
