@@ -98,4 +98,34 @@ namespace :transam_core_data do
     end
   end
 
+  desc "Seed issue status types"
+  task seed_issue_status_types: :environment do
+    issue_status_types = [
+        {:active => 1, :name => 'Open',      :description => 'Open'},
+        {:active => 1, :name => 'Resolved',  :description => 'Resolved'},
+    ]
+
+    issue_status_types.each do |type|
+      IssueStatusType.create(type)
+    end
+  end
+
+  desc "Add activity to send email for issues report weekly"
+  task add_issues_report_activity: :environment do
+    issues_report_activity = Activity.find_by(name: 'Weekly Issues Report')
+    if issues_report_activity.nil?
+      Activity.create(
+        name: 'Weekly Issues Report',
+        description: 'Report giving an admin a list of all issues.',
+        show_in_dashboard: false,
+        system_activity: true,
+        frequency_quantity: 1,
+        frequency_type_id: 4,
+        execution_time: 'Monday 00:01',
+        job_name: 'IssuesReportJob',
+        active: true
+      )
+    end
+  end
+
 end
