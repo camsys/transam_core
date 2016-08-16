@@ -61,7 +61,7 @@
 
       if ((parseInt(file_content_type_id) == new_inventory_id) && (type.class_name != 'Equipment')) {
         add_to_options = true;
-      } else if ($.inArray( parseInt(org_id), type.orgs ) >= 0) {
+      } else if ((parseInt(file_content_type_id) != new_inventory_id) && ($.inArray( parseInt(org_id), type.orgs ) >= 0)) {
         add_to_options = true;
       }
 
