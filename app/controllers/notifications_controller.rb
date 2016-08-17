@@ -1,5 +1,7 @@
 class NotificationsController < OrganizationAwareController
 
+  prepend_before_action :skip_timeout, :only => [:count]
+
   before_action :set_notification, :only => [:show, :update]
 
   # always get all notifications only for the current user logged in
@@ -13,6 +15,8 @@ class NotificationsController < OrganizationAwareController
   end
 
   def count
+    request.env["devise.skip_trackable"] = true
+
     @count = current_user ? current_user.user_notifications.unopened.count : 0
 
     respond_to do |format|
@@ -56,6 +60,10 @@ class NotificationsController < OrganizationAwareController
       # update the noification as opend at by the logged in user
       @notification.user_notifications.find_by(user: current_user).update!(opened_at: Time.now)
     end
+  end
+
+  def skip_timeout
+    request.env["devise.skip_trackable"] = true
   end
 
 end
