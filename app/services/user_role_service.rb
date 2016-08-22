@@ -38,11 +38,8 @@ class UserRoleService
     Rails.logger.debug "Assign roles and privileges: user = #{user}, manager = #{manager}, role_id = #{role_id}, privilege_ids = #{privilege_ids}"
     return if user.blank?
 
-    # Find the user role -- everyone has to ahve this role
-    user_role = Role.find_by(:name => 'user')
-
     # Check all the roles and privileges and revoke/assign as needed
-    Role.where.not(id: user_role.id).each do |role|
+    Role.all.each do |role|
       Rails.logger.debug "Checking role #{role}, id = #{role.id}"
       if role_id == role.id.to_s
         # Its the role they are assigned
@@ -59,8 +56,8 @@ class UserRoleService
     end
 
     # Make sure the user has the user role and assign it if they dont (except for guests)
-    if !(user.has_role? :guest)
-      assign_role user, user_role, manager
+    if (!(user.has_role? :guest) && !(user.has_role? :user))
+      assign_role user, Role.find_by(:name => 'user'), manager
     end
   end
 
