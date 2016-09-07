@@ -114,7 +114,7 @@ module TransamKeywordSearchable
     text = a.uniq.compact.join(' ')
 
     keyword_search_index = KeywordSearchIndex.new(object_key: object_key)
-    keyword_search_index.organization_id = self.organization.id
+    keyword_search_index.organization_id = self.organization.id if self.organization
     keyword_search_index.context = self.class.name
     keyword_search_index.search_text = text
     if self.is_a?(Asset)
@@ -135,6 +135,7 @@ module TransamKeywordSearchable
       end
     end
 
+    keyword_search_index
   end
   
   #-----------------------------------------------------------------------------
