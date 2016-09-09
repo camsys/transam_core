@@ -44,11 +44,11 @@ class ImagesController < NestedResourceController
     @imagable = find_resource
     @image = @imagable.images.build(form_params)
     @image.creator = current_user
-
+    
     respond_to do |format|
       if @image.save
         notify_user(:notice, 'Image was successfully created.')
-        format.html { redirect_to @imagable }
+        format.html { redirect_to (params[:redirect_to].present? ? params[:redirect_to] : @imagable) }
         format.json { render action: 'show', status: :created, location: @image }
       else
         format.html { render action: 'new' }
