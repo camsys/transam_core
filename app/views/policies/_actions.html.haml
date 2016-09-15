@@ -35,7 +35,8 @@
             %i.fa.fa-copy.fa-fw
             = " Make a copy"
 
-      - if can? :destroy, @policy
+      - # system admins can destroy anything but this only shows remove button if policy is not the parent of another policy
+      - if (can? :destroy, @policy) && (Policy.where(parent_id: @policy.id).count == 0)
         %li.divider
         %li
           = link_to policy_path(@policy), :method => :delete, :data => {:confirm => "Are you sure? The action cannot be undone!"}  do
