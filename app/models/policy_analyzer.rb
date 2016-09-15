@@ -26,6 +26,7 @@ class PolicyAnalyzer
   attr_reader :policy
   attr_reader :asset_type_rule
   attr_reader :asset_subtype_rule
+  attr_reader :replace_asset_subtype_rule
   attr_reader :warnings
 
   #-----------------------------------------------------------------------------
@@ -44,6 +45,31 @@ class PolicyAnalyzer
         method_object.call(*arguments)
       elsif asset_type_rule.respond_to? actual_method_sym
         method_object = asset_type_rule.method(actual_method_sym)
+        returned_val = method_object.call(*arguments)
+
+        # ================================= #
+        # check if theres a replace rule
+        # if there is, check that the replacement cost calculation type does not use the purchase price calculator
+        if replace_asset_subtype_rule.present?
+          purchase_price_calculator = CostCalculationType.find_by(class_name: 'PurchasePricePlusInterestCalculator')
+
+          # then if uses the purchase price calculator default to replacement (plus interest) calculator
+          if returned_val ==  purchase_price_calculator
+            CostCalculationType.find_by(class_name: 'ReplacementCostPlusInterestCalculator')
+          elsif replace_asset_subtype_rule.present? && actual_method_sym == :replacement_cost_calculation_type_id && returned_val ==  purchase_price_calculator.id
+            CostCalculationType.find_by(class_name: 'ReplacementCostPlusInterestCalculator').id
+          else
+            # for all other calculators just return the value
+            returned_val
+          end
+        else
+          # for all other asset type rule fields just return the value
+          returned_val
+        end
+        # ================================= #
+
+      elsif !actual_method_sym.to_s.starts_with?('replace_') && replace_asset_subtype_rule.respond_to?(actual_method_sym)
+        method_object = replace_asset_subtype_rule.method(actual_method_sym)
         method_object.call(*arguments)
       elsif asset_subtype_rule.respond_to? actual_method_sym
         method_object = asset_subtype_rule.method(actual_method_sym)
@@ -87,6 +113,9 @@ class PolicyAnalyzer
     if @policy.present? and @asset.present?
       @asset_type_rule = @policy.policy_asset_type_rules.find_by(:asset_type_id => asset.asset_type_id)
       @asset_subtype_rule = @policy.policy_asset_subtype_rules.find_by(:asset_subtype_id => @asset.asset_subtype_id, :fuel_type_id => @asset.fuel_type_id)
+      if @asset_subtype_rule.replace_asset_subtype_id.present? || @asset_subtype_rule.replace_fuel_type_id.present?
+        @replace_asset_subtype_rule = @policy.policy_asset_subtype_rules.find_by(:asset_subtype_id => (@asset_subtype_rule.replace_asset_subtype_id || @asset.asset_subtype_id), :fuel_type_id => (@asset_subtype_rule.replace_fuel_type_id || @asset.fuel_type_id))
+      end
     else
       @warnings << "Policy not found for asset #{asset} with class #{asset.asset_type}"
     end
