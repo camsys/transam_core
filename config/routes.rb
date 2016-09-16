@@ -173,6 +173,7 @@ Rails.application.routes.draw do
 
   resources :policies do
     member do
+      get     'check_subtype_rule_exists'
       get     'get_subtype_minimum_value'
       get     'show_edit_form'
       get     'runner'

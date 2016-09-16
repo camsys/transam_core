@@ -29,6 +29,14 @@ class PoliciesController < OrganizationAwareController
     end
   end
 
+  def check_subtype_rule_exists
+    valid = @policy.policy_asset_subtype_rules.find_by(asset_subtype_id: params[:asset_subtype_id].to_i, fuel_type_id: params[:fuel_type_id]).present?
+
+    respond_to do |format|
+      format.json { render :json =>  valid}
+    end
+  end
+
   def index
 
     add_breadcrumb "Policies", policies_path
@@ -60,6 +68,8 @@ class PoliciesController < OrganizationAwareController
   #-----------------------------------------------------------------------------
   def show_edit_form
 
+    @notice = params[:notice] if params[:notice]
+
     @type = params[:type]
     if @type == 'asset_type'
       @rule = @policy.policy_asset_type_rules.find(params[:rule])
@@ -89,6 +99,21 @@ class PoliciesController < OrganizationAwareController
     else
       rule = PolicyAssetSubtypeRule.find(params[:policy_asset_subtype_rule][:id])
       rule.update_attributes(asset_subtype_rule_form_params)
+    end
+
+    if (rule.replace_asset_subtype_id || rule.replace_fuel_type_id)
+      if @policy.policy_asset_subtype_rules.find_by(asset_subtype_id: (rule.replace_asset_subtype_id || rule.asset_subtype_id), fuel_type_id: (rule.replace_fuel_type_id || rule.fuel_type_id)).nil?
+        new_rule = @policy.parent.policy_asset_subtype_rules.find_by(asset_subtype_id: (rule.replace_asset_subtype_id || rule.asset_subtype_id)).dup
+        new_rule.policy = @policy # reset duplicated rule to agency's policy
+        new_rule.fuel_type_id = (rule.replace_fuel_type_id || rule.fuel_type_id)
+        if new_rule.save
+          if params[:edit_rule_after]
+            redirect_to show_edit_form_policy_path(@policy, :rule => new_rule.id, :type => 'asset_subtype', :notice => 'Please edit the policy rule corresponding to your Replace With assets.'), format: 'js'
+            return
+          end
+        end
+
+      end
     end
 
     render 'update_policy_rules'
