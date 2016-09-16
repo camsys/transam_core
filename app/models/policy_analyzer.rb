@@ -113,7 +113,7 @@ class PolicyAnalyzer
     if @policy.present? and @asset.present?
       @asset_type_rule = @policy.policy_asset_type_rules.find_by(:asset_type_id => asset.asset_type_id)
       @asset_subtype_rule = @policy.policy_asset_subtype_rules.find_by(:asset_subtype_id => @asset.asset_subtype_id, :fuel_type_id => @asset.fuel_type_id)
-      if @asset_subtype_rule.replace_asset_subtype_id.present? || @asset_subtype_rule.replace_fuel_type_id.present?
+      if @asset_subtype_rule.try(:replace_asset_subtype_id).present? || @asset_subtype_rule.try(:replace_fuel_type_id).present?
         @replace_asset_subtype_rule = @policy.policy_asset_subtype_rules.find_by(:asset_subtype_id => (@asset_subtype_rule.replace_asset_subtype_id || @asset.asset_subtype_id), :fuel_type_id => (@asset_subtype_rule.replace_fuel_type_id || @asset.fuel_type_id))
       end
     else
