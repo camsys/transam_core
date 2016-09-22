@@ -30,7 +30,7 @@ class MessagesController < OrganizationAwareController
     @all_messages = @messages.where('opened_at IS NOT NULL')
     @new_messages = @messages.where('opened_at IS NULL')
     @flagged_messages = current_user.messages
-    @sent_messages = Message.where(:user_id => current_user.id).order("created_at DESC")
+    @sent_messages = Message.unscoped.where(:user_id => current_user.id).order("created_at DESC")
 
     # cache the set of asset ids in case we need them later
     cache_list(@all_messages, "#{ALL_MESSAGE_FILTER}_#{INDEX_KEY_LIST_VAR}")
@@ -231,7 +231,7 @@ class MessagesController < OrganizationAwareController
 
   # Callbacks to share common setup or constraints between actions.
   def set_message
-    @message = Message.find_by_object_key(params[:id]) unless params[:id].nil?
+    @message = Message.unscoped.find_by_object_key(params[:id]) unless params[:id].nil?
     if @message.nil?
       redirect_to '/404'
       return
