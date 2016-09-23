@@ -11,14 +11,14 @@
       :page_list => "[5, 10, 20, 50, 100, 200]",
       :page_size => current_user.num_table_rows,
       :show_columns => 'false',
-      :show_export => 'false',
+      :show_export => 'true',
       :show_toggle => 'false',
-      :resizable => 'false',
+      :resizable => 'true',
       :search => 'false'}}
       %thead
         %tr
-          %th Event
-          %th Date
+          %th{:data => {:sortable => 'true'}} Event
+          %th{:data => {:sortable => 'true'}} Date
           %th Update
           %th Notes
       %tbody
