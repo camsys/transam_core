@@ -1,6 +1,9 @@
 :ruby
   new_messages = Message.where('to_user_id = ? AND opened_at IS NULL', current_user.id).order("created_at DESC")
   flagged_messages = current_user.messages
+  one_wk_ago = 1.week.ago.beginning_of_day
+  all_messages = Message.where('to_user_id = ? AND opened_at IS NOT NULL AND created_at >= ?', current_user.id, one_wk_ago).order("created_at DESC")
+  sent_messages = Message.where('user_id = ? AND created_at >= ?', current_user.id, one_wk_ago).order("created_at DESC")
 
 %fieldset
   %legend My Messages
@@ -20,9 +23,27 @@
             %i.fa.fa-star
             = " Flagged"
 
+        %li
+          %a{:href => "#inbox", :data =>{:toggle => 'tab'}, :title => 'Messages read within past 7 days'}
+            %span.badge.pull-right= all_messages.count
+            %i.fa.fa-inbox
+            = " Read"
+
+        %li
+          %a{:href => "#sent", :data =>{:toggle => 'tab'}, :title => 'Messages sent within past 7 days'}
+            %span.badge.pull-right= sent_messages.count
+            %i.fa.fa-send
+            = " Sent"
+
       .tab-content{:style => 'min-height: 200px'}
         .tab-pane.fade{:id => "new"}
           = render :partial => 'message_queue', :locals => {:name => "New Messages", :messages => new_messages, :filter => MessagesController::NEW_MESSAGE_FILTER}
 
         .tab-pane.fade{:id => "flag"}
           = render :partial => 'message_queue', :locals => {:name => "Inbox", :messages => flagged_messages, :filter => MessagesController::FLAGGED_MESSAGE_FILTER} 
+
+        .tab-pane.fade{:id => "inbox"}
+          = render :partial => 'message_queue', :locals => {:name => "Read", :messages => all_messages, :filter => MessagesController::ALL_MESSAGE_FILTER} 
+
+        .tab-pane.fade{:id => "sent"}
+          = render :partial => 'message_queue', :locals => {:name => "Inbox", :messages => sent_messages, :filter => MessagesController::SENT_MESSAGE_FILTER} 
