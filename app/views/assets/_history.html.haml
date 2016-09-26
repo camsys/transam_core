@@ -12,13 +12,14 @@
       :page_size => current_user.num_table_rows,
       :show_columns => 'false',
       :show_export => 'true',
+      :export_types => "['csv', 'txt', 'excel']",
       :show_toggle => 'false',
       :resizable => 'true',
       :search => 'false'}}
       %thead
         %tr
           %th{:data => {:sortable => 'true'}} Event
-          %th{:data => {:sortable => 'true'}} Date
+          %th{:data => {:sortable => 'true', :formatter => 'date_formatter'}} Date
           %th Update
           %th Notes
       %tbody
@@ -62,11 +63,13 @@
             %td
               = evt[:description]
             %td
-              = format_as_date(evt[:event_date])
+              = evt[:event_date]
             %td
               = evt[:update]
             %td
               = evt[:comments].html_safe
+
+= render 'shared/table_formatters'
 
 :javascript
   $(window).resize(function() {
