@@ -1,6 +1,14 @@
 # Mainly used for incremental seeding, or data change
 
 namespace :transam_core_data do
+
+  desc "add super manager role"
+  task add_super_manager_role: :environment do
+    if Role.find_by(name: 'super_manager').nil?
+      Role.create(name: 'super_manager', weight: 10, privilege: false)
+    end
+  end
+
   desc "Add event type for EarlyDispositionRequestUpdateEvent"
   task add_early_disposition_request_event_type: :environment do
     if AssetEventType && AssetEventType.where(class_name: 'EarlyDispositionRequestUpdateEvent').empty?
