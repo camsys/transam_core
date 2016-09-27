@@ -148,7 +148,7 @@
                 <div class="col-md-6">\
                   <div class="selector-available">\
                     <div class="row">\
-                      <h3>Available</h3>\
+                      <h3>Not Selected</h3>\
                     </div>\
                     <div class="row">\
                       <div class="selector-filter">\
