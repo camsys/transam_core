@@ -45,7 +45,29 @@ class PolicyAnalyzer
         method_object.call(*arguments)
       elsif asset_type_rule.respond_to? actual_method_sym
         method_object = asset_type_rule.method(actual_method_sym)
-        method_object.call(*arguments)
+        returned_val = method_object.call(*arguments)
+
+        # ================================= #
+        # check if theres a replace rule
+        # if there is, check that the replacement cost calculation type does not use the purchase price calculator
+        if replace_asset_subtype_rule.present?
+          purchase_price_calculator = CostCalculationType.find_by(class_name: 'PurchasePricePlusInterestCalculator')
+
+          # then if uses the purchase price calculator default to replacement (plus interest) calculator
+          if returned_val ==  purchase_price_calculator
+            CostCalculationType.find_by(class_name: 'ReplacementCostPlusInterestCalculator')
+          elsif replace_asset_subtype_rule.present? && actual_method_sym == :replacement_cost_calculation_type_id && returned_val ==  purchase_price_calculator.id
+            CostCalculationType.find_by(class_name: 'ReplacementCostPlusInterestCalculator').id
+          else
+            # for all other calculators just return the value
+            returned_val
+          end
+        else
+          # for all other asset type rule fields just return the value
+          returned_val
+        end
+        # ================================= #
+
       elsif !actual_method_sym.to_s.starts_with?('replace_') && !actual_method_sym.to_s.starts_with?('min_') && replace_asset_subtype_rule.respond_to?(actual_method_sym)
         method_object = replace_asset_subtype_rule.method(actual_method_sym)
         method_object.call(*arguments)
