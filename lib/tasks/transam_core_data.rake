@@ -70,7 +70,7 @@ namespace :transam_core_data do
                 puts "Updating rules for assets with subtype #{subtype.id}, #{policy} in #{policy.organization} for #{fuel}"
                 assets.each do |a|
                   asset = Asset.get_typed_asset(a)
-                  if asset.fuel_type.id == fuel.id
+                  if asset.fuel_type_id == fuel.id
                     asset.check_policy_rule
                     break
                   end
