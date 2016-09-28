@@ -46,9 +46,9 @@ class PolicyAnalyzer
       elsif asset_type_rule.respond_to? actual_method_sym
         method_object = asset_type_rule.method(actual_method_sym)
         method_object.call(*arguments)
-      # elsif !actual_method_sym.to_s.starts_with?('replace_') && replace_asset_subtype_rule.respond_to?(actual_method_sym)
-      #   method_object = replace_asset_subtype_rule.method(actual_method_sym)
-      #   method_object.call(*arguments)
+      elsif !actual_method_sym.to_s.starts_with?('replace_') && !actual_method_sym.to_s.starts_with?('min_') && replace_asset_subtype_rule.respond_to?(actual_method_sym)
+        method_object = replace_asset_subtype_rule.method(actual_method_sym)
+        method_object.call(*arguments)
       elsif asset_subtype_rule.respond_to? actual_method_sym
         method_object = asset_subtype_rule.method(actual_method_sym)
         method_object.call(*arguments)
