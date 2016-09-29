@@ -28,7 +28,7 @@ class NotificationsController < OrganizationAwareController
     current_user.user_notifications.unopened.update_all(opened_at: Time.now) if current_user
 
     respond_to do |format|
-      format.js { render text: 'countNotifications(); getNotifications();' } # run JS function on main notification nav to recount notifications
+      format.js { render text: 'countNotifications(); $("#notificationContainer").hide();' } # run JS function on main notification nav to recount notifications
     end
   end
 
