@@ -215,9 +215,9 @@ module TransamFormatHelper
 
   def format_as_date(date, compact=true)
     if compact
-      date.strftime("%m/%d/%Y") unless date.nil?
+      date.strftime("%m/%d/%Y") unless (date.nil? || date == Date.new(1))
     else
-      date.strftime("%b %d %Y") unless date.nil?
+      date.strftime("%b %d %Y") unless (date.nil? || date == Date.new(1))
     end
   end
 
