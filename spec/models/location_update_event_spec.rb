@@ -27,7 +27,7 @@ RSpec.describe LocationUpdateEvent, :type => :model do
   end
 
   it '.get_update' do
-    expect(test_event.get_update.to_s).to eq(test_event.parent.to_s)
+    expect(test_event.get_update.to_s).to eq("Located at #{test_event.parent.asset_subtype} #{test_event.parent}")
   end
   it '.parent_key' do
     expect(test_event.parent_key).to eq(test_event.parent.object_key)

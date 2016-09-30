@@ -32,7 +32,7 @@ RSpec.describe ConditionUpdateEvent, :type => :model do
   end
 
   it '.get_update' do
-    expect(test_event.get_update).to eq("#{sprintf("%#.1f", test_event.assessed_rating)} (#{test_event.condition_type.to_s})")
+    expect(test_event.get_update).to eq("Condition recorded as #{sprintf("%#.1f", test_event.assessed_rating)} (#{test_event.condition_type.to_s})")
   end
 
   describe '.set_defaults' do

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160711155349) do
+ActiveRecord::Schema.define(version: 20160923152346) do
 
   create_table "activities", force: true do |t|
     t.string   "object_key",           limit: 12
@@ -428,10 +428,10 @@ ActiveRecord::Schema.define(version: 20160711155349) do
   end
 
   create_table "fuel_types", force: true do |t|
-    t.string  "name",        limit: 64,  null: false
-    t.string  "code",        limit: 2,   null: false
-    t.string  "description", limit: 254, null: false
-    t.boolean "active",                  null: false
+    t.string  "name",        null: false
+    t.string  "code",        null: false
+    t.string  "description", null: false
+    t.boolean "active",      null: false
   end
 
   create_table "images", force: true do |t|
