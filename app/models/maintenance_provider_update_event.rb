@@ -46,7 +46,7 @@ class MaintenanceProviderUpdateEvent < AssetEvent
     
   # This must be overriden otherwise a stack error will occur  
   def get_update
-    maintenance_provider_type unless maintenance_provider_type.nil?
+    "Maintained by #{maintenance_provider_type}" unless maintenance_provider_type.nil?
   end
   
   protected

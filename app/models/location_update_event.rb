@@ -51,7 +51,7 @@ class LocationUpdateEvent < AssetEvent
 
   # This must be overriden otherwise a stack error will occur
   def get_update
-    parent unless parent.nil?
+    "Asset located at #{parent.asset_subtype} #{parent}" unless parent.nil?
   end
  
   def parent_key=(object_key)
