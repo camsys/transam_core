@@ -54,7 +54,7 @@ class Issue < ActiveRecord::Base
 
   # Set resonable defaults for a new asset event
   def set_defaults
-
+    self.issue_status_type_id ||= 1
   end    
     
   #------------------------------------------------------------------------------
