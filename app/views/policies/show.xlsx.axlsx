@@ -117,7 +117,7 @@ wb.styles do |style|
                 ]
             end
             sheet.add_row rule_row,
-            style: [nil, nil, nil, integer_cell, integer_cell, currency_cell, integer_cell, nil, nil, integer_cell, integer_cell, nil, nil, integer_cell, currency_cell, currency_cell, integer_cell, integer_cell, nil, nil, nil, nil, nil, nil, nil]
+            style: [nil, nil, nil, integer_cell, integer_cell, currency_cell, nil, nil, nil, integer_cell, integer_cell, nil, nil, integer_cell, currency_cell, currency_cell, integer_cell, integer_cell, nil, nil, nil, nil, nil, nil, nil]
         end
     end
 end
