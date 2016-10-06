@@ -1,6 +1,5 @@
-:ruby
-  assignable_roles = UserRoleService.new.assignable_roles(current_user)
-  assignable_privileges = UserRoleService.new.assignable_privileges(current_user)
+- assignable_roles = Role.roles.map{ |r| [r.name.titleize, r.id] if can? :assign, r }.compact
+- assignable_privileges = Role.privileges.map{ |r| [r.name.titleize, r.id] if can? :assign, r }.compact
 
 = simple_form_for(@user,
   :html => {:class => 'form-vertical user_form'},
@@ -12,7 +11,7 @@
 
   %fieldset
     %legend User Details
-    - if current_user.organizations.count > 1
+    - if @organization_list.count > 1
       = f.association :organization, :collection => current_user.organizations, :label_method => 'coded_name'
     - elsif current_user.has_role?(:manager)
       = f.association :organization, :collection => Organization.where(active: true).order(:short_name), :label_method => 'coded_name'
@@ -32,15 +31,16 @@
       .col-lg-6.col-md-6.col-sm-6.col-xs-12
         = f.input :external_id, :placeholder => "User's ID number...", :label => "ID Number"
 
-    - if can? :assign_roles, User
+    - if can? :assign, Role.find_by(name: 'user')
       %fieldset
         %legend Roles & Prvileges
 
         .row
           .col-lg-6.col-md-6.col-sm-6.col-xs-12
-            = f.input :role_ids, :label => "User Role", :collection => assignable_roles.collect{|x| [x.name.titleize, x.id]}, :include_blank => false
-          .col-lg-6.col-md-6.col-sm-6.col-xs-12
-            = f.input :privilege_ids, :label => "User Privileges", :collection => assignable_privileges.collect{|x| [x.name.titleize, x.id]}, :as => :check_boxes, :input_html => { :multiple => true }
+            = f.input :role_ids, :label => "User Role", :collection => assignable_roles, :include_blank => false
+          - if assignable_privileges.count > 0
+            .col-lg-6.col-md-6.col-sm-6.col-xs-12
+              = f.input :privilege_ids, :label => "User Privileges", :collection => assignable_privileges, :as => :check_boxes, :input_html => { :multiple => true }
 
   %fieldset
     %legend Contact Info
