@@ -1,5 +1,6 @@
-- assignable_roles = Role.roles.map{ |r| [r.name.titleize, r.id] if can? :assign, r }.compact
-- assignable_privileges = Role.privileges.map{ |r| [r.name.titleize, r.id] if can? :assign, r }.compact
+- assignable_roles = Role.roles.map{ |r| [r.label, r.id] if can? :assign, r }.compact
+- assignable_privileges = Role.privileges.where('resource_id IS NULL').map{ |r| [r.label, r.id] if can? :assign, r }.compact
+- assignable_super_privileges = Role.privileges.where('resource_id IS NOT NULL').map{ |r| [r.id, r.label, r.resource_id] if can? :assign, r }.compact
 
 = simple_form_for(@user,
   :html => {:class => 'form-vertical user_form'},
@@ -38,6 +39,9 @@
         .row
           .col-lg-6.col-md-6.col-sm-6.col-xs-12
             = f.input :role_ids, :label => "User Role", :collection => assignable_roles, :include_blank => false
+            = f.collection_check_boxes :privilege_ids, assignable_super_privileges, :first, :second, :item_wrapper_class => 'checkbox' do |b|
+              = b.check_box(:class => 'super-privilege', :data => { resource_id: b.object.third.to_s}) + b.text
+
           - if assignable_privileges.count > 0
             .col-lg-6.col-md-6.col-sm-6.col-xs-12
               = f.input :privilege_ids, :label => "User Privileges", :collection => assignable_privileges, :as => :check_boxes, :input_html => { :multiple => true }
@@ -70,6 +74,20 @@
 :javascript
 
   $(document).ready(function() {
+    $('#user_role_ids').change();
+
+  });
+
+  $('#user_role_ids').change(function() {
+    $('.super-privilege').each(function(){
+
+      if(parseInt($(this).data('resource-id')) == parseInt($('#user_role_ids').val())) {
+        $(this).parent().parent().show(); // get span of checkbox
+      } else {
+        $(this).parent().parent().hide();
+      }
+    });
+
   });
 
   // Override placement of validator msg on .input-groups
