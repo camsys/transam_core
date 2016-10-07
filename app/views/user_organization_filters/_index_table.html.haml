@@ -23,12 +23,12 @@
       %th.left{:data => {:visible => 'false'}} Object Key
       %th.left{:data => {:sortable => 'true', :order => 'desc'}} Name
       %th.left{:data => {:sortable => 'true', :order => 'desc'}} Description
-      %th.center{:data => {:sortable => 'true', :order => 'desc', :formatter => 'boolean_formatter'}} System
       %th.right{:data => {:sortable => 'true', :order => 'desc'}} Org Count
 
       %th.left{:data => {:sortable => 'true', :order => 'desc'}} Created By
       %th.right{:data => {:visible => 'false', :sortable => 'true', :order => 'desc'}} Created On
       %th.right{:data => {:visible => 'false', :sortable => 'true', :order => 'desc'}} Last Updated
+      %th.center{data: {:sortable => 'true', :order => 'desc', :formatter => 'replace_with_subtype_formatter'}}
 
   %tbody
     - @user_organization_filters.sorted.each do |f|
@@ -36,11 +36,38 @@
         %td.left= f.object_key
         %td.left= f.name
         %td.left= f.description
-        %td.center= (f.system_filter? ? 1 : 0)
-        %td.right= f.organizations.count
+        - orgs = f.query_string.present? ? TransitOperator.find_by_sql(f.query_string) : f.organizations
+        %td.right
+          = orgs.count
+          %a.transam-popover{data: {placement: 'left', toggle: 'popover', html: 'true', content: orgs.map{|o| o.short_name}.join(', ')}, title: 'Organizations', tabindex: '0'}
+            %i.fa.fa-info-circle
 
-        %td.left= f.user
+        %td.left= f.creator
         %td.right= format_as_date_time(f.created_at)
         %td.right= format_as_date_time(f.updated_at)
+        %td.center= [(f.system_filter? ? 1 : 0), f.users.count ]
 
 = render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :path_pattern => user_user_organization_filter_path(current_user, "xxx")}
+
+:javascript
+
+  $('#' + '#{table_dom_id}').on('post-body.bs.table', function () {
+    $('.transam-popover').popover({
+      trigger: 'hover'
+    });
+
+    $('.transam-tooltip').tooltip();
+  });
+
+  function replace_with_subtype_formatter(value, data) {
+    vals = JSON.parse(value);
+    html_str = "";
+    if((vals[0] == 1) && (data)) {
+      html_str += '<a class="transam-tooltip" data-placement="top" data-title="System executed query" data-toggle="tooltip" tabindex="0" data-original-title="" title=""><i class="fa fa-cog" style="color: green !important;margin-right:10px;"></i></a>';
+    }
+    if((vals[1] != 1) && (data)) {
+      html_str += '<a class="transam-tooltip" data-placement="top" data-title="Shared with '+ vals[1] +' users" data-toggle="tooltip" tabindex="0" data-original-title="" title=""><i class="fa fa-users" style="color: orange !important;"></i></a>';
+    }
+
+    return html_str;
+  }

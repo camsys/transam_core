@@ -1,3 +1,4 @@
 = format_field("Name", filter.name )
 = format_field("Num Orgs", filter.organizations.count )
 = format_field("Description", format_as_text(filter.description))
+= format_field("Shared With", filter.shared? ? filter.creator.organization.short_name : 'No One')

@@ -19,9 +19,10 @@ class UserOrganizationFilter < ActiveRecord::Base
   # Each filter can have a list of organizations that are included
   has_and_belongs_to_many :organizations, :join_table => 'user_organization_filters_organizations'
 
-  validates   :user_id,       :presence => :true
+  has_and_belongs_to_many :users, :join_table => 'users_user_organization_filters'
+
   validates   :name,          :presence => :true
-  validates   :name,          :uniqueness => {scope: :user, message: "must be unique for user"}, if: Proc.new { |filter| filter.user_id != User.find_by(first_name: 'system').id }
+  #validates   :name,          :uniqueness => {scope: :user, message: "must be unique for user"}, if: Proc.new { |filter| filter.user_id != User.find_by(first_name: 'system').id }
   validates   :description,   :presence => :true
 
   # Allow selection of active instances
@@ -30,8 +31,8 @@ class UserOrganizationFilter < ActiveRecord::Base
   scope :sorted, -> { order('sort_order IS NULL, sort_order ASC', :name) }
 
   # Named Scopes
-  scope :system_filters, -> { where('user_id = ? AND active = ?', 1, 1 ) }
-  scope :other_filters, -> { where('user_id > ? AND active = ?', 1, 1 ) }
+  scope :system_filters, -> { where('created_by_user_id = ? AND active = ?', 1, 1 ) }
+  scope :other_filters, -> { where('created_by_user_id > ? AND active = ?', 1, 1 ) }
 
   # List of allowable form param hash keys
   FORM_PARAMS = [
@@ -60,6 +61,10 @@ class UserOrganizationFilter < ActiveRecord::Base
   # Returns true if this is a system filter
   def system_filter?
     UserOrganizationFilter.system_filters.include? self
+  end
+
+  def shared?
+    self.users.count > 1
   end
 
   #------------------------------------------------------------------------------

@@ -6,6 +6,13 @@
         = f.input :description, :as => :text, :placeholder => "Enter a description for this filter.", :rows => 3
         = f.input :organization_ids, :as => :hidden
 
+        - if can? :share, @user_organization_filter
+          .form-group.required
+            = check_box_tag :share_filter, style: 'margin-left: 10px;'
+            Share this filter?
+
+
+
     .col-md-6
       = dialog_tag('Organizations Filter', {:icon => 'fa fa-list', :class => "form-part"}) do
         #org_select.input-xlarge

@@ -5,7 +5,7 @@
       .col-sm-6.col-xs-12
         = form_tag new_inventory_path, :id => 'asset_subtype_form', :method => "get", :class => 'form-vertical', :role => 'form' do
 
-          - if current_user.organizations.count > 1
+          - if @organization_list.count > 1
             .form-group
               %label.control-label.string.required
                 * Organization

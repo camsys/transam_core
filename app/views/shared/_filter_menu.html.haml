@@ -1,47 +1,31 @@
+:ruby
+  my_filters = current_user.user_organization_filters.sorted
+  my_personal_filters =  UserOrganizationFilter.joins(:users).where(created_by_user_id: current_user.id).group('user_organization_filters.id').having( 'count( user_id ) = 1' )
+
 %ul.dropdown-menu.dropdown-menu-right{:role => "menu"}
-  - UserOrganizationFilter.where(user_id: User.find_by_first_name('system').id, role_id: current_user.roles.roles.ids).sorted.each do |filter|
+  - (my_filters - my_personal_filters).each do |filter|
     - if filter == current_user.user_organization_filter
       %li.dropdown-submenu.dropdown-submenu-right
         = link_to user_user_organization_filter_use_path(current_user, filter) do
           %i.fa.fa-filter.fa-fw
           = filter.name
-          %span{style: 'color: red;'}= 1 == 1  ? 'Selected' : ''
+          -#%span{style: 'color: red;'}= 1 == 1  ? 'Selected' : ''
         %ul.dropdown-menu{style: "overflow-y:scroll;height:400px;"}
-          - current_user.user_organization_filter.organizations.each do |org|
+          - orgs = current_user.user_organization_filter.query_string.present? ? TransitOperator.find_by_sql(current_user.user_organization_filter.query_string) : current_user.user_organization_filter.organizations
+          - orgs.each do |org|
             %li
-              = link_to user_user_organization_filter_set_org_path(current_user, current_user.user_organization_filter, org: org.short_name) do
+              -#= link_to user_user_organization_filter_set_org_path(current_user, current_user.user_organization_filter, org: org.short_name) do
+              = link_to '#' do
                 %i.fa.fa-filter.fa-fw
                 = org.short_name
-                %span{style: 'color: red;'}= 1 == 1  ? 'Selected' : ''
+                -#%span{style: 'color: red;'}= 1 == 1  ? 'Selected' : ''
     - else
       %li
         = link_to user_user_organization_filter_use_path(current_user, filter) do
           %i.fa.fa-filter.fa-fw
           = filter.name
-  %li
-    - my_main_filter = UserOrganizationFilter.find_by(name: "#{current_user.name}'s organizations")
-    - if my_main_filter
-      - if my_main_filter == current_user.user_organization_filter
-        %li.dropdown-submenu.dropdown-submenu-right
-          = link_to user_user_organization_filter_use_path(current_user, my_main_filter) do
-            %i.fa.fa-filter.fa-fw
-            = my_main_filter.name
-            %span{style: 'color: red;'}= 1 == 1  ? 'Selected (CUMBCO)' : ''
-          %ul.dropdown-menu{style: "overflow-y:scroll;height:400px;"}
-            - current_user.user_organization_filter.organizations.each do |org|
-              %li
-                = link_to user_user_organization_filter_set_org_path(current_user, current_user.user_organization_filter, org: org.short_name) do
-                  %i.fa.fa-filter.fa-fw
-                  = org.short_name
-                  %span{style: 'color: red;'}= org.short_name == 'CUMBCO'  ? 'Selected' : ''
-      - else
-        %li
-          = link_to user_user_organization_filter_use_path(current_user, my_main_filter) do
-            %i.fa.fa-filter.fa-fw
-            = my_main_filter.name
-
   %li.divider
-  - UserOrganizationFilter.where(user_id: current_user.id).where('id != ?', my_main_filter.try(:id)).sorted.each do |filter|
+  - my_personal_filters.each do |filter|
     %li
       = link_to user_user_organization_filter_use_path(current_user, filter) do
         %i.fa.fa-filter.fa-fw

@@ -10,7 +10,7 @@ class UserOrganizationFiltersController < OrganizationAwareController
 
     add_breadcrumb "Organization Filters"
 
-    @user_organization_filters = UserOrganizationFilter.all
+    @user_organization_filters = current_user.user_organization_filters
 
   end
 
@@ -118,7 +118,8 @@ class UserOrganizationFiltersController < OrganizationAwareController
     add_breadcrumb "New"
 
     @user_organization_filter = UserOrganizationFilter.new(form_params.except(:organization_ids))
-    @user_organization_filter.user = current_user
+    @user_organization_filter.creator = current_user
+    @user_organization_filter.users = params[:share_filter] ? current_user.organization.users : [current_user]
 
     respond_to do |format|
       if @user_organization_filter.save
@@ -148,9 +149,7 @@ class UserOrganizationFiltersController < OrganizationAwareController
       redirect_to :back
     end
 
-    add_breadcrumb "Organization Filters", user_user_organization_filters_path(current_user)
-    add_breadcrumb @user_organization_filter.name, user_user_organization_filter_path(current_user, @user_organization_filter)
-    add_breadcrumb "Update"
+    @user_organization_filter.users = params[:share_filter] ? current_user.organization.users : [current_user]
 
     respond_to do |format|
       if @user_organization_filter.update(form_params)

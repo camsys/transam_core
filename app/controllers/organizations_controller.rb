@@ -28,7 +28,10 @@ class OrganizationsController < OrganizationAwareController
       add_breadcrumb OrganizationType.find(@organization_type_id).name.pluralize(2), organizations_path(:organization_type_id => @organization_type_id)
     end
 
-    @organizations = current_user.organizations.where(conditions.join(' AND '), *values)
+    conditions << 'id IN (?)'
+    values << @organization_list
+
+    @organizations = Organization.where(conditions.join(' AND '), *values)
 
     # cache the set of asset ids in case we need them later
     cache_list(@organizations, INDEX_KEY_LIST_VAR)
