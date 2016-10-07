@@ -13,12 +13,15 @@ class UserOrganizationFilter < ActiveRecord::Base
   # Each filter is owned by a specific user
   belongs_to  :user
 
+  # Each filter is created by someone usually the owner but sometimes the system user (could be extended to sharing filters)
+  belongs_to :creator, :class_name => "User", :foreign_key => :created_by_user_id
+
   # Each filter can have a list of organizations that are included
   has_and_belongs_to_many :organizations, :join_table => 'user_organization_filters_organizations'
 
   validates   :user_id,       :presence => :true
   validates   :name,          :presence => :true
-  validates   :name,          :uniqueness => true
+  validates   :name,          :uniqueness => {scope: :user, message: "must be unique for user"}, if: Proc.new { |filter| filter.user_id != User.find_by(first_name: 'system').id }
   validates   :description,   :presence => :true
 
   # Allow selection of active instances

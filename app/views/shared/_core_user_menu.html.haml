@@ -7,10 +7,24 @@
     %i.fa.fa-envelope.fa-fw
     = " My messages (#{current_user.new_messages.count})"
 %li.divider.text-left
-%li.text-left
-  = link_to organization_path(current_user.organization)  do
-    %i.fa.fa-building-o.fa-fw
-    My organization
+- if current_user.organizations.count == 1
+  %li.text-left
+    = link_to organization_path(current_user.organization)  do
+      %i.fa.fa-building-o.fa-fw
+      My organization
+- else
+
+  %li.dropdown-submenu.dropdown-submenu-right
+    = link_to '#', :tabindex => "-1"  do
+      %i.fa.fa-building-o.fa-fw
+      My organizations
+    %ul.dropdown-menu
+      - current_user.organizations.each do |org|
+        %li
+          = link_to organization_path(org)  do
+            %i.fa.fa-building-o.fa-fw
+            = org.short_name
+
 %li.divider.text-left
 %li.text-left
   = link_to user_path(current_user)  do

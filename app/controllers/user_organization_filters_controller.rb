@@ -45,7 +45,12 @@ class UserOrganizationFiltersController < OrganizationAwareController
     Rails.logger.debug "Setting agency filter to: #{@user_organization_filter.organizations.inspect}"
 
     # Set the session variable to store the list of organizations for reporting
-    set_selected_organization_list(@user_organization_filter.organizations)
+    if @user_organization_filter.query_string.present?
+      organizations =  TransitOperator.find_by_sql(@user_organization_filter.query_string)
+    else
+      organizations = @user_organization_filter.organizations
+    end
+    set_selected_organization_list(organizations)
 
     # Save the selection. Next time the user logs in the filter will be reset
     current_user.user_organization_filter = @user_organization_filter
@@ -56,6 +61,27 @@ class UserOrganizationFiltersController < OrganizationAwareController
     session[:user_organization_filter] = @user_organization_filter.name
 
     redirect_to :back
+
+  end
+
+  def set_org
+    @user_organization_filter = UserOrganizationFilter.find_by_object_key(params[:user_organization_filter_id])
+
+    if @user_organization_filter.nil?
+      notify_user(:alert, 'Record not found!')
+      redirect_to :back
+      return
+    end
+
+    # Set the session variable to store the org selected
+    set_selected_organization_list(Organization.find_by(short_name: params[:org]))
+    set_selected_organization(Organization.find_by(short_name: params[:org]))
+
+    # Set the filter name in the session
+    session[:user_organization_filter] = @user_organization_filter.name
+
+    redirect_to :back
+
 
   end
 

@@ -1,0 +1,58 @@
+%ul.dropdown-menu.dropdown-menu-right{:role => "menu"}
+  - UserOrganizationFilter.where(user_id: User.find_by_first_name('system').id, role_id: current_user.roles.roles.ids).sorted.each do |filter|
+    - if filter == current_user.user_organization_filter
+      %li.dropdown-submenu.dropdown-submenu-right
+        = link_to user_user_organization_filter_use_path(current_user, filter) do
+          %i.fa.fa-filter.fa-fw
+          = filter.name
+          %span{style: 'color: red;'}= 1 == 1  ? 'Selected' : ''
+        %ul.dropdown-menu{style: "overflow-y:scroll;height:400px;"}
+          - current_user.user_organization_filter.organizations.each do |org|
+            %li
+              = link_to user_user_organization_filter_set_org_path(current_user, current_user.user_organization_filter, org: org.short_name) do
+                %i.fa.fa-filter.fa-fw
+                = org.short_name
+                %span{style: 'color: red;'}= 1 == 1  ? 'Selected' : ''
+    - else
+      %li
+        = link_to user_user_organization_filter_use_path(current_user, filter) do
+          %i.fa.fa-filter.fa-fw
+          = filter.name
+  %li
+    - my_main_filter = UserOrganizationFilter.find_by(name: "#{current_user.name}'s organizations")
+    - if my_main_filter
+      - if my_main_filter == current_user.user_organization_filter
+        %li.dropdown-submenu.dropdown-submenu-right
+          = link_to user_user_organization_filter_use_path(current_user, my_main_filter) do
+            %i.fa.fa-filter.fa-fw
+            = my_main_filter.name
+            %span{style: 'color: red;'}= 1 == 1  ? 'Selected (CUMBCO)' : ''
+          %ul.dropdown-menu{style: "overflow-y:scroll;height:400px;"}
+            - current_user.user_organization_filter.organizations.each do |org|
+              %li
+                = link_to user_user_organization_filter_set_org_path(current_user, current_user.user_organization_filter, org: org.short_name) do
+                  %i.fa.fa-filter.fa-fw
+                  = org.short_name
+                  %span{style: 'color: red;'}= org.short_name == 'CUMBCO'  ? 'Selected' : ''
+      - else
+        %li
+          = link_to user_user_organization_filter_use_path(current_user, my_main_filter) do
+            %i.fa.fa-filter.fa-fw
+            = my_main_filter.name
+
+  %li.divider
+  - UserOrganizationFilter.where(user_id: current_user.id).where('id != ?', my_main_filter.try(:id)).sorted.each do |filter|
+    %li
+      = link_to user_user_organization_filter_use_path(current_user, filter) do
+        %i.fa.fa-filter.fa-fw
+        = filter.name
+  %li.divider
+  %li.text-left
+    = link_to user_user_organization_filters_path(current_user) do
+      %i.fa.fa-list-alt.fa-fw
+      Manage Filters
+  %li.divider
+  %li.text-left
+    = link_to new_user_user_organization_filter_path(current_user) do
+      %i.fa.fa-plus.fa-fw
+      New Filter
