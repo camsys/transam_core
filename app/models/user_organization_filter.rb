@@ -22,7 +22,6 @@ class UserOrganizationFilter < ActiveRecord::Base
   has_and_belongs_to_many :users, :join_table => 'users_user_organization_filters'
 
   validates   :name,          :presence => :true
-  #validates   :name,          :uniqueness => {scope: :user, message: "must be unique for user"}, if: Proc.new { |filter| filter.user_id != User.find_by(first_name: 'system').id }
   validates   :description,   :presence => :true
 
   # Allow selection of active instances
