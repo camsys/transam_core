@@ -4,6 +4,7 @@ describe "users/_form.html.haml", :type => :view do
   it 'fields' do
     test_user = create(:manager)
     allow(controller).to receive(:current_user).and_return(test_user)
+    assign(:organization_list, Organization.all.ids)
     assign(:user, User.new)
     render
 
