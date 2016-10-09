@@ -74,11 +74,7 @@ class UserOrganizationFiltersController < OrganizationAwareController
     end
 
     # Set the session variable to store the org selected
-    set_selected_organization_list(Organization.find_by(short_name: params[:org]))
-    set_selected_organization(Organization.find_by(short_name: params[:org]))
-
-    # Set the filter name in the session
-    session[:user_organization_filter] = @user_organization_filter.name
+    set_selected_organization_list(Organization.where(id: params[:org_user_organization_filter]))
 
     redirect_to :back
 

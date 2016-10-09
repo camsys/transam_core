@@ -202,7 +202,7 @@ Rails.application.routes.draw do
   # Add user organization filters
     resources :user_organization_filters do
       get 'use'
-      get 'set_org'
+      post 'set_org'
     end
   end
 
