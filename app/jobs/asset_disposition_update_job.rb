@@ -33,7 +33,7 @@ class AssetDispositionUpdateJob < AbstractAssetUpdateJob
 
     event_url = Rails.application.routes.url_helpers.new_inventory_path asset
 
-    transfer_notification = Notification.create(text: "A new asset has been transferred to you. Please update the asset.", link: event_url, notifiable_type: 'Asset', notifiable_id: asset.id )
+    transfer_notification = Notification.create(text: "A new asset has been transferred to you. Please update the asset.", link: event_url, notifiable_type: 'Organization', notifiable_id: asset.organization_id )
 
     transit_managers.each do |usr|
       UserNotification.create(notification: transfer_notification, user: usr)

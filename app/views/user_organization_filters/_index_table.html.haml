@@ -28,7 +28,7 @@
       %th.left{:data => {:sortable => 'true', :order => 'desc'}} Created By
       %th.right{:data => {:visible => 'false', :sortable => 'true', :order => 'desc'}} Created On
       %th.right{:data => {:visible => 'false', :sortable => 'true', :order => 'desc'}} Last Updated
-      %th.center{data: {:sortable => 'true', :order => 'desc', :formatter => 'replace_with_subtype_formatter'}}
+      %th.center{data: {:sortable => 'true', :order => 'desc', :formatter => 'properties_formatter'}}
 
   %tbody
     - @user_organization_filters.sorted.each do |f|
@@ -59,7 +59,7 @@
     $('.transam-tooltip').tooltip();
   });
 
-  function replace_with_subtype_formatter(value, data) {
+  function properties_formatter(value, data) {
     vals = JSON.parse(value);
     html_str = "";
     if((vals[0] == 1) && (data)) {

@@ -25,7 +25,7 @@ class UploadProcessorJob < Job
       end
 
       event_url = Rails.application.routes.url_helpers.upload_path(upload)
-      upload_notification = Notification.create!(text: "#{upload.file_content_type} #{upload.file_status_type}.", link: event_url, notifiable_type: 'Upload', notifiable_id: upload.id)
+      upload_notification = Notification.create!(text: "#{upload.file_content_type} #{upload.file_status_type}.", link: event_url, notifiable_type: 'Organization', notifiable_id: upload.organization_id)
       UserNotification.create!(user: upload.user, notification: upload_notification)
 
     else

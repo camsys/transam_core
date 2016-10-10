@@ -16,10 +16,15 @@
 
     %tbody
       - notifications.each do |n|
+        - notification = n.notification
         %tr
           %td.left
-            = link_to notification_path(n.notification) do
-              = n.notification.text
+            - if notification.notifiable_type == 'Organization' && !(@organization_list.include? notification.notifiable_id)
+              = link_to notification_path(notification), :data => {:confirm => "This notification is outside your filter. Reset filter?"} do
+                = notification.text
+            - else
+              = link_to notification_path(notification) do
+                = notification.text
           %td.right
-            = link_to notification_path(n.notification), remote: true, method: :put, title: 'Mark as Read', style: 'padding-right: 15px;' do
+            = link_to notification_path(notification), remote: true, method: :put, title: 'Mark as Read', style: 'padding-right: 15px;' do
               %i.fa.fa-check.fa-fw

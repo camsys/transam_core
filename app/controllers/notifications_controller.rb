@@ -34,6 +34,11 @@ class NotificationsController < OrganizationAwareController
 
   def show
 
+    # reset filter if necessary so you go to notification link
+    if @notification.notifiable_type == 'Organization' && !(@organization_list.include? @notification.notifiable_id)
+      set_current_user_organization_filter_(current_user, current_user.user_organization_filters.system_filters.first)
+    end
+
     # if all users of that notification have seen it make notification inactive
     if @notification.user_notifications.count == @notification.user_notifications.opened.count
       @notification.update(active: false)

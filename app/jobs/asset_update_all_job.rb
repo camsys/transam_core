@@ -39,7 +39,7 @@ class AssetUpdateAllJob < Job
     end
 
     event_url = Rails.application.routes.url_helpers.policy_path policy
-    policy_notification = Notification.create(text: msg, link: event_url)
+    policy_notification = Notification.create(text: msg, link: event_url, notifiable_type: 'Organization', notifiable_id: policy.organization_id)
     UserNotification.create(user: creator, notification: policy_notification)
 
   end

@@ -93,6 +93,9 @@
       type: 'POST',
       data: {
         org_user_organization_filter : orgs
+      },
+      complete: function() {
+        window.location.reload(true);
       }
     });
   });
