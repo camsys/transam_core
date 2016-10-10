@@ -12,7 +12,7 @@ class IssuesReportJob < ActivityJob
 
     system_user = User.where(first_name: 'system', last_name: 'user').first
 
-    event_url = Rails.application.routes.url_helpers.report_path(Report.find_by(name: 'Issues Report'))
+    event_url = Rails.application.routes.url_helpers.report_url(Report.find_by(name: 'Issues Report'))
 
     # send message to all admin about new issues created this week
     User.with_role(:admin).each do |user|
