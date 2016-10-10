@@ -27,4 +27,4 @@
       %li.divider
       - Role.all.each do |role|
         %li
-          = link_to role.name.titleize, users_path(:organization_id => @organization_id, :role => role.name)
+          = link_to role.label, users_path(:organization_id => @organization_id, :role => role.name)

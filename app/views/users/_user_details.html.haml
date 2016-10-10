@@ -7,7 +7,7 @@
     = format_field("Ext.", user.phone_ext) unless user.phone_ext.blank?
     = format_field("External ID", user.external_id ) unless user.external_id.blank?
     = format_field("Address", format_as_address(user)) unless user.full_address.blank?
-    = format_field("Roles", format_as_list(user.roles.collect{|x| x.name.titleize}) )
+    = format_field("Roles", format_as_list(user.roles.collect{|x| x.label}) )
 .hidden-lg
   .col-sm-4
     = render :partial => "users/user_card", :locals => {:user => user}
@@ -18,4 +18,4 @@
     = format_field("External ID", user.external_id ) unless user.external_id.blank?
   .col-sm-4
     = format_field("Address", format_as_address(user)) unless user.full_address.blank?
-    = format_field("Roles", format_as_list(user.roles.collect{|x| x.name.titleize}) )
+    = format_field("Roles", format_as_list(user.roles.collect{|x| x.label}) )

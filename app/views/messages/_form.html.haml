@@ -20,7 +20,7 @@
         = f.input :to_user_ids, :label => "Users", :collection => available_agencies, :input_html => {:multiple => true, :size => 5}, :as => :grouped_select, :group_method => :users, :include_blank => false
         = f.input :group_agencys, :input_html => {:multiple => true, :size => 5}, :label => "Organizations", :collection => available_agencies, :include_blank => false
       .col-lg-4.col-md-4.col-sm-6.col-xs-6
-        = f.input :group_roles, :input_html => {:multiple => true, :size => 5}, :label => "Roles", :collection => Role.all, :include_blank => "All Roles", :label_method => lambda {|r| "#{r.name.titleize.pluralize}"}, :value_method => lambda { |r| r.id }
+        = f.input :group_roles, :input_html => {:multiple => true, :size => 5}, :label => "Roles", :collection => Role.all, :include_blank => "All Roles", :label_method => lambda {|r| "#{r.label.pluralize}"}, :value_method => lambda { |r| r.id }
       - if current_user.is_in_roles? [:admin, :manager]
         .col-lg-4.col-md-4.col-sm-12.col-xs-12
           .pull-right{:style => 'margin-top: 25px;'}
