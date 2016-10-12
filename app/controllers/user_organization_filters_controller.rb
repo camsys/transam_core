@@ -99,7 +99,12 @@ class UserOrganizationFiltersController < OrganizationAwareController
 
     @user_organization_filter = UserOrganizationFilter.new(form_params.except(:organization_ids))
     @user_organization_filter.creator = current_user
-    @user_organization_filter.users = params[:share_filter] ? current_user.organization.users : [current_user]
+    if params[:share_filter]
+      @user_organization_filter.users = current_user.organization.users
+      @user_organization_filter.resource = current_user.organization
+    else
+      @user_organization_filter.users = [current_user]
+    end
 
     respond_to do |format|
       if @user_organization_filter.save
@@ -129,7 +134,13 @@ class UserOrganizationFiltersController < OrganizationAwareController
       redirect_to :back
     end
 
-    @user_organization_filter.users = params[:share_filter] ? current_user.organization.users : [current_user]
+    if params[:share_filter]
+      @user_organization_filter.users = current_user.organization.users
+      @user_organization_filter.resource = current_user.organization
+    else
+      @user_organization_filter.users = [current_user]
+      @user_organization_filter.resource = nil
+    end
 
     respond_to do |format|
       if @user_organization_filter.update(form_params)

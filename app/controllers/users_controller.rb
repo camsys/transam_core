@@ -206,12 +206,16 @@ class UsersController < OrganizationAwareController
     new_user_service = get_new_user_service
     # Create the user
     @user = new_user_service.build(form_params)
-    @user.organization = @organization unless @user.organization # allow for mass-assignment of organization
-
-    add_breadcrumb 'New'
 
     respond_to do |format|
       if @user.save
+
+        # set organizations
+        # Add the (possibly) new organizations into the object
+        org_list = form_params[:organization_ids].split(',')
+        org_list.each do |id|
+          @user.organizations << Organization.find(id)
+        end
 
         # Perform an post-creation tasks such as sending emails, etc.
         new_user_service.post_process @user
@@ -246,6 +250,14 @@ class UsersController < OrganizationAwareController
 
     respond_to do |format|
       if @user.update_attributes(form_params)
+
+        # clear the existing list of organizations
+        @user.organizations.clear
+        # Add the (possibly) new organizations into the object
+        org_list = form_params[:organization_ids].split(',')
+        org_list.each do |id|
+          @user.organizations << Organization.find(id)
+        end
 
         #-----------------------------------------------------------------------
         # Assign the role and privileges but only on a profile form, not a

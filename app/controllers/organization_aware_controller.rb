@@ -83,7 +83,7 @@ class OrganizationAwareController < TransamController
 
     # Set the session variable to store the list of organizations for reporting
     if filter.query_string.present?
-      organizations =  TransitOperator.find_by_sql(filter.query_string)
+      organizations =  Organization.find_by_sql(filter.query_string)
     else
       organizations = filter.organizations
     end

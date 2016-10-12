@@ -5,10 +5,11 @@ class UserOrganizationFilter < ActiveRecord::Base
 
   # Callbacks
   after_initialize :set_defaults
-  after_save       :require_at_least_one_organization     # validate model for HABTM relationships
 
   # Clean up any HABTM associations before the asset is destroyed
   before_destroy { :clean_habtm_relationships }
+
+  belongs_to :resource, :polymorphic => true
 
   # Each filter is owned by a specific user
   belongs_to  :user
@@ -73,13 +74,6 @@ class UserOrganizationFilter < ActiveRecord::Base
   #------------------------------------------------------------------------------
 
   protected
-
-  def require_at_least_one_organization
-    if organizations.count == 0
-      errors.add(:organizations, "must be selected.")
-      return false
-    end
-  end
 
   def clean_habtm_relationships
     organizations.clear
