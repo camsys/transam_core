@@ -37,8 +37,9 @@ class User < ActiveRecord::Base
   # to display local weather on the dashboard
   belongs_to  :weather_code
 
-  # Every user has 0 or 1 user organization filter that they are using
+  # Every user has 0 or 1 user organization filter that they are using and a list that they own
   belongs_to :user_organization_filter
+  has_and_belongs_to_many :user_organization_filters, :join_table => 'users_user_organization_filters'
 
   # every user has access to 0 or more organizations for reporting
   has_and_belongs_to_many :organizations, :join_table => 'users_organizations'

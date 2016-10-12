@@ -1,9 +1,12 @@
-- assignable_roles = Role.roles.map{ |r| [r.label, r.id] if can? :assign, r }.compact
-- assignable_privileges = Role.privileges.where('resource_id IS NULL').map{ |r| [r.label, r.id] if can? :assign, r }.compact
-- assignable_super_privileges = Role.privileges.where('resource_id IS NOT NULL').map{ |r| [r.id, r.label, r.resource_id] if can? :assign, r }.compact
+:ruby
+  role_ids_by_org = OrganizationRoleMapping.role_ids_by_org || {}
+  assignable_roles = Role.roles.map{ |r| [r.label, r.id] if can? :assign, r }.compact
+  assignable_privileges = Role.privileges.where('resource_id IS NULL').map{ |r| [r.label, r.id] if can? :assign, r }.compact
+  assignable_super_privileges = Role.privileges.where('resource_id IS NOT NULL').map{ |r| [r.id, r.label, r.resource_id] if can? :assign, r }.compact
 
 = simple_form_for(@user,
-  :html => {:class => 'form-vertical user_form'},
+  :html => {:class => 'form-vertical'},
+  :id => '#user_form',
   :wrapper => :vertical_form,
   :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes,
   :radio_buttons => :vertical_radio_and_checkboxes,
@@ -11,21 +14,28 @@
   :boolean => :vertical_boolean}) do |f|
 
   %fieldset
-    %legend User Details
-    - if @organization_list.count > 1
-      = f.association :organization, :collection => current_user.organizations, :label_method => 'coded_name'
-    - elsif current_user.has_role?(:manager)
-      = f.association :organization, :collection => Organization.where(active: true).order(:short_name), :label_method => 'coded_name'
-    - else
-      = f.association :organization, :placeholder => current_user.organization.id, :as => :hidden
+    %legend User Organizations
+    .row
+      .col-lg-6.col-md-6.col-sm-6.col-xs-12
+        = f.association :organization, :collection => Organization.where(id: @organization_list), :label_method => 'coded_name'
+      .col-lg-6.col-md-6.col-sm-6.col-xs-12
 
+        = f.input :organization_ids, :as => :hidden
+        .form-group.required
+          %label.required.control-label
+            %abbr{title: 'required'} *
+            = " Organizations"
+          #org_select.input-large
+
+  %fieldset
+    %legend User Details
     .row
       .col-lg-6.col-md-6.col-sm-6.col-xs-12
         = f.input :first_name, :placeholder => "User's first name...", :label => "First Name"
       .col-lg-6.col-md-6.col-sm-6.col-xs-12
         = f.input :last_name, :placeholder => "User's last name...", :label => "Last Name"
 
-    = f.input :email, :as => :email, :placeholder => "User's business email address...", :hint => 'Enter only business email addresses'
+    = f.input :email, :as => :email, :required => true, :placeholder => "User's business email address...", :hint => 'Enter only business email addresses'
     .row
       .col-lg-6.col-md-6.col-sm-6.col-xs-12
         = f.input :title, :placeholder => "User's title..."
@@ -51,7 +61,7 @@
 
     .row
       .col-lg-4.col-md-4.col-sm-6.col-xs-6
-        = f.input :phone, :as => :tel, :placeholder => "Users primary phone number...", :hint => 'Format 123-456-7890'
+        = f.input :phone, :as => :tel, :placeholder => "Users primary phone number...", :hint => 'Format 123-456-7890', :required => true
       .col-lg-2.col-md-2.col-sm-2.col-xs-3
         = f.input :phone_ext, :label => "Ext."
       .col-lg-6col-md-6.col-sm-6.col-xs-6
@@ -70,11 +80,39 @@
 
     = f.button :submit, :class => "btn btn-primary"
 
+= render 'form_scripts'
 
 :javascript
 
+  $('#user_form').validate({
+    ignore: '#user_organization_ids, .filter-input, .filtered',
+    submitHandler: function(form) {
+      form.submit();
+    },
+    rules: {
+      user_email: {
+        email: true
+      },
+      user_zip: {
+        zipcodeUS: true
+      },
+      user_phone : {
+        phoneUS: true
+      }
+    },
+    debug: true
+  });
+
+  var role_ids_by_org = JSON.parse('#{role_ids_by_org.to_json}');
+
   $(document).ready(function() {
     $('#user_role_ids').change();
+
+    $('btn.selector-clearall').hide();
+
+    var org_id = $('#user_organization_id').val();
+    update_role_list_by_organization(org_id);
+    update_org_list(org_id);
 
   });
 
@@ -92,7 +130,7 @@
 
   // Override placement of validator msg on .input-groups
   $.validator.setDefaults({errorPlacement: function(error, element) {
-      console.log(element);
+      //console.log(element);
       if(element.parents('.input-group').length) {
         error.insertAfter(element.parents('.input-group'));
       } else {
@@ -100,20 +138,38 @@
       }
     }
   });
-  $('.user_form').validate({
-    submitHandler: function(form) {
-      form.submit();
-    }
+
+  // Organization change: reset role, borough, and boroughs
+  $('#user_organization_id').on('change', function(e) {
+    var org_id = $(this).val();
+    update_role_list_by_organization(org_id);
+    update_org_list(org_id);
+
+    $('#user_role_ids').val('');
   });
 
-  $("#user_zip").rules("add", {
-    zipcodeUS: true
-  })
-  $("#user_email").rules("add", {
-    required: true,
-    email: true
-  })
-  $("#user_phone").rules("add", {
-    required: true,
-    phoneUS: true
-  })
+  function update_org_list(org_id) {
+    $('#org_select').data().bootstrapTransfer.set_values([org_id])
+
+    $('#selected_grantees option').attr('disabled', false);
+    $('#selected_grantees option[value="' + org_id + '"]').attr('disabled', true);
+  }
+
+  function update_role_list_by_organization(org_id) {
+    if(org_id) {
+      org_id = parseInt(org_id);
+      var role_ids = role_ids_by_org[org_id];
+      //console.log(role_ids);
+      $('#user_role_ids option').each(function() {
+        var val = $(this).val();
+        if(val && role_ids != undefined && role_ids.indexOf(parseInt(val)) < 0) {
+          $(this).hide();
+        } else {
+          $(this).show();
+        }
+      });
+    } else {
+      $('#user_role_ids option').hide();
+      $('#user_role_ids option[value=""]').show();
+    }
+  }

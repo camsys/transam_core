@@ -10,7 +10,7 @@ class UserOrganizationFiltersController < OrganizationAwareController
 
     add_breadcrumb "Organization Filters"
 
-    @user_organization_filters = UserOrganizationFilter.all
+    @user_organization_filters = current_user.user_organization_filters
 
   end
 
@@ -42,20 +42,26 @@ class UserOrganizationFiltersController < OrganizationAwareController
       return
     end
 
-    Rails.logger.debug "Setting agency filter to: #{@user_organization_filter.organizations.inspect}"
-
-    # Set the session variable to store the list of organizations for reporting
-    set_selected_organization_list(@user_organization_filter.organizations)
-
-    # Save the selection. Next time the user logs in the filter will be reset
-    current_user.user_organization_filter = @user_organization_filter
-    current_user.save
-
-    ##notify_user(:notice, "Using agency filter #{@user_organization_filter.name}")
-    # Set the filter name in the session
-    session[:user_organization_filter] = @user_organization_filter.name
+    set_current_user_organization_filter_(current_user, @user_organization_filter)
 
     redirect_to :back
+
+  end
+
+  def set_org
+    @user_organization_filter = UserOrganizationFilter.find_by_object_key(params[:user_organization_filter_id])
+
+    if @user_organization_filter.nil?
+      notify_user(:alert, 'Record not found!')
+      redirect_to :back
+      return
+    end
+
+    # Set the session variable to store the org selected
+    set_selected_organization_list(Organization.where(id: params[:org_user_organization_filter]))
+
+    redirect_to :back
+
 
   end
 
@@ -92,7 +98,13 @@ class UserOrganizationFiltersController < OrganizationAwareController
     add_breadcrumb "New"
 
     @user_organization_filter = UserOrganizationFilter.new(form_params.except(:organization_ids))
-    @user_organization_filter.user = current_user
+    @user_organization_filter.creator = current_user
+    if params[:share_filter]
+      @user_organization_filter.users = current_user.organization.users
+      @user_organization_filter.resource = current_user.organization
+    else
+      @user_organization_filter.users = [current_user]
+    end
 
     respond_to do |format|
       if @user_organization_filter.save
@@ -122,9 +134,13 @@ class UserOrganizationFiltersController < OrganizationAwareController
       redirect_to :back
     end
 
-    add_breadcrumb "Organization Filters", user_user_organization_filters_path(current_user)
-    add_breadcrumb @user_organization_filter.name, user_user_organization_filter_path(current_user, @user_organization_filter)
-    add_breadcrumb "Update"
+    if params[:share_filter]
+      @user_organization_filter.users = current_user.organization.users
+      @user_organization_filter.resource = current_user.organization
+    else
+      @user_organization_filter.users = [current_user]
+      @user_organization_filter.resource = nil
+    end
 
     respond_to do |format|
       if @user_organization_filter.update(form_params)

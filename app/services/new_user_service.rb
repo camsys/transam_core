@@ -18,16 +18,34 @@ class NewUserService
     # Override opt-in for email notifications
     user.notify_via_email = true
 
-    user.organizations << user.organization
     return user
   end
 
   # Steps to take if the user was valid
   def post_process(user)
-    # Make sure the user has at least a user role
-    unless user.has_role? :user
-      user.add_role :user
+
+    # add user's filters
+    f = UserOrganizationFilter.new({:active => 1, :name => "#{user.name}'s organizations", :description => "#{user.name}'s organizations", :sort_order => 1})
+    f.users = [user]
+    f.creator = User.find_by(first_name: 'system')
+    f.query_string = TransitOperator.active.joins(:users).where('users_organizations.user_id = ?', user.id).to_sql
+    f.save!
+
+    user.user_organization_filter = f
+
+    UserOrganizationFilter.where('resource_type IS NOT NULL').each do |filter|
+      if user.respond_to? filter.resource_type.downcase.pluralize #check has many associations
+        if user.try(filter.resource_type.downcase.pluralize).include? filter.resource
+          user.user_organization_filters << filter
+        end
+      elsif user.respond_to? filter.resource_type.downcase # check single association
+        if user.try(filter.resource_type.downcase) == filter.resource
+          user.user_organization_filters << filter
+        end
+      end
     end
+
+    user.save
 
     UserMailer.send_email_on_user_creation(user).deliver
   end

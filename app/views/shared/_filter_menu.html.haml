@@ -1,0 +1,145 @@
+:css
+
+  .dropdown-menu label.checkbox {
+    font-weight: normal;
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+
+  .dropdown-menu.columns-2 {
+    min-width: 600px;
+  }
+  .dropdown-menu.columns-3 {
+    min-width: 600px;
+  }
+
+  .multi-column-dropdown {
+    list-style: none;
+  }
+  .multi-column-dropdown li label {
+    display: block;
+    padding: 3px 44px;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.428571429;
+    color: #17406e;
+    white-space: nowrap;
+  }
+  .multi-column-dropdown li label:hover {
+    text-decoration: none;
+    color: #7d7d7d;
+    background-color: whitesmoke;
+  }
+
+  .multi-column-dropdown li a {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.428571429;
+    color: #17406e;
+    white-space: nowrap;
+  }
+  .multi-column-dropdown li a:hover {
+    text-decoration: none;
+    color: #7d7d7d;
+    background-color: whitesmoke;
+  }
+
+  @media (max-width: 767px) {
+    .dropdown-menu.multi-column {
+        min-width: 240px !important;
+        overflow-x: hidden;
+    }
+  }
+
+  #filter_notification_count {
+    padding: 3px 7px 3px 7px;
+    background: #cc0000;
+    color: #ffffff;
+    font-weight: bold;
+    border-radius: 9px;
+    margin-top: -3px;
+    font-size: 11px;
+  }
+
+:ruby
+  my_filters = current_user.user_organization_filters.sorted
+  my_personal_filters =  UserOrganizationFilter.joins(:users).where(created_by_user_id: current_user.id).group('user_organization_filters.id').having( 'count( user_id ) = 1' )
+
+  orgs = current_user.user_organization_filter.query_string.present? ? Organization.find_by_sql(current_user.user_organization_filter.query_string) : current_user.user_organization_filter.organizations
+
+.navbar-header.navbar-right
+  %ul.nav.navbar-nav.pull-right
+    %li.dropdown
+
+      = link_to "#", :class => 'dropdown-toggle', :data => {:toggle => 'dropdown'} do
+        %i.fa.fa-filter
+        = " #{session[:user_organization_filter]}"
+        %b.caret
+        - unless @organization_list.count == orgs.count
+          %span#filter_notification_count
+            = "#{@organization_list.count}/#{orgs.count}"
+
+      %ul.dropdown-menu.dropdown-menu-right.multi-column.columns-2{role: "menu"}
+        .row
+          .col-sm-6{style: "padding-right: 15px;"}
+            %ul.multi-column-dropdown
+              - (my_filters - my_personal_filters).each do |filter|
+                %li
+                  = link_to user_user_organization_filter_use_path(current_user, filter) do
+                    %i.fa.fa-filter.fa-fw
+                    = filter.name
+              %li.divider
+              - my_personal_filters.each do |filter|
+                %li
+                  = link_to user_user_organization_filter_use_path(current_user, filter) do
+                    %i.fa.fa-filter.fa-fw
+                    = filter.name
+              %li.divider
+              %li.text-left
+                = link_to user_user_organization_filters_path(current_user) do
+                  %i.fa.fa-list-alt.fa-fw
+                  Manage Filters
+              %li.divider
+              %li.text-left
+                = link_to new_user_user_organization_filter_path(current_user) do
+                  %i.fa.fa-plus.fa-fw
+                  New Filter
+          .col-sm-6{style: "border-left-style: solid;border-left-color: #e5e5e5;border-left-width: 0.5px;padding-left: 15px;"}
+            %ul.multi-column-dropdown{style: "overflow-y:scroll;height:400px;"}
+              %li
+                = link_to '#', id: 'subselect-orgs' do
+                  %i.fa.fa-check-square.fa-fw
+                  Update Selection
+              - orgs.each do |org|
+                %li.dropdown-menu-stay-open
+                  %label.checkbox
+                    = check_box_tag 'org[]', org.id, @organization_list.include?(org.id)
+                    = org.short_name
+
+:javascript
+  $('li.dropdown-menu-stay-open').click(function(e) {
+      $(this).find('a').children().prop('checked', !$(this).children().prop('checked'));
+
+      e.stopPropagation();
+  });
+
+  $('#subselect-orgs').click(function(event) {
+    event.preventDefault();
+
+    var orgs = $("input[name='org[]']:checked").map(function() { return this.value;}).get();
+
+    //console.log(orgs);
+
+    $.ajax({
+      url: "#{user_user_organization_filter_set_org_path(current_user, current_user.user_organization_filter)}",
+      type: 'POST',
+      data: {
+        org_user_organization_filter : orgs
+      },
+      complete: function() {
+        window.location.reload(true);
+      }
+    });
+  });

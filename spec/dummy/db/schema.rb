@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160923152346) do
+ActiveRecord::Schema.define(version: 20161006175613) do
 
   create_table "activities", force: true do |t|
     t.string   "object_key",           limit: 12
@@ -757,6 +757,7 @@ ActiveRecord::Schema.define(version: 20160923152346) do
     t.datetime "created_at",                               null: false
     t.datetime "updated_at",                               null: false
     t.boolean  "privilege",                default: false, null: false
+    t.string   "label"
   end
 
   add_index "roles", ["name"], name: "roles_idx1", using: :btree
@@ -863,17 +864,21 @@ ActiveRecord::Schema.define(version: 20160923152346) do
   add_index "user_notifications", ["user_id"], name: "index_user_notifications_on_user_id", using: :btree
 
   create_table "user_organization_filters", force: true do |t|
-    t.string   "object_key",  limit: 12,  null: false
-    t.integer  "user_id",                 null: false
-    t.string   "name",        limit: 64,  null: false
-    t.string   "description", limit: 254, null: false
-    t.boolean  "active",                  null: false
+    t.string   "object_key",         limit: 12,  null: false
+    t.integer  "user_id",                        null: false
+    t.string   "name",               limit: 64,  null: false
+    t.string   "description",        limit: 254, null: false
+    t.boolean  "active",                         null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "sort_order"
+    t.integer  "role_id"
+    t.integer  "created_by_user_id"
   end
 
+  add_index "user_organization_filters", ["created_by_user_id"], name: "index_user_organization_filters_on_created_by_user_id", using: :btree
   add_index "user_organization_filters", ["object_key"], name: "user_organization_filters_idx1", using: :btree
+  add_index "user_organization_filters", ["role_id"], name: "index_user_organization_filters_on_role_id", using: :btree
   add_index "user_organization_filters", ["user_id"], name: "user_organization_filters_idx2", using: :btree
 
   create_table "user_organization_filters_organizations", id: false, force: true do |t|
