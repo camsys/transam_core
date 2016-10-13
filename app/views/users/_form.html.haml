@@ -5,8 +5,7 @@
   assignable_super_privileges = Role.privileges.where('resource_id IS NOT NULL').map{ |r| [r.id, r.label, r.resource_id] if can? :assign, r }.compact
 
 = simple_form_for(@user,
-  :html => {:class => 'form-vertical'},
-  :id => '#user_form',
+  :html => {:class => 'form-vertical user_profile_form'},
   :wrapper => :vertical_form,
   :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes,
   :radio_buttons => :vertical_radio_and_checkboxes,
@@ -84,8 +83,8 @@
 
 :javascript
 
-  $('#user_form').validate({
-    ignore: '#user_organization_ids, .filter-input, .filtered',
+  $('.user_profile_form').validate({
+    ignore: '#user_organization_ids, .filtered, .filter-input',
     submitHandler: function(form) {
       form.submit();
     },
@@ -126,17 +125,6 @@
       }
     });
 
-  });
-
-  // Override placement of validator msg on .input-groups
-  $.validator.setDefaults({errorPlacement: function(error, element) {
-      //console.log(element);
-      if(element.parents('.input-group').length) {
-        error.insertAfter(element.parents('.input-group'));
-      } else {
-        error.insertAfter(element);
-      }
-    }
   });
 
   // Organization change: reset role, borough, and boroughs

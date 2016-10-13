@@ -3,11 +3,11 @@
   // Document Ready
   $(document).ready(function(){
 
-  	var selected_set_name = 'funding_template_organization_ids';
+  	var selected_set_name = 'user_organization_ids';
   	var shuttle_target_id = 'selected_grantees'
 
   	// Add an submit event handler for the form
-  	$(".funding_template_form").submit(function(){
+  	$(".user_profile_form").submit(function(){
   		var shuttle_target = $('#' + shuttle_target_id);
   		var form_target = $('#' + selected_set_name);
 	  	// select all the options in the selected array from the other shuttle list list

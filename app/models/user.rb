@@ -139,7 +139,8 @@ class User < ActiveRecord::Base
     :zip,
     :role_ids,
     :privilege_ids,
-    :user_organization_filter_id
+    :user_organization_filter_id,
+    :organization_ids
   ]
 
   #-----------------------------------------------------------------------------
