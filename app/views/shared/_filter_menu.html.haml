@@ -64,8 +64,9 @@
   }
 
 :ruby
-  my_filters = current_user.user_organization_filters.sorted
-  my_personal_filters =  UserOrganizationFilter.joins(:users).where(created_by_user_id: current_user.id).group('user_organization_filters.id').having( 'count( user_id ) = 1' )
+  my_system_filters = current_user.user_organization_filters.system_filters.sorted
+  my_shared_filters = current_user.user_organization_filters.other_filters.sorted
+  my_personal_filters =  UserOrganizationFilter.joins(:users).where(created_by_user_id: current_user.id).sorted.group('user_organization_filters.id').having( 'count( user_id ) = 1' )
 
   orgs = current_user.user_organization_filter.query_string.present? ? Organization.find_by_sql(current_user.user_organization_filter.query_string) : current_user.user_organization_filter.organizations
 
@@ -85,7 +86,13 @@
         .row
           .col-sm-6{style: "padding-right: 15px;"}
             %ul.multi-column-dropdown
-              - (my_filters - my_personal_filters).each do |filter|
+              - my_system_filters.each do |filter|
+                %li
+                  = link_to user_user_organization_filter_use_path(current_user, filter) do
+                    %i.fa.fa-filter.fa-fw
+                    = filter.name
+              %li.divider
+              - (my_shared_filters - my_personal_filters).each do |filter|
                 %li
                   = link_to user_user_organization_filter_use_path(current_user, filter) do
                     %i.fa.fa-filter.fa-fw
@@ -106,22 +113,33 @@
                 = link_to new_user_user_organization_filter_path(current_user) do
                   %i.fa.fa-plus.fa-fw
                   New Filter
-          .col-sm-6{style: "border-left-style: solid;border-left-color: #e5e5e5;border-left-width: 0.5px;padding-left: 15px;"}
+          .col-sm-6{style: "border-left-style: solid;border-left-color: #e5e5e5;border-left-width: 0.5px;padding-left: 15px; padding-right: 15px;"}
             %ul.multi-column-dropdown{style: "overflow-y:scroll;height:400px;"}
               %li
                 = link_to '#', id: 'subselect-orgs' do
-                  %i.fa.fa-check-square.fa-fw
                   Update Selection
+              %li.divider
               - orgs.each do |org|
                 %li.dropdown-menu-stay-open
                   %label.checkbox
                     = check_box_tag 'org[]', org.id, @organization_list.include?(org.id)
                     = org.short_name
+              - if (can? :update, current_user.user_organization_filter) && !current_user.user_organization_filter.system_filter?
+                %li.divider
+                %li
+                  = link_to edit_user_user_organization_filter_path(current_user, current_user.user_organization_filter) do
+                    %i.fa.fa-plus.fa-fw
+                    Edit This Filter
 
 :javascript
   $('li.dropdown-menu-stay-open').click(function(e) {
       $(this).find('a').children().prop('checked', !$(this).children().prop('checked'));
 
+      if ($('input[name="org[]"]:checked').length == 1) {
+        $('input[name="org[]"]:checked').attr('disabled', true)
+      } else {
+        $('input[name="org[]"]:checked').attr('disabled', false)
+      }
       e.stopPropagation();
   });
 

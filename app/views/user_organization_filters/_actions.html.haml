@@ -1,22 +1,26 @@
-.btn-group.pull-right.panel-action
-  %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
-    %i.fa.fa-cog
-    = " Actions"
-    %span.caret
-  %ul.dropdown-menu{:role => 'menu'}
-    %li
-      = link_to "#" do
-        %i.fa.fa-check-square-o.fa-fw
-        = " Set as my default"
-    - unless @user_organization_filter.system_filter?
-      - if can? :update, @user_organization_filter
+- can_update = !@user_organization_filter.system_filter? && (can? :update, @user_organization_filter)
+- can_destroy = !@user_organization_filter.system_filter? && (can? :destroy, @user_organization_filter)
+
+- if current_user.user_organization_filter != @user_organization_filter || can_update || can_destroy
+  .btn-group.pull-right.panel-action
+    %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
+      %i.fa.fa-cog
+      = " Actions"
+      %span.caret
+    %ul.dropdown-menu{:role => 'menu'}
+      %li
+        - unless current_user.user_organization_filter == @user_organization_filter
+          = link_to user_user_organization_filter_use_path(current_user, @user_organization_filter) do
+            %i.fa.fa-filter.fa-fw
+            = " Set as current filter"
+      - if can_update
         %li.divider
         %li
           = link_to edit_user_user_organization_filter_path(current_user, @user_organization_filter) do
             %i.fa.fa-edit.fa-fw
             = " Update this filter"
 
-      - if can? :destroy, @user_organization_filter
+      - if can_destroy
         %li.divider
         %li
           = link_to user_user_organization_filter_path(current_user, @user_organization_filter), :method => :delete, :data => {:confirm => "Are you sure? The action cannot be undone!"}  do

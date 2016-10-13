@@ -11,8 +11,6 @@
             = check_box_tag :share_filter, style: 'margin-left: 10px;'
             Share this filter?
 
-
-
     .col-md-6
       = dialog_tag('Organizations Filter', {:icon => 'fa fa-list', :class => "form-part"}) do
         #org_select.input-xlarge
@@ -20,6 +18,17 @@
  
     .col-md-12
       = f.button :submit, "Update Organization Filter", :class => "btn btn-primary"
-
+      = f.button :submit, "Update and Select This Filter", :class => "btn btn-primary"
 
 = render 'form_scripts'
+
+:javascript
+  $('input[name="commit"]').attr('disabled', true);
+
+  $('#org_select').on('click', 'btn', function(){
+    if ($('#selected_grantees option').length > 0) {
+      $('input[name="commit"]').attr('disabled', false);
+    } else {
+      $('input[name="commit"]').attr('disabled', true);
+    }
+  });

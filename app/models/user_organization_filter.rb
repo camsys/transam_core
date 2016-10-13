@@ -24,6 +24,7 @@ class UserOrganizationFilter < ActiveRecord::Base
 
   validates   :name,          :presence => :true
   validates   :description,   :presence => :true
+  #validate    :require_at_least_one_organization
 
   # Allow selection of active instances
   scope :active, -> { where(:active => true) }
@@ -74,6 +75,13 @@ class UserOrganizationFilter < ActiveRecord::Base
   #------------------------------------------------------------------------------
 
   protected
+
+  def require_at_least_one_organization
+    if organizations.count == 0
+      errors.add(:organizations, "must be selected.")
+      return false
+    end
+  end
 
   def clean_habtm_relationships
     organizations.clear
