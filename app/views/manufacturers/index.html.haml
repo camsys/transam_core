@@ -34,4 +34,4 @@
         %td.left= m.filter
         %td.right= format_as_integer(@organization_list.sum { |o| m.asset_count(Organization.find(o)) })
 
-= render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :path_pattern => inventory_index_path(:manufacturer_id => "xxx", :organization_id => @organization.id)}
+= render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :path_pattern => inventory_index_path(:manufacturer_id => "xxx")}

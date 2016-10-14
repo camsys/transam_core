@@ -137,6 +137,7 @@
   });
 
   function update_org_list(org_id) {
+    $('#org_select').data().bootstrapTransfer.move_all(true, false); // clear out all selected values
     $('#org_select').data().bootstrapTransfer.set_values([org_id])
 
     $('#selected_grantees option').attr('disabled', false);

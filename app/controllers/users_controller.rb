@@ -32,14 +32,8 @@ class UsersController < OrganizationAwareController
     conditions  = []
     values      = []
 
-    # See if we got an organization id
-    if @organization_id > 0
-      conditions << 'organization_id = ?'
-      values << @organization_id
-    else
-      conditions << 'organization_id IN (?)'
-      values << @organization_list
-    end
+    conditions << 'organization_id IN (?)'
+    values << @organization_list
 
     unless @search_text.blank?
       # get the list of searchable fields from the asset class
@@ -81,8 +75,8 @@ class UsersController < OrganizationAwareController
     end
 
     # Set the breadcrumbs
-    if @organization_id > 0
-      org = Organization.find(@organization_id)
+    if @organization_list.count == 1
+      org = Organization.find(@organization_list.first)
       add_breadcrumb org.short_name, users_path(:organization_id => org.id)
     end
     if @role.present?

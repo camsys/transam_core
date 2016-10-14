@@ -174,6 +174,8 @@ class TasksController < NestedResourceController
       @task = @taskable.tasks.build(form_params)
     end
 
+
+
     # Simple form doesn't process mapped associations very well
     #@task.assigned_to_user = User.find(params[:task][:assigned_to_user_id]) unless params[:task][:assigned_to_user_id].blank?
     if @task.assigned_to_user.nil?

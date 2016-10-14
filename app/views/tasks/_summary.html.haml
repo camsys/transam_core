@@ -3,6 +3,7 @@
 = format_field("Due", format_as_date(@task.complete_by))
 = format_field("Priority", @task.priority_type )
 = format_field("From", @task.user.name )
+= format_field("Assigned To", @task.assigned_to_user.name ) unless @task.assigned_to_user.nil?
 = format_field("Assigned On", format_as_date(@task.created_at) )
 - if @task.updated_at > @task.created_at
   = format_field("Last Updated On", format_as_date_time(@task.updated_at))

@@ -38,7 +38,7 @@
         %i.fa.fa-tags.fa-fw
         Groups
       %ul.dropdown-menu
-        - @organization.asset_groups.each do |grp|
+        - AssetGroup.where(organization_id: @organization_list).each do |grp|
           %li.text-left
             = link_to asset_group_path(grp) do
               %i.fa.fa-tag.fa-fw

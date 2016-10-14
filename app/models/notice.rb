@@ -109,7 +109,7 @@ class Notice < ActiveRecord::Base
   # Notices that are for the entire set of organizations
   scope :system_level_notices, -> { active.visible.where("organization_id IS null") }
   # Notices that are active and visible for a specific organization
-  scope :active_for_organization, -> (org) { active.visible.where("organization_id IS null OR organization_id = ?", org.id) }
+  scope :active_for_organizations, -> (orgs) { active.visible.where("organization_id IS null OR organization_id IN (?)", orgs) }
 
   #------------------------------------------------------------------------------
   #

@@ -44,12 +44,12 @@ RSpec.describe Notice, :type => :model do
     end
   end
 
-  describe '.active_for_organization' do
+  describe '.active_for_organizations' do
     it 'returns system notices and organization-specific notices' do
       expect{
         FactoryGirl.create(:system_notice)
         FactoryGirl.create(:notice, organization: organization)
-      }.to change{Notice.active_for_organization(organization).count}.by(2) # 1 for system, 1 for organization
+      }.to change{Notice.active_for_organizations([organization]).count}.by(2) # 1 for system, 1 for organization
     end
   end
 

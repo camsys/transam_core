@@ -1,5 +1,5 @@
 :ruby
-  notices = Notice.active_for_organization(@organization).order(:display_datetime)
+  notices = Notice.active_for_organizations(@organization_list).order(:display_datetime)
 
 .col-md-3.col-sm-3
   .panel.panel-default{:style => 'height: 200px;overflow-y: auto;'}

@@ -3,6 +3,6 @@
     %fieldset
       %legend User
       .col-md-6        
-        = f.input :organization_id, :collection => Organization.all, :label_method => 'coded_name',  :include_blank => "Any..." unless current_user.organizations.count < 2
+        = f.input :organization_id, :collection => Organization.where(id: @organization_list), :label_method => 'coded_name',  :include_blank => "Any..." unless @organization_list.count < 2
       .col-md-6
         = f.input :keywords, :label => "Keywords"

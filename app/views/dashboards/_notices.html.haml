@@ -1,5 +1,5 @@
 :ruby
-  notices = Notice.active_for_organization(@organization).order(:display_datetime)
+  notices = Notice.active_for_organizations(@organization_list).order(:display_datetime)
 
 %fieldeset
   %legend My Notices

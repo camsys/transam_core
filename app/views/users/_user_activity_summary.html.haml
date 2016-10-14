@@ -13,7 +13,7 @@
           %th.center
           %th.center
       %tbody
-        - @organization.users.includes(:tasks).each do |u|
+        - User.where(organization_id: @organization_list).includes(:tasks).each do |u|
           %tr{:data => {:action_path => user_path(u)}}
             %td.left= u.name
             %td.center= u.external_id

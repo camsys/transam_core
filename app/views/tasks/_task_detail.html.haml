@@ -24,9 +24,9 @@
             - else
               = task.assigned_to_user
             %span.caret
-          %ul.dropdown-menu.pull-right.scrollable-menu{:role => "menu"}
+          %ul.dropdown-menu.pull-right.scrollable-menu{:role => "menu", :style => "overflow-y:scroll;height:300px;"}
             %li
-              - @organization.users.each do |usr|
+              - User.where(organization_id: @organization_list).each do |usr|
                 = link_to change_owner_task_path(task, :user => usr.object_key) do
                   %i.fa.fa-fw.fa-user
                   = usr
