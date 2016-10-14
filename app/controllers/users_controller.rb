@@ -201,12 +201,18 @@ class UsersController < OrganizationAwareController
     # Create the user
     @user = new_user_service.build(form_params)
 
+    if @user.organization.nil?
+      @user.organization_id = @organization_list.first
+      org_list = @organization_list
+    else
+      org_list = form_params[:organization_ids].split(',')
+    end
+
     respond_to do |format|
       if @user.save
 
         # set organizations
         # Add the (possibly) new organizations into the object
-        org_list = form_params[:organization_ids].split(',')
         org_list.each do |id|
           @user.organizations << Organization.find(id)
         end
@@ -245,12 +251,15 @@ class UsersController < OrganizationAwareController
     respond_to do |format|
       if @user.update_attributes(form_params)
 
-        # clear the existing list of organizations
-        @user.organizations.clear
+
         # Add the (possibly) new organizations into the object
         org_list = form_params[:organization_ids].split(',')
-        org_list.each do |id|
-          @user.organizations << Organization.find(id)
+        if org_list.count > 0
+          # clear the existing list of organizations
+          @user.organizations.clear
+          org_list.each do |id|
+            @user.organizations << Organization.find(id)
+          end
         end
 
         #-----------------------------------------------------------------------

@@ -12,19 +12,20 @@
   :file => :vertical_file_input,
   :boolean => :vertical_boolean}) do |f|
 
-  %fieldset
-    %legend User Organizations
-    .row
-      .col-lg-6.col-md-6.col-sm-6.col-xs-12
-        = f.association :organization, :collection => Organization.where(id: @organization_list), :label_method => 'coded_name'
-      .col-lg-6.col-md-6.col-sm-6.col-xs-12
+  - if @organization_list.count > 1
+    %fieldset
+      %legend User Organizations
+      .row
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12
+          = f.association :organization, :collection => Organization.where(id: @organization_list), :label_method => 'coded_name'
+        .col-lg-6.col-md-6.col-sm-6.col-xs-12
 
-        = f.input :organization_ids, :as => :hidden
-        .form-group.required
-          %label.required.control-label
-            %abbr{title: 'required'} *
-            = " Organizations"
-          #org_select.input-large
+          = f.input :organization_ids, :as => :hidden
+          .form-group.required
+            %label.required.control-label
+              %abbr{title: 'required'} *
+              = " Organizations"
+            #org_select.input-large
 
   %fieldset
     %legend User Details
