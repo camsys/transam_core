@@ -27,4 +27,4 @@
       %p.text-muted.credit.text-right
         = "Build #{app_version}"
         Powered by
-        = link_to "TransAM Ver #{transam_version}", "https://github.com/camsys/transam_core/wiki", :target => "_blank", title: SystemConfig.transam_modules.map{|t| "#{t.name}: #{t.version}"}.join("\n")
+        = link_to "TransAM Ver #{transam_version}", "http://camsys.software/products/transam", :target => "_blank", title: SystemConfig.transam_modules.map{|t| "#{t.name}: #{t.version}"}.join("\n")
