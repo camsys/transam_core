@@ -90,17 +90,16 @@
       form.submit();
     },
     rules: {
-      user_email: {
+      'user[email]': {
         email: true
       },
-      user_zip: {
+      'user[zip]': {
         zipcodeUS: true
       },
-      user_phone : {
+      'user[phone]' : {
         phoneUS: true
       }
-    },
-    debug: true
+    }
   });
 
   var role_ids_by_org = JSON.parse('#{role_ids_by_org.to_json}');
