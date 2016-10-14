@@ -42,7 +42,7 @@
           = link_to policy_path(@policy), :method => :delete, :data => {:confirm => "Are you sure? The action cannot be undone!"}  do
             %i.fa.fa-trash-o.fa-fw
             = " Remove this policy"
-      - if (can? :create_rules, @policy) and (@policy.policy_asset_type_rules.count != AssetType.active.count)
+      - if (can? :create_rules, @policy) and (@policy.policy_asset_type_rules.count != AssetType.active.count) and @policy.parent.nil?
         %li.divider
         %li
           = link_to new_policy_rule_policy_path(@policy, :type => 1), :remote => true do
