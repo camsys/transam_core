@@ -1,14 +1,24 @@
-%form#new_user.navbar-form.navbar-right{"accept-charset" => "UTF-8", :action => "/users/sign_in", :method => "post", :novalidate => "novalidate", :role => "form"}
-  %div{:style => "margin:0;padding:0;display:inline"}
-    %input{:name => "utf8", :type => "hidden", :value => "✓"}/
-    %input{:name => "authenticity_token", :type => "hidden", :value => "Rm1Nje97STEfMS+AT/8jbMqy9F69EW1NeNPSh7mR5Ms="}/
-  .form-group
-    %label.sr-only{:for => "user_email"}
-      %abbr{:title => "required"} *
-      Email
-    %input#user_email.form-control{:autofocus => "autofocus", :name => "user[email]", :placeholder => "Enter email", :type => "email"}/
-  .form-group
-    %label.sr-only{:for => "user_password"} Password
-    %input#user_password.form-control{:name => "user[password]", :placeholder => "Password", :type => "password"}/
-  %button.btn.btn-primary{:type => "submit"} Sign in
-= link_to "Forgot Your Password?", new_password_path(resource_name), :class => 'navbar-right navbar-text'
+.panel.panel-primary.login-panel
+  .panel-heading
+    %h3.panel-title Please sign in
+  .panel-body
+    = simple_form_for(resource,
+      :url => "/users/sign_in", :method => "post", :novalidate => "novalidate",
+      :role => "form",
+      :html => {:class => 'form-vertical', :style => 'margin-bottom: 10px;'},
+      :wrapper => :vertical_form,
+      :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes,
+      :radio_buttons => :vertical_radio_and_checkboxes,
+      :file => :vertical_file_input,
+      :boolean => :vertical_boolean}) do |f|
+
+      %fieldset
+        = f.input :email, :placeholder => "Email address", :label => false
+        = f.input :password, :placeholder => "Password", :label => false
+
+        = f.input :remember_me, :label => "Remember Me", :as => :boolean if devise_mapping.rememberable?
+
+        = f.submit "Sign in", :class => 'btn btn-lg btn-primary btn-block'
+
+    = link_to "Forgot Your Password?", new_password_path(resource_name), :style => 'margin-top: 15px;'
+    = render 'shared/devise_messages'
