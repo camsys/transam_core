@@ -7,4 +7,4 @@
           = link_to [c.commentable, c], :method => :delete, :class => "btn btn-warning btn-xs pull-right", :style => "margin-left: 5px;", :data => { :confirm => 'Are you sure you want to remove this comment?' } do
             %i.fa.fa-trash
             Delete
-      %span.title{:style => 'display:block;vertical-align:top;word-wrap:break-word;'}= c.comment.html_safe
+      %span.title{:style => 'display:block;vertical-align:top;word-wrap:break-word;'}= format_as_text(c.comment.html_safe)
