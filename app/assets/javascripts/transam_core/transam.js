@@ -63,6 +63,28 @@ var transam = new function() {
 	  		}
 	  	});
 	};
+	// Show a rails-style flash message, but default to old-popup if messages-flash doesn't exist
+	this.show_flash_message = function(message, classes){
+		var $msg = $('#messages-flash');
+		if($msg.length == 0){
+			return this.show_popup_message('Information', message, classes);
+		}
+		classes = classes || 'alert alert-info';
+		// Close existing flash message, display new one, trigger scroll to update 'floating' js positioned elements (floating table header for example)
+		$('#messages a.close').click();
+		$msg.html("<div class='"+classes+"'><a class='close' data-dismiss='alert'>×</a><div id='flash_notice'>"+message+"</div></div>");
+		$(document).trigger('scroll');
+		var updateTableHeader = function( second ){
+		  //calling this will trigger 'scroll' event 2x, 220 ms apart, to make sure it actually runs on slower devices
+		  setTimeout(function(){
+				$(document).trigger('scroll');
+				if(!second){
+					updateTableHeader(true);
+				}
+			}, 220);
+		}
+		$msg.off('click').on('click', updateTableHeader );
+	}
 	// Show a popup message in the UI
 	this.show_popup_message = function(title, message, type) {
 		var class_name = 'alert alert-info';
