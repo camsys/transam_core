@@ -68,7 +68,7 @@
   my_shared_filters = current_user.user_organization_filters.other_filters.sorted
   my_personal_filters =  UserOrganizationFilter.joins(:users).where(created_by_user_id: current_user.id).sorted.group('user_organization_filters.id').having( 'count( user_id ) = 1' )
 
-  orgs = current_user.user_organization_filter.query_string.present? ? Organization.find_by_sql(current_user.user_organization_filter.query_string) : current_user.user_organization_filter.organizations
+  orgs = current_user.user_organization_filter.get_organizations
 
 .navbar-header.navbar-right
   %ul.nav.navbar-nav.pull-right

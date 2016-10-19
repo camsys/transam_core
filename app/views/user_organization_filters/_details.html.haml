@@ -1,1 +1,1 @@
-= render :partial => 'organizations/index_table', :locals => {:organizations => @user_organization_filter.query_string.present? ? Organization.find_by_sql(@user_organization_filter.query_string) : @user_organization_filter.organizations, :show_actions => 0}
+= render :partial => 'organizations/index_table', :locals => {:organizations => @user_organization_filter.get_organizations, :show_actions => 0}

@@ -40,7 +40,7 @@
         %td.left= f.object_key
         %td.left= f.name
         %td.left= f.description
-        - orgs = f.query_string.present? ? Organization.find_by_sql(f.query_string) : f.organizations
+        - orgs = f.get_organizations
         %td.right
           = orgs.count
           %a.transam-popover{data: {placement: 'left', toggle: 'popover', html: 'true', content: orgs.map{|o| o.short_name}.join(', ')}, title: 'Organizations', tabindex: '0'}

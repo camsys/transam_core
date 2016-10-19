@@ -82,12 +82,7 @@ class OrganizationAwareController < TransamController
     Rails.logger.debug "Setting agency filter to: #{filter}"
 
     # Set the session variable to store the list of organizations for reporting
-    if filter.query_string.present?
-      organizations =  Organization.find_by_sql(filter.query_string)
-    else
-      organizations = filter.organizations
-    end
-    set_selected_organization_list(organizations)
+    set_selected_organization_list(filter.get_organizations)
 
     # Save the selection. Next time the user logs in the filter will be reset
     user.user_organization_filter = filter
