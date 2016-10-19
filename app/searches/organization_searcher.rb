@@ -36,7 +36,7 @@ class OrganizationSearcher < BaseSearcher
     unless organization_type_id.blank?
       Organization.where(organization_type_id: organization_type_id)
     else
-      Organization.where(id: get_id_list(user.organizations))
+      Organization.where(id:  user.user_organization_filter.get_organizations.map{|o| o.id})
     end
   end
   

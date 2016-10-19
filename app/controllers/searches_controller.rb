@@ -15,10 +15,12 @@ class SearchesController < OrganizationAwareController
   MAX_ROWS_RETURNED = SystemConfig.instance.max_rows_returned
 
   # Set the view variables form the params @search_type, @searcher_klass
-  before_filter :set_view_vars,     :only => [:create, :new]
+  before_filter :set_view_vars,     :only => [:create, :new, :reset]
 
   def create
-    params[:searcher][:organization_ids] = @organization_list
+    # use organization list if query is for any organization
+    params[:searcher][:organization_id] = @organization_list if params[:searcher][:organization_id] == [''] || params[:searcher][:organization_id].nil?
+
     @searcher = @searcher_klass.constantize.new(params[:searcher])
     @searcher.user = current_user
     @data = @searcher.data
@@ -26,7 +28,10 @@ class SearchesController < OrganizationAwareController
     add_breadcrumb "Query"
     add_breadcrumb "Results"
 
-    # Cache the result set so the use can page through them
+    # Cache the search params result set so the use can page through them
+    unless @searcher.cache_params_variable_name.blank?
+      cache_objects(@searcher.cache_params_variable_name, params[:searcher])
+    end
     unless @searcher.cache_variable_name.blank?
       cache_list(@data, @searcher.cache_variable_name)
     end
@@ -43,14 +48,33 @@ class SearchesController < OrganizationAwareController
   def new
 
     @searcher = @searcher_klass.constantize.new
+    unless @searcher.cache_params_variable_name.blank?
+      cached_search_params = get_cached_objects(@searcher.cache_params_variable_name)
+      @searcher = @searcher_klass.constantize.new(cached_search_params) unless cached_search_params.blank?
+    end
     @searcher.user = current_user
-    @data = []
+
+    cached_list = get_cached_objects(@searcher.cache_variable_name)
+    if cached_list.blank?
+      @data = []
+    else
+      @data = @searcher.cached_data(cached_list)
+    end
 
     add_breadcrumb "Query"
 
     respond_to do |format|
       format.html # new.html.haml this had been an erb and is now an haml the change should just be caught
     end
+  end
+
+  def reset
+    @searcher = @searcher_klass.constantize.new
+
+    clear_cached_objects(@searcher.cache_params_variable_name)
+    cache_list([], @searcher.cache_variable_name)
+
+    redirect_to new_search_path(:search_type => @search_type)
   end
 
   # Action for performing full text search using the search text index

@@ -113,6 +113,7 @@ Rails.application.routes.draw do
     collection do
       post :keyword
       get  :keyword
+      get  :reset
     end
   end
   resources :reports,       :only => [:index, :show] do

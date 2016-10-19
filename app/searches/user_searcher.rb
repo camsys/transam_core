@@ -32,7 +32,7 @@ class UserSearcher < BaseSearcher # TODO Not Implemented.  Just copied from othe
   # Add any new conditions here. The property name must end with _conditions
   def organization_conditions
     if organization_id.blank?
-      ["assets.organization_id in (?)", get_id_list(user.organizations)]
+      ["assets.organization_id in (?)",  user.user_organization_filter.get_organizations.map{|o| o.id}]
     else
       ["assets.organization_id = ?", organization_id]
     end

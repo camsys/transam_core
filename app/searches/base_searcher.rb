@@ -28,6 +28,11 @@ class BaseSearcher
   def cache_variable_name
   end
 
+  # Override this to return use a session cache list for saved results
+  def cached_data(list)
+    @klass.where(object_key: list) if @klass
+  end
+
   # Override this to return the name of the results table to display
   def results_view
   end
@@ -69,21 +74,7 @@ class BaseSearcher
   # Returns an array of ActiveRecord::Relation objects
   def condition_parts
     ### Subclass MUST respond with at least 1 non-nil AR::Relation object  ###
-    private_methods(false).grep(/_conditions$/).map { |m| send(m) }.compact
-  end
-
-
-  #############################################################################
-  # Helper methods for subclasses
-  #############################################################################
-
-  # returns a list of PKs from a collection
-  def get_id_list(coll)
-    ids = []
-    coll.each do |e|
-      ids << e.id
-    end
-    ids
+    private_methods.grep(/_conditions$/).map { |m| send(m) }.compact
   end
 
 end
