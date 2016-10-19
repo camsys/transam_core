@@ -36,6 +36,8 @@ $.rails.allowAction = (element) ->
              </div>
                """
   $modal_html = $(modal_html)
+  # Remove exiting modal before attaching new modal (needed for remote forms)
+  $('#confirm_dialog_modal').remove();
   # Add the new button to the modal box
   $modal_html.find('.modal-footer').append($link)
   attach = element.data('attach')
