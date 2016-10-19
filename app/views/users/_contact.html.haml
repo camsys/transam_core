@@ -1,4 +1,5 @@
 = format_field("Organization", link_to(@user.organization.name, organization_path(@user.organization)) )
+= format_field("Organizations", format_as_list(@user.organizations.map{|l| link_to(l.name, organization_path(l)) })) if @user.organizations.count > 1
 = format_field("Address", format_as_address(@user.organization) )
 = format_field("Phone", format_as_phone_number(@user.organization.phone) )
 = format_field("Ext.", @user.phone_ext) unless @user.phone_ext.blank?

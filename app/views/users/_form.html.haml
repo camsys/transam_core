@@ -111,7 +111,9 @@
 
     var org_id = $('#user_organization_id').val();
     update_role_list_by_organization(org_id);
-    update_org_list(org_id);
+
+    $('#selected_grantees option').attr('disabled', false);
+    $('#selected_grantees option[value="' + org_id + '"]').attr('disabled', true);
 
   });
 
@@ -131,18 +133,14 @@
   $('#user_organization_id').on('change', function(e) {
     var org_id = $(this).val();
     update_role_list_by_organization(org_id);
-    update_org_list(org_id);
-
-    $('#user_role_ids').val('');
-  });
-
-  function update_org_list(org_id) {
     $('#org_select').data().bootstrapTransfer.move_all(true, false); // clear out all selected values
     $('#org_select').data().bootstrapTransfer.set_values([org_id])
 
     $('#selected_grantees option').attr('disabled', false);
     $('#selected_grantees option[value="' + org_id + '"]').attr('disabled', true);
-  }
+
+    $('#user_role_ids').val('');
+  });
 
   function update_role_list_by_organization(org_id) {
     if(org_id) {
