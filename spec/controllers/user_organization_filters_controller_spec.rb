@@ -48,7 +48,7 @@ RSpec.describe UserOrganizationFiltersController, :type => :controller do
     test_filter = UserOrganizationFilter.first
     expect(assigns(:user_organization_filter)).to eq(test_filter)
     expect(test_filter.organizations).to include(test_org)
-    expect(test_filter.user).to eq(subject.current_user)
+    expect(test_filter.creator).to eq(subject.current_user)
   end
   it 'PUT update' do
     test_org = create(:organization)

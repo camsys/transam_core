@@ -13,6 +13,7 @@ describe "users/_actions.html.haml", :type => :view do
     test_user.organizations << logged_in_user.organization
     test_user.save
     assign(:user, test_user)
+    assign(:organization_list, test_user.organization_ids)
     render
 
     expect(rendered).to have_link("Send #{test_user.first_name} a message")

@@ -26,7 +26,7 @@
             %span.caret
           %ul.dropdown-menu.pull-right.scrollable-menu{:role => "menu", :style => "overflow-y:scroll;height:300px;"}
             %li
-              - User.where(organization_id: @organization_list).each do |usr|
+              - User.joins(:users_organizations).where(:users_organizations => {:organization_id => @organization_list}).each do |usr|
                 = link_to change_owner_task_path(task, :user => usr.object_key) do
                   %i.fa.fa-fw.fa-user
                   = usr

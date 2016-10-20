@@ -5,8 +5,11 @@ RSpec.describe UserOrganizationFilter, :type => :model do
   let(:test_filter) { create(:user_organization_filter) }
 
   describe 'associations' do
-    it 'has a user' do
-      expect(test_filter).to belong_to(:user)
+    it 'has a creator' do
+      expect(test_filter).to belong_to(:creator)
+    end
+    it 'has many users' do
+      expect(test_filter).to have_and_belong_to_many(:users)
     end
     it 'HABTM organizations' do
       expect(test_filter).to have_and_belong_to_many(:organizations)
@@ -14,10 +17,6 @@ RSpec.describe UserOrganizationFilter, :type => :model do
   end
 
   describe 'validations' do
-    it 'must have a user' do
-      test_filter.user = nil
-      expect(test_filter.valid?).to be false
-    end
     describe 'name' do
       it 'must exist' do
         test_filter.name = nil
@@ -49,10 +48,10 @@ RSpec.describe UserOrganizationFilter, :type => :model do
   end
 
   it '.system_filter?' do
-    test_filter.update!(:user_id => 2)
+    test_filter.update!(:created_by_user_id => 2)
     expect(test_filter.system_filter?).to be false
 
-    test_filter.update!(:user_id => 1)
+    test_filter.update!(:created_by_user_id => 1)
     expect(test_filter.system_filter?).to be true
   end
 

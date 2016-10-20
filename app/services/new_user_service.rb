@@ -28,7 +28,7 @@ class NewUserService
     f = UserOrganizationFilter.new({:active => 1, :name => "#{user.name}'s organizations", :description => "#{user.name}'s organizations", :sort_order => 1})
     f.users = [user]
     f.creator = User.find_by(first_name: 'system')
-    f.query_string = TransitOperator.active.joins(:users).where('users_organizations.user_id = ?', user.id).to_sql
+    f.query_string = Organization.active.joins(:users).where('users_organizations.user_id = ?', user.id).to_sql
     f.save!
 
     user.user_organization_filter = f

@@ -7,6 +7,7 @@ describe "assets/_new_form.html.haml", :type => :view do
     test_user.organizations = [test_user.organization, create(:organization)]
     test_user.save!
     assign(:asset_types, AssetType.all)
+    assign(:organization_list, test_user.organizations)
     render
 
     expect(rendered).to have_field('organization_id')
