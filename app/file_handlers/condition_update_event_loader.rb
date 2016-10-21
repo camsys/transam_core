@@ -19,7 +19,7 @@ class ConditionUpdateEventLoader < EventLoader
     @event.assessed_rating = as_float(cells[CONDITION_RATING_COL]) if cells[CONDITION_RATING_COL]
 
     # Event Date
-    @event.event_date = as_date(cells[EVENT_DATE_COL]) if cells[EVENT_DATE_COL]
+    @event.event_date = as_date(cells[EVENT_DATE_COL])
 
 
   end
