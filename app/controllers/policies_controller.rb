@@ -5,6 +5,7 @@ class PoliciesController < OrganizationAwareController
   #before_filter :authorize_admin
   before_action :get_policy, :except => [:index, :create, :new]
 
+
   SESSION_VIEW_TYPE_VAR = 'policies_subnav_view_type'
 
   def get_subtype_minimum_value
@@ -128,11 +129,11 @@ class PoliciesController < OrganizationAwareController
     rule = @policy.policy_asset_subtype_rules.find(params[:rule])
     if rule.nil?
       notify_user_immediately "Can't find the rule in policy #{@policy}", "warning"
-    elsif rule.default_rule
-      notify_user_immediately "Can't remove a default rule from #{@policy}", "warning"
+    elsif rule.default_rule && Asset.where(organization_id: @policy.organization_id, asset_subtype_id: rule.asset_subtype_id, fuel_type_id: rule.fuel_type_id).count > 0
+      notify_user_immediately "Can't remove a default rule being used from #{@policy}", "warning"
     else
       rule.destroy
-      notify_user_immediately "Rule was sucessfully removed from #{@policy}"
+      notify_user_immediately "Rule was successfully removed from #{@policy}"
     end
 
     render 'update_policy_rules'
