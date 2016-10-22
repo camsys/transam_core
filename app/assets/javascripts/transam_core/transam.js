@@ -70,9 +70,8 @@ var transam = new function() {
 			return this.show_popup_message('Information', message, classes);
 		}
 		classes = classes || 'alert alert-info';
-		// Close existing flash message, display new one, trigger scroll to update 'floating' js positioned elements (floating table header for example)
-		$('#messages a.close').click();
-		$msg.html("<div class='"+classes+"'><a class='close' data-dismiss='alert'>×</a><div id='flash_notice'>"+message+"</div></div>");
+		// push new mesage on top of messages, trigger scroll to update 'floating' js positioned elements (floating table header for example)
+		$msg.prepend("<div class='"+classes+"'><a class='close' data-dismiss='alert'>×</a><div id='flash_notice'>"+message+"</div></div>");
 		$(document).trigger('scroll');
 		var updateTableHeader = function( second ){
 		  //calling this will trigger 'scroll' event 2x, 220 ms apart, to make sure it actually runs on slower devices
