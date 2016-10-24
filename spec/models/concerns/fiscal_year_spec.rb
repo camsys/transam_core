@@ -121,7 +121,7 @@ RSpec.describe FiscalYear do
         results << ["FY #{(yr-2000).to_s}-#{(yr-2000+1).to_s}", yr]
       end
       expect(test_fy_class.get_fiscal_years(test_date1, 6)).to eq(results[1..results.length-1])
-      expect(test_fy_class.get_fiscal_years(test_date2, 5)).to eq(results)
+      expect(test_fy_class.get_fiscal_years(test_date2, 7)).to eq(results)
     end
   end
   it '.get_planning_fiscal_years' do
