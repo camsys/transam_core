@@ -14,9 +14,9 @@ Scenario: Forgot your password
 	When I start the app
 		And I press the link "Forgot Your Password?"
 		And I fill out the forgotten password form with "jsoloski@catabus.com"
-	Then I will see "Sign in"
+	Then I will see "Please sign in"
 	# TODO: finish
 
 Scenario: Log in with incorrect credentials
 	When "jsoloski@catabus.com" logs in using invalid user data
-	Then I will see "Sign in"
+	Then I will see "Please sign in"
