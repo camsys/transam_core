@@ -110,7 +110,7 @@ RSpec.describe FiscalYear do
       (0..4).each do |forecast_yr|
         results << ["FY #{(current_planning_yr+forecast_yr-2000).to_s}-#{(current_planning_yr+forecast_yr-2000+1).to_s}", current_planning_yr+forecast_yr]
       end
-      expect(test_fy_class.get_fiscal_years(nil,5)).to eq(results)
+      expect(test_fy_class.get_fiscal_years(nil,4)).to eq(results)
     end
     it 'date and forecasting years given' do
       current_planning_yr = Date.today.month < 7 ? Date.today.year : Date.today.year + 1
@@ -120,7 +120,7 @@ RSpec.describe FiscalYear do
       (2014..current_planning_yr+4).each do |yr|
         results << ["FY #{(yr-2000).to_s}-#{(yr-2000+1).to_s}", yr]
       end
-      expect(test_fy_class.get_fiscal_years(test_date1, 5)).to eq(results[1..results.length-1])
+      expect(test_fy_class.get_fiscal_years(test_date1, 6)).to eq(results[1..results.length-1])
       expect(test_fy_class.get_fiscal_years(test_date2, 5)).to eq(results)
     end
   end
