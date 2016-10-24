@@ -61,7 +61,8 @@
         = f.input :rehabilitation_cost, :wrapper=> :vertical_prepend  do
           %span.input-group-addon
             %i.fa.fa-usd
-          = f.input_field :rehabilitation_cost, required: true, :class => "form-control", :input_html => { min: 0 }
+          = f.input_field :rehabilitation_cost, rGrantsController fiscal years no num forecasting years
+equired: true, :class => "form-control", :input_html => { min: 0 }
 
       .col-sm-3
         = f.input :extended_service_life_months, required: true, :label => "Change in ESL (Mo)", :input_html => { :class => "has_minimum", :min => min_values[:extended_service_life_months] }
