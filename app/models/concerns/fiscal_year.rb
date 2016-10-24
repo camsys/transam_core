@@ -136,7 +136,7 @@ module FiscalYear
     if num_forecasting_years.nil?
       last_year = last_fiscal_year_year
     else
-      last_year = current_fiscal_year_year + num_forecasting_years
+      last_year = current_year + num_forecasting_years
     end
 
     (current_year..last_year).each do |year|
