@@ -38,7 +38,7 @@ class AssetGroup < ActiveRecord::Base
   # Validations
   #------------------------------------------------------------------------------
   validates :organization,          :presence => true
-  validates :name,                  :presence => true, :length => { maximum: 64 }, :uniqueness => {:scope => :organization, :message => "must be unique within an organization"}
+  validates :name,                  :presence => true, :length => { maximum: 64 }, :uniqueness => {:scope => :organization, :case_sensitive => false, :message => "must be unique within an organization"}
   validates :code,                  :presence => true, :length => { maximum: 8 }
   validates :description,           :presence => true
 

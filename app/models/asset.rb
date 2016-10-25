@@ -138,7 +138,7 @@ class Asset < ActiveRecord::Base
   #-----------------------------------------------------------------------------
 
   # Asset tags must be unique within an organization
-  validates_uniqueness_of :asset_tag, :scope => :organization
+  validates_uniqueness_of :asset_tag, :scope => :organization, :case_sensitive => false
 
   # Validations on core attributes
   validates       :asset_tag,         :presence => true, :length => { :maximum => 12 }

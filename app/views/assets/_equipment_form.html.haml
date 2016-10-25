@@ -16,7 +16,7 @@
     .col-md-6
       = dialog_tag('Equipment', {:icon => 'fa fa-refresh', :class => "form_part"}) do
         = f.association :asset_subtype, :collection => (AssetType.find_by(id: @asset.asset_type_id).try(:asset_subtypes) || []), :include_blank => false
-        = f.input :asset_tag, :prompt => "Enter the asset tag...", :label => "Asset Tag"
+        = f.input :asset_tag, :prompt => "Enter the asset tag...", :label => "Asset Tag", :input_html => {:data => {:convert => "uppercase"}}
         = f.input :external_id, :prompt => "Enter any external ID...", :label => "External ID", :input_html => {:maxlength => 32}
         = f.input :description
         = f.input :quantity
@@ -59,6 +59,12 @@
 
   // Document Ready
   $(document).ready(function(){
+
+    // Force uppercase text for OFT inputs
+    $('[data-convert="uppercase"]').keyup(function(evt) {
+      this.value = this.value.toUpperCase();
+    });
+
     $('[data-behavior~=datepicker]').datepicker({
     });
     $('#vendor_name').on('focus', function() {

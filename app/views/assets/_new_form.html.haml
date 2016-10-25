@@ -10,7 +10,7 @@
               %label.control-label.string.required
                 * Organization
 
-              = select_tag(:organization_id, options_from_collection_for_select(current_user.organizations, :id, :coded_name), :class => 'form-control string required', :prompt => 'Select organization...')
+              = select_tag(:organization_id, options_from_collection_for_select(Organization.where(id: @organization_list), :id, :coded_name), :class => 'form-control string required', :prompt => 'Select organization...')
 
           .form-group
             %label.control-label.string.required
