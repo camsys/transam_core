@@ -119,6 +119,11 @@
                 = link_to '#', id: 'subselect-orgs' do
                   Update Selection
               %li.divider
+              %li#select-all
+                %label.checkbox
+                  = check_box_tag 'orgs-select-all', 1, @organization_list.count == orgs.count
+                  Select All
+              %li.divider
               - orgs.each do |org|
                 %li.dropdown-menu-stay-open
                   %label.checkbox
@@ -132,32 +137,38 @@
                     Edit This Filter
 
 :javascript
-  $('li.dropdown-menu-stay-open').click(function(e) {
-      $(this).find('a').children().prop('checked', !$(this).children().prop('checked'));
 
-      if ($('input[name="org[]"]:checked').length == 1) {
-        $('input[name="org[]"]:checked').attr('disabled', true)
+  $('li#select-all').click(function(e) {
+      if ($('#orgs-select-all:checked').length == 1) {
+        $('input[name="org[]"]').prop('checked', true)
       } else {
-        $('input[name="org[]"]:checked').attr('disabled', false)
+        $('input[name="org[]"]').prop('checked', false)
       }
+      e.stopPropagation();
+  });
+
+  $('li.dropdown-menu-stay-open').click(function(e) {
       e.stopPropagation();
   });
 
   $('#subselect-orgs').click(function(event) {
     event.preventDefault();
+    if ($('input[name="org[]"]:checked').length > 0) {
+      var orgs = $("input[name='org[]']:checked").map(function() { return this.value;}).get();
 
-    var orgs = $("input[name='org[]']:checked").map(function() { return this.value;}).get();
+      //console.log(orgs);
 
-    //console.log(orgs);
-
-    $.ajax({
-      url: "#{user_user_organization_filter_set_org_path(current_user, current_user.user_organization_filter)}",
-      type: 'POST',
-      data: {
-        org_user_organization_filter : orgs
-      },
-      complete: function() {
-        window.location.reload(true);
-      }
-    });
+      $.ajax({
+        url: "#{user_user_organization_filter_set_org_path(current_user, current_user.user_organization_filter)}",
+        type: 'POST',
+        data: {
+          org_user_organization_filter : orgs
+        },
+        complete: function() {
+          window.location.reload(true);
+        }
+      });
+    } else {
+      event.stopPropagation();
+    }
   });

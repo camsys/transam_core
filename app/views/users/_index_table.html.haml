@@ -56,7 +56,7 @@
         %td= format_as_boolean(u.notify_via_email)
         %td= format_as_integer(u.num_table_rows)
         - if current_user.has_role? :admin
-          %td= format_as_list(u.roles)
+          %td= format_as_list(u.roles.map{|r| r.label})
           %td= format_as_integer(u.sign_in_count)
           %td= format_as_date_time(u.last_sign_in_at)
           %td= u.last_sign_in_ip
