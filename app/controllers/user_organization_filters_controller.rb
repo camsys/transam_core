@@ -142,7 +142,7 @@ class UserOrganizationFiltersController < OrganizationAwareController
 
 
     respond_to do |format|
-      if @user_organization_filter.update(form_params)
+      if @user_organization_filter.update(form_params.except(:organization_ids))
 
         # Add the (possibly) new organizations into the object
         org_list = form_params[:organization_ids].split(',')

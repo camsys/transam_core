@@ -199,7 +199,7 @@ class UsersController < OrganizationAwareController
     # new users
     new_user_service = get_new_user_service
     # Create the user
-    @user = new_user_service.build(form_params)
+    @user = new_user_service.build(form_params.except(:organization_ids))
 
     if @user.organization.nil?
       @user.organization_id = @organization_list.first
@@ -249,7 +249,7 @@ class UsersController < OrganizationAwareController
     Rails.logger.debug "role_id = #{role_id}, privilege_ids = #{privilege_ids}"
 
     respond_to do |format|
-      if @user.update_attributes(form_params)
+      if @user.update_attributes(form_params.except(:organization_ids))
 
 
         # Add the (possibly) new organizations into the object
