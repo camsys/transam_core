@@ -8,7 +8,7 @@
 
         - if can? :share, @user_organization_filter
           .form-group.required
-            = check_box_tag :share_filter, style: 'margin-left: 10px;'
+            = check_box_tag :share_filter, 1, @user_organization_filter.users.count > 1, style: 'margin-left: 10px;'
             Share this filter?
 
     .col-md-6
@@ -23,7 +23,7 @@
 = render 'form_scripts'
 
 :javascript
-  $('input[name="commit"]').attr('disabled', true);
+  $('input[name="commit"]').attr('disabled', '#{@user_organization_filter.new_record?}' == 'true');
 
   $('#org_select').on('click', 'btn', function(){
     if ($('#selected_grantees option').length > 0) {

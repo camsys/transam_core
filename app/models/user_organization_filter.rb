@@ -7,7 +7,7 @@ class UserOrganizationFilter < ActiveRecord::Base
   after_initialize :set_defaults
 
   # Clean up any HABTM associations before the asset is destroyed
-  before_destroy { :clean_habtm_relationships }
+  #before_destroy { :clean_habtm_relationships }
 
   belongs_to :resource, :polymorphic => true
 
