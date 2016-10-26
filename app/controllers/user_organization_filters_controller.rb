@@ -158,7 +158,7 @@ class UserOrganizationFiltersController < OrganizationAwareController
           @user_organization_filter.users = current_user.organization.users
           @user_organization_filter.resource = current_user.organization
         else
-          @user_organization_filter.users.clear
+          @user_organization_filter.users = [current_user]
           @user_organization_filter.resource = nil
         end
 
