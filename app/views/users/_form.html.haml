@@ -142,6 +142,22 @@
     $('#user_role_ids').val('');
   });
 
+  // disable main org after adding to org list
+  // must add event to body because button is a dynamically created object
+  $('body').on('click', 'btn.selector-add', function() {
+    var org_id = $('#user_organization_id').val();
+    $('#selected_grantees option').attr('disabled', false);
+    $('#selected_grantees option[value="' + org_id + '"]').attr('disabled', true);
+  });
+
+  $('select').on('click',function(e){
+    console.log('heello world' + $(this).val());
+
+    if ($(this).val() == $('#user_organization_id').val()) {
+      $('.selector-remove').attr('disabled', true)
+    }
+  });
+
   function update_role_list_by_organization(org_id) {
     if(org_id) {
       org_id = parseInt(org_id);
