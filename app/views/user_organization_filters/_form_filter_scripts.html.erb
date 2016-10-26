@@ -8,21 +8,23 @@
   	
   	// Add an submit event handler for the form
   	$('#filter_form').submit(function(){
-  		var shuttle_target = $('#' + shuttle_target_id);
-  		var form_target = $('#' + selected_set_name);
-	  	// select all the options in the selected array from the other shuttle list list
-	  	var id_list = new Array();
-		shuttle_target.children().map(function() {
-			id_list.push($(this).val());
-  		});	  	
-  		//var id_list = new Array();
-		//alert(id_list);
-  		form_target.val(id_list);
-  		//elem.children().map(function() {
-  		//	id_list.push($(this).val());
-  		//});
-  		//alert($('#' + target_id).val());
-  		return true;
+      if ($(this).valid()) {
+        var shuttle_target = $('#' + shuttle_target_id);
+        var form_target = $('#' + selected_set_name);
+        // select all the options in the selected array from the other shuttle list list
+        var id_list = new Array();
+        shuttle_target.children().map(function () {
+          id_list.push($(this).val());
+        });
+        //var id_list = new Array();
+        //alert(id_list);
+        form_target.val(id_list);
+        //elem.children().map(function() {
+        //	id_list.push($(this).val());
+        //});
+        //alert($('#' + target_id).val());
+        return true;
+      }
   	});
 
     var t = $('#org_select').bootstrapTransfer({

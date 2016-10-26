@@ -25,10 +25,7 @@
 :javascript
 
   $('#filter_form').validate({
-    ignore: '#user_organization_filter_organization_ids, .filtered, .filter-input',
-    submitHandler: function(form) {
-      form.submit();
-    }
+    ignore: '#user_organization_filter_organization_ids, .filtered, .filter-input'
   });
 
   $('input[name="commit"]').attr('disabled', '#{@user_organization_filter.new_record?}' == 'true');

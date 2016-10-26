@@ -86,9 +86,6 @@
 
   $('.user_profile_form').validate({
     ignore: '#user_organization_ids, .filtered, .filter-input',
-    submitHandler: function(form) {
-      form.submit();
-    },
     rules: {
       'user[email]': {
         email: true
