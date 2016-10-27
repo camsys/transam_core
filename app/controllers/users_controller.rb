@@ -253,12 +253,14 @@ class UsersController < OrganizationAwareController
 
 
         # Add the (possibly) new organizations into the object
-        org_list = form_params[:organization_ids].split(',')
-        if org_list.count > 0
-          # clear the existing list of organizations
-          @user.organizations.clear
-          org_list.each do |id|
-            @user.organizations << Organization.find(id)
+        if form_params[:organization_ids].present?
+          org_list = form_params[:organization_ids].split(',')
+          if org_list.count > 0
+            # clear the existing list of organizations
+            @user.organizations.clear
+            org_list.each do |id|
+              @user.organizations << Organization.find(id)
+            end
           end
         end
 
