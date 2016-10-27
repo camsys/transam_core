@@ -31,18 +31,21 @@
     	target_id: shuttle_target_id,
      	hilite_selection: false
      });
-    var filter_orgs = [];
-    var selected = [];
-    <% Organization.where(id: @organization_list).each do |org| %>
+    if (t.length) {
+      var filter_orgs = [];
+      var selected = [];
+      <% Organization.where(id: @organization_list).each do |org| %>
       filter_orgs.push({value: '<%= org.id %>', content: '<%= org.coded_name %>'});
-    <% end %>
+      <% end %>
 
-    <% @user.organizations.each do |grantee| %>
+      <% @user.organizations.each do |grantee| %>
       selected.push('<%= grantee.id %>');
-    <% end %>
-    
-    t.populate(filter_orgs);
-    t.set_values(selected);
+      <% end %>
+      t.populate(filter_orgs);
+      t.set_values(selected);
+    }
+
+
     transam.make_same_height('.form-part');
   });
 

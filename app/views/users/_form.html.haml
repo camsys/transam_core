@@ -147,13 +147,6 @@
     $('#selected_grantees option[value="' + org_id + '"]').attr('disabled', true);
   });
 
-  $('select').on('click',function(e){
-
-    if ($(this).val() == $('#user_organization_id').val()) {
-      $('.selector-remove').attr('disabled', true)
-    }
-  });
-
   function update_role_list_by_organization(org_id) {
     if(org_id) {
       org_id = parseInt(org_id);
