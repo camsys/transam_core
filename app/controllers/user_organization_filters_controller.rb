@@ -44,7 +44,12 @@ class UserOrganizationFiltersController < OrganizationAwareController
 
     set_current_user_organization_filter_(current_user, @user_organization_filter)
 
-    redirect_to :back
+    # if currently on a filter detail page direct to detail page of filter just set
+    if URI(request.referer).path =~ /\/users\/[[:alnum:]]{12}\/user_organization_filters\/[[:alnum:]]{12}/
+      redirect_to user_user_organization_filter_path(current_user, @user_organization_filter)
+    else
+      redirect_to :back
+    end
 
   end
 
