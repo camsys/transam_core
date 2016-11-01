@@ -1,7 +1,4 @@
-- can_update = !@user_organization_filter.system_filter? && (can? :update, @user_organization_filter)
-- can_destroy = !@user_organization_filter.system_filter? && (can? :destroy, @user_organization_filter)
-
-- if current_user.user_organization_filter != @user_organization_filter || can_update || can_destroy
+- if current_user.user_organization_filter != @user_organization_filter || (@user_organization_filter.can_update? current_user) || (@user_organization_filter.can_destroy? current_user)
   .btn-group.pull-right.panel-action
     %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
       %i.fa.fa-cog
@@ -13,14 +10,14 @@
           = link_to user_user_organization_filter_use_path(current_user, @user_organization_filter) do
             %i.fa.fa-filter.fa-fw
             = " Set as current filter"
-      - if can_update
+      - if (@user_organization_filter.can_update? current_user) && (can? :update, @user_organization_filter)
         %li.divider
         %li
           = link_to edit_user_user_organization_filter_path(current_user, @user_organization_filter) do
             %i.fa.fa-edit.fa-fw
             = " Update this filter"
 
-      - if can_destroy
+      - if (@user_organization_filter.can_destroy? current_user) && (can? :destroy, @user_organization_filter)
         %li.divider
         %li
           = link_to user_user_organization_filter_path(current_user, @user_organization_filter), :method => :delete, :data => {:confirm => "Are you sure? The action cannot be undone!"}  do
