@@ -138,7 +138,6 @@ class UsersController < OrganizationAwareController
     add_breadcrumb 'New'
 
     @user = User.new
-    @user.organization = @organization
 
     respond_to do |format|
       format.html # new.html.haml this had been an erb and is now an haml the change should just be caught
@@ -263,6 +262,12 @@ class UsersController < OrganizationAwareController
             end
           end
         end
+
+        # update filters
+        # set all filters to personal not shared one
+        # then run method that checks your main org and org list to get all shared filters
+        @user.user_organization_filters = UserOrganizationFilter.joins(:users).where(created_by_user_id: current_user.id).sorted.group('user_organization_filters.id').having( 'count( user_id ) = 1' )
+        @user.update_user_organization_filters
 
         #-----------------------------------------------------------------------
         # Assign the role and privileges but only on a profile form, not a
