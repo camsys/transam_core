@@ -256,7 +256,6 @@ class User < ActiveRecord::Base
       if self.respond_to? filter.resource_type.downcase.pluralize #check has many associations
         if self.try(filter.resource_type.downcase.pluralize).include? filter.resource
           self.user_organization_filters << filter
-          puts "apple pie"
         end
       elsif self.respond_to? filter.resource_type.downcase # check single association
         if self.try(filter.resource_type.downcase) == filter.resource
@@ -269,7 +268,7 @@ class User < ActiveRecord::Base
       f = UserOrganizationFilter.new({:active => 1, :name => "#{self.name}'s organizations", :description => "#{self.name}'s organizations", :sort_order => 1})
       f.users = [self]
       f.creator = User.find_by(first_name: 'system')
-      f.query_string = TransitOperator.active.joins(:users).where('users_organizations.user_id = ?', self.id).to_sql
+      f.query_string = Organization.active.joins(:users).where('users_organizations.user_id = ?', self.id).to_sql
       f.save!
     end
 
