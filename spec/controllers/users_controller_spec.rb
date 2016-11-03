@@ -79,7 +79,7 @@ RSpec.describe UsersController, :type => :controller do
   it 'GET new' do
     get :new
 
-    expect(assigns(:user).organization).to eq(assigns(:organization))
+    expect(assigns(:user).to_json).to eq(User.new.to_json)
   end
 
   describe 'GET edit' do
