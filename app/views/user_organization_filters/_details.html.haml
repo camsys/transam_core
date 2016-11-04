@@ -1,1 +1,13 @@
-= render :partial => 'organizations/index_table', :locals => {:organizations => @user_organization_filter.get_organizations, :show_actions => 0}
+- orgs = @user_organization_filter.get_organizations
+
+%ul.nav.nav-tabs
+  %li
+    %a{:href => "#orgs", :data =>{:toggle => 'tab'}}
+      %span.badge.pull-right= orgs.count
+      = "Organizations"
+
+.tab-content{:style => 'max-height:400px;overflow-y: auto;'}
+  .tab-pane.fade#orgs
+    .tab-content
+      = format_field("Agencies", QueryParam.find_by(class_name: 'UserOrganizationFilter', query_string: @user_organization_filter.query_string).to_s) if @user_organization_filter.query_string.present?
+      = render :partial => 'organizations/index_table', :locals => {:organizations => orgs, :show_actions => 0}

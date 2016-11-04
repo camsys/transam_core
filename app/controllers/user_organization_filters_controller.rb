@@ -174,6 +174,8 @@ class UserOrganizationFiltersController < OrganizationAwareController
           end
         end
 
+        @user_organization_filter.save
+
         if params[:share_filter]
           @user_organization_filter.users = current_user.organization.users
           @user_organization_filter.resource = current_user.organization
