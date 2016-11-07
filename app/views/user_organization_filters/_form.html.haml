@@ -15,7 +15,7 @@
       = dialog_tag('Organizations Filter', {:icon => 'fa fa-list', :class => "form-part"}) do
 
         .form-group
-          = select_tag(:query, options_for_select(QueryParam.active.where(class_name: f.object.class.name).map{|x| [x.to_s,x.id]}, :selected => QueryParam.find_by(class_name: f.object.class.name, query_string: f.object.query_string).try(:id)), :class => "form-control", :prompt => "Choose Organizations")
+          =# select_tag(:query, options_for_select(QueryParam.active.where(class_name: f.object.class.name).map{|x| [x.to_s,x.id]}, :selected => QueryParam.find_by(class_name: f.object.class.name, query_string: f.object.query_string).try(:id)), :class => "form-control", :prompt => "Choose Organizations")
 
         #org_select.input-xlarge
 
@@ -28,28 +28,28 @@
 
 :javascript
 
-  if (parseInt($('#query').val()) > 0) { // if query
-    $('#org_select').hide();
-  }  else {
-    $('#org_select').show();
-  }
-
-  // check if using query or selecting orgs
-  $('#query').on('change', function(e) {
-    var val = $(this).val();
-    if (parseInt(val) > 0) { // if query
-      $('#org_select').data().bootstrapTransfer.move_all(true, false); // clear out all selected values
-      $('#org_select').hide();
-      $('input[name="commit"]').attr('disabled', false);
-    }  else {
-      $('#org_select').show();
-      if ($('#selected_grantees option').length > 0) {
-        $('input[name="commit"]').attr('disabled', false);
-      } else {
-        $('input[name="commit"]').attr('disabled', true);
-      }
-    }
-  });
+  // if (parseInt($('#query').val()) > 0) { // if query
+  //   $('#org_select').hide();
+  // }  else {
+  //   $('#org_select').show();
+  // }
+  //
+  // // check if using query or selecting orgs
+  // $('#query').on('change', function(e) {
+  //   var val = $(this).val();
+  //   if (parseInt(val) > 0) { // if query
+  //     $('#org_select').data().bootstrapTransfer.move_all(true, false); // clear out all selected values
+  //     $('#org_select').hide();
+  //     $('input[name="commit"]').attr('disabled', false);
+  //   }  else {
+  //     $('#org_select').show();
+  //     if ($('#selected_grantees option').length > 0) {
+  //       $('input[name="commit"]').attr('disabled', false);
+  //     } else {
+  //       $('input[name="commit"]').attr('disabled', true);
+  //     }
+  //   }
+  // });
 
   $('#filter_form').validate({
     ignore: '#user_organization_filter_organization_ids, .filtered, .filter-input'
