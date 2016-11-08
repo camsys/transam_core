@@ -21,7 +21,8 @@
 
  
     .col-md-12
-      = f.button :submit, "Update Organization Filter", :class => "btn btn-primary"
+      - unless current_user.user_organization_filter == @user_organization_filter
+        = f.button :submit, "Update Organization Filter", :class => "btn btn-primary"
       = f.button :submit, "Update and Select This Filter", :class => "btn btn-primary"
 
 = render 'form_scripts'

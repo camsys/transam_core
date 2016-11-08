@@ -102,7 +102,7 @@ class PoliciesController < OrganizationAwareController
       rule.update_attributes(asset_subtype_rule_form_params)
     end
 
-    if (rule.replace_asset_subtype_id || rule.replace_fuel_type_id)
+    if (rule.try(:replace_asset_subtype_id) || rule.try(:replace_fuel_type_id))
       if @policy.policy_asset_subtype_rules.find_by(asset_subtype_id: (rule.replace_asset_subtype_id || rule.asset_subtype_id), fuel_type_id: (rule.replace_fuel_type_id || rule.fuel_type_id)).nil?
         new_rule = @policy.parent.policy_asset_subtype_rules.find_by(asset_subtype_id: (rule.replace_asset_subtype_id || rule.asset_subtype_id)).dup
         new_rule.policy = @policy # reset duplicated rule to agency's policy

@@ -73,7 +73,7 @@ class UserOrganizationFilter < ActiveRecord::Base
   end
 
   def can_update? user
-    !self.system_filter? && (self.users.include? user) && self != user.user_organization_filter
+    !self.system_filter? && (self.users.include? user)
   end
 
   def can_destroy? user
