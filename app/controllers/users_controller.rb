@@ -257,8 +257,10 @@ class UsersController < OrganizationAwareController
         # update filters
         # set all filters to personal not shared one
         # then run method that checks your main org and org list to get all shared filters
-        @user.user_organization_filters = UserOrganizationFilter.joins(:users).where(created_by_user_id: current_user.id).sorted.group('user_organization_filters.id').having( 'count( user_id ) = 1' )
-        @user.update_user_organization_filters
+        if ActiveRecord::Base.connection.table_exists?(:user_organization_filters)
+          @user.user_organization_filters = UserOrganizationFilter.joins(:users).where(created_by_user_id: current_user.id).sorted.group('user_organization_filters.id').having( 'count( user_id ) = 1' )
+          @user.update_user_organization_filters
+        end
 
         #-----------------------------------------------------------------------
         # Assign the role and privileges but only on a profile form, not a
