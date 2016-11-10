@@ -25,7 +25,7 @@ RSpec.describe UserRoleService, :type => :service do
       expect((test_service.assignable_privileges test_admin).to_json).to eq(Role.privileges.order(:weight).to_json)
     end
     it 'not admin' do
-      expect((test_service.assignable_privileges test_tech).to_json).to eq(Role.where("name = 'technical_contact'").order(:weight).to_json)
+      expect((test_service.assignable_privileges test_tech).to_json).to eq(Role.privileges. where("name != 'admin'").order(:weight).to_json)
     end
   end
 

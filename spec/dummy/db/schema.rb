@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161011165614) do
+ActiveRecord::Schema.define(version: 20161102174139) do
 
   create_table "activities", force: true do |t|
     t.string   "object_key",           limit: 12
@@ -722,6 +722,14 @@ ActiveRecord::Schema.define(version: 20161011165614) do
     t.string  "description", limit: 254, null: false
     t.boolean "is_default",              null: false
     t.boolean "active",                  null: false
+  end
+
+  create_table "query_params", force: true do |t|
+    t.string  "name"
+    t.string  "description"
+    t.text    "query_string"
+    t.string  "class_name"
+    t.boolean "active"
   end
 
   create_table "replacement_reason_types", force: true do |t|
