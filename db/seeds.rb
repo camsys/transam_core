@@ -13,18 +13,6 @@ is_sqlite =  (ActiveRecord::Base.configurations[Rails.env]['adapter'] == 'sqlite
 
 puts "======= Processing TransAM CORE Lookup Tables  ======="
 
-activities = [
-  { name: 'Weekly Issues Report',
-   description: 'Report giving an admin a list of all issues.',
-   show_in_dashboard: false,
-   system_activity: true,
-   frequency_quantity: 1,
-   frequency_type_id: 4,
-   execution_time: 'Monday 00:01',
-   job_name: 'IssuesReportJob',
-   active: true }
-]
-
 asset_event_types = [
   {:active => 1, :name => 'Condition',       :display_icon_name => "fa fa-star-half-o",       :description => 'Condition',       :class_name => 'ConditionUpdateEvent',      :job_name => 'AssetConditionUpdateJob'},
   {:active => 1, :name => 'Maintenance provider type',       :display_icon_name => "fa fa-cog",       :description => 'Maintenance Provider',       :class_name => 'MaintenanceProviderUpdateEvent',      :job_name => 'AssetMaintenanceProviderUpdateJob'},
@@ -169,11 +157,23 @@ frequency_types = [
   {:active => 1, :name => 'month', :description => 'Month'}
 ]
 
+activities = [
+    { name: 'Weekly Issues Report',
+      description: 'Report giving an admin a list of all issues.',
+      show_in_dashboard: false,
+      system_activity: true,
+      frequency_quantity: 1,
+      frequency_type_id: 4,
+      execution_time: 'Monday 00:01',
+      job_name: 'IssuesReportJob',
+      active: true }
+]
 
-lookup_tables = %w{activities asset_event_types condition_types disposition_types cost_calculation_types license_types priority_types
+
+lookup_tables = %w{asset_event_types condition_types disposition_types cost_calculation_types license_types priority_types
   file_content_types file_status_types report_types service_status_types
   service_life_calculation_types condition_estimation_types
-  issue_status_types issue_types web_browser_types replacement_reason_types roles notice_types frequency_types
+  issue_status_types issue_types web_browser_types replacement_reason_types roles notice_types frequency_types activities
   }
 
 lookup_tables.each do |table_name|
