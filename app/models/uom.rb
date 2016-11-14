@@ -14,7 +14,7 @@ class Uom
   # Pre-defined weight quantities
   KILOGRAM            = 'kilogram'
   POUND               = "pound"
-  SHORT_TON           = 'short_ton'
+  SHORT_TON           = 'short ton'
   #TON                 = SHORT_TON
   TONNE               = "tonne"
 
