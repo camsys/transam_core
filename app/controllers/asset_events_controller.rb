@@ -287,6 +287,8 @@ class AssetEventsController < AssetAwareController
     asset_event = AssetEvent.find_by_object_key(params[:id]) unless params[:id].nil?
     if asset_event
       @asset_event = AssetEvent.as_typed_event(asset_event)
+    else
+      redirect_to '/404'
     end
   end
 

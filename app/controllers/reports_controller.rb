@@ -93,7 +93,7 @@ class ReportsController < OrganizationAwareController
     end
     if @report.nil?
       notify_user(:alert, "Can't find report.")
-      redirect_to reports_url
+      redirect_to '/404'
       return
     end
   end

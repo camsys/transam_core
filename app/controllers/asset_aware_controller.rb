@@ -79,8 +79,12 @@ class AssetAwareController < OrganizationAwareController
     # check that the asset is owned by the agency
     @asset = get_selected_asset(render_typed_assets)
     if @asset.nil?
-      notify_user(:alert, 'Record not found!')
-      redirect_to(root_url)
+      if  Asset.find_by(:organization_id => current_user.user_organization_filters.system_filters.first.get_organizations.map{|x| x.id}, :object_key => params[:inventory_id]).nil?
+        redirect_to '/404'
+      else
+        notify_user(:warning, 'This record is outside your filter. Change your filter if you want to access it.')
+        redirect_to inventory_path
+      end
       return
     end
   end
