@@ -248,7 +248,7 @@ class AssetsController < AssetAwareController
     if params[:organization_id].present?
       @asset.organization = Organization.find(params[:organization_id])
     else
-      @asset.organization = @organization
+      @asset.organization_id = @organization_list.first
     end
 
     respond_to do |format|
@@ -272,7 +272,7 @@ class AssetsController < AssetAwareController
     # If the asset does not have an org already defined, set to the default for
     # the user
     if @asset.organization.blank?
-      @asset.organization = @organization
+      @asset.organization_id = @organization_list.first
     end
 
     @asset.creator = current_user
