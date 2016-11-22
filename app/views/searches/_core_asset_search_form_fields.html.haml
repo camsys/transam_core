@@ -22,7 +22,7 @@
         .col-md-3.general-fields
           %fieldset
             %legend.panel-legend Status
-            = f.input :asset_scope, collection: ["Disposed", "Operational", "In Service"], :label => "Status"
+            = f.input :asset_scope, collection: ["Disposed", "Operational"], :label => "Operational Status"
 
         -unless @organization_list.count < 2
           .col-md-3.general-fields
