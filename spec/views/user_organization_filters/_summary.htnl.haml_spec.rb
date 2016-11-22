@@ -11,7 +11,7 @@ describe "user_organization_filters/_summary.html.haml", :type => :view do
     render 'user_organization_filters/summary', :filter => test_filter
 
     expect(rendered).to have_content(test_filter.name)
-    expect(rendered).to have_content('12')
+    expect(rendered).to have_content(Organization.find_by_sql(test_filter.query_string).count.to_s)
     expect(rendered).to have_content(test_filter.description)
   end
 end

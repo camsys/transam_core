@@ -6,60 +6,26 @@ RSpec.describe UsersController, :type => :controller do
   let(:test_user2) { create(:normal_user) }
 
   before(:each) do
-    test_user.organizations << test_user.organization
+    test_user.organizations = [test_user.organization, test_user2.organization]
     test_user.save!
     sign_in test_user
   end
 
   describe 'GET index' do
-    describe 'one organization' do
-      it 'gets all users of a single org' do
-        org = subject.current_user.organization
-        get :index, {:organization_id => org.id}
-
-        expect(assigns(:users)).to eq(org.users)
-      end
-
-      it 'get users for one organization with a specific role' do
-        org = subject.current_user.organization
-        get :index, {:organization_id => org.id, :role => 'admin'}
-
-        expect(assigns(:users)).to eq(org.users.with_role('admin'))
-      end
-
-      it 'returns no users if wrong role' do
-        org = subject.current_user.organization
-        get :index, {:organization_id => org.id, :role => 'fake_role'}
-
-        expect(assigns(:users).count).to eq(0)
-      end
-    end
 
     describe 'users from a list of orgs' do
       it 'returns all users' do
         get :index
 
-        users = []
-        subject.current_user.organizations.each do |org|
-          users << org.users
-        end
-
-        users.flatten!.uniq
-
-        expect(assigns(:users)).to eq(users)
+        expect(assigns(:users)).to include(test_user)
+        expect(assigns(:users)).to include(test_user2)
       end
 
       it 'returns all users with a role' do
         get :index, {:role => 'admin'}
 
-        users = []
-        subject.current_user.organizations.each do |org|
-          users << org.users.with_role('admin')
-        end
-
-        users.flatten!.uniq
-
-        expect(assigns(:users)).to eq(users)
+        expect(assigns(:users)).to include(test_user)
+        expect(assigns(:users)).not_to include(test_user2)
       end
 
       it 'returns no users if wrong role' do
@@ -183,7 +149,7 @@ RSpec.describe UsersController, :type => :controller do
 
   it 'DELETE destroy' do
     User.unscoped.where(:last_name => 'Chang').delete_all if User.unscoped.find_by(:last_name => 'Chang')
-    create(:normal_user, :last_name => 'Chang')
+    create(:normal_user, :last_name => 'Chang', :organization => test_user.organization)
 
     delete :destroy, {:id => User.find_by(:last_name => 'Chang').object_key}
 

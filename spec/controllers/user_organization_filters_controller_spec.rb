@@ -11,7 +11,7 @@ RSpec.describe UserOrganizationFiltersController, :type => :controller do
   it 'GET index' do
     get :index, :user_id => subject.current_user.object_key
 
-    expect(assigns(:user_organization_filters)).to eq(UserOrganizationFilter.all)
+    expect(assigns(:user_organization_filters)).to eq(subject.current_user.user_organization_filters)
   end
 
   it 'GET show' do

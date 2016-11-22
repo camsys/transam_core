@@ -3,12 +3,7 @@ FactoryGirl.define do
     sequence(:name) {|n| "Test Filter #{n}"}
     description "Test Filter Description"
     created_by_user_id 1
+    query_string "SELECT `organizations`.* FROM `organizations`"
     active true
-
-    after(:create) do |filter|
-      filter.organizations << create(:organization)
-      filter.users << create(:normal_user)
-      filter.save!
-    end
   end
 end
