@@ -21,7 +21,7 @@
       = link_to manufacturers_path do
         %i.fa.fa-fw.fa-star
         Manufacturers
-      %ul.dropdown-menu
+      %ul.dropdown-menu{style: "overflow-y:scroll; max-height:400px;"}
         - Manufacturer.joins(:assets).where(assets: {organization_id: @organization_list}).distinct.each do | manufacturer |
           %li.text-left
             = link_to inventory_index_path(:manufacturer_id => manufacturer) do
