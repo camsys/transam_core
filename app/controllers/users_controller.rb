@@ -358,7 +358,7 @@ class UsersController < OrganizationAwareController
   # Callbacks to share common setup or constraints between actions.
   #-----------------------------------------------------------------------------
   def set_user
-    @user = User.find_by_object_key(params[:id], :organization_id => @organization_list)
+    @user = User.find_by(:object_key => params[:id], :organization_id => @organization_list)
     if @user.nil?
       if User.find_by(:object_key => params[:id], :organization_id => current_user.user_organization_filters.system_filters.first.get_organizations.map{|x| x.id}).nil?
         redirect_to '/404'
