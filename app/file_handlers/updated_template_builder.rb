@@ -44,7 +44,12 @@ class UpdatedTemplateBuilder
 
         unless @data_validations[i].empty?
           column_letter = convert_index_to_letter(idx)
-          sheet.add_data_validation("#{column_letter}3:#{column_letter}1000", @data_validations[i])
+          if @default_values[i].present?
+            sheet.add_data_validation("#{column_letter}3", @data_validations[i].merge({:allowBlank => false}))
+            sheet.add_data_validation("#{column_letter}4:#{column_letter}1000", @data_validations[i])
+          else
+            sheet.add_data_validation("#{column_letter}3:#{column_letter}1000", @data_validations[i])
+          end
         end
         idx+=1
       end
