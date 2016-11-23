@@ -17,11 +17,10 @@ class BootstrapBreadcrumbsBuilder < BreadcrumbsOnRails::Breadcrumbs::Builder
     regular_elements = @elements.dup
     active_element = regular_elements.pop #|| raise(NoBreadcrumbsPassed)
 
-    @context.content_tag(:ol, class: 'breadcrumb') do
-      regular_elements.collect do |element|
-        render_regular_element(element)
-      end.join.html_safe + render_active_element(active_element).html_safe
-    end
+    regular_elements.collect do |element|
+      render_regular_element(element)
+    end.join.html_safe + render_active_element(active_element).html_safe
+
   end
 
   def render_regular_element(element)

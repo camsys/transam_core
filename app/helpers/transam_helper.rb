@@ -41,6 +41,10 @@ module TransamHelper
     return credit.html_safe
   end
 
+  def html_help_path
+    '/TransamUserGuide.htm'
+  end
+
   # Returns the correct FontAwesomne icon for a file type based on the
   # file extension
   def get_file_icon_for_filename(filename)

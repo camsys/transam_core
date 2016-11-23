@@ -2,9 +2,17 @@
   - if @row_number.to_i > 0
     .row
       .col-lg-10.col-md-9.col-sm-8.col.col-xs-12
-        = render_breadcrumbs :builder => ::BootstrapBreadcrumbsBuilder, :separator => "&raquo;"
+        %ol.breadcrumb
+          = render_breadcrumbs :builder => ::BootstrapBreadcrumbsBuilder, :separator => "&raquo;"
+          %div{style: 'font-size:18px; float:right;'}
+            = link_to "#{html_help_path}##{params[:controller]}__#{params[:action]}" do
+              %i.fa.fa-question.fa-fw
       .col-lg-2.col-md-3.col-sm-4.col.col-xs-12
         #row_pager
           = render 'shared/row_pager'
   - else
-    = render_breadcrumbs :builder => ::BootstrapBreadcrumbsBuilder, :separator => "&raquo;"
+    %ol.breadcrumb
+      = render_breadcrumbs :builder => ::BootstrapBreadcrumbsBuilder, :separator => "&raquo;"
+      %div{style: 'font-size:18px; float:right;'}
+        = link_to "#{html_help_path}##{params[:controller]}__#{params[:action]}" do
+          %i.fa.fa-question.fa-fw
