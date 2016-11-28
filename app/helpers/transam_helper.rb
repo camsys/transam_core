@@ -42,7 +42,7 @@ module TransamHelper
   end
 
   def html_help_path
-    '/TransamUserGuide.htm'
+    'user_guide/TransAMUserGuide.html'
   end
 
   # Returns the correct FontAwesomne icon for a file type based on the
