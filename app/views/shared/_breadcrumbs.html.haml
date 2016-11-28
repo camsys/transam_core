@@ -5,8 +5,12 @@
         %ol.breadcrumb
           = render_breadcrumbs :builder => ::BootstrapBreadcrumbsBuilder, :separator => "&raquo;"
           %div{style: 'font-size:18px; float:right;'}
-            = link_to "#{html_help_path}##{params[:controller]}__#{params[:action]}" do
-              %i.fa.fa-question.fa-fw
+            - if File.exists?("#{Rails.root}/public/user_guide/#{params[:controller]}__#{params[:action]}.html")
+              = link_to "#{html_help_path}##{params[:controller]}__#{params[:action]}" do
+                %i.fa.fa-question.fa-fw
+            - else
+              = link_to "#{html_help_path}##{params[:controller]}" do
+                %i.fa.fa-question.fa-fw
       .col-lg-2.col-md-3.col-sm-4.col.col-xs-12
         #row_pager
           = render 'shared/row_pager'
@@ -14,5 +18,9 @@
     %ol.breadcrumb
       = render_breadcrumbs :builder => ::BootstrapBreadcrumbsBuilder, :separator => "&raquo;"
       %div{style: 'font-size:18px; float:right;'}
-        = link_to "#{html_help_path}##{params[:controller]}__#{params[:action]}" do
-          %i.fa.fa-question.fa-fw
+        - if File.exists?("#{Rails.root}/public/user_guide/#{params[:controller]}__#{params[:action]}.html")
+          = link_to "#{html_help_path}##{params[:controller]}__#{params[:action]}" do
+            %i.fa.fa-question.fa-fw
+        - else
+          = link_to "#{html_help_path}##{params[:controller]}" do
+            %i.fa.fa-question.fa-fw
