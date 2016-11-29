@@ -30,19 +30,3 @@
   = link_to user_path(current_user)  do
     %i.fa.fa-user.fa-fw
     My settings
-- if can? :read, ActivityLog
-  %li.divider.text-left
-  %li.text-left
-    = link_to activity_logs_path  do
-      %i.fa.fa-clock-o.fa-fw
-      Activity Log
-%li.divider.text-left
-%li.text-left
-  = link_to new_issue_path  do
-    %i.fa.fa-bug.fa-fw
-    Report an issue
-%li.divider.text-left
-%li.text-left
-  = link_to html_help_path do
-    %i.fa.fa-question.fa-fw
-    Help

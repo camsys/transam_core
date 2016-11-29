@@ -12,6 +12,7 @@ class UsersController < OrganizationAwareController
   #-----------------------------------------------------------------------------
   before_action :set_user, :only => [:show, :edit, :settings, :update, :destroy, :change_password, :update_password, :profile_photo, :reset_password]
   before_filter :check_for_cancel, :only => [:create, :update, :update_password]
+  before_action :check_filter,     :only => [:edit]
 
   #-----------------------------------------------------------------------------
   INDEX_KEY_LIST_VAR    = "user_key_list_cache_var"
