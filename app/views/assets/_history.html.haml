@@ -19,7 +19,7 @@
       %thead
         %tr
           %th{:data => {:sortable => 'true'}} Event
-          %th{:data => {:sortable => 'true', :formatter => 'date_formatter'}} Date
+          %th{:data => {:sortable => 'true'}} Date
           %th Update
           %th Notes
       %tbody
@@ -63,13 +63,11 @@
             %td
               = evt[:description]
             %td
-              = evt[:event_date]
+              = format_as_date(evt[:event_date])
             %td
               = evt[:update]
             %td
               = evt[:comments].html_safe
-
-= render 'shared/table_formatters'
 
 :javascript
   $(window).resize(function() {
