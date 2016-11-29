@@ -28,7 +28,7 @@
         %td= s
         %td= user.name unless user.blank?
         %td= @sessions[s][:ip_addr]
-        %td= user.organization.short_name unless user.blank?
+        %td= user.organization.to_s unless user.blank?
         %td= format_as_date_time(@sessions[s][:start_time])
         %td= format_as_date_time(@sessions[s][:expire_time])
         %td= format_as_time_difference((Time.now - @sessions[s][:start_time]).to_i) unless @sessions[s][:start_time].blank?

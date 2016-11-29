@@ -12,7 +12,7 @@
       %tbody
         - @policies.each do |p|
           %tr{"data-action-path" => policy_path(p)}
-            %td= p.organization.name
+            %td= p.organization.to_s
             %td= p.name
             %td= p.year
             %td.center= format_as_boolean(p.active)

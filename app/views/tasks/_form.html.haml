@@ -10,7 +10,7 @@
 
   .row
     .col-md-3
-      = f.association :assigned_to_user, :collection => Organization.where(id: @organization_list), :as => :grouped_select, :group_method => :users, :label => "Assigned To", :selected => f.object.assigned_to_user_id || User.find_by(object_key: params[:user_id]).try(:id)
+      = f.association :assigned_to_user, :collection => Organization.where(id: @organization_list), :as => :grouped_select, :group_method => :users, :group_label_method => 'coded_name', :label => "Assigned To", :selected => f.object.assigned_to_user_id || User.find_by(object_key: params[:user_id]).try(:id)
     .col-md-3
       = f.input :complete_by, :wrapper => :vertical_append, :label => "Complete By" do
         = f.input_field :complete_by, :as => :string, :class => 'datepicker form-control', :data => {'behavior' => 'datepicker'}, :value => format_as_date(f.object.complete_by)

@@ -128,7 +128,7 @@
                 %li.dropdown-menu-stay-open
                   %label.checkbox
                     = check_box_tag 'org[]', org.id, @organization_list.include?(org.id)
-                    = org.short_name
+                    = org.to_s
               - if (can? :update, current_user.user_organization_filter) && (current_user.user_organization_filter.can_update? current_user)
                 %li.divider
                 %li

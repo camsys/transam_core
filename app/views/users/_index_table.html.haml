@@ -46,7 +46,7 @@
       %tr{ :class => 'action-path' }
         %td= u.object_key
         %td= u.external_id
-        %td= link_to( u.organization.short_name, organization_path(u.organization.short_name))
+        %td= link_to( u.organization.to_s, organization_path(u.organization.short_name))
         %td= u.title
         %td= link_to u.first_name, user_path(u)
         %td= u.last_name

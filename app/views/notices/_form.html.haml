@@ -13,7 +13,7 @@
         = f.input :subject
         = f.input :summary
         = f.input :details, :as => :text, :input_html => {:rows => 3}
-        = f.association :organization, :collection => Organization.where(id: @organization_list), :include_blank => "All"
+        = f.association :organization, :collection => Organization.where(id: @organization_list), :label_method => 'coded_name', :include_blank => "All"
         .row
           .col-sm-9
             .form-group

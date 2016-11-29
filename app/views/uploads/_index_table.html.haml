@@ -37,7 +37,7 @@
     - @uploads.each do |f|
       %tr{:id => f.object_key, :class => 'action-path'}
         %td.left= f.object_key
-        %td.left= f.organization.present? ? f.organization.short_name : 'Multi Org'
+        %td.left= f.organization.present? ? f.organization.to_s : 'Multi Org'
         %td.left= f.original_filename
         %td.left= f.file_content_type
         %td.left= f.user.name

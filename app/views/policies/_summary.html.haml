@@ -1,5 +1,5 @@
 .col-sm-6
-  = format_field("Policy Owner", @policy.organization.name )
+  = format_field("Policy Owner", @policy.organization )
   = format_field("Description", @policy.description )
   = format_field("Parent Policy", link_to(@policy.parent.name, policy_path(@policy.parent)) ) unless @policy.parent.blank?
   = format_field("Current", format_as_boolean(@policy.active) )
