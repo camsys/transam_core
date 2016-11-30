@@ -53,14 +53,19 @@
     $("#notificationContainer").hide();
 
     $("#notificationLink").click(function() {
-      $("#notificationContainer").fadeToggle(300);
-      getNotifications();
+      if($('#notificationContainer').is(':visible')) {
+        $("#notificationContainer").hide();
+      } else {
+        $('body').click();
+        $("#notificationContainer").fadeToggle(300);
+        getNotifications();
+      }
       //$("#notification_count").fadeOut("slow");
       return false;
     });
 
     //Document Click
-    $(document).click(function() {
+    $('body').click(function() {
       $("#notificationContainer").hide();
     });
 
