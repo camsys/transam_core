@@ -49,7 +49,7 @@
             %i.fa.fa-tags.fa-fw
             Manage Groups
       - event_type = EarlyDispositionRequestUpdateEvent.asset_event_type
-      - can_view_early_disposition = event_type.active and can?(:manage, EarlyDispositionRequestUpdateEvent)
+      - can_view_early_disposition = (event_type.active and can?(:manage, EarlyDispositionRequestUpdateEvent))
       - if can_view_early_disposition || can?(:accept_transfers, Asset)
         - early_events = Asset.where(organization_id: @organization_list).joins(:early_disposition_requests).where(asset_events: {state: 'new'}).count
         - transferred_assets = Asset.where(organization_id: @organization_list).where('asset_tag = object_key').count
