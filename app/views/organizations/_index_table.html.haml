@@ -35,11 +35,11 @@
       %th.left{:data => {:sortable => 'true'}} Web Site
   %tbody
     - organizations.each do |o|
-      %tr{ :class => 'action-path' }
+      %tr{ :id => o.short_name, :class => 'action-path' }
         %td= o.id
         %td= o.external_id
         %td= o.organization_type
-        %td= link_to( "#{o.short_name}", organization_path(o.short_name))
+        %td= o.short_name
         %td= o.name
         %td= format_as_address(o)
         %td= o.address1

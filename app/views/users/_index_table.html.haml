@@ -43,12 +43,12 @@
 
   %tbody
     - @users.each do |u|
-      %tr{ :class => 'action-path' }
+      %tr{ :id => u.object_key, :class => 'action-path' }
         %td= u.object_key
         %td= u.external_id
         %td= link_to( u.organization.to_s, organization_path(u.organization.short_name))
         %td= u.title
-        %td= link_to u.first_name, user_path(u)
+        %td= u.first_name
         %td= u.last_name
         %td= u.email
         %td= format_as_phone_number(u.phone)
