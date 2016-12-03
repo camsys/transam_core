@@ -13,7 +13,7 @@ describe "notices/_index_table.html.haml", :type => :view do
     expect(rendered).to have_xpath('//a[@title="Remove this notice"]')
     expect(rendered).to have_content(test_notice.object_key)
     expect(rendered).to have_content(test_notice.notice_type.to_s)
-    expect(rendered).to have_link(test_notice.subject)
+    expect(rendered).to have_content(test_notice.subject)
     expect(rendered).to have_content(test_notice.summary)
   end
 end

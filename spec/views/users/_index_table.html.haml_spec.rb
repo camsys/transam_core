@@ -8,7 +8,7 @@ describe "users/_index_table.html.haml", :type => :view do
     render
 
     expect(rendered).to have_content(test_user.object_key)
-    expect(rendered).to have_link(test_user.first_name)
+    expect(rendered).to have_content(test_user.first_name)
     expect(rendered).to have_content(test_user.last_name)
   end
 end
