@@ -362,7 +362,7 @@ class PoliciesController < OrganizationAwareController
   end
 
   def get_policy
-    @policy = Policy.find_by(:object_key => params[:id], :organization_id => @organization_list) unless params[:id].nil?
+    @policy = Policy.find_by(:object_key => params[:id], :organization_id => (@organization_list + (defined?(Grantor).present? ? Grantor.ids : [])).uniq) unless params[:id].nil?
     if @policy.nil?
       if Policy.find_by(:object_key => params[:id], :organization_id => current_user.user_organization_filters.system_filters.first.get_organizations.map{|x| x.id}).nil?
         redirect_to '/404'
