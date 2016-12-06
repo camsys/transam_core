@@ -17,6 +17,7 @@ def create_user(email, org_short_name)
   user.organizations << o
   user.save!
 
+  user.add_role :user
   user.add_role :admin
 end
 
