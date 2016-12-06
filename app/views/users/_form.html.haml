@@ -3,6 +3,7 @@
   assignable_roles = Role.roles.map{ |r| [r.label, r.id] if can? :assign, r }.compact
   assignable_privileges = Role.privileges.where('resource_id IS NULL').map{ |r| [r.label, r.id] if can? :assign, r }.compact
   assignable_super_privileges = Role.privileges.where('resource_id IS NOT NULL').map{ |r| [r.id, r.label, r.resource_id] if can? :assign, r }.compact
+  can_assign_roles = ((can? :assign, Role.find_by(name: 'user')) && @user != current_user)
 
 = simple_form_for(@user,
   :html => {:class => 'form-vertical user_profile_form'},
@@ -12,7 +13,7 @@
   :file => :vertical_file_input,
   :boolean => :vertical_boolean}) do |f|
 
-  - if @organization_list.count > 1
+  - if @organization_list.count > 1 && can_assign_roles
     %fieldset
       %legend User Organizations
       .row
@@ -42,7 +43,7 @@
       .col-lg-6.col-md-6.col-sm-6.col-xs-12
         = f.input :external_id, :placeholder => "User's ID number...", :label => "ID Number"
 
-    - if can? :assign, Role.find_by(name: 'user')
+    - if can_assign_roles
       %fieldset
         %legend Roles & Prvileges
 
