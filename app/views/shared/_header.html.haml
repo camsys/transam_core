@@ -1,3 +1,5 @@
+= render 'shared/header_nowrap_script'
+
 %nav.navbar.navbar-fixed-top.navbar-inverse{:role => 'navigation', :style => 'z-index:1033'}
   .container-fluid
     .navbar-header
@@ -11,7 +13,9 @@
 
     = render 'shared/main_nav'
 
-    .collapse.navbar-collapse.navbar-collapse
+    .collapse.navbar-collapse
+      %script
+        $('.navbar-fixed-top div.navbar-collapse').addClass('hide-during-load');
       %ul.nav.navbar-nav.pull-right
         %li.dropdown
           = link_to "#", :class => 'dropdown-toggle', :data => {:toggle => 'dropdown'} do

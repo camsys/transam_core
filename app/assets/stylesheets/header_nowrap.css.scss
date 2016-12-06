@@ -1,0 +1,28 @@
+.hide-during-load {
+  position: absolute !important;
+  margin-top: -340px !important;
+
+  div.pull-right {
+    width: auto !important;
+
+    .navbar-form {
+      margin-left: -5px !important;
+      margin-right: -5px !important;
+    }
+  }
+}
+
+.navbar-fixed-top .collapse {
+  ul.pull-right > li > a {
+    padding-top: 15px;
+  }
+
+  div.pull-right .navbar-form {
+    padding-top: 5px;
+  }
+}
+
+button.navbar-toggle {
+  margin-top: 8px;
+  margin-bottom: 7px;
+}
