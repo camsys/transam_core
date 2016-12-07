@@ -1,3 +1,5 @@
+= render 'shared/header_nowrap_script'
+
 %nav.navbar.navbar-fixed-top.navbar-inverse{:role => 'navigation', :style => 'z-index:1033'}
   .container-fluid
     .navbar-header
@@ -11,7 +13,9 @@
 
     = render 'shared/main_nav'
 
-    .collapse.navbar-collapse.navbar-collapse
+    .collapse.navbar-collapse
+      :javascript
+        $('.navbar-fixed-top div.navbar-collapse').addClass('hide-during-load');
       %ul.nav.navbar-nav.pull-right
         %li.dropdown
           = link_to "#", :class => 'dropdown-toggle', :data => {:toggle => 'dropdown'} do
@@ -37,3 +41,7 @@
             .input-group-btn
               = button_tag :type => 'submit', :class => 'btn' do
                 %i.fa.fa-search
+
+#wait-for-fa-wrapper
+  #wait-for-fa-content
+    %i.fa.fa-home.fa-lg
