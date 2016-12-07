@@ -14,11 +14,9 @@ describe "shared/_header.html.haml", :type => :view do
 
     render
 
-    puts(page.body)
-
-    # expect(rendered).to have_link(test_user.name)
-    # expect(rendered).to have_link('Logout')
-    # expect(rendered).to have_link(test_filter.to_s)
-    # expect(rendered).to have_field('search_text')
+    expect(rendered).to have_link(test_user.name)
+    expect(rendered).to have_link('Logout')
+    expect(rendered).to have_link(test_filter.to_s)
+    expect(rendered).to have_field('search_text')
   end
 end
