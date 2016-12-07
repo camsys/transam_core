@@ -14,7 +14,7 @@
     = render 'shared/main_nav'
 
     .collapse.navbar-collapse
-      %script
+      :javascript
         $('.navbar-fixed-top div.navbar-collapse').addClass('hide-during-load');
       %ul.nav.navbar-nav.pull-right
         %li.dropdown
@@ -41,3 +41,7 @@
             .input-group-btn
               = button_tag :type => 'submit', :class => 'btn' do
                 %i.fa.fa-search
+
+#wait-for-fa-wrapper
+  #wait-for-fa-content
+    %i.fa.fa-home.fa-lg

@@ -26,3 +26,14 @@ button.navbar-toggle {
   margin-top: 8px;
   margin-bottom: 7px;
 }
+
+#wait-for-fa-wrapper {
+  visibility: hidden;
+  position: absolute;
+  overflow: hidden;
+}
+
+#wait-for-fa-content {
+  position: relative;
+  white-space: nowrap;
+}

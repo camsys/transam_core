@@ -1,5 +1,5 @@
 %ul.nav.navbar-nav.collapse.navbar-collapse
-  %script
+  :javascript
     $('.navbar-fixed-top ul.navbar-collapse').addClass('hide-during-load');
   %li{:class => get_nav_link_class('dashboards') }
     = link_to dashboards_path, title: 'Home' do

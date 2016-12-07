@@ -1,68 +1,75 @@
 :javascript
   $(document).ready(function() {
-    // Finds width where header would wrap
-    // Adds media query breakpoint at that width to collapse header
+    // First waits for the Font Awesome icons to load
+    // Needed to calculate widths correctly in Safari
 
-    // Start with 15px to deal with a potential vertical scroll bar
-    var bp = 15;
-    console.log(bp);
+    var wrapper = $("#wait-for-fa-wrapper")[0];
+    var content = $("#wait-for-fa-content")[0];
+    var origWidth = content.offsetWidth;
 
-    // Add the brand name (which adds the left padding as well)
-    // Add 1px per width because jQuery rounds down non-integer results
-    bp += parseFloat($('.navbar-brand').css('width')) + 1
-    console.log(bp);
+    wrapper.style.width = (origWidth - 1) + "px";
+    wrapper.scrollLeft = wrapper.scrollWidth - wrapper.clientWidth;
 
-    // Add the right padding
-    bp += parseFloat($('.navbar-fixed-top .container-fluid').css('padding-right'));
-    console.log(bp);
+    wrapper.addEventListener("scroll", function () {
+      // Finds width where header would wrap
+      // Adds media query breakpoint at that width to collapse header
 
-    // Header might start collapsed
-    // So temporarily uncollapse the header to compute element widths
-    // Also float the left elements so they don't take up the full width
-    // Also force search box to take its short form
-    $('.navbar-fixed-top .collapse').addClass('in');
-    $('.navbar-fixed-top .collapse.nav:not(.pull-right) > li').css('float', 'left');
-    $('.navbar-form .input-group .input-group-btn').css('width', 'auto');
+      // Start with 15px to deal with a potential vertical scroll bar
+      var bp = 15;
 
-    // Add all right elements on the collapsible part of the header
-    // Add 1px per width because jQuery rounds down non-integer results
-    $('.navbar-fixed-top .collapse .pull-right').each(function() {
-      bp += parseFloat($(this).css('width')) + 1;
-      console.log(bp);
-    });
+      // Add the brand name (which adds the left padding as well)
+      // Add 1px per width because jQuery rounds down non-integer results
+      bp += parseFloat($('.navbar-brand').css('width')) + 1;
 
-    // Add all left elements on the collapsible part of the header
-    // Add 1px per width because jQuery rounds down non-integer results
-    $('.navbar-fixed-top .collapse.nav:not(.pull-right) > li').each(function() {
-      bp += parseFloat($(this).css('width')) + 1;
-      console.log(bp);
-    });
+      // Add the right padding
+      bp += parseFloat($('.navbar-fixed-top .container-fluid').css('padding-right'));
 
-    // Only set up new collapse if it would happen before the default
-    if (bp > 767) {
-      // Add style element to contain the new collapse media query
-      $('.navbar-fixed-top').prepend('<style></style>');
+      // Header might start collapsed
+      // So temporarily uncollapse the header to compute element widths
+      // Also float the left elements so they don't take up the full width
+      // Also force search box to take its short form
+      $('.navbar-fixed-top .collapse').addClass('in');
+      $('.navbar-fixed-top .collapse.nav:not(.pull-right) > li').css('float', 'left');
+      $('.navbar-form .input-group .input-group-btn').css('width', 'auto');
 
-      // Define the new collapse media query
-      // Attempts to replicate the default collapse behavior
-      // Also adds a little to the default collapse media query
-      // Does this to set padding-top back to 10px for a few right elements
-      var mq = '@media (max-width: ' + bp.toString() + 'px) and (min-width: 767.001px) { button.navbar-toggle { display: block; } .navbar-header { float: none; } .navbar > .container .navbar-brand, .navbar > .container-fluid .navbar-brand { margin-left: 0px; } .container > .navbar-header, .container > .navbar-collapse, .container-fluid > .navbar-header, .container-fluid > .navbar-collapse { margin-right: -5px; margin-left: -5px; } .navbar-collapse.collapse { display: none !important; overflow-x: visible !important; overflow-y: auto !important; } .navbar-collapse.collapse.in { display: block !important; overflow-x: visible !important; overflow-y: auto !important; } .navbar-fixed-top .navbar-collapse { padding-right: 5px; padding-left: 5px; border-top: 1px solid transparent; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1); -webkit-overflow-scrolling: touch; } .navbar-nav { float: none; margin: 5px -5px; } .navbar-nav > li { float: none; } .navbar-nav .open .dropdown-menu > li > a { line-height: 20px; } .navbar-nav .open .dropdown-menu > li > a, .navbar-nav .open .dropdown-menu .dropdown-header { padding: 5px 15px 5px 25px; } .navbar-nav .open .dropdown-menu { position: static; float: none; width: auto; margin-top: 0; background-color: transparent; border: 0; box-shadow: none; } .navbar-inverse .navbar-nav .open .dropdown-menu > li > a { color: #a7a7a7; } .navbar-inverse .navbar-nav .open .dropdown-menu .divider { background-color: #0e2744; } .navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form { border-color: #112f50; } .navbar-form { margin-left: -5px; margin-right: -5px; padding: 10px 5px; border-top: 1px solid transparent; border-bottom: 1px solid transparent; -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(255, 255, 255, 0.1); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(255, 255, 255, 0.1); margin-top: 5px; margin-bottom: 5px; } .navbar-form .input-group .input-group-btn { width: 1%; } .form-inline .input-group > .form-control, .navbar-form .input-group > .form-control { width: 100%; } .navbar-fixed-top div.navbar-collapse .col-sm-2 { width: 100%; } .navbar-fixed-top .collapse ul.pull-right > li > a { padding-top: 10px; } .navbar-fixed-top .collapse div.pull-right .navbar-form { padding-top: 10px; } } @media (max-width: 767px) { .navbar-fixed-top .collapse ul.pull-right > li > a { padding-top: 10px; } .navbar-fixed-top .collapse div.pull-right .navbar-form { padding-top: 10px; } }';
+      // Add all right elements on the collapsible part of the header
+      // Add 1px per width because jQuery rounds down non-integer results
+      $('.navbar-fixed-top .collapse .pull-right').each(function() {
+        bp += parseFloat($(this).css('width')) + 1;
+      });
 
-      // Add the new collapse media query
-      $('.navbar-fixed-top > style').append(mq);
-    }
+      // Add all left elements on the collapsible part of the header
+      // Add 1px per width because jQuery rounds down non-integer results
+      $('.navbar-fixed-top .collapse.nav:not(.pull-right) > li').each(function() {
+        bp += parseFloat($(this).css('width')) + 1;
+      });
 
-    // Recollapse header
-    // Unfloat left elements
-    // Unshorten search box
-    $('.navbar-fixed-top .collapse').removeClass('in');
-    $('.navbar-fixed-top .collapse.nav:not(.pull-right) > li').css('float', '');
-    $('.navbar-form .input-group .input-group-btn').css('width', '');
+      // Only set up new collapse if it would happen before the default
+      if (bp > 767) {
+        // Add style element to contain the new collapse media query
+        $('.navbar-fixed-top').prepend('<style></style>');
 
-    // Remove class added to stop momentary wraps during load
-    // This class does cause a tiny header text flicker on load, however
-    // Can be removed from the header view if momentary wrap is prefered
-    // (I have not found a way to prevent both)
-    $('.hide-during-load').removeClass('hide-during-load');
+        // Define the new collapse media query
+        // Attempts to replicate the default collapse behavior
+        // Also adds a little to the default collapse media query
+        // Does this to set padding-top back to 10px for a few right elements
+        var mq = '@media (max-width: ' + bp.toString() + 'px) and (min-width: 767.001px) { button.navbar-toggle { display: block; } .navbar-header { float: none; } .navbar > .container .navbar-brand, .navbar > .container-fluid .navbar-brand { margin-left: 0px; } .container > .navbar-header, .container > .navbar-collapse, .container-fluid > .navbar-header, .container-fluid > .navbar-collapse { margin-right: -5px; margin-left: -5px; } .navbar-collapse.collapse { display: none !important; overflow-x: visible !important; overflow-y: auto !important; } .navbar-collapse.collapse.in { display: block !important; overflow-x: visible !important; overflow-y: auto !important; } .navbar-fixed-top .navbar-collapse { padding-right: 5px; padding-left: 5px; border-top: 1px solid transparent; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1); -webkit-overflow-scrolling: touch; } .navbar-nav { float: none; margin: 5px -5px; } .navbar-nav > li { float: none; } .navbar-nav .open .dropdown-menu > li > a { line-height: 20px; } .navbar-nav .open .dropdown-menu > li > a, .navbar-nav .open .dropdown-menu .dropdown-header { padding: 5px 15px 5px 25px; } .navbar-nav .open .dropdown-menu { position: static; float: none; width: auto; margin-top: 0; background-color: transparent; border: 0; box-shadow: none; } .navbar-inverse .navbar-nav .open .dropdown-menu > li > a { color: #a7a7a7; } .navbar-inverse .navbar-nav .open .dropdown-menu .divider { background-color: #0e2744; } .navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form { border-color: #112f50; } .navbar-form { margin-left: -5px; margin-right: -5px; padding: 10px 5px; border-top: 1px solid transparent; border-bottom: 1px solid transparent; -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(255, 255, 255, 0.1); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(255, 255, 255, 0.1); margin-top: 5px; margin-bottom: 5px; } .navbar-form .input-group .input-group-btn { width: 1%; } .form-inline .input-group > .form-control, .navbar-form .input-group > .form-control { width: 100%; } .navbar-fixed-top div.navbar-collapse .col-sm-2 { width: 100%; } .navbar-fixed-top .collapse ul.pull-right > li > a { padding-top: 10px; } .navbar-fixed-top .collapse div.pull-right .navbar-form { padding-top: 10px; } } @media (max-width: 767px) { .navbar-fixed-top .collapse ul.pull-right > li > a { padding-top: 10px; } .navbar-fixed-top .collapse div.pull-right .navbar-form { padding-top: 10px; } }';
+
+        // Add the new collapse media query
+        $('.navbar-fixed-top > style').append(mq);
+      }
+
+      // Recollapse header
+      // Unfloat left elements
+      // Unshorten search box
+      $('.navbar-fixed-top .collapse').removeClass('in');
+      $('.navbar-fixed-top .collapse.nav:not(.pull-right) > li').css('float', '');
+      $('.navbar-form .input-group .input-group-btn').css('width', '');
+
+      // Remove class added to stop momentary wraps during load
+      // This class does cause a tiny header text flicker on load, however
+      // Can be removed from the header view if momentary wrap is prefered
+      // (I have not found a way to prevent both)
+      $('.hide-during-load').removeClass('hide-during-load');
+    }, false);
   });
