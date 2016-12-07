@@ -4,7 +4,9 @@ module Abilities
 
     def initialize(user)
 
-      can :assign, Role
+      can :assign, Role do |r|
+        r.name != "admin"
+      end
 
     end
   end
