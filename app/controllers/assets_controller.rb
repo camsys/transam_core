@@ -192,9 +192,10 @@ class AssetsController < AssetAwareController
     add_breadcrumb @asset.name, inventory_path(@asset)
     add_breadcrumb "Modify", edit_inventory_path(@asset)
 
-    # tranferred assets need to remove notification if exists
+    # transfered assets need to remove notification if exists
     if @asset.asset_tag == @asset.object_key
-      Notification.where(notifiable_type: 'Asset', notifiable_id: @asset.id).first.update(active:false)
+      notification = Notification.where("text = 'A new asset has been transferred to you. Please update the asset.' AND link LIKE ?" , "%#{@asset.object_key}%").first
+      notification.update(active: false) if notification.present?
     end
 
     respond_to do |format|
