@@ -45,7 +45,7 @@ class UserRoleService
         # Its the role they are assigned
         assign_role user, role, manager
 
-      elsif privilege_ids.include? role.id.to_s
+      elsif privilege_ids.present? && privilege_ids.include?(role.id.to_s)
         # Its a privilege they should be assigned
         assign_role user, role, manager
 
