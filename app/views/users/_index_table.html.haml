@@ -30,9 +30,9 @@
       %th.left{:data => {:visible => 'false', :sortable => 'true'}} Timezone
       %th.center{:data => {:visible => 'false', :sortable => 'true'}} Send Emails
       %th.right{:data => {:visible => 'false', :sortable => 'true'}} Table Rows
+      %th.left{:data => {:sortable => 'true'}} Role
+      %th.left{:data => {:sortable => 'true'}} Privileges
       - if current_user.has_role? :admin
-        %th.left{:data => {:sortable => 'true'}} Role
-        %th.left{:data => {:sortable => 'true'}} Privileges
         %th.right{:data => {:sortable => 'true'}} Num Logins
         %th.right{:data => {:sortable => 'true'}} Last Login
         %th.left.nowrap{:data => {:visible => 'false', :sortable => 'true'}} Last Login IP
@@ -56,9 +56,9 @@
         %td= u.timezone
         %td= format_as_boolean(u.notify_via_email)
         %td= format_as_integer(u.num_table_rows)
+        %td= u.roles.roles.last.label
+        %td= format_as_list(u.roles.privileges.collect{|x| x.label})
         - if current_user.has_role? :admin
-          %td= u.roles.roles.last.label
-          %td= format_as_list(u.roles.privileges.collect{|x| x.label})
           %td= format_as_integer(u.sign_in_count)
           %td= format_as_date_time(u.last_sign_in_at)
           %td= u.last_sign_in_ip
