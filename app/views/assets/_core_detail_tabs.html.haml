@@ -1,3 +1,12 @@
+:css
+  %a {
+    white-space: nowrap;
+  }
+  %span.badge.pull-right{
+    margin-left: 35px;
+    white-space: nowrap;
+  }
+
 %li
   %a{:href => "#conf", :data =>{:toggle => 'tab'}}
     Configuration
@@ -6,29 +15,35 @@
     Purchase
 %li
   %a{:href => "#hist", :data =>{:toggle => 'tab'}}
-    %span.badge.pull-right= @asset.asset_events.count
-    = "History"
+    %span{:style => 'white-space: nowrap !important;'}
+      History
+      %span.badge= @asset.asset_events.count
 - if @asset.dependents.present?
   %li
     %a{:href => "#depd", :data =>{:toggle => 'tab'}}
-      %span.badge.pull-right= @asset.dependents.count
-      Dependents
+      %span{:style => 'white-space: nowrap !important;'}
+        Dependents
+        %span.badge= @asset.dependents.count
 %li
   %a{:href => "#task", :data =>{:toggle => 'tab'}}
-    %span.badge.pull-right= @asset.tasks.count
-    Tasks
+    %span{:style => 'white-space: nowrap !important;'}
+      Tasks
+      %span.badge= @asset.tasks.count
 %li
   %a{:href => "#comm", :data =>{:toggle => 'tab'}}
-    %span.badge.pull-right= @asset.comments.count
-    = "Comments"
+    %span{:style => 'white-space: nowrap !important;'}
+      = "Comments"
+      %span.badge= @asset.comments.count
 %li
   %a{:href => "#docs", :data =>{:toggle => 'tab'}}
-    %span.badge.pull-right= @asset.documents.count
-    = "Documents"
+    %span{:style => 'white-space: nowrap !important;'}
+      = "Documents"
+      %span.badge= @asset.documents.count
 %li
   %a{:href => "#imag", :data =>{:toggle => 'tab'}}
-    %span.badge.pull-right= @asset.images.count
-    = "Photos"
+    %span{:style => 'white-space: nowrap !important;'}
+      = "Photos"
+      %span.badge= @asset.images.count
 %li
   %a{:href => "#chrt", :data =>{:toggle => 'tab'}}
     Charts
