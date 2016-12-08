@@ -24,6 +24,9 @@
         - if File.exists?("#{Rails.root}/public/user_guide/#{params[:controller]}__#{params[:action]}.html")
           = link_to "#{html_help_path}##{params[:controller]}__#{params[:action]}", :target => "_blank" do
             %i.fa.fa-question.fa-fw
-        - else
+        - elsif File.exists?("#{Rails.root}/public/user_guide/#{params[:controller]}.html")
           = link_to "#{html_help_path}##{params[:controller]}", :target => "_blank" do
+            %i.fa.fa-question.fa-fw
+        - else
+          = link_to "#{html_help_path}", :target => "_blank" do
             %i.fa.fa-question.fa-fw
