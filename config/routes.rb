@@ -146,6 +146,7 @@ Rails.application.routes.draw do
       get   'change_password'
       patch 'update_password'
       get   'profile_photo'
+      get 'authorizations'
     end
 
     resources :images

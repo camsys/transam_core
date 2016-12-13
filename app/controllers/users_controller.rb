@@ -3,16 +3,16 @@ class UsersController < OrganizationAwareController
   #-----------------------------------------------------------------------------
   # Protect controller methods using the cancan ability
   #-----------------------------------------------------------------------------
-  authorize_resource
+  authorize_resource :user
 
   #-----------------------------------------------------------------------------
   add_breadcrumb "Home",  :root_path
   add_breadcrumb "Users", :users_path
 
   #-----------------------------------------------------------------------------
-  before_action :set_user, :only => [:show, :edit, :settings, :update, :destroy, :change_password, :update_password, :profile_photo, :reset_password]
+  before_action :set_user, :only => [:show, :edit, :settings, :update, :destroy, :change_password, :update_password, :profile_photo, :reset_password, :authorizations]
   before_filter :check_for_cancel, :only => [:create, :update, :update_password]
-  before_action :check_filter,     :only => [:edit]
+  before_action :check_filter,     :only => [:authorizations]
 
   #-----------------------------------------------------------------------------
   INDEX_KEY_LIST_VAR    = "user_key_list_cache_var"
@@ -152,6 +152,11 @@ class UsersController < OrganizationAwareController
     add_user_breadcrumb('Profile')
     add_breadcrumb 'Update'
 
+  end
+
+  def authorizations
+    add_breadcrumb @user, user_path(@user)
+    add_breadcrumb 'Update', authorizations_user_path(@user)
   end
 
   #-----------------------------------------------------------------------------
@@ -361,11 +366,15 @@ class UsersController < OrganizationAwareController
   def set_user
     @user = User.find_by(:object_key => params[:id], :organization_id => @organization_list)
     if @user.nil?
-      if User.find_by(:object_key => params[:id], :organization_id => current_user.user_organization_filters.system_filters.first.get_organizations.map{|x| x.id}).nil?
-        redirect_to '/404'
+      if ActiveRecord::Base.connection.table_exists?(:user_organization_filters)
+        if User.find_by(:object_key => params[:id], :organization_id => current_user.user_organization_filters.system_filters.first.get_organizations.map{|x| x.id}).nil?
+          redirect_to '/404'
+        else
+          notify_user(:warning, 'This record is outside your filter. Change your filter if you want to access it.')
+          redirect_to users_path
+        end
       else
-        notify_user(:warning, 'This record is outside your filter. Change your filter if you want to access it.')
-        redirect_to users_path
+        redirect_to '/404'
       end
       return
     end

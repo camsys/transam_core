@@ -1,0 +1,101 @@
+:ruby
+  role_ids_by_org = OrganizationRoleMapping.role_ids_by_org || {}
+  assignable_roles = Role.roles.map{ |r| [r.label, r.id] if can? :assign, r }.compact
+  assignable_privileges = Role.privileges.where('resource_id IS NULL').map{ |r| [r.label, r.id] if can? :assign, r }.compact
+  assignable_super_privileges = Role.privileges.where('resource_id IS NOT NULL').map{ |r| [r.id, r.label, r.resource_id] if can? :assign, r }.compact
+
+%fieldset
+  %legend User Organizations
+  .row
+    .col-lg-6.col-md-6.col-sm-6.col-xs-12
+      = f.association :organization, :collection => Organization.where(id: @organization_list), :label_method => 'coded_name'
+    .col-lg-6.col-md-6.col-sm-6.col-xs-12
+
+      = f.input :organization_ids, :as => :hidden
+      .form-group.required
+        %label.required.control-label
+          %abbr{title: 'required'} *
+          = " Organizations"
+        #org_select.input-large
+
+%fieldset
+  %legend Roles & Prvileges
+
+  .row
+    .col-lg-6.col-md-6.col-sm-6.col-xs-12
+      = f.input :role_ids, :label => "User Role", :collection => assignable_roles, :required => true
+      = f.collection_check_boxes :privilege_ids, assignable_super_privileges, :first, :second, :item_wrapper_class => 'checkbox' do |b|
+        = b.check_box(:class => 'super-privilege', :data => { resource_id: b.object.third.to_s}) + b.text
+
+    - if assignable_privileges.count > 0
+      .col-lg-6.col-md-6.col-sm-6.col-xs-12
+        = f.input :privilege_ids, :label => "User Privileges", :collection => assignable_privileges, :as => :check_boxes, :input_html => { :multiple => true }
+
+= render 'form_scripts'
+:javascript
+  var role_ids_by_org = JSON.parse('#{role_ids_by_org.to_json}');
+
+  $(document).ready(function() {
+    $('#user_role_ids').change();
+
+    $('btn.selector-clearall').hide();
+
+    var org_id = $('#user_organization_id').val();
+    update_role_list_by_organization(org_id);
+
+    $('#selected_grantees option').attr('disabled', false);
+    $('#selected_grantees option[value="' + org_id + '"]').attr('disabled', true);
+
+  });
+
+  $('#user_role_ids').change(function() {
+    $('.super-privilege').each(function(){
+
+      if(parseInt($(this).data('resource-id')) == parseInt($('#user_role_ids').val())) {
+        $(this).parent().parent().show(); // get span of checkbox
+      } else {
+        $(this).parent().parent().hide();
+      }
+    });
+
+  });
+
+  // Organization change: reset role, borough, and boroughs
+  $('#user_organization_id').on('change', function(e) {
+    var org_id = $(this).val();
+    update_role_list_by_organization(org_id);
+    $('#org_select').data().bootstrapTransfer.move_all(true, false); // clear out all selected values
+    $('#org_select').data().bootstrapTransfer.set_values([org_id])
+
+    $('#selected_grantees option').attr('disabled', false);
+    $('#selected_grantees option[value="' + org_id + '"]').attr('disabled', true);
+
+    $('#user_role_ids').val('');
+  });
+
+  // disable main org after adding to org list
+  // must add event to body because button is a dynamically created object
+  $('body').on('click', 'btn.selector-add', function() {
+    var org_id = $('#user_organization_id').val();
+    $('#selected_grantees option').attr('disabled', false);
+    $('#selected_grantees option[value="' + org_id + '"]').attr('disabled', true);
+  });
+
+  function update_role_list_by_organization(org_id) {
+    if(org_id) {
+      org_id = parseInt(org_id);
+      var role_ids = role_ids_by_org[org_id];
+      //console.log(role_ids);
+      $('#user_role_ids option').each(function() {
+        var val = $(this).val();
+        if(val && role_ids != undefined && role_ids.indexOf(parseInt(val)) < 0) {
+          $(this).hide();
+        } else {
+          $(this).show();
+        }
+      });
+    } else {
+      $('#user_role_ids option').hide();
+      $('#user_role_ids option[value=""]').show();
+    }
+  }
