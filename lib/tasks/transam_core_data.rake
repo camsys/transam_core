@@ -121,10 +121,16 @@ namespace :transam_core_data do
 
   desc "Add activity to send email for issues report weekly"
   task add_issues_report_activity: :environment do
-    issues_report_activity = Activity.find_by(name: 'Weekly Issues Report')
-    if issues_report_activity.nil?
-      Activity.create(
-        name: 'Weekly Issues Report',
+
+    # old name need to replace if exists
+    if Activity.where('name LIKE ?', "%Issues Report").count > 0
+      issues_report_activity = Activity.where('name LIKE ?', "%Issues Report").first
+    else
+      issues_report_activity = Activity.new
+    end
+
+    issues_report_activity.attributes = {
+        name: 'Issues Report',
         description: 'Report giving an admin a list of all issues.',
         show_in_dashboard: false,
         system_activity: true,
@@ -133,8 +139,7 @@ namespace :transam_core_data do
         execution_time: 'Monday 00:01',
         job_name: 'IssuesReportJob',
         active: true
-      )
-    end
+    }
+    issues_report_activity.save!
   end
-
 end
