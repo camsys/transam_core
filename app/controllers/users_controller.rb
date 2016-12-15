@@ -364,20 +364,28 @@ class UsersController < OrganizationAwareController
   # Callbacks to share common setup or constraints between actions.
   #-----------------------------------------------------------------------------
   def set_user
-    @user = User.find_by(:object_key => params[:id], :organization_id => @organization_list)
-    if @user.nil?
-      if ActiveRecord::Base.connection.table_exists?(:user_organization_filters)
+    filters_used = ActiveRecord::Base.connection.table_exists?(:user_organization_filters)
+    if filters_used
+      @user = User.find_by(:object_key => params[:id], :organization_id => @organization_list)
+
+      if @user.nil?
         if User.find_by(:object_key => params[:id], :organization_id => current_user.user_organization_filters.system_filters.first.get_organizations.map{|x| x.id}).nil?
           redirect_to '/404'
         else
           notify_user(:warning, 'This record is outside your filter. Change your filter if you want to access it.')
           redirect_to users_path
         end
-      else
+      end
+
+    else
+      @user = User.find_by(:object_key => params[:id])
+      if @user.nil?
         redirect_to '/404'
       end
-      return
+
     end
+
+    return
   end
 
   #-----------------------------------------------------------------------------
