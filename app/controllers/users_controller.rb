@@ -18,6 +18,8 @@ class UsersController < OrganizationAwareController
   INDEX_KEY_LIST_VAR    = "user_key_list_cache_var"
   SESSION_VIEW_TYPE_VAR = 'users_subnav_view_type'
 
+  FILTERS_IGNORED = Rails.application.config.try(:user_organization_filters_ignored).present?
+
   #-----------------------------------------------------------------------------
   # GET /users
   # GET /users.json
@@ -263,7 +265,7 @@ class UsersController < OrganizationAwareController
         # update filters
         # set all filters to personal not shared one
         # then run method that checks your main org and org list to get all shared filters
-        if ActiveRecord::Base.connection.table_exists?(:user_organization_filters)
+        unless FILTERS_IGNORED
           @user.user_organization_filters = UserOrganizationFilter.joins(:users).where(created_by_user_id: current_user.id).sorted.group('user_organization_filters.id').having( 'count( user_id ) = 1' )
           @user.update_user_organization_filters
         end
@@ -364,8 +366,12 @@ class UsersController < OrganizationAwareController
   # Callbacks to share common setup or constraints between actions.
   #-----------------------------------------------------------------------------
   def set_user
-    filters_used = ActiveRecord::Base.connection.table_exists?(:user_organization_filters)
-    if filters_used
+    if FILTERS_IGNORED
+      @user = User.find_by(:object_key => params[:id])
+      if @user.nil?
+        redirect_to '/404'
+      end
+    else
       @user = User.find_by(:object_key => params[:id], :organization_id => @organization_list)
 
       if @user.nil?
@@ -376,13 +382,6 @@ class UsersController < OrganizationAwareController
           redirect_to users_path
         end
       end
-
-    else
-      @user = User.find_by(:object_key => params[:id])
-      if @user.nil?
-        redirect_to '/404'
-      end
-
     end
 
     return
