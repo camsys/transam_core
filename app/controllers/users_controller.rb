@@ -366,8 +366,12 @@ class UsersController < OrganizationAwareController
   # Callbacks to share common setup or constraints between actions.
   #-----------------------------------------------------------------------------
   def set_user
-    if FILTERS_IGNORED
+
+    if params[:id] == current_user.object_key
       @user = User.find_by(:object_key => params[:id])
+    elsif FILTERS_IGNORED
+      @user = User.find_by(:object_key => params[:id])
+
       if @user.nil?
         redirect_to '/404'
       end
@@ -382,6 +386,7 @@ class UsersController < OrganizationAwareController
           redirect_to users_path
         end
       end
+
     end
 
     return
