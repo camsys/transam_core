@@ -250,7 +250,7 @@ var transam = new function() {
 
 	this.install_quick_link_handlers = function() {
 		// Enable the quick links
-		$('[data-action-path]').click(function() {
+		$(document).on('click', '[data-action-path]', function() {
 			var url = $(this).data('action-path');
 			document.location.href = url;
 		});
