@@ -104,11 +104,12 @@ RSpec.describe Organization, :type => :model do
       expect(test_org.technical_contact).to be nil
     end
     it 'technical contact' do
-      test_user = create(:technical_contact, :organization => test_org)
-      test_user.organizations << test_user.organization
+      user_org = create(:organization)
+      test_user = create(:technical_contact, :organization => user_org)
+      test_user.organizations << user_org
       test_user.save!
 
-      expect(test_org.technical_contact).to eq(test_user)
+      expect(user_org.technical_contact).to eq(test_user)
     end
   end
 
@@ -118,11 +119,12 @@ RSpec.describe Organization, :type => :model do
       expect(results.count).to eq(0)
     end
     it 'get users with a role' do
-      test_user = create(:admin, :organization => test_org)
-      test_user.organizations << test_user.organization
+      user_org = create(:organization)
+      test_user = create(:admin, :organization => user_org)
+      test_user.organizations << user_org
       test_user.save!
 
-      expect(test_org.users_with_role 'admin').to include(test_user)
+      expect(user_org.users_with_role 'admin').to include(test_user)
     end
   end
 

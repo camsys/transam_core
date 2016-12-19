@@ -2,7 +2,6 @@ require 'rails_helper'
 
 RSpec.describe Notice, :type => :model do
   let(:notice)        {build_stubbed(:notice)}
-  let(:organization)  {build_stubbed(:organization)}
   #------------------------------------------------------------------------------
   #
   # Class Methods
@@ -46,10 +45,12 @@ RSpec.describe Notice, :type => :model do
 
   describe '.active_for_organizations' do
     it 'returns system notices and organization-specific notices' do
+      test_org = create(:organization)
+      
       expect{
         FactoryGirl.create(:system_notice)
-        FactoryGirl.create(:notice, organization: organization)
-      }.to change{Notice.active_for_organizations([organization]).count}.by(2) # 1 for system, 1 for organization
+        FactoryGirl.create(:notice, organization: test_org)
+      }.to change{Notice.active_for_organizations([test_org]).count}.by(2) # 1 for system, 1 for organization
     end
   end
 
