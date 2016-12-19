@@ -96,6 +96,9 @@ class AssetsController < AssetAwareController
     # check that an order param was provided otherwise use asset_tag as the default
     params[:sort] ||= 'asset_tag'
 
+    # fix sorting on organizations to be alphabetical not by index
+    params[:sort] = 'organizations.short_name' if params[:sort] == 'organization_id'
+
     unless @fmt == 'xls'
       # cache the set of asset ids in case we need them later
       cache_list(@assets.order("#{params[:sort]} #{params[:order]}"), INDEX_KEY_LIST_VAR)

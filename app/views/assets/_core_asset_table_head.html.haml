@@ -3,9 +3,9 @@
 %th.center{:data => {:field => "external_id", :align => 'left', :visible => 'false', :sortable => 'true'}} External Id
 
 - if @organization_list.count > 1
-  %th.center.nowrap{:data => {:field => "organization_id", :sort_name => 'organization_id', :sortable => 'true',  :searchable => 'true'}} Agency
+  %th.center.nowrap{:data => {:field => "organization_id", :sortable => 'true', :searchable => 'true'}} Agency
 - else
-  %th.center.nowrap{:data => {:field => "organization_id", :sort_name => 'organization_id', :visible => 'false', :sortable => 'true',  :searchable => 'true'}} Agency
+  %th.center.nowrap{:data => {:field => "organization_id", :sortable => 'true',  :searchable => 'true', :visible => 'false'}} Agency
 
 %th.center{:data => {:field => "asset_subtype_id", :sort_name => 'asset_subtype_id', :align => 'left', :sortable => 'true', :searchable => 'true'}} Type
 %th.center.nowrap{:data => {:field => "asset_tag", :align => 'left', :sortable => 'true',  :searchable => 'true'}} Asset Tag
