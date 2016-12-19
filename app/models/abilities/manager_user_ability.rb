@@ -4,7 +4,7 @@ module Abilities
 
     def initialize(user)
 
-      can [:create, :update], User
+      can [:create, :update, :authorizations], User
 
     end
   end
