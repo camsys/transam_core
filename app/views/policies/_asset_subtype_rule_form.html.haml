@@ -25,7 +25,18 @@
     - if @rule.new_record? and !@copy
       .row
         .col-xs-12
-          = f.association :asset_subtype, :collection => @valid_types, :include_blank => false
+          = f.association :asset_subtype, :collection => @valid_types, :prompt => 'New Subtype', :required => false
+
+      #new_subtype.row
+        = hidden_field_tag :new_asset_subtype_asset_type_id, @asset_type.id
+        .col-sm-6
+          .form-group
+            %label.control-label New Asset Subtype Name
+            = text_field_tag :new_asset_subtype_name, '', {class: 'form-control'}
+        .col-sm-6
+          .form-group
+            %label.control-label New Asset Subtype Descriptien
+            = text_field_tag :new_asset_subtype_description, '', {class: 'form-control'}
 
     .row
       .col-sm-3
@@ -61,8 +72,7 @@
         = f.input :rehabilitation_cost, :wrapper=> :vertical_prepend  do
           %span.input-group-addon
             %i.fa.fa-usd
-          = f.input_field :rehabilitation_cost, rGrantsController fiscal years no num forecasting years
-equired: true, :class => "form-control", :input_html => { min: 0 }
+          = f.input_field :rehabilitation_cost, required: true, :class => "form-control", :input_html => { min: 0 }
 
       .col-sm-3
         = f.input :extended_service_life_months, required: true, :label => "Change in ESL (Mo)", :input_html => { :class => "has_minimum", :min => min_values[:extended_service_life_months] }
@@ -81,6 +91,19 @@ equired: true, :class => "form-control", :input_html => { min: 0 }
     replace_with_leased_action(checked);
   });
 
+  $('#policy_asset_subtype_rule_asset_subtype_id').on('change', function(event) {
+    var id = $(this).val();
+
+    if (parseInt(id) > 0) {
+      $('#new_subtype').hide();
+      $('#policy_asset_subtype_rule_fuel_type_id').attr('disabled', false);
+    } else {
+      $('#new_subtype').show();
+      $('#policy_asset_subtype_rule_fuel_type_id').attr('disabled', true); // fuel types not allowed on new subtypes. must create universal rule
+    }
+  });
+
+
   // validate the form before submittal
   $('#edit-form').validate({
     submitHandler: function(form) {
@@ -90,6 +113,14 @@ equired: true, :class => "form-control", :input_html => { min: 0 }
       $(form).ajaxSubmit();
     }
   });
+
+  $('#policy_asset_subtype_rule_asset_subtype_id').rules("add", {
+    required_or_new: true
+  });
+
+  $.validator.addMethod("required_or_new", function(value, element) {
+    return parseInt(value) > 0 || (($('#new_asset_subtype_name').val() != "") && ($('#new_asset_subtype_description').val() != ""));
+  }, "Create a new subtype or select one.");
 
   $('.has_minimum').each(function (item) {
     $(this).rules( "add", {
