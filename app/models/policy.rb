@@ -171,15 +171,6 @@ class Policy < ActiveRecord::Base
           rule.save
 
 
-
-
-
-
-          if (rule.try(:replace_asset_subtype_id) || rule.try(:replace_fuel_type_id))
-            self.find_or_create_asset_subtype_rule (rule.replace_asset_subtype_id || rule.asset_subtype_id), (rule.replace_fuel_type_id || rule.fuel_type_id)
-          end
-
-
         else
           raise "Rule for asset subtype #{asset_subtype} was not found in the parent policy."
         end
