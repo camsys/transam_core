@@ -114,10 +114,11 @@
     }
   });
 
-  $('#policy_asset_subtype_rule_asset_subtype_id').rules("add", {
-    required_or_new: true
-  });
-
+  if ( $("#policy_asset_subtype_rule_asset_subtype_id" ).length ) {
+    $('#policy_asset_subtype_rule_asset_subtype_id').rules("add", {
+      required_or_new: true
+    });
+  }
   $.validator.addMethod("required_or_new", function(value, element) {
     return parseInt(value) > 0 || (($('#new_asset_subtype_name').val() != "") && ($('#new_asset_subtype_description').val() != ""));
   }, "Create a new subtype or select one.");
