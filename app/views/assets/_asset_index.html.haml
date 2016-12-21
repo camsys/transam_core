@@ -1,1 +1,7 @@
+.row
+  / This is the placeholder in each module for anything placed above the asset table, e.g., map
+  - SystemConfig.transam_module_names.each do |mod|
+    - if lookup_context.template_exists?("#{mod}_above_table_elements", 'assets', true)
+      = render :partial => "assets/#{mod}_above_table_elements"
+
 = render 'asset_table_ajax'

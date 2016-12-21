@@ -10,7 +10,8 @@
     = stylesheet_link_tag    "application", :media => "all"
     / Render engine specific CSS and JS includes if it exists
     - SystemConfig.transam_module_names.each do |mod|
-      = render :partial => "layouts/#{mod}_includes" rescue nil
+      - if lookup_context.template_exists?("#{mod}_includes", 'layouts', true)
+        = render :partial => "layouts/#{mod}_includes"
     = javascript_include_tag "https://www.google.com/jsapi"
     = javascript_include_tag "application"
     / HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries
