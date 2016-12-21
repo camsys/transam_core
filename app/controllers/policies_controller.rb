@@ -85,6 +85,12 @@ class PoliciesController < OrganizationAwareController
         @rule = rule
 
       end
+
+      if @copy || !(@rule.subtype_fuel_type_rule_used? (@policy.parent.present? ? [@policy.organization_id] : ([@policy.organization_id] + Policy.where(parent_id: @policy.id).pluck(:organization_id))))
+        @valid_fuel_types = FuelType.active.where.not(id: @policy.policy_asset_subtype_rules.where('id != ? AND asset_subtype_id = ?', @rule.id, @rule.asset_subtype_id).pluck(:fuel_type_id))
+
+      end
+
     end
 
   end
@@ -103,8 +109,6 @@ class PoliciesController < OrganizationAwareController
     end
 
     try_create_replace_with_rule rule
-
-    render 'update_policy_rules'
 
   end
 
@@ -167,7 +171,7 @@ class PoliciesController < OrganizationAwareController
 
     try_create_replace_with_rule rule
 
-    render 'update_policy_rules'
+
 
   end
 
@@ -190,6 +194,8 @@ class PoliciesController < OrganizationAwareController
       AssetSubtype.active.where(:asset_type_id => @asset_type).each do |at|
         @valid_types << at unless @policy.asset_subtype_rule? at
       end
+
+      @valid_fuel_types = FuelType.active
     end
     render 'new_rule'
   end
@@ -371,7 +377,8 @@ class PoliciesController < OrganizationAwareController
   def try_create_replace_with_rule rule
     if (rule.try(:replace_asset_subtype_id) || rule.try(:replace_fuel_type_id))
       if @policy.policy_asset_subtype_rules.find_by(asset_subtype_id: (rule.replace_asset_subtype_id || rule.asset_subtype_id), fuel_type_id: (rule.replace_fuel_type_id || rule.fuel_type_id)).nil?
-        new_rule = @policy.parent.policy_asset_subtype_rules.find_by(asset_subtype_id: (rule.replace_asset_subtype_id || rule.asset_subtype_id)).dup
+        policy_to_use = @policy.parent.present? ? @policy.parent : @policy
+        new_rule = policy_to_use.policy_asset_subtype_rules.find_by(asset_subtype_id: (rule.replace_asset_subtype_id || rule.asset_subtype_id)).dup
         new_rule.policy = @policy # reset duplicated rule to agency's policy
         new_rule.fuel_type_id = (rule.replace_fuel_type_id || rule.fuel_type_id)
         if new_rule.save
@@ -383,6 +390,8 @@ class PoliciesController < OrganizationAwareController
 
       end
     end
+
+    render 'update_policy_rules'
   end
 
   def get_policy
