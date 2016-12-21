@@ -155,7 +155,7 @@ class Policy < ActiveRecord::Base
         end
 
         if parent_rule.nil?
-          parent_rule = parent.policy_asset_subtype_rules.find_by(:asset_subtype_id => asset_subtype.id, :default_rule => true)
+          parent_rule = parent.policy_asset_subtype_rules.find_by(:asset_subtype_id => asset_subtype.id)
         end
 
         # Check to see of we got a rule
@@ -169,6 +169,8 @@ class Policy < ActiveRecord::Base
           end
 
           rule.save
+
+
         else
           raise "Rule for asset subtype #{asset_subtype} was not found in the parent policy."
         end
