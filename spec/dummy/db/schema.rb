@@ -220,6 +220,8 @@ ActiveRecord::Schema.define(version: 20170103225100) do
     t.date     "service_status_date"
     t.date     "last_maintenance_date"
     t.boolean  "depreciable"
+    t.date     "depreciation_start_date"
+    t.date     "current_depreciation_date"
     t.integer  "book_value"
     t.integer  "salvage_value"
     t.date     "disposition_date"
@@ -230,6 +232,7 @@ ActiveRecord::Schema.define(version: 20170103225100) do
     t.integer  "vehicle_rebuild_type_id"
     t.integer  "location_reference_type_id"
     t.string   "location_reference",                 limit: 254
+    t.geometry "geometry",                           :limit => nil
     t.text     "location_comments"
     t.integer  "fuel_type_id"
     t.integer  "vehicle_length"
@@ -372,6 +375,20 @@ ActiveRecord::Schema.define(version: 20170103225100) do
 
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
 
+  create_table "depreciation_calculation_types", :force => true do |t|
+    t.string  "name",        :limit => 64,  :null => false
+    t.string  "class_name",  :limit => 64,  :null => false
+    t.string  "description", :limit => 254, :null => false
+    t.boolean "active",                     :null => false
+  end
+
+  create_table "depreciation_interval_types", :force => true do |t|
+    t.string  "name",        :limit => 64,  :null => false
+    t.string  "description", :limit => 254, :null => false
+    t.integer "months",                     :null => false
+    t.boolean "active",                     :null => false
+  end
+
   create_table "disposition_types", force: true do |t|
     t.string  "name",        limit: 64,  null: false
     t.string  "code",        limit: 2,   null: false
@@ -506,6 +523,13 @@ ActiveRecord::Schema.define(version: 20170103225100) do
     t.boolean "active",                    null: false
   end
 
+  create_table "location_reference_types", :force => true do |t|
+    t.string  "name",        :limit => 64,  :null => false
+    t.string  "format",      :limit => 64,  :null => false
+    t.string  "description", :limit => 254, :null => false
+    t.boolean "active",                     :null => false
+  end
+
   create_table "maintenance_provider_types", force: true do |t|
     t.string  "name",        limit: 64,  null: false
     t.string  "code",        limit: 2,   null: false
@@ -626,6 +650,7 @@ ActiveRecord::Schema.define(version: 20170103225100) do
     t.string   "phone_ext",                limit: 6
     t.string   "fax",                      limit: 10
     t.string   "url",                      limit: 128,                          null: false
+    t.text     "allowed_email_domains",    limit: 255
     t.integer  "grantor_id"
     t.integer  "fta_agency_type_id"
     t.boolean  "indian_tribe"
@@ -664,7 +689,9 @@ ActiveRecord::Schema.define(version: 20170103225100) do
     t.string   "description",                      limit: 254,                         null: false
     t.integer  "service_life_calculation_type_id",                                     null: false
     t.integer  "cost_calculation_type_id",                                             null: false
+    t.integer  "depreciation_calculation_type_id",                                     null: false
     t.integer  "condition_estimation_type_id",                                         null: false
+    t.integer  "depreciation_interval_type_id",                                        null: false
     t.decimal  "condition_threshold",                          precision: 9, scale: 2, null: false
     t.decimal  "interest_rate",                                precision: 9, scale: 2, null: false
     t.boolean  "current",                                                              null: false
@@ -694,8 +721,6 @@ ActiveRecord::Schema.define(version: 20170103225100) do
     t.integer  "rehabilitation_parts_cost"
     t.integer  "extended_service_life_months"
     t.integer  "extended_service_life_miles"
-    t.datetime "created_at"
-    t.datetime "updated_at"
     t.integer  "min_used_purchase_service_life_months",           null: false
     t.string   "purchase_replacement_code",             limit: 8, null: false
     t.string   "lease_replacement_code",                limit: 8
@@ -705,6 +730,8 @@ ActiveRecord::Schema.define(version: 20170103225100) do
     t.string   "engineering_design_code",               limit: 8
     t.string   "construction_code",                     limit: 8
     t.boolean  "default_rule"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "policy_asset_subtype_rules", ["asset_subtype_id"], name: "policy_asset_subtype_rules_idx2", using: :btree
