@@ -1,5 +1,10 @@
 :javascript
   $(document).ready(function() {
+
+    //
+    // Function definition
+    //
+
     // Finds width where header would wrap
     // Adds media query breakpoint at that width to collapse header
     var stopHeaderWrap = function () {
@@ -16,10 +21,8 @@
       // Header might start collapsed
       // So temporarily uncollapse the header to compute element widths
       // Also float the left elements so they don't take up the full width
-      // Also force search box to take its short form
       $('.navbar-fixed-top .collapse').addClass('in');
       $('.navbar-fixed-top .collapse.nav:not(.pull-right) > li').css('float', 'left');
-      $('.navbar-form .input-group .input-group-btn').css('width', 'auto');
 
       // Add all right elements on the collapsible part of the header
       // Add 1px per width because jQuery rounds down non-integer results
@@ -33,27 +36,117 @@
         bp += parseFloat($(this).css('width')) + 1;
       });
 
+      var mq = ''
       // Only set up new collapse if it would happen before the default
       if (bp > 767) {
-        // Add style element to contain the new collapse media query
-        $('.navbar-fixed-top').prepend('<style></style>');
-
         // Define the new collapse media query
-        // Attempts to replicate the default collapse behavior
-        // Also adds a little to the default collapse media query
-        // Does this to set padding-top back to 10px for a few right elements
-        var mq = '@media (max-width: ' + bp.toString() + 'px) and (min-width: 767.001px) { button.navbar-toggle { display: block; } .navbar-header { float: none; } .navbar > .container .navbar-brand, .navbar > .container-fluid .navbar-brand { margin-left: 0px; } .container > .navbar-header, .container > .navbar-collapse, .container-fluid > .navbar-header, .container-fluid > .navbar-collapse { margin-right: -5px; margin-left: -5px; } .navbar-collapse.collapse { display: none !important; overflow-x: visible !important; overflow-y: auto !important; } .navbar-collapse.collapse.in { display: block !important; overflow-x: visible !important; overflow-y: auto !important; } .navbar-fixed-top .navbar-collapse { padding-right: 5px; padding-left: 5px; border-top: 1px solid transparent; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1); -webkit-overflow-scrolling: touch; } .navbar-nav { float: none; margin: 5px -5px; } .navbar-nav > li { float: none; } .navbar-nav .open .dropdown-menu > li > a { line-height: 20px; } .navbar-nav .open .dropdown-menu > li > a, .navbar-nav .open .dropdown-menu .dropdown-header { padding: 5px 15px 5px 25px; } .navbar-nav .open .dropdown-menu { position: static; float: none; width: auto; margin-top: 0; background-color: transparent; border: 0; box-shadow: none; } .navbar-inverse .navbar-nav .open .dropdown-menu > li > a { color: #a7a7a7; } .navbar-inverse .navbar-nav .open .dropdown-menu .divider { background-color: #0e2744; } .navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form { border-color: #112f50; } .navbar-form { margin: 10px 0px 5px 0x; padding: 0px; -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(255, 255, 255, 0.1); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(255, 255, 255, 0.1); } .navbar-form .input-group .input-group-btn { width: 1%; } .form-inline .input-group > .form-control, .navbar-form .input-group > .form-control { width: 100%; } .navbar-fixed-top div.navbar-collapse .col-sm-2 { width: 100%; } .navbar-fixed-top .collapse ul.pull-right > li > a { padding-top: 10px; } ul.navbar-collapse.collapse { height: 1px !important; } ul.navbar-collapse.collapse.in { height: 393px !important; } } @media (max-width: 767px) { .navbar-fixed-top .collapse ul.pull-right > li > a { padding-top: 10px; } }';
+        // Attempts to replicate the default collapse behavior from Bootstrap
+        // But a few rules are commented out where we want to deviate from the default
+        mq += '@media (max-width: ' + bp.toString() + 'px) and (min-width: 767.001px) { ' +
+             '.navbar { border-radius: 0; } ' +
+             '.navbar-header { float: none; } ' +
+             '.navbar-collapse { width: auto; border-top: 1px solid transparent; box-shadow: inset 0 1px 0 rgba(255,255,255,0.1) } ' +
 
-        // Add the new collapse media query
-        $('.navbar-fixed-top > style').append(mq);
+             // Closed collapsed header display and height
+             '.navbar-collapse.collapse { display: none !important; padding-bottom: 0px; overflow-x: visible !important; overflow-y: auto !important;} ' +
+             '.navbar-nav.navbar-collapse.collapse { height: 1px !important; } ' +
+
+             // Open collapsed header display and height
+             '.navbar-collapse.in { display: block !important; overflow-y: auto !important; } ' +
+             '.navbar-nav.navbar-collapse.in { height: 393px !important; } ' +
+
+             '.navbar-fixed-top .navbar-collapse, .navbar-static-top .navbar-collapse, .navbar-fixed-bottom .navbar-collapse { padding-left: 5px; padding-right: 5px; } ' +
+             '.container > .navbar-header, .container > .navbar-collapse, .container-fluid > .navbar-header, .container-fluid > .navbar-collapse { margin-right: -5px; margin-left: -5px; } ' +
+             '.navbar-static-top, .navbar-fixed-top, .navbar-fixed-bottom { border-radius: 0; } ' +
+             '.navbar > .container .navbar-brand, .navbar > .container-fluid .navbar-brand { margin-left: 0px; } ' +
+
+             // Toggle for opening and closing collapsed header display
+             '.navbar-toggle { display: block; } ' +
+
+             // Open dropdown menu item stacking and spacing
+             '.navbar-nav .open .dropdown-menu { position: static; float: none; width: auto; margin-top: 0; background-color: transparent; border: 0; box-shadow: none; } ' +
+             '.navbar-nav .open .dropdown-menu > li > a, .navbar-nav .open .dropdown-menu .dropdown-header { padding: 5px 15px 5px 25px; } ' +
+             '.navbar-nav .open .dropdown-menu > li > a { line-height: 20px; } ' +
+             '.navbar-nav .open .dropdown-menu > li > a:hover, .navbar-nav .open .dropdown-menu > li > a:focus { background-image: none; } ' +
+
+             // Header list and list items stacking and spacing
+             '.navbar-nav { float: none; margin: 5px -5px } ' +
+             '.navbar-nav > li { float: none; } ' +
+             '.navbar-nav > li > a { padding-top: 10px; padding-bottom: 10px; } ' +
+
+             '.navbar-nav.navbar-right:last-child { margin-right: 0; } ' +
+             '.navbar-left { float: none !important; } ' +
+             // '.navbar-right { float: none !important; } ' +
+
+             // Keyword search form stacking, spacing, and width
+             '.navbar-form .form-group { margin-bottom: 5px; } ' +
+             '.navbar-form.navbar-right:last-child { margin-right: 0; } ' +
+             // '.navbar-fixed-top div.pull-right { width: auto; } ' +
+             // From .form-inline mixin
+             '.navbar-form .form-group { display: block; } ' +
+             '.navbar-form .form-control { display: table-cell; width: 100%; float: left; } ' +
+             '.navbar-form .input-group { display: inline-table; } ' +
+             '.navbar-form .input-group .input-group-addon, .navbar-form .input-group .input-group-btn, .navbar-form .input-group .form-control { display: table-cell; width: 1%; } ' +
+             '.navbar-form .input-group > .form-control { width: 100%; } ' +
+             '.navbar-form .control-label { margin-bottom: 5px; } ' +
+             '.navbar-form .radio, .navbar-form .checkbox { display: table-cell; margin-top: 5px; margin-bottom: 5px; } ' +
+             '.navbar-form .radio label, .navbar-form .checkbox label { padding-left: 0; } ' +
+             '.navbar-form .radio input[type="radio"], .navbar-form .checkbox input[type="checkbox"] { position: relative; margin-left: 0; } ' +
+             '.navbar-form .has-feedback .form-control-feedback { top: 25px; } ' +
+             '.navbar-fixed-top .collapse div.pull-right .navbar-form { margin-top: 5px; } ' +
+             '.navbar-fixed-top .collapsing div.pull-right .navbar-form { margin-top: 5px; } ' +
+             '.navbar-form { width: auto; padding: 10px 5px; } ' +
+             // '.navbar-form { margin-left: -5px; margin-right: -5px; } ' +
+
+             // Keyword search form border
+             // '.navbar-form { border-top: 1px solid transparent; border-bottom: 1px solid transparent; -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(255, 255, 255, 0.1); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(255, 255, 255, 0.1); } ' +
+
+             '.navbar-text { float: none; margin-left: 0; margin-right: 0; } ' +
+             '.navbar-text.navbar-right:last-child { margin-right: 0; } ' +
+
+             // Open dropdown menu item colors
+             '.navbar-default .navbar-nav .open .dropdown-menu > li > a { color: #434749; } ' +
+             '.navbar-default .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus { color: #8BA0B6; background-color: transparent; } ' +
+             '.navbar-default .navbar-nav .open .dropdown-menu > .active > a, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus { color: #8BA0B6; background-color: #969696; } ' +
+             '.navbar-default .navbar-nav .open .dropdown-menu > .disabled > a, .navbar-default .navbar-nav .open .dropdown-menu > .disabled > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > .disabled > a:focus { color: #ccc; background-color: transparent; } ' +
+             '.navbar-inverse .navbar-nav .open .dropdown-menu > .dropdown-header { border-color: #2b2d2e; } ' +
+             '.navbar-inverse .navbar-nav .open .dropdown-menu > .divider { background-color: #2b2d2e; } ' +
+             '.navbar-inverse .navbar-nav .open .dropdown-menu > li > a { color: #a7a7a7; } ' +
+             '.navbar-inverse .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-inverse .navbar-nav .open .dropdown-menu > li > a:focus { color: white; background-color: transparent; } ' +
+             '.navbar-inverse .navbar-nav .open .dropdown-menu > .active > a, .navbar-inverse .navbar-nav .open .dropdown-menu > .active > a:hover, .navbar-inverse .navbar-nav .open .dropdown-menu > .active > a:focus { color: white; background-color: #2b2d2e; } ' +
+             '.navbar-inverse .navbar-nav .open .dropdown-menu > .disabled > a, .navbar-inverse .navbar-nav .open .dropdown-menu > .disabled > a:hover, .navbar-inverse .navbar-nav .open .dropdown-menu > .disabled > a:focus { color: #444; background-color: transparent; } ' +
+
+             // Organization filter stacking and width
+             '.dropdown-menu.multi-column { min-width: 240px !important; } ' +
+             '.dropdown-menu.multi-column > .row > div { width: auto; float: none; } ' +
+             '} ';
       }
+
+      // Make needed adjustments to the default collapse
+      mq += '@media (max-width: 767px) { ' +
+           // Keyword search form stacking, spacing, and width
+           '.navbar-right { float: right !important; } ' +
+           '.navbar-form { margin-left: 0; margin-right: 0; } ' +
+           '.navbar-fixed-top .collapse div.pull-right .navbar-form { margin-top: 5px; } ' +
+           '.navbar-fixed-top .collapsing div.pull-right .navbar-form { margin-top: 5px; } ' +
+
+           // Keyword search form border
+           '.navbar-form { border-top: none; border-bottom: none; -webkit-box-shadow: none; box-shadow: none; } ' +
+
+           // Organization filter divider color
+           '.navbar-inverse .navbar-nav .open .dropdown-menu.multi-column .divider { background-color: #e5e5e5; } ' +
+           '}';
+
+      // Add style element to contain the new collapse media query
+      $('.navbar-fixed-top').prepend('<style></style>');
+
+      // Add the new collapse media query
+      $('.navbar-fixed-top > style').append(mq);
 
       // Recollapse header
       // Unfloat left elements
-      // Unshorten search box
       $('.navbar-fixed-top .collapse').removeClass('in');
       $('.navbar-fixed-top .collapse.nav:not(.pull-right) > li').css('float', '');
-      $('.navbar-form .input-group .input-group-btn').css('width', '');
 
       // Remove class added to stop momentary wraps during load
       // This class does cause a tiny header text flicker on load, however
@@ -61,6 +154,10 @@
       // (I have not found a way to prevent both)
       $('.hide-during-load').removeClass('hide-during-load');
     };
+
+    //
+    // Function execution
+    //
 
     // Get the width of a hidden element containing a Font Awesome icon
     // Used to determine if Font Awesome icons have loaded

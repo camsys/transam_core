@@ -48,12 +48,12 @@
 
   .dropdown-menu.multi-column {
     background-color: white !important;
+    overflow-x: hidden;
   }
   
   @media (max-width: 767px) {
     .dropdown-menu.multi-column {
         min-width: 240px !important;
-        overflow-x: hidden;
     }
   }
 
@@ -86,7 +86,7 @@
           %span#filter_notification_count
             = "#{@organization_list.count}/#{orgs.count}"
 
-      %ul.dropdown-menu.dropdown-menu-right.multi-column.columns-2{role: "menu", style: "overflow-y:scroll;height:400px;"}
+      %ul.dropdown-menu.dropdown-menu-right.multi-column.columns-2{role: "menu", style: "overflow-y:scroll;max-height:400px;"}
         .row
           .col-sm-6{style: "padding-right: 15px;"}
             %ul.multi-column-dropdown

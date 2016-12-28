@@ -1,3 +1,36 @@
+// Smooth header appearance
+
+.navbar-fixed-top .collapse {
+  ul.pull-right > li > a {
+    padding-top: 15px;
+    padding-bottom: 14px;
+  }
+
+  div.pull-right .navbar-form {
+    margin-top: 10px;
+    width: 200px;
+  }
+}
+
+.navbar-fixed-top .collapsing {
+  ul.pull-right > li > a {
+    padding-top: 15px;
+    padding-bottom: 14px;
+  }
+
+  div.pull-right .navbar-form {
+    margin-top: 10px;
+    width: 200px;
+  }
+}
+
+button.navbar-toggle {
+  margin-top: 8px;
+  margin-bottom: 7px;
+}
+
+// Hide header while loading
+
 .hide-during-load {
   position: absolute !important;
   margin-top: -340px !important;
@@ -12,20 +45,7 @@
   }
 }
 
-.navbar-fixed-top .collapse {
-  ul.pull-right > li > a {
-    padding-top: 15px;
-  }
-
-  div.pull-right .navbar-form {
-    margin-top: 10px;
-  }
-}
-
-button.navbar-toggle {
-  margin-top: 8px;
-  margin-bottom: 7px;
-}
+// Style elements that determine when Font Awesome icons have loaded
 
 #wait-for-fa-wrapper {
   visibility: hidden;
