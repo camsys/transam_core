@@ -12,6 +12,7 @@ class PoliciesController < OrganizationAwareController
   # Lock down the controller
   authorize_resource only: [:index, :show, :create, :edit, :update, :destroy]
 
+
   SESSION_VIEW_TYPE_VAR = 'policies_subnav_view_type'
 
   def get_subtype_minimum_value
