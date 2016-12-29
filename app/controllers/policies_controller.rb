@@ -5,6 +5,9 @@ class PoliciesController < OrganizationAwareController
   #before_filter :authorize_admin
   before_action :get_policy, :except => [:index, :create, :new]
 
+  # Lock down the controller
+  authorize_resource only: [:index, :show, :create, :edit, :update, :destroy]
+
 
   SESSION_VIEW_TYPE_VAR = 'policies_subnav_view_type'
 

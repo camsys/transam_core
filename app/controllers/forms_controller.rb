@@ -5,6 +5,9 @@ class FormsController < OrganizationAwareController
   add_breadcrumb "Home", :root_path
   add_breadcrumb "Forms", :forms_path
 
+  # Lock down the controller
+  authorize_resource only: [:index]
+
   #-----------------------------------------------------------------------------
   def index
 

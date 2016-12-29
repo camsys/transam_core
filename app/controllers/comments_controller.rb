@@ -1,6 +1,9 @@
 class CommentsController < NestedResourceController
   before_action :set_comment, :only => [:edit, :update, :destroy]
 
+  # Lock down the controller
+  authorize_resource except: [:show]
+
   # GET /comments
   # GET /comments.json
   def index

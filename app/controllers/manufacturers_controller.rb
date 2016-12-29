@@ -2,6 +2,9 @@ class ManufacturersController < OrganizationAwareController
 
   add_breadcrumb "Home", :root_path
 
+  # Lock down the controller
+  authorize_resource
+
   def index
 
     add_breadcrumb "Manufacturers", manufacturers_path

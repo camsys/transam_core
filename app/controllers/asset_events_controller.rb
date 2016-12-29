@@ -10,6 +10,9 @@ class AssetEventsController < AssetAwareController
   # always use generic untyped assets for this controller
   RENDER_TYPED_ASSETS = true
 
+  # Lock down the controller
+  authorize_resource only: [:index, :show, :new, :create, :edit, :update, :destroy]
+
   # always render untyped assets for this controller
   def render_typed_assets
     RENDER_TYPED_ASSETS

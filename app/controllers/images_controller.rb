@@ -1,6 +1,9 @@
 class ImagesController < NestedResourceController
   before_action :set_image, :only => [:edit, :update, :destroy, :download]
 
+  # Lock down the controller
+  authorize_resource only: [:index, :new, :create, :edit, :update, :destroy]
+
   # GET /images
   # GET /images.json
   def index
