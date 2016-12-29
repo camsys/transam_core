@@ -4,6 +4,7 @@ module Abilities
 
     def initialize(user)
 
+      self.merge "Abilities::AuthorizedActivityLogAbility".constantize.new(user)
       self.merge "Abilities::AuthorizedUserAbility".constantize.new(user)
       self.merge "Abilities::AuthorizedIssueAbility".constantize.new(user)
 
