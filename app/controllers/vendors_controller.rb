@@ -5,6 +5,9 @@ class VendorsController < OrganizationAwareController
 
   before_action :set_vendor, only: [:show, :edit, :update, :destroy]
 
+  # Lock down the controller
+  authorize_resource only: [:index, :show, :new, :create, :edit, :update, :destroy]
+
   # include the transam markers mixin
   include TransamMapMarkers
 

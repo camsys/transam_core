@@ -2,6 +2,9 @@ class ReportsController < OrganizationAwareController
 
   before_filter :get_report, :only => [:show, :load]
 
+  # Lock down the controller
+  authorize_resource only: [:index, :show]
+
   add_breadcrumb "Home", :root_path
   add_breadcrumb "Reports", :reports_path
 

@@ -1,6 +1,9 @@
 class DocumentsController < NestedResourceController
   before_action :set_document, :only => [:edit, :update, :destroy, :download]
 
+  # Lock down the controller
+  authorize_resource only: [:index, :new, :create, :edit, :update, :destroy]
+
   # GET /documents
   # GET /documents.json
   def index

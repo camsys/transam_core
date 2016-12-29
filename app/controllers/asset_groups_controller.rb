@@ -4,6 +4,9 @@ class AssetGroupsController < OrganizationAwareController
 
   add_breadcrumb "Home", :root_path
 
+  # Lock down the controller
+  authorize_resource
+
   # GET /asset_groups
   def index
 

@@ -5,6 +5,9 @@ class MessagesController < OrganizationAwareController
   before_action :set_message, :only => [:show, :edit, :update, :destroy, :tag, :reply, :destroy]
   before_action :check_for_cancel, :only => [:create]
 
+  # Lock down the controller
+  authorize_resource only: [:index, :show, :new, :create, :destroy]
+
   # Session Variables
   INDEX_KEY_LIST_VAR          = "messages_list_cache_var"
 

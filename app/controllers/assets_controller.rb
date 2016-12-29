@@ -12,6 +12,9 @@ class AssetsController < AssetAwareController
   # Update the vendor_id param if the user is using the vendor_name parameter
   before_filter :update_vendor_param,  :only => [:create, :update]
 
+  # Lock down the controller
+  authorize_resource only: [:index, :show, :new, :create, :edit, :update, :destroy]
+
   STRING_TOKENIZER          = '|'
 
   # Session Variables
