@@ -5,7 +5,7 @@
         .row
           .col-sm-6
             %h3.panel-title
-              %i.fa{:class => get_tag_icon(@asset), :data => {:id => @asset.object_key}}
+              %i.fa{:style => "cursor: pointer;", :class => get_tag_icon(@asset), :data => {:id => @asset.object_key}}
               = @asset
           .col-sm-6
             = render 'actions'
