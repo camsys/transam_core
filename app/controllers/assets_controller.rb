@@ -322,7 +322,8 @@ class AssetsController < AssetAwareController
   end
 
   def new_asset
-
+    authorize! :new, Asset
+    
     add_breadcrumb "Add Asset", new_asset_inventory_index_path
 
     @page_title = 'New Asset'
