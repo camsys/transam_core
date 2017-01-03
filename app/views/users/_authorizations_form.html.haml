@@ -1,5 +1,5 @@
 = simple_form_for(@user,
-  :html => {:class => 'form-vertical user_form'},
+  :html => {:class => 'form-vertical user_profile_form'},
   :wrapper => :vertical_form,
   :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes,
   :radio_buttons => :vertical_radio_and_checkboxes,
@@ -9,3 +9,8 @@
   = render partial: "authorization_fields", :locals => {:f => f}
 
   = f.submit :class => "btn btn-primary"
+
+:javascript
+  $('.user_profile_form').validate({
+    ignore: '#user_organization_ids, .filtered, .filter-input'
+  });
