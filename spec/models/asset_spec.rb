@@ -70,11 +70,40 @@ RSpec.describe Asset, :type => :model do
       expect(buslike_asset.age).to eql(0)
     end
 
-    it 'returns a positive value for an asset starting service in the past' do
-      # Built 6 years ago
-      buslike_asset.in_service_date = Date.today - 6.years
+    describe 'for an asset starting service in the past' do
+      it 'returns a positive value' do
+        # Built 6 years ago
+        buslike_asset.in_service_date = Date.today - 6.years
 
-      expect(buslike_asset.age).to eql(6)
+        expect(buslike_asset.age).to eql(6)
+      end
+
+      describe 'when the on_date month and past month are the same' do
+        it 'returns the difference in years' do
+          buslike_asset.in_service_date = Date.new(2010, 1, 1)
+
+          on_date = Date.new(2015, 1, 1)
+          expect(buslike_asset.age(on_date)).to eql(5)
+        end
+      end
+
+      describe 'when the on_date month is greater than the past month' do
+        it 'returns the difference in years' do
+          buslike_asset.in_service_date = Date.new(2010, 1, 1)
+
+          on_date = Date.new(2015, 12, 1)
+          expect(buslike_asset.age(on_date)).to eql(5)
+        end
+      end
+
+      describe 'when the on_date month is less than the past month' do
+        it 'returns the difference in years minus 1' do
+          buslike_asset.in_service_date = Date.new(2010, 12, 1)
+
+          on_date = Date.new(2015, 1, 1)
+          expect(buslike_asset.age(on_date)).to eql(4)
+        end
+      end
     end
 
     it 'calculates its age on a specific date properly' do
