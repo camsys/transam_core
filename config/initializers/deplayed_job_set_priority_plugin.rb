@@ -8,7 +8,7 @@ module Delayed
             job_class_name = YAML.load(job.handler).try(:class).try(:name)
             if job_class_name.present?
               priority = DelayedJobPriority.find_by_class_name(job_class_name).try(:priority)
-              if priority != job.priority
+              if priority.present? && priority != job.priority
                 job.priority = priority
               end
             end
