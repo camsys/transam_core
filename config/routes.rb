@@ -149,6 +149,11 @@ Rails.application.routes.draw do
       get 'authorizations'
     end
 
+    resources :user_organization_filters do
+      get 'use'
+      post 'set_org'
+    end
+
     resources :images
 
     resources :messages do
@@ -199,13 +204,5 @@ Rails.application.routes.draw do
 
   # default root for the site -- will be /org/:organization_id/dashboards
   root :to => 'dashboards#index'
-
-  resources :users, only: [] do
-  # Add user organization filters
-    resources :user_organization_filters do
-      get 'use'
-      post 'set_org'
-    end
-  end
 
 end

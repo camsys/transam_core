@@ -11,9 +11,6 @@ class UserOrganizationFilter < ActiveRecord::Base
 
   belongs_to :resource, :polymorphic => true
 
-  # Each filter is owned by a specific user
-  belongs_to  :user
-
   # Each filter is created by someone usually the owner but sometimes the system user (could be extended to sharing filters)
   belongs_to :creator, :class_name => "User", :foreign_key => :created_by_user_id
 
@@ -37,7 +34,6 @@ class UserOrganizationFilter < ActiveRecord::Base
 
   # List of allowable form param hash keys
   FORM_PARAMS = [
-    :user_id,
     :name,
     :description,
     :organization_ids
