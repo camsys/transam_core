@@ -14,5 +14,5 @@
 					%td.left= user[1]
 					%td.left= user[2]
 					%td.right= format_as_integer(user[3])
-					%td.right= format_as_date_time(user[4])
-					%td.right= format_as_date_time(user[5])
+					%td.right= format_as_date_time(user[4].in_time_zone(Time.zone)) if user[4]
+					%td.right= format_as_date_time(user[5].in_time_zone(Time.zone)) if user[5]
