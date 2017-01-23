@@ -77,7 +77,7 @@
       = link_to reset_searches_path(:search_type => SearchesController::ASSET_SEARCH_TYPE) do
         %i.fa.fa-search.fa-fw
         Query
-    - if can? :create, Asset
+    - if !Policy.where('parent_id IS NOT NULL AND organization_id IN (?)', @organization_list).pluck(:organization_id).empty? && (can? :create, Asset)
       %li.divider
       %li.text-left
         = link_to new_asset_inventory_index_path do
