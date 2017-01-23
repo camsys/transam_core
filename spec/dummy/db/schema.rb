@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170103225100) do
+ActiveRecord::Schema.define(version: 20170111194012) do
 
   create_table "activities", force: true do |t|
     t.string   "object_key",           limit: 12
@@ -336,8 +336,8 @@ ActiveRecord::Schema.define(version: 20170103225100) do
   end
 
   create_table "delayed_job_priorities", force: true do |t|
-    t.string   "class_name",             null: false
-    t.integer  "priority",   default: 0, null: false
+    t.string   "class_name", null: false
+    t.integer  "priority",   null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

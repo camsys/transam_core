@@ -10,7 +10,7 @@ describe "shared/_header.html.haml", :type => :view do
     allow(controller).to receive(:current_user).and_return(test_user)
     allow(controller).to receive(:session).and_return({:user_organization_filter => test_filter})
     assign(:organization, test_user.organization)
-    assign(:organization_list, test_user.organizations)
+    assign(:organization_list, test_user.organizations.ids)
 
     render
 
