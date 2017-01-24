@@ -481,7 +481,7 @@ class Asset < ActiveRecord::Base
     return false if disposed?
     # otherwise check the policy year and see if it is less than or equal to
     # the current planning year
-    return false if estimated_replacement_year.blank?
+    return false if policy_replacement_year.blank?
 
     if policy_replacement_year <= current_planning_year_year
       # After ESL disposal
@@ -502,7 +502,7 @@ class Asset < ActiveRecord::Base
     return false if disposed?
     # otherwise check the policy year and see if it is less than or equal to
     # the current planning year
-    return false if estimated_replacement_year.blank?
+    return false if policy_replacement_year.blank?
 
     if policy_replacement_year <= current_planning_year_year
       # Eligible for after ESL disposal
