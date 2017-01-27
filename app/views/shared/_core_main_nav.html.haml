@@ -77,6 +77,8 @@
       = link_to reset_searches_path(:search_type => SearchesController::ASSET_SEARCH_TYPE) do
         %i.fa.fa-search.fa-fw
         Query
+    - SystemConfig.transam_module_names.each do |mod|
+      = render :partial => "shared/#{mod}_main_nav_extra_menu" rescue nil
     - if !Policy.where('parent_id IS NOT NULL AND organization_id IN (?)', @organization_list).pluck(:organization_id).empty? && (can? :create, Asset)
       %li.divider
       %li.text-left
