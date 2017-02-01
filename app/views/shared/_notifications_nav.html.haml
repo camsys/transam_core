@@ -2,7 +2,7 @@
   %span#notification_count{style: 'display: none;'}
   = link_to "#", :id => "notificationLink", :class => "dropdown-toggle", :data => {"toggle" => "dropdown"}, :title => 'Notifications' do
     %i.fa.fa-globe.fa-2x
-  #notificationContainer
+  #notificationContainer{style: "overflow-y:scroll;max-height:400px;"}
     #notificationsBody.notifications
     #notificationFooter
       = link_to read_all_notifications_path, :remote => true do
