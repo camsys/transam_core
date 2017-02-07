@@ -5,7 +5,6 @@
   :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}) do |f|
 
   = f.input :description, :required => true, :as => :text, :input_html => { :rows => 3 }, :placeholder => "Enter a description for the policy..."
-  = f.association :condition_estimation_type, :required => true, :label => "Condition Estimator", :prompt => "Select..."
   = f.input :condition_threshold, :requried => true, :input_html => {:min => ConditionType.min_rating, :max => ConditionType.max_rating}, :label => "Condition Threshold"
   = f.button :submit, :class => "btn btn-primary"
 

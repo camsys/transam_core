@@ -1,3 +1,7 @@
+#  This calculator is not used and is broken.
+# It estimates the slope for a straight line estimation based on the last condition update ONLY. It doesn't take into account all the updates and therefore can reflect a very inaccurate slope if the last update is vatly different from the rest.
+# We currently use the Google Chart API that has trendlines of scatter plots.
+
 #------------------------------------------------------------------------------
 #
 # StraightLineEstimationCalculator
@@ -15,6 +19,10 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
   # of the condition assement or milege assessment
   #
   def calculate(asset)
+    calculate_on_date(asset)
+  end
+
+  def calculate_on_date(asset,on_date=nil)
 
     Rails.logger.debug "StraightLineEstimationCalculator.calculate(asset)"
 
@@ -38,7 +46,11 @@ class StraightLineEstimationCalculator < ConditionEstimationCalculator
     end
 
     min_slope = [slopes[:condition_slope], slopes[:mileage_slope] * scale_factor].min
-    est_rating = max_rating + (min_slope * asset.age)
+    if on_date.nil?
+      est_rating = max_rating + (min_slope * asset.age)
+    else
+      est_rating = max_rating + (min_slope * asset.age(on_date))
+    end
     Rails.logger.debug "est rating = #{est_rating}"
     # make sure we don't go below the minimum. This is possible as the slope can extend infinitely for extreme cases
     [est_rating.round(2), min_rating].max

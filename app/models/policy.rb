@@ -190,6 +190,7 @@ class Policy < ActiveRecord::Base
 
   # Set resonable defaults for a new policy
   def set_defaults
+    self.condition_estimation_type_id ||= 1
     self.condition_threshold ||= 2.5
   end
 
