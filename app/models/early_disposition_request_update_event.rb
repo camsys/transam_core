@@ -83,7 +83,7 @@ class EarlyDispositionRequestUpdateEvent < AssetEvent
 
     # Callbacks
     before_transition do |request, transition|
-      Rails.logger.debug "Transitioning early dispositin request #{request.object_key} from #{transition.from_name} to #{transition.to_name} using #{transition.event}"
+      Rails.logger.debug "Transitioning early disposition request #{request.object_key} from #{transition.from_name} to #{transition.to_name} using #{transition.event}"
     end
   end
 
