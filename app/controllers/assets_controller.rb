@@ -117,6 +117,42 @@ class AssetsController < AssetAwareController
     end
   end
 
+
+  def fire_asset_event_workflow_events
+
+    event_name = params[:event]
+    asset_event_type = AssetEventType.find_by(id: params[:asset_event_type_id])
+
+    if asset_event_type && params[:targets]
+
+      notification_enabled = asset_event_type.class_name.constantize.workflow_notification_enabled?
+
+      events = asset_event_type.class_name.constantize.where(object_key: params[:targets].split(','))
+
+      failed = 0
+      events.each do |evt|
+
+        if evt.fire_state_event(event_name)
+          workflow_event = WorkflowEvent.new
+          workflow_event.creator = current_user
+          workflow_event.accountable = evt
+          workflow_event.event_type = event_name
+          workflow_event.save
+
+          if notification_enabled
+            evt.notify_event_by(current_user, event_name)
+          end
+
+        else
+          failed += 1
+        end
+      end
+
+    end
+
+    redirect_to :back
+  end
+
   # makes a copy of an asset and renders it. The new asset is not saved
   # and has any identifying chracteristics identified as CLEANSABLE_FIELDS are nilled
   def copy
