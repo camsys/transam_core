@@ -1,4 +1,9 @@
 %li.text-left
+  = link_to user_path(current_user)  do
+    %i.fa.fa-user.fa-fw
+    = current_user.name
+%li.divider.text-left
+%li.text-left
   = link_to user_tasks_path(current_user, :state => "all")  do
     %i.fa.fa-calendar.fa-fw
     = " My tasks (#{current_user.assigned_tasks.count})"
@@ -25,8 +30,5 @@
             %i.fa.fa-building-o.fa-fw
             = org.to_s
 
-%li.divider.text-left
-%li.text-left
-  = link_to user_path(current_user)  do
-    %i.fa.fa-user.fa-fw
-    My settings
+
+

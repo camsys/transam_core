@@ -1,0 +1,124 @@
+:css
+  #filter_notification_count {
+    padding: 3px 7px 3px 7px;
+    background: #cc0000;
+    color: #ffffff;
+    font-weight: bold;
+    border-radius: 9px;
+    margin-top: -3px;
+    font-size: 11px;
+  }
+
+:ruby
+  my_system_filters = current_user.user_organization_filters.system_filters.sorted
+  my_shared_filters = current_user.user_organization_filters.other_filters.sorted
+  my_personal_filters =  UserOrganizationFilter.joins(:users).where(created_by_user_id: current_user.id).sorted.group('user_organization_filters.id').having( 'count( user_id ) = 1' )
+
+  orgs = current_user.user_organization_filter.get_organizations
+
+- # Load module specific filters if they exist
+- SystemConfig.transam_module_names.each do |mod|
+  - view_component = "#{mod}_filter_nav"
+  - Rails.logger.debug "Checking for #{view_component}: Results = #{lookup_context.template_exists?(view_component, 'shared', true)}"
+  - if lookup_context.template_exists?(view_component, 'shared', true)
+    = render :partial => "shared/#{view_component}"
+
+%li.dropdown
+  = link_to "#", :class => 'dropdown-toggle', :style => 'padding-top:15px;', :data => {:toggle => 'dropdown'} do
+    %i.fa.fa-filter
+    = " #{session[:user_organization_filter]}"
+    %b.caret
+    - unless @organization_list.count == orgs.count
+      %span#filter_notification_count
+        = "#{@organization_list.count}/#{orgs.count}"
+
+  %ul.dropdown-menu.dropdown-menu-right.multi-column.columns-2{role: "menu", style: "overflow-y:scroll;max-height:400px;"}
+    .row
+      .col-sm-6{style: "padding-right: 15px;"}
+        %ul.multi-column-dropdown
+          - my_system_filters.each do |filter|
+            %li
+              = link_to user_user_organization_filter_use_path(current_user, filter) do
+                %i.fa.fa-filter.fa-fw
+                = filter.name
+          %li.divider
+          - (my_shared_filters - my_personal_filters).each do |filter|
+            %li
+              = link_to user_user_organization_filter_use_path(current_user, filter) do
+                %i.fa.fa-filter.fa-fw
+                = filter.name
+          %li.divider
+          - my_personal_filters.each do |filter|
+            %li
+              = link_to user_user_organization_filter_use_path(current_user, filter) do
+                %i.fa.fa-filter.fa-fw
+                = filter.name
+          %li.divider
+          %li.text-left
+            = link_to user_user_organization_filters_path(current_user) do
+              %i.fa.fa-list-alt.fa-fw
+              Manage Filters
+          %li.divider
+          %li.text-left
+            = link_to new_user_user_organization_filter_path(current_user) do
+              %i.fa.fa-plus.fa-fw
+              New Filter
+      .col-sm-6{style: "border-left-style: solid;border-left-color: #e5e5e5;border-left-width: 0.5px;padding-left: 15px; padding-right: 15px;"}
+        %ul.multi-column-dropdown
+          %li
+            = link_to '#', id: 'subselect-orgs' do
+              Update Selection
+          %li.divider
+          %li#select-all
+            %label.checkbox
+              = check_box_tag 'orgs-select-all', 1, @organization_list.count == orgs.count
+              Select All
+          %li.divider
+          - orgs.each do |org|
+            %li.dropdown-menu-stay-open
+              %label.checkbox
+                = check_box_tag 'org[]', org.id, @organization_list.include?(org.id)
+                = org.to_s
+          - if (can? :update, current_user.user_organization_filter) && (current_user.user_organization_filter.can_update? current_user)
+            %li.divider
+            %li
+              = link_to edit_user_user_organization_filter_path(current_user, current_user.user_organization_filter) do
+                %i.fa.fa-edit.fa-fw
+                Edit This Filter
+
+:javascript
+
+  $('li#select-all').click(function(e) {
+      if ($('#orgs-select-all:checked').length == 1) {
+        $('input[name="org[]"]').prop('checked', true)
+      } else {
+        $('input[name="org[]"]').prop('checked', false)
+      }
+      e.stopPropagation();
+  });
+
+  $('li.dropdown-menu-stay-open').click(function(e) {
+      e.stopPropagation();
+  });
+
+  $('#subselect-orgs').click(function(event) {
+    event.preventDefault();
+    if ($('input[name="org[]"]:checked').length > 0) {
+      var orgs = $("input[name='org[]']:checked").map(function() { return this.value;}).get();
+
+      //console.log(orgs);
+
+      $.ajax({
+        url: "#{user_user_organization_filter_set_org_path(current_user, current_user.user_organization_filter)}",
+        type: 'POST',
+        data: {
+          org_user_organization_filter : orgs
+        },
+        complete: function() {
+          window.location.reload(true);
+        }
+      });
+    } else {
+      event.stopPropagation();
+    }
+  });

@@ -1,0 +1,12 @@
+- show_subtypes ||= 1
+
+- if subtypes.count > 0
+  %li.text-left.small
+    = link_to inventory_index_path(:asset_type => type, :asset_subtype => 0, :asset_group => 0), :style => 'font-weight:bold;'  do
+      %i{:class => "#{type.display_icon_name} fa-fw"}
+      = type.name.pluralize(2)
+  - if show_subtypes == 1
+    - subtypes.each do |as, count|
+      %li.text-left.small
+        - asset_subtype = AssetSubtype.find(as)
+        = link_to asset_subtype.name, inventory_index_path(:asset_subtype => asset_subtype, :asset_group => 0)
