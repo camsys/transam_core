@@ -93,5 +93,3 @@
             - unless idx == 0
               %li.divider
             = render partial: 'shared/inventory_nav_asset_subtype_menu_item', locals: {type: type, subtypes: assets.select{|k, v| type.asset_subtypes.ids.include? k}}
-
-= render 'shared/policy_nav'
