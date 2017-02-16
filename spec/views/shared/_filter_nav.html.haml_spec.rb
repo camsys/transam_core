@@ -5,7 +5,7 @@ describe "shared/_filter_nav.html.haml", :type => :view do
     test_user = create(:admin)
     test_filter = create(:user_organization_filter)
     test_user.user_organization_filters << test_filter
-    test_user.update!(user_organization_filter: test_filter)                                                    re
+    test_user.update!(user_organization_filter: test_filter)
 
     allow(controller).to receive(:current_user).and_return(test_user)
     assign(:organization_list, [1,2])
