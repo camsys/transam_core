@@ -135,8 +135,8 @@ namespace :transam_core_data do
         show_in_dashboard: false,
         system_activity: true,
         frequency_quantity: 1,
-        frequency_type_id: 4,
-        execution_time: 'Monday 00:01',
+        frequency_type_id: 3,
+        execution_time: '00:01',
         job_name: 'IssuesReportJob',
         active: true
     }

@@ -19,15 +19,17 @@ class IssuesReportJob < ActivityJob
     frequency = activity.frequency_type.name
     new_issues = Issue.where(issue_status_type: IssueStatusType.find_by(name: 'Open')).where('created_at >= ?', Date.today - (activity.frequency_quantity).send(frequency))
 
-    User.with_role(:admin).each do |user|
-      msg               = Message.new
-      msg.user          = system_user
-      msg.organization  = system_user.organization
-      msg.to_user       = user
-      msg.subject       = "New Issues Report"
-      msg.body          = "There are #{new_issues.count} new issue(s) in the last #{frequency}. You can view all issues <a href='#{event_url}'>here</a>."
-      msg.priority_type = PriorityType.default
-      msg.save
+    if new_issues.count > 0
+      User.with_role(:admin).each do |user|
+        msg               = Message.new
+        msg.user          = system_user
+        msg.organization  = system_user.organization
+        msg.to_user       = user
+        msg.subject       = "New Issues Report"
+        msg.body          = "There are #{new_issues.count} new issue(s) in the last #{frequency}. You can view all issues <a href='#{event_url}'>here</a>."
+        msg.priority_type = PriorityType.default
+        msg.save
+      end
     end
 
   end
