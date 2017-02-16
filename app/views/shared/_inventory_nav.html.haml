@@ -10,9 +10,9 @@
   = link_to "#", :class => "dropdown-toggle", :data => {"toggle" => "dropdown"}, :title => 'Inventory' do
     %i.fa.fa-bus.fa-2x
     %b.caret
-  %ul.dropdown-menu.columns-5
+  %ul.dropdown-menu.columns-6
     .row
-      .col-sm-3
+      .col-sm-2
         %ul.multi-column-dropdown
           %li.text-left
             = link_to manufacturers_path do
@@ -29,14 +29,12 @@
               %li.text-left{:style => 'width:255px'}
                 = link_to inventory_index_path(:early_disposition => 1) do
                   %i.fa.fa-fw{:class => event_type.display_icon_name}
-                  %span.badge.pull-right= early_events
-                  Early Disposition Proposed
+                  = "Early Disposition Proposed (#{early_events})"
             - if transferred_assets > 0 && can?(:accept_transfers, Asset)
               %li.text-left{:style => 'width:255px'}
                 = link_to inventory_index_path(:transferred_assets => 1) do
                   %i.fa.fa-refresh.fa-fw
-                  %span.badge.pull-right= transferred_assets
-                  Newly Transferred Assets
+                  = "Newly Transferred Assets (#{transferred_assets})"
           %li.divider
           %li.text-left
             = link_to reset_searches_path(:search_type => SearchesController::ASSET_SEARCH_TYPE) do
@@ -66,30 +64,35 @@
       .col-sm-2
         %ul.multi-column-dropdown
           - AssetType.where(class_name: ['Vehicle', 'SupportVehicle']).order(:id).each_with_index do |type, idx|
-            - unless idx == 0
+            - subtypes = assets.select{|k, v| type.asset_subtypes.ids.include? k}
+            - if subtypes.count > 0 and idx > 0
               %li.divider
-            = render partial: 'shared/inventory_nav_asset_subtype_menu_item', locals: {type: type, subtypes: assets.select{|k, v| type.asset_subtypes.ids.include? k}}
+            = render partial: 'shared/inventory_nav_asset_subtype_menu_item', locals: {type: type, subtypes: subtypes}
+      .col-sm-2
+        %ul.multi-column-dropdown
+          - AssetType.where(class_name: ['SupportVehicle']).order(:id).each_with_index do |type, idx|
+            - subtypes = assets.select{|k, v| type.asset_subtypes.ids.include? k}
+            - if subtypes.count > 0 and idx > 0
+              %li.divider
+            = render partial: 'shared/inventory_nav_asset_subtype_menu_item', locals: {type: type, subtypes: subtypes}
       .col-sm-2
         %ul.multi-column-dropdown
           - AssetType.where(class_name: ['TransitFacility', 'SupportFacility']).order(:id).each_with_index do |type, idx|
-            - unless idx == 0
+            - subtypes = assets.select{|k, v| type.asset_subtypes.ids.include? k}
+            - if subtypes.count > 0 and idx > 0
               %li.divider
-            = render partial: 'shared/inventory_nav_asset_subtype_menu_item', locals: {type: type, subtypes: assets.select{|k, v| type.asset_subtypes.ids.include? k}}
+            = render partial: 'shared/inventory_nav_asset_subtype_menu_item', locals: {type: type, subtypes: subtypes}
       .col-sm-2
         %ul.multi-column-dropdown
           - AssetType.where(class_name: ['RailCar', 'Locomotive']).order(:id).each_with_index do |type, idx|
-            - unless idx == 0
+            - subtypes = assets.select{|k, v| type.asset_subtypes.ids.include? k}
+            - if subtypes.count > 0 and idx > 0
               %li.divider
-            = render partial: 'shared/inventory_nav_asset_subtype_menu_item', locals: {type: type, subtypes: assets.select{|k, v| type.asset_subtypes.ids.include? k}}
+            = render partial: 'shared/inventory_nav_asset_subtype_menu_item', locals: {type: type, subtypes: subtypes}
       .col-sm-2
         %ul.multi-column-dropdown
-          - AssetType.where(class_name: ['Equipment']).order(:id).each_with_index do |type, idx|
-            - unless idx == 0
+          - AssetType.where.not(class_name: ['Vehicle', 'SupportVehicle', 'TransitFacility', 'SupportFacility', 'RailCar', 'Locomotive']).order(:id).each_with_index do |type, idx|
+            - subtypes = assets.select{|k, v| type.asset_subtypes.ids.include? k}
+            - if subtypes.count > 0 and idx > 0
               %li.divider
-            = render partial: 'shared/inventory_nav_asset_subtype_menu_item', locals: {type: type, subtypes: assets.select{|k, v| type.asset_subtypes.ids.include? k}, show_subtypes: 0}
-      .col-sm-2
-        %ul.multi-column-dropdown
-          - AssetType.where.not(class_name: ['Vehicle', 'SupportVehicle', 'TransitFacility', 'SupportFacility', 'RailCar', 'Locomotive', 'Equipment']).each_with_index do |type, idx|
-            - unless idx == 0
-              %li.divider
-            = render partial: 'shared/inventory_nav_asset_subtype_menu_item', locals: {type: type, subtypes: assets.select{|k, v| type.asset_subtypes.ids.include? k}}
+            = render partial: 'shared/inventory_nav_asset_subtype_menu_item', locals: {type: type, subtypes: subtypes, show_subtypes: 0}

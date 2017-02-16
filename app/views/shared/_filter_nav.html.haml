@@ -34,7 +34,7 @@
 
   %ul.dropdown-menu.dropdown-menu-right.multi-column.columns-2{role: "menu", style: "overflow-y:scroll;max-height:400px;"}
     .row
-      .col-sm-6{style: "padding-right: 15px;"}
+      .col-sm-6
         %ul.multi-column-dropdown
           - my_system_filters.each do |filter|
             %li
@@ -63,7 +63,7 @@
             = link_to new_user_user_organization_filter_path(current_user) do
               %i.fa.fa-plus.fa-fw
               New Filter
-      .col-sm-6{style: "border-left-style: solid;border-left-color: #e5e5e5;border-left-width: 0.5px;padding-left: 15px; padding-right: 15px;"}
+      .col-sm-6
         %ul.multi-column-dropdown
           %li
             = link_to '#', id: 'subselect-orgs' do

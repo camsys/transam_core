@@ -11,26 +11,32 @@
 }
 
 .dropdown-menu.columns-2 {
-    min-width: 600px;
+    width: 28vw;
 }
 .dropdown-menu.columns-3 {
-    min-width: 750px;
+    width: 42vw;
 }
 .dropdown-menu.columns-4 {
-    min-width: 900px;
+    width: 56vw;
 }
 .dropdown-menu.columns-5 {
-    min-width: 1000px;
+    width: 70vw;
+}
+.dropdown-menu.columns-6 {
+    width: 84vw;
 }
 
 .multi-column-dropdown {
     list-style: none;
+    margin-left: -25px;
+    padding-right: 15px;
 }
 .multi-column-dropdown li label {
     display: block;
     padding: 3px 44px;
     clear: both;
     font-weight: normal;
+    font-size: 0.8vmax;
     line-height: 1.428571429;
     color: #17406e;
     white-space: nowrap;
@@ -43,12 +49,12 @@
 
 .multi-column-dropdown li a {
     display: block;
-    /*padding: 3px 20px;*/
+    padding: 3px 20px;
     clear: both;
+    font-size: 0.8vmax;
     font-weight: normal;
     line-height: 1.428571429;
     color: #17406e;
-    white-space: nowrap;
 }
 .multi-column-dropdown li a:hover {
     text-decoration: none;
