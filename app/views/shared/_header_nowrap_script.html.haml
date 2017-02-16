@@ -27,7 +27,11 @@
       // Add all right elements on the collapsible part of the header
       // Add 1px per width because jQuery rounds down non-integer results
       $('.navbar-fixed-top .collapse .pull-right').each(function() {
-        bp += parseFloat($(this).css('width')) + 1;
+        if ($(this).attr('id') != 'keyword_search_div') {
+          bp += parseFloat($(this).css('width')) + 1;
+        } else {
+          console.log('skipping keyword search');
+        }
       });
 
       // Add all left elements on the collapsible part of the header
