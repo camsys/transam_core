@@ -26,7 +26,7 @@
 %li.dropdown
   = link_to "#", :class => 'dropdown-toggle', :style => 'padding-top:15px;', :data => {:toggle => 'dropdown'} do
     %i.fa.fa-filter
-    = " #{session[:user_organization_filter]}"
+    = " #{session[:user_organization_filter].to_s[0..31]}#{session[:user_organization_filter].to_s.length > 32 ? '...' : ''}"
     %b.caret
     - unless @organization_list.count == orgs.count
       %span#filter_notification_count

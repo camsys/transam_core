@@ -34,6 +34,19 @@
 
 :javascript
 
+  $(document).ready(function() {
+    // Start with 15px to deal with a potential vertical scroll bar
+      var bp = 15;
+
+      $('ul.nav.navbar-nav.pull-right li.dropdown').each(function() {
+        bp += parseFloat($(this).css('width')) + 1;
+      });
+
+      $('#keyword_search_div').css('right', bp.toString() + 'px')
+  });
+
+
+
   $('.search-trigger').click(function(e) {
     if ($('#search_text:hidden').length) {
       e.preventDefault();
