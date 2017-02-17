@@ -11,19 +11,29 @@
 }
 
 .dropdown-menu.columns-2 {
-    width: 28vw;
+    width: 26vw;
+    max-height: 85vh;
+    overflow-y:scroll;
 }
 .dropdown-menu.columns-3 {
-    width: 42vw;
+    width: 39vw;
+    max-height: 85vh;
+    overflow-y:scroll;
 }
 .dropdown-menu.columns-4 {
-    width: 56vw;
+    width: 52vw;
+    max-height: 85vh;
+    overflow-y:scroll;
 }
 .dropdown-menu.columns-5 {
-    width: 70vw;
+    width: 65vw;
+    max-height: 85vh;
+    overflow-y:scroll;
 }
 .dropdown-menu.columns-6 {
-    width: 84vw;
+    width: 78vw;
+    max-height: 85vh;
+    overflow-y:scroll;
 }
 
 .multi-column-dropdown {

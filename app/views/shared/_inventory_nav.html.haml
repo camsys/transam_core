@@ -6,13 +6,27 @@
 
   assets = Asset.operational.where(:organization_id => @organization_list).group(:asset_subtype_id).count
 
+  grouped_assets = Hash.new
+  AssetType.all.each do |type|
+    grouped_assets[type.id] = [type, assets.select{|k, v| type.asset_subtypes.ids.include? k}]
+  end
+
+
+
+  column_count = (grouped_assets.count < 4 ? grouped_assets.count + 1 : 6)
+
+  types_per_column = (grouped_assets.count/(column_count-1).to_f).ceil
+
+  extras = grouped_assets.count%(column_count-1)
+
+
 %li{:class => "dropdown #{get_nav_link_class('assets')}"}
   = link_to "#", :class => "dropdown-toggle", :data => {"toggle" => "dropdown"}, :title => 'Inventory' do
     %i.fa.fa-bus.fa-2x
     %b.caret
-  %ul.dropdown-menu.columns-6
+  %ul.dropdown-menu{class: "columns-#{column_count}"}
     .row
-      .col-sm-2
+      %div{class: "col-sm-#{12/column_count}"}
         %ul.multi-column-dropdown
           %li.text-left
             = link_to manufacturers_path do
@@ -61,38 +75,41 @@
               = link_to new_upload_path do
                 %i.fa.fa-upload.fa-fw
                 Upload Template
-      .col-sm-2
-        %ul.multi-column-dropdown
-          - AssetType.where(class_name: ['Vehicle', 'SupportVehicle']).order(:id).each_with_index do |type, idx|
-            - subtypes = assets.select{|k, v| type.asset_subtypes.ids.include? k}
-            - if subtypes.count > 0 and idx > 0
-              %li.divider
-            = render partial: 'shared/inventory_nav_asset_subtype_menu_item', locals: {type: type, subtypes: subtypes}
-      .col-sm-2
-        %ul.multi-column-dropdown
-          - AssetType.where(class_name: ['SupportVehicle']).order(:id).each_with_index do |type, idx|
-            - subtypes = assets.select{|k, v| type.asset_subtypes.ids.include? k}
-            - if subtypes.count > 0 and idx > 0
-              %li.divider
-            = render partial: 'shared/inventory_nav_asset_subtype_menu_item', locals: {type: type, subtypes: subtypes}
-      .col-sm-2
-        %ul.multi-column-dropdown
-          - AssetType.where(class_name: ['TransitFacility', 'SupportFacility']).order(:id).each_with_index do |type, idx|
-            - subtypes = assets.select{|k, v| type.asset_subtypes.ids.include? k}
-            - if subtypes.count > 0 and idx > 0
-              %li.divider
-            = render partial: 'shared/inventory_nav_asset_subtype_menu_item', locals: {type: type, subtypes: subtypes}
-      .col-sm-2
-        %ul.multi-column-dropdown
-          - AssetType.where(class_name: ['RailCar', 'Locomotive']).order(:id).each_with_index do |type, idx|
-            - subtypes = assets.select{|k, v| type.asset_subtypes.ids.include? k}
-            - if subtypes.count > 0 and idx > 0
-              %li.divider
-            = render partial: 'shared/inventory_nav_asset_subtype_menu_item', locals: {type: type, subtypes: subtypes}
-      .col-sm-2
-        %ul.multi-column-dropdown
-          - AssetType.where.not(class_name: ['Vehicle', 'SupportVehicle', 'TransitFacility', 'SupportFacility', 'RailCar', 'Locomotive']).order(:id).each_with_index do |type, idx|
-            - subtypes = assets.select{|k, v| type.asset_subtypes.ids.include? k}
-            - if subtypes.count > 0 and idx > 0
-              %li.divider
-            = render partial: 'shared/inventory_nav_asset_subtype_menu_item', locals: {type: type, subtypes: subtypes, show_subtypes: 0}
+      - idx = -1
+      - (column_count-1).times do
+        - idx += 1
+        - if idx < grouped_assets.count
+          - type = grouped_assets[grouped_assets.keys[idx]][0]
+          - subtypes = grouped_assets[grouped_assets.keys[idx]][1]
+
+          %div{class: "col-sm-#{12/column_count}"}
+            %ul.multi-column-dropdown
+              %li.text-left
+                = link_to inventory_index_path(:asset_type => type, :asset_subtype => 0, :asset_group => 0), :style => 'font-weight:bold;'  do
+                  %i{:class => "#{type.display_icon_name} fa-fw"}
+                  = type.name.pluralize(2)
+              - subtypes.keys.each do |as|
+                %li.text-left.small
+                  - asset_subtype = AssetSubtype.find(as)
+                  = link_to asset_subtype.name, inventory_index_path(:asset_subtype => asset_subtype, :asset_group => 0)
+
+
+
+              - repeat = extras > 0 ? (types_per_column-1) : (types_per_column-2)
+              - extras -= 1
+              - (repeat).times do
+                - idx += 1
+                - if idx < grouped_assets.count
+                  - type = grouped_assets[grouped_assets.keys[idx]][0]
+                  - subtypes = grouped_assets[grouped_assets.keys[idx]][1]
+
+                  %li.divider
+                  %li.text-left.small
+                    = link_to inventory_index_path(:asset_type => type, :asset_subtype => 0, :asset_group => 0), :style => 'font-weight:bold;'  do
+                      %i{:class => "#{type.display_icon_name} fa-fw"}
+                      = type.name.pluralize(2)
+                  - subtypes.keys.each do |as|
+                    %li.text-left.small
+                      - asset_subtype = AssetSubtype.find(as)
+                      = link_to asset_subtype.name, inventory_index_path(:asset_subtype => asset_subtype, :asset_group => 0)
+
