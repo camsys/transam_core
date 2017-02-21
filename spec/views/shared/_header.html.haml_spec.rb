@@ -11,12 +11,13 @@ describe "shared/_header.html.haml", :type => :view do
     allow(controller).to receive(:session).and_return({:user_organization_filter => test_filter})
     assign(:organization, test_user.organization)
     assign(:organization_list, test_user.organizations.ids)
+    create(:equipment_asset)
 
     render
 
     expect(rendered).to have_link(test_user.name)
     expect(rendered).to have_link('Logout')
-    expect(rendered).to have_link(test_filter.to_s)
-    expect(rendered).to have_field('search_text')
+    expect(rendered).to have_link(test_filter.to_s[0..31])
+    expect(rendered).to have_xpath('//div[@id="keyword_search_div"]')
   end
 end
