@@ -8,7 +8,10 @@
 
   grouped_assets = Hash.new
   AssetType.all.each do |type|
-    grouped_assets[type.id] = [type, assets.select{|k, v| type.asset_subtypes.ids.include? k}]
+    subtype_counts = assets.select{|k, v| type.asset_subtypes.ids.include? k}
+    if subtype_counts.length > 0
+      grouped_assets[type.id] = [type, subtype_counts]
+    end
   end
 
 
