@@ -13,8 +13,8 @@
 
     .collapse.navbar-collapse
       %ul.nav.navbar-nav.pull-right
-        - if current_user.organizations.count > 1 || current_user.user_organization_filters.count > 1
-          = render 'shared/filter_nav'
+
+        = render 'shared/filter_nav'
         = render 'shared/settings_nav'
 
       #keyword_search_div{style: 'position: absolute; padding-top: 5px; right: 340px;'}

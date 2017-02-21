@@ -23,68 +23,69 @@
   - if lookup_context.template_exists?(view_component, 'shared', true)
     = render :partial => "shared/#{view_component}"
 
-%li.dropdown
-  = link_to "#", :class => 'dropdown-toggle', :style => 'padding-top:15px;', :data => {:toggle => 'dropdown'} do
-    %i.fa.fa-filter
-    = " #{session[:user_organization_filter].to_s[0..31]}#{session[:user_organization_filter].to_s.length > 32 ? '...' : ''}"
-    %b.caret
-    - unless @organization_list.count == orgs.count
-      %span#filter_notification_count
-        = "#{@organization_list.count}/#{orgs.count}"
+- if current_user.organizations.count > 1 || current_user.user_organization_filters.count > 1
+  %li.dropdown
+    = link_to "#", :class => 'dropdown-toggle', :style => 'padding-top:15px;', :data => {:toggle => 'dropdown'} do
+      %i.fa.fa-filter
+      = " #{session[:user_organization_filter].to_s[0..31]}#{session[:user_organization_filter].to_s.length > 32 ? '...' : ''}"
+      %b.caret
+      - unless @organization_list.count == orgs.count
+        %span#filter_notification_count
+          = "#{@organization_list.count}/#{orgs.count}"
 
-  %ul.dropdown-menu.dropdown-menu-right.multi-column.columns-2{role: "menu", style: "overflow-y:scroll;max-height:400px;"}
-    .row
-      .col-sm-6
-        %ul.multi-column-dropdown
-          - my_system_filters.each do |filter|
-            %li
-              = link_to user_user_organization_filter_use_path(current_user, filter) do
-                %i.fa.fa-filter.fa-fw
-                = filter.name
-          %li.divider
-          - (my_shared_filters - my_personal_filters).each do |filter|
-            %li
-              = link_to user_user_organization_filter_use_path(current_user, filter) do
-                %i.fa.fa-filter.fa-fw
-                = filter.name
-          %li.divider
-          - my_personal_filters.each do |filter|
-            %li
-              = link_to user_user_organization_filter_use_path(current_user, filter) do
-                %i.fa.fa-filter.fa-fw
-                = filter.name
-          %li.divider
-          %li.text-left
-            = link_to user_user_organization_filters_path(current_user) do
-              %i.fa.fa-list-alt.fa-fw
-              Manage Filters
-          %li.divider
-          %li.text-left
-            = link_to new_user_user_organization_filter_path(current_user) do
-              %i.fa.fa-plus.fa-fw
-              New Filter
-      .col-sm-6
-        %ul.multi-column-dropdown
-          %li
-            = link_to '#', id: 'subselect-orgs' do
-              Update Selection
-          %li.divider
-          %li#select-all
-            %label.checkbox
-              = check_box_tag 'orgs-select-all', 1, @organization_list.count == orgs.count
-              Select All
-          %li.divider
-          - orgs.each do |org|
-            %li.dropdown-menu-stay-open
-              %label.checkbox
-                = check_box_tag 'org[]', org.id, @organization_list.include?(org.id)
-                = org.to_s
-          - if (can? :update, current_user.user_organization_filter) && (current_user.user_organization_filter.can_update? current_user)
+    %ul.dropdown-menu.dropdown-menu-right.multi-column.columns-2{role: "menu", style: "overflow-y:scroll;max-height:400px;"}
+      .row
+        .col-sm-6
+          %ul.multi-column-dropdown
+            - my_system_filters.each do |filter|
+              %li
+                = link_to user_user_organization_filter_use_path(current_user, filter) do
+                  %i.fa.fa-filter.fa-fw
+                  = filter.name
             %li.divider
+            - (my_shared_filters - my_personal_filters).each do |filter|
+              %li
+                = link_to user_user_organization_filter_use_path(current_user, filter) do
+                  %i.fa.fa-filter.fa-fw
+                  = filter.name
+            %li.divider
+            - my_personal_filters.each do |filter|
+              %li
+                = link_to user_user_organization_filter_use_path(current_user, filter) do
+                  %i.fa.fa-filter.fa-fw
+                  = filter.name
+            %li.divider
+            %li.text-left
+              = link_to user_user_organization_filters_path(current_user) do
+                %i.fa.fa-list-alt.fa-fw
+                Manage Filters
+            %li.divider
+            %li.text-left
+              = link_to new_user_user_organization_filter_path(current_user) do
+                %i.fa.fa-plus.fa-fw
+                New Filter
+        .col-sm-6
+          %ul.multi-column-dropdown
             %li
-              = link_to edit_user_user_organization_filter_path(current_user, current_user.user_organization_filter) do
-                %i.fa.fa-edit.fa-fw
-                Edit This Filter
+              = link_to '#', id: 'subselect-orgs' do
+                Update Selection
+            %li.divider
+            %li#select-all
+              %label.checkbox
+                = check_box_tag 'orgs-select-all', 1, @organization_list.count == orgs.count
+                Select All
+            %li.divider
+            - orgs.each do |org|
+              %li.dropdown-menu-stay-open
+                %label.checkbox
+                  = check_box_tag 'org[]', org.id, @organization_list.include?(org.id)
+                  = org.to_s
+            - if (can? :update, current_user.user_organization_filter) && (current_user.user_organization_filter.can_update? current_user)
+              %li.divider
+              %li
+                = link_to edit_user_user_organization_filter_path(current_user, current_user.user_organization_filter) do
+                  %i.fa.fa-edit.fa-fw
+                  Edit This Filter
 
 :javascript
 
