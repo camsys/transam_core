@@ -18,10 +18,10 @@
 
   column_count = (grouped_assets.count < 4 ? grouped_assets.count + 1 : 6)
 
-  types_per_column = (grouped_assets.count/(column_count-1).to_f).ceil
-
-  extras = grouped_assets.count%(column_count-1)
-
+  unless grouped_assets.count == 0
+    types_per_column = (grouped_assets.count/(column_count-1).to_f).ceil
+    extras = grouped_assets.count%(column_count-1)
+  end
 
 %li{:class => "dropdown #{get_nav_link_class('assets')}"}
   = link_to "#", :class => "dropdown-toggle", :data => {"toggle" => "dropdown"}, :title => 'Inventory' do
