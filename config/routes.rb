@@ -40,6 +40,7 @@ Rails.application.routes.draw do
         get 'export'
         get 'parent'
         post 'fire_asset_event_workflow_events'
+        get 'get_summary'
       end
       member do
         get 'tag'

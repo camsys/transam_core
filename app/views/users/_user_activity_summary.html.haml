@@ -16,7 +16,7 @@
           %tr{:data => {:action_path => user_path(u)}}
             %td.left= u.name
             %td.right= format_as_date_time(u.last_sign_in_at)
-            %td.center= format_as_integer(u.sign_in_count)
+            %td.right= format_as_integer(u.sign_in_count)
             %td.center= format_as_boolean(u.locked_at)
             %td.center
               %i.fa.fa-info-circle.text-info.popup-details{:data => {:title => "#{u.name}", :content => "#{raw render :partial => 'users/summary', :locals => {:user => u}}"}}
