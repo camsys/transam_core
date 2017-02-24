@@ -1,0 +1,27 @@
+.panel.panel-default.dashboard-panel
+  .panel-heading
+    Asset Summary
+  .panel-body
+
+    %table.table.table-hover.table-condensed{style: 'width:100%;'}
+      %thead
+        %tr
+          %th.left.nowrap{:data => {:sortable => 'true'}} Subtype
+          %th.left.nowrap{:data => {:sortable => 'true'}} Avg. Age
+          %th.left.nowrap{:data => {:sortable => 'true'}} Count
+          %th.left.nowrap{:data => {:sortable => 'true'}} Cost
+          %th.left.nowrap{:data => {:sortable => 'true'}} Book Value
+
+      %tbody
+        - results = ActiveRecord::Base.connection.exec_query(Asset.select('organization_id, asset_subtype_id, organizations.short_name AS org_short_name, asset_subtypes.name AS subtype_name, COUNT(*) AS assets_count, SUM(purchase_cost) AS sum_purchase_cost, SUM(book_value) AS sum_book_value').joins(:organization, :asset_subtype).where(organization_id: @organization_list).group(:organization_id, :asset_subtype_id).to_sql)
+        - results.each do |a|
+          - assets = Asset.where(organization_id: a['organization_id'], asset_subtype_id: a['asset_subtype_id'])
+          %tr
+            - if @organization_list.count > 1
+              %td= "#{a['org_short_name']} #{a['subtype_name']}"
+            - else
+              %td= a['subtype_name']
+            %td= format_as_decimal((assets.inject(0) { |sum, x| sum += x.age }/assets.count.to_f),1)
+            %td= a['assets_count']
+            %td= format_as_currency(a['sum_purchase_cost'])
+            %td= format_as_currency(a['sum_book_value'])
