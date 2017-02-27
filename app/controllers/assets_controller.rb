@@ -64,20 +64,26 @@ class AssetsController < AssetAwareController
     asset_type_id = params[:asset_type_id]
 
     if asset_type_id.blank?
-      results = ActiveRecord::Base.connection.exec_query(Asset.select('organization_id, asset_subtypes.asset_type_id, organizations.short_name AS org_short_name, asset_types.name AS subtype_name, COUNT(*) AS assets_count, SUM(purchase_cost) AS sum_purchase_cost, SUM(book_value) AS sum_book_value').joins(:organization, asset_subtype: :asset_type).where(organization_id: @organization_list).group(:organization_id, :asset_subtype_id).to_sql)
+      results = ActiveRecord::Base.connection.exec_query(Asset.select('organization_id, asset_subtypes.asset_type_id, organizations.short_name AS org_short_name, asset_types.name AS subtype_name, COUNT(*) AS assets_count, SUM(purchase_cost) AS sum_purchase_cost, SUM(book_value) AS sum_book_value').joins(:organization, asset_subtype: :asset_type).where(organization_id: @organization_list).group(:organization_id, :asset_type_id).to_sql)
 
       level = 'type'
 
     else
       asset_subtype_ids = AssetType.includes(:asset_subtypes).find_by(id: asset_type_id).asset_subtypes.ids
 
-      results = ActiveRecord::Base.connection.exec_query(Asset.select('organization_id, asset_subtype_id, organizations.short_name AS org_short_name, asset_subtypes.name AS subtype_name, COUNT(*) AS assets_count, SUM(purchase_cost) AS sum_purchase_cost, SUM(book_value) AS sum_book_value').joins(:organization, :asset_subtype).where(organization_id: @organization_list, asset_subtype_id: asset_subtype_ids).group(:organization_id, :asset_subtype_id).to_sql)
+      results = ActiveRecord::Base.connection.exec_query(Asset.select('organization_id, asset_subtype_id, organizations.short_name AS org_short_name, asset_subtypes.name AS subtype_name, COUNT(*) AS assets_count, SUM(purchase_cost) AS sum_purchase_cost, SUM(book_value) AS sum_book_value').joins(:organization, :asset_subtype).where(organization_id: (params[:org] || @organization_list), asset_subtype_id: asset_subtype_ids).group(:organization_id, :asset_subtype_id).to_sql)
 
       level = 'subtype'
     end
 
     respond_to do |format|
-      format.js { render partial: 'dashboards/assets_widget_table', locals: {results: results, level: level }  }
+      format.js {
+        if params[:org]
+          render partial: 'dashboards/assets_widget_table_rows', locals: {results: results, level: level }
+        else
+          render partial: 'dashboards/assets_widget_table', locals: {results: results, level: level }
+        end
+      }
     end
   end
 
