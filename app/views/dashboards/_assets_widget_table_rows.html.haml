@@ -2,11 +2,13 @@
   - asset_type = ""
   - if level == 'subtype'
     - assets = Asset.where(organization_id: a['organization_id'], asset_subtype_id: a['asset_subtype_id'])
+    - url = inventory_index_path(:asset_subtype => a['asset_subtype_id'], :asset_group => 0)
   - else
     - asset_type = a['asset_type_id']
     - assets = Asset.joins(asset_subtype: :asset_type).where(organization_id: a['organization_id']).where('asset_subtypes.asset_type_id = ?', asset_type)
+    - url = inventory_index_path(:asset_type => asset_type, :asset_subtype => 0, :asset_group => 0)
 
-  %tr{data: {org: a['organization_id'], asset_type: asset_type}}
+  %tr{data: {org: a['organization_id'], asset_type: asset_type, action_path: @organization_list.count == 1 ? url : nil}}
     - if @organization_list.count > 1
       %td.left= "#{a['org_short_name']} #{a['subtype_name']}"
     - else
