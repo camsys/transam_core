@@ -41,6 +41,7 @@
       });
 
       var mq = ''
+
       // Only set up new collapse if it would happen before the default
       if (bp > 767) {
         // Define the new collapse media query
@@ -123,7 +124,15 @@
              // Organization filter stacking and width
              '.dropdown-menu.multi-column { min-width: 240px !important; } ' +
              '.dropdown-menu.multi-column > .row > div { width: auto; float: none; } ' +
+
+             // navbar right float left on collapse
+            '.left-on-collapse { float: left !important; } ' +
+            '#keyword_search_div { position: static; !important; } ' +
+
+
              '} ';
+
+
       }
 
       // Make needed adjustments to the default collapse
@@ -143,6 +152,12 @@
 
            // Organization filter divider color
            '.navbar-inverse .navbar-nav .open .dropdown-menu.multi-column .divider { background-color: #e5e5e5; } ' +
+
+
+           // navbar right float left on collapse
+           '.left-on-collapse { float: left !important; } ' +
+           '#keyword_search_div { position: static; !important; } ' +
+
            '}';
 
       // Add style element to contain the new collapse media query

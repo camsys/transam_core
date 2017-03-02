@@ -53,3 +53,17 @@ button.navbar-toggle {
   position: relative;
   white-space: nowrap;
 }
+
+@media (min-width: 767.001px) {
+  #keyword_search_div {
+    position: absolute;
+    padding-top: 5px;
+    right: 340px;
+  }
+}
+
+@media (max-width: 767px) {
+  #keyword_search_div {
+    position: static;
+  }
+}
