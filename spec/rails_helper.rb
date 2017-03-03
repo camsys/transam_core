@@ -2,13 +2,16 @@
 ENV["RAILS_ENV"] ||= 'test'
 
 require 'codacy-coverage'
-Codacy::Reporter.start
-
 require 'simplecov'
+
+SimpleCov.formatters = [
+  Codacy::Formatter,
+  SimpleCov::Formatter::HTMLFormatter
+]
+
 SimpleCov.start 'rails' do
   add_group "Calculators", "app/calculators"
   add_group "File Handlers", "app/file_handlers"
-  add_group "Jobs", "app/jobs"
   add_group "Reports", "app/reports"
   add_group "Services", "app/services"
   add_group "Searches", "app/searches"
