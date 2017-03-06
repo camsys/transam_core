@@ -27,9 +27,9 @@
   = link_to "#", :class => "dropdown-toggle", :data => {"toggle" => "dropdown"}, :title => 'Inventory' do
     %i.fa.fa-bus.fa-2x
     %b.caret
-  %ul.dropdown-menu{class: "columns-#{column_count}"}
+  %ul.dropdown-menu.columns-3
     .row
-      %div{class: "col-sm-#{12/column_count}"}
+      %div.col-sm-4
         %ul.multi-column-dropdown
           %li.text-left
             = link_to manufacturers_path do
@@ -78,41 +78,27 @@
               = link_to new_upload_path do
                 %i.fa.fa-upload.fa-fw
                 Upload Template
-      - idx = -1
-      - (column_count-1).times do
-        - idx += 1
-        - if idx < grouped_assets.count
-          - type = grouped_assets[grouped_assets.keys[idx]][0]
-          - subtypes = grouped_assets[grouped_assets.keys[idx]][1]
 
-          %div{class: "col-sm-#{12/column_count}"}
-            %ul.multi-column-dropdown
-              %li.text-left
-                = link_to inventory_index_path(:asset_type => type, :asset_subtype => 0, :asset_group => 0), :style => 'font-weight:bold;'  do
-                  %i{:class => "#{type.display_icon_name} fa-fw"}
-                  = type.name.pluralize(2)
-              - subtypes.keys.each do |as|
-                %li.text-left.small
-                  - asset_subtype = AssetSubtype.find(as)
-                  = link_to asset_subtype.name, inventory_index_path(:asset_subtype => asset_subtype, :asset_group => 0)
+      .col-sm-4
+        %ul.multi-column-dropdown
+          - grouped_assets.values.map{|x| x[0]}.each do |type|
+            %li.text-left.asset_type_menu_item{data: {asset_type_id: type.id}}
+              = link_to inventory_index_path(:asset_type => type, :asset_subtype => 0, :asset_group => 0) do
+                %i{:class => "#{type.display_icon_name} fa-fw"}
+                = type.name.pluralize(2)
 
+      .col-sm-4
+        %ul.multi-column-dropdown
+          - grouped_assets.values.each do |x|
+            - subtypes = x[1]
+            - subtypes.keys.each do |as|
+              %li.text-left.asset_subtype_menu_item{data: {asset_type_id: x[0].id}, style: 'display: none;'}
+                - asset_subtype = AssetSubtype.find(as)
+                = link_to asset_subtype.name, inventory_index_path(:asset_subtype => asset_subtype, :asset_group => 0)
 
+:javascript
 
-              - repeat = extras > 0 ? (types_per_column-1) : (types_per_column-2)
-              - extras -= 1
-              - (repeat).times do
-                - idx += 1
-                - if idx < grouped_assets.count
-                  - type = grouped_assets[grouped_assets.keys[idx]][0]
-                  - subtypes = grouped_assets[grouped_assets.keys[idx]][1]
-
-                  %li.divider
-                  %li.text-left.small
-                    = link_to inventory_index_path(:asset_type => type, :asset_subtype => 0, :asset_group => 0), :style => 'font-weight:bold;'  do
-                      %i{:class => "#{type.display_icon_name} fa-fw"}
-                      = type.name.pluralize(2)
-                  - subtypes.keys.each do |as|
-                    %li.text-left.small
-                      - asset_subtype = AssetSubtype.find(as)
-                      = link_to asset_subtype.name, inventory_index_path(:asset_subtype => asset_subtype, :asset_group => 0)
-
+  $(".asset_type_menu_item").mouseover(function() {
+    $(".asset_subtype_menu_item").hide();
+    $("li[data-asset-type-id='"+$(this).data('asset-type-id')+"']").show();
+  });
