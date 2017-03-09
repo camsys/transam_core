@@ -33,6 +33,10 @@ class BaseSearcher
     @klass.where(object_key: list) if @klass
   end
 
+  def cache_params_variable_name
+    "query_search_params_var"
+  end
+
   # Override this to return the name of the results table to display
   def results_view
   end
