@@ -2,36 +2,21 @@
   = link_to reports_path, :class => "dropdown-toggle", :data => {"toggle" => "dropdown"}, :title => 'Reports' do
     %i.fa.fa-bar-chart-o.fa-2x
     %b.caret
-  %ul.dropdown-menu.multi-level.multi-column.columns-2{:role => "menu"}
-    .row
-      .col-sm-6
-        %ul.multi-column-dropdown
-          - ReportType.active.joins(:reports).where(reports: {show_in_nav: true}).uniq.each_with_index do | rt, idx |
-            - if rt.reports.count > 0
-              - num = 0
-              - reports = rt.reports.where(show_in_nav: true, active: true)
-              - reports.each{|x| num += (current_user.is_in_roles? x.role_names) ? 1 : 0}
-              - if num > 0
-                - unless idx == 0
-                  %li.divider
-                %li.text-left
-                  = link_to reports_path(:report_type => rt.id), :style => 'font-weight:bold;'  do
-                    %i{:class => "#{rt.display_icon_name} fa-fw"}
-                    = rt.name.pluralize(2)
-                - reports.each do |report|
-                  - if current_user.is_in_roles? report.role_names
-                    %li.text-left.small
-                      = link_to report_path(report) do
-                        = report.name
-      .col-sm-6
-        - if Form.count > 0
-          %ul.multi-column-dropdown
-            %li.text-left
-              = link_to forms_path, :style => 'font-weight:bold;' do
-                %i.fa.fa-file-text-o.fa-fw
-                All Forms
-            - Form.all.each do | frm |
-              %li.text-left.small
-                = link_to form_path(frm)  do
-                  %i.fa.fa-file-text-o.fa-fw
-                  = frm.name.pluralize(2)
+  %ul.dropdown-menu.multi-level{:role => "menu"}
+    - ReportType.active.joins(:reports).where(reports: {show_in_nav: true}).uniq.each do | rt |
+      - if rt.reports.count > 0
+        - num = 0
+        - reports = rt.reports.where(show_in_nav: true, active: true)
+        - reports.each{|x| num += (current_user.is_in_roles? x.role_names) ? 1 : 0}
+        - if num > 0
+          %li.text-left.dropdown-submenu
+            = link_to reports_path(:report_type => rt.id)  do
+              %i{:class => "#{rt.display_icon_name} fa-fw"}
+              = rt.name.pluralize(2)
+            %ul.dropdown-menu
+              - reports.each do |report|
+                - if current_user.is_in_roles? report.role_names
+                  %li.text-left
+                    = link_to report_path(report)  do
+                      %i{:class => "#{report.report_type.display_icon_name} fa-fw"}
+                      = report.name

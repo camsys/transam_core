@@ -2,27 +2,16 @@
   = link_to "#", :class => "dropdown-toggle", :data => {"toggle" => "dropdown"}, :title => 'Policies' do
     %i.fa.fa-line-chart.fa-2x
     %b.caret
-  %ul.dropdown-menu.multi-column.columns-2
-    .row
-      .col-sm-6
-        %ul.multi-column-dropdown
-          %li.text-left
-            = link_to policies_path do
-              %i.fa.fa-book.fa-fw
-              Policies
+  %ul.dropdown-menu.multi-level{:role => 'menu'}
+    %li.text-left
+      = link_to policies_path do
+        %i.fa.fa-book.fa-fw
+        Policies
+    %li.divider
 
-          - # Load module specific tab content if they exist
-          - SystemConfig.transam_module_names.each do |mod|
-            - view_component = "#{mod}_policy_sub_nav_first_column"
-            - Rails.logger.debug "Checking for #{view_component}: Results = #{lookup_context.template_exists?(view_component, 'shared', true)}"
-            - if lookup_context.template_exists?(view_component, 'shared', true)
-              = render :partial => "shared/#{view_component}"
-
-      .col-sm-6
-        %ul.multi-column-dropdown
-          - # Load module specific tab content if they exist
-          - SystemConfig.transam_module_names.each do |mod|
-            - view_component = "#{mod}_policy_sub_nav_second_column"
-            - Rails.logger.debug "Checking for #{view_component}: Results = #{lookup_context.template_exists?(view_component, 'shared', true)}"
-            - if lookup_context.template_exists?(view_component, 'shared', true)
-              = render :partial => "shared/#{view_component}"
+    - # Load module specific tab content if they exist
+    - SystemConfig.transam_module_names.each do |mod|
+      - view_component = "#{mod}_policy_sub_nav"
+      - Rails.logger.debug "Checking for #{view_component}: Results = #{lookup_context.template_exists?(view_component, 'shared', true)}"
+      - if lookup_context.template_exists?(view_component, 'shared', true)
+        = render :partial => "shared/#{view_component}"

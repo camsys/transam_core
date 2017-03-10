@@ -1,104 +1,101 @@
-:ruby
-  event_type = EarlyDispositionRequestUpdateEvent.asset_event_type
-  can_view_early_disposition = (event_type.active and can?(:manage, EarlyDispositionRequestUpdateEvent))
-  early_events = Asset.where(organization_id: @organization_list).joins(:early_disposition_requests).where(asset_events: {state: 'new'}).count
-  transferred_assets = Asset.where(organization_id: @organization_list).where('asset_tag = object_key').count
-
-  assets = Asset.operational.where(:organization_id => @organization_list).group(:asset_subtype_id).count
-
-  grouped_assets = Hash.new
-  AssetType.all.each do |type|
-    subtype_counts = assets.select{|k, v| type.asset_subtypes.ids.include? k}
-    if subtype_counts.length > 0
-      grouped_assets[type.id] = [type, subtype_counts]
-    end
-  end
-
-
-
-  column_count = (grouped_assets.count < 4 ? grouped_assets.count + 1 : 6)
-
-  unless grouped_assets.count == 0
-    types_per_column = (grouped_assets.count/(column_count-1).to_f).ceil
-    extras = grouped_assets.count%(column_count-1)
-  end
-
 %li{:class => "dropdown #{get_nav_link_class('assets')}"}
   = link_to "#", :class => "dropdown-toggle", :data => {"toggle" => "dropdown"}, :title => 'Inventory' do
     %i.fa.fa-bus.fa-2x
     %b.caret
-  %ul.dropdown-menu.columns-3
-    .row
-      %div.col-sm-4
-        %ul.multi-column-dropdown
-          %li.text-left
-            = link_to manufacturers_path do
-              %i.fa.fa-fw.fa-star
-              Manufacturers
-          %li.divider
-          %li.text-left
-            = link_to asset_groups_path do
-              %i.fa.fa-tags.fa-fw
-              Groups
-          - if (early_events > 0 && can_view_early_disposition) || (transferred_assets > 0 && can?(:accept_transfers, Asset))
-            %li.divider
-            - if early_events > 0 && can_view_early_disposition
-              %li.text-left{:style => 'width:255px'}
-                = link_to inventory_index_path(:early_disposition => 1) do
-                  %i.fa.fa-fw{:class => event_type.display_icon_name}
-                  = "Early Disposition Proposed (#{early_events})"
-            - if transferred_assets > 0 && can?(:accept_transfers, Asset)
-              %li.text-left{:style => 'width:255px'}
-                = link_to inventory_index_path(:transferred_assets => 1) do
-                  %i.fa.fa-refresh.fa-fw
-                  = "Newly Transferred Assets (#{transferred_assets})"
-          %li.divider
-          %li.text-left
-            = link_to reset_searches_path(:search_type => SearchesController::ASSET_SEARCH_TYPE) do
-              %i.fa.fa-search.fa-fw
-              Query
-          - SystemConfig.transam_module_names.each do |mod|
-            = render :partial => "shared/#{mod}_inventory_nav_first_column" rescue nil
-          - if !Policy.where('parent_id IS NOT NULL AND organization_id IN (?)', @organization_list).pluck(:organization_id).empty? && (can? :create, Asset)
-            %li.divider
-            %li.text-left
-              = link_to new_asset_inventory_index_path do
-                %i.fa.fa-plus.fa-fw
-                Add Asset
-            %li.divider
-            %li.text-left
-              = link_to uploads_path, :style => 'font-weight:bold;' do
-                %i.fa.fa-file-excel-o.fa-fw
-                Bulk Updates
-            %li.text-left.small
-              = link_to templates_uploads_path do
-                %i.fa.fa-download.fa-fw
-                Download Template
-            %li.text-left.small
-              = link_to new_upload_path do
-                %i.fa.fa-upload.fa-fw
-                Upload Template
-
-      .col-sm-4
-        %ul.multi-column-dropdown
-          - grouped_assets.values.map{|x| x[0]}.each do |type|
-            %li.text-left.asset_type_menu_item{data: {asset_type_id: type.id}}
-              = link_to inventory_index_path(:asset_type => type, :asset_subtype => 0, :asset_group => 0) do
-                %i{:class => "#{type.display_icon_name} fa-fw"}
-                = type.name.pluralize(2)
-
-      .col-sm-4
-        %ul.multi-column-dropdown
-          - grouped_assets.values.each do |x|
-            - subtypes = x[1]
-            - subtypes.keys.each do |as|
-              %li.text-left.asset_subtype_menu_item{data: {asset_type_id: x[0].id}, style: 'display: none;'}
+  %ul.dropdown-menu.multi-level{:role => "menu"}
+    - assets = Asset.operational.where(:organization_id => @organization_list).group(:asset_subtype_id).count
+    - AssetType.all.each do |type|
+      - subtypes = assets.select{|k, v| type.asset_subtypes.ids.include? k}
+      - if subtypes.count > 0
+        %li.text-left.dropdown-submenu
+          = link_to inventory_index_path(:asset_type => type, :asset_subtype => 0, :asset_group => 0)  do
+            %i{:class => "#{type.display_icon_name} fa-fw"}
+            = type.name.pluralize(2)
+          %ul.dropdown-menu
+            - subtypes.each do |as, count|
+              %li.text-left
                 - asset_subtype = AssetSubtype.find(as)
                 = link_to asset_subtype.name, inventory_index_path(:asset_subtype => asset_subtype, :asset_group => 0)
-
-:javascript
-
-  $(".asset_type_menu_item").mouseover(function() {
-    $(".asset_subtype_menu_item").hide();
-    $("li[data-asset-type-id='"+$(this).data('asset-type-id')+"']").show();
-  });
+    %li.divider
+    %li.text-left.dropdown-submenu
+      = link_to manufacturers_path do
+        %i.fa.fa-fw.fa-star
+        Manufacturers
+      %ul.dropdown-menu{style: "overflow-y:scroll; max-height:400px;"}
+        - Manufacturer.joins(:assets).where(assets: {organization_id: @organization_list}).distinct.each do | manufacturer |
+          %li.text-left
+            = link_to inventory_index_path(:manufacturer_id => manufacturer) do
+              %i.fa.fa-star.fa-fw
+              = manufacturer.name
+        %li.divider
+        %li.text-left
+          = link_to manufacturers_path do
+            %i.fa.fa-star.fa-fw
+            All Manufacturers
+    %li.divider
+    %li.text-left.dropdown-submenu
+      = link_to asset_groups_path do
+        %i.fa.fa-tags.fa-fw
+        Groups
+      %ul.dropdown-menu
+        - AssetGroup.where(organization_id: @organization_list).each do |grp|
+          %li.text-left
+            = link_to asset_group_path(grp) do
+              %i.fa.fa-tag.fa-fw
+              = grp.name
+        %li.divider
+        %li.text-left
+          = link_to asset_groups_path do
+            %i.fa.fa-tags.fa-fw
+            Manage Groups
+      - event_type = EarlyDispositionRequestUpdateEvent.asset_event_type
+      - can_view_early_disposition = (event_type.active and can?(:manage, EarlyDispositionRequestUpdateEvent))
+      - if can_view_early_disposition || can?(:accept_transfers, Asset)
+        - early_events = Asset.where(organization_id: @organization_list).joins(:early_disposition_requests).where(asset_events: {state: 'new'}).count
+        - transferred_assets = Asset.where(organization_id: @organization_list).where('asset_tag = object_key').count
+        - if (early_events > 0 && can_view_early_disposition) || (transferred_assets > 0 && can?(:accept_transfers, Asset))
+          %li.divider
+          %li.text-left.dropdown-submenu
+            = link_to '#' do
+              %i.fa.fa-exclamation.fa-fw
+              Action Events
+            %ul.dropdown-menu
+              - if early_events > 0 && can_view_early_disposition
+                %li.text-left{:style => 'width:255px'}
+                  = link_to inventory_index_path(:early_disposition => 1) do
+                    %i.fa.fa-fw{:class => event_type.display_icon_name}
+                    %span.badge.pull-right= early_events
+                    Early Disposition Proposed
+              - if transferred_assets > 0 && can?(:accept_transfers, Asset)
+                %li.text-left{:style => 'width:255px'}
+                  = link_to inventory_index_path(:transferred_assets => 1) do
+                    %i.fa.fa-refresh.fa-fw
+                    %span.badge.pull-right= transferred_assets
+                    Newly Transferred Assets
+    %li.divider
+    %li.text-left
+      = link_to reset_searches_path(:search_type => SearchesController::ASSET_SEARCH_TYPE) do
+        %i.fa.fa-search.fa-fw
+        Query
+    - SystemConfig.transam_module_names.each do |mod|
+      = render :partial => "shared/#{mod}_main_nav_extra_menu" rescue nil
+    - if !Policy.where('parent_id IS NOT NULL AND organization_id IN (?)', @organization_list).pluck(:organization_id).empty? && (can? :create, Asset)
+      %li.divider
+      %li.text-left
+        = link_to new_asset_inventory_index_path do
+          %i.fa.fa-plus.fa-fw
+          Add Asset
+      %li.divider
+      %li.text-left.dropdown-submenu
+        = link_to uploads_path do
+          %i.fa.fa-file-excel-o.fa-fw
+          Bulk Updates
+        %ul.dropdown-menu
+          %li.text-left
+            = link_to templates_uploads_path do
+              %i.fa.fa-download.fa-fw
+              Download Template
+          %li.text-left
+            = link_to new_upload_path do
+              %i.fa.fa-upload.fa-fw
+              Upload Template
