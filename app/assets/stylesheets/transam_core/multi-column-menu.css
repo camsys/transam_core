@@ -11,27 +11,27 @@
 }
 
 .dropdown-menu.columns-2 {
-    width: 26vw;
+    width: 30vw;
     max-height: 85vh;
     overflow-y:scroll;
 }
 .dropdown-menu.columns-3 {
-    width: 39vw;
+    width: 45vw;
     max-height: 85vh;
     overflow-y:scroll;
 }
 .dropdown-menu.columns-4 {
-    width: 52vw;
+    width: 60vw;
     max-height: 85vh;
     overflow-y:scroll;
 }
 .dropdown-menu.columns-5 {
-    width: 65vw;
+    width: 75vw;
     max-height: 85vh;
     overflow-y:scroll;
 }
 .dropdown-menu.columns-6 {
-    width: 78vw;
+    width: 90vw;
     max-height: 85vh;
     overflow-y:scroll;
 }

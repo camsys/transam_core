@@ -157,6 +157,11 @@ frequency_types = [
   {:active => 1, :name => 'month', :description => 'Month'}
 ]
 
+search_types = [
+  {:active => 1, :name => 'Asset', :class_name => 'AssetSearcher'},
+  {:active => 1, :name => 'Capital Plan', :class_name => 'CapitalProjectSearcher'}
+]
+
 activities = [
     { name: 'Weekly Issues Report',
       description: 'Report giving an admin a list of all issues.',
@@ -173,7 +178,7 @@ activities = [
 lookup_tables = %w{asset_event_types condition_types disposition_types cost_calculation_types license_types priority_types
   file_content_types file_status_types report_types service_status_types
   service_life_calculation_types condition_estimation_types
-  issue_status_types issue_types web_browser_types replacement_reason_types roles notice_types frequency_types activities
+  issue_status_types issue_types web_browser_types replacement_reason_types roles notice_types frequency_types search_types activities
   }
 
 lookup_tables.each do |table_name|

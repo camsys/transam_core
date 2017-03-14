@@ -1,0 +1,51 @@
+:ruby
+  table_dom_id = SecureRandom.hex
+  show_actions ||= 0
+
+- if show_actions == 1
+  #table_actions.btn-group
+    = render :partial => "saved_searches/index_actions"
+
+%table.table.table-hover{:id => table_dom_id, :data => {:toggle => 'table',
+  :pagination => 'true',
+  :show_pagination_switch => 'true',
+  :page_list => "[5, 10, 20, 50, 100, 200]",
+  :page_size => current_user.num_table_rows,
+  :search => 'false',
+  :toolbar => "#table_actions",
+  :export_types => "['csv', 'txt', 'excel']",
+  :show_export => 'true',
+  :show_columns => 'true',
+  :show_toggle => 'true'}}
+  %thead
+    %tr
+      %th.left{:data => {:visible => 'false'}} Object Key
+      %th.center{:data => {:sortable => 'true'}} Name
+      %th.center{:data => {:sortable => 'true'}} Description
+      - unless @search_type
+        %th.center{:data => {:sortable => 'true'}} Search Type
+      %th.center{:data => {:visible => 'true', :sortable => 'true'}} Created On
+      %th.center{:data => {:visible => 'true', :sortable => 'false'}}
+      %th.center{:data => {:visible => 'true', :sortable => 'false'}}
+      %th.center{:data => {:visible => 'true', :sortable => 'false'}}
+
+  %tbody
+    - searches.each do |s|
+      %tr{:id => s.object_key}
+        %td.left= s.object_key
+        %td.left= s.name
+        %td.left= s.description.html_safe
+        - unless @search_type
+          %td.left= s.search_type
+        %td.right= format_as_date_time(s.created_at)
+        %td.center
+          = link_to saved_search_path(s), :title => "Run this search." do
+            %i.fa.fa-fw.fa-play-circle.text-primary.fa-1-5x
+        %td.center
+          = link_to edit_saved_search_path(s), :title => "Update this search.", :remote => true do
+            %i.fa.fa-fw.fa-edit.text-primary.fa-1-5x
+        %td.center
+          = link_to saved_search_path(s), :title => "Remove this search", :method => :delete, :data => {:confirm => "Are you sure you want to remove this search? The action can't be undone."} do
+            %i.fa.fa-fw.fa-trash-o.action-icon.text-danger.fa-1-5x
+
+= render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :path_pattern => "#"}

@@ -24,12 +24,13 @@
   :wrapper => :vertical_form,
   :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :horizontal_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean},
   :defaults => {:include_blank => "Any...", :required => false} ) do |f|
-    = hidden_field_tag :search_type, @search_type
+    = hidden_field_tag :search_type, @search_type.id
     = yield f
     .row
       .col-md-12
         = f.button :submit, 'Query', :class=>"btn btn-primary", :id => 'submit_btn'
         = button_tag 'Reset', :type => 'reset', :class=> 'btn btn-warning reset-button'
+
 
 :javascript
   $(document).ready(function() {

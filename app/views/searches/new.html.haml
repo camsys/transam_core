@@ -1,8 +1,25 @@
-= render @searcher.form_view
+.modal.fade#save-search-modal{:tabindex => -1, :role => 'dialog', :aria => {:hidden => true}}
 
-.row{:style => 'margin-top: 20px;'}
-  .col-md-12
-    #results_table
-      - unless @data.empty?
-        = render 'results'
-    #spinner{:style => 'padding: 20px;display:none;'}= loader_panel_tag({:message => "Searching...", :size => 3, :spinner => "refresh"})
+%ul.nav.nav-tabs
+  %li.active
+    %a{:href => "#new", :data =>{:toggle => 'tab'}}
+      New Search
+  %li
+    %a{:href => "#saved", :data =>{:toggle => 'tab'}}
+      Saved Searches
+
+.tab-content
+  .tab-pane.fade.in.active#new
+    .tab-content
+      = render @searcher.form_view
+
+      .row{:style => 'margin-top: 20px;'}
+        .col-md-12
+          #results_table
+            - unless @data.empty?
+              = render 'results'
+          #spinner{:style => 'padding: 20px;display:none;'}= loader_panel_tag({:message => "Searching...", :size => 3, :spinner => "refresh"})
+
+  .tab-pane.fade#saved
+    .tab-content
+      = render :partial => 'saved_searches/index_table', :locals => {:searches => current_user.saved_searches.where(search_type_id: @search_type.id), :show_actions => 0}

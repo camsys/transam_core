@@ -11,6 +11,11 @@
   = link_to user_messages_path(current_user) do
     %i.fa.fa-envelope.fa-fw
     = " My messages (#{current_user.new_messages.count})"
+%li.divider
+%li.text-left
+  = link_to saved_searches_path do
+    %i.fa.fa-floppy-o.fa-fw
+    = "My saved searches"
 %li.divider.text-left
 - if current_user.organizations.count == 1
   %li.text-left
@@ -18,17 +23,10 @@
       %i.fa.fa-building-o.fa-fw
       My organization
 - else
-
-  %li.dropdown-submenu.dropdown-submenu-right
-    = link_to '#', :tabindex => "-1"  do
-      %i.fa.fa-building-o.fa-fw
-      My organizations
-    %ul.dropdown-menu
-      - current_user.organizations.each do |org|
-        %li
-          = link_to organization_path(org)  do
-            %i.fa.fa-building-o.fa-fw
-            = org.to_s
-
+  - current_user.organizations.each do |org|
+    %li.text-left
+      = link_to organization_path(org) do
+        %i.fa.fa-building-o.fa-fw
+        = org.to_s
 
 

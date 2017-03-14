@@ -74,7 +74,7 @@
                     Newly Transferred Assets
     %li.divider
     %li.text-left
-      = link_to reset_searches_path(:search_type => SearchesController::ASSET_SEARCH_TYPE) do
+      = link_to reset_searches_path(:search_type => SearchType.find_by(class_name: 'AssetSearcher').id) do
         %i.fa.fa-search.fa-fw
         Query
     - SystemConfig.transam_module_names.each do |mod|

@@ -118,6 +118,13 @@ Rails.application.routes.draw do
       get  :reset
     end
   end
+
+  resources :saved_searches do
+    member do
+      get 'reorder'
+    end
+  end
+
   resources :reports,       :only => [:index, :show] do
     member do
       get 'load'  # load a report using ajax
