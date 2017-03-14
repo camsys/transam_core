@@ -56,15 +56,18 @@
     return 'action-path';
   };
 
-  $('#asset_server_table').on('sort.bs.table', function(e, name, order) {
-    $('#asset_server_table').bootstrapTable('selectPage', 1);
+  $('#search_asset_server_table').on('click-row.bs.table', function (e, row, $element) {
+    var url = path.replace("x", row['object_key']);
+    document.location.href = url;
+  }).on('sort.bs.table', function(e, name, order) {
+    $('#search_asset_server_table').bootstrapTable('selectPage', 1);
   }).on('post-body.bs.table', function() {
     $('.fixed-table-container').css('min-height', '300px');
-    $('#asset_server_table > tbody > tr').addClass('action-path');
+    $('#search_asset_server_table > tbody > tr').addClass('action-path');
   });
 
   $(window).resize(function() {
-    $('#asset_server_table').bootstrapTable('resetView');
+    $('#search_asset_server_table').bootstrapTable('resetView');
   });
 
   function boolean_formatter(value) {

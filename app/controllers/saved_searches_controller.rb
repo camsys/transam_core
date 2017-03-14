@@ -43,6 +43,7 @@ class SavedSearchesController < OrganizationAwareController
         if search_proxy
           search_type = @search.search_type
           searcher = search_type.class_name.constantize.new(search_proxy)
+          searcher.user = current_user
           cache_objects(searcher.cache_params_variable_name, search_proxy)
           cache_list(searcher.data, searcher.cache_variable_name)
 
@@ -80,7 +81,9 @@ class SavedSearchesController < OrganizationAwareController
     #search_proxy.name = @search.name
     # serialize the search proxy to JSON
     @search.json = search_proxy.to_json
-    @search.query_string = @search.search_type.class_name.constantize.new(search_proxy).to_s
+    searcher =  @search.search_type.class_name.constantize.new(search_proxy)
+    searcher.user = current_user
+    @search.query_string = searcher.to_s
 
     respond_to do |format|
       if @search.save

@@ -12,7 +12,12 @@ class SearchesController < OrganizationAwareController
 
   def create
     # use organization list if query is for any organization
-    params[:searcher][:organization_id] = @organization_list if params[:searcher][:organization_id] == [''] || params[:searcher][:organization_id].nil?
+    unless params[:searcher][:organization_id].is_a?(Array)
+      params[:searcher][:organization_id] = [params[:searcher][:organization_id]]
+    end
+    if params[:searcher][:organization_id].select { |e| !e.blank? }.empty?
+      params[:searcher][:organization_id] = @organization_list
+    end
 
     @searcher = @searcher_klass.constantize.new(params[:searcher])
     @searcher.user = current_user
