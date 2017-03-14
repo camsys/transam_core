@@ -34,17 +34,23 @@ class SavedSearchesController < OrganizationAwareController
     # to the session cache and re-direct to either the map search or work search
     # page
 
-    search_proxy = @search.search_proxy
-    # cache the search proxy
-    Rails.logger.debug search_proxy.inspect
+    respond_to do |format|
+      format.html {
+        search_proxy = @search.search_proxy
+        # cache the search proxy
+        Rails.logger.debug search_proxy.inspect
 
+        if search_proxy
+          search_type = @search.search_type
+          searcher = search_type.class_name.constantize.new(search_proxy)
+          cache_objects(searcher.cache_params_variable_name, search_proxy)
+          cache_list(searcher.data, searcher.cache_variable_name)
 
-    search_type = @search.search_type
-    searcher = search_type.class_name.constantize.new(search_proxy)
-    cache_objects(searcher.cache_params_variable_name, search_proxy)
-    cache_list(searcher.data, searcher.cache_variable_name)
-
-    redirect_to new_search_url(search_type: search_type.id), status: 303
+          redirect_to new_search_url(search_type: search_type.id), status: 303
+        end
+      }
+      format.js # load SQL in modal
+    end
 
   end
 
@@ -75,6 +81,7 @@ class SavedSearchesController < OrganizationAwareController
     #search_proxy.name = @search.name
     # serialize the search proxy to JSON
     @search.json = search_proxy.to_json
+    @search.query_string = @search.search_type.class_name.constantize.new(search_proxy).to_s
 
     respond_to do |format|
       if @search.save

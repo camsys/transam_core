@@ -91,8 +91,10 @@ class SavedSearch < ActiveRecord::Base
 
   # Inflates a search proxy from the saved JSON
   def search_proxy
-    h = JSON.parse(json)
-    h.except('errors')
+    if json.present?
+      h = JSON.parse(json)
+      h.except('errors')
+    end
   end
 
   #-----------------------------------------------------------------------------

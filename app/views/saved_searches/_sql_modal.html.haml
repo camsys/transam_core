@@ -1,0 +1,9 @@
+.modal-dialog
+  .modal-content
+    .modal-header
+      %button.close{:data => {:dismiss => "modal"}}
+        x
+      %h4.modal-title
+        SQL
+    .modal-body
+      = @search.query_string

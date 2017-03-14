@@ -25,6 +25,7 @@
       - unless @search_type
         %th.center{:data => {:sortable => 'true'}} Search Type
       %th.center{:data => {:visible => 'true', :sortable => 'true'}} Created On
+      %th.center{:data => {:visible => 'true', :sortable => 'false'}} SQL
       %th.center{:data => {:visible => 'true', :sortable => 'false'}}
       %th.center{:data => {:visible => 'true', :sortable => 'false'}}
       %th.center{:data => {:visible => 'true', :sortable => 'false'}}
@@ -39,8 +40,13 @@
           %td.left= s.search_type
         %td.right= format_as_date_time(s.created_at)
         %td.center
-          = link_to saved_search_path(s), :title => "Run this search." do
-            %i.fa.fa-fw.fa-play-circle.text-primary.fa-1-5x
+          - if s.query_string.present?
+            = link_to saved_search_path(s), :title => "SQL for this search.", :remote => true do
+              %i.fa.fa-fw.fa-code.text-primary.fa-1-5x
+        %td.center
+          - if s.json.present?
+            = link_to saved_search_path(s), :title => "Run this search." do
+              %i.fa.fa-fw.fa-play-circle.text-primary.fa-1-5x
         %td.center
           = link_to edit_saved_search_path(s), :title => "Update this search.", :remote => true do
             %i.fa.fa-fw.fa-edit.text-primary.fa-1-5x
