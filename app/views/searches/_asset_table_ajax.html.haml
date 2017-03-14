@@ -2,6 +2,10 @@
   .flag-column {
     :width: 30px;
   }
+:ruby
+  # set table type
+  @asset_class_name = @searcher.asset_type_class_name
+  @view = "#{@asset_class_name.underscore}_index"
 
 .table-responsive
   %table.table.table-condensed.table-hover{:id => 'search_asset_server_table',
