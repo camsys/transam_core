@@ -51,8 +51,17 @@ class SearchesController < OrganizationAwareController
       @data = @searcher.cached_data(cached_list)
     end
 
+    # check that an order param was provided otherwise use asset_tag as the default
+    params[:sort] ||= @searcher.default_sort
+
     respond_to do |format|
       format.html # new.html.haml this had been an erb and is now an haml the change should just be caught
+      format.json {
+        render :json => {
+            :total => @data.count,
+            :rows =>  @data.order("#{params[:sort]} #{params[:order]}").limit(params[:limit]).offset(params[:offset]).as_json(user: current_user, include_early_disposition: false)
+        }
+      }
     end
   end
 
@@ -143,7 +152,6 @@ class SearchesController < OrganizationAwareController
       add_breadcrumb @search_type.name
     else
       notify_user(:alert, "Something went wrong. Can't determine type of search to perform.")
-      redirect_to root_path
       return
     end
 

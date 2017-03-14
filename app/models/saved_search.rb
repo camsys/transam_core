@@ -55,6 +55,7 @@ class SavedSearch < ActiveRecord::Base
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
     :ordinal,
+    :search_type_id,
     :name,
     :description
   ]

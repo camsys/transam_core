@@ -6,6 +6,8 @@
   :file => :vertical_file_input,
   :boolean => :vertical_boolean}) do |f|
 
+  = f.input :search_type_id, :as => :hidden
+
   .row
     .col-xs-12
       = f.input :name, :placeholder => "Enter a name for this search...", :required => true, :wrapper_html => {:class => 'text-limiter-wrapper'}, :input_html => {:class => 'text-limiter', :maxlength => 64}

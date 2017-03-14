@@ -57,7 +57,7 @@ class SavedSearchesController < OrganizationAwareController
   # GET /saved_searches/new
   def new
 
-    @search = SavedSearch.new
+    @search = SavedSearch.new(:search_type_id => params[:search_type_id])
   end
 
   # GET /saved_searches/1/edit
@@ -72,7 +72,6 @@ class SavedSearchesController < OrganizationAwareController
     @search = SavedSearch.new(saved_search_params)
     @search.ordinal = SavedSearch.where(user: current_user).maximum(:ordinal).to_i + 1 
     @search.user = current_user
-    @search.search_type = SearchType.find_by(class_name: 'AssetSearcher')
 
     # Get the search proxy from the cache
     search_proxy = get_cached_objects(@search.search_type.class_name.constantize.new.cache_params_variable_name)

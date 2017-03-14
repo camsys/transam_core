@@ -18,7 +18,7 @@
         .col-md-3.general-fields#subtype-selector
           %fieldset
             %legend.panel-legend Subtypes
-            = f.input :asset_subtype_id, collection: AssetType.active, as: :grouped_select, group_method: :asset_subtypes, input_html: { multiple: true }, include_blank: false, :label => "Asset Subtype"
+            = f.input :asset_subtype_id, collection: AssetType.active, as: :grouped_select, group_method: :asset_subtypes, input_html: { multiple: true }, :label => "Asset Subtype"
         .col-md-3.general-fields
           %fieldset
             %legend.panel-legend Status
