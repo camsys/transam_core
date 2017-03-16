@@ -1,25 +1,30 @@
+:ruby
+  report_conditions = []
+  report_values = []
+
+  current_user.roles_name.each do |role|
+    report_conditions << "roles LIKE ?"
+    report_values << "%#{role}%"
+  end
+
 %li{:class => "dropdown #{get_nav_link_class('reports')}"}
   = link_to reports_path, :class => "dropdown-toggle", :data => {"toggle" => "dropdown"}, :title => 'Reports' do
     %i.fa.fa-bar-chart-o.fa-2x
     %b.caret
   %ul.dropdown-menu.multi-level{:role => "menu"}
-    - ReportType.active.joins(:reports).where(reports: {show_in_nav: true}).uniq.each do | rt |
-      - if rt.reports.count > 0
-        - num = 0
-        - reports = rt.reports.where(show_in_nav: true, active: true)
-        - reports.each{|x| num += (current_user.is_in_roles? x.role_names) ? 1 : 0}
-        - if num > 0
-          %li.text-left.dropdown-submenu
-            = link_to reports_path(:report_type => rt.id)  do
-              %i{:class => "#{rt.display_icon_name} fa-fw"}
-              = rt.name.pluralize(2)
-            %ul.dropdown-menu
-              - reports.each do |report|
-                - if current_user.is_in_roles? report.role_names
-                  %li.text-left
-                    = link_to report_path(report)  do
-                      %i{:class => "#{report.report_type.display_icon_name} fa-fw"}
-                      = report.name
+    - ReportType.active.joins(:reports).each do | rt |
+      - reports = rt.reports.where(show_in_nav: true, active: true).where(report_conditions.join(' OR '), *report_values)
+      - if reports.count > 0
+        %li.text-left.dropdown-submenu
+          = link_to reports_path(:report_type => rt.id)  do
+            %i{:class => "#{rt.display_icon_name} fa-fw"}
+            = rt.name.pluralize(2)
+          %ul.dropdown-menu
+            - reports.each do |report|
+              %li.text-left
+                = link_to report_path(report)  do
+                  %i{:class => "#{report.report_type.display_icon_name} fa-fw"}
+                  = report.name
 
     - if Form.count > 0
       %li.divider
