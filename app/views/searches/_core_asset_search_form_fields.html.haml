@@ -1,9 +1,6 @@
 .panel.panel-info
   .panel-heading
-    Types & Subtypes
-    .btn-group.pull-right.panel-action
-      %button.btn.btn-primary.btn-sm.panel-toggle{ type: 'button', :data => {:toggle => "collapse", :target => "#type-subtype-panel"}}
-        %i.fa.fa-fw.fa-minus
+    = link_to 'Types & Subtypes', '#type-subtype-panel', :role => 'button', :data => {:toggle => 'collapse'}, :aria => {:expanded => true}
 
   .panel-body#type-subtype-panel.collapse.in
     #types
@@ -33,10 +30,7 @@
 
 #general.general-fields.panel.panel-info
   .panel-heading
-    Common Fields
-    .btn-group.pull-right.panel-action
-      %button.btn.btn-primary.btn-sm.panel-toggle{ type: 'button', :data => {:toggle => "collapse", :target => "#common-panel"}}
-        %i.fa.fa-fw.fa-plus
+    = link_to 'Common Fields', '#common-panel', :role => 'button', :data => {:toggle => 'collapse'}, :aria => {:expanded => true}
 
   .panel-body#common-panel.collapse
     .row.row-eq
@@ -178,10 +172,7 @@
 
 #equipment.equipment-related-only.panel.panel-info
   .panel-heading
-    Equipment Specific Fields
-    .btn-group.pull-right.panel-action
-      %button.btn.btn-primary.btn-sm.panel-toggle{ type: 'button', :data => {:toggle => "collapse", :target => "#equipment-panel"}}
-        %i.fa.fa-fw.fa-plus
+    = link_to 'Equipment Specific Fields', '#equipment-panel', :role => 'button', :data => {:toggle => 'collapse'}, :aria => {:expanded => true}
   .panel-body#equipment-panel.collapse
     .row.row-eq
       .col-md-3

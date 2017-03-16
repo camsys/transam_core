@@ -7,11 +7,8 @@
             .panel-title
               %h3.panel-title
                 %i.fa.fa-search.fa-fw
-                Search Results
+                = link_to 'Search Parameters', '.search-panel', :role => 'button', :data => {:toggle => 'collapse'}, :aria => {:expanded => true}
           .col-sm-6
-            .btn-group.pull-right.panel-action
-              %button.btn.btn-primary.btn-sm#collapse.panel-toggle{:data => {:toggle => "collapse", :target => ".search-panel"}}
-                %i.fa.fa-fw.fa-plus
             = render 'actions'
 
 .search-panel#asset_search_form.collapse.in
