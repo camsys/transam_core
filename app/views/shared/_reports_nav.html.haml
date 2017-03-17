@@ -12,7 +12,7 @@
     %i.fa.fa-bar-chart-o.fa-2x
     %b.caret
   %ul.dropdown-menu.multi-level{:role => "menu"}
-    - ReportType.active.joins(:reports).each do | rt |
+    - ReportType.active.each do | rt |
       - reports = rt.reports.where(show_in_nav: true, active: true).where(report_conditions.join(' OR '), *report_values)
       - if reports.count > 0
         %li.text-left.dropdown-submenu
