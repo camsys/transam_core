@@ -4,6 +4,7 @@ class AssetSubsystem < ActiveRecord::Base
   belongs_to :asset_type
   has_many :asset_event_asset_subsystems
 
+  scope :active, -> { where(:active => true) }
   scope :for_type, ->(type_id) { where(asset_type_id: [type_id, nil]) } # NOTE: can handle id or coerce down an AssetType itself
 
   validates :name, :presence => true

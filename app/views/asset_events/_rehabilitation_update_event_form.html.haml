@@ -11,34 +11,40 @@
     = f.input_field :event_date, :as => :string, :class => 'form-control datepicker', :data => {'behavior' => 'datepicker'}, :value => format_as_date(f.object.event_date)
     %span.input-group-addon
       %i.fa.fa-calendar
-  .row
-    .col-sm-4.col-sm-offset-8.text-center
-      .col-sm-6
-        .control-label Parts
-      .col-sm-6
-        .control-label Labor
-  = f.simple_fields_for :asset_event_asset_subsystems do |s|
-    = s.input :asset_subsystem_id, :as => :hidden
-    .form-group#costs
-      %label.control-label.col-sm-8.text-right
-        = s.object.asset_subsystem
-      .col-sm-4
-        .col-sm-6.form-group
-          = s.input :parts_cost, :wrapper => :vertical_prepend, :label => false do
-            %span.input-group-addon
-              %i.fa.fa-usd
-            = s.input_field :parts_cost, :class => 'form-control', :label => false
-        .col-sm-6.form-group
-          = s.input :labor_cost, :wrapper => :vertical_prepend, label: false do
-            %span.input-group-addon
-              %i.fa.fa-usd
-            = s.input_field :labor_cost, :class => 'form-control', :label => false
-  .form-group.col-sm-4.col-sm-offset-8
-    %label Total Cost
-    .input-group
+  - if AssetSubsystem.active.count > 0
+    .row
+      .col-sm-4.col-sm-offset-8.text-center
+        .col-sm-6
+          .control-label Parts
+        .col-sm-6
+          .control-label Labor
+    = f.simple_fields_for :asset_event_asset_subsystems do |s|
+      = s.input :asset_subsystem_id, :as => :hidden
+      .form-group#costs
+        %label.control-label.col-sm-8.text-right
+          = s.object.asset_subsystem
+        .col-sm-4
+          .col-sm-6.form-group
+            = s.input :parts_cost, :wrapper => :vertical_prepend, :label => false do
+              %span.input-group-addon
+                %i.fa.fa-usd
+              = s.input_field :parts_cost, :class => 'form-control', :label => false
+          .col-sm-6.form-group
+            = s.input :labor_cost, :wrapper => :vertical_prepend, label: false do
+              %span.input-group-addon
+                %i.fa.fa-usd
+              = s.input_field :labor_cost, :class => 'form-control', :label => false
+    .form-group.col-sm-4.col-sm-offset-8
+      %label Total Cost
+      .input-group
+        %span.input-group-addon
+          %i.fa.fa-usd
+        %input#total.form-control{type: "number", disabled: true, val: 0}
+  - else
+    = f.input :total_cost, :wrapper => :vertical_prepend, label: 'Total Cost' do
       %span.input-group-addon
         %i.fa.fa-usd
-      %input#total.form-control{type: "number", disabled: true, val: 0}
+      = f.input_field :total_cost, :class => 'form-control', :required => true, :value => 0, :label => false
   = f.input :extended_useful_life_months
   = f.input :extended_useful_life_miles if @asset.type_of? :rolling_stock
   = f.input :comments, :input_html => { :rows => 6 }, :placeholder => "Describe work performed...", label: "Notes"

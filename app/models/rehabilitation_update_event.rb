@@ -23,6 +23,7 @@ class RehabilitationUpdateEvent < AssetEvent
 
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
+    :total_cost,
     :extended_useful_life_months,
     :asset_event_asset_subsystems_attributes => [AssetEventAssetSubsystem.allowable_params]
   ]
@@ -53,7 +54,11 @@ class RehabilitationUpdateEvent < AssetEvent
   end
 
   def cost
-    parts_cost + labor_cost # sum up the costs from subsystems
+    if total_cost
+      total_cost
+    else
+      parts_cost + labor_cost # sum up the costs from subsystems
+    end
   end
 
   # Cost for each piece is the sum of what's spent on subsystems

@@ -7,6 +7,10 @@
 #------------------------------------------------------------------------------
 class AssetRehabilitationUpdateJob < AbstractAssetUpdateJob
 
+  def requires_sogr_update?
+    true
+  end
+
   def execute_job(asset)
     asset.update_rehabilitation
   end
