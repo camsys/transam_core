@@ -44,9 +44,12 @@ class PoliciesController < OrganizationAwareController
 
     # create hash to store policies from organization_list
     policies = Hash.new
-    @organization_list.each do |o|
-		  org = Organization.get_typed_organization(Organization.find(o))
-      policies[org.short_name] = org.policies
+    Policy.includes(:organization).where(organization_id: @organization_list).each do |policy|
+      if policies[policy.organization.short_name].nil?
+        policies[policy.organization.short_name] =  [policy]
+      else
+        policies[policy.organization.short_name] << policy
+      end
     end
 
     @policies = policies
