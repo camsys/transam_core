@@ -21,8 +21,10 @@ class ConditionType < ActiveRecord::Base
       rating = 3
     elsif estimated_rating >= 2.0
       rating = 2
-    else
+    elsif estimated_rating >= 1.0
       rating = 1
+    else
+      rating = 0 #unknown
     end
     ConditionType.find_by_rating(rating)
   end
