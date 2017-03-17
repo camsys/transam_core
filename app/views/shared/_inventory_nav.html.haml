@@ -6,9 +6,11 @@
     %i.fa.fa-bus.fa-2x
     %b.caret
   %ul.dropdown-menu.multi-level{:role => "menu"}
+    - types = []
     - AssetType.all.each do |type|
       - subtypes = Asset.operational.where('organization_id IN (?) AND asset_subtypes.asset_type_id = ?', @organization_list, type.id).joins(:asset_subtype).group(['asset_subtypes.name', 'asset_subtypes.id']).count
       - if subtypes.count > 0
+        - types << type
         %li.text-left.dropdown-submenu
           = link_to inventory_index_path(:asset_type => type, :asset_subtype => 0, :asset_group => 0)  do
             %i{:class => "#{type.display_icon_name} fa-fw"}
@@ -22,12 +24,20 @@
       = link_to manufacturers_path do
         %i.fa.fa-fw.fa-star
         Manufacturers
-      %ul.dropdown-menu{style: "overflow-y:scroll; max-height:400px;"}
-        - Manufacturer.joins(:assets).where(assets: {organization_id: @organization_list}).distinct.each do | manufacturer |
-          %li.text-left
-            = link_to inventory_index_path(:manufacturer_id => manufacturer) do
-              %i.fa.fa-star.fa-fw
-              = manufacturer.name
+      %ul.dropdown-menu
+        - AssetType.all.each do |type|
+          - manufacturers = Manufacturer.joins(:assets).where(assets: {asset_type_id: type.id, organization_id: @organization_list}).distinct
+          - if manufacturers.count > 0
+            %li.text-left.dropdown-submenu
+              = link_to '#' do
+                %i{:class => "#{type.display_icon_name} fa-fw"}
+                = type.name.pluralize(2)
+              %ul.dropdown-menu{style: "overflow-y:scroll; max-height:400px;"}
+                - manufacturers.each do | manufacturer |
+                  %li.text-left
+                    = link_to inventory_index_path(:manufacturer_id => manufacturer) do
+                      %i.fa.fa-star.fa-fw
+                      = manufacturer.name
         %li.divider
         %li.text-left
           = link_to manufacturers_path do
