@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170111194012) do
+ActiveRecord::Schema.define(version: 20170317143951) do
 
   create_table "activities", force: true do |t|
     t.string   "object_key",           limit: 12
@@ -106,6 +106,7 @@ ActiveRecord::Schema.define(version: 20170111194012) do
     t.string   "document",                     limit: 128
     t.string   "original_filename",            limit: 128
     t.integer  "created_by_id"
+    t.integer  "total_cost"
   end
 
   add_index "asset_events", ["asset_event_type_id"], name: "asset_events_idx3", using: :btree
@@ -756,6 +757,25 @@ ActiveRecord::Schema.define(version: 20170111194012) do
 
   add_index "roles", ["name"], name: "roles_idx1", using: :btree
   add_index "roles", ["resource_id"], name: "roles_idx2", using: :btree
+
+  create_table "saved_searches", force: true do |t|
+    t.string   "object_key",     limit: 12,  null: false
+    t.integer  "user_id",                    null: false
+    t.string   "name",           limit: 64,  null: false
+    t.string   "description",    limit: 254, null: false
+    t.integer  "search_type_id"
+    t.text     "json"
+    t.text     "query_string"
+    t.integer  "ordinal"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "search_types", force: true do |t|
+    t.string  "name"
+    t.string  "class_name"
+    t.boolean "active"
+  end
 
   create_table "service_life_calculation_types", force: true do |t|
     t.string  "name",        limit: 64,  null: false
