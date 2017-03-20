@@ -9,7 +9,7 @@ describe "tasks/_actions.html.haml", :type => :view do
     render
 
     expect(rendered).to have_link('Update this task')
-    expect(rendered).to have_link('Update this status...')
+    expect(rendered).to have_link('Update status...')
     expect(rendered).to have_link('Start this task')
   end
 end
