@@ -1,6 +1,6 @@
 = render :layout => "update_event_form" do |f|
 
-  = f.input :maintenance_type_id, :collection => MaintenanceType.active, :label => "Maintenance type performed", :include_blank => false
+  = f.input :maintenance_type_id, :collection => MaintenanceType.active, :label => "Maintenance Type Performed", :include_blank => false
   - if @asset.respond_to? :mileage_updates
     = f.input :current_mileage, :label => "Current Mileage", :input_html => { :min => 0  }
 
@@ -10,4 +10,4 @@
       %i.fa.fa-calendar
   = f.input :comments, :input_html => { :rows => 6 }, :placeholder => "Enter any additional comments..."
   .form-group
-    = f.button :submit, "Record maintenance", :class => 'btn btn-primary'
+    = f.button :submit, "Record Maintenance", :class => 'btn btn-primary'
