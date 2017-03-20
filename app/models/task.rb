@@ -121,8 +121,8 @@ class Task < ActiveRecord::Base
       transition :new => :started
     end
 
-    # re-start a task
-    event :re_start do
+    # restart a task
+    event :restart do
       transition :halted => :started
     end
 

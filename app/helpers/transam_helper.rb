@@ -100,7 +100,7 @@ module TransamHelper
       'fa-check-square'
     elsif event_name == 'cancel'
       'fa-stop'
-    elsif event_name == 're_start'
+    elsif event_name == 'restart'
       'fa-play'
     elsif event_name == 'halt'
       'fa-pause'
