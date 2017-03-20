@@ -77,6 +77,7 @@ module TransamHelper
   # the message priority
   def get_message_priority_icon(msg)
     if msg.priority_type_id == 1
+      'fa-flag invisible'
     elsif msg.priority_type_id == 2
       'fa-flag text-default'
     elsif msg.priority_type_id == 3
