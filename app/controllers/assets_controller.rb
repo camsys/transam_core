@@ -249,7 +249,7 @@ class AssetsController < AssetAwareController
     else
       add_breadcrumb @asset.asset_tag, inventory_path(@asset)
     end
-    add_breadcrumb "Update master record", edit_inventory_path(@asset)
+    add_breadcrumb "Update Master Record", edit_inventory_path(@asset)
 
   end
 
