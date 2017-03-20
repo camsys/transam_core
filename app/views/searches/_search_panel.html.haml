@@ -26,25 +26,4 @@
     .row
       .col-md-12
         = f.button :submit, 'Query', :class=>"btn btn-primary", :id => 'submit_btn'
-        = button_tag 'Reset', :type => 'reset', :class=> 'btn btn-warning reset-button'
-
-
-:javascript
-  $(document).ready(function() {
-    // Set btn-dropdown text from set values in the hidden fields
-    var hidden_fields = $(".input-group-btn input[type='hidden']");
-    hidden_fields.each(function(selector) {
-      var selected_link = $(this).prev("ul").find("a[data-compare=" + this.value+ "]");
-      var text = selected_link.html() + " ";
-      var btn = $(this).prevAll("button");
-      btn.html(text).append("<span class='caret'></span>");
-    });
-  });
-
-  // When selecting from the button-dropdowns, set a hidden field appropriately
-  $(".input-group-btn a").on("click", function() {
-    // Handle btn-dropdown by setting relevant variable in hidden field
-    $(this).parents("ul").siblings("input:hidden").val($(this).attr("data-compare"));
-    $(this).parents("ul").prev("button").text($(this).text() + " ");
-    $(this).parents("ul").prev("button").append("<span class='caret'></span>");
-  });
+        = link_to 'Reset', reset_searches_path(:search_type => @search_type.id), :class=> 'btn btn-warning'

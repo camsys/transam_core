@@ -152,19 +152,7 @@
                   %a{:data => {:compare => "1"}} After
               = f.input_field :policy_replacement_year_comparator, :as => :hidden, :value => '0'
             = f.input_field :policy_replacement_year, :collection => get_fiscal_years, :class => "form-control"
-          .vehicle-related-only
-            = f.input :rebuild_year, :wrapper => :vertical_prepend, :label => "Rebuild Year (Vehicles Only)" do
-              .input-group-btn
-                %button.btn.btn-default.dropdown-toggle{"data-toggle" => "dropdown", :type => "button"}
-                %ul.dropdown-menu{:role => "menu"}
-                  %li
-                    %a{:data => {:compare => "-1"}} Before
-                  %li
-                    %a{:data => {:compare => "0"}} During
-                  %li
-                    %a{:data => {:compare => "1"}} After
-                = f.input_field :rebuild_year_comparator, :as => :hidden, :value => '0'
-              = f.input_field :rebuild_year, :collection => get_all_fiscal_years, :class => "form-control"
+
 
         - view_component = "app_core_asset_search_form_common_fields"
         - if lookup_context.template_exists?(view_component, 'searches', true)
