@@ -11,8 +11,8 @@
       - if subtypes.count > 0
         %li.text-left.dropdown-submenu
           = link_to inventory_index_path(:asset_type => type, :asset_subtype => 0, :asset_group => 0)  do
-            %i{:class => "#{type[1]} fa-fw"}
-            = type[2].pluralize(2)
+            %i{:class => "#{type[2]} fa-fw"}
+            = type[1].pluralize(2)
           %ul.dropdown-menu
             - subtypes.keys.each do |subtype|
               %li.text-left
@@ -28,8 +28,8 @@
           - if manufacturers.any?
             %li.text-left.dropdown-submenu
               = link_to '#' do
-                %i{:class => "#{type[1]} fa-fw"}
-                = type[2].pluralize(2)
+                %i{:class => "#{type[2]} fa-fw"}
+                = type[1].pluralize(2)
               %ul.dropdown-menu{style: "overflow-y:scroll; max-height:400px;"}
                 - manufacturers.each do | manufacturer |
                   %li.text-left
