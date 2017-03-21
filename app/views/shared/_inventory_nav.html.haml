@@ -1,18 +1,18 @@
 :ruby
-
+  asset_types = AssetType.pluck(:id, :name, :display_icon_name)
 
 %li{:class => "dropdown #{get_nav_link_class('assets')}"}
   = link_to "#", :class => "dropdown-toggle", :data => {"toggle" => "dropdown"}, :title => 'Inventory' do
     %i.fa.fa-bus.fa-2x
     %b.caret
   %ul.dropdown-menu.multi-level{:role => "menu"}
-    - AssetType.all.each do |type|
-      - subtypes = Asset.operational.where('organization_id IN (?) AND asset_subtypes.asset_type_id = ?', @organization_list, type.id).joins(:asset_subtype).group(['asset_subtypes.name', 'asset_subtypes.id']).count
+    - asset_types.each do |type|
+      - subtypes = Asset.operational.where('organization_id IN (?) AND asset_subtypes.asset_type_id = ?', @organization_list, type[0]).joins(:asset_subtype).group(['asset_subtypes.name', 'asset_subtypes.id']).count
       - if subtypes.count > 0
         %li.text-left.dropdown-submenu
           = link_to inventory_index_path(:asset_type => type, :asset_subtype => 0, :asset_group => 0)  do
-            %i{:class => "#{type.display_icon_name} fa-fw"}
-            = type.name.pluralize(2)
+            %i{:class => "#{type[2]} fa-fw"}
+            = type[1].pluralize(2)
           %ul.dropdown-menu
             - subtypes.keys.each do |subtype|
               %li.text-left
@@ -23,19 +23,19 @@
         %i.fa.fa-fw.fa-star
         Manufacturers
       %ul.dropdown-menu
-        - AssetType.all.each do |type|
-          - manufacturers = Manufacturer.joins(:assets).where(assets: {asset_type_id: type.id, organization_id: @organization_list}).distinct
-          - if manufacturers.count > 0
+        - asset_types.each do |type|
+          - manufacturers = Manufacturer.joins(:assets).where(assets: {asset_type_id: type[0], organization_id: @organization_list}).distinct.pluck("manufacturers.id", "manufacturers.name")
+          - if manufacturers.any?
             %li.text-left.dropdown-submenu
               = link_to '#' do
-                %i{:class => "#{type.display_icon_name} fa-fw"}
-                = type.name.pluralize(2)
+                %i{:class => "#{type[2]} fa-fw"}
+                = type[1].pluralize(2)
               %ul.dropdown-menu{style: "overflow-y:scroll; max-height:400px;"}
                 - manufacturers.each do | manufacturer |
                   %li.text-left
-                    = link_to inventory_index_path(:manufacturer_id => manufacturer) do
+                    = link_to inventory_index_path(:manufacturer_id => manufacturer[0]) do
                       %i.fa.fa-star.fa-fw
-                      = manufacturer.name
+                      = manufacturer[1]
         %li.divider
         %li.text-left
           = link_to manufacturers_path do
