@@ -340,6 +340,10 @@ class UsersController < OrganizationAwareController
     add_breadcrumb 'Profile Photo'
   end
 
+  def popup
+    @user = User.find_by_object_key(params[:id])
+  end
+
   #------------------------------------------------------------------------------
   # Protected Methods
   #------------------------------------------------------------------------------

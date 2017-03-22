@@ -19,7 +19,7 @@
             %td.right= format_as_integer(u.sign_in_count)
             %td.center= format_as_boolean(u.locked_at)
             %td.center
-              %i.fa.fa-info-circle.text-info.popup-details{:data => {:title => "#{u.name}", :content => "#{raw render :partial => 'users/summary', :locals => {:user => u}}"}}
+              %i.fa.fa-info-circle.text-info.popup-details{:id => "user_popup_#{u.id}", :data => {:user_key => u.object_key, :title => "#{u.name}", :toggle => 'popover' }}
             %td.center
               = link_to new_user_message_path(current_user, to_user: u), :title => "Send #{u.first_name} a message" do
                 %i.fa.fa-envelope
@@ -27,10 +27,10 @@
                 %i.fa.fa-calendar
 
 :javascript
-  $('.popup-details').popover({
-    trigger: 'hover',
-    container: 'body',
-    placement: 'left',
-    animation: 'true',
-    html: 'true'
+  $('.popup-details').on('mouseover', function() {
+    if(!$(this).hasClass('has-popover')) {
+      $.ajax({
+        url: "#{popup_user_path('xxx', format: :js)}".replace('xxx', $(this).data('user-key'))
+      });
+    }
   });

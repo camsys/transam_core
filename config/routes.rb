@@ -156,6 +156,7 @@ Rails.application.routes.draw do
       patch 'update_password'
       get   'profile_photo'
       get 'authorizations'
+      get 'popup'
     end
 
     resources :user_organization_filters do
