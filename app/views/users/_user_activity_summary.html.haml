@@ -23,7 +23,7 @@
             %td.center
               = link_to new_user_message_path(current_user, to_user: u), :title => "Send #{u.first_name} a message" do
                 %i.fa.fa-envelope
-              = link_to new_user_task_path(current_user, user_id: u), :title => "Assign task to #{u.first_name}" do
+              = link_to new_user_task_path(current_user, assigned_to_user_id: u), :title => "Assign task to #{u.first_name}" do
                 %i.fa.fa-calendar
 
 :javascript
