@@ -9,7 +9,7 @@
       - if @organization_list.count == 1
         = f.input :organization_id, :as => :hidden, :input_html => { :value => @organization_list.first }
       - else
-        = f.input :organization_id, :required => true, :collection => Organization.where(id: @organization_list), :label_method => 'coded_name'
+        = f.input :organization_id, :required => true, :collection => Organization.where(id: @organization_list).where('parent_id IS NOT NULL'), :label_method => 'coded_name'
     .row
       .col-sm-6
         = f.input :file, :required => true, :label => 'Spreadsheet', :hint => 'Select a spreadsheet that has been downloaded from TransAM, edited, then saved.'
