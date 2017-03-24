@@ -10,7 +10,7 @@
       - subtypes = Asset.operational.where('organization_id IN (?) AND asset_subtypes.asset_type_id = ?', @organization_list, type[0]).joins(:asset_subtype).group(['asset_subtypes.name', 'asset_subtypes.id']).count
       - if subtypes.count > 0
         %li.text-left.dropdown-submenu
-          = link_to inventory_index_path(:asset_type => type, :asset_subtype => 0, :asset_group => 0)  do
+          = link_to inventory_index_path(:asset_type => type[0], :asset_subtype => 0, :asset_group => 0)  do
             %i{:class => "#{type[2]} fa-fw"}
             = type[1].pluralize(2)
           %ul.dropdown-menu
