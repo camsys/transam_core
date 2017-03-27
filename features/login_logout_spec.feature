@@ -8,7 +8,7 @@ Feature: An application for asset management
 
 Scenario: Login
 	When "jsoloski@catabus.com" logs in using valid user data
-	Then I will see "Home"
+	Then I will see "Asset Summary"
 
 Scenario: Forgot your password
 	When I start the app
