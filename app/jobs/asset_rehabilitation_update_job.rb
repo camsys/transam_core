@@ -22,7 +22,7 @@ class AssetRehabilitationUpdateJob < AbstractAssetUpdateJob
       update_sched_replacement_yr = true
     else
       last_rehab = asset.rehabilitation_updates.last
-      if last_rehab.extended_useful_life_months > 0 || last_rehab.extended_useful_life_miles > 0
+      if last_rehab.extended_useful_life_months > 0 || (last_rehab.try(:extended_useful_life_miles) || 0) > 0
         update_sched_replacement_yr = true
       end
     end
