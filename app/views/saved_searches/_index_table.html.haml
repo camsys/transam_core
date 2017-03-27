@@ -41,17 +41,17 @@
         %td.right= format_as_date_time(s.created_at)
         %td.center
           - if s.query_string.present?
-            = link_to saved_search_path(s), :title => "SQL for this search.", :remote => true do
+            = link_to saved_search_path(s), :title => "SQL for this query.", :remote => true do
               %i.fa.fa-fw.fa-code.text-primary.fa-1-5x
         %td.center
           - if s.json.present?
-            = link_to saved_search_path(s), :title => "Run this search." do
+            = link_to saved_search_path(s), :title => "Run this query." do
               %i.fa.fa-fw.fa-play-circle.text-primary.fa-1-5x
         %td.center
-          = link_to edit_saved_search_path(s), :title => "Update this search.", :remote => true do
+          = link_to edit_saved_search_path(s), :title => "Update this query.", :remote => true do
             %i.fa.fa-fw.fa-edit.text-primary.fa-1-5x
         %td.center
-          = link_to saved_search_path(s), :title => "Remove this search", :method => :delete, :data => {:confirm => "Are you sure you want to remove this search? The action can't be undone."} do
+          = link_to saved_search_path(s), :title => "Remove this query", :method => :delete, :data => {:confirm => "Are you sure you want to remove this query? The action can't be undone."} do
             %i.fa.fa-fw.fa-trash-o.action-icon.text-danger.fa-1-5x
 
 = render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :path_pattern => "#"}
