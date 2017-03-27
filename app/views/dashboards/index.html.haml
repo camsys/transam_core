@@ -11,18 +11,18 @@
 
 .row
   .col-lg-4.col-md-6.col-sm-12.col-xs-12
-    = render :partial => 'asset_audit_summary'
     = render :partial => 'assets_widget'
     - if current_user.has_role? :manager
       = render :partial => 'activities_summary'
     - else
       = render :partial => 'queues'
-  .col-lg-4.col-md-6.col-sm-12.col-xs-12
-    = render :partial => 'capital_projects_widget'
-    - unless current_user.has_role? :manager
-      = render :partial => 'funding_widget'
     - if current_user.is_in_roles?([:transit_manager, :manager])
       = render :partial => 'users/user_activity_summary'
+  .col-lg-4.col-md-6.col-sm-12.col-xs-12
+    - SystemConfig.transam_module_names.each do |mod|
+      - view_component = "#{mod}_widget"
+      - if lookup_context.template_exists?(view_component, 'dashboards', true)
+        = render :partial => "dashboards/#{view_component}"
   .col-lg-4.col-md-6.col-sm-12.col-xs-12
     = render :partial => 'notices'
     = render :partial => 'search'
