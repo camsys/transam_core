@@ -42,7 +42,7 @@ class BaseSearcher
   end
 
   def to_s
-    queries.to_s
+    queries.to_sql
   end
 
   protected
@@ -70,15 +70,22 @@ class BaseSearcher
   end
 
   # Reduce as in map-reduce- merges down array of queries into a single one
-  def queries
-    condition_parts.reduce(:merge)
+  def queries(with_orgs=true)
+    condition_parts(with_orgs).reduce(:merge)
   end
 
   # Finds each method named *_conditions and runs it in the concrete class
   # Returns an array of ActiveRecord::Relation objects
-  def condition_parts
+  def condition_parts(with_orgs=true)
     ### Subclass MUST respond with at least 1 non-nil AR::Relation object  ###
-    private_methods.grep(/_conditions$/).map { |m| send(m) }.compact
+
+    if with_orgs
+      conditions = private_methods.grep(/_conditions$/)
+    else
+      conditions = (private_methods.grep(/_conditions$/) - [:organization_conditions])
+    end
+
+    conditions.map { |m| send(m) }.compact
   end
 
 end

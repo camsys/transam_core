@@ -21,13 +21,6 @@
             %legend.panel-legend Status
             = f.input :asset_scope, collection: ["Disposed", "Operational"], :label => "Operational Status"
 
-        -unless @organization_list.count < 2
-          .col-md-3.general-fields
-            %fieldset
-              %legend.panel-legend Organizations
-              #org-selector
-                = f.input :organization_id, :collection => Organization.where(id: @organization_list), :label_method => 'coded_name', input_html: { multiple: true }
-
 #general.general-fields.panel.panel-info
   .panel-heading
     = link_to 'Common Fields', '#common-panel', :role => 'button', :data => {:toggle => 'collapse'}, :aria => {:expanded => true}

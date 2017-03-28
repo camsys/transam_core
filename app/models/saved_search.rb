@@ -94,7 +94,7 @@ class SavedSearch < ActiveRecord::Base
   def search_proxy
     if json.present?
       h = JSON.parse(json)
-      h.except('errors')
+      h.except('errors', 'organization_id')
     end
   end
 

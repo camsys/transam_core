@@ -42,6 +42,7 @@ class SavedSearchesController < OrganizationAwareController
 
         if search_proxy
           search_type = @search.search_type
+          search_proxy[:organization_id] = @organization_list
           searcher = search_type.class_name.constantize.new(search_proxy)
           searcher.user = current_user
           cache_objects(searcher.cache_params_variable_name, search_proxy)
@@ -83,7 +84,7 @@ class SavedSearchesController < OrganizationAwareController
     @search.json = search_proxy.to_json
     searcher =  @search.search_type.class_name.constantize.new(search_proxy)
     searcher.user = current_user
-    @search.query_string = searcher.to_s
+    @search.query_string = searcher.to_s #dont save org list. org filter is applied on top of queries
 
     respond_to do |format|
       if @search.save
