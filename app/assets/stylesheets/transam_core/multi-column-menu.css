@@ -14,26 +14,31 @@
     width: 30vw;
     max-height: 85vh;
     overflow-y:scroll;
+    overflow-x: hidden;
 }
 .dropdown-menu.columns-3 {
     width: 45vw;
     max-height: 85vh;
     overflow-y:scroll;
+    overflow-x: hidden;
 }
 .dropdown-menu.columns-4 {
     width: 60vw;
     max-height: 85vh;
     overflow-y:scroll;
+    overflow-x: hidden;
 }
 .dropdown-menu.columns-5 {
     width: 75vw;
     max-height: 85vh;
     overflow-y:scroll;
+    overflow-x: hidden;
 }
 .dropdown-menu.columns-6 {
     width: 90vw;
     max-height: 85vh;
     overflow-y:scroll;
+    overflow-x: hidden;
 }
 
 .multi-column-dropdown {
