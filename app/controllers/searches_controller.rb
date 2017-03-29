@@ -11,6 +11,10 @@ class SearchesController < OrganizationAwareController
   before_filter :set_view_vars,     :only => [:create, :new, :reset]
 
   def create
+
+    @searcher = @searcher_klass.constantize.new(params[:searcher])
+    @searcher.user = current_user
+
     # Cache the search params result set so the use can page through them
     unless @searcher.cache_params_variable_name.blank?
       cache_objects(@searcher.cache_params_variable_name, params[:searcher])
@@ -18,9 +22,6 @@ class SearchesController < OrganizationAwareController
 
     # use organization list if query is for any organization
     params[:searcher][:organization_id] = @organization_list
-
-    @searcher = @searcher_klass.constantize.new(params[:searcher])
-    @searcher.user = current_user
     @data = @searcher.data
 
     unless @searcher.cache_variable_name.blank?
