@@ -170,6 +170,19 @@ class Task < ActiveRecord::Base
     subject
   end
 
+  def taskable_path
+    return false if self.taskable.nil?
+
+    path = "#{self.taskable.class.name.pluralize.underscore}/#{self.taskable.object_key}"
+    begin
+      Rails.application.routes.recognize_path(path)
+    rescue
+      return false
+    end
+
+    path
+  end
+
   #------------------------------------------------------------------------------
   #
   # Private Methods
