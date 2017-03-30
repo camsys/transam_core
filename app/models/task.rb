@@ -173,7 +173,7 @@ class Task < ActiveRecord::Base
   def taskable_path
     return false if self.taskable.nil?
 
-    path = "#{self.taskable.class.name.pluralize.underscore}/#{self.taskable.object_key}"
+    path = eval("Rails.application.routes.url_helpers.#{self.taskable.class.name.underscore}_path(id: '#{self.taskable.object_key}')")
     begin
       Rails.application.routes.recognize_path(path)
     rescue
