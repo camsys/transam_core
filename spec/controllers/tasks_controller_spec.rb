@@ -58,6 +58,7 @@ RSpec.describe TasksController, :type => :controller do
     expect(assigns(:task)).to eq(test_task)
   end
   it 'POST create' do
+    request.env["HTTP_REFERER"] = tasks_path
     post :create, :user_id => subject.current_user.object_key, :task => attributes_for(:task, :user => nil, :organization => nil)
 
     expect(assigns(:taskable)).to eq(subject.current_user)
