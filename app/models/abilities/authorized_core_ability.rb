@@ -4,7 +4,7 @@ module Abilities
 
     def initialize(user)
 
-      ['ActivityLog', 'Asset', 'AssetEvent', 'AssetGroup', 'Issue', 'Message', 'Task', 'Upload', 'User', 'UserOrganizationFilter', 'Vendor'].each do |c|
+      ['ActivityLog', 'Asset', 'AssetEvent', 'AssetGroup', 'Issue', 'Message', 'SavedSearch' ,'Task', 'Upload', 'User', 'UserOrganizationFilter', 'Vendor'].each do |c|
         ability = "Abilities::Authorized#{c}Ability".constantize.new(user)
 
         self.merge ability if ability.present?
