@@ -83,7 +83,7 @@ Rails.application.routes.draw do
     resources :images
   end
 
-  resources :organizations, :path => "org", :only => [:index, :show, :edit, :update]
+  resources :organizations, :path => "org"
 
   resources :tasks,       :only => [:index, :show, :create, :update, :edit, :new, :destroy] do
     resources :comments

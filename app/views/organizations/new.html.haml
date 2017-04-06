@@ -1,0 +1,10 @@
+= render(:partial => 'shared/form_errors', :locals => {:obj => @org}) unless @org.errors.empty?
+
+= render 'form'
+
+:javascript
+  
+  $(document).ready(function() {
+    transam.make_same_height('.header-part');
+  });
+
