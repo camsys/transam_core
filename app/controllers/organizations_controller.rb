@@ -4,7 +4,6 @@ class OrganizationsController < OrganizationAwareController
   add_breadcrumb "Organizations", :organizations_path
 
   before_filter :get_org, :only => [:show, :map, :edit, :update]
-  before_filter :check_for_cancel, :only => [:update]
 
   # include the transam markers mixin
   include TransamMapMarkers
@@ -202,13 +201,6 @@ class OrganizationsController < OrganizationAwareController
   # Never trust parameters from the scary internet, only allow the white list through.
   def form_params
     params.require(:organization).permit(organization_allowable_params)
-  end
-
-  def check_for_cancel1
-    unless params[:cancel].blank?
-      @org = get_organization
-      redirect_to organization_url(@org)
-    end
   end
 
 end
