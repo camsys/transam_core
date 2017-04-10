@@ -9,6 +9,9 @@
     :radio_buttons => :vertical_radio_and_checkboxes,
     :file => :vertical_file_input,
     :boolean => :vertical_boolean}) do |f|
+    - if @org.new_record? # for now only allow organization type of planning partern
+      = f.input :organization_type_id, :as => :hidden
+      = f.input :customer_id, :as => :hidden, :input_html => {:value => Customer.first.id}
     .col-md-6
       = dialog_tag('Corporate', {:icon => 'fa fa-book', :class => "header-part"}) do
         = f.input :name, :required => true
@@ -28,6 +31,8 @@
             = f.input :state, :required => true, :as => :select, :collection => Country['US'].states
           .col-sm-3
             = f.input :zip, :required => true
+        - if User.new.respond_to? :email_in_org_domain_list
+          = f.input :allowed_email_domains, :label => 'Allowed Email Domains', :placeholder => 'To enter more than one domain, separate with |'
 
     .col-md-12
       = f.button :submit, :class => 'btn btn-primary'
