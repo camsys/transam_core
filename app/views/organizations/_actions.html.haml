@@ -18,6 +18,6 @@
       - if can? :create, User
         %li.divider
         %li
-          = link_to new_user_path do
+          = link_to new_user_path(organization_id: @org.id) do
             %i.fa.fa-user-plus.fa-fw
             = " Add a user"
