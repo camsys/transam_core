@@ -112,6 +112,10 @@ class OrganizationsController < OrganizationAwareController
           OrganizationRoleMapping.create(organization_id: @org.id, role_id: role.id)
         end
 
+        # set current session to current org filter again in case new org in current filter
+        set_current_user_organization_filter_(current_user, current_user.user_organization_filter)
+        get_organization_selections
+
         redirect_to organization_path(@org), notice: 'Organization was successfully created.'
       else
         render :new
