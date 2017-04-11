@@ -32,7 +32,7 @@
           .col-sm-3
             = f.input :zip, :required => true
         - if User.new.respond_to? :email_in_org_domain_list
-          = f.input :allowed_email_domains, :label => 'Allowed Email Domains', :placeholder => 'To enter more than one domain, separate with |'
+          = f.input :allowed_email_domains, :required => true, :label => 'Allowed Email Domains', :placeholder => 'To enter more than one domain, separate with |'
 
     .col-md-12
       = f.button :submit, :class => 'btn btn-primary'
