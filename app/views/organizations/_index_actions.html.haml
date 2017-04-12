@@ -1,5 +1,5 @@
 - OrganizationType.all.each do |org_type|
-  - if org_type.class_name.constantize.createable?
+  - if org_type.class_name.constantize.createable? && (can? :create, Organization)
     .btn-group{:role => 'group', :style => 'margin-left: 0!important;'}
       = link_to new_organization_path(:organization_type_id => org_type.id), :role => 'button', :class => 'btn btn-default' do
         %i.fa.fa-plus.fa-fw
