@@ -49,6 +49,8 @@ class Asset < ActiveRecord::Base
   # each asset has a single maintenance provider type
   belongs_to  :maintenance_provider_type
 
+  belongs_to  :replacement_status_type
+
   # each asset has a reason why it is being replaced
   belongs_to  :replacement_reason_type
 
@@ -70,6 +72,8 @@ class Asset < ActiveRecord::Base
 
   # each asset has zero or more condition updates
   has_many   :condition_updates, -> {where :asset_event_type_id => ConditionUpdateEvent.asset_event_type.id }, :class_name => "ConditionUpdateEvent"
+
+  has_many   :replacement_status_updates, -> {where :asset_event_type_id => ReplacementStatusUpdateEvent.asset_event_type.id }, :class_name => "ReplacementStatusUpdateEvent"
 
   # each asset has zero or more scheduled replacement updates
   has_many   :schedule_replacement_updates, -> {where :asset_event_type_id => ScheduleReplacementUpdateEvent.asset_event_type.id }, :class_name => "ScheduleReplacementUpdateEvent"
@@ -176,6 +180,10 @@ class Asset < ActiveRecord::Base
   scope :operational, -> { where('assets.disposition_date IS NULL AND assets.asset_tag != assets.object_key') }
   # Returns a list of asset that operational and are marked as being in service
   scope :in_service,  -> { where('assets.disposition_date IS NULL AND assets.service_status_type_id = 1')}
+
+  scope :in_replacement_cycle, -> { where('replacement_status_type_id IS NULL OR replacement_status_type_id != ?', ReplacementStatusType.find_by(name: 'None').id) }
+  scope :replacement_underway, -> { where(replacement_status_type_id: ReplacementStatusType.find_by(name: 'Underway').id) }
+
   # Returns a list of asset that in early replacement
   scope :early_replacement, -> { where('policy_replacement_year is not NULL and scheduled_replacement_year is not NULL and scheduled_replacement_year < policy_replacement_year') }
   #-----------------------------------------------------------------------------
@@ -222,6 +230,7 @@ class Asset < ActiveRecord::Base
     :update_sogr,
     :update_service_status,
     :update_condition,
+    :update_replacement_status,
     :update_scheduled_replacement,
     :update_scheduled_rehabilitation,
     :update_scheduled_disposition,
@@ -521,6 +530,22 @@ class Asset < ActiveRecord::Base
     early_disposition_requests.active.last.try(:comments) || ""
   end
 
+  def in_replacement_cycle?
+    ReplacementStatusType.where.not(name: 'None').include? replacement_status_type
+  end
+
+  def replacement_by_policy?
+    replacement_status_type.nil? || replacement_status_type == ReplacementStatusType.find_by(name: 'By Policy')
+  end
+
+  def replacement_underway?
+    replacement_status_type == ReplacementStatusType.find_by(name: 'Underway')
+  end
+
+  def no_replacement?
+    replacement_status_type == ReplacementStatusType.find_by(name: 'None')
+  end
+
   # Returns true if an asset is scheduled for disposition
   def scheduled_for_disposition?
     (scheduled_disposition_year.present? and disposed? == false)
@@ -811,6 +836,28 @@ class Asset < ActiveRecord::Base
 
   end
 
+  def update_replacement_status(save_asset = true)
+    Rails.logger.debug "Updating replacement status for asset = #{object_key}"
+
+    # can't do this if it is a new record as none of the IDs would be set
+    unless new_record? or disposed?
+      if replacement_status_updates.empty?
+        self.replacement_status_type = nil
+      else
+        event = replacement_status_updates.last
+        status = event.replacement_status_type
+        self.replacement_status_type = status
+        if self.replacement_by_policy?
+          self.scheduled_replacement_year = self.policy_replacement_year
+        elsif self.replacement_underway?
+          self.scheduled_replacement_year = event.replacement_year
+        end
+      end
+      # save changes to this asset
+      save(:validate => false) if save_asset
+    end
+  end
+
   # Forces an update of an assets scheduled replacement. This performs an update on the record.
   def update_scheduled_replacement(save_asset = true)
 
@@ -1055,8 +1102,10 @@ class Asset < ActiveRecord::Base
   def before_update_callback
 
     Rails.logger.debug "In before_save_callback"
-    # Get the policy analyzer
 
+    return unless self.replacement_by_policy?
+
+    # Get the policy analyzer
     this_policy_analyzer = self.policy_analyzer
 
     # If the policy replacement year changes we need to check to see if the asset
@@ -1126,6 +1175,9 @@ class Asset < ActiveRecord::Base
 
   # updates the calculated values of an asset
   def update_asset_state(save_asset = true, policy = nil)
+
+    return unless self.replacement_by_policy?
+
     Rails.logger.debug "Updating SOGR for asset = #{object_key}"
 
     if disposed?

@@ -1,0 +1,33 @@
+= render :layout => "update_event_form" do |f|
+  = f.input :event_date, :as => :hidden, :input_html => { :value => Date.today.strftime('%m/%d/%Y') }
+  = f.input :replacement_year, :as => :hidden
+  = f.association :replacement_status_type, :label => 'Replacement Status', :include_blank => false, :selected => @asset.replacement_status_type_id
+  #warning{@asset.replacement_by_policy? ? {} : {style: 'display:none;'}}
+    .alert.alert-warning.text-center
+      %strong
+        Warning!
+      This option will reset the scheduled replacement year to match the policy year.
+
+  = f.input :comments, :input_html => { :rows => 6 }, :placeholder => "Enter any additional comments..."
+  .form-group
+    = f.button :submit, "Update Replacement Status", :class => 'btn btn-primary'
+
+:javascript
+
+  var by_policy_replacement_status =  parseInt('#{ReplacementStatusType.find_by(name: "By Policy").id}');
+  var underway_replacement_status =  parseInt('#{ReplacementStatusType.find_by(name: "Underway").id}');
+
+  $('#asset_event_replacement_status_type_id').on('change', function(event) {
+    var id = parseInt($(this).val());
+
+    if (id == by_policy_replacement_status) {
+      $('#asset_event_replacement_year').val('');
+      $('#warning').show();
+    } else if (id == underway_replacement_status) {
+      $('#asset_event_replacement_year').val('#{current_fiscal_year_year}');
+      $('#warning').hide();
+    } else {
+      $('#asset_event_replacement_year').val('');
+      $('#warning').hide();
+    }
+  });

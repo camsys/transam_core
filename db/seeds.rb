@@ -24,7 +24,8 @@ asset_event_types = [
   {:active => 1, :name => 'Rehabilitation',       :display_icon_name => "fa fa-wrench",       :description => 'Rehabilitation Update',       :class_name => 'RehabilitationUpdateEvent',      :job_name => 'AssetRehabilitationUpdateJob'},
   {:active => 1, :name => 'Record final disposition',     :display_icon_name => "fa fa-ban",      :description => 'Disposition Update',     :class_name => 'DispositionUpdateEvent',    :job_name => 'AssetDispositionUpdateJob'},
   {:active => 1, :name => 'Request early disposition',     :display_icon_name => "fa fa-ban",      :description => 'Early Disposition Request',     :class_name => 'EarlyDispositionRequestUpdateEvent',    :job_name => ''},
-  {:active => 1, :name => "Maintenance history",          :display_icon_name => "fa fa-wrench",            :description => "Maintenance/Service Update",    :class_name => "MaintenanceUpdateEvent", :job_name => "AssetMaintenanceUpdateJob"}
+  {:active => 1, :name => "Maintenance history",          :display_icon_name => "fa fa-wrench",            :description => "Maintenance/Service Update",    :class_name => "MaintenanceUpdateEvent", :job_name => "AssetMaintenanceUpdateJob"},
+  {:active => 1, :name => 'Replacement status', :class_name => 'ReplacementStatusUpdateEvent', :job_name => 'AssetReplacementStatusUpdateJob', :display_icon_name => 'fa fa-refresh', :description => 'Replacement Status Update'}
 ]
 
 condition_types = [
@@ -134,6 +135,12 @@ replacement_reason_types = [
   {:active => 1, :name => 'Other',     :description => 'The asset is being replaced for other reasons.'}
 ]
 
+replacement_status_types = [
+    {:active => 1, :name => 'By Policy', :description => 'Asset will be replaced following tho policy and planner.'},
+    {:active => 1, :name => 'Underway', :description => 'Asset is being replaced this fiscal year.'},
+    {:active => 1, :name => 'None', :description => 'Asset is not being replaced.'}
+]
+
 roles = [
   {:privilege => false, :name => 'guest', :weight => 1},
   {:privilege => false, :name => 'user', :weight => 1},
@@ -178,7 +185,7 @@ activities = [
 lookup_tables = %w{asset_event_types condition_types disposition_types cost_calculation_types license_types priority_types
   file_content_types file_status_types report_types service_status_types
   service_life_calculation_types condition_estimation_types
-  issue_status_types issue_types web_browser_types replacement_reason_types roles notice_types frequency_types search_types activities
+  issue_status_types issue_types web_browser_types replacement_reason_types replacement_status_types roles notice_types frequency_types search_types activities
   }
 
 lookup_tables.each do |table_name|
