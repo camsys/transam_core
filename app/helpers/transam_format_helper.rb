@@ -64,11 +64,12 @@ module TransamFormatHelper
   # formats an assets list of asset groups with remove option
   def format_asset_groups(asset, style = 'info')
     html = ""
-    asset.asset_groups.each do |grp|
+    asset.asset_groups.each_with_index do |grp, index|
       html << "<span class='label label-#{style}'>"
       html << grp.code
       html << "<span data-role='remove' data-action-path='#{remove_from_group_inventory_path(asset, :asset_group => grp)}'></span>"
       html << "</span>"
+      html << "<br>" if (index + 1) % 3 == 0
     end
     html.html_safe
   end
