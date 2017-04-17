@@ -1,15 +1,16 @@
-.panel.panel-default.dashboard-panel
-  .panel-heading
-    My Queues
-  .panel-body
-    %ul.nav.nav-tabs#queue_tabs
-      - @queues.each_with_index do |queue, idx|
-        %li
-          %a{:href => "#tab#{idx}", :data =>{:toggle => 'tab'}}
-            %span.badge.pull-right= queue[:objs].count
-            = queue[:name]
+- unless current_user.has_role? :manager
+  .panel.panel-default.dashboard-panel
+    .panel-heading
+      My Queues
+    .panel-body
+      %ul.nav.nav-tabs#queue_tabs
+        - @queues.each_with_index do |queue, idx|
+          %li
+            %a{:href => "#tab#{idx}", :data =>{:toggle => 'tab'}}
+              %span.badge.pull-right= queue[:objs].count
+              = queue[:name]
 
-    .tab-content{:style => 'min-height: 200px'}
-      - @queues.each_with_index do |queue, idx|
-        .tab-pane.fade{:id => "tab#{idx}"}
-          = render :partial => queue[:view], :locals => {:name => queue[:name], :objs => queue[:objs]}
+      .tab-content{:style => 'min-height: 200px'}
+        - @queues.each_with_index do |queue, idx|
+          .tab-pane.fade{:id => "tab#{idx}"}
+            = render :partial => queue[:view], :locals => {:name => queue[:name], :objs => queue[:objs]}

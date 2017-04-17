@@ -6,28 +6,23 @@
     overflow-y: auto;
   }
 
+
 .row
   #spinner= loader_panel_tag({:message => "Loading...", :spinner => "cog"})
 
 .row
   .col-lg-4.col-md-6.col-sm-12.col-xs-12
-    = render :partial => 'assets_widget'
-    - if current_user.has_role? :manager
-      = render :partial => 'activities_summary'
-    - else
-      = render :partial => 'queues'
-    - if current_user.is_in_roles?([:transit_manager, :manager])
-      = render :partial => 'users/user_activity_summary'
+    - User.dashboard_widgets.select{|w| w[1] == 1}.each do |widget|
+      - if lookup_context.template_exists?(widget[0], 'dashboards', true)
+        = render :partial => "dashboards/#{widget[0]}"
   .col-lg-4.col-md-6.col-sm-12.col-xs-12
-    - SystemConfig.transam_module_names.each do |mod|
-      - view_component = "#{mod}_widget"
-      - if lookup_context.template_exists?(view_component, 'dashboards', true)
-        = render :partial => "dashboards/#{view_component}"
+    - User.dashboard_widgets.select{|w| w[1] == 2}.each do |widget|
+      - if lookup_context.template_exists?(widget[0], 'dashboards', true)
+        = render :partial => "dashboards/#{widget[0]}"
   .col-lg-4.col-md-6.col-sm-12.col-xs-12
-    = render :partial => 'notices'
-    = render :partial => 'search'
-    = render :partial => 'message_queues'
-    = render :partial => 'task_queues'
+    - User.dashboard_widgets.select{|w| w[1] == 3}.each do |widget|
+      - if lookup_context.template_exists?(widget[0], 'dashboards', true)
+        = render :partial => "dashboards/#{widget[0]}"
 
 :javascript
   var queue_tab_key = 'queues_tab_key';

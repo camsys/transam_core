@@ -154,6 +154,30 @@ class User < ActiveRecord::Base
     FORM_PARAMS
   end
 
+  # set default widgets and the column they are in. these can be customized at the app level
+  def self.dashboard_widgets
+    return Rails.application.config.dashboard_widgets if Rails.application.config.try(:dashboard_widgets)
+
+    widgets = []
+    SystemConfig.transam_module_names.each do |mod|
+      view_component = "#{mod}_widget"
+      widgets << [view_component, 2]
+    end
+    widgets += [
+        ['assets_widget', 1],
+        ['activities_widget', 1],
+        ['queues', 1],
+        ['users_widget', 1],
+        ['notices_widget', 3],
+        ['search_widget', 3],
+        ['message_queues', 3],
+        ['task_queues', 3]
+    ]
+
+    return widgets
+
+  end
+
   #-----------------------------------------------------------------------------
   # Instance Methods
   #-----------------------------------------------------------------------------

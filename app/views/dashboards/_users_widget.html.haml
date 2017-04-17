@@ -1,0 +1,37 @@
+- if current_user.is_in_roles?([:transit_manager, :manager])
+  .panel.panel-default.dashboard-panel
+    .panel-heading
+      User Activity
+    .panel-body
+      %table.table.table-hover.table-condensed
+        %thead
+          %tr
+            %th.left Name
+            %th.right Most Recent Login
+            %th.center Login Count
+            %th.center Account Locked
+            %th.center
+            %th.center
+        %tbody
+          - User.unscoped.where(organization_id: @organization_list).order(last_sign_in_at: :desc).each do |u|
+            %tr{:data => {:action_path => user_path(u)}}
+              %td.left= u.name
+              %td.right= format_as_date_time(u.last_sign_in_at)
+              %td.right= format_as_integer(u.sign_in_count)
+              %td.center= format_as_boolean(u.locked_at)
+              %td.center
+                %i.fa.fa-info-circle.text-info.popup-details{:id => "user_popup_#{u.id}", :data => {:user_key => u.object_key, :title => "#{u.name}", :toggle => 'popover' }}
+              %td.center
+                = link_to new_user_message_path(current_user, to_user: u), :title => "Send #{u.first_name} a message" do
+                  %i.fa.fa-envelope
+                = link_to new_user_task_path(current_user, assigned_to_user_id: u), :title => "Assign task to #{u.first_name}" do
+                  %i.fa.fa-calendar
+
+:javascript
+  $('.popup-details').on('mouseover', function() {
+    if(!$(this).hasClass('has-popover')) {
+      $.ajax({
+        url: "#{popup_user_path('xxx', format: :js)}".replace('xxx', $(this).data('user-key'))
+      });
+    }
+  });
