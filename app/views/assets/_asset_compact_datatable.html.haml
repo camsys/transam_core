@@ -22,7 +22,7 @@
       %th.center{:data => {:sortable => 'true', :order => 'desc'}} Status
 
   %tbody
-    - assets.each do |a|
+    - assets.joins("INNER JOIN users_organizations").where('assets.organization_id = users_organizations.organization_id').where( 'users_organizations.user_id = ?', current_user.id).uniq.each do |a|
       %tr{:id => a.object_key, :class => 'action-path'}
         %td.left= a.organization
         %td.left= a.asset_subtype
