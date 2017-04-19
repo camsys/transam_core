@@ -15,7 +15,6 @@ puts "======= Processing TransAM CORE Lookup Tables  ======="
 
 asset_event_types = [
   {:active => 1, :name => 'Condition',       :display_icon_name => "fa fa-star-half-o",       :description => 'Condition',       :class_name => 'ConditionUpdateEvent',      :job_name => 'AssetConditionUpdateJob'},
-  {:active => 1, :name => 'Maintenance provider type',       :display_icon_name => "fa fa-cog",       :description => 'Maintenance Provider',       :class_name => 'MaintenanceProviderUpdateEvent',      :job_name => 'AssetMaintenanceProviderUpdateJob'},
   {:active => 0, :name => 'Schedule replacement',       :display_icon_name => "fa fa-refresh",       :description => 'Scheduled replacement',       :class_name => 'ScheduleReplacementUpdateEvent',      :job_name => 'AssetScheduleReplacementUpdateJob'},
   {:active => 0, :name => 'Schedule rehabilitation',       :display_icon_name => "fa fa-wrench",       :description => 'Scheduled rehabilitation',       :class_name => 'ScheduleRehabilitationUpdateEvent',      :job_name => 'AssetScheduleRehabilitationUpdateJob'},
   {:active => 0, :name => 'Schedule disposition',       :display_icon_name => "fa fa-times-circle",       :description => 'Scheduled disposition',       :class_name => 'ScheduleDispositionUpdateEvent',      :job_name => 'AssetScheduleDispositionUpdateJob'},
