@@ -152,7 +152,6 @@
                     </div>\
                     <div class="row">\
                       <div class="selector-filter">\
-                        <form class="form">\
                           <div class="form-group">\
                             <div class="input-group">\
                               <div class="input-group-addon">\
@@ -161,7 +160,6 @@
                               <input class="form-control filter-input form-control" type="text" placeholder="Search..." />\
                             </div>\
                           </div>\
-                        </form>\
                       </div>\
                     </div>\
                     <div class="row">\
