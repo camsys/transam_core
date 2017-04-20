@@ -90,6 +90,9 @@
       update_disabled_orgs();
 
       $('#user_role_ids').val('');
+      $('#privilege-ids-div input').attr('checked', false);
+
+      special_updates(org_id);
   });
 
   // disable main org after adding to org list
@@ -122,4 +125,9 @@
     var org_id = $('#user_organization_id').val();
     $('#selected_grantees option').attr('disabled', false);
     $('#selected_grantees option[value="' + org_id + '"]').attr('disabled', true);
+  }
+
+  // can be overwritten in other engine
+  function special_updates(org_id) {
+    console.log('core has no special updates');
   }

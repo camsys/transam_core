@@ -29,7 +29,8 @@
 
     - if assignable_privileges.count > 0
       .col-lg-6.col-md-6.col-sm-6.col-xs-12
-        = f.input :privilege_ids, :label => "User Privileges", :collection => assignable_privileges, :as => :check_boxes, :input_html => { :multiple => true }
+        #privilege-ids-div
+          = f.input :privilege_ids, :label => "User Privileges", :collection => assignable_privileges, :as => :check_boxes, :input_html => { :multiple => true }
 
 - SystemConfig.transam_module_names.each do |mod|
   - if lookup_context.template_exists?("#{mod}_authorization_fields_scripts", 'users', true)
