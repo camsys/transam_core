@@ -51,6 +51,7 @@
     if ($('#search_text:hidden').length) {
       e.preventDefault();
       $('#search_text').show();
+      $('#search_text').focus();
     } else if ($('#search_text').val() == "") {
       e.preventDefault();
       $('#search_text').hide();
