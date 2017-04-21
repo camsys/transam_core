@@ -57,12 +57,7 @@
 
     $('btn.selector-clearall').hide();
 
-    var org_id = $('#user_organization_id').val();
-    update_role_list_by_organization(org_id);
-    $('#org_select').data().bootstrapTransfer.move_all(true, false); // clear out all selected values
-    $('#org_select').data().bootstrapTransfer.set_values([org_id])
-
-    update_disabled_orgs();
+    $('#user_organization_id').change();
 
     transam.make_same_height('.form-part');
   });
