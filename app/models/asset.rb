@@ -46,9 +46,6 @@ class Asset < ActiveRecord::Base
   # each asset has a single asset subtype
   belongs_to  :asset_subtype
 
-  # each asset has a single maintenance provider type
-  belongs_to  :maintenance_provider_type
-
   belongs_to  :replacement_status_type
 
   # each asset has a reason why it is being replaced

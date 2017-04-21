@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170317143951) do
+ActiveRecord::Schema.define(version: 20170413143204) do
 
   create_table "activities", force: true do |t|
     t.string   "object_key",           limit: 12
@@ -66,12 +66,12 @@ ActiveRecord::Schema.define(version: 20170317143951) do
   add_index "asset_event_types", ["class_name"], name: "asset_event_types_idx1", using: :btree
 
   create_table "asset_events", force: true do |t|
-    t.string   "object_key",                   limit: 12,                          null: false
-    t.integer  "asset_id",                                                         null: false
-    t.integer  "asset_event_type_id",                                              null: false
+    t.string   "object_key",                  limit: 12,                          null: false
+    t.integer  "asset_id",                                                        null: false
+    t.integer  "asset_event_type_id",                                             null: false
     t.integer  "upload_id"
-    t.date     "event_date",                                                       null: false
-    t.decimal  "assessed_rating",                          precision: 9, scale: 2
+    t.date     "event_date",                                                      null: false
+    t.decimal  "assessed_rating",                         precision: 9, scale: 2
     t.integer  "condition_type_id"
     t.integer  "current_mileage"
     t.integer  "parent_id"
@@ -81,6 +81,7 @@ ActiveRecord::Schema.define(version: 20170317143951) do
     t.integer  "extended_useful_life_miles"
     t.integer  "extended_useful_life_months"
     t.integer  "replacement_reason_type_id"
+    t.string   "replacement_status_type_id"
     t.date     "disposition_date"
     t.integer  "disposition_type_id"
     t.integer  "service_status_type_id"
@@ -89,9 +90,8 @@ ActiveRecord::Schema.define(version: 20170317143951) do
     t.integer  "avg_daily_use_hours"
     t.integer  "avg_daily_use_miles"
     t.integer  "avg_daily_passenger_trips"
-    t.integer  "maintenance_provider_type_id"
-    t.decimal  "avg_cost_per_mile",                        precision: 9, scale: 2
-    t.decimal  "avg_miles_per_gallon",                     precision: 9, scale: 2
+    t.decimal  "avg_cost_per_mile",                       precision: 9, scale: 2
+    t.decimal  "avg_miles_per_gallon",                    precision: 9, scale: 2
     t.integer  "annual_maintenance_cost"
     t.integer  "annual_insurance_cost"
     t.boolean  "actual_costs"
@@ -100,11 +100,11 @@ ActiveRecord::Schema.define(version: 20170317143951) do
     t.integer  "sales_proceeds"
     t.string   "organization_id"
     t.text     "comments"
-    t.datetime "created_at",                                                       null: false
-    t.datetime "updated_at",                                                       null: false
-    t.string   "state",                        limit: 32
-    t.string   "document",                     limit: 128
-    t.string   "original_filename",            limit: 128
+    t.datetime "created_at",                                                      null: false
+    t.datetime "updated_at",                                                      null: false
+    t.string   "state",                       limit: 32
+    t.string   "document",                    limit: 128
+    t.string   "original_filename",           limit: 128
     t.integer  "created_by_id"
     t.integer  "total_cost"
   end
@@ -208,6 +208,7 @@ ActiveRecord::Schema.define(version: 20170317143951) do
     t.boolean  "scheduled_replace_with_new"
     t.integer  "scheduled_rehabilitation_cost"
     t.integer  "replacement_reason_type_id"
+    t.string   "replacement_status_type_id"
     t.boolean  "in_backlog"
     t.integer  "reported_condition_type_id"
     t.decimal  "reported_condition_rating",                   precision: 10, scale: 1
@@ -225,7 +226,6 @@ ActiveRecord::Schema.define(version: 20170317143951) do
     t.date     "disposition_date"
     t.integer  "disposition_type_id"
     t.date     "last_rehabilitation_date"
-    t.integer  "maintenance_provider_type_id"
     t.string   "location_reference",              limit: 254
     t.text     "location_comments"
     t.integer  "fuel_type_id"
@@ -493,13 +493,6 @@ ActiveRecord::Schema.define(version: 20170317143951) do
     t.boolean "active",                    null: false
   end
 
-  create_table "maintenance_provider_types", force: true do |t|
-    t.string  "name",        limit: 64,  null: false
-    t.string  "code",        limit: 2,   null: false
-    t.string  "description", limit: 254, null: false
-    t.boolean "active",                  null: false
-  end
-
   create_table "maintenance_types", force: true do |t|
     t.string  "name",        limit: 32,  null: false
     t.string  "description", limit: 254, null: false
@@ -591,6 +584,7 @@ ActiveRecord::Schema.define(version: 20170317143951) do
     t.string  "display_icon_name", limit: 64,  null: false
     t.string  "map_icon_name",     limit: 64,  null: false
     t.string  "description",       limit: 254, null: false
+    t.string  "roles"
     t.boolean "active",                        null: false
   end
 
@@ -715,6 +709,12 @@ ActiveRecord::Schema.define(version: 20170317143951) do
   create_table "replacement_reason_types", force: true do |t|
     t.string  "name",        limit: 64,  null: false
     t.string  "description", limit: 254, null: false
+    t.boolean "active"
+  end
+
+  create_table "replacement_status_types", force: true do |t|
+    t.string  "name"
+    t.string  "description"
     t.boolean "active"
   end
 
