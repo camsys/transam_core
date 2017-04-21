@@ -7,7 +7,7 @@ module Abilities
       self.merge "Abilities::AuthorizedActivityLogAbility".constantize.new(user)
       self.merge "Abilities::AuthorizedUserAbility".constantize.new(user)
       self.merge "Abilities::AuthorizedIssueAbility".constantize.new(user)
-
+      self.merge "Abilities::AuthorizedSavedSearchAbility".constantize.new(user)
     end
   end
 end
