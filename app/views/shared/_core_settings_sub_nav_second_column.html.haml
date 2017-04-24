@@ -16,17 +16,4 @@
   = link_to saved_searches_path do
     %i.fa.fa-floppy-o.fa-fw
     = "My saved queries"
-%li.divider.text-left
-- if current_user.organizations.count == 1
-  %li.text-left
-    = link_to organization_path(current_user.organization)  do
-      %i.fa.fa-building-o.fa-fw
-      My organization
-- else
-  - current_user.organizations.each do |org|
-    %li.text-left
-      = link_to organization_path(org) do
-        %i.fa.fa-building-o.fa-fw
-        = org.to_s
-
 

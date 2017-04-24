@@ -7,9 +7,15 @@
       .col-sm-6
         %ul.multi-column-dropdown
           %li.text-left
-            = link_to organizations_path do
-              %i.fa.fa-building.fa-fw
-              Organizations
+            - if @organization_list.count > 1
+              = link_to organizations_path do
+                %i.fa.fa-building.fa-fw
+                Organizations
+            - else
+              - org = Organization.find_by(id: @organization_list.first)
+              = link_to organization_path(org) do
+                %i.fa.fa-building.fa-fw
+                = org.to_s
           %li.text-left
             = link_to users_path do
               %i.fa.fa-users.fa-fw
