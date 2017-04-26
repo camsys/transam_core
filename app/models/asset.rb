@@ -845,7 +845,7 @@ class Asset < ActiveRecord::Base
         status = event.replacement_status_type
         self.replacement_status_type = status
         if self.replacement_by_policy?
-          self.scheduled_replacement_year = self.policy_replacement_year
+          self.scheduled_replacement_year = self.policy_replacement_year < current_planning_year_year ? current_planning_year_year : self.policy_replacement_year
         elsif self.replacement_underway?
           self.scheduled_replacement_year = event.replacement_year
         end
