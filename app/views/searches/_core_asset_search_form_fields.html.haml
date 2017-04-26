@@ -33,7 +33,7 @@
           #vendor-selector
             = f.input :vendor_id, collection: Vendor.active.where(organization_id: @organization_list).map { |vendor| [vendor.name, vendor.id, { class: vendor.organization_id } ]}, label: 'Vendor', input_html: { multiple: true }
           #manufacturers
-            = f.input :manufacturer_id, collection: Manufacturer.active.map { |manufacturer| [ " #{ manufacturer.name } (#{ manufacturer.filter.titleize.pluralize })", manufacturer.id, { class: manufacturer.filter }] }, input_html: { multiple: true }
+            = f.input :manufacturer_id, collection: Manufacturer.active.map { |manufacturer| [ " #{ manufacturer.to_s } (#{ manufacturer.filter.titleize.pluralize })", manufacturer.id, { class: manufacturer.filter }] }, input_html: { multiple: true }
           = f.input :manufacturer_model, :placeholder => "Enter The Manufacturer Model", :label => "Manufacturer Model"
           = f.input :manufacture_year, :wrapper => :vertical_prepend, :label => "Manufacture Year" do
             .input-group-btn
@@ -51,7 +51,7 @@
       .col-md-3
         %fieldset
           %legend.panel-legend Funding, Value
-          = f.input :fta_funding_type_id, :label => "Fta Funding Type", :collection => FtaFundingType.active, input_html: { multiple: true }
+          = f.input :fta_funding_type_id, :label => "Fta Funding Type", :collection => FtaFundingType.active, :label_method => :to_s, input_html: { multiple: true }
           = f.input :sourceable_id, :label => GrantPurchase.label, :collection => GrantPurchase.sources, input_html: { multiple: true }
           = f.input :purchase_cost, :label => "Purchase Cost", :wrapper => :vertical_prepend do
             .input-group-btn

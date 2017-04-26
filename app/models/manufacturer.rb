@@ -30,7 +30,7 @@ class Manufacturer < ActiveRecord::Base
   end
 
   def to_s
-    code
+    "#{code}-#{name}"
   end
 
 end
