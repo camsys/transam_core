@@ -277,6 +277,8 @@ class User < ActiveRecord::Base
   end
 
   def update_user_organization_filters
+    self.user_organization_filters = UserOrganizationFilter.joins(:users).where(created_by_user_id: self.id).sorted.group('user_organization_filters.id').having( 'count( user_id ) = 1' )
+
     UserOrganizationFilter.where('resource_type IS NOT NULL').each do |filter|
       puts self.try(filter.resource_type.downcase.pluralize).include? filter.resource
       puts self.organizations.inspect

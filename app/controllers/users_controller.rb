@@ -266,7 +266,6 @@ class UsersController < OrganizationAwareController
         # set all filters to personal not shared one
         # then run method that checks your main org and org list to get all shared filters
         unless FILTERS_IGNORED
-          @user.user_organization_filters = UserOrganizationFilter.joins(:users).where(created_by_user_id: current_user.id).sorted.group('user_organization_filters.id').having( 'count( user_id ) = 1' )
           @user.update_user_organization_filters
         end
 
