@@ -4,10 +4,11 @@ module Abilities
 
     def initialize(user)
 
-      self.merge "Abilities::AuthorizedActivityLogAbility".constantize.new(user)
-      self.merge "Abilities::AuthorizedUserAbility".constantize.new(user)
-      self.merge "Abilities::AuthorizedIssueAbility".constantize.new(user)
-      self.merge "Abilities::AuthorizedSavedSearchAbility".constantize.new(user)
+      self.merge Abilities::AuthorizedActivityLogAbility.new(user)
+      self.merge Abilities::AuthorizedUserAbility.new(user)
+      self.merge Abilities::AuthorizedIssueAbility.new(user)
+      self.merge Abilities::AuthorizedSavedSearchAbility.new(user)
+      self.merge Abilities::AuthorizedUserOrganizationFilterAbility.new(user)
     end
   end
 end
