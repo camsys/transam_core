@@ -46,8 +46,6 @@ class Asset < ActiveRecord::Base
   # each asset has a single asset subtype
   belongs_to  :asset_subtype
 
-  belongs_to  :replacement_status_type
-
   # each asset has a reason why it is being replaced
   belongs_to  :replacement_reason_type
 
@@ -69,8 +67,6 @@ class Asset < ActiveRecord::Base
 
   # each asset has zero or more condition updates
   has_many   :condition_updates, -> {where :asset_event_type_id => ConditionUpdateEvent.asset_event_type.id }, :class_name => "ConditionUpdateEvent"
-
-  has_many   :replacement_status_updates, -> {where :asset_event_type_id => ReplacementStatusUpdateEvent.asset_event_type.id }, :class_name => "ReplacementStatusUpdateEvent"
 
   # each asset has zero or more scheduled replacement updates
   has_many   :schedule_replacement_updates, -> {where :asset_event_type_id => ScheduleReplacementUpdateEvent.asset_event_type.id }, :class_name => "ScheduleReplacementUpdateEvent"
@@ -178,9 +174,6 @@ class Asset < ActiveRecord::Base
   # Returns a list of asset that operational and are marked as being in service
   scope :in_service,  -> { where('assets.disposition_date IS NULL AND assets.service_status_type_id = 1')}
 
-  scope :in_replacement_cycle, -> { where('replacement_status_type_id IS NULL OR replacement_status_type_id != ?', ReplacementStatusType.find_by(name: 'None').id) }
-  scope :replacement_underway, -> { where(replacement_status_type_id: ReplacementStatusType.find_by(name: 'Underway').id) }
-
   # Returns a list of asset that in early replacement
   scope :early_replacement, -> { where('policy_replacement_year is not NULL and scheduled_replacement_year is not NULL and scheduled_replacement_year < policy_replacement_year') }
   #-----------------------------------------------------------------------------
@@ -227,7 +220,6 @@ class Asset < ActiveRecord::Base
     :update_sogr,
     :update_service_status,
     :update_condition,
-    :update_replacement_status,
     :update_scheduled_replacement,
     :update_scheduled_rehabilitation,
     :update_scheduled_disposition,
@@ -527,20 +519,8 @@ class Asset < ActiveRecord::Base
     early_disposition_requests.active.last.try(:comments) || ""
   end
 
-  def in_replacement_cycle?
-    ReplacementStatusType.where.not(name: 'None').include? replacement_status_type
-  end
-
-  def replacement_by_policy?
-    replacement_status_type.nil? || replacement_status_type == ReplacementStatusType.find_by(name: 'By Policy')
-  end
-
-  def replacement_underway?
-    replacement_status_type == ReplacementStatusType.find_by(name: 'Underway')
-  end
-
-  def no_replacement?
-    replacement_status_type == ReplacementStatusType.find_by(name: 'None')
+ def replacement_by_policy?
+    true # all assets in core are in replacement cycle. To plan and/or make exceptions to normal schedule, see CPT.
   end
 
   # Returns true if an asset is scheduled for disposition
@@ -831,28 +811,6 @@ class Asset < ActiveRecord::Base
       save(:validate => false) if save_asset
     end
 
-  end
-
-  def update_replacement_status(save_asset = true)
-    Rails.logger.debug "Updating replacement status for asset = #{object_key}"
-
-    # can't do this if it is a new record as none of the IDs would be set
-    unless new_record? or disposed?
-      if replacement_status_updates.empty?
-        self.replacement_status_type = nil
-      else
-        event = replacement_status_updates.last
-        status = event.replacement_status_type
-        self.replacement_status_type = status
-        if self.replacement_by_policy?
-          self.scheduled_replacement_year = self.policy_replacement_year < current_planning_year_year ? current_planning_year_year : self.policy_replacement_year
-        elsif self.replacement_underway?
-          self.scheduled_replacement_year = event.replacement_year
-        end
-      end
-      # save changes to this asset
-      save(:validate => false) if save_asset
-    end
   end
 
   # Forces an update of an assets scheduled replacement. This performs an update on the record.

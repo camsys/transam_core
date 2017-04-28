@@ -1,4 +1,0 @@
-= format_field("Replacement Status", @asset_event.replacement_status_type)
-= format_field("Replacement Year", format_as_fiscal_year(@asset_event.replacement_year)) if @asset_event.replacement_year.present?
-= format_field("Reported On", format_as_date(@asset_event.event_date))
-= format_field("Comments", @asset_event.comments.html_safe) unless @asset_event.comments.blank?
