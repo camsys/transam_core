@@ -26,7 +26,7 @@ Gem::Specification.new do |s|
   s.add_dependency "high_voltage"
   #s.add_dependency "fullcalendar-rails"
   #s.add_dependency 'mail', '2.5.4'
-  s.add_dependency 'unitwise'
+  s.add_dependency 'unitwise', '~> 2.0.0'
   s.add_dependency 'chronic'
   s.add_dependency "breadcrumbs_on_rails"
   s.add_dependency 'state_machine'
