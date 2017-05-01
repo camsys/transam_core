@@ -39,19 +39,19 @@
           %ul.multi-column-dropdown
             - my_system_filters.each do |filter|
               %li
-                = link_to user_user_organization_filter_use_path(current_user, filter) do
+                = link_to user_user_organization_filter_use_path(current_user, filter), :class => 'filter-link' do
                   %i.fa.fa-filter.fa-fw
                   = filter.name
             %li.divider
             - (my_shared_filters - my_personal_filters).each do |filter|
               %li
-                = link_to user_user_organization_filter_use_path(current_user, filter) do
+                = link_to user_user_organization_filter_use_path(current_user, filter), :class => 'filter-link' do
                   %i.fa.fa-filter.fa-fw
                   = filter.name
             %li.divider
             - my_personal_filters.each do |filter|
               %li
-                = link_to user_user_organization_filter_use_path(current_user, filter) do
+                = link_to user_user_organization_filter_use_path(current_user, filter), :class => 'filter-link' do
                   %i.fa.fa-filter.fa-fw
                   = filter.name
             %li.divider
@@ -102,12 +102,17 @@
       e.stopPropagation();
   });
 
+  $('.filter-link').click(function(event) {
+    bootbox.dialog({ message: "#{loader_panel_tag({:message => 'Processing...', :spinner => 'cog'})}", closeButton: false });
+  });
+
   $('#subselect-orgs').click(function(event) {
     event.preventDefault();
     if ($('input[name="org[]"]:checked').length > 0) {
       var orgs = $("input[name='org[]']:checked").map(function() { return this.value;}).get();
 
       //console.log(orgs);
+      bootbox.dialog({ message: "#{loader_panel_tag({:message => 'Processing...', :spinner => 'cog'})}", closeButton: false });
 
       $.ajax({
         url: "#{user_user_organization_filter_set_org_path(current_user, current_user.user_organization_filter)}",
