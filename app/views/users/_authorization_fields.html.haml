@@ -8,7 +8,7 @@
   %legend User Organizations
   .row
     .col-lg-6.col-md-6.col-sm-6.col-xs-12
-      = f.association :organization, :collection => Organization.where(id: @organization_list), :label_method => 'coded_name', :selected => params[:organization_id], :include_blank => true
+      = f.association :organization, :collection => Organization.where(id: @organization_list), :label_method => 'coded_name', :selected => (@user.organization_id || params[:organization_id]), :include_blank => true
     .col-lg-6.col-md-6.col-sm-6.col-xs-12
 
       = f.input :organization_ids, :as => :hidden

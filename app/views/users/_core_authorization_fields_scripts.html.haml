@@ -57,7 +57,7 @@
 
     $('btn.selector-clearall').hide();
 
-    $('#user_organization_id').change();
+    all_org_updates($('#user_organization_id').val());
 
     transam.make_same_height('.form-part');
   });
@@ -78,16 +78,13 @@
   // Organization change: reset role, borough, and boroughs
   $('#user_organization_id').on('change', function(e) {
       var org_id = $(this).val();
-      update_role_list_by_organization(org_id);
-      $('#org_select').data().bootstrapTransfer.move_all(true, false); // clear out all selected values
-      $('#org_select').data().bootstrapTransfer.set_values([org_id])
 
-      update_disabled_orgs();
+      all_org_updates(org_id);
 
       $('#user_role_ids').val('');
       $('#privilege-ids-div input').attr('checked', false);
 
-      special_updates(org_id);
+
   });
 
   // disable main org after adding to org list
@@ -95,6 +92,16 @@
   $('body').on('click', 'btn.selector', function() {
       update_disabled_orgs();
   });
+
+  function all_org_updates(org_id) {
+    update_role_list_by_organization(org_id);
+    $('#org_select').data().bootstrapTransfer.move_all(true, false); // clear out all selected values
+    $('#org_select').data().bootstrapTransfer.set_values([org_id])
+
+    update_disabled_orgs();
+
+    special_updates(org_id);
+  }
 
   function update_role_list_by_organization(org_id) {
       if(org_id) {
