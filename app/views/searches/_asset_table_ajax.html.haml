@@ -7,6 +7,8 @@
   @asset_class_name = @searcher.asset_type_class_name
   @view = "#{@asset_class_name.underscore}_index"
 
+  @core_tbl_formatter_load_count = 1 # load own set of table formatters
+
 .table-responsive
   %table.table.table-condensed.table-hover{:id => 'search_asset_server_table',
     :data => {:toggle => 'table',
