@@ -17,4 +17,4 @@
             = " Add an Asset Subtype Rule"
 
         %hr
-        = render :partial => 'asset_subtype_rules', :locals => {:asset_type => at.asset_type, :rules => @policy.policy_asset_subtype_rules.joins(asset_subtype: :asset_type).where("asset_types.id = ?", at.asset_type.id), :policy => @policy}
+        = render :partial => 'asset_subtype_rules', :locals => {:asset_type => at.asset_type, :rules => @policy.policy_asset_subtype_rules.joins(asset_subtype: :asset_type).where("asset_subtypes.active = true AND asset_types.id = ?", at.asset_type.id), :policy => @policy}

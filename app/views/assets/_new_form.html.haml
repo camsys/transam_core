@@ -15,7 +15,7 @@
           .form-group
             %label.control-label.string.required
               * Asset Type
-            = select_tag(:asset_subtype, option_groups_from_collection_for_select(@asset_types, :asset_subtypes, :name, :id, :name), :class => 'form-control string required', :prompt => 'Select asset type...', :id => 'asset_subtype_filter')
+            = select_tag(:asset_subtype, grouped_options_for_select(@asset_types.each_with_object({}) { |type, hash|  hash[type.to_s] = AssetSubtype.active.where(asset_type_id: type.id).pluck(:name, :id)}), :class => 'form-control string required', :prompt => 'Select asset type...', :id => 'asset_subtype_filter')
 
           = submit_tag 'Create New Asset', :class => "btn btn-primary", :id => "submit_button"
 
