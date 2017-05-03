@@ -103,7 +103,7 @@
   });
 
   $('.filter-link').click(function(event) {
-    bootbox.dialog({ message: "#{loader_panel_tag({:message => 'Processing...', :spinner => 'cog'})}", closeButton: false });
+    bootbox.dialog({ message: "#{loader_panel_tag({:message => 'Processing...', :spinner => 'cog', :html_class => 'filter-loader'})}", closeButton: false });
   });
 
   $('#subselect-orgs').click(function(event) {
@@ -112,7 +112,7 @@
       var orgs = $("input[name='org[]']:checked").map(function() { return this.value;}).get();
 
       //console.log(orgs);
-      bootbox.dialog({ message: "#{loader_panel_tag({:message => 'Processing...', :spinner => 'cog'})}", closeButton: false });
+      bootbox.dialog({ message: "#{loader_panel_tag({:message => 'Processing...', :spinner => 'cog', :html_class => 'filter-loader'})}", closeButton: false });
 
       $.ajax({
         url: "#{user_user_organization_filter_set_org_path(current_user, current_user.user_organization_filter)}",
