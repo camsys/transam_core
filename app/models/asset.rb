@@ -644,7 +644,7 @@ class Asset < ActiveRecord::Base
 
   # returns the list of events associated with this asset ordered by date, newest first
   def history
-    AssetEvent.unscoped.where('asset_id = ?', id).order('event_date DESC')
+    AssetEvent.unscoped.where('asset_id = ?', id).order('event_date DESC, created_at DESC')
   end
 
   def estimated_rehabilitation_cost(on_date = Date.today)
