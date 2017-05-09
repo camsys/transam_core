@@ -22,7 +22,10 @@
         :search => 'false',
         :resizable => 'true',
         :show_header => 'false',
-        :query_params => 'query_params'}}
+        :query_params => 'query_params',
+        :state_save => 'true',
+        :state_save_id_table => "keyword_search_id",
+        :state_save_expire => "1y"}}
         %thead
           %tr
             %th.center{:data => {:field => "content", :title => "Search Results", :align => 'left'}}

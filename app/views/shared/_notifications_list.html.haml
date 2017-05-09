@@ -12,7 +12,10 @@
     :show_columns => 'false',
     :show_toggle => 'false',
     :maintain_selected => 'true',
-    :single_select => 'false'}}
+    :single_select => 'false',
+    :state_save => 'true',
+    :state_save_id_table => "notificationsid",
+    :state_save_expire => "1y"}}
 
     %tbody
       - notifications.each do |n|
