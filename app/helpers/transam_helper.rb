@@ -45,6 +45,10 @@ module TransamHelper
     '/user_guide/TransAMUserGuide.html'
   end
 
+  def html_help_pdf_path
+    '/user_guide/CPT_User_Guide.pdf'
+  end
+
   # Returns the correct FontAwesomne icon for a file type based on the
   # file extension
   def get_file_icon_for_filename(filename)
