@@ -1,3 +1,7 @@
+:ruby
+  has_report_actions = lookup_context.template_exists?("#{@report_view}_actions", 'reports', true)
+  has_common_actions = lookup_context.template_exists?("common_actions", 'reports', true)
+  
 %nav.navbar.navbar-default
   .container-fluid
     .navbar-header
@@ -8,9 +12,12 @@
         %span.icon-bar
       .navbar-brand= @report.name
 
-    - if lookup_context.template_exists?("#{@report_view}_actions", 'reports', true)
+    - if has_report_actions || has_common_actions
       .collapse.navbar-collapse#report-form-actions
-        = render :partial => "#{@report_view}_actions"
+        - if has_common_actions
+          = render :partial => "common_actions"
+        - if has_report_actions
+          = render :partial => "#{@report_view}_actions"
 
 .row
   .col-lg-12.col-md-12.col-sm-12.col-xs-12

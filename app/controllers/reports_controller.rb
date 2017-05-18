@@ -44,7 +44,23 @@ class ReportsController < OrganizationAwareController
   end
 
   def show
+    handle_show do
+      respond_to do |format|
+        format.html
+        format.xls do
+          sanitized_report_name = @report.name.gsub(" ", "_").underscore
+          response.headers['Content-Disposition'] = "attachment; filename=#{@organization.short_name}_#{sanitized_report_name}.xls"
+        end
+      end
+    end
+  end
 
+  protected
+
+  # Simply calling super in a subclassed show method doesn't work because of the respond_to
+  # This method does the work of setting up the report, allowing the subclass to pass
+  # a different respond_to block.
+  def handle_show &block
     @report_filter_type = params[:report_filter_type]
     @asset_types = []
     AssetType.active.each do |at|
@@ -64,16 +80,10 @@ class ReportsController < OrganizationAwareController
       # get the report data
       @data = report_instance.get_data(@organization_list, params)
 
-      respond_to do |format|
-        format.html
-        format.xls do
-          sanitized_report_name = @report.name.gsub(" ", "_").underscore
-          response.headers['Content-Disposition'] = "attachment; filename=#{@organization.short_name}_#{sanitized_report_name}.xls"
-        end
-      end
+      yield
     end
   end
-
+  
   #------------------------------------------------------------------------------
   #
   # Private Methods
