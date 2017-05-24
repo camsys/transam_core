@@ -58,6 +58,7 @@ class AssetGroupsController < OrganizationAwareController
     @asset_group = AssetGroup.new(form_params)
     @asset_group.active = true
     @asset_group.organization = @organization
+    @asset_group.active = true
 
     if @asset_group.save
 
