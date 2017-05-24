@@ -34,3 +34,22 @@
     / Begin analytics
     - unless ENV['GOOGLE_ANALYTICS_ACCOUNT'].blank?
       = render 'shared/analytics'
+
+:javascript
+  $(document).ready(function() {
+    $(window).resize(function() {
+      $('#view').css('margin-top', $('.navbar-fixed-top').height() + 6);
+    });
+
+    $(window).load(function() {
+      $('#view').css('margin-top', $('.navbar-fixed-top').height() + 6);
+    });
+
+    $('.navbar-fixed-top .navbar-collapse').on('shown.bs.collapse', function() {
+      $('#view').animate({'margin-top':$('.navbar-fixed-top').height() + 6}, 200);
+    });
+
+    $('.navbar-fixed-top .navbar-collapse').on('hidden.bs.collapse', function() {
+      $('#view').animate({'margin-top':$('.navbar-fixed-top').height() + 6}, 200);
+    });
+  });
