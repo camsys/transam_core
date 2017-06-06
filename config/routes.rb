@@ -10,6 +10,12 @@ Rails.application.routes.draw do
     get code, :to => "errors#show", :code => code
   end
 
+  #-----------------------------------------------------------------------------
+  # Landing page for checking the health of the system, used mostly as a heartbeat
+  # checker for the system overall
+  #-----------------------------------------------------------------------------
+  get 'system_health_check', to: 'errors#system_health'
+
   # Routes for the issues controller
   resources :issues,    :only => [:create, :update, :edit, :new] do
     member do
