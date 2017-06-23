@@ -55,6 +55,11 @@ class ReportsController < OrganizationAwareController
     end
   end
 
+  #------------------------------------------------------------------------------
+  #
+  # Protected Methods
+  #
+  #------------------------------------------------------------------------------
   protected
 
   # Simply calling super in a subclassed show method doesn't work because of the respond_to
@@ -84,13 +89,6 @@ class ReportsController < OrganizationAwareController
     end
   end
   
-  #------------------------------------------------------------------------------
-  #
-  # Private Methods
-  #
-  #------------------------------------------------------------------------------
-  private
-
   # Returns the selected report
   def get_report
     # load this report and create the report instance
