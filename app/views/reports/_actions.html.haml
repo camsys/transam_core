@@ -1,6 +1,7 @@
-= form_tag report_url(@report), :class => "navbar-form navbar-right", :method => :get, :id => 'report_filter_form', :role => "form" do
-  .form-group
-    = select_tag(:report_filter_type, options_for_select(@asset_types, :selected => @report_filter_type), :class => "form-control", :prompt => 'Any Type...', :id => 'asset_filter')
+- if @include_assets_filter
+	= form_tag report_url(@report), :class => "navbar-form navbar-right", :method => :get, :id => 'report_filter_form', :role => "form" do
+	  .form-group
+	    = select_tag(:report_filter_type, options_for_select(@asset_types, :selected => @report_filter_type), :class => "form-control", :prompt => 'Any Type...', :id => 'asset_filter')
 
 :javascript
 
