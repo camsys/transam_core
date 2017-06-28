@@ -7,7 +7,7 @@
     %b.caret
   %ul.dropdown-menu.multi-level{:role => "menu"}
     - asset_types.each do |type|
-      - subtypes = Asset.operational.where('organization_id IN (?) AND asset_subtypes.asset_type_id = ?', @organization_list, type[0]).joins(:asset_subtype).group(['asset_subtypes.name', 'asset_subtypes.id']).order(:id).count
+      - subtypes = Asset.operational.where('organization_id IN (?) AND asset_subtypes.asset_type_id = ?', @organization_list, type[0]).joins(:asset_subtype).group(['asset_subtypes.name', 'asset_subtypes.id']).order(:asset_subtype_id).count
       - if subtypes.count > 0
         %li.text-left.dropdown-submenu
           = link_to inventory_index_path(:asset_type => type[0], :asset_subtype => 0, :asset_group => 0)  do
