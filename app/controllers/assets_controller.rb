@@ -293,7 +293,7 @@ class AssetsController < AssetAwareController
 
     @page_title = 'New Asset'
     # Get the asset types for the filter dropdown
-    @asset_types = AssetType.active
+    @asset_types = params[:asset_type_id].present? ? AssetType.where(id: params[:asset_type_id]) : AssetType.active
 
   end
 
@@ -318,6 +318,10 @@ class AssetsController < AssetAwareController
       @asset.organization = Organization.find(params[:organization_id])
     else
       @asset.organization_id = @organization_list.first
+    end
+
+    if params[:parent_id].present?
+      @asset.parent_id = params[:parent_id].to_i
     end
 
     respond_to do |format|
@@ -354,7 +358,7 @@ class AssetsController < AssetAwareController
     add_breadcrumb "New", new_inventory_path(asset_subtype)
 
     respond_to do |format|
-      if @asset.save
+      if @asset.save!
 
         # Make sure the policy has rules for this asset
         policy = @asset.policy

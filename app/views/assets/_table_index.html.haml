@@ -1,1 +1,6 @@
-= render @view
+- if lookup_context.template_exists?(@view, 'assets', true)
+  = render @view
+- else
+  = render 'asset_index'
+
+
