@@ -85,7 +85,8 @@
           = f.input :reported_condition_type_id, :label => "Reported Condition Type", :collection => ConditionType.active, input_html: { multiple: true }
           = f.input :in_backlog, :as => :boolean, :label => "In Backlog"
           = f.input :purchased_new, :as => :boolean, :label => "Purchased New", :label_html => { :class => 'bold' }
-          = f.input :early_replacement, :as => :boolean, :label => "Early Replacement", :label_html => { :class => 'bold' }
+          = f.input :early_replacement, :as => :boolean, :label => "Scheduled Early Replacement", :label_html => { :class => 'bold' }
+          = f.input :disposed_early, :as => :boolean, :label => "Disposed Early", :label_html => { :class => 'bold' }
 
 
       .col-md-3

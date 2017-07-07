@@ -402,6 +402,7 @@ class Asset < ActiveRecord::Base
       :purchased_new => self.purchased_new,
       :warranty_date => self.warranty_date,
       :in_service_date => self.in_service_date,
+      :disposition_date => self.disposition_date,
       :vendor_id => self.vendor.present? ? self.vendor.to_s : nil,
 
       :created_at => self.created_at,
