@@ -85,10 +85,16 @@ class ReportsController < OrganizationAwareController
       # get the report data
       @data = @report_instance.get_data(@organization_list, params)
 
-      yield
+      # String return value indicates an error message.
+      if @data.is_a? String
+        notify_user(:alert, @data)
+        redirect_to report_path(@report)
+      else
+        yield
+      end
     end
   end
-  
+
   # Returns the selected report
   def get_report
     # load this report and create the report instance
