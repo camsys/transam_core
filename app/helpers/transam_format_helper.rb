@@ -113,7 +113,11 @@ module TransamFormatHelper
   def format_as_currency(val, precision = 0)
     val ||= 0
     if precision == 0
-      val = val + 0.5
+      if val < 0
+        val = val - 0.5
+      else
+        val = val + 0.5
+      end
       number_to_currency(val.to_i, :precision => 0)
     else
       number_to_currency(val, :precision => precision)
