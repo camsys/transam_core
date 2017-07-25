@@ -358,7 +358,7 @@ class AssetsController < AssetAwareController
     add_breadcrumb "New", new_inventory_path(asset_subtype)
 
     respond_to do |format|
-      if @asset.save!
+      if @asset.save
 
         # Make sure the policy has rules for this asset
         policy = @asset.policy
