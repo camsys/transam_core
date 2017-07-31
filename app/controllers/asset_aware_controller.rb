@@ -28,11 +28,12 @@ class AssetAwareController < OrganizationAwareController
   def filter
 
     query = params[:query]
+    orgs = params[:organization_id] ? [params[:organization_id].to_i] : @organization_list
     query_str = "%" + query + "%"
     Rails.logger.debug query_str
 
     matches = []
-    assets = Asset.where("organization_id in (?) AND (asset_tag LIKE ? OR object_key LIKE ? OR description LIKE ?)", @organization_list, query_str, query_str, query_str)
+    assets = Asset.where("organization_id in (?) AND (asset_tag LIKE ? OR object_key LIKE ? OR description LIKE ?)", orgs, query_str, query_str, query_str)
     assets.each do |asset|
       matches << {
         "id" => asset.object_key,
