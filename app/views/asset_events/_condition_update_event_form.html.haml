@@ -1,5 +1,39 @@
+:ruby
+  if @asset_event.condition_type_percents.empty?
+    ConditionType.all.each do |c|
+      @asset_event.condition_type_percents.build(condition_type: c)
+    end
+  end
+
 = render :layout => "update_event_form" do |f|
-  = f.input :assessed_rating, :as => :float, :input_html => {:min => ConditionType.min_rating, :max => ConditionType.max_rating}
+  .row
+    .col-sm-6
+      - if @asset.quantity_units.to_i > 1
+        = f.input :assessed_rating, :as => :hidden
+        .form-group.float.required
+          %label.float.required.control-label
+            %abbr{title:'required'} *
+            Overall Rating
+          %div
+            = number_field_tag "overall_rating", f.object.assessed_rating, {class: 'numeric float required disabled form-control', min: ConditionType.min_rating, max: ConditionType.max_rating, disabled: 'disabled'}
+      - else
+        = f.input :assessed_rating, :as => :float, :input_html => {:min => ConditionType.min_rating, :max => ConditionType.max_rating}, :label => 'Assessed Rating'
+    .col-sm-6
+      - if @asset.quantity_units.to_i > 1
+        .col-sm-4.col-sm-offset-8
+          %label.control-label Pcnt
+
+        = f.simple_fields_for :condition_type_percents do |s|
+          = s.input :condition_type_id, :as => :hidden
+          .col-sm-6.text-right
+            %label.control-label
+              = "#{s.object.condition_type.name} (#{s.object.condition_type.rating})"
+          .col-sm-6
+            = s.input :pcnt, :wrapper => :vertical_prepend, :label => false do
+              = s.input_field :pcnt, :class => 'form-control pcnt-field', :min => 0, :max => 100, :label => false
+              %span.input-group-addon
+                %i.fa.fa-percent
+
   = f.input :event_date, :label => 'Date of Report', :wrapper => :vertical_append do
     = f.input_field :event_date, :class => "form-control", :as => :string, :data => {'behavior' => 'datepicker'}, :value => format_as_date(f.object.event_date)
     %span.input-group-addon
@@ -7,3 +41,32 @@
   = f.input :comments, :input_html => { :rows => 6 }, :placeholder => "Enter any additional comments..."
   .form-group
     = f.button :submit, "Update the condition", :class => 'btn btn-primary'
+
+:javascript
+
+  $('.pcnt-field').change(function() {
+     overall_rating = 0;
+     $('.pcnt-field').each(function() {
+        var rating = $(this).attr('id');
+        rating = rating[rating.length-1];
+        var val = $(this).val();
+        overall_rating += parseInt(rating)*parseInt(val)/100;
+    });
+
+    $('#asset_event_assessed_rating').val(overall_rating);
+    $('#overall_rating').val(overall_rating);
+
+  });
+
+  $('.pcnt-field').rules("add", {
+      pcntSumsHundred: true
+  });
+
+  $.validator.addMethod("pcntSumsHundred", function(value, element) {
+      var sum = 0;
+    $('.pcnt-field').each(function() {
+        sum += Number($(this).val());
+    });
+
+    return sum == 100;
+  }, "Entries do not sum to 100%.");

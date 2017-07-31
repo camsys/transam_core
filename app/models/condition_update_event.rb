@@ -8,6 +8,9 @@ class ConditionUpdateEvent < AssetEvent
   after_initialize :set_defaults
 
   # Associations
+  has_many :condition_type_percents, :foreign_key => "asset_event_id", :dependent => :destroy
+  accepts_nested_attributes_for :condition_type_percents, :allow_destroy => true, :reject_if   => lambda{ |attrs| attrs[:pcnt].blank? }
+
 
   # Condition of the asset
   belongs_to  :condition_type
@@ -36,6 +39,7 @@ class ConditionUpdateEvent < AssetEvent
   FORM_PARAMS = [
     :condition_type_id,
     :assessed_rating,
+    :condition_type_percents_attributes => [ConditionTypePercent.allowable_params]
   ]
 
   #------------------------------------------------------------------------------
@@ -58,6 +62,11 @@ class ConditionUpdateEvent < AssetEvent
   # Instance Methods
   #
   #------------------------------------------------------------------------------
+
+  # usually no conditions on can create but can be overridden by specific asset events
+  def can_create?
+    asset_event_type.active && asset.dependents.count == 0
+  end
 
   # Override numeric setters to remove any extraneous formats from the number strings eg $, etc.
   def assessed_rating=(num)

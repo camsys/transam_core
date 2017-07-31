@@ -25,11 +25,15 @@
         = f.association :asset_type, :collection => @valid_types, :include_blank => false
 
   .row
-    .col-xs-6
+    .col-xs-4
       = f.association :service_life_calculation_type, :include_blank => false, :disabled => parent_rule.present?
 
-    .col-xs-6
+    .col-xs-4
       = f.association :replacement_cost_calculation_type, :include_blank => false
+
+    .col-xs-4
+      = f.association :condition_rollup_calculation_type, :include_blank => false
+
 
     .col-xs-4
       = f.input :annual_inflation_rate, :required => true, :input_html => {:min => 0.01, :max => 100}

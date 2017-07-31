@@ -4,6 +4,7 @@
       %tr
         %th.center Service Life Calculation Method
         %th.center Repl. Cost Calculation Method
+        %th.center Condition Rollup Calculation Method
         %th.center Annual Inflation Rate
         %th.center Pcnt Residual Value
         %th.center Last Updated
@@ -14,6 +15,7 @@
         %tr
           %td.center= rule.service_life_calculation_type
           %td.center= rule.replacement_cost_calculation_type
+          %td.center= rule.condition_rollup_calculation_type
           %td.center= format_as_decimal(rule.annual_inflation_rate, 2)
           %td.center= format_as_percentage(rule.pcnt_residual_value)
           %td.center= format_as_date_time(rule.updated_at)

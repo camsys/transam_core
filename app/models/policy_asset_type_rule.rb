@@ -26,6 +26,8 @@ class PolicyAssetTypeRule < ActiveRecord::Base
   belongs_to  :service_life_calculation_type
   # Every asset type rule has a replacement cost calculator
   belongs_to  :replacement_cost_calculation_type, :class_name => "CostCalculationType"
+  # Every asset type rule has a condition rollup calculator
+  belongs_to  :condition_rollup_calculation_type
 
   #-----------------------------------------------------------------------------
   # Validations
@@ -51,6 +53,7 @@ class PolicyAssetTypeRule < ActiveRecord::Base
     :asset_type_id,
     :service_life_calculation_type_id,
     :replacement_cost_calculation_type_id,
+    :condition_rollup_calculation_type_id,
     :annual_inflation_rate,
     :pcnt_residual_value
   ]

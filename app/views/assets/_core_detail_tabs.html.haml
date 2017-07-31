@@ -9,6 +9,12 @@
     %span{:style => 'white-space: nowrap !important;'}
       History
       %span.badge= @asset.asset_events.count
+- if @asset.occupants.present?
+  %li
+    %a{:href => "#occ", :data =>{:toggle => 'tab'}}
+      %span{:style => 'white-space: nowrap !important;'}
+        Occupants
+        %span.badge= @asset.occupants.count
 - if @asset.dependents.present?
   %li
     %a{:href => "#depd", :data =>{:toggle => 'tab'}}

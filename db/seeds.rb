@@ -68,6 +68,11 @@ condition_estimation_types = [
   {:active => 1, :name => 'Straight Line',  :class_name => 'StraightLineEstimationCalculator',  :description => 'Asset condition is estimated using a straight-line approximation.'}
 ]
 
+condition_rollup_calculation_types = [
+    {name: 'Weighted Average', class_name: 'WeightedAverageConditionRollupCalculator', description: "Asset condition is calculated using a weighted average of its components' conditions."},
+    {name: 'Median', class_name: 'MedianConditionRollupCalculator', description: "Asset condition is calculated using the median of its components' conditions."}
+]
+
 file_content_types = [
   {:active => 1, :name => 'Inventory Updates',    :class_name => 'InventoryUpdatesFileHandler',  :builder_name => "InventoryUpdatesTemplateBuilder",    :description => 'Worksheet records updated condition, status, and mileage for existing inventory.'},
   {:active => 1, :name => 'Maintenance Updates',  :class_name => 'MaintenanceUpdatesFileHandler',:builder_name => "MaintenanceUpdatesTemplateBuilder",  :description => 'Worksheet records latest maintenance updates for assets'},
@@ -175,7 +180,7 @@ activities = [
 
 lookup_tables = %w{asset_event_types condition_types disposition_types cost_calculation_types license_types priority_types
   file_content_types file_status_types report_types service_status_types
-  service_life_calculation_types condition_estimation_types
+  service_life_calculation_types condition_estimation_types condition_rollup_calculation_types
   issue_status_types issue_types web_browser_types replacement_reason_types roles notice_types frequency_types search_types activities
   }
 

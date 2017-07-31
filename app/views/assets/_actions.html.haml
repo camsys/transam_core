@@ -28,7 +28,7 @@
               %ul.dropdown-menu.scrollable-menu
                 - @asset.event_classes.each do |klass|
                   - unless klass.name == 'DispositionUpdateEvent' or klass.name == 'EarlyDispositionRequestUpdateEvent'
-                    - if klass.asset_event_type.active
+                    - if klass.new(asset: @asset).can_create?
                       %li.text-left
                         = link_to new_inventory_asset_event_path(@asset, :event_type => klass.asset_event_type.id) do
                           %i.fa.fa-fw{:class => klass.asset_event_type.display_icon_name}

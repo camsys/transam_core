@@ -8,6 +8,7 @@
     = format_field("Scheduled Year", format_as_fiscal_year(asset.scheduled_replacement_year), "#{asset.formatted_early_replacement_reason}", 'fa fa-exclamation-triangle early-replacement-asset', "Early Replacement")
   - else
     = format_field("Scheduled Year", format_as_fiscal_year(asset.scheduled_replacement_year))
+  = format_field("Scheduled Replacement Cost", format_as_currency(asset.scheduled_replacement_cost))
 = format_field("Scheduled Rehabilitation", format_as_fiscal_year(asset.scheduled_rehabilitation_year)) unless asset.scheduled_rehabilitation_year.blank?
 = format_field("Scheduled Disposition", format_as_fiscal_year(asset.scheduled_disposition_year)) unless asset.scheduled_disposition_year.blank?
 = format_field("Policy Year", format_as_fiscal_year(asset.policy_replacement_year))

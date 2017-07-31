@@ -5,6 +5,7 @@
 %td.left= a.description
 
 %td.left= link_to(a.parent.name, inventory_path(a.parent) ) unless a.parent.nil?
+%td.left= link_to(a.location.name, inventory_path(a.location) ) unless a.location.nil?
 %td.right= format_as_fiscal_year(a.in_service_date.year)
 %td.right= format_as_integer(a.age)
 %td.center= format_as_decimal(a.reported_condition_rating, 1)

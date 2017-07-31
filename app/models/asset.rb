@@ -61,6 +61,8 @@ class Asset < ActiveRecord::Base
   # each can belong to a parent
   belongs_to  :parent, :class_name => "Asset",  :foreign_key => :parent_id
 
+  belongs_to :location, :class_name => "Asset", :foreign_key => :location_id
+
   # Each asset has zero or more asset events. These are all events regardless of
   # event type. Events are deleted when the asset is deleted
   has_many   :asset_events, :dependent => :destroy
@@ -104,8 +106,11 @@ class Asset < ActiveRecord::Base
   # Each asset has zero or more tasks. Tasks are deleted when the asset is deleted
   has_many    :tasks,       :as => :taskable,     :dependent => :destroy
 
-  # Each asset can have 0 or more dependents
+  # Each asset can have 0 or more dependents (parent-child relationships)
   has_many    :dependents,  :class_name => 'Asset', :foreign_key => :parent_id, :dependent => :nullify
+
+  # Facilities can have many vehicles stored on their premises
+  has_many    :occupants,   :class_name => 'Asset', :foreign_key => :location_id, :dependent => :nullify
 
   # Each asset can be associated with 0 or more asset groups
   has_and_belongs_to_many :asset_groups
@@ -163,6 +168,7 @@ class Asset < ActiveRecord::Base
   # Transient Attributes
   #-----------------------------------------------------------------------------
   attr_reader :vendor_name
+  attr_accessor :parent_name
 
   #-----------------------------------------------------------------------------
   # Scopes
@@ -264,6 +270,9 @@ class Asset < ActiveRecord::Base
     :disposition_date,
     :disposition_type_id,
     :parent_id,
+    :parent_name,
+    :parent_key,
+    :location_id,
     :superseded_by_id,
     :created_by_id,
     :updated_by_id
@@ -384,6 +393,7 @@ class Asset < ActiveRecord::Base
       :asset_subtype_id => self.asset_subtype.to_s,
 
       :parent_id => self.parent.to_s,
+      :location_id => self.location.to_s,
       :name => self.name,
       :description => self.description,
 
@@ -436,6 +446,17 @@ class Asset < ActiveRecord::Base
   # Override the getter for vendor name
   def vendor_name
     vendor.name unless vendor.nil?
+  end
+
+  def parent_name
+    parent.to_s unless parent.nil?
+  end
+
+  def parent_key=(object_key)
+    self.parent = Asset.find_by_object_key(object_key)
+  end
+  def parent_key
+    parent.object_key if parent
   end
 
   # Returns true if the asset has one or more tasks that are open
@@ -738,11 +759,11 @@ class Asset < ActiveRecord::Base
 
     unless new_record? or disposed?
       if location_updates.empty?
-        self.parent_id = nil
+        self.location_id = nil
         self.location_comments = nil
       else
         event = location_updates.last
-        self.parent_id = event.parent_id
+        self.location_id = event.parent_id
         self.location_comments = event.comments
       end
       # save changes to this asset
@@ -798,18 +819,38 @@ class Asset < ActiveRecord::Base
 
     # can't do this if it is a new record as none of the IDs would be set
     unless new_record? or disposed?
-      if condition_updates.empty?
-        self.reported_condition_date = nil
-        self.reported_condition_rating = nil
-        self.reported_condition_type = ConditionType.find_by(:name => "Unknown")
+      if self.dependents.count > 0
+        calc_from_dependents = self.policy_analyzer.get_condition_rollup_calculation_type.class_name.constantize.new.calculate(self)
+        self.reported_condition_date = self.dependents.order(:reported_condition_date).pluck(:reported_condition_date).last
+        self.reported_condition_rating = calc_from_dependents
+        self.reported_condition_type = ConditionType.from_rating(calc_from_dependents)
+
+        # save changes to this asset
+        save(:validate => false) if save_asset
+
       else
-        event = condition_updates.last
-        self.reported_condition_date = event.event_date
-        self.reported_condition_rating = event.assessed_rating
-        self.reported_condition_type = ConditionType.from_rating(event.assessed_rating)
+        if condition_updates.empty?
+          self.reported_condition_date = nil
+          self.reported_condition_rating = nil
+          self.reported_condition_type = ConditionType.find_by(:name => "Unknown")
+        else
+          event = condition_updates.last
+          self.reported_condition_date = event.event_date
+          self.reported_condition_rating = event.assessed_rating
+          self.reported_condition_type = ConditionType.from_rating(event.assessed_rating)
+        end
+
+        # save changes to this asset
+        save(:validate => false) if save_asset
+
+        affected_parent = self.parent
+        while affected_parent.present?
+          affected_parent.update_condition
+          affected_parent = affected_parent.parent
+        end
       end
-      # save changes to this asset
-      save(:validate => false) if save_asset
+
+
     end
 
   end

@@ -79,6 +79,11 @@ class AssetEvent < ActiveRecord::Base
   #
   #------------------------------------------------------------------------------
 
+  # usually no conditions on can create but can be overridden by specific asset events
+  def can_create?
+    asset_event_type.active
+  end
+
   # returns true if the organization instance is strongly typed, i.e., a concrete class
   # false otherwise.
   # true
