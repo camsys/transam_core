@@ -145,6 +145,19 @@ class PoliciesController < OrganizationAwareController
 
     if params[:policy_asset_type_rule].present?
       rule = PolicyAssetTypeRule.new(asset_type_rule_form_params)
+
+      if rule.asset_type.nil?
+        # for now default most fields
+        new_type = AssetType.create(
+          name: params[:new_asset_type_name],
+          description: params[:new_asset_type_description],
+          class_name: 'Component',
+          display_icon_name: 'fa fa-cogs',
+          map_icon_name: 'blueIcon',
+          active: true
+        )
+        rule.asset_type = new_type
+      end
     else
       if params[:copied_rule].present? # if the rule is copied, copy from old rule and overwrite with form
         rule = PolicyAssetSubtypeRule.find(params[:copied_rule]).dup

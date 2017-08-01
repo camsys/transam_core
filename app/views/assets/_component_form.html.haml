@@ -1,0 +1,45 @@
+.row
+  = simple_form_for(@asset,
+  :as => :asset,
+  :url => @asset.new_record? ? inventory_index_path : inventory_path,
+  :method => @asset.new_record? ? 'post' : 'put',
+  :html => {:class => 'form-vertical'},
+  :wrapper => :vertical_form,
+  :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes,
+    :radio_buttons => :vertical_radio_and_checkboxes,
+    :file => :vertical_file_input,
+    :boolean => :vertical_boolean}) do |f|
+
+    = f.input :asset_type_id, :as => :hidden
+    = f.input :organization_id, :as => :hidden
+
+    .col-md-4
+      = dialog_tag('Component', {:icon => 'fa fa-refresh', :class => "form_part"}) do
+        = f.association :asset_subtype, :collection => AssetSubtype.active.where(asset_type_id: @asset.asset_type_id), :include_blank => false
+        = f.input :asset_tag, :prompt => "Enter the asset tag...", :label => "Asset Tag", :input_html => {:data => {:convert => "uppercase"}}
+        = f.input :description
+        = f.input :quantity
+        = f.input :quantity_units, :collection => Uom.units
+
+        - view_component = 'app_component_form'
+        - if lookup_context.template_exists?(view_component, 'assets', true)
+          = render :partial => "assets/#{view_component}", :locals => {:f => f}
+
+        = f.input :expected_useful_life, :as => :hidden, :value => 0
+
+    .col-md-12
+      = f.button :submit, :class => 'btn btn-primary'
+
+:javascript
+
+  // Document Ready
+  $(document).ready(function(){
+
+    // Force uppercase text for OFT inputs
+    $('[data-convert="uppercase"]').keyup(function(evt) {
+      this.value = this.value.toUpperCase();
+    });
+
+    $('[data-behavior~=datepicker]').datepicker({
+    });
+  });

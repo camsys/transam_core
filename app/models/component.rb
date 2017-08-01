@@ -1,4 +1,4 @@
-class Equipment < Asset
+class Component < Asset
 
   # Callbacks
   after_initialize :set_defaults
@@ -77,8 +77,7 @@ class Equipment < Asset
     a = []
     a << super
     a += [
-      :description,
-      :serial_number
+      :description
     ]
     a.flatten
   end
@@ -108,6 +107,7 @@ class Equipment < Asset
   # Set resonable defaults for a suppoert facility
   def set_defaults
     super
+    self.purchase_cost ||= 0 # need to set cause required asset field
     self.quantity ||= 1
     self.quantity_units ||= Uom::UNIT
   end

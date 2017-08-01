@@ -1,0 +1,6 @@
+= format_field("Description", @asset.description)
+= format_field("Quantity", format_as_quantity(@asset.quantity, @asset.quantity_units) )
+
+- view_component = 'app_equipment_configuration'
+- if lookup_context.template_exists?(view_component, 'assets', true)
+  = render :partial => "assets/#{view_component}"
