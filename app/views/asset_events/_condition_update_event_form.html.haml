@@ -8,7 +8,7 @@
 = render :layout => "update_event_form" do |f|
   .row
     .col-sm-6
-      - if @asset.quantity_units.to_i > 1
+      - if @asset.quantity.to_i > 1
         = f.input :assessed_rating, :as => :hidden
         .form-group.float.required
           %label.float.required.control-label
@@ -19,7 +19,7 @@
       - else
         = f.input :assessed_rating, :as => :float, :input_html => {:min => ConditionType.min_rating, :max => ConditionType.max_rating}, :label => 'Assessed Rating'
     .col-sm-6
-      - if @asset.quantity_units.to_i > 1
+      - if @asset.quantity.to_i > 1
         .col-sm-4.col-sm-offset-8
           %label.control-label Pcnt
 
@@ -40,7 +40,7 @@
       %i.fa.fa-calendar
   = f.input :comments, :input_html => { :rows => 6 }, :placeholder => "Enter any additional comments..."
   .form-group
-    = f.button :submit, "Update the condition", :class => 'btn btn-primary'
+    = f.button :submit, "Update the condition 222", :class => 'btn btn-primary'
 
 :javascript
 
@@ -48,8 +48,11 @@
      overall_rating = 0;
      $('.pcnt-field').each(function() {
         var rating = $(this).attr('id');
-        rating = rating[rating.length-1];
+        rating = rating[rating.length-6];
         var val = $(this).val();
+        if (!val) {
+          val = 0;
+        }
         overall_rating += parseInt(rating)*parseInt(val)/100;
     });
 

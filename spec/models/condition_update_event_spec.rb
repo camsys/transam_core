@@ -25,7 +25,7 @@ RSpec.describe ConditionUpdateEvent, :type => :model do
   end
 
   it '#allowable_params' do
-    expect(ConditionUpdateEvent.allowable_params).to eq([:condition_type_id, :assessed_rating, {:condition_type_percents_attributes => ConditionTypePercent.allowable_params}])
+    expect(ConditionUpdateEvent.allowable_params).to eq([:condition_type_id, :assessed_rating, {:condition_type_percents_attributes => [ConditionTypePercent.allowable_params]}])
   end
   it '#asset_event_type' do
     expect(ConditionUpdateEvent.asset_event_type).to eq(AssetEventType.find_by(:class_name => 'ConditionUpdateEvent'))
