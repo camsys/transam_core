@@ -109,6 +109,8 @@ class Asset < ActiveRecord::Base
   # Each asset can have 0 or more dependents (parent-child relationships)
   has_many    :dependents,  :class_name => 'Asset', :foreign_key => :parent_id, :dependent => :nullify
 
+  accepts_nested_attributes_for :dependents
+
   # Facilities can have many vehicles stored on their premises
   has_many    :occupants,   :class_name => 'Asset', :foreign_key => :location_id, :dependent => :nullify
 
@@ -168,7 +170,7 @@ class Asset < ActiveRecord::Base
   # Transient Attributes
   #-----------------------------------------------------------------------------
   attr_reader :vendor_name
-  attr_accessor :parent_name
+  attr_reader :parent_name
 
   #-----------------------------------------------------------------------------
   # Scopes
@@ -382,60 +384,72 @@ class Asset < ActiveRecord::Base
 
   # Render the asset as a JSON object -- overrides the default json encoding
   def as_json(options={})
-    json = {
-      :id => self.id,
-      :object_key => self.object_key,
-      :asset_tag => self.asset_tag,
-      :external_id => self.external_id,
+    if options[:is_super]
+      super(options)
+    else
+      json = {
+        :id => self.id,
+        :object_key => self.object_key,
+        :asset_tag => self.asset_tag,
+        :external_id => self.external_id,
 
-      :organization_id => self.organization.to_s,
-      :asset_type_id=> self.asset_type.to_s,
-      :asset_subtype_id => self.asset_subtype.to_s,
+        :organization_id => self.organization.to_s,
+        :asset_type_id=> self.asset_type.to_s,
+        :asset_subtype_id => self.asset_subtype.to_s,
 
-      :parent_id => self.parent.to_s,
-      :location_id => self.location.to_s,
-      :name => self.name,
-      :description => self.description,
+        :parent_id => self.parent.to_s,
+        :location_id => self.location.to_s,
+        :name => self.name,
+        :description => self.description,
 
-      :service_status_type_id => self.service_status_type.present? ? self.service_status_type.code : nil,
-      :age => self.age,
-      :reported_condition_rating => self.reported_condition_rating,
+        :service_status_type_id => self.service_status_type.present? ? self.service_status_type.code : nil,
+        :age => self.age,
+        :reported_condition_rating => self.reported_condition_rating,
 
-      :scheduled_rehabilitation_year => self.scheduled_rehabilitation_year.present? ? fiscal_year(self.scheduled_rehabilitation_year) : nil,
-      :scheduled_replacement_year => self.scheduled_replacement_year.present? ? fiscal_year(self.scheduled_replacement_year) : nil,
+        :scheduled_rehabilitation_year => self.scheduled_rehabilitation_year.present? ? fiscal_year(self.scheduled_rehabilitation_year) : nil,
+        :scheduled_replacement_year => self.scheduled_replacement_year.present? ? fiscal_year(self.scheduled_replacement_year) : nil,
 
-      :manufacturer_id => self.manufacturer.present? ? self.manufacturer.to_s : nil,
-      :manufacture_year => self.manufacture_year,
+        :manufacturer_id => self.manufacturer.present? ? self.manufacturer.to_s : nil,
+        :manufacture_year => self.manufacture_year,
 
-      :purchase_cost => self.purchase_cost,
-      :purchase_date => self.purchase_date,
-      :purchased_new => self.purchased_new,
-      :warranty_date => self.warranty_date,
-      :in_service_date => self.in_service_date,
-      :disposition_date => self.disposition_date,
-      :vendor_id => self.vendor.present? ? self.vendor.to_s : nil,
+        :purchase_cost => self.purchase_cost,
+        :purchase_date => self.purchase_date,
+        :purchased_new => self.purchased_new,
+        :warranty_date => self.warranty_date,
+        :in_service_date => self.in_service_date,
+        :disposition_date => self.disposition_date,
+        :vendor_id => self.vendor.present? ? self.vendor.to_s : nil,
 
-      :created_at => self.created_at,
-      :updated_at => self.updated_at,
+        :created_at => self.created_at,
+        :updated_at => self.updated_at,
 
-      :tasks => self.tasks.active.count,
-      :comments => self.comments.count,
-      :documents => self.documents.count,
-      :photos => self.images.count,
+        :tasks => self.tasks.active.count,
+        :comments => self.comments.count,
+        :documents => self.documents.count,
+        :photos => self.images.count,
 
-      :tagged => self.tagged?(options[:user]) ? 1 : 0
+        :tagged => self.tagged?(options[:user]) ? 1 : 0
+      }
+
+      if options[:include_early_disposition]
+        json[:early_disposition_notes] = self.early_disposition_notes
+        json[:early_disposition_event_object_key] = self.early_disposition_requests.last.try(:object_key)
+      end
+
+      if self.respond_to? :book_value
+        a = Asset.get_typed_asset self
+        json.merge! a.depreciable_as_json
+      end
+      json
+    end
+  end
+
+  def to_node
+    {
+      :text => self.asset_tag,
+      :href => "/inventory/#{self.object_key}",
+      :nodes => self.dependents.map{|d| d.to_node}
     }
-
-    if options[:include_early_disposition]
-      json[:early_disposition_notes] = self.early_disposition_notes
-      json[:early_disposition_event_object_key] = self.early_disposition_requests.last.try(:object_key)
-    end
-
-    if self.respond_to? :book_value
-      a = Asset.get_typed_asset self
-      json.merge! a.depreciable_as_json
-    end
-    json
   end
 
   # Override to_s to return a reasonable default

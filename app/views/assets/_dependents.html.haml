@@ -1,0 +1,28 @@
+#tree
+
+#tree-form
+  = render 'dependent_form', asset: @asset
+
+:javascript
+  var tree_data = JSON.parse('#{[@asset.to_node].to_json}');
+
+  $(document).ready(function() {
+    $('#tree').treeview({
+      data: tree_data,
+      enableLinks: true
+    });
+
+    $('#tree').treeview('selectNode', 0);
+
+    $('#tree').on('nodeSelected', function(event, data) {
+      $.ajax({
+        url: $('#tree').treeview('getSelected')[0]['href']+'/get_dependents',
+        error: function (xhr, ajaxOptions, thrownError) {
+          alert("We are sorry but something went wrong. " + xhr.status + " " + thrownError);
+        }
+      });
+    });
+
+  });
+
+

@@ -56,6 +56,8 @@ Rails.application.routes.draw do
         get 'add_to_group'
         get 'remove_from_group'
         get 'popup'
+        get 'get_dependents'
+        patch 'add_dependents'
       end
 
     resources :asset_events do 

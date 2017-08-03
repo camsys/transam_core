@@ -7,7 +7,7 @@ class AssetsController < AssetAwareController
   # Don't process cancel buttons
   before_filter :check_for_cancel,  :only => [:create, :update]
   # set the @asset variable before any actions are invoked
-  before_filter :get_asset,         :only => [:tag, :show, :edit, :copy, :update, :destroy, :summary_info, :add_to_group, :remove_from_group, :popup]
+  before_filter :get_asset,         :only => [:tag, :show, :edit, :copy, :update, :destroy, :summary_info, :add_to_group, :remove_from_group, :popup, :get_dependents, :add_dependents]
   before_filter :reformat_date_fields,  :only => [:create, :update]
   # Update the vendor_id param if the user is using the vendor_name parameter
   before_filter :update_vendor_param,  :only => [:create, :update]
@@ -285,6 +285,24 @@ class AssetsController < AssetAwareController
         format.json { render :json => @asset.errors, :status => :unprocessable_entity }
       end
     end
+  end
+
+  def get_dependents
+    respond_to do |format|
+      format.js
+      format.json { render :json => @asset.to_json }
+    end
+  end
+
+  def add_dependents
+    params[:asset][:dependents_attributes].each do |key, val|
+      unless val[:id]
+        @asset.dependents << Asset.find_by(object_key: val[:object_key])
+        @asset.update_condition # might need to change to run full AssetUpdateJob
+      end
+    end
+
+    redirect_to :back
   end
 
   def new_asset
