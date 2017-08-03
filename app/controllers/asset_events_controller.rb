@@ -160,7 +160,7 @@ class AssetEventsController < AssetAwareController
     add_new_show_create_breadcrumbs
 
     respond_to do |format|
-      if @asset_event.update(form_params)
+      if @asset_event.save(form_params)
         Rails.logger.debug @asset_event.inspect
 
         notify_user(:notice, "Event was successfully created.")

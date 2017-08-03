@@ -66,6 +66,6 @@ class ConditionTypePercent < ActiveRecord::Base
 
   # Set resonable defaults for a new instance
   def set_defaults
-
+    self.pcnt ||= 0
   end
 end

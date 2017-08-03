@@ -9,7 +9,7 @@ class ConditionUpdateEvent < AssetEvent
 
   # Associations
   has_many :condition_type_percents, :foreign_key => "asset_event_id", :dependent => :destroy
-  accepts_nested_attributes_for :condition_type_percents, :allow_destroy => true, :reject_if   => lambda{ |attrs| attrs[:pcnt].blank? }
+  accepts_nested_attributes_for :condition_type_percents, :allow_destroy => true
 
 
   # Condition of the asset
