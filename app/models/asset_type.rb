@@ -1,5 +1,7 @@
 class AssetType < ActiveRecord::Base
 
+  after_initialize  :set_defaults
+
   # associations
 
   # every asset type has 0 or more sub types
@@ -14,6 +16,12 @@ class AssetType < ActiveRecord::Base
 
   def to_s
     name
+  end
+
+  protected
+
+  def set_defaults
+    self.allow_parent = self.allow_parent.nil? ? true : self.allow_parent
   end
 
 end

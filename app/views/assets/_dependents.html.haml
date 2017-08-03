@@ -4,15 +4,14 @@
   = render 'dependent_form', asset: @asset
 
 :javascript
-  var tree_data = JSON.parse('#{[@asset.to_node].to_json}');
+  var tree_data = JSON.parse('#{[@asset.top_parent.to_node(@asset)].to_json}');
 
   $(document).ready(function() {
     $('#tree').treeview({
       data: tree_data,
-      enableLinks: true
+      enableLinks: true,
+      levels: parseInt('#{@asset.level}')
     });
-
-    $('#tree').treeview('selectNode', 0);
 
     $('#tree').on('nodeSelected', function(event, data) {
       $.ajax({

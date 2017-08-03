@@ -1,19 +1,22 @@
 .row
   .col-sm-6
-
     = simple_form_for(asset,
         :as => :asset,
         :url => add_dependents_inventory_url,
         :html => {:id => 'dependents_form', :class => 'form-vertical' },
         :wrapper => :vertical_form,                                                                                                                                                           :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}) do |f|
 
-      #dependents.well.well-sm{style: "overflow-y:scroll; max-height:250px;"}
+      #dependents.well.well-sm
         %label.control-label
           %i.fa.fa-users.fa-1-5x
           = "Add Children to #{asset.to_s}"
         .links.pull-right
           = link_to_add_association f, :dependents, :class => 'btn btn-xs btn-info', data: {association_insertion_method: 'after'} do
             %i.fa.fa-plus
+            Existing
+          = link_to new_asset_inventory_index_path(parent_id: asset.id), :class => 'btn btn-xs btn-success', :style => 'margin-left:10px;' do
+            %i.fa.fa-plus
+            New
         %label#dependents-error.error
         = f.simple_fields_for :dependents do |dependent|
           = render 'dependent_fields', f: dependent

@@ -444,12 +444,42 @@ class Asset < ActiveRecord::Base
     end
   end
 
-  def to_node
-    {
+  def to_node(selected=nil)
+    node_options = {
       :text => self.asset_tag,
       :href => "/inventory/#{self.object_key}",
-      :nodes => self.dependents.map{|d| d.to_node}
+      :nodes => self.dependents.map{|d| d.to_node(selected)}
     }
+
+    # expands everything above selected and then selects selected
+    if selected.object_key == self.object_key
+      node_options[:state] ||= {}
+      node_options[:state][:selected] = true
+    end
+
+    node_options
+  end
+
+  # get the greatest grand parent of asset or return self if no parents
+  def top_parent
+    top_parent = self
+    while top_parent.parent.present?
+      top_parent = top_parent.parent
+    end
+
+    return top_parent
+  end
+
+  def level
+    level =  1 # asset itself is a level
+
+    current_asset = self
+    while current_asset.parent.present?
+      level += 1
+      current_asset = current_asset.parent
+    end
+
+    return level
   end
 
   # Override to_s to return a reasonable default

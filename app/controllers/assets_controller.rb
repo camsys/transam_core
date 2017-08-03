@@ -297,8 +297,11 @@ class AssetsController < AssetAwareController
   def add_dependents
     params[:asset][:dependents_attributes].each do |key, val|
       unless val[:id]
-        @asset.dependents << Asset.find_by(object_key: val[:object_key])
-        @asset.update_condition # might need to change to run full AssetUpdateJob
+        dependent = Asset.find_by(object_key: val[:object_key])
+        if dependent
+          @asset.dependents << dependent
+          @asset.update_condition # might need to change to run full AssetUpdateJob
+        end
       end
     end
 
