@@ -52,6 +52,9 @@
     .col-xs-4
       = f.input :pcnt_residual_value, :required => true, :input_html => {:min => 0, :max => 100}
 
+    .col-xs-4
+      = f.input :condition_rollup_weight, :required => true, :input_html => {:min => 0, :max => 100}
+
   .row
     = f.button :submit, "Save", :class => 'btn btn-primary'
     %button.btn.btn-default{:data => {:dismiss => "modal"}} Cancel

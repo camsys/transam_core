@@ -276,6 +276,7 @@ class Asset < ActiveRecord::Base
     :parent_key,
     :location_id,
     :superseded_by_id,
+    :weight,
     :created_by_id,
     :updated_by_id
   ]

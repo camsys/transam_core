@@ -12,7 +12,8 @@ class AddConditionRollupCalculatorFields < ActiveRecord::Migration
     ConditionRollupCalculationType.destroy_all
     [
         {id: 1, name: 'Weighted Average', class_name: 'WeightedAverageConditionRollupCalculator', description: "Asset condition is calculated using a weighted average of its components' conditions."},
-        {id: 2, name: 'Median', class_name: 'MedianConditionRollupCalculator', description: "Asset condition is calculated using the median of its components' conditions."}
+        {id: 2, name: 'Median', class_name: 'MedianConditionRollupCalculator', description: "Asset condition is calculated using the median of its components' conditions."},
+        {name: 'Custom Weighted', class_name: 'CustomWeightedConditionRollupCalculator', description: "Asset condition is calculated using a weighted average of conditions where the weight is custom set."}
     ].each do |t|
       ConditionRollupCalculationType.create!(t)
     end

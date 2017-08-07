@@ -55,7 +55,8 @@ class PolicyAssetTypeRule < ActiveRecord::Base
     :replacement_cost_calculation_type_id,
     :condition_rollup_calculation_type_id,
     :annual_inflation_rate,
-    :pcnt_residual_value
+    :pcnt_residual_value,
+    :condition_rollup_weight
   ]
 
   #------------------------------------------------------------------------------
@@ -97,6 +98,7 @@ class PolicyAssetTypeRule < ActiveRecord::Base
   def set_defaults
     self.annual_inflation_rate ||= 1.1
     self.pcnt_residual_value ||= 0
+    self.condition_rollup_weight ||= 0
   end
 
 end

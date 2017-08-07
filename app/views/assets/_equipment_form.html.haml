@@ -19,7 +19,7 @@
         = f.input :asset_tag, :prompt => "Enter the asset tag...", :label => "Asset Tag", :input_html => {:data => {:convert => "uppercase"}}
         = f.input :external_id, :prompt => "Enter any external ID...", :label => "External ID", :input_html => {:maxlength => 32}
         = f.input :description
-        = f.input :quantity
+        = f.input :quantity, :input_html => {:min => 1}
         = f.input :quantity_units, :collection => Uom.units
         = f.association :manufacturer, :prompt => "Select manufacturer...", :collection => Manufacturer.active_for_asset_type(@asset.asset_type), :label_method => :to_s
         = f.input :manufacturer_model, :prompt => "Enter manufacturer model...", :label => "Manufacturer Model"
@@ -53,6 +53,11 @@
         = f.input :vendor_name, :label => 'Vendor', :input_html => {:autocomplete => 'off', :class => 'form-control', :placeholder => 'Enter vendor name', :id => 'vendor_name', :data => {:url => filter_vendors_path}}
         = f.input :parent_key, :as => :hidden
         = f.input :parent_name, :label => 'Parent', :input_html => {:autocomplete => 'off', :class => 'form-control', :placeholder => 'Enter search text', :id => 'parent_name', :data => {:url => filter_inventory_index_path(organization_id: @asset.organization_id)}}
+        - rule = PolicyAssetTypeRule.find_by(policy_id: Policy.find_by(organization_id: @asset.organization_id), asset_type_id: @asset.asset_type_id)
+        - if rule.try(:condition_rollup_calculation_type).nil?
+          - rule = PolicyAssetTypeRule.find_by(policy_id: Policy.where('parent_id IS NULL'), asset_type_id: @asset.asset_type_id)
+        - if rule.condition_rollup_calculation_type.class_name == 'CustomWeightedConditionRollupCalculator'
+          = f.input :weight, :value => @asset.weight || rule.condition_rollup_weight, :min => 0, :max => 100, :hint => 'Give a custom weight between 0-100 for importance in condition rollup.'
         = f.input :expected_useful_life, as: :hidden, :value => 0
 
     .col-md-12

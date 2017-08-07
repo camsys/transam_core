@@ -18,7 +18,7 @@
         = f.association :asset_subtype, :collection => AssetSubtype.active.where(asset_type_id: @asset.asset_type_id), :include_blank => false
         = f.input :asset_tag, :prompt => "Enter the asset tag...", :label => "Asset Tag", :input_html => {:data => {:convert => "uppercase"}}
         = f.input :description
-        = f.input :quantity
+        = f.input :quantity, :input_html => {:min => 1}
         = f.input :quantity_units, :collection => Uom.units
 
         - view_component = 'app_component_form'
@@ -31,6 +31,11 @@
       = dialog_tag('Purchase', {:icon => 'fa fa-refresh', :class => "form_part"}) do
         = f.input :parent_key, :as => :hidden
         = f.input :parent_name, :label => 'Parent', :input_html => {:autocomplete => 'off', :class => 'form-control', :placeholder => 'Enter search text', :id => 'parent_name', :data => {:url => filter_inventory_index_path(organization_id: @asset.organization_id)}}
+        - rule = PolicyAssetTypeRule.find_by(policy_id: Policy.find_by(organization_id: @asset.organization_id), asset_type_id: @asset.asset_type_id)
+        - if rule.try(:condition_rollup_calculation_type).nil?
+          - rule = PolicyAssetTypeRule.find_by(policy_id: Policy.where('parent_id IS NULL'), asset_type_id: @asset.asset_type_id)
+        - if rule.condition_rollup_calculation_type.class_name == 'CustomWeightedConditionRollupCalculator'
+          = f.input :weight, :input_html => {:value => @asset.weight || rule.condition_rollup_weight, :min => 0, :max => 100}, :hint => 'Give a custom weight between 0-100 for importance in condition rollup.'
 
     .col-md-12
       = f.button :submit, :class => 'btn btn-primary'
