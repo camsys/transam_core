@@ -298,28 +298,39 @@ var transam = new function() {
 
             // get fiscal year
             yr_input = parseInt($(this).val());
-            if (yr_input < 50) {
-                year = 2000 + yr_input;
+            if (yr_input >= 0) {
+                if (yr_input < 50) {
+                    year = 2000 + yr_input;
+                } else {
+                    year = 1900 + yr_input;
+                }
+                $('#'+field_to_update).val(year);
+
+                // add leading 0 if necessary
+                if (yr_input < 10) {
+                    $(this).val('0' + yr_input);
+                }
+
+                if (yr_input == 99) {
+                    yr_input = '00'
+                } else if (yr_input < 9) {
+                    yr_input = '0' + (yr_input+1)
+                } else {
+                    yr_input += 1
+                }
+                $('span[for="'+field_to_update+'"]').text(' - '+ yr_input);
             } else {
-                year = 1900 + yr_input;
+                $('#'+field_to_update).val('');
+                $('span[for="'+field_to_update+'"]').text(' - XX');
             }
-            $('#'+field_to_update).val(year);
-
-            // add leading 0 if necessary
-            if (yr_input < 10) {
-                $(this).val('0' + yr_input);
-            }
-
-            if (yr_input == 99) {
-                yr_input = '00'
-            } else if (yr_input < 9) {
-                yr_input = '0' + (yr_input+1)
-            } else {
-                yr_input += 1
-            }
-            $('span[for="'+field_to_update+'"]').text(' - '+ yr_input);
-
-
         });
+
+        initial_yr_input = parseInt($(jquery_selector).val());
+        if (initial_yr_input >= 2000) {
+            $(jquery_selector).val(initial_yr_input-2000).change();
+        } else if (initial_yr_input >= 1900) {
+            $(jquery_selector).val(initial_yr_input-1900).change();
+        }
+
     };
 }();
