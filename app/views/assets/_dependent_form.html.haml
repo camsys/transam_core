@@ -24,3 +24,10 @@
       .col-sm-12
         = f.button :submit, :class => 'btn btn-primary'
 
+  .col-sm-6
+    .btn-group
+      - fc = FileContentType.find_by(name: 'Inventory Updates')
+      = link_to create_template_uploads_path({:file_content_type_id => fc.id, :targets => ([@asset.object_key]+@asset.relatives.map{|x| x.object_key}).join(',')}), :title => 'Export assets to template', :role => 'button', :class => "btn btn-default selected-action" do
+        %i.fa.fa-download.fa-1-5x
+        = fc.name
+

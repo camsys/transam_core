@@ -483,6 +483,21 @@ class Asset < ActiveRecord::Base
     return level
   end
 
+  def relatives
+    relatives = []
+    relatives = self.dependents
+
+    x = self.dependents
+    i = 0
+    while x.count > 0
+      relatives << x[i]
+      i += 1
+      x[i].dependents.each{|xx| x << xx}
+    end
+
+    relatives
+  end
+
   # Override to_s to return a reasonable default
   def to_s
     "#{asset_subtype.name}: #{asset_tag}"
