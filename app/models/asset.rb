@@ -170,7 +170,7 @@ class Asset < ActiveRecord::Base
   # Transient Attributes
   #-----------------------------------------------------------------------------
   attr_reader :vendor_name
-  attr_reader :parent_name
+  attr_accessor :parent_name
 
   #-----------------------------------------------------------------------------
   # Scopes
