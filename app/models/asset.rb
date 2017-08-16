@@ -489,7 +489,7 @@ class Asset < ActiveRecord::Base
 
     x = self.dependents
     i = 0
-    while x.count > 0
+    while i < x.count
       relatives << x[i]
       i += 1
       x[i].dependents.each{|xx| x << xx}
@@ -1177,6 +1177,7 @@ class Asset < ActiveRecord::Base
         self.in_backlog = true
         start_date = start_of_fiscal_year(scheduled_replacement_year)
       else
+        self.in_backlog = false
         start_date = start_of_fiscal_year(policy_replacement_year)
       end
       # Update the estimated replacement costs
