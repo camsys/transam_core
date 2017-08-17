@@ -2,10 +2,10 @@ require 'rails_helper'
 
 describe "assets/_equipment_form.html.haml", :type => :view do
   it 'fields' do
+    test_asset_type =  create(:asset_type, :class_name => 'Equipment')
+    assign(:asset, Equipment.new(:asset_type => test_asset_type))
     test_policy = create(:policy, parent_id: nil)
-    create(:policy_asset_type_rule, policy_id: test_policy.id, asset_type_id: AssetType.find_by(:class_name => 'Equipment').id, condition_rollup_calculation_type_id: 1)
-
-    assign(:asset, Equipment.new(:asset_type => create(:asset_type, :class_name => 'Equipment')))
+    create(:policy_asset_type_rule, policy_id: test_policy.id, asset_type_id: test_asset_type.id, condition_rollup_calculation_type_id: 1)
     render
 
     expect(rendered).to have_xpath('//input[@id="asset_asset_type_id"]')
