@@ -449,13 +449,15 @@ class Asset < ActiveRecord::Base
     node_options = {
       :text => self.asset_tag,
       :href => "/inventory/#{self.object_key}",
-      :nodes => self.dependents.map{|d| d.to_node(selected)}
+      :nodes => self.dependents.uniq.map{|d| d.to_node(selected)}
     }
 
     # expands everything above selected and then selects selected
-    if selected.object_key == self.object_key
-      node_options[:state] ||= {}
-      node_options[:state][:selected] = true
+    if selected
+      if selected.object_key == self.object_key
+        node_options[:state] ||= {}
+        node_options[:state][:selected] = true
+      end
     end
 
     node_options
