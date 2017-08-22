@@ -133,7 +133,7 @@
                 %li
                   %a{:data => {:compare => "1"}} After
               = f.input_field :scheduled_replacement_year_comparator, :as => :hidden, :value => '0'
-            = f.input_field :scheduled_replacement_year, :collection => get_fiscal_years, :class => "form-control"
+            = f.input_field :scheduled_replacement_year, :as => :fiscal_year, :class => "form-control"
           = f.input :policy_replacement_year, :wrapper => :vertical_prepend, :label => "Policy Replacement Year" do
             .input-group-btn
               %button.btn.btn-default.dropdown-toggle{"data-toggle" => "dropdown", :type => "button"}
@@ -145,7 +145,7 @@
                 %li
                   %a{:data => {:compare => "1"}} After
               = f.input_field :policy_replacement_year_comparator, :as => :hidden, :value => '0'
-            = f.input_field :policy_replacement_year, :collection => get_fiscal_years, :class => "form-control"
+            = f.input_field :policy_replacement_year, :as => :fiscal_year, :class => "form-control"
 
 
         - view_component = "app_core_asset_search_form_common_fields"
