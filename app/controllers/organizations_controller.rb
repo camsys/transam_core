@@ -68,7 +68,7 @@ class OrganizationsController < OrganizationAwareController
     @markers = generate_map_markers(@organizations, true)
 
     # get the data for the tabs
-    @users = @org.users
+    @users = @org.users.active
 
     if @org.try(:assets)
       rep = AssetSubtypeReport.new
