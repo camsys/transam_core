@@ -605,6 +605,10 @@ class Asset < ActiveRecord::Base
 
  def replacement_by_policy?
     true # all assets in core are in replacement cycle. To plan and/or make exceptions to normal schedule, see CPT.
+ end
+
+  def replacement_pinned?
+    false # all assets can be locked into place to prevent sched replacement year changes but by default none are locked
   end
 
   # Returns true if an asset is scheduled for disposition
@@ -1162,7 +1166,7 @@ class Asset < ActiveRecord::Base
 
     Rails.logger.debug "In before_save_callback"
 
-    return unless self.replacement_by_policy?
+    return unless self.replacement_by_policy? || self.replacement_pinned?
 
     # Get the policy analyzer
     this_policy_analyzer = self.policy_analyzer
@@ -1236,7 +1240,7 @@ class Asset < ActiveRecord::Base
   # updates the calculated values of an asset
   def update_asset_state(save_asset = true, policy = nil)
 
-    return unless self.replacement_by_policy?
+    return unless self.replacement_by_policy? || self.replacement_pinned?
 
     Rails.logger.debug "Updating SOGR for asset = #{object_key}"
 
@@ -1265,7 +1269,7 @@ class Asset < ActiveRecord::Base
 
       if asset.scheduled_replacement_year.nil? or asset.scheduled_replacement_year == old_policy_replacement_year
         Rails.logger.debug "Setting scheduled replacement year to #{asset.policy_replacement_year}"
-        asset.scheduled_replacement_year = asset.policy_replacement_year
+        asset.scheduled_replacement_year = asset.policy_replacement_year unless self.replacement_pinned?
         asset.in_backlog = false
       end
       # If the asset is in backlog set the scheduled year to the current FY year
