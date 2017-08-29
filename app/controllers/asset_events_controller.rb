@@ -145,7 +145,7 @@ class AssetEventsController < AssetAwareController
     # we need to know what the event type was for this event
     asset_event_type = AssetEventType.find(params[:event_type])
     unless asset_event_type.blank?
-      @asset_event = @asset.build_typed_event(asset_event_type.class_name.constantize)
+      @asset_event = asset_event_type.class_name.constantize.new(form_params.merge({asset: @asset}))
       @asset_event.creator = current_user
     end
 
@@ -160,7 +160,7 @@ class AssetEventsController < AssetAwareController
     add_new_show_create_breadcrumbs
 
     respond_to do |format|
-      if @asset_event.save(form_params)
+      if @asset_event.save
         Rails.logger.debug @asset_event.inspect
 
         notify_user(:notice, "Event was successfully created.")
