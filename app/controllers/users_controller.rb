@@ -40,7 +40,7 @@ class UsersController < OrganizationAwareController
 
     unless @search_text.blank?
       # get the list of searchable fields from the asset class
-      searchable_fields = User.new.user_searchable_fields
+      searchable_fields = User.new.searchable_fields
       # create an OR query for each field
       query_str = []
       first = true
