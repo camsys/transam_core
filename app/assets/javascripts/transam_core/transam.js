@@ -299,6 +299,12 @@ var transam = new function() {
             // get fiscal year
             yr_input = parseInt($(this).val());
             if (yr_input >= 0) {
+                if (yr_input >= 2000) {
+                    yr_input -= 2000
+                } else if (yr_input > 1900) {
+                    yr_input -= 1900
+                }
+
                 if (yr_input < 50) {
                     year = 2000 + yr_input;
                 } else {
@@ -325,12 +331,16 @@ var transam = new function() {
             }
         });
 
-        initial_yr_input = parseInt($(jquery_selector).val());
-        if (initial_yr_input >= 2000) {
-            $(jquery_selector).val(initial_yr_input-2000).change();
-        } else if (initial_yr_input >= 1900) {
-            $(jquery_selector).val(initial_yr_input-1900).change();
-        }
+        $(jquery_selector).each(function(){
+            initial_yr_input = parseInt($(this).val());
+            console.log(initial_yr_input);
+            if (initial_yr_input >= 2000) {
+                $(this).val(initial_yr_input-2000).change();
+            } else if (initial_yr_input >= 1900) {
+                $(this).val(initial_yr_input-1900).change();
+            }
+        })
+
 
     };
 }();
