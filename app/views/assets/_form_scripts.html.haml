@@ -3,6 +3,7 @@
   // jquery validations
   $('.form-vertical').validate({
     submitHandler: function(form) {
+      $('input').prop('disabled', false); // re-enable any disabled fields so they'll submit
       form.submit();
     }
   });
