@@ -1,4 +1,4 @@
-- if (can? :update, @asset_event) || (can? :destroy, @asset_event)
+- if @asset_event.can_update? && (can? :update, @asset_event) || (can? :destroy, @asset_event)
   .btn-group.pull-right.panel-action
     %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
       %i.fa.fa-cog

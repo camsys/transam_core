@@ -64,7 +64,7 @@ class ConditionUpdateEvent < AssetEvent
   #------------------------------------------------------------------------------
 
   # usually no conditions on can create but can be overridden by specific asset events
-  def can_create?
+  def can_update?
     asset_event_type.active && asset.dependents.count == 0
   end
 

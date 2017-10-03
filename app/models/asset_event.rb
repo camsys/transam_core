@@ -80,7 +80,7 @@ class AssetEvent < ActiveRecord::Base
   #------------------------------------------------------------------------------
 
   # usually no conditions on can create but can be overridden by specific asset events
-  def can_create?
+  def can_update?
     asset_event_type.active
   end
 
