@@ -3,7 +3,7 @@ class UsersController < OrganizationAwareController
   #-----------------------------------------------------------------------------
   # Protect controller methods using the cancan ability
   #-----------------------------------------------------------------------------
-  authorize_resource :user
+  authorize_resource :user, except: :popup
 
   #-----------------------------------------------------------------------------
   add_breadcrumb "Home",  :root_path
@@ -68,6 +68,17 @@ class UsersController < OrganizationAwareController
     unless @id_filter_list.blank?
       conditions << 'object_key in (?)'
       values << @id_filter_list
+    end
+
+    if params[:show_active_only].nil?
+      @show_active_only = '1'
+    else
+      @show_active_only = params[:show_active_only]
+    end
+
+    if @show_active_only == '1'
+      conditions << 'active = ?'
+      values << true
     end
 
     # Get the Users but check to see if a role was selected
@@ -323,7 +334,11 @@ class UsersController < OrganizationAwareController
   #-----------------------------------------------------------------------------
   #-----------------------------------------------------------------------------
   def destroy
-    @user.active = false
+    if @user.active
+      @user.active = false
+    else
+      @user.active = true
+    end
     @user.save(:validate => :false)
     respond_to do |format|
       notify_user(:notice, "User #{@user} has been deactivated.")
