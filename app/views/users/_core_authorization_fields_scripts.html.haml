@@ -36,7 +36,7 @@
     if (t.length) {
       var filter_orgs = [];
       var selected = [];
-      var orgs = JSON.parse('#{Organization.where(id: @organization_list).map{|o| [o.coded_name, o.id]}.to_json}');
+      var orgs = JSON.parse('#{escape_javascript(Organization.where(id: @organization_list).map{|o| [o.coded_name, o.id]}.to_json)}');
       var user_orgs = JSON.parse('#{@user.organizations.pluck(:id).to_json}');
 
 
