@@ -4,9 +4,15 @@
       %i.fa.fa-fw.fa-user-plus
       = " Add a user"
 
-= form_tag users_path, :id => 'search_form', :method => 'get', :class => 'navbar-form navbar-right panel-action', style: 'padding-top: 2px', :role => 'search' do
+= form_tag users_path, :id => 'search_form', :method => 'get', :class => 'navbar-form navbar-right panel-action', style: 'padding-top: 7px', :role => 'search' do
   = select_tag(:role, options_for_select(Role.all.collect{|x| [x.label, x.name]}, :selected => @role), :class => "form-control", :include_blank => "Any role/privilege...")
-  = text_field_tag :search_text, nil, :value => @search_text, :autocomplete => 'off', :class => 'form-control', :placeholder => 'Initials/First/Last/Email/Title...', :id => 'search_text', :data => {:convert => 'uppercase'}
+  = text_field_tag :search_text, nil, :value => @search_text, :autocomplete => 'off', :class => 'form-control', :placeholder => 'Initials/First/Last/Email/Title...', :id => 'search_text', :data => {:convert => 'uppercase'}, :style => 'width:250px;'
+
+  .form-group
+    %label.checkbox
+      = hidden_field_tag :show_active_only, ''
+      = check_box_tag(:show_active_only, '1', @show_active_only == '1', {:class => "form-control", :style => 'height: 18px;'})
+      Show Active Users Only
 
   = button_tag :type => 'submit', :id => 'form-submit', :class => 'btn btn-info', :style => 'margin-left: 2px;' do
     %i.fa.fa-search.fa-1-5x
