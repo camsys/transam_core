@@ -33,7 +33,9 @@
 
     // update tables for filters
     update_assets_widget();
-    update_capital_projects_widget();
+    if ($('#capital-projects-widget').length > 0) {
+      update_capital_projects_widget();
+    }
     if ($('#funding-widget').length > 0) {
       update_funding_widget();
     }

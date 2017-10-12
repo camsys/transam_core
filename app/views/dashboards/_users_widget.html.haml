@@ -13,7 +13,7 @@
             %th.center
             %th.center
         %tbody
-          - User.unscoped.where(organization_id: @organization_list).order(last_sign_in_at: :desc).each do |u|
+          - User.active.where(organization_id: @organization_list).order(last_sign_in_at: :desc).each do |u|
             %tr{:data => {:action_path => user_path(u)}}
               %td.left= u.name
               %td.right= format_as_date_time(u.last_sign_in_at)
