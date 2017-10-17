@@ -9,16 +9,11 @@ class AssetDispositionUpdateJob < AbstractAssetUpdateJob
 
 
   def execute_job(asset)
-    # If the asset has already been transferred then this is an update to the disposition and we don't want to create another asset.
-    asset_event_type = AssetEventType.where(:class_name => 'DispositionUpdateEvent').first
-    asset_event = AssetEvent.where(:asset_id => asset.id, :asset_event_type_id => asset_event_type.id).last
-    disposition_type = DispositionType.where(:id => asset_event.disposition_type_id).first
-
-    asset_already_transferred = asset.disposed disposition_type
+    just_disposed_and_transferred = !asset.disposed? && asset.disposition_updates.last.try(:disposition_type_id) == 2
 
     asset.record_disposition
-    if(!asset_already_transferred && asset_event.disposition_type_id == 2)
-      new_asset = asset.transfer asset_event.organization_id
+    if(just_disposed_and_transferred)
+      new_asset = asset.transfer asset.organization_id
       send_asset_transferred_message new_asset
     end
   end
