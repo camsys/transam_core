@@ -77,7 +77,7 @@ class UsersController < OrganizationAwareController
     end
 
     if @show_active_only == '1'
-      conditions << 'active = ?'
+      conditions << 'users.active = ?'
       values << true
     end
 
