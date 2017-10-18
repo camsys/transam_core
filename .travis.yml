@@ -8,6 +8,7 @@ env:
 - TEST_SUITE=rspec
 - TEST_SUITE=cucumber
 before_install:
+- gem update --system 2.4.6
 - export TZ="America/New_York" # set timezone
 - mysql -e "create database IF NOT EXISTS transam_core_testing;" -uroot
 addons:
