@@ -6,8 +6,8 @@ if($.fn.bootstrapTable) {
 }
 
 $(document).ready(function() {
-    $('.input-group .fa-calendar').click(function (event) {
+    $('body').on('click', '.input-group-addon:has(.fa-calendar)', function(event) {
         event.preventDefault();
-        $(this).parent().parent().find('input').datepicker('show');
+        $(this).parent().find('input').datepicker('show');
     });
 });
