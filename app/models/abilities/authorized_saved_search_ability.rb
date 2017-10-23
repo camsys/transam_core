@@ -2,7 +2,7 @@ module Abilities
   class AuthorizedSavedSearchAbility
     include CanCan::Ability
 
-    def initialize(user)
+    def initialize(user, organization_ids=[])
 
       #-------------------------------------------------------------------------
       # Issues
