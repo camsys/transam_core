@@ -9,11 +9,12 @@ class AssetDispositionUpdateJob < AbstractAssetUpdateJob
 
 
   def execute_job(asset)
-    just_disposed_and_transferred = !asset.disposed? && asset.disposition_updates.last.try(:disposition_type_id) == 2
+    disposition_event = asset.disposition_updates.last
+    just_disposed_and_transferred = !asset.disposed? && disposition_event.try(:disposition_type_id) == 2
 
     asset.record_disposition
     if(just_disposed_and_transferred)
-      new_asset = asset.transfer asset.organization_id
+      new_asset = asset.transfer disposition_event.organization_id
       send_asset_transferred_message new_asset
     end
   end
