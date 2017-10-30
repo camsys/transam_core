@@ -212,7 +212,7 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
 
   def column_widths
     # set specific width to last 8 columns to avoid cut-off text
-    [nil] * include_serial_number? ? 6 : 5 +
+    [nil] * (include_serial_number? ? 6 : 5) +
     [20] * 8
   end
 
