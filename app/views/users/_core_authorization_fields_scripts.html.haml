@@ -79,6 +79,9 @@
   $('#user_organization_id').on('change', function(e) {
       var org_id = $(this).val();
 
+      $('#org_select').data().bootstrapTransfer.move_all(true, false); // clear out all selected values
+      $('#org_select').data().bootstrapTransfer.set_values([org_id])
+
       all_org_updates(org_id);
 
       $('#user_role_ids').val('');
@@ -95,8 +98,6 @@
 
   function all_org_updates(org_id) {
     update_role_list_by_organization(org_id);
-    $('#org_select').data().bootstrapTransfer.move_all(true, false); // clear out all selected values
-    $('#org_select').data().bootstrapTransfer.set_values([org_id])
 
     update_disabled_orgs();
 
