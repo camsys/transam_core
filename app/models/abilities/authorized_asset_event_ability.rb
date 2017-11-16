@@ -2,14 +2,14 @@ module Abilities
   class AuthorizedAssetEventAbility
     include CanCan::Ability
 
-    def initialize(user)
+    def initialize(user, organization_ids=[])
 
       #-------------------------------------------------------------------------
       # Asset Events
       #-------------------------------------------------------------------------
       # Can manage asset events if the asset is owned by their organization
       can :manage, AssetEvent do |ae|
-        ae.asset_event_type.try(:active) && user.organization_ids.include?(ae.asset.organization_id)
+        ae.asset_event_type.try(:active) && organization_ids.include?(ae.asset.organization_id)
       end
 
       cannot :create, DispositionUpdateEvent do |ae|

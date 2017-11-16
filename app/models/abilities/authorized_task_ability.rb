@@ -2,7 +2,7 @@ module Abilities
   class AuthorizedTaskAbility
     include CanCan::Ability
 
-    def initialize(user)
+    def initialize(user, organization_ids=[])
 
       #-------------------------------------------------------------------------
       # Tasks
