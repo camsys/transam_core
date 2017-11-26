@@ -145,13 +145,9 @@ module FiscalYear
     a
   end
 
-  def get_past_fiscal_years(date=nil, num_forecasting_years=nil)
-    if date.nil?
-      date = Date.today-(SystemConfig.instance.num_forecasting_years).years
-    end
-    if num_forecasting_years.nil?
-      num_forecasting_years = SystemConfig.instance.num_forecasting_years-1
-    end
+  def get_past_fiscal_years
+    date = Date.today-(SystemConfig.instance.num_forecasting_years).years
+    num_forecasting_years = SystemConfig.instance.num_forecasting_years-1
 
     get_fiscal_years(date,num_forecasting_years)
   end

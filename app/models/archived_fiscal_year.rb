@@ -31,8 +31,4 @@ class ArchivedFiscalYear < ActiveRecord::Base
     end
   end
 
-  def self.available_years
-    years = self.pluck(:fy_year)
-    ArchivedFiscalYear.new.get_past_fiscal_years.select{ |x| !(years.include? x[1]) }
-  end
 end
