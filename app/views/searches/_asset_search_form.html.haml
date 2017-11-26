@@ -5,5 +5,3 @@
       - view_component = "#{mod}_asset_search_form_fields"
       - if lookup_context.template_exists?(view_component, 'searches', true)
         = render :partial => "searches/#{view_component}", :locals => {:f => f}
-
-= render @searcher.form_view + '_scripts'
