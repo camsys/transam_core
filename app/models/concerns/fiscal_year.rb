@@ -23,7 +23,7 @@ module FiscalYear
   end
   # returns the fiscal year epoch -- the first allowable fiscal year for the application
   def fiscal_year_epoch_year
-    2010
+    fiscal_year_year_on_date(SystemConfig.instance.epoch)
   end
 
   def fiscal_year_epoch
@@ -143,6 +143,17 @@ module FiscalYear
       a << [fiscal_year(year), year]
     end
     a
+  end
+
+  def get_past_fiscal_years(date=nil, num_forecasting_years=nil)
+    if date.nil?
+      date = Date.today-(SystemConfig.instance.num_forecasting_years).years
+    end
+    if num_forecasting_years.nil?
+      num_forecasting_years = SystemConfig.instance.num_forecasting_years-1
+    end
+
+    get_fiscal_years(date,num_forecasting_years)
   end
 
   # Returns a select array of fiscal years remaining in the planning period
