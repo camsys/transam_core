@@ -113,10 +113,11 @@ class DispositionUpdatesFileHandler < AbstractFileHandler
           #---------------------------------------------------------------------
           # Disposition
           #---------------------------------------------------------------------
-          unless reader.empty?(6,6)
+          idx = included_serial_number?(asset) ? 7 : 6
+          unless reader.empty?(idx,idx)
             add_processing_message(2, 'success', 'Processing Disposition Report')
             loader = DispositionUpdateEventLoader.new
-            loader.process(asset, cells[6..9])
+            loader.process(asset, cells[idx..idx+3])
             if loader.errors?
               row_errored = true
               loader.errors.each { |e| add_processing_message(3, 'warning', e)}
@@ -159,6 +160,10 @@ class DispositionUpdatesFileHandler < AbstractFileHandler
   def initialize(upload)
     super
     @upload = upload
+  end
+
+  def included_serial_number?(asset)
+    asset.type_of? :vehicle or asset.type_of? :support_vehicle or asset.type_of? :equipment
   end
 
 end
