@@ -15,9 +15,10 @@ class OrganizationAwareController < TransamController
 
   protected
 
-  def check_filter
-    if current_user.user_organization_filter != current_user.user_organization_filters.system_filters.first || current_user.user_organization_filters.system_filters.first.get_organizations.count != @organization_list.count
-      set_current_user_organization_filter_(current_user, current_user.user_organization_filters.system_filters.first)
+  def check_filter filter=nil
+    filter = current_user.user_organization_filters.system_filters.first if filter.nil?
+    if current_user.user_organization_filter != filter || filter.get_organizations.count != @organization_list.count
+      set_current_user_organization_filter_(current_user, filter)
       notify_user(:filter_warning, "Filter reset to perform this action.", true)
 
       get_organization_selections
