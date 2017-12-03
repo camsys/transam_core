@@ -36,7 +36,7 @@ class Activity < ActiveRecord::Base
   validates_inclusion_of :system_activity,    :in => [true, false]
   #validates :start_date,        :allow_nil => true
   #validates :end_date,          :allow_nil => true
-  validates :frequency_quantity, :presence => true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 1}
+  validates :frequency_quantity, :presence => true, :numericality => {:only_integer => true, :greater_than_or_equal_to => 1}
   validates :frequency_type,    :presence => true
   validates :job_name,          :presence => true
   validates_inclusion_of :active, :in => [true, false]
