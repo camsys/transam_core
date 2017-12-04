@@ -7,7 +7,7 @@
 if Rails.env.test?
 
   # Determine if we are using postgres or mysql
-  is_mysql = (ActiveRecord::Base.configurations[Rails.env]['adapter'] == 'mysql2')
+  is_mysql = (ActiveRecord::Base.configurations[Rails.env]['adapter'].include? 'mysql2')
 
   # ====================================================================
 
