@@ -325,7 +325,7 @@ class UsersController < OrganizationAwareController
   #-----------------------------------------------------------------------------
   def destroy
     @user.active = false
-    @user.save(:validate => :false)
+    @user.save(:validate => false)
     respond_to do |format|
       notify_user(:notice, "User #{@user} has been deactivated.")
       format.html { redirect_to user_url(@user) }

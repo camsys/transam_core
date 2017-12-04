@@ -27,8 +27,8 @@ class AssetEventAssetSubsystem < ActiveRecord::Base
   #-----------------------------------------------------------------------------
   validates     :asset_subsystem,             :presence => true
   validates     :rehabilitation_update_event, :presence => true
-  validates     :parts_cost,                  :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0}, allow_nil: true
-  validates     :labor_cost,                  :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0}, allow_nil: true
+  validates     :parts_cost,                  :numericality => {:only_integer => true, :greater_than_or_equal_to => 0}, allow_nil: true
+  validates     :labor_cost,                  :numericality => {:only_integer => true, :greater_than_or_equal_to => 0}, allow_nil: true
 
   #-----------------------------------------------------------------------------
   # Constants
