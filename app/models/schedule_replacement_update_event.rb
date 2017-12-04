@@ -10,7 +10,7 @@ class ScheduleReplacementUpdateEvent < AssetEvent
   # Associations
   belongs_to  :replacement_reason_type      
         
-  validates :replacement_year,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => Date.today.year - 10}, :allow_nil => true
+  validates :replacement_year,  :numericality => {:only_integer => true,   :greater_than_or_equal_to => Date.today.year - 10}, :allow_nil => true
   validates :replacement_reason_type,  :presence => true
       
   #------------------------------------------------------------------------------

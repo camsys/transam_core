@@ -13,7 +13,7 @@ class RehabilitationUpdateEvent < AssetEvent
 
   has_many :asset_subsystems, :through => :asset_event_asset_subsystems
 
-  validates :extended_useful_life_months, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0}, allow_nil: true
+  validates :extended_useful_life_months, :numericality => {:only_integer => true, :greater_than_or_equal_to => 0}, allow_nil: true
 
   #------------------------------------------------------------------------------
   # Scopes

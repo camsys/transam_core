@@ -26,8 +26,8 @@ class AssetTag < ActiveRecord::Base
   #-----------------------------------------------------------------------------
   # Validations
   #-----------------------------------------------------------------------------
-  validates     :asset,         :presence => :true
-  validates     :user,          :presence => :true
+  validates     :asset,         :presence => true
+  validates     :user,          :presence => true
 
   #-----------------------------------------------------------------------------
   # Constants

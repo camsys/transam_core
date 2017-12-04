@@ -95,7 +95,7 @@ class User < ActiveRecord::Base
   validates :state,         :allow_nil => true, :length => { maximum: 2 }
   validates :zip,           :allow_nil => true, :length => { maximum: 12 }
 
-  validates :num_table_rows,:presence => true,  :numericality => {:only_integer => :true, :greater_than_or_equal_to => 5}
+  validates :num_table_rows,:presence => true,  :numericality => {:only_integer => true, :greater_than_or_equal_to => 5}
   validates :organization,  :presence => true
 
   #-----------------------------------------------------------------------------
