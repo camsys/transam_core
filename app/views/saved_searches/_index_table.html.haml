@@ -53,11 +53,13 @@
           - if s.json.present?
             = link_to saved_search_path(s), :title => "Run this query." do
               %i.fa.fa-fw.fa-play-circle.text-primary.fa-1-5x
-        %td.center
-          = link_to edit_saved_search_path(s), :title => "Update this query.", :remote => true do
-            %i.fa.fa-fw.fa-edit.text-primary.fa-1-5x
-        %td.center
-          = link_to saved_search_path(s), :title => "Remove this query", :method => :delete, :data => {:confirm => "Are you sure you want to remove this query? The action can't be undone."} do
-            %i.fa.fa-fw.fa-trash-o.action-icon.text-danger.fa-1-5x
+        - if can? :edit, s
+          %td.center
+            = link_to edit_saved_search_path(s), :title => "Update this query.", :remote => true do
+              %i.fa.fa-fw.fa-edit.text-primary.fa-1-5x
+        - if can? :destroy, s
+          %td.center
+            = link_to saved_search_path(s), :title => "Remove this query", :method => :delete, :data => {:confirm => "Are you sure you want to remove this query? The action can't be undone."} do
+              %i.fa.fa-fw.fa-trash-o.action-icon.text-danger.fa-1-5x
 
 = render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :path_pattern => "#"}
