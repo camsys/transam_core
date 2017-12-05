@@ -111,6 +111,7 @@ class AssetEvent < ActiveRecord::Base
     event = asset.asset_events
       .where('asset_event_type_id = ?', self.asset_event_type_id)
       .where('event_date > ? OR (event_date = ? AND created_at > ?)', self.event_date, self.event_date, (self.new_record? ? Time.current : self.created_at )) # Define a window that backs up to this event
+      .where('object_key != ?', self.object_key)
       .order(:event_date, :created_at => :desc).first
 
     # Return Strongly Typed Asset
@@ -124,6 +125,7 @@ class AssetEvent < ActiveRecord::Base
     event = asset.asset_events
       .where("asset_event_type_id = ?", self.asset_event_type_id) # get events of same type
       .where("event_date < ? OR (event_date = ? AND created_at < ?)", self.event_date, self.event_date, (self.new_record? ? Time.current : self.created_at) ) # Define a window that runs up to this event
+      .where('object_key != ?', self.object_key)
       .order(:event_date, :created_at => :asc).last
 
     # Return Strongly Typed Asset
