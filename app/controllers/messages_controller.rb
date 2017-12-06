@@ -196,7 +196,7 @@ class MessagesController < OrganizationAwareController
 
   def destroy
     @message.active = false
-    @message.save(:validate => :false)
+    @message.save(:validate => false)
     respond_to do |format|
       notify_user(:notice, "Message has been deleted.")
       format.html { redirect_to user_messages_url(current_user) }

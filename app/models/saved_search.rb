@@ -31,6 +31,8 @@ class SavedSearch < ActiveRecord::Base
 
   belongs_to        :search_type
 
+  has_and_belongs_to_many   :organizations
+
   #-----------------------------------------------------------------------------
   # Validations
   #-----------------------------------------------------------------------------
@@ -46,7 +48,7 @@ class SavedSearch < ActiveRecord::Base
 
   # set the default scope
   default_scope { order("ordinal asc, created_at desc") }
-  validates     :ordinal,     :numericality => {:only_integer => :true, :greater_than => 0}, :allow_nil => true
+  validates     :ordinal,     :numericality => {:only_integer => true, :greater_than => 0}, :allow_nil => true
 
   #-----------------------------------------------------------------------------
   # Constants
@@ -57,7 +59,8 @@ class SavedSearch < ActiveRecord::Base
     :ordinal,
     :search_type_id,
     :name,
-    :description
+    :description,
+    :organization_ids => []
   ]
 
   # List of fields which can be searched using a simple text-based search
@@ -96,6 +99,10 @@ class SavedSearch < ActiveRecord::Base
       h = JSON.parse(json)
       h.except('errors', 'organization_id')
     end
+  end
+
+  def shared?
+    !organizations.empty?
   end
 
   #-----------------------------------------------------------------------------

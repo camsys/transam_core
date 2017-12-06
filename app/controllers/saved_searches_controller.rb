@@ -14,9 +14,9 @@ class SavedSearchesController < OrganizationAwareController
 
     if params[:search_type_id]
       @search_type = SearchType.find_by(id: params[:search_type_id].to_i)
-      @searches = current_user.saved_searches.includes(:search_type).where(search_type_id: @search_type.try(:id))
+      @searches = current_user.all_searches(@search_type.try(:id))
     else
-      @searches = current_user.saved_searches.includes(:search_type)
+      @searches = current_user.all_searches
     end
 
     respond_to do |format|

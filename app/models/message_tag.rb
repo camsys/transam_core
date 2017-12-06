@@ -26,8 +26,8 @@ class MessageTag < ActiveRecord::Base
   #-----------------------------------------------------------------------------
   # Validations
   #-----------------------------------------------------------------------------
-  validates     :message,       :presence => :true
-  validates     :user,          :presence => :true
+  validates     :message,       :presence => true
+  validates     :user,          :presence => true
 
   #-----------------------------------------------------------------------------
   # Constants

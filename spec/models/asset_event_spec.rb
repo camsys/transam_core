@@ -12,14 +12,6 @@ RSpec.describe AssetEvent, :type => :model do
   # Class Methods
   #
   #------------------------------------------------------------------------------
-  describe '.get_new_typed_event' do
-    it "returns a typed asset" do
-      pending "This is coupled to seed data.  Needs review"
-      a = AssetEvent.get_new_typed_event(FactoryGirl.build(:asset_event_subtype))
-
-      expect(a.class).to eq("AssetEventType")
-    end
-  end
 
   describe '.as_typed_event' do
     it "types an untyped event" do

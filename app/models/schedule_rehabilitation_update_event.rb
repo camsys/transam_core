@@ -7,7 +7,7 @@ class ScheduleRehabilitationUpdateEvent < AssetEvent
   # Callbacks
   after_initialize :set_defaults
               
-  validates :rebuild_year, :presence => true, :numericality => { :only_integer => :true,  :greater_than_or_equal_to => Date.today.year - 10 }
+  validates :rebuild_year, :presence => true, :numericality => { :only_integer => true,  :greater_than_or_equal_to => Date.today.year - 10 }
       
   #------------------------------------------------------------------------------
   # Scopes

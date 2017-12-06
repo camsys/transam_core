@@ -24,7 +24,7 @@
         = f.association :manufacturer, :prompt => "Select manufacturer...", :collection => Manufacturer.active_for_asset_type(@asset.asset_type), :label_method => :to_s
         = f.input :manufacturer_model, :prompt => "Enter manufacturer model...", :label => "Manufacturer Model"
         = f.input :manufacture_year, :label => "Manufacture Year"
-        = f.input :serial_number
+        = f.input :serial_number, :input_html => {:maxlength => 32}
 
     .col-md-6
       = dialog_tag('Purchase', {:icon => 'fa fa-refresh', :class => "form_part"}) do
