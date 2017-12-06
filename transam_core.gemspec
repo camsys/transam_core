@@ -29,7 +29,11 @@ Gem::Specification.new do |s|
   s.add_dependency 'unitwise'
   s.add_dependency 'chronic'
   s.add_dependency "breadcrumbs_on_rails"
-  s.add_dependency 'state_machine'
+
+  s.add_dependency 'state_machines'
+  s.add_dependency 'state_machines-activemodel'
+  s.add_dependency 'state_machines-activerecord'
+
   s.add_dependency 'fog'
   s.add_dependency 'carrierwave'
   s.add_dependency 'kaminari'
