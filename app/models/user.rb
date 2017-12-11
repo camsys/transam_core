@@ -165,7 +165,7 @@ class User < ActiveRecord::Base
     end
     widgets += [
         ['assets_widget', 1],
-        ['activities_widget', 1],
+        #['activities_widget', 1],
         ['queues', 1],
         ['users_widget', 1],
         ['notices_widget', 3],

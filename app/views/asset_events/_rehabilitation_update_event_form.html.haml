@@ -47,7 +47,13 @@
       = f.input_field :total_cost, :class => 'form-control', :required => true, :value => 0, :label => false
   = f.input :extended_useful_life_months
   = f.input :extended_useful_life_miles if @asset.type_of? :rolling_stock
-  = f.input :comments, :input_html => { :rows => 6 }, :placeholder => "Describe work performed...", label: "Notes"
+
+  - SystemConfig.transam_module_names.each do |mod|
+    - view_component = "#{mod}_rehabilitation_update_event_form"
+    - if lookup_context.template_exists?(view_component, 'asset_events', true)
+      = render :partial => "asset_events/#{view_component}", :locals => {:f => f}
+
+  = f.input :comments, :required => true, :input_html => { :rows => 6 }, :placeholder => "Describe work performed...", label: "Notes"
   .form-group
     = f.button :submit, "Add rehabilitation", :class => 'btn btn-primary'
 :javascript
