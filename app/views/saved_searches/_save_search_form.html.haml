@@ -19,7 +19,10 @@
   = f.input :description, :as => :text, :placeholder => "Enter a description of this search...", :required => true, :wrapper_html => {:class => 'text-limiter-wrapper'}, :input_html => {:class => 'text-limiter', :rows => 4, :maxlength => 254}
   %p.text-muted.text-limiter-counter
     %span#description-counter
+
     characters remaining.
+
+  = f.association :organizations, :collection => current_user.organizations.where(id: @organization_list), :label_method => :coded_name, :label => 'Share With'
 
   = f.button :submit, "Save...", :class => 'btn btn-primary'
   %button.btn.btn-default{:data => {:dismiss => "modal"}} Cancel

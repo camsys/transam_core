@@ -375,6 +375,25 @@ class PoliciesController < OrganizationAwareController
 
   end
 
+  def distribute
+    policies = Policy.where(parent_id: @policy.id)
+    if policies.empty?
+      notify_user(:alert, 'No children policies to distribute policy rules too.')
+    else
+      policies.each do |p|
+        p.policy_asset_subtype_rules.each do |subtype_rule|
+          parent_rules = subtype_rule.min_allowable_policy_values
+
+          subtype_rule.update(subtype_rule.attributes.slice(*parent_rules.stringify_keys.keys).merge(parent_rules){|key, oldval, newval| [oldval, newval].max})
+        end
+      end
+
+      notify_user(:notice, 'Parent policy distributed. Values updated to at least the minimum allowed by the parent policy.')
+    end
+
+    redirect_to policy_path(@policy)
+  end
+
   private
 
   # Never trust parameters from the scary internet, only allow the white list through.

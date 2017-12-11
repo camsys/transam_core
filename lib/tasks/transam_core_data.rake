@@ -5,6 +5,7 @@ namespace :transam_core_data do
   desc "add super manager role"
   task add_super_manager_role: :environment do
     r = Role.find_or_initialize_by(name: 'super_manager')
+    r.resource = Role.find_by(name: 'manager')
     r.weight = 10
     r.privilege = true
     r.save!
