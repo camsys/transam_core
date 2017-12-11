@@ -210,6 +210,7 @@ Rails.application.routes.draw do
       get     'new_policy_rule'
       post    'add_policy_rule'
       delete  'remove_policy_rule'
+      get     'distribute'
     end
   end
 

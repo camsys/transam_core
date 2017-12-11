@@ -165,7 +165,7 @@ class User < ActiveRecord::Base
     end
     widgets += [
         ['assets_widget', 1],
-        ['activities_widget', 1],
+        #['activities_widget', 1],
         ['queues', 1],
         ['users_widget', 1],
         ['notices_widget', 3],
@@ -212,6 +212,22 @@ class User < ActiveRecord::Base
   end
   def on_hold_tasks
     assigned_tasks.where(:state => "halted")
+  end
+
+  def all_searches(search_type_id=nil)
+    if search_type_id
+      saved_searches.where(search_type_id: search_type_id) + searches_shared_with_me.where(search_type_id: search_type_id)
+    else
+      saved_searches + searches_shared_with_me
+    end
+  end
+
+  def shared_searches
+    saved_searches.joins(:organizations)
+  end
+
+  def searches_shared_with_me
+    SavedSearch.joins(:organizations).where(organizations: {id: organizations.ids}).where.not(saved_searches: {user_id: self.id})
   end
 
   # Returns the initials for this user

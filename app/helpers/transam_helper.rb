@@ -42,7 +42,7 @@ module TransamHelper
   end
 
   def html_help_path
-    '/user_guide/TransAMUserGuide.html'
+    Rails.application.config.help_directory + '/TransAMUserGuide.html'
   end
 
   def html_help_pdf_path

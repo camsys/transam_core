@@ -27,6 +27,7 @@
       %th.center{:data => {:sortable => 'true'}} Description
       - unless @search_type
         %th.center{:data => {:sortable => 'true'}} Search Type
+      %th.center{:data => {:sortable => 'true'}} Shared
       %th.center{:data => {:visible => 'true', :sortable => 'true'}} Created On
       %th.center{:data => {:visible => 'true', :sortable => 'false'}} SQL
       %th.center{:data => {:visible => 'true', :sortable => 'false'}}
@@ -41,6 +42,8 @@
         %td.left= s.description.html_safe
         - unless @search_type
           %td.left= s.search_type
+        %td.center{data: {tableexport: {value: "#{s.shared? ? 'Yes' : 'No'}"}}}
+          = format_as_boolean(s.shared?)
         %td.right= format_as_date_time(s.created_at)
         %td.center
           - if s.query_string.present?
@@ -50,11 +53,13 @@
           - if s.json.present?
             = link_to saved_search_path(s), :title => "Run this query." do
               %i.fa.fa-fw.fa-play-circle.text-primary.fa-1-5x
-        %td.center
-          = link_to edit_saved_search_path(s), :title => "Update this query.", :remote => true do
-            %i.fa.fa-fw.fa-edit.text-primary.fa-1-5x
-        %td.center
-          = link_to saved_search_path(s), :title => "Remove this query", :method => :delete, :data => {:confirm => "Are you sure you want to remove this query? The action can't be undone."} do
-            %i.fa.fa-fw.fa-trash-o.action-icon.text-danger.fa-1-5x
+        - if can? :edit, s
+          %td.center
+            = link_to edit_saved_search_path(s), :title => "Update this query.", :remote => true do
+              %i.fa.fa-fw.fa-edit.text-primary.fa-1-5x
+        - if can? :destroy, s
+          %td.center
+            = link_to saved_search_path(s), :title => "Remove this query", :method => :delete, :data => {:confirm => "Are you sure you want to remove this query? The action can't be undone."} do
+              %i.fa.fa-fw.fa-trash-o.action-icon.text-danger.fa-1-5x
 
 = render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :path_pattern => "#"}

@@ -1,4 +1,7 @@
 <% if @user %>
+  // close all other popovers
+  $('.has-popover').popover('hide');
+
   var popup_id = "#user_popup_<%= @user.id %>";
   $(popup_id).data('content', "<%= escape_javascript(render 'users/summary', :user => @user) %>");
 

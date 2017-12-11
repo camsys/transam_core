@@ -22,4 +22,4 @@
 
   .tab-pane.fade#saved
     .tab-content
-      = render :partial => 'saved_searches/index_table', :locals => {:searches => current_user.saved_searches.where(search_type_id: @search_type.id), :show_actions => 0}
+      = render :partial => 'saved_searches/index_table', :locals => {:searches => current_user.all_searches(@search_type.id), :show_actions => 0}
