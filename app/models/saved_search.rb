@@ -46,7 +46,7 @@ class SavedSearch < ActiveRecord::Base
 
   # set the default scope
   default_scope { order("ordinal asc, created_at desc") }
-  validates     :ordinal,     :numericality => {:only_integer => :true, :greater_than => 0}, :allow_nil => true
+  validates     :ordinal,     :numericality => {:only_integer => true, :greater_than => 0}, :allow_nil => true
 
   #-----------------------------------------------------------------------------
   # Constants

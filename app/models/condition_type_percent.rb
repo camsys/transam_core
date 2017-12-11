@@ -26,7 +26,7 @@ class ConditionTypePercent < ActiveRecord::Base
   #-----------------------------------------------------------------------------
   validates     :condition_type,              :presence => true
   validates     :condition_update_event,      :presence => true
-  validates     :pcnt,                        :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0, :less_than_or_equal_to => 100}, allow_nil: true
+  validates     :pcnt,                        :numericality => {:only_integer => true, :greater_than_or_equal_to => 0, :less_than_or_equal_to => 100}, allow_nil: true
 
   #-----------------------------------------------------------------------------
   # Constants

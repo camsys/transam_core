@@ -37,7 +37,7 @@ class PolicyAssetTypeRule < ActiveRecord::Base
   validates :service_life_calculation_type, :presence => true
   validates :replacement_cost_calculation_type, :presence => true
   validates :annual_inflation_rate,         :presence => true,  :numericality => {:greater_than_or_equal_to => 0.01, :less_than_or_equal_to => 100}
-  validates :pcnt_residual_value,           :presence => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0, :less_than_or_equal_to => 100}
+  validates :pcnt_residual_value,           :presence => true,  :numericality => {:only_integer => true,   :greater_than_or_equal_to => 0, :less_than_or_equal_to => 100}
 
   #-----------------------------------------------------------------------------
   # Scopes

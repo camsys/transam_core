@@ -19,8 +19,8 @@ class UserOrganizationFilter < ActiveRecord::Base
 
   has_and_belongs_to_many :users, :join_table => 'users_user_organization_filters'
 
-  validates   :name,          :presence => :true
-  validates   :description,   :presence => :true
+  validates   :name,          :presence => true
+  validates   :description,   :presence => true
   #validate    :require_at_least_one_organization
 
   # Allow selection of active instances
