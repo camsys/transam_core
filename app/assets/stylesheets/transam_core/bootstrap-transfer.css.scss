@@ -1,0 +1,63 @@
+.bootstrap-transfer-container {
+  
+  .selector-available,.selector-chosen {
+    text-align: center;
+     
+     h3 {
+      margin: 0;
+      // height: 18px;
+      padding-left: 4px;
+      line-height: inherit;
+      /*font-size: 11px; */
+      text-align: left;
+      font-weight: normal;
+    }
+    div:last-child {
+      margin-top: 10px;
+    }
+  } // end .selector-available,.selector-chosen
+
+  .selector-available {
+    select {
+      height: 17em;
+    }
+  }
+
+  .selector-chosen {
+    select {
+      height: 19em;
+      margin-top: 5px;
+    }
+  }
+  .selector-chooser {
+    height: 100%;
+    margin-top: 50%;
+    margin-bottom: 50%;
+    padding: 2px;
+    text-align: center;
+    .selector-add, .selector-remove {
+      // display: block;
+      padding: 0;
+      min-width: 3em;
+    }
+  } // end select-chooser
+  
+  button.selector-chooseall,button.selector-clearall {
+    padding-top: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    margin: 0; 
+  }
+  p {
+    color: white;
+    text-align: left;
+  }
+} // end bootstrap-transfer-container section
+
+ 
+/* The ghost, nudged to maintain perfect centering */
+#movers {
+  .selector-chooser {
+    margin-top: 10em;
+  }
+}
