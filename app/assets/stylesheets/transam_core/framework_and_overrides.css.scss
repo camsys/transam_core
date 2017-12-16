@@ -182,8 +182,8 @@ $application-emphasis:    #d193d9;
 // Active coloe
 $application-active:      #FFFFDD;
 
-@import "../../../../../../.rvm/gems/ruby-2.2.2/gems/bootstrap-sass-3.2.0.2/assets/stylesheets/bootstrap-sprockets";
-@import "../../../../../../.rvm/gems/ruby-2.2.2/gems/bootstrap-sass-3.2.0.2/assets/stylesheets/bootstrap";
+@import "bootstrap-sprockets";
+@import "bootstrap";
 
 // Re-decorate breadcrumb
 //.breadcrumb {background: rgba(245, 245, 245, 1); border: 1px solid rgba(245, 245, 245, 1); border-radius: 4px; display: block;}
