@@ -1,13 +1,12 @@
 
-.dropdown-menu label.checkbox {
+.dropdown-menu .multi-column-dropdown label.checkbox {
     font-weight: normal;
     margin-top: auto;
     margin-bottom: auto;
 }
 
-.dropdown-menu li a {
+.dropdown-menu .multi-column-dropdown li a {
     padding: 5px 15px;
-    font-weight: 300;
 }
 
 .dropdown-menu.columns-2 {
