@@ -8,8 +8,8 @@ class ConditionUpdateEvent < AssetEvent
   after_initialize :set_defaults
 
   # Associations
-  has_many :condition_type_percents, :foreign_key => "asset_event_id", :dependent => :destroy
-  accepts_nested_attributes_for :condition_type_percents, :allow_destroy => true
+  has_many :condition_type_percents, :foreign_key => "asset_event_id", :inverse_of  => :condition_update_event, :dependent => :destroy
+  accepts_nested_attributes_for :condition_type_percents, :allow_destroy => true, :reject_if   => lambda{ |attrs| attrs[:condition_type].blank? }
 
 
   # Condition of the asset
