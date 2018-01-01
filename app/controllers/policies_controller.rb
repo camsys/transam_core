@@ -375,18 +375,24 @@ class PoliciesController < OrganizationAwareController
 
   end
 
+  def inherit
+    add_breadcrumb "Policies", policies_path
+    add_breadcrumb @policy.name, policy_path(@policy)
+    add_breadcrumb "Distribute Policy", inherit_policy_path(@policy)
+
+    @distributer_proxy = PolicyDistributerProxy.new(:policy => @policy)
+    @message = "Distributing and applying policies. This may take a while..."
+  end
+
   def distribute
-    policies = Policy.where(parent_id: @policy.id)
+    @distributer_proxy = PolicyDistributerProxy.new(params[:policy_distributer_proxy])
+    @distributer_proxy.policy = @policy
+
+    policies = Policy.where(parent_id: @distributer_proxy.policy.id)
     if policies.empty?
       notify_user(:alert, 'No children policies to distribute policy rules too.')
     else
-      policies.each do |p|
-        p.policy_asset_subtype_rules.each do |subtype_rule|
-          parent_rules = subtype_rule.min_allowable_policy_values
-
-          subtype_rule.update(subtype_rule.attributes.slice(*parent_rules.stringify_keys.keys).merge(parent_rules){|key, oldval, newval| [oldval, newval].max})
-        end
-      end
+      Delayed::Job.enqueue PolicyDistributerJob.new(@distributer_proxy, current_user), :priority => 0
 
       notify_user(:notice, 'Parent policy distributed. Values updated to at least the minimum allowed by the parent policy.')
     end

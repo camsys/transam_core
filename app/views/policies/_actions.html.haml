@@ -16,24 +16,24 @@
             %i.fa.fa-edit.fa-fw
             = " Modify this policy"
       - if @policy.active
-        %li.divider
-        %li
-          = link_to runner_policy_path(@policy) do
-            %i.fa.fa-fw.fa-cogs
-            = " Apply this policy"
+        - if @policy.parent.nil? && (current_user.has_role? :admin)
+          %li.divider
+          %li
+            = link_to inherit_policy_path(@policy), :onclick => "$('#spinner').show();"  do
+              %i.fa.fa-paper-plane.fa-fw
+              = " Distribute this policy"
+        - else
+          %li.divider
+          %li
+            = link_to runner_policy_path(@policy) do
+              %i.fa.fa-fw.fa-cogs
+              = " Apply this policy"
       - else
         %li.divider
         %li
           = link_to make_current_policy_path(@policy) do
             %i.fa.fa-check-square-o.fa-fw
             = " Set as current"
-
-      - if @policy.parent.nil?
-        %li.divider
-        %li
-          = link_to distribute_policy_path(@policy), :onclick => "$('#spinner').show();"  do
-            %i.fa.fa-paper-plane.fa-fw
-            = " Distribute this policy"
 
       - if can? :create, @policy
         %li.divider
