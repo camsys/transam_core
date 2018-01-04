@@ -25,7 +25,7 @@
 
 - if current_user.organizations.count > 1 || current_user.user_organization_filters.count > 1
   %li.dropdown
-    = link_to "#", :class => 'dropdown-toggle', :style => 'padding-top:15px;', :data => {:toggle => 'dropdown'} do
+    = link_to "#", :class => 'dropdown-toggle', :style => 'padding-top:19px;', :data => {:toggle => 'dropdown'} do
       %i.fa.fa-filter
       = " #{session[:user_organization_filter].to_s[0..31]}#{session[:user_organization_filter].to_s.length > 32 ? '...' : ''}"
       %b.caret
