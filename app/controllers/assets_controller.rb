@@ -100,28 +100,30 @@ class AssetsController < AssetAwareController
 
     @assets = get_assets
 
+    terminal_crumb = nil
     if @early_disposition
-      add_breadcrumb "Early disposition proposed"
+      terminal_crumb = "Early disposition proposed"
     elsif @transferred_assets
-        add_breadcrumb "Transferred Assets"
+      terminal_crumb = "Transferred Assets"
     elsif @asset_group.present?
       asset_group = AssetGroup.find_by_object_key(@asset_group)
-      add_breadcrumb asset_group
+      terminal_crumb = asset_group
     elsif @search_text.present?
-      add_breadcrumb "Search '#{@search_text}'"
+      terminal_crumb = "Search '#{@search_text}'"
     elsif @asset_subtype > 0
       subtype = AssetSubtype.find(@asset_subtype)
       add_breadcrumb subtype.asset_type.name.pluralize(2), inventory_index_path(:asset_type => subtype.asset_type, :asset_subtype => 0)
-      add_breadcrumb subtype.name
+      terminal_crumb = subtype.name
     elsif @manufacturer_id > 0
       add_breadcrumb "Manufacturers", manufacturers_path
       manufacturer = Manufacturer.find(@manufacturer_id)
-      add_breadcrumb manufacturer.name
+      terminal_crumb = manufacturer.name
     elsif @asset_type > 0
       asset_type = AssetType.find(@asset_type)
-      add_breadcrumb asset_type.name.titleize.pluralize(2)
+      terminal_crumb = asset_type.name.titleize.pluralize(2)
     end
-
+    add_breadcrumb terminal_crumb if terminal_crumb
+    
     # check that an order param was provided otherwise use asset_tag as the default
     params[:sort] ||= 'asset_tag'
 
@@ -142,7 +144,14 @@ class AssetsController < AssetAwareController
           :rows =>  @assets.order("#{params[:sort]} #{params[:order]}").limit(params[:limit]).offset(params[:offset]).as_json(user: current_user, include_early_disposition: @early_disposition)
           }
         }
-      format.xls
+      format.xls do
+        filename = (terminal_crumb || "unknown").gsub(" ", "_").underscore
+        response.headers['Content-Disposition'] = "attachment; filename=#{filename}.xls"
+      end
+      format.xlsx do
+        filename = (terminal_crumb || "unknown").gsub(" ", "_").underscore
+        response.headers['Content-Disposition'] = "attachment; filename=#{filename}.xlsx"
+      end
     end
   end
 

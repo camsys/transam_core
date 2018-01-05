@@ -1,3 +1,8 @@
+.btn-group
+  = link_to current_url(format: :xlsx), class: 'btn btn-default', target: '_blank', title: 'Export all rows and columns to XLSX' do
+    %i.fa.fa-file
+    = " Export All"
+
 - if @early_disposition
   - EarlyDispositionRequestUpdateEvent.state_machines[:state].events.map(&:name).each do |evt|
     - unless evt == :approve_via_transfer
