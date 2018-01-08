@@ -22,7 +22,7 @@
 
     characters remaining.
 
-  = f.association :organizations, :collection => current_user.organizations.where(id: @organization_list), :label_method => :coded_name, :label => 'Share With'
+  = f.association :organizations, :collection => current_user.organizations.where(id: @organization_list), :label_method => :coded_name, :label => 'Share With', :as => :check_boxes
 
   = f.button :submit, "Save...", :class => 'btn btn-primary'
   %button.btn.btn-default{:data => {:dismiss => "modal"}} Cancel
