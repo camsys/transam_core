@@ -1,5 +1,6 @@
 [a.organization, a.asset_subtype, a.asset_tag, a.description,
  (a.parent.name unless a.parent.nil?),
+ (a.location.name unless a.location.nil?),
  format_as_fiscal_year(a.in_service_date.year)].each do |val|
   row.add_cell(val)
 end
@@ -9,4 +10,4 @@ row.add_cell(format_as_integer(a.age), style: integer_cell)
  format_as_fiscal_year(a.scheduled_rehabilitation_year),
  format_as_fiscal_year(a.scheduled_replacement_year)].each do |val|
   row.add_cell(val)
-                                   
+end                                   
