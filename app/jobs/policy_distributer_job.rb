@@ -16,7 +16,7 @@ class PolicyDistributerJob < Job
       p.policy_asset_subtype_rules.each do |subtype_rule|
         parent_rules = subtype_rule.min_allowable_policy_values
 
-        subtype_rule.update(subtype_rule.attributes.slice(*parent_rules.stringify_keys.keys).merge(parent_rules){|key, oldval, newval| [oldval, newval].max})
+        subtype_rule.update(subtype_rule.attributes.slice(*parent_rules.stringify_keys.keys).merge(parent_rules.stringify_keys){|key, oldval, newval| [oldval, newval].max})
       end
 
       if policy_distributer_proxy.apply_policies.to_i == 1
