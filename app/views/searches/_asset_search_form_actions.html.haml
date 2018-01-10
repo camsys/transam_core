@@ -4,7 +4,7 @@
     = " Actions"
     %span.caret
   %ul.dropdown-menu{:role => 'menu'}
-    - if @search_type.class_name == 'AssetSearcher' and can? :create, AssetGroup
+    - if can? :create, AssetGroup
       %li
         = link_to new_asset_group_path(:from_search => 1) do
           %i.fa.fa-tag.fa-fw
