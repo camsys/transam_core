@@ -22,4 +22,9 @@
 
   $.validator.addMethod("validDate", function(value, element) {
       return this.optional(element) || /^(0?[1-9]|1[0-2])[/., -](0?[1-9]|[12][0-9]|3[0-1])[/., -](19|20)\d{2}$/.test(value);
-  }, "Please enter a valid date in the format DD/MM/YYYY");
+  }, "Please enter a valid date in the format DD/MM/YYYY.");
+
+
+  $.validator.addMethod("exactlength", function(value, element, param) {
+      return this.optional(element) || value.length == param;
+  }, "Please enter exactly {0} characters.");
