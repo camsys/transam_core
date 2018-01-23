@@ -120,7 +120,8 @@ class AssetsController < AssetAwareController
       terminal_crumb = manufacturer.name
     elsif @asset_type > 0
       asset_type = AssetType.find(@asset_type)
-      terminal_crumb = asset_type.name.titleize.pluralize(2)
+      terminal_crumb = asset_type.name.pluralize(2)
+
     end
     add_breadcrumb terminal_crumb if terminal_crumb
     
