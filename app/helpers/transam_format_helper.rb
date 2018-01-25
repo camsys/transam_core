@@ -283,4 +283,32 @@ module TransamFormatHelper
 
   end
 
+  def format_using_format(val, format)
+    case format
+      when :currencyM
+        number_to_currency(val, format: '%u%nM', negative_format: '(%u%nM)')
+      when :currency
+        format_as_currency(val)
+      when :fiscal_year
+        format_as_fiscal_year(val.to_i) unless val.nil?
+      when :integer
+        format_as_integer(val)
+      when :percent
+        format_as_percentage(val)
+      when :string
+        val
+      when :checkbox
+        format_as_checkbox(val)
+      when :boolean
+        # Check for 1/0 val as well as true/false given direct query clause
+        format_as_boolean(val == 0 ? false : val)
+      when :list
+        format_as_list(val)
+      else
+        # Note, current implementation uses rescue and is thus potentially inefficient.
+        # Consider alterantives.
+        format_as_general(val)
+    end
+  end
+
 end
