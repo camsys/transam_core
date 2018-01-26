@@ -36,7 +36,7 @@ class PolicyDistributerJob < Job
       end
     end
 
-
+    msg = 'Parent policy has been distributed.'
 
     event_url = Rails.application.routes.url_helpers.policy_path policy_distributer_proxy.policy
     policy_notification = Notification.create(text: msg, link: event_url, notifiable_type: 'Organization', notifiable_id: policy_distributer_proxy.policy.organization_id)
