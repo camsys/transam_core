@@ -247,6 +247,7 @@ class Asset < ActiveRecord::Base
     :vendor_id,
     :vendor_name,
     :manufacturer_id,
+    :other_manufacturer,
     :manufacturer_model,
     :purchase_cost,
     :purchase_date,
