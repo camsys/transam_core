@@ -293,6 +293,8 @@ module TransamFormatHelper
         format_as_fiscal_year(val.to_i) unless val.nil?
       when :integer
         format_as_integer(val)
+      when :decimal
+        format_as_decimal(val)
       when :percent
         format_as_percentage(val)
       when :string
