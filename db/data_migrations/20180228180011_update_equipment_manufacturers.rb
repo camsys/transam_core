@@ -1,7 +1,7 @@
 class UpdateEquipmentManufacturers < ActiveRecord::DataMigration
   def up
 
-    other_manufacturer = Manufacturer.find_or_create_by(filter: 'Equipment', name: 'Other (Describe)')
+    other_manufacturer = Manufacturer.find_or_create_by(filter: 'Equipment', name: 'Other (Describe)', code: 'ZZZ', active: true)
 
     Equipment.where('manufacturer_id IS NOT NULL').each do |asset|
       unless asset.manufacturer.name.include? 'Other'
