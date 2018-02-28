@@ -19,11 +19,23 @@
     .page-header
       .btn-toolbar.pull-right{:style => 'margin-top: 7px;'}
         = render 'actions'
-      %h2= @policy.name
+      %h2 Asset Replacement/Rehabilitation Policy
 
   .col-sm-12
     %fieldset
-      %legend Asset Replacement/Rehabilitation Policy
+      %legend Filters
+      = form_tag policies_path, :id => 'filter_form', :method => "get", :class => 'navbar-form panel-action', style: 'padding-top: 1px' do
+        .form-group
+          = select_tag(:organization_id, options_for_select(Organization.where(id: @organization_list).map{|f| [f.coded_name,f.id]}, :selected => @policy.organization_id), :class => "form-control")
+        .form-group
+          = select_tag(:policy_id, options_for_select(Policy.where(organization_id: @policy.organization_id).order(active: :desc).map{|f| ["#{f.description} #{f.active ? '(Current)' : ''}",f.id]}, :selected => @policy.id), :class => "form-control")
+
+        = button_tag :class => 'btn btn-default', :type => 'submit' do
+          %i.fa.fa-filter
+
+    %br
+    %fieldset
+      %legend
       = render 'summary'
 
   .col-sm-12
@@ -96,3 +108,26 @@
       });
     });
   };
+
+  $('#organization_id').change(function() {
+
+    var url = '#{get_policies_organizations_path}';
+        $.ajax({
+          url: url,
+          data: {organization_id: $(this).val()},
+          success: function(result){
+            $('#policy_id').empty();
+
+            for(i = 0;i<result.length;i++){
+              //add an option for each organizations available to the tempalte
+              $('#policy_id').append(
+                  $("<option></option>").attr("value", result[i][0]).text(result[i][1])
+              );
+            }
+          },
+          error: function (xhr, ajaxOptions, thrownError) {
+            alert("We are sorry but something went wrong. " + xhr.status + " " + thrownError);
+          }
+        });
+
+  });

@@ -53,11 +53,11 @@ class OrganizationAwareController < TransamController
         session[USER_SELECTED_ORGANIZATION_ID_LIST] = @organization_list
       end
 
-      @organization_list = session[USER_SELECTED_ORGANIZATION_ID_LIST]
+      @organization_list = (@viewable_organizations || session[USER_SELECTED_ORGANIZATION_ID_LIST])
       # Make sure the list is not empty. If it is, set it to the list of organizations
       # for the current user
       if @organization_list.empty?
-        @organization_list = current_user.organization_ids
+        @organization_list = current_user.viewable_organization_ids
       end
 
     else
