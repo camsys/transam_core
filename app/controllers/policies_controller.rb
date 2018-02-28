@@ -6,6 +6,8 @@ class PoliciesController < OrganizationAwareController
   #before_filter :authorize_admin
   before_action :get_policy, :except => [:index, :create, :new]
 
+  before_action :set_viewable_organizations
+
 
   SESSION_VIEW_TYPE_VAR = 'policies_subnav_view_type'
 
@@ -40,7 +42,19 @@ class PoliciesController < OrganizationAwareController
   end
 
   def index
-    redirect_to policy_path(Policy.includes(:organization).where(organization_id: @organization_list).first)
+    if params[:organization_id]
+      org_id = params[:organization_id]
+    else
+      org_id = @organization_list.first
+    end
+
+    if params[:policy_id]
+      policy = Policy.find_by(id: params[:policy_id], organization_id: org_id)
+    else
+      policy = Policy.active.find_by(organization_id: org_id)
+    end
+
+    redirect_to policy_path(policy)
   end
 
   def show
@@ -434,6 +448,10 @@ class PoliciesController < OrganizationAwareController
       return
     end
 
+  end
+
+  def set_viewable_organizations
+    @viewable_organizations = current_user.viewable_organizations
   end
 
 end

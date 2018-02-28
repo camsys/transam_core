@@ -91,7 +91,11 @@ Rails.application.routes.draw do
     resources :images
   end
 
-  resources :organizations, :path => "org"
+  resources :organizations, :path => "org" do
+    collection do
+      get 'get_policies'
+    end
+  end
 
   resources :tasks,       :only => [:index, :show, :create, :update, :edit, :new, :destroy] do
     resources :comments
