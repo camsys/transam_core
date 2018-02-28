@@ -196,6 +196,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :rule_sets
+
   resources :policies do
     member do
       get     'check_subtype_rule_exists'

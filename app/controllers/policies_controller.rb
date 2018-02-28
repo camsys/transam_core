@@ -1,6 +1,7 @@
 class PoliciesController < OrganizationAwareController
 
   add_breadcrumb "Home", :root_path
+  add_breadcrumb "Policies", :rule_sets_path
 
   #before_filter :authorize_admin
   before_action :get_policy, :except => [:index, :create, :new]
@@ -39,26 +40,12 @@ class PoliciesController < OrganizationAwareController
   end
 
   def index
-
-    add_breadcrumb "Policies", policies_path
-
-    # create hash to store policies from organization_list
-    policies = Hash.new
-    Policy.includes(:organization).where(organization_id: @organization_list).each do |policy|
-      if policies[policy.organization.short_name].nil?
-        policies[policy.organization.short_name] =  [policy]
-      else
-        policies[policy.organization.short_name] << policy
-      end
-    end
-
-    @policies = policies
-
+    redirect_to policy_path(Policy.includes(:organization).where(organization_id: @organization_list).first)
   end
 
   def show
 
-    add_breadcrumb "Policies", policies_path
+    add_breadcrumb "Asset Replacement/Rehabilitation Policy", policies_path
     add_breadcrumb @policy.name, policy_path(@policy)
 
   end
@@ -239,7 +226,7 @@ class PoliciesController < OrganizationAwareController
 
   def edit
 
-    add_breadcrumb "Policies", policies_path
+    add_breadcrumb "Asset Replacement/Rehabilitation Policy", policies_path
     add_breadcrumb @policy.name, policy_path(@policy)
 
     if params[:copy].to_i == 1
@@ -318,7 +305,7 @@ class PoliciesController < OrganizationAwareController
 
   def update
 
-    add_breadcrumb "Policies", policies_path
+    add_breadcrumb "Asset Replacement/Rehabilitation Policy", policies_path
     add_breadcrumb @policy.name, policy_path(@policy)
     add_breadcrumb 'Modify', edit_policy_path(@policy)
 
@@ -345,7 +332,7 @@ class PoliciesController < OrganizationAwareController
   end
 
   def runner
-    add_breadcrumb "Policies", policies_path
+    add_breadcrumb "Asset Replacement/Rehabilitation Policy", policies_path
     add_breadcrumb @policy.name, policy_path(@policy)
     add_breadcrumb "Policy Runner", runner_policy_path(@policy)
 
@@ -376,7 +363,7 @@ class PoliciesController < OrganizationAwareController
   end
 
   def inherit
-    add_breadcrumb "Policies", policies_path
+    add_breadcrumb "Asset Replacement/Rehabilitation Policy", policies_path
     add_breadcrumb @policy.name, policy_path(@policy)
     add_breadcrumb "Distribute Policy", inherit_policy_path(@policy)
 

@@ -3,10 +3,17 @@
     %i.fa.fa-line-chart.fa-2x
     %b.caret
   %ul.dropdown-menu.multi-level{:role => 'menu'}
-    %li.text-left
-      = link_to policies_path do
+    %li.text-left.dropdown-submenu
+      = link_to rule_sets_path do
         %i.fa.fa-book.fa-fw
         Policies
+      %ul.dropdown-menu
+        - RuleSet.all.each do |rule_set|
+          %li.text-left
+            = link_to rule_set_path(rule_set) do
+              %i.fa.fa-fw.fa-book
+              = rule_set
+
     %li.divider
 
     - # Load module specific tab content if they exist
