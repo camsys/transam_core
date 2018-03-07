@@ -17,8 +17,6 @@
 .row
   .col-sm-12
     .page-header
-      .btn-toolbar.pull-right{:style => 'margin-top: 7px;'}
-        = render 'actions'
       %h2 Asset Replacement/Rehabilitation Policy
 
   .col-sm-12
@@ -36,6 +34,8 @@
     %br
     %fieldset
       %legend
+      .btn-toolbar.pull-right{:style => 'margin-top: 7px;'}
+        = render 'actions'
       = render 'summary'
 
   .col-sm-12

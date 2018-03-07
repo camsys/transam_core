@@ -6,27 +6,18 @@ class RuleSetAwareController < OrganizationAwareController
   # set the @rule_set_class variable before any actions are invoked
   before_action :get_rule_set_class
 
-  #before_action :set_rule_set, except: [:new, :create]
+  def copy
+    # use the name of the controller that inherits from the rule set aware controller to determine the variable name of the object we're duping
+    data_obj = eval("@#{params[:controller].singularize}")
 
-  def new
-    @rule_set = @rule_set_type.class_name.constantize.new
+    new_data_obj = data_obj.dup
+    new_data_obj.object_key = nil
+
+    new_data_obj.save!
+
+    self.instance_variable_set('@new_'+new_data_obj.class.to_s.underscore, new_data_obj)
   end
 
-  def create
-    @rule_set = @rule_set_type.class_name.constantize.new(rule_set_params)
-
-    if @rule_set.save
-      redirect_to rule_set_path(@rule_set)
-    else
-      render :new
-    end
-  end
-
-  def edit
-  end
-
-  def update
-  end
 
   # this method is to take some rule set data model and distribute by dup of each org in that data model's HABTM org relationship
   # override .dup at the model level if want to copy over any associations or other customizations
@@ -40,23 +31,50 @@ class RuleSetAwareController < OrganizationAwareController
   # assume that there's a distribute event in the state machine for the data object
   # assume data obj has parent variable
 
+  # if data model has recipients send notification/email (check model for .recipients .email_enabled? .notification.enabled?)
+
   def distribute
     # use the name of the controller that inherits from the rule set aware controller to determine the variable name of the object we're duping
     data_obj = eval("@#{params[:controller].singularize}")
 
     orgs = data_obj.try(:organizations) || []
     orgs.each do |org|
-      new_data_obj = data_obj.dup
-      new_data_obj.object_key = nil # assume always have an object_key
+      new_data_obj = data_obj.try(:distribute) || data_obj.dup
+      new_data_obj.object_key = nil
       new_data_obj.organization = org
       new_data_obj.parent = data_obj
 
       new_data_obj.save!
+
+      # send notifications/email
+      if new_data_obj.try(:email_enabled?)
+        new_data_obj.recipients.each do |user|
+          msg = Message.new
+          msg.user          = current_user
+          msg.organization  = new_data_obj.organization
+          msg.to_user       = user
+          msg.subject       = "Rule Set Distributed"
+          msg.body          = "#{data_obj} has been distributed to #{new_data_obj}."
+          msg.priority_type = PriorityType.default
+          msg.save
+        end
+      end
+
+      if new_data_obj.try(:notification_enabled?)
+        event_url = Rails.application.routes.url_helpers.rule_set_tam_policies_path(@rule_set_type)
+        notification = Notification.create(text: "#{data_obj} has been distributed to #{new_data_obj}.", link: event_url, notifiable_type: 'Organization', notifiable_id: new_data_obj.organization_id )
+
+        new_data_obj.recipients.each do |user|
+          UserNotification.create(notification: notification, user: user)
+        end
+      end
     end
 
-    # fire workflow event
-    params[:event] = 'distribute'
-    fire_workflow_event
+    # fire workflow event if exists
+    if klass.event_names.include? 'distribute'
+      params[:event] = 'distribute'
+      fire_workflow_event
+    end
 
   end
 
@@ -73,8 +91,6 @@ class RuleSetAwareController < OrganizationAwareController
     if klass.event_names.include? params[:event]
       event_name = params[:event]
       rule_set = klass.find_by(object_key: params[:id])
-
-      puts rule_set.inspect
 
       if rule_set.fire_state_event(event_name)
         event = WorkflowEvent.new
@@ -94,11 +110,12 @@ class RuleSetAwareController < OrganizationAwareController
       notify_user(:alert, "#{params[:event_name]} is not a valid event for a #{klass.class.name}")
     end
 
-    redirect_to :back
+    respond_to do |format|
+      format.html { redirect_to :back }
+      format.js
+    end
 
   end
-
-
 
 
     #-------------------------------------------------------------------------------
