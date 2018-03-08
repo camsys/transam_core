@@ -10,10 +10,13 @@ class RuleSetAwareController < OrganizationAwareController
     # use the name of the controller that inherits from the rule set aware controller to determine the variable name of the object we're duping
     data_obj = eval("@#{params[:controller].singularize}")
 
+    puts "==========="
     new_data_obj = data_obj.dup
     new_data_obj.object_key = nil
 
     new_data_obj.save!
+
+    puts "==========="
 
     self.instance_variable_set('@new_'+new_data_obj.class.to_s.underscore, new_data_obj)
   end
@@ -30,6 +33,8 @@ class RuleSetAwareController < OrganizationAwareController
   # has an object key
   # assume that there's a distribute event in the state machine for the data object
   # assume data obj has parent variable
+
+  # check if there might be a special distribute otherwise just dup
 
   # if data model has recipients send notification/email (check model for .recipients .email_enabled? .notification.enabled?)
 
@@ -71,7 +76,7 @@ class RuleSetAwareController < OrganizationAwareController
     end
 
     # fire workflow event if exists
-    if klass.event_names.include? 'distribute'
+    if data_obj.class.event_names.include? 'distribute'
       params[:event] = 'distribute'
       fire_workflow_event
     end
