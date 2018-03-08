@@ -23,7 +23,7 @@
   - if lookup_context.template_exists?(view_component, 'shared', true)
     = render :partial => "shared/#{view_component}"
 
-- if current_user.organizations.count > 1 || current_user.user_organization_filters.count > 1
+- if (current_user.organizations.count > 1 || current_user.user_organization_filters.count > 1) && !@viewable_organizations
   %li.dropdown
     = link_to "#", :class => 'dropdown-toggle', :style => 'padding-top:19px;', :data => {:toggle => 'dropdown'} do
       %i.fa.fa-filter

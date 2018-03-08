@@ -26,7 +26,7 @@
       / Main Page Content
       = render 'shared/breadcrumbs'
       = render 'shared/messages'
-      = yield
+      = content_for?(:content) ? yield(:content) : yield
     / Begin footer content
     %footer.footer= render 'shared/footer'
     / push the java script to the bottom so the page loads faster

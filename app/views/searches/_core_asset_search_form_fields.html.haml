@@ -78,6 +78,21 @@
               = f.input_field :book_value_comparator, :as => :hidden, :value => '0'
             = f.input_field :book_value, :class => "form-control", :as => :integer, :label => "Book Value", input_html: { :min => '0'}
 
+          .not-for-equipment
+            = f.input :direct_capital_responsibility, :as => :boolean, :label => "Direct Capital Responsibility", :label_html => { :class => 'bold' }
+            = f.input :pcnt_capital_responsibility, :label => "Percent Capital Responsibility", :wrapper => :vertical_prepend do
+              .input-group-btn
+                %button.btn.btn-default.dropdown-toggle{"data-toggle" => "dropdown", :type => "button"}
+                %ul.dropdown-menu{:role => "menu"}
+                  %li
+                    %a{:data => {:compare => "-1"}} Less Than
+                  %li
+                    %a{:data => {:compare => "0"}} Equal To
+                  %li
+                    %a{:data => {:compare => "1"}} Greater Than
+                = f.input_field :pcnt_capital_responsibility_comparator, :as => :hidden, :value => '0'
+              = f.input_field :pcnt_capital_responsibility, :class => "form-control", :as => :integer,  input_html: { :min => '0', :max => 100}
+
       .col-md-3
         %fieldset
           %legend.panel-legend Condition & Status

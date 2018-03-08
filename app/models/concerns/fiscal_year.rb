@@ -106,15 +106,35 @@ module FiscalYear
 
   # Returns the calendar year formatted as a FY string
   def fiscal_year(year)
-    yr = year - fy_century(year)
-    first = "%.2d" % yr
-    if yr == 99 # when yr == 99, yr + 1 would be 100, which causes: "FY 99-100"
-      next_yr = 00
+
+    # some controllers might have a special formatter instead of the default one to use the FY string
+    # eventually default might be a SystemConfig.instance attribute as well but for now hard-coded
+
+    if defined? params
+      klass = params[:controller].classify
+    elsif self.class.to_s.include? 'Controller'
+      klass = self.class.to_s[0..-('Controller'.length+1)]
     else
-      next_yr = (yr + 1)
+      klass = self.class.to_s
     end
-    last = "%.2d" % next_yr
-    "FY #{first}-#{last}"
+
+    formatter = Rails.application.config.special_fiscal_year_formatters[klass]
+
+    if formatter == 'start_year'
+      "#{year}"
+    elsif formatter == 'end_year'
+      "#{year+1}"
+    else
+      yr = year - fy_century(year)
+      first = "%.2d" % yr
+      if yr == 99 # when yr == 99, yr + 1 would be 100, which causes: "FY 99-100"
+        next_yr = 00
+      else
+        next_yr = (yr + 1)
+      end
+      last = "%.2d" % next_yr
+      "FY #{first}-#{last}"
+    end
   end
 
   # Returns a select array of fiscal years that includes fiscal years that
