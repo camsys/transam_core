@@ -1,0 +1,16 @@
+<div class="row">
+	<div class="col-md-12">
+		<table class="table table-hover">
+			<thead>
+				<th>Policy</th>
+			</thead>
+			<tbody>
+				<% @rule_sets.each do |rule_set| %>
+				<tr data-action-path = '<%= rule_set_path(rule_set) %>'>
+					<td><%= rule_set.name %></td>
+				</tr>
+				<% end %>
+			</tbody>
+		</table>
+	</div>
+</div>

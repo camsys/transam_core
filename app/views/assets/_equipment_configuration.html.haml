@@ -1,6 +1,7 @@
 = format_field("Description", @asset.description)
 = format_field("Quantity", format_as_quantity(@asset.quantity, @asset.quantity_units) )
 = format_field("Manufacturer", @asset.manufacturer ) unless @asset.manufacturer.blank?
+= format_field("Other Manufacturer", @asset.other_manufacturer ) unless @asset.other_manufacturer.blank?
 = format_field("Model", @asset.manufacturer_model )
 = format_field("Manufacture Year", @asset.manufacture_year )
 = format_field("Serial Number", @asset.serial_number )
