@@ -5,7 +5,7 @@ class UpdateEquipmentManufacturers < ActiveRecord::DataMigration
 
     Equipment.where('manufacturer_id IS NOT NULL').each do |asset|
       unless asset.manufacturer.name.include? 'Other'
-        asset.other_manufacturer = asset.manufacturer.name
+        asset.other_manufacturer = asset.manufacturer.try(:name)
       end
       asset.manufacturer = other_manufacturer
 
