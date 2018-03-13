@@ -53,6 +53,9 @@ class OrganizationAwareController < TransamController
         session[USER_SELECTED_ORGANIZATION_ID_LIST] = @organization_list
       end
 
+      # some controllers might want to override the current session's org list as based on the org filter
+      # to do this the controller should skip_before_action get_organization_selections
+      # and then in their own before_action set @viewable_organizations and call get_organization_selections
       @organization_list = (@viewable_organizations || session[USER_SELECTED_ORGANIZATION_ID_LIST])
       # Make sure the list is not empty. If it is, set it to the list of organizations
       # for the current user
