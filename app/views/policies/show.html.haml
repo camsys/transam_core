@@ -14,6 +14,10 @@
     position: absolute;
   }
 
+  fieldset + fieldset {
+      margin-top: 30px;
+  }
+
 .row
   .col-sm-12
     .page-header
@@ -31,18 +35,20 @@
         = button_tag :class => 'btn btn-default', :type => 'submit' do
           %i.fa.fa-filter
 
-    %br
     %fieldset
-      %legend
-      .btn-toolbar.pull-right{:style => 'margin-top: 7px;'}
-        = render 'actions'
-      = render 'summary'
+      %legend Policy Rules
+      .row
+        .col-sm-12
+          .btn-toolbar.pull-right{:style => 'margin-top: 7px;'}
+            = render 'actions'
+      .row
+        = render 'summary'
 
   .col-sm-12
     #spinner
       = loader_panel_tag({:message => "Working...", :size => 3, :spinner => "refresh"})
 
-  .col-sm-12#rules-container
+  .col-sm-12#rules-container{style: 'padding-top: 30px;'}
     = render 'rules'
 
 .modal.fade#rule-modal{:tabindex => -1, :role => 'dialog', :aria => {:hidden => true}}
