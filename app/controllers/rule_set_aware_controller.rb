@@ -50,29 +50,6 @@ class RuleSetAwareController < OrganizationAwareController
       new_data_obj.parent = data_obj
 
       new_data_obj.save!
-
-      # send notifications/email
-      if new_data_obj.try(:email_enabled?)
-        new_data_obj.recipients.each do |user|
-          msg = Message.new
-          msg.user          = current_user
-          msg.organization  = new_data_obj.organization
-          msg.to_user       = user
-          msg.subject       = "Rule Set Distributed"
-          msg.body          = "#{data_obj} has been distributed to #{new_data_obj}."
-          msg.priority_type = PriorityType.default
-          msg.save
-        end
-      end
-
-      if new_data_obj.try(:notification_enabled?)
-        event_url = Rails.application.routes.url_helpers.rule_set_tam_policies_path(@rule_set_type)
-        notification = Notification.create(text: "#{data_obj} has been distributed to #{new_data_obj}.", link: event_url, notifiable_type: 'Organization', notifiable_id: new_data_obj.organization_id )
-
-        new_data_obj.recipients.each do |user|
-          UserNotification.create(notification: notification, user: user)
-        end
-      end
     end
 
     # fire workflow event if exists
@@ -104,10 +81,28 @@ class RuleSetAwareController < OrganizationAwareController
         event.event_type = event_name
         event.save
 
-        # if notification enabled, then send out
-        # if @form.class.try(:workflow_notification_enabled?)
-        #   @form.notify_event_by(current_user, event_name)
-        # end
+        # send notifications/email
+        if rule_set.try(:email_enabled?)
+          rule_set.recipients.each do |user|
+            msg = Message.new
+            msg.user          = current_user
+            msg.organization  = rule_set.organization
+            msg.to_user       = user
+            msg.subject       = rule_set.try(:message_subject) || "Workflow Change for #{rule_set}"
+            msg.body          = rule_set.try(:message_body) || "#{rule_set.titleize} has been #{rule_set.state.humanize}."
+            msg.priority_type = PriorityType.default
+            msg.save
+          end
+        end
+
+        if rule_set.try(:notification_enabled?)
+          event_url = Rails.application.routes.url_helpers.rule_set_tam_policies_path(@rule_set_type)
+          notification = Notification.create(text: rule_set.try(:message_body) || "#{rule_set.titleize} has been #{rule_set.state.humanize}.", link: event_url, notifiable_type: 'Organization', notifiable_id: rule_set.organization_id )
+
+          rule_set.recipients.each do |user|
+            UserNotification.create(notification: notification, user: user)
+          end
+        end
       else
         notify_user(:alert, "Could not #{event_name.humanize} form #{rule_set}")
       end
