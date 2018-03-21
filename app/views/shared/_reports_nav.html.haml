@@ -29,7 +29,12 @@
     - if Form.count > 0
       %li.divider
       - Form.all.each do | frm |
-        %li.text-left
-          = link_to form_path(frm)  do
-            %i.fa.fa-file-text-o.fa-fw
-            = frm.name
+        - # forms can be complicated with many components so check if they have their own menu
+        - view_component = "#{frm.controller}_form_menu"
+        - if lookup_context.template_exists?(view_component, 'shared', true)
+          = render :partial => "shared/#{view_component}"
+        - else
+          %li.text-left
+            = link_to form_path(frm)  do
+              %i.fa.fa-file-text-o.fa-fw
+              = frm.name
