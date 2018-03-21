@@ -81,9 +81,11 @@ class RuleSetAwareController < OrganizationAwareController
         event.event_type = event_name
         event.save
 
+        recipients = (rule_set.recipients || [])
+
         # send notifications/email
         if rule_set.try(:email_enabled?)
-          rule_set.recipients.each do |user|
+          recipients.each do |user|
             msg = Message.new
             msg.user          = current_user
             msg.organization  = rule_set.organization
@@ -99,7 +101,7 @@ class RuleSetAwareController < OrganizationAwareController
           event_url = Rails.application.routes.url_helpers.rule_set_tam_policies_path(@rule_set_type)
           notification = Notification.create(text: rule_set.try(:message_body) || "#{rule_set.titleize} has been #{rule_set.state.humanize}.", link: event_url, notifiable_type: 'Organization', notifiable_id: rule_set.organization_id )
 
-          rule_set.recipients.each do |user|
+          recipients.each do |user|
             UserNotification.create(notification: notification, user: user)
           end
         end
