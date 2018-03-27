@@ -140,12 +140,12 @@ replacement_reason_types = [
 ]
 
 roles = [
-  {:privilege => false, :name => 'guest', :weight => 1},
-  {:privilege => false, :name => 'user', :weight => 1},
-  {:privilege => false, :name => 'manager', :weight => 7},
-  {:privilege => true, :name => 'admin'},
-  {:privilege => true, :name => 'super_manager', :weight => 10},
-  {:privilege => true, :name => 'technical_contact'}
+  {:privilege => false, :name => 'guest', :weight => 1, :show_in_user_mgmt => true},
+  {:privilege => false, :name => 'user', :weight => 1, :show_in_user_mgmt => true},
+  {:privilege => false, :name => 'manager', :weight => 7, :show_in_user_mgmt => true},
+  {:privilege => true, :name => 'admin', :show_in_user_mgmt => true},
+  {:privilege => true, :name => 'super_manager', :weight => 10, role_parent: 'manager', :show_in_user_mgmt => true},
+  {:privilege => true, :name => 'technical_contact', :show_in_user_mgmt => true}
 
 ]
 
@@ -182,7 +182,7 @@ activities = [
 lookup_tables = %w{asset_event_types condition_types disposition_types cost_calculation_types license_types priority_types
   file_content_types file_status_types report_types service_status_types
   service_life_calculation_types condition_estimation_types condition_rollup_calculation_types
-  issue_status_types issue_types web_browser_types replacement_reason_types roles notice_types frequency_types search_types activities
+  issue_status_types issue_types web_browser_types replacement_reason_types notice_types frequency_types search_types activities
   }
 
 lookup_tables.each do |table_name|
@@ -200,6 +200,23 @@ lookup_tables.each do |table_name|
     x = klass.new(row)
     x.save!
   end
+end
+
+table_name = 'roles'
+puts "  Loading #{table_name}"
+if is_mysql
+  ActiveRecord::Base.connection.execute("TRUNCATE TABLE #{table_name};")
+elsif is_sqlite
+  ActiveRecord::Base.connection.execute("DELETE FROM #{table_name};")
+else
+  ActiveRecord::Base.connection.execute("TRUNCATE #{table_name} RESTART IDENTITY;")
+end
+data = eval(table_name)
+klass = table_name.classify.constantize
+data.each do |row|
+  x = klass.new(row.except(:role_parent))
+  x.role_parent = Role.find_by(name: row[:role_parent])
+  x.save!
 end
 
 puts "======= Processing TransAM CORE Reports  ======="
