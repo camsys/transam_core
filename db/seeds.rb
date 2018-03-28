@@ -149,6 +149,10 @@ roles = [
 
 ]
 
+manufacturers = [
+    {filter: "Equipment", name: "Other (Describe)", code: "ZZZ", active: true}
+]
+
 notice_types = [
   {:active => 1,  :name => 'System Notice',   :description => 'System notices.', :display_icon => 'fa-warning', :display_class => 'text-danger'},
   {:active => 1,  :name => 'Informational Notice',  :description => 'Informational notices.', :display_icon => 'fa-exclamation', :display_class => 'text-info'}
@@ -182,7 +186,7 @@ activities = [
 lookup_tables = %w{asset_event_types condition_types disposition_types cost_calculation_types license_types priority_types
   file_content_types file_status_types report_types service_status_types
   service_life_calculation_types condition_estimation_types condition_rollup_calculation_types
-  issue_status_types issue_types web_browser_types replacement_reason_types notice_types frequency_types search_types activities
+  issue_status_types issue_types web_browser_types replacement_reason_types notice_types frequency_types search_types activities manufacturers
   }
 
 lookup_tables.each do |table_name|

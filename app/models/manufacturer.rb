@@ -7,8 +7,7 @@ class Manufacturer < ActiveRecord::Base
 
   # Manufacturers that are maked as active
   scope :active, -> { where(:active => true) }
-  # Notices that are active and visible for a specific organization
-  scope :active_for_asset_type, -> (asset_type) { asset_type.class_name == 'Equpiment' ? active.where(filter: asset_type.class_name) : active.where(filter: 'Vehicle') }
+  scope :active_for_asset_type, -> (asset_type) { active.where("filter = ?", asset_type.class_name) }
 
 
   def self.search(text, filter, exact = true)
