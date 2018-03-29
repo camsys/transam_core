@@ -123,7 +123,8 @@ class AssetEventsController < AssetAwareController
   def update
 
     # get variables for updating view via JS if form sent remotely
-    if ajax_request?
+    @ajax_request = ajax_request?
+    if @ajax_request
       @view_div = params[:view_div]
       @view_name = params[:view_name]
     end
@@ -160,7 +161,9 @@ class AssetEventsController < AssetAwareController
   def create
 
     # get variables for updating view via JS if form sent remotely
-    if ajax_request?
+
+    @ajax_request = ajax_request?
+    if @ajax_request
       @view_div = params[:view_div]
       @view_name = params[:view_name]
     end
