@@ -167,6 +167,33 @@ module TransamFormatHelper
     html.html_safe
   end
 
+  # returns a collection as a formatted table without headers
+  def format_as_table_wihtout_headers(data, number_of_columns = 5, cell_padding_in_px = '6px')
+    html = "<table class='table-unstyled'>"
+    counter = 0
+
+    data.each do |datum|
+      if counter == 0
+        html << '<tr>'
+      end
+
+      html << "<td style='padding:#{cell_padding_in_px};'>"
+      html << datum.to_s
+      html << "</td>"
+
+      counter += 1
+
+      if ( (counter >= number_of_columns) || (datum.equal? data.last))
+        html << '</tr>'
+        counter = 0
+      end
+
+
+    end
+    html << "</table>"
+    html.html_safe
+  end
+
   # formats a boolean field using a checkbox if the value is true
   def format_as_checkbox(val, text_class='text-default')
     if val
