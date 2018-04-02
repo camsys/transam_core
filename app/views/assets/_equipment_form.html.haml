@@ -21,7 +21,7 @@
         = f.input :description
         = f.input :quantity, :input_html => {:min => 1}
         = f.input :quantity_units, :collection => Uom.units
-        = f.input :manufacturer_id, :as => :hidden, :value => Manufacturer.find_by(filter: 'Equipment', code: 'ZZZ').id
+        = f.input :manufacturer_id, :as => :hidden, :input_html => {:value => Manufacturer.find_by(filter: 'Equipment', code: 'ZZZ').id}
         = f.input :other_manufacturer, :input_html => {:maxlength => 30}
         = f.input :manufacturer_model, :prompt => "Enter manufacturer model...", :label => "Manufacturer Model"
         = f.input :manufacture_year, :label => "Manufacture Year"
