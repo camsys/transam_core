@@ -3,11 +3,11 @@ class PoliciesController < OrganizationAwareController
   add_breadcrumb "Home", :root_path
   add_breadcrumb "Policies", :rule_sets_path
 
-  #before_filter :authorize_admin
-  before_action :get_policy, :except => [:index, :create, :new]
-
+  skip_before_action :get_organization_selections
   before_action :set_viewable_organizations
 
+  #before_filter :authorize_admin
+  before_action :get_policy, :except => [:index, :create, :new]
 
   SESSION_VIEW_TYPE_VAR = 'policies_subnav_view_type'
 
@@ -451,7 +451,9 @@ class PoliciesController < OrganizationAwareController
   end
 
   def set_viewable_organizations
-    @viewable_organizations = current_user.viewable_organizations
+    @viewable_organizations = current_user.viewable_organization_ids
+
+    get_organization_selections
   end
 
 end

@@ -83,12 +83,15 @@ class RuleSetAwareController < OrganizationAwareController
 
         recipients = (rule_set.recipients || [])
 
+        puts "+=+=+=+"
+        puts recipients.inspect
+
         # send notifications/email
         if rule_set.try(:email_enabled?)
           recipients.each do |user|
             msg = Message.new
             msg.user          = current_user
-            msg.organization  = rule_set.organization
+            msg.organization  = current_user.organization
             msg.to_user       = user
             msg.subject       = rule_set.try(:message_subject) || "Workflow Change for #{rule_set}"
             msg.body          = rule_set.try(:message_body) || "#{rule_set.titleize} has been #{rule_set.state.humanize}."

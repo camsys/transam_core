@@ -28,7 +28,7 @@
       %legend Filters
       = form_tag policies_path, :id => 'filter_form', :method => "get", :class => 'navbar-form panel-action', style: 'padding-top: 1px' do
         .form-group
-          = select_tag(:organization_id, options_for_select(Organization.where(id: @organization_list).map{|f| [f.coded_name,f.id]}, :selected => @policy.organization_id), :class => "form-control")
+          = select_tag(:organization_id, options_for_select(Organization.distinct.joins('INNER JOIN policies ON policies.organization_id = organizations.id').where(id: @organization_list).map{|f| [f.coded_name,f.id]}, :selected => @policy.organization_id), :class => "form-control")
         .form-group
           = select_tag(:policy_id, options_for_select(Policy.where(organization_id: @policy.organization_id).order(active: :desc).map{|f| ["#{f.description} #{f.active ? '(Current)' : ''}",f.id]}, :selected => @policy.id), :class => "form-control")
 
