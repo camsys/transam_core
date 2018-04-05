@@ -55,3 +55,7 @@
 
 <%= render 'timeline_scripts' %>
 <%= render 'chart_scripts' %>
+
+<% unless @core_tbl_formatter_load_count == 1 %>
+  <%= render 'shared/table_formatters' %>
+<% end %>
