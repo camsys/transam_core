@@ -122,7 +122,65 @@
       $('#asset_parent_key').attr('value', item.id);
       return item.name;
     }
-  })
+  });
+
+  $('.equipment_form').validate({
+    submitHandler: function(form) {
+      form.submit();
+    }
+  });
+
+
+  // Document Ready
+  $(document).ready(function(){
+
+    // Force uppercase text for OFT inputs
+    $('[data-convert="uppercase"]').keyup(function(evt) {
+      this.value = this.value.toUpperCase();
+    });
+
+    $('[data-behavior~=datepicker]').datepicker({
+    });
+    $('#vendor_name').on('focus', function() {
+      _typeahead_source_url = $(this).data('url');
+    });
+
+    // Enable typeahead for the SMO filter
+    $('#vendor_name').typeahead({
+      items: 10,
+      minLength: 2,
+      source: _typeahead_searcher,
+      matcher: _typeahead_matcher,
+      highlighter: _typeahead_highlighter,
+      updater: function (obj) {
+        var item = JSON.parse(obj);
+        // Update the UI
+        $('#vendor_name').attr('value', item.name);
+        $('#asset_vendor_id').attr('value', item.id);
+        return item.name;
+      }
+    });
+  });
+
+  $('#parent_name').on('focus', function() {
+      _typeahead_source_url = $(this).data('url');
+    });
+
+  // Enable typeahead for the SMO filter
+  $('#parent_name').typeahead({
+    items: 10,
+    minLength: 2,
+    source: _typeahead_searcher,
+    matcher: _typeahead_matcher,
+    highlighter: _typeahead_highlighter,
+    updater: function (obj) {
+      var item = JSON.parse(obj);
+      // Update the UI
+      $('#parent_name').attr('value', item.name);
+      $('#asset_parent_key').attr('value', item.id);
+      return item.name;
+    }
+  });
 
   $('.equipment_form').validate({
     submitHandler: function(form) {

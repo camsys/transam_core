@@ -15,7 +15,7 @@
   //Redirect the selected row to the issue edit form
   $("tr").click(function() {
 
-    var object_key = $(this).attr('id')
+    var object_key = $(this).attr('id');
     var path = '#{edit_issue_path("X")}';
     var url = path.replace("X", object_key);
     document.location.href = url;

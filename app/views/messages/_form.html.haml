@@ -63,7 +63,7 @@
     $('.message_proxy_group_agencys, .message_proxy_group_roles').hide();
     $('.message_proxy_to_user_ids').show();
     $('#message_proxy_send_to_group').val('0');
-    $('#switch-mode span').html('Send to group')
+    $('#switch-mode span').html('Send to group');
     $('#switch-mode i').removeClass('fa-user')
     $('#switch-mode i').addClass('fa-users')
   };
@@ -74,6 +74,58 @@
     $('#switch-mode span').html('Send to users')
     $('#switch-mode i').addClass('fa-user')
     $('#switch-mode i').removeClass('fa-users')
+  };
+
+  $('#new_message_proxy').validate({
+    ignore: [], //validate hidden fields
+    submitHandler: function(form) {
+      form.submit();
+    }
+  });
+
+  $('#message_proxy_body').rules("add", {
+    required: function()
+    {
+      CKEDITOR.instances.message_proxy_body.updateElement();
+    }
+  });
+
+
+  $(document).ready(function() {
+
+    $("#switch-mode").bootstrapSwitch({
+      onSwitchChange: switch_mode
+    });
+
+    enable_user_mode();
+
+  });
+
+  function switch_mode() {
+    var val = $('#message_proxy_send_to_group').val();
+    if (val == '0') {
+      enable_group_mode();
+    } else {
+      enable_user_mode();
+    }
+  };
+
+  function enable_user_mode() {
+    var val = $('#message_proxy_send_to_group').val('1');
+    $('.message_proxy_group_agencys, .message_proxy_group_roles').hide();
+    $('.message_proxy_to_user_ids').show();
+    $('#message_proxy_send_to_group').val('0');
+    $('#switch-mode span').html('Send to group');
+    $('#switch-mode i').removeClass('fa-user');
+    $('#switch-mode i').addClass('fa-users');
+  };
+  function enable_group_mode() {
+    $('.message_proxy_group_agencys, .message_proxy_group_roles').show();
+    $('.message_proxy_to_user_ids').hide();
+    $('#message_proxy_send_to_group').val('1');
+    $('#switch-mode span').html('Send to users');
+    $('#switch-mode i').addClass('fa-user');
+    $('#switch-mode i').removeClass('fa-users');
   };
 
   $('#new_message_proxy').validate({
