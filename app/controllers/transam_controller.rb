@@ -207,7 +207,7 @@ class TransamController < ApplicationController
       else
         h = session_list
       end
-      if ! h.has_key? session.id
+      unless h.has_key? session.id
         h[session.id] = {:start_time => Time.now, :views => 0, :user_id => current_user.id}
       end
       h[session.id][:last_view] = Time.now
