@@ -56,7 +56,7 @@
 
     var options = '<option value="">Set the asset type...</option>';
     for (var j = 0; j < asset_types.length; j++){
-      type = asset_types[j]
+      type = asset_types[j];
       var add_to_options = false;
 
       if ((parseInt(file_content_type_id) == new_inventory_id) && (type.class_name != 'Equipment')) {
