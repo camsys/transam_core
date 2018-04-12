@@ -157,6 +157,8 @@ class EarlyDispositionRequestUpdateEvent < AssetEvent
     when :reject, :approve_via_transfer, :approve
       # notify creator
       [creator]
+    else
+     []
     end
 
     recipients || []
@@ -172,6 +174,8 @@ class EarlyDispositionRequestUpdateEvent < AssetEvent
       'approved'
     when :approve_via_transfer
       'approved via transfer'
+    else
+        ''
     end
   end
 
