@@ -5,6 +5,7 @@ class UserOrganizationFilter < ActiveRecord::Base
 
   # Callbacks
   after_initialize :set_defaults
+  before_destroy   :reset_users_using_filter
 
   # Clean up any HABTM associations before the asset is destroyed
   #before_destroy { :clean_habtm_relationships }
@@ -99,6 +100,13 @@ class UserOrganizationFilter < ActiveRecord::Base
   # Set resonable defaults for a new filter
   def set_defaults
     self.active = self.active.nil? ? true : self.active
+  end
+
+  def reset_users_using_filter
+    User.where(user_organization_filter_id: self.id).each do |user|
+      user.update(user_organization_filter_id: user.user_organization_filters.system_filters.sorted.first.id)
+    end
+
   end
 
 
