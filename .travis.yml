@@ -3,7 +3,8 @@ rvm:
 - 2.2.2
 branches:
   only:
-  - /quarter\d*/
+    - master
+    - /quarter\d*/
 env:
 - TEST_SUITE=rspec
 - TEST_SUITE=cucumber
