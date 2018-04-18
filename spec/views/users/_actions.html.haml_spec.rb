@@ -9,8 +9,10 @@ describe "users/_actions.html.haml", :type => :view do
     test_user = create(:normal_user, :organization => logged_in_user.organization)
 
     logged_in_user.organizations << logged_in_user.organization
+    logged_in_user.viewable_organizations << logged_in_user.organization
     logged_in_user.save
     test_user.organizations << logged_in_user.organization
+    test_user.viewable_organizations << logged_in_user.organization
     test_user.save
     assign(:user, test_user)
     assign(:organization_list, test_user.organization_ids)

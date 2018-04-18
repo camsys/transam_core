@@ -2,6 +2,7 @@ require 'rails_helper'
 
 describe "asset_events/_schedule_rehabilitation_update_event_view.html.haml", :type => :view do
   it 'info' do
+    allow(controller).to receive(:params).and_return({controller: 'asset_events'})
     test_asset = create(:buslike_asset)
     test_asset.asset_events.create!(attributes_for(:schedule_rehabilitation_update_event, :rebuild_year => 2010, :comments => 'test comment 123'))
     test_event = test_asset.asset_events.last
