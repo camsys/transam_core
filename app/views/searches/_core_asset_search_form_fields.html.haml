@@ -51,7 +51,7 @@
       .col-md-3
         %fieldset
           %legend.panel-legend Funding, Value
-          = f.input :fta_funding_type_id, :label => "Fta Funding Type", :collection => FtaFundingType.active, :label_method => :to_s, input_html: { multiple: true }
+          = f.input :fta_funding_type_id, :label => "FTA Funding Type", :collection => FtaFundingType.active, :label_method => :to_s, input_html: { multiple: true }
           = f.input :sourceable_id, :label => GrantPurchase.label, :collection => GrantPurchase.sources, input_html: { multiple: true }
           = f.input :purchase_cost, :label => "Purchase Cost", :wrapper => :vertical_prepend do
             .input-group-btn
