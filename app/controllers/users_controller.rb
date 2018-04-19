@@ -83,9 +83,9 @@ class UsersController < OrganizationAwareController
 
     # Get the Users but check to see if a role was selected
     if @role.blank?
-      @users = User.where(conditions.join(' AND '), *values).order(:organization_id, :last_name)
+      @users = User.unscoped.where(conditions.join(' AND '), *values).order(:organization_id, :last_name)
     else
-      @users = User.with_role(@role).where(conditions.join(' AND '), *values).order(:organization_id, :last_name)
+      @users = User.unscoped.with_role(@role).where(conditions.join(' AND '), *values).order(:organization_id, :last_name)
     end
 
     # Set the breadcrumbs
@@ -336,8 +336,10 @@ class UsersController < OrganizationAwareController
   def destroy
     if @user.active
       @user.active = false
+      @user.notify_via_email = false
     else
       @user.active = true
+      @user.notify_via_email = true
     end
     @user.save(:validate => false)
     respond_to do |format|

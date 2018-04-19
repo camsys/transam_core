@@ -103,10 +103,12 @@ class User < ActiveRecord::Base
   #-----------------------------------------------------------------------------
   # Scopes
   #-----------------------------------------------------------------------------
-  # default scope
-  default_scope { order(:last_name) }
   # Scope only active users
   scope :active, -> { where(active: true) }
+
+  # default scope
+  default_scope { active.order(:last_name) }
+
 
   #-----------------------------------------------------------------------------
   # Lists
