@@ -1,5 +1,7 @@
 class Notification < ActiveRecord::Base
 
+  DEFAULT_INTERVAL = 10000 # checking for notifications every 10 seconds in milliseconds
+
   # Include the object key mixin
   include TransamObjectKey
 
@@ -20,6 +22,10 @@ class Notification < ActiveRecord::Base
   default_scope { order('created_at DESC') }
 
   scope :active, -> { where(active: true) }
+
+  def self.interval
+    Rails.application.config.try(:notification_interval) || DEFAULT_INTERVAL
+  end
 
   protected
   def set_defaults

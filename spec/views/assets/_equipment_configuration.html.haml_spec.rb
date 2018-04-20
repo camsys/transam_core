@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe "assets/_equipment_configuration.html.haml", :type => :view do
   it 'info' do
-    test_asset = create(:equipment_asset, :manufacturer => create(:manufacturer), :manufacturer_model => 'silverado', :manufacture_year => 2005, :serial_number => 'ABCDE12345')
+    test_asset = create(:equipment_asset, :manufacturer => Manufacturer.first, :manufacturer_model => 'silverado', :manufacture_year => 2005, :serial_number => 'ABCDE12345')
     assign(:asset, test_asset)
     render
 

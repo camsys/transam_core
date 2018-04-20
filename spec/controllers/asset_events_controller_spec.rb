@@ -8,6 +8,7 @@ RSpec.describe AssetEventsController, :type => :controller do
 
   before(:each) do
     test_user.organizations << test_user.organization
+    test_user.viewable_organizations << test_user.organization
     test_user.save!
     sign_in test_user
   end

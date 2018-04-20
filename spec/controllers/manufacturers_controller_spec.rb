@@ -4,10 +4,11 @@ RSpec.describe ManufacturersController, :type => :controller do
 
   let(:test_user) { create(:admin) }
   let(:bus) { create(:buslike_asset) }
-  let(:test_manufacturer) { create(:manufacturer) }
+  let(:test_manufacturer) { Manufacturer.first }
 
   before(:each) do
     test_user.organizations << test_user.organization
+    test_user.viewable_organizations << test_user.organization
     test_user.save!
     sign_in test_user
   end

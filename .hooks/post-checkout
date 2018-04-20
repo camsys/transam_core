@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# If checking out a branch that follows the pattern "quarter#", get its name
+branch=$(git reflog | awk 'NR==1{print $8; exit}' | grep 'quarter\d')
+
+# If a quarter# branch was checked out...
+if [ $branch ] ; then
+  # Add a colon (:) before the branch name for proper searching
+  branch=":${branch}"
+
+  # Get the outdatedBranches (for logging purposes later) if there are any
+  outdatedGems=$(grep -nr ':quarter\d' Gemfile)
+  outdatedBranches=()
+  while read -r oldBranch ; do
+    if [ "$branch" != "$oldBranch" ] ; then
+      outdatedBranches+=("$oldBranch")
+    fi
+  done < <(grep -o ':quarter\d' <<< "${outdatedGems}")
+
+  # Replace all branches in the file with the new branch
+  if [ "${outdatedBranches}" ] ; then
+    echo -e "Your Gemfile contains the following gems which do not match your current branch:\n**********\n${outdatedGems}\n**********"
+
+    sed -i '' "s/:quarter[0-9]/${branch}/g" "./Gemfile"
+
+    echo "They have been updated to ${branch}."
+  fi
+fi
