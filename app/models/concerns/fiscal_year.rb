@@ -23,7 +23,7 @@ module FiscalYear
   end
   # returns the fiscal year epoch -- the first allowable fiscal year for the application
   def fiscal_year_epoch_year
-    2010
+    fiscal_year_year_on_date(SystemConfig.instance.epoch)
   end
 
   def fiscal_year_epoch
@@ -106,15 +106,39 @@ module FiscalYear
 
   # Returns the calendar year formatted as a FY string
   def fiscal_year(year)
-    yr = year - fy_century(year)
-    first = "%.2d" % yr
-    if yr == 99 # when yr == 99, yr + 1 would be 100, which causes: "FY 99-100"
-      next_yr = 00
+
+    # some controllers might have a special formatter instead of the default one to use the FY string
+    # eventually default might be a SystemConfig.instance attribute as well but for now hard-coded
+
+    if defined? params
+      klass = params[:controller].classify
+    elsif self.class.to_s.include? 'Controller'
+      klass = self.class.to_s[0..-('Controller'.length+1)]
     else
-      next_yr = (yr + 1)
+      klass = self.class.to_s
     end
-    last = "%.2d" % next_yr
-    "FY #{first}-#{last}"
+
+    if Rails.application.config.try(:special_fiscal_year_formatters)
+      formatter = Rails.application.config.special_fiscal_year_formatters[klass]
+    else
+      formatter = nil
+    end
+
+    if formatter == 'start_year'
+      "#{year}"
+    elsif formatter == 'end_year'
+      "#{year+1}"
+    else
+      yr = year - fy_century(year)
+      first = "%.2d" % yr
+      if yr == 99 # when yr == 99, yr + 1 would be 100, which causes: "FY 99-100"
+        next_yr = 00
+      else
+        next_yr = (yr + 1)
+      end
+      last = "%.2d" % next_yr
+      "FY #{first}-#{last}"
+    end
   end
 
   # Returns a select array of fiscal years that includes fiscal years that
@@ -143,6 +167,13 @@ module FiscalYear
       a << [fiscal_year(year), year]
     end
     a
+  end
+
+  def get_past_fiscal_years
+    date = Date.today-(SystemConfig.instance.num_forecasting_years).years
+    num_forecasting_years = SystemConfig.instance.num_forecasting_years-1
+
+    get_fiscal_years(date,num_forecasting_years)
   end
 
   # Returns a select array of fiscal years remaining in the planning period

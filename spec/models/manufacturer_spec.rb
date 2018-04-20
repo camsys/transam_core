@@ -2,12 +2,8 @@ require 'rails_helper'
 
 RSpec.describe Manufacturer, :type => :model do
 
-  let(:test_manufacturer) { create(:manufacturer) }
+  let(:test_manufacturer) { Manufacturer.first }
   let(:bus) { create(:buslike_asset) }
-
-  before(:each) do
-    Manufacturer.destroy_all
-  end
 
   describe 'associations' do
     it 'has many assets' do

@@ -12,4 +12,9 @@ class ApplicationController < ActionController::Base
     # placeholder
 
   end
+
+  # Returns true if the request was an ajax request
+  def ajax_request?
+    request.xhr?
+  end
 end

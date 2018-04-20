@@ -9,7 +9,7 @@
                 %i.fa.fa-search.fa-fw
                 = link_to 'Query Parameters', '.search-panel', :role => 'button', :data => {:toggle => 'collapse'}, :aria => {:expanded => true}
           .col-sm-6
-            = render 'actions'
+            = render @searcher.form_view + '_actions'
 
 .search-panel#asset_search_form.collapse.in
   = simple_form_for(@searcher,
@@ -27,3 +27,6 @@
       .col-md-12
         = f.button :submit, 'Query', :class=>"btn btn-primary", :id => 'submit_btn'
         = link_to 'Reset', reset_searches_path(:search_type => @search_type.id), :class=> 'btn btn-warning'
+
+
+= render @searcher.form_view + '_scripts'

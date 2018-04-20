@@ -11,6 +11,16 @@ class OrganizationsController < OrganizationAwareController
   INDEX_KEY_LIST_VAR    = "organization_key_list_cache_var"
   SESSION_VIEW_TYPE_VAR = 'organization_subnav_view_type'
 
+  def get_policies
+    org_id = params[:organization_id]
+
+    result = Policy.where(organization_id: org_id).order(active: :desc).pluck(:id, :description, :active).map{|p| [p[0], "#{p[1]} #{p[2] ? '(Current)' : ''}"]}
+
+    respond_to do |format|
+      format.json { render json: result.to_json }
+    end
+  end
+
   # GET /asset
   # GET /asset.json
   def index

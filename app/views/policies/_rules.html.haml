@@ -1,20 +1,19 @@
-%fieldset
-  %legend Policy Rules
-  %ul.nav.nav-tabs.responsive-tabs
-    - @policy.policy_asset_type_rules.each do |at|
-      %li
-        %a{:href => "#at_#{at.asset_type.id}", :data =>{:toggle => 'tab'}}
-          = "#{at.asset_type}"
 
-  .tab-content
-    - @policy.policy_asset_type_rules.each do |at|
-      .tab-pane.fade{:id => "at_#{at.asset_type.id}"}
-        = render :partial => 'asset_type_rules', :locals => {:rules => [at], :policy => @policy}
+%ul.nav.nav-tabs.responsive-tabs
+  - @policy.policy_asset_type_rules.each do |at|
+    %li
+      %a{:href => "#at_#{at.asset_type.id}", :data =>{:toggle => 'tab'}}
+        = "#{at.asset_type}"
 
-        - if (can? :create_rules, @policy) and @policy.parent.nil?
-          %button.btn.btn-primary.button-action{:data => {:url => new_policy_rule_policy_path(@policy, :asset_type => at.asset_type.id, :type => 2)}}
-            %i.fa.fa-fw.fa-plus
-            = " Add an Asset Subtype Rule"
+.tab-content
+  - @policy.policy_asset_type_rules.each do |at|
+    .tab-pane.fade{:id => "at_#{at.asset_type.id}"}
+      = render :partial => 'asset_type_rules', :locals => {:rules => [at], :policy => @policy}
 
-        %hr
-        = render :partial => 'asset_subtype_rules', :locals => {:asset_type => at.asset_type, :rules => @policy.policy_asset_subtype_rules.joins(asset_subtype: :asset_type).where("asset_subtypes.active = true AND asset_types.id = ?", at.asset_type.id), :policy => @policy}
+      - if (can? :create_rules, @policy) and @policy.parent.nil?
+        %button.btn.btn-primary.button-action{:data => {:url => new_policy_rule_policy_path(@policy, :asset_type => at.asset_type.id, :type => 2)}}
+          %i.fa.fa-fw.fa-plus
+          = " Add an Asset Subtype Rule"
+
+      %hr
+      = render :partial => 'asset_subtype_rules', :locals => {:asset_type => at.asset_type, :rules => @policy.policy_asset_subtype_rules.joins(asset_subtype: :asset_type).where("asset_subtypes.active = true AND asset_types.id = ?", at.asset_type.id), :policy => @policy}

@@ -13,7 +13,7 @@
 
   countNotifications();
 
-  setInterval(countNotifications, 10000); // checking for notifications every 10 seconds
+  setInterval(countNotifications, parseInt('#{Notification.interval}'));
 
   function countNotifications() {
     $.ajax({

@@ -1,8 +1,8 @@
 :ruby
 
   assignable_roles = Role.roles.map{ |r| [r.label, r.id] if can? :assign, r }.compact
-  assignable_privileges = Role.privileges.where('resource_id IS NULL').map{ |r| [r.label, r.id] if can? :assign, r }.compact
-  assignable_super_privileges = Role.privileges.where('resource_id IS NOT NULL').map{ |r| [r.id, r.label, r.resource_id] if can? :assign, r }.compact
+  assignable_privileges = Role.privileges.where(role_parent: nil, show_in_user_mgmt: true).map{ |r| [r.label, r.id] if can? :assign, r }.compact
+  assignable_super_privileges = Role.privileges.where(show_in_user_mgmt: true).where.not(role_parent: nil).map{ |r| [r.id, r.label, r.role_parent_id] if can? :assign, r }.compact
 
 %fieldset
   %legend User Organizations

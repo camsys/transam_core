@@ -107,6 +107,7 @@ RSpec.describe Organization, :type => :model do
       user_org = create(:organization)
       test_user = create(:technical_contact, :organization => user_org)
       test_user.organizations << user_org
+      test_user.viewable_organizations << user_org
       test_user.save!
 
       expect(user_org.technical_contact).to eq(test_user)
@@ -122,6 +123,7 @@ RSpec.describe Organization, :type => :model do
       user_org = create(:organization)
       test_user = create(:admin, :organization => user_org)
       test_user.organizations << user_org
+      test_user.viewable_organizations << user_org
       test_user.save!
 
       expect(user_org.users_with_role 'admin').to include(test_user)
