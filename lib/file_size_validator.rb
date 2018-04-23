@@ -40,7 +40,7 @@ class FileSizeValidator < ActiveModel::EachValidator
     value = (options[:tokenizer] || DEFAULT_TOKENIZER).call(value) if value.kind_of?(String)
  
     CHECKS.each do |key, validity_check|
-      next unless check_value == options[key]
+      next unless check_value = options[key]
  
       value ||= [] if key == :maximum
  
