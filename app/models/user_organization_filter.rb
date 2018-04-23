@@ -104,7 +104,7 @@ class UserOrganizationFilter < ActiveRecord::Base
 
   def reset_users_using_filter
     User.where(user_organization_filter_id: self.id).each do |user|
-      user.update(user_organization_filter_id: user.user_organization_filters.system_filters.sorted.first.id)
+      user.update(user_organization_filter_id: user.user_organization_filters.system_filters.sorted.first.try(:id))
     end
 
   end
