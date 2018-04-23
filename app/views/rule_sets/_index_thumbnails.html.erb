@@ -1,0 +1,21 @@
+<div class="row">
+	<% @rule_sets.each do |rule_set| %>
+		<%= action_thumbnail_tag({:class => 'col-md-3', :icon => 'fa fa-book', :title => rule_set.name, :path => rule_set_path(rule_set) }) do %>
+        <%= content_tag "p" do %>
+            <%= rule_set.name %>
+        <% end %>
+    <% end %>
+	<% end %>
+</div>
+
+<script type="text/javascript" charset="utf-8">
+
+	$(document).ready(function() {
+		transam.make_same_height('.thumbnail-content');
+		
+		$(window).resize(function() {
+			transam.make_same_height('.thumbnail-content');
+    	});		
+	});
+		
+</script>

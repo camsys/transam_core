@@ -1,58 +1,85 @@
-%li{:class => get_nav_link_class(['settings'])}
-  = link_to "#", :class => "dropdown-toggle", :data => {"toggle" => "dropdown"} do
-    %i.fa.fa-cog.fa-2x
+%li.dropdown
+  = link_to "#", :class => 'dropdown-toggle', :data => {:toggle => 'dropdown'} do
+    %i.fa.fa-user.fa-2x
     %b.caret
-  %ul.dropdown-menu.dropdown-menu-right{:role => 'menu'}
-    %li.text-left
-      = link_to organizations_path do
-        %i.fa.fa-building.fa-fw
-        Organizations
-    %li.text-left
-      = link_to users_path do
-        %i.fa.fa-users.fa-fw
-        Users
+  %ul.dropdown-menu.dropdown-menu-right.multi-column.columns-2
+    .row
+      .col-sm-6
+        %ul.multi-column-dropdown
+          %li.text-left
+            - if @organization_list.count > 1
+              = link_to organizations_path do
+                %i.fa.fa-building.fa-fw
+                Organizations
+            - else
+              - org = Organization.find_by(id: @organization_list.first)
+              = link_to organization_path(org) do
+                %i.fa.fa-building.fa-fw
+                = org.to_s
+          %li.text-left
+            = link_to users_path do
+              %i.fa.fa-users.fa-fw
+              Users
 
-    %li.divider
-    %li.text-left
-      = link_to html_help_path, :target => "_blank" do
-        %i.fa.fa-question.fa-fw
-        Help
-    %li.text-left
-      = link_to new_issue_path  do
-        %i.fa.fa-bug.fa-fw
-        Report an issue
+          %li.divider
+          %li.text-left
+            = link_to html_help_path, :target => "_blank" do
+              %i.fa.fa-question.fa-fw
+              Help
+          -if File.exists?("#{Rails.root}/public#{html_help_pdf_path}")
+            %li.text-left
+              = link_to html_help_pdf_path, :target => "_blank" do
+                %i.fa.fa-file-pdf-o.fa-fw
+                Download Help
+          %li.text-left
+            = link_to new_issue_path  do
+              %i.fa.fa-bug.fa-fw
+              Report an issue
 
-    - if can? :read, ActivityLog
-      %li.divider
-      %li.text-left
-        = link_to activity_logs_path  do
-          %i.fa.fa-clock-o.fa-fw
-          Activity Log
+          - if can? :read, ActivityLog
+            %li.divider
+            %li.text-left
+              = link_to activity_logs_path  do
+                %i.fa.fa-clock-o.fa-fw
+                Activity Log
 
-    - if current_user.has_role? :admin
-      %li.text-left
-        = link_to notices_path do
-          %i.fa.fa-thumb-tack.fa-fw
-          Notices
-      %li.text-left
-        = link_to sessions_users_path do
-          %i.fa.fa-users.fa-fw
-          Online Users
+          - if current_user.has_role? :admin
+            %li.text-left
+              = link_to notices_path do
+                %i.fa.fa-thumb-tack.fa-fw
+                Notices
+            %li.text-left
+              = link_to sessions_users_path do
+                %i.fa.fa-users.fa-fw
+                Online Users
 
-      -# %li.text-left
-      -#   = link_to activities_path do
-      -#     %i.fa.fa-at.fa-fw
-      -#     Activities
+            -# %li.text-left
+            -#   = link_to activities_path do
+            -#     %i.fa.fa-at.fa-fw
+            -#     Activities
 
-      - # Load module specific tab content if they exist
-      - SystemConfig.transam_module_names.each do |mod|
-        - view_component = "#{mod}_admin_sub_nav"
-        - Rails.logger.debug "Checking for #{view_component}: Results = #{lookup_context.template_exists?(view_component, 'shared', true)}"
-        - if lookup_context.template_exists?(view_component, 'shared', true)
-          = render :partial => "shared/#{view_component}"
+            - # Load module specific tab content if they exist
+            - SystemConfig.transam_module_names.each do |mod|
+              - view_component = "#{mod}_settings_sub_nav_first_column"
+              - Rails.logger.debug "Checking for #{view_component}: Results = #{lookup_context.template_exists?(view_component, 'shared', true)}"
+              - if lookup_context.template_exists?(view_component, 'shared', true)
+                = render :partial => "shared/#{view_component}"
 
-      %li.divider
-      %li.text-left
-        = link_to admin_path do
-          %i.fa.fa-cogs.fa-fw
-          Admin Interface
+            %li.divider
+            %li.text-left
+              = link_to rails_admin_path do
+                %i.fa.fa-cogs.fa-fw
+                Admin Interface
+      .col-sm-6
+        %ul.multi-column-dropdown
+          - SystemConfig.transam_module_names.each do |mod|
+            - view_component = "#{mod}_settings_sub_nav_second_column"
+            - Rails.logger.debug "Checking for #{view_component}: Results = #{lookup_context.template_exists?(view_component, 'shared', true)}"
+            - if lookup_context.template_exists?(view_component, 'shared', true)
+              = render :partial => "shared/#{view_component}"
+
+          %li.divider
+          %li.text-left
+            = link_to destroy_user_session_path, :method => 'delete' do
+              %i.fa.fa-sign-out
+              = " Logout"

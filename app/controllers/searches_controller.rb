@@ -2,13 +2,6 @@ class SearchesController < OrganizationAwareController
 
   add_breadcrumb "Home", :root_path
 
-  ASSET_SEARCH_TYPE             = '1'
-  CAPITAL_PLAN_SEARCH_TYPE      = '2'
-  ORGANIZATION_SEARCH_TYPE      = '3'
-  USER_SEARCH_TYPE              = '4'
-  FUNDING_SOURCE_SEARCH_TYPE    = '5'
-  FUNDING_LINE_ITEM_SEARCH_TYPE = '6'
-
   # Session Variables
   INDEX_KEY_LIST_VAR        = "search_key_list_cache_var"
 
@@ -18,17 +11,15 @@ class SearchesController < OrganizationAwareController
   before_filter :set_view_vars,     :only => [:create, :new, :reset]
 
   def create
+
     # use organization list if query is for any organization
-    params[:searcher][:organization_id] = @organization_list if params[:searcher][:organization_id] == [''] || params[:searcher][:organization_id].nil?
+    params[:searcher][:organization_id] = @organization_list
 
     @searcher = @searcher_klass.constantize.new(params[:searcher])
     @searcher.user = current_user
     @data = @searcher.data
 
-    add_breadcrumb "Query"
-    add_breadcrumb "Results"
-
-    # Cache the search params result set so the use can page through them
+    # Cache the search params and result set so the use can page through them
     unless @searcher.cache_params_variable_name.blank?
       cache_objects(@searcher.cache_params_variable_name, params[:searcher])
     end
@@ -61,10 +52,17 @@ class SearchesController < OrganizationAwareController
       @data = @searcher.cached_data(cached_list)
     end
 
-    add_breadcrumb "Query"
+    # check that an order param was provided otherwise use asset_tag as the default
+    params[:sort] ||= @searcher.default_sort
 
     respond_to do |format|
       format.html # new.html.haml this had been an erb and is now an haml the change should just be caught
+      format.json {
+        render :json => {
+            :total => @data.count,
+            :rows =>  @data.order("#{params[:sort]} #{params[:order]}").limit(params[:limit]).offset(params[:offset]).as_json(user: current_user, include_early_disposition: false)
+        }
+      }
     end
   end
 
@@ -74,7 +72,7 @@ class SearchesController < OrganizationAwareController
     clear_cached_objects(@searcher.cache_params_variable_name)
     cache_list([], @searcher.cache_variable_name)
 
-    redirect_to new_search_path(:search_type => @search_type)
+    redirect_to new_search_path(:search_type => @search_type.id)
   end
 
   # Action for performing full text search using the search text index
@@ -145,28 +143,16 @@ class SearchesController < OrganizationAwareController
 
   def set_view_vars
 
-    @search_type = params[:search_type]
-    if @search_type == ASSET_SEARCH_TYPE
-      @searcher_klass = "AssetSearcher"
-      add_breadcrumb "Assets", new_search_path(:search_type => ASSET_SEARCH_TYPE)
-    elsif @search_type == CAPITAL_PLAN_SEARCH_TYPE
-      @searcher_klass = "CapitalProjectSearcher"
-      add_breadcrumb "Capital Projects", new_search_path(:search_type => CAPITAL_PLAN_SEARCH_TYPE)
-    elsif @search_type == ORGANIZATION_SEARCH_TYPE
-      @searcher_klass = "OrganizationSearcher"
-      add_breadcrumb "Organizations", new_search_path(:search_type => ORGANIZATION_SEARCH_TYPE)
-    elsif @search_type == USER_SEARCH_TYPE
-      @searcher_klass = "UserSearcher"
-      add_breadcrumb "Users", new_search_path(:search_type => USER_SEARCH_TYPE)
-    elsif @search_type == FUNDING_SOURCE_SEARCH_TYPE
-      @searcher_klass = "FundingSourceSearcher"
-      add_breadcrumb "Funds", new_search_path(:search_type => FUNDING_SOURCE_SEARCH_TYPE)
-    elsif @search_type == FUNDING_LINE_ITEM_SEARCH_TYPE
-      @searcher_klass = "FundingLineItemSearcher"
-      add_breadcrumb "Appropriations", new_search_path(:search_type => FUNDING_LINE_ITEM_SEARCH_TYPE)
+    @search_type = SearchType.find_by(id: params[:search_type])
+
+    if @search_type
+
+      add_breadcrumb "Query", new_search_path(:search_type => @search_type.id)
+
+      @searcher_klass = @search_type.class_name
+      add_breadcrumb @search_type.name
     else
       notify_user(:alert, "Something went wrong. Can't determine type of search to perform.")
-      redirect_to root_path
       return
     end
 

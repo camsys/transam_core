@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# look for views that might be overriden in different transam engines/apps
+files=`git status --porcelain | xargs -n1 basename | grep '\.haml\|erb$'`
+for file in $files; do
+
+  find .. -path "../$(basename "$PWD")" -prune -o -name $file -print | while read f; do
+      echo "$file shadows or is shadowed by: $f"
+      echo "$file shadows or is shadowed by: $f" >> 'shadowed_views.log'
+  done
+
+done

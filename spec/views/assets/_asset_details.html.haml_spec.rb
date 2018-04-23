@@ -7,7 +7,7 @@ describe "assets/_asset_details.html.haml", :type => :view do
     expect(rendered).to have_content('No asset found')
   end
   it 'info' do
-    test_asset = create(:buslike_asset, :service_status_type_id => 1, :parent => create(:buslike_asset), :manufacturer => create(:manufacturer))
+    test_asset = create(:buslike_asset, :service_status_type_id => 1, :parent => create(:buslike_asset), :manufacturer => Manufacturer.first)
     render 'assets/asset_details', :asset => test_asset
 
     expect(rendered).to have_link(test_asset.organization.short_name)

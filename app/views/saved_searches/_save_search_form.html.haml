@@ -1,0 +1,58 @@
+= simple_form_for(@search,
+  :html => {:class => 'form-vertical', :autocomplete => 'off', :id => 'saved_search_form'},
+  :wrapper => :vertical_form,
+  :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes,
+  :radio_buttons => :vertical_radio_and_checkboxes,
+  :file => :vertical_file_input,
+  :boolean => :vertical_boolean}) do |f|
+
+  = f.input :search_type_id, :as => :hidden
+
+  .row
+    .col-xs-12
+      = f.input :name, :placeholder => "Enter a name for this search...", :required => true, :wrapper_html => {:class => 'text-limiter-wrapper'}, :input_html => {:class => 'text-limiter', :maxlength => 64}
+      %p.text-muted.text-limiter-counter
+        %span#name-counter
+        characters remaining.
+
+
+  = f.input :description, :as => :text, :placeholder => "Enter a description of this search...", :required => true, :wrapper_html => {:class => 'text-limiter-wrapper'}, :input_html => {:class => 'text-limiter', :rows => 4, :maxlength => 254}
+  %p.text-muted.text-limiter-counter
+    %span#description-counter
+
+    characters remaining.
+
+  = f.association :organizations, :collection => current_user.organizations.where(id: @organization_list), :label_method => :coded_name, :label => 'Share With', :as => :check_boxes
+
+  = f.button :submit, "Save...", :class => 'btn btn-primary'
+  %button.btn.btn-default{:data => {:dismiss => "modal"}} Cancel
+
+:javascript
+
+  $('#saved_search_form').validate({
+    submitHandler: function(form) {
+      form.submit();
+    }
+  });
+
+  $('#saved_search_form').on('submit', function() {
+    if ($(this).valid()) {
+      $('#saved-search-modal').modal('hide');
+    }
+  });
+
+  $('#saved_search_name').simplyCountable({
+    counter: '#name-counter',
+    maxCount: $('#saved_search_name').attr('maxlength'),
+    strictMax: false,
+    safeClass: 'text-muted',
+    overClass: 'text-danger'
+  });
+
+  $('#saved_search_description').simplyCountable({
+    counter: '#description-counter',
+    maxCount: $('#saved_search_description').attr('maxlength'),
+    strictMax: false,
+    safeClass: 'text-muted',
+    overClass: 'text-danger'
+  });

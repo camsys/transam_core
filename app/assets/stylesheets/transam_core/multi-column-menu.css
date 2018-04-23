@@ -1,0 +1,86 @@
+
+.dropdown-menu .multi-column-dropdown label.checkbox {
+    font-weight: normal;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.dropdown-menu .multi-column-dropdown li a {
+    padding: 5px 15px;
+}
+
+.dropdown-menu.columns-2 {
+    width: 30vw;
+    max-height: 85vh;
+    overflow-y:scroll;
+    overflow-x: hidden;
+}
+.dropdown-menu.columns-3 {
+    width: 45vw;
+    max-height: 85vh;
+    overflow-y:scroll;
+    overflow-x: hidden;
+}
+.dropdown-menu.columns-4 {
+    width: 60vw;
+    max-height: 85vh;
+    overflow-y:scroll;
+    overflow-x: hidden;
+}
+.dropdown-menu.columns-5 {
+    width: 75vw;
+    max-height: 85vh;
+    overflow-y:scroll;
+    overflow-x: hidden;
+}
+.dropdown-menu.columns-6 {
+    width: 90vw;
+    max-height: 85vh;
+    overflow-y:scroll;
+    overflow-x: hidden;
+}
+
+.multi-column-dropdown {
+    list-style: none;
+    margin-left: -25px;
+    padding-right: 15px;
+}
+.multi-column-dropdown li label {
+    display: block;
+    padding: 3px 44px;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.428571429;
+    color: #17406e;
+    white-space: nowrap;
+}
+.multi-column-dropdown li label:hover {
+    text-decoration: none;
+    color: #7d7d7d;
+    background-color: whitesmoke;
+}
+
+.multi-column-dropdown li a {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.428571429;
+    color: #17406e;
+}
+.multi-column-dropdown li a:hover {
+    text-decoration: none;
+    color: #7d7d7d;
+    background-color: whitesmoke;
+}
+
+.dropdown-menu.multi-column {
+    background-color: white !important;
+    overflow-x: hidden;
+}
+
+@media (max-width: 767px) {
+    .dropdown-menu.multi-column {
+        min-width: 240px !important;
+    }
+}

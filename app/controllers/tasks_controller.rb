@@ -191,7 +191,14 @@ class TasksController < NestedResourceController
     respond_to do |format|
       if @task.save
         notify_user(:notice, "Task was successfully created.")
-        format.html { redirect_to user_tasks_url(current_user) }
+        format.html {
+          # check where to redirect to
+          if URI(request.referer || '').path.include?('tasks')
+            redirect_to user_tasks_url(current_user)
+          else
+            redirect_to :back
+          end
+        }
         format.json { render :json => @task, :status => :created, :location => @task }
       else
         format.html { render :action => "new" }

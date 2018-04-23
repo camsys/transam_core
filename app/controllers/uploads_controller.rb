@@ -211,7 +211,7 @@ class UploadsController < OrganizationAwareController
       file_content_type = FileContentType.find(params[:file_content_type_id])
       assets = Asset.operational.where(:object_key => params[:targets].split(','))
       asset_types = AssetType.where(:id => assets.pluck(:asset_type_id).uniq)
-      org = @organization
+      org = nil
     end
 
     # Find out which builder is used to construct the template and create an instance

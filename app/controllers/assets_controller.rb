@@ -7,7 +7,7 @@ class AssetsController < AssetAwareController
   # Don't process cancel buttons
   before_filter :check_for_cancel,  :only => [:create, :update]
   # set the @asset variable before any actions are invoked
-  before_filter :get_asset,         :only => [:tag, :show, :edit, :copy, :update, :destroy, :summary_info, :add_to_group, :remove_from_group, :popup]
+  before_filter :get_asset,         :only => [:tag, :show, :edit, :copy, :update, :destroy, :summary_info, :add_to_group, :remove_from_group, :popup, :get_dependents, :add_dependents]
   before_filter :reformat_date_fields,  :only => [:create, :update]
   # Update the vendor_id param if the user is using the vendor_name parameter
   before_filter :update_vendor_param,  :only => [:create, :update]
@@ -63,6 +63,35 @@ class AssetsController < AssetAwareController
     end
   end
 
+  def get_summary
+    asset_type_id = params[:asset_type_id]
+
+    if asset_type_id.blank?
+      results = ActiveRecord::Base.connection.exec_query(Asset.operational.select('organization_id, asset_subtypes.asset_type_id, organizations.short_name AS org_short_name, asset_types.name AS subtype_name, COUNT(*) AS assets_count, SUM(purchase_cost) AS sum_purchase_cost, SUM(book_value) AS sum_book_value').joins(:organization, asset_subtype: :asset_type).where(organization_id: @organization_list).group(:organization_id, :asset_type_id).to_sql)
+
+      level = 'type'
+
+    else
+      asset_subtype_ids = AssetType.includes(:asset_subtypes).find_by(id: asset_type_id).asset_subtypes.ids
+
+      results = ActiveRecord::Base.connection.exec_query(Asset.operational.select('organization_id, asset_subtype_id, organizations.short_name AS org_short_name, asset_subtypes.name AS subtype_name, COUNT(*) AS assets_count, SUM(purchase_cost) AS sum_purchase_cost, SUM(book_value) AS sum_book_value').joins(:organization, :asset_subtype).where(organization_id: (params[:org] || @organization_list), asset_subtype_id: asset_subtype_ids).group(:organization_id, :asset_subtype_id).to_sql)
+
+      level = 'subtype'
+    end
+
+    respond_to do |format|
+      format.js {
+        if params[:org]
+          render partial: 'dashboards/assets_widget_table_rows', locals: {results: results, level: level }
+        else
+          render partial: 'dashboards/assets_widget_table', locals: {results: results, level: level }
+        end
+      }
+    end
+  end
+
+
+
   # renders either a table or map view of a selected list of assets
   #
   # Parameters include asset_type, asset_subtype, id_list, box, or search_text
@@ -74,28 +103,31 @@ class AssetsController < AssetAwareController
 
     @assets = get_assets
 
+    terminal_crumb = nil
     if @early_disposition
-      add_breadcrumb "Early disposition proposed"
+      terminal_crumb = "Early disposition proposed"
     elsif @transferred_assets
-        add_breadcrumb "Transferred Assets"
+      terminal_crumb = "Transferred Assets"
     elsif @asset_group.present?
       asset_group = AssetGroup.find_by_object_key(@asset_group)
-      add_breadcrumb asset_group
+      terminal_crumb = asset_group
     elsif @search_text.present?
-      add_breadcrumb "Search '#{@search_text}'"
+      terminal_crumb = "Search '#{@search_text}'"
     elsif @asset_subtype > 0
       subtype = AssetSubtype.find(@asset_subtype)
       add_breadcrumb subtype.asset_type.name.pluralize(2), inventory_index_path(:asset_type => subtype.asset_type, :asset_subtype => 0)
-      add_breadcrumb subtype.name
+      terminal_crumb = subtype.name
     elsif @manufacturer_id > 0
       add_breadcrumb "Manufacturers", manufacturers_path
       manufacturer = Manufacturer.find(@manufacturer_id)
-      add_breadcrumb manufacturer.name
+      terminal_crumb = manufacturer.name
     elsif @asset_type > 0
       asset_type = AssetType.find(@asset_type)
-      add_breadcrumb asset_type.name.titleize.pluralize(2)
-    end
+      terminal_crumb = asset_type.name.pluralize(2)
 
+    end
+    add_breadcrumb terminal_crumb if terminal_crumb
+    
     # check that an order param was provided otherwise use asset_tag as the default
     params[:sort] ||= 'asset_tag'
 
@@ -116,8 +148,51 @@ class AssetsController < AssetAwareController
           :rows =>  @assets.order("#{params[:sort]} #{params[:order]}").limit(params[:limit]).offset(params[:offset]).as_json(user: current_user, include_early_disposition: @early_disposition)
           }
         }
-      format.xls
+      format.xls do
+        filename = (terminal_crumb || "unknown").gsub(" ", "_").underscore
+        response.headers['Content-Disposition'] = "attachment; filename=#{filename}.xls"
+      end
+      format.xlsx do
+        filename = (terminal_crumb || "unknown").gsub(" ", "_").underscore
+        response.headers['Content-Disposition'] = "attachment; filename=#{filename}.xlsx"
+      end
     end
+  end
+
+
+  def fire_asset_event_workflow_events
+
+    event_name = params[:event]
+    asset_event_type = AssetEventType.find_by(id: params[:asset_event_type_id])
+
+    if asset_event_type && params[:targets]
+
+      notification_enabled = asset_event_type.class_name.constantize.workflow_notification_enabled?
+
+      events = asset_event_type.class_name.constantize.where(object_key: params[:targets].split(','))
+
+      failed = 0
+      events.each do |evt|
+
+        if evt.fire_state_event(event_name)
+          workflow_event = WorkflowEvent.new
+          workflow_event.creator = current_user
+          workflow_event.accountable = evt
+          workflow_event.event_type = event_name
+          workflow_event.save
+
+          if notification_enabled
+            evt.notify_event_by(current_user, event_name)
+          end
+
+        else
+          failed += 1
+        end
+      end
+
+    end
+
+    redirect_to :back
   end
 
   # makes a copy of an asset and renders it. The new asset is not saved
@@ -210,7 +285,7 @@ class AssetsController < AssetAwareController
         # If the asset was successfully updated, schedule update the condition and disposition asynchronously
         Delayed::Job.enqueue AssetUpdateJob.new(@asset.object_key), :priority => 0
         # See if this asset has any dependents that use its spatial reference
-        if @asset.geometry and @asset.dependents.count > 0
+        if @asset.geometry and @asset.occupants.count > 0
           # schedule an update to the spatial references of the dependent assets
           Delayed::Job.enqueue AssetDependentSpatialReferenceUpdateJob.new(@asset.object_key), :priority => 0
         end
@@ -225,6 +300,27 @@ class AssetsController < AssetAwareController
     end
   end
 
+  def get_dependents
+    respond_to do |format|
+      format.js
+      format.json { render :json => @asset.to_json }
+    end
+  end
+
+  def add_dependents
+    params[:asset][:dependents_attributes].each do |key, val|
+      unless val[:id]
+        dependent = Asset.find_by(object_key: val[:object_key])
+        if dependent
+          @asset.dependents << dependent
+          @asset.update_condition # might need to change to run full AssetUpdateJob
+        end
+      end
+    end
+
+    redirect_to :back
+  end
+
   def new_asset
     authorize! :new, Asset
     
@@ -232,7 +328,7 @@ class AssetsController < AssetAwareController
 
     @page_title = 'New Asset'
     # Get the asset types for the filter dropdown
-    @asset_types = AssetType.active
+    @asset_types = params[:asset_type_id].present? ? AssetType.where(id: params[:asset_type_id]) : AssetType.active
 
   end
 
@@ -257,6 +353,10 @@ class AssetsController < AssetAwareController
       @asset.organization = Organization.find(params[:organization_id])
     else
       @asset.organization_id = @organization_list.first
+    end
+
+    if params[:parent_id].present?
+      @asset.parent_id = params[:parent_id].to_i
     end
 
     respond_to do |format|

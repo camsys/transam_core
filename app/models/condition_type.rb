@@ -12,8 +12,9 @@ class ConditionType < ActiveRecord::Base
 
   # Uses FTA's condition assessment ratings
   def self.from_rating(estimated_rating)
-    return if estimated_rating.nil?
-    if estimated_rating >= 4.8
+    if estimated_rating.nil?
+      rating = 0
+    elsif estimated_rating >= 4.8
       rating = 5
     elsif estimated_rating >= 4.0
       rating = 4
@@ -21,8 +22,10 @@ class ConditionType < ActiveRecord::Base
       rating = 3
     elsif estimated_rating >= 2.0
       rating = 2
-    else
+    elsif estimated_rating >= 1.0
       rating = 1
+    else
+      rating = 0 #unknown
     end
     ConditionType.find_by_rating(rating)
   end

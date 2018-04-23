@@ -1,4 +1,98 @@
 :css
-  .breadcrumbs {display: none;}
+  .tab-content {padding-top: 0px}
 
-= render 'default_dashboard'
+  .dashboard-panel .panel-body {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+
+.row
+  #spinner= loader_panel_tag({:message => "Loading...", :spinner => "cog"})
+
+.row
+  .col-lg-4.col-md-6.col-sm-12.col-xs-12
+    - User.dashboard_widgets.select{|w| w[1] == 1}.each do |widget|
+      - if lookup_context.template_exists?(widget[0], 'dashboards', true)
+        = render :partial => "dashboards/#{widget[0]}"
+  .col-lg-4.col-md-6.col-sm-12.col-xs-12
+    - User.dashboard_widgets.select{|w| w[1] == 2}.each do |widget|
+      - if lookup_context.template_exists?(widget[0], 'dashboards', true)
+        = render :partial => "dashboards/#{widget[0]}"
+  .col-lg-4.col-md-6.col-sm-12.col-xs-12
+    - User.dashboard_widgets.select{|w| w[1] == 3}.each do |widget|
+      - if lookup_context.template_exists?(widget[0], 'dashboards', true)
+        = render :partial => "dashboards/#{widget[0]}"
+
+:javascript
+  var queue_tab_key = 'queues_tab_key';
+  var message_tab_key = 'messages_tab_key';
+  var task_tab_key = 'tasks_tab_key';
+
+  $(document).ready(function() {
+
+    // update tables for filters
+    update_assets_widget();
+    if ($('#capital-projects-widget').length > 0) {
+      update_capital_projects_widget();
+    }
+    if ($('#funding-widget').length > 0) {
+      update_funding_widget();
+    }
+
+    $("#spinner").hide();
+
+   transam.install_quick_link_handlers();
+
+    // Manage the tabs
+    $('#queue_tabs a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+      // save the latest tab
+      var this_tab = $(this).attr('href');
+      transam.set_ui_key_value(queue_tab_key, this_tab);
+      // Activate the data actions
+      transam.install_quick_link_handlers();
+    });
+    $('#message_tabs a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+      // save the latest tab
+      var this_tab = $(this).attr('href');
+      transam.set_ui_key_value(message_tab_key, this_tab);
+      // Activate the data actions
+      transam.install_quick_link_handlers();
+    });
+    $('#task_tabs a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+      // save the latest tab
+      var this_tab = $(this).attr('href');
+      transam.set_ui_key_value(task_tab_key, this_tab);
+      // Activate the data actions
+      transam.install_quick_link_handlers();
+    });
+
+  });
+
+  $(function() {
+    var last_tab = transam.get_ui_key_value(queue_tab_key);
+    if (last_tab) {
+      $('#queue_tabs a[href='+last_tab+']').tab('show');
+    } else {
+      // Default to the first tab if no tab is stored
+      $('#queue_tabs a[data-toggle="tab"]:first').tab('show');
+    }
+  });
+  $(function() {
+    var last_tab = transam.get_ui_key_value(message_tab_key);
+    if (last_tab) {
+      $('#message_tabs a[href='+last_tab+']').tab('show');
+    } else {
+      // Default to the first tab if no tab is stored
+      $('#message_tabs a[data-toggle="tab"]:first').tab('show');
+    }
+  });
+  $(function() {
+    var last_tab = transam.get_ui_key_value(task_tab_key);
+    if (last_tab) {
+      $('#task_tabs a[href='+last_tab+']').tab('show');
+    } else {
+      // Default to the first tab if no tab is stored
+      $('#task_tabs a[data-toggle="tab"]:first').tab('show');
+    }
+  });

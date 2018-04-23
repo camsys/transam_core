@@ -55,8 +55,10 @@ RSpec.describe PolicyAssetTypeRule, :type => :model do
       :asset_type_id,
       :service_life_calculation_type_id,
       :replacement_cost_calculation_type_id,
+      :condition_rollup_calculation_type_id,
       :annual_inflation_rate,
-      :pcnt_residual_value
+      :pcnt_residual_value,
+      :condition_rollup_weight
     ])
   end
 

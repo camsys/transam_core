@@ -1,0 +1,75 @@
+.row
+  = simple_form_for(@asset,
+  :as => :asset,
+  :url => @asset.new_record? ? inventory_index_path : inventory_path,
+  :method => @asset.new_record? ? 'post' : 'put',
+  :html => {:class => 'form-vertical'},
+  :wrapper => :vertical_form,
+  :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes,
+    :radio_buttons => :vertical_radio_and_checkboxes,
+    :file => :vertical_file_input,
+    :boolean => :vertical_boolean}) do |f|
+
+    = f.input :asset_type_id, :as => :hidden
+    = f.input :organization_id, :as => :hidden
+
+    .col-md-4
+      = dialog_tag('Component', {:icon => 'fa fa-refresh', :class => "form_part"}) do
+        = f.association :asset_subtype, :collection => AssetSubtype.active.where(asset_type_id: @asset.asset_type_id), :include_blank => false
+        = f.input :asset_tag, :prompt => "Enter the asset tag...", :label => "Asset Tag", :input_html => {:data => {:convert => "uppercase"}}
+        = f.input :description
+        = f.input :quantity, :input_html => {:min => 1}
+        = f.input :quantity_units, :collection => Uom.units
+
+        - view_component = 'app_component_form'
+        - if lookup_context.template_exists?(view_component, 'assets', true)
+          = render :partial => "assets/#{view_component}", :locals => {:f => f}
+
+        = f.input :expected_useful_life, :as => :hidden, :value => 0
+
+    .col-md-4
+      = dialog_tag('Purchase', {:icon => 'fa fa-refresh', :class => "form_part"}) do
+        = f.input :parent_key, :as => :hidden
+        = f.input :parent_name, :label => 'Parent', :input_html => {:autocomplete => 'off', :class => 'form-control', :placeholder => 'Enter search text', :id => 'parent_name', :data => {:url => filter_inventory_index_path(organization_id: @asset.organization_id)}}
+        - rule = PolicyAssetTypeRule.find_by(policy_id: Policy.find_by(organization_id: @asset.organization_id), asset_type_id: @asset.asset_type_id)
+        - if rule.try(:condition_rollup_calculation_type).nil?
+          - rule = PolicyAssetTypeRule.find_by(policy_id: Policy.where('parent_id IS NULL'), asset_type_id: @asset.asset_type_id)
+        - if rule.condition_rollup_calculation_type.class_name == 'CustomWeightedConditionRollupCalculator'
+          = f.input :weight, :input_html => {:value => @asset.weight || rule.condition_rollup_weight, :min => 0, :max => 100}, :hint => 'Give a custom weight between 0-100 for importance in condition rollup.'
+
+    .col-md-12
+      = f.button :submit, :class => 'btn btn-primary'
+
+:javascript
+
+  // Document Ready
+  $(document).ready(function(){
+
+    // Force uppercase text for OFT inputs
+    $('[data-convert="uppercase"]').keyup(function(evt) {
+      this.value = this.value.toUpperCase();
+    });
+
+    $('[data-behavior~=datepicker]').datepicker({
+    });
+  });
+
+  $('#parent_name').on('focus', function() {
+      _typeahead_source_url = $(this).data('url');
+    });
+
+  // Enable typeahead for the SMO filter
+  $('#parent_name').typeahead({
+    items: 10,
+    minLength: 2,
+    source: _typeahead_searcher,
+    matcher: _typeahead_matcher,
+    highlighter: _typeahead_highlighter,
+    updater: function (obj) {
+      var item = JSON.parse(obj);
+      // Update the UI
+      $('#parent_name').attr('value', item.name);
+      $('#asset_parent_key').attr('value', item.id);
+      return item.name;
+    }
+  })

@@ -12,31 +12,16 @@
     = render 'shared/main_nav'
 
     .collapse.navbar-collapse
-      :javascript
-        $('.navbar-fixed-top div.navbar-collapse').addClass('hide-during-load');
-      %ul.nav.navbar-nav.pull-right
-        %li.dropdown
-          = link_to "#", :class => 'dropdown-toggle', :data => {:toggle => 'dropdown'} do
-            %i.fa.fa-user
-            = current_user.name
-            %b.caret
-          %ul.dropdown-menu.dropdown-menu-right
-            - SystemConfig.transam_module_names.each do |mod|
-              = render :partial => "shared/#{mod}_user_menu" rescue nil
+      %ul.nav.navbar-nav.pull-right.left-on-collapse
 
-            %li.divider
-            %li.text-left
-              = link_to destroy_user_session_path, :method => 'delete' do
-                %i.fa.fa-sign-out
-                = " Logout"
-      - if current_user.organizations.count > 1 || current_user.user_organization_filters.count > 1
-        = render 'shared/filter_menu'
+        = render 'shared/filter_nav'
+        = render 'shared/settings_nav'
 
-      .pull-right
+      #keyword_search_div
         = form_tag keyword_searches_path, :id => 'asset_search_form', :class => 'navbar-form search-form', :role => 'search' do
-          .input-group
-            = text_field_tag :search_text, nil, :class => 'form-control search-control', :placeholder => 'keywords...', :id => 'search_text'
-            .input-group-btn
+          .input-group.pull-right
+            = text_field_tag :search_text, nil, :class => 'form-control search-control', :placeholder => 'keywords...', :id => 'search_text', :style => 'display:none;'
+            .input-group-btn.search-trigger
               = button_tag :type => 'submit', :class => 'btn' do
                 %i.fa.fa-search
 
@@ -45,3 +30,30 @@
     %i.fa.fa-home.fa-lg
 
 = render 'shared/header_nowrap_script'
+
+
+:javascript
+
+  $(document).ready(function() {
+    // Start with 15px to deal with a potential vertical scroll bar
+      var bp = 15;
+
+      $('ul.nav.navbar-nav.pull-right li.dropdown').each(function() {
+        bp += parseFloat($(this).css('width')) + 1;
+      });
+
+      $('#keyword_search_div').css('right', bp.toString() + 'px')
+  });
+
+
+
+  $('.search-trigger').click(function(e) {
+    if ($('#search_text:hidden').length) {
+      e.preventDefault();
+      $('#search_text').show();
+      $('#search_text').focus();
+    } else if ($('#search_text').val() == "") {
+      e.preventDefault();
+      $('#search_text').hide();
+    }
+  });

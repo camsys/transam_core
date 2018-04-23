@@ -1,0 +1,19 @@
+%li.text-left
+  = link_to user_path(current_user)  do
+    %i.fa.fa-user.fa-fw
+    = current_user.name
+%li.divider.text-left
+%li.text-left
+  = link_to user_tasks_path(current_user, :state => "all")  do
+    %i.fa.fa-calendar.fa-fw
+    = " My tasks (#{current_user.assigned_tasks.count})"
+%li.text-left
+  = link_to user_messages_path(current_user) do
+    %i.fa.fa-envelope.fa-fw
+    = " My messages (#{current_user.new_messages.count})"
+%li.divider
+%li.text-left
+  = link_to saved_searches_path do
+    %i.fa.fa-floppy-o.fa-fw
+    = "My saved queries"
+

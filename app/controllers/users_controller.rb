@@ -3,7 +3,7 @@ class UsersController < OrganizationAwareController
   #-----------------------------------------------------------------------------
   # Protect controller methods using the cancan ability
   #-----------------------------------------------------------------------------
-  authorize_resource :user
+  authorize_resource :user, except: :popup
 
   #-----------------------------------------------------------------------------
   add_breadcrumb "Home",  :root_path
@@ -12,7 +12,9 @@ class UsersController < OrganizationAwareController
   #-----------------------------------------------------------------------------
   before_action :set_user, :only => [:show, :edit, :settings, :update, :destroy, :change_password, :update_password, :profile_photo, :reset_password, :authorizations]
   before_filter :check_for_cancel, :only => [:create, :update, :update_password]
-  before_action :check_filter,     :only => [:authorizations]
+
+  skip_before_action :get_organization_selections,      :only => [:authorizations]
+  before_action :set_viewable_organizations,      :only => [:authorizations]
 
   #-----------------------------------------------------------------------------
   INDEX_KEY_LIST_VAR    = "user_key_list_cache_var"
@@ -40,7 +42,7 @@ class UsersController < OrganizationAwareController
 
     unless @search_text.blank?
       # get the list of searchable fields from the asset class
-      searchable_fields = User.new.user_searchable_fields
+      searchable_fields = User.new.searchable_fields
       # create an OR query for each field
       query_str = []
       first = true
@@ -70,11 +72,22 @@ class UsersController < OrganizationAwareController
       values << @id_filter_list
     end
 
+    if params[:show_active_only].nil?
+      @show_active_only = '1'
+    else
+      @show_active_only = params[:show_active_only]
+    end
+
+    if @show_active_only == '1'
+      conditions << 'users.active = ?'
+      values << true
+    end
+
     # Get the Users but check to see if a role was selected
     if @role.blank?
-      @users = User.active.where(conditions.join(' AND '), *values).order(:organization_id, :last_name)
+      @users = User.unscoped.where(conditions.join(' AND '), *values).order(:organization_id, :last_name)
     else
-      @users = User.active.with_role(@role).where(conditions.join(' AND '), *values).order(:organization_id, :last_name)
+      @users = User.unscoped.with_role(@role).where(conditions.join(' AND '), *values).order(:organization_id, :last_name)
     end
 
     # Set the breadcrumbs
@@ -266,7 +279,6 @@ class UsersController < OrganizationAwareController
         # set all filters to personal not shared one
         # then run method that checks your main org and org list to get all shared filters
         unless FILTERS_IGNORED
-          @user.user_organization_filters = UserOrganizationFilter.joins(:users).where(created_by_user_id: current_user.id).sorted.group('user_organization_filters.id').having( 'count( user_id ) = 1' )
           @user.update_user_organization_filters
         end
 
@@ -324,8 +336,14 @@ class UsersController < OrganizationAwareController
   #-----------------------------------------------------------------------------
   #-----------------------------------------------------------------------------
   def destroy
-    @user.active = false
-    @user.save(:validate => :false)
+    if @user.active
+      @user.active = false
+      @user.notify_via_email = false
+    else
+      @user.active = true
+      @user.notify_via_email = true
+    end
+    @user.save(:validate => false)
     respond_to do |format|
       notify_user(:notice, "User #{@user} has been deactivated.")
       format.html { redirect_to user_url(@user) }
@@ -338,6 +356,10 @@ class UsersController < OrganizationAwareController
   def profile_photo
     add_user_breadcrumb('Profile')
     add_breadcrumb 'Profile Photo'
+  end
+
+  def popup
+    @user = User.find_by_object_key(params[:id])
   end
 
   #------------------------------------------------------------------------------

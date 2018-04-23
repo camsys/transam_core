@@ -1,0 +1,14 @@
+= simple_form_for(@distributer_proxy,
+          :html => {:class => 'form-vertical'},
+          :url => distribute_policy_path(@policy),
+          :wrapper => :vertical_form,
+          :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes,
+          :radio_buttons => :vertical_radio_and_checkboxes,
+          :file => :vertical_file_input,
+          :boolean => :vertical_boolean}) do |f|
+
+  .row
+    .col-md-6
+      = f.input :apply_policies, as: :boolean
+
+  = f.submit "Run...", :class => "btn btn-primary", :id => "submit_button"

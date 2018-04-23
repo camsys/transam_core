@@ -1,0 +1,15 @@
+.btn-group.pull-right.panel-action{:style => "padding-right: 5px;"}
+  %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
+    %i.fa.fa-cog
+    = " Actions"
+    %span.caret
+  %ul.dropdown-menu{:role => 'menu'}
+    - if can? :create, AssetGroup
+      %li
+        = link_to new_asset_group_path(:from_search => 1) do
+          %i.fa.fa-tag.fa-fw
+          = " Save selection as a group"
+    %li
+      = link_to new_saved_search_path(search_type_id: @search_type.id), :remote => true, :title => 'Save query' do
+        %i.fa.fa-floppy-o.fa-fw
+        = " Save query parameters"

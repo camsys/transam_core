@@ -1,0 +1,4 @@
+['Agency', 'Type', 'Asset Tag', 'Description', 'Parent', 'Location', 'In Service', 'Age',
+ 'Condition', 'Status', 'Rehab', 'Replace'].each do |header|
+  row.add_cell(header)
+end

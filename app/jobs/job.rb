@@ -26,6 +26,9 @@ class Job
       clean_up
     rescue Exception => e
       Rails.logger.warn e.message
+      Rails.logger.warn e.backtrace
+      Delayed::Worker.logger.warn e.message rescue nil # log to worker logger if available
+      Delayed::Worker.logger.warn e.backtrace rescue nil # log to worker logger if available
     end
   end
 

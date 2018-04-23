@@ -12,6 +12,6 @@ describe "user_organization_filters/_index_table.html.haml", :type => :view do
     expect(rendered).to have_content(test_filter.object_key)
     expect(rendered).to have_content(test_filter.name)
     expect(rendered).to have_content(test_filter.description)
-    expect(rendered).to have_content(test_filter.user.to_s)
+    expect(rendered).to have_content(test_filter.creator.to_s)
   end
 end

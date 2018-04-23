@@ -1,7 +1,7 @@
 #encoding: utf-8
 
 # determine if we are using postgres or mysql
-is_mysql = (ActiveRecord::Base.configurations[Rails.env]['adapter'] == 'mysql2')
+is_mysql = (ActiveRecord::Base.configurations[Rails.env]['adapter'].include? 'mysql2')
 is_sqlite =  (ActiveRecord::Base.configurations[Rails.env]['adapter'] == 'sqlite3')
 #------------------------------------------------------------------------------
 #
@@ -15,7 +15,6 @@ puts "======= Processing TransAM CORE Lookup Tables  ======="
 
 asset_event_types = [
   {:active => 1, :name => 'Condition',       :display_icon_name => "fa fa-star-half-o",       :description => 'Condition',       :class_name => 'ConditionUpdateEvent',      :job_name => 'AssetConditionUpdateJob'},
-  {:active => 1, :name => 'Maintenance provider type',       :display_icon_name => "fa fa-cog",       :description => 'Maintenance Provider',       :class_name => 'MaintenanceProviderUpdateEvent',      :job_name => 'AssetMaintenanceProviderUpdateJob'},
   {:active => 0, :name => 'Schedule replacement',       :display_icon_name => "fa fa-refresh",       :description => 'Scheduled replacement',       :class_name => 'ScheduleReplacementUpdateEvent',      :job_name => 'AssetScheduleReplacementUpdateJob'},
   {:active => 0, :name => 'Schedule rehabilitation',       :display_icon_name => "fa fa-wrench",       :description => 'Scheduled rehabilitation',       :class_name => 'ScheduleRehabilitationUpdateEvent',      :job_name => 'AssetScheduleRehabilitationUpdateJob'},
   {:active => 0, :name => 'Schedule disposition',       :display_icon_name => "fa fa-times-circle",       :description => 'Scheduled disposition',       :class_name => 'ScheduleDispositionUpdateEvent',      :job_name => 'AssetScheduleDispositionUpdateJob'},
@@ -67,6 +66,12 @@ service_life_calculation_types = [
 
 condition_estimation_types = [
   {:active => 1, :name => 'Straight Line',  :class_name => 'StraightLineEstimationCalculator',  :description => 'Asset condition is estimated using a straight-line approximation.'}
+]
+
+condition_rollup_calculation_types = [
+    {name: 'Weighted Average', class_name: 'WeightedAverageConditionRollupCalculator', description: "Asset condition is calculated using a weighted average of its components' conditions."},
+    {name: 'Median', class_name: 'MedianConditionRollupCalculator', description: "Asset condition is calculated using the median of its components' conditions."},
+    {name: 'Custom Weighted', class_name: 'CustomWeightedConditionRollupCalculator', description: "Asset condition is calculated using a weighted average of conditions where the weight is custom set."}
 ]
 
 file_content_types = [
@@ -135,13 +140,17 @@ replacement_reason_types = [
 ]
 
 roles = [
-  {:privilege => false, :name => 'guest', :weight => 1},
-  {:privilege => false, :name => 'user', :weight => 1},
-  {:privilege => false, :name => 'manager', :weight => 7},
-  {:privilege => true, :name => 'admin'},
-  {:privilege => true, :name => 'super_manager', :weight => 10},
-  {:privilege => true, :name => 'technical_contact'}
+  {:privilege => false, :name => 'guest', :weight => 1, :show_in_user_mgmt => true},
+  {:privilege => false, :name => 'user', :weight => 1, :show_in_user_mgmt => true},
+  {:privilege => false, :name => 'manager', :weight => 7, :show_in_user_mgmt => true},
+  {:privilege => true, :name => 'admin', :show_in_user_mgmt => true},
+  {:privilege => true, :name => 'super_manager', :weight => 10, role_parent: 'manager', :show_in_user_mgmt => true},
+  {:privilege => true, :name => 'technical_contact', :show_in_user_mgmt => true}
 
+]
+
+manufacturers = [
+    {filter: "Equipment", name: "Other (Describe)", code: "ZZZ", active: true}
 ]
 
 notice_types = [
@@ -155,6 +164,10 @@ frequency_types = [
   {:active => 1, :name => 'day', :description => 'Day'},
   {:active => 1, :name => 'week', :description => 'Week'},
   {:active => 1, :name => 'month', :description => 'Month'}
+]
+
+search_types = [
+  {:active => 1, :name => 'Asset', :class_name => 'AssetSearcher'}
 ]
 
 activities = [
@@ -172,8 +185,8 @@ activities = [
 
 lookup_tables = %w{asset_event_types condition_types disposition_types cost_calculation_types license_types priority_types
   file_content_types file_status_types report_types service_status_types
-  service_life_calculation_types condition_estimation_types
-  issue_status_types issue_types web_browser_types replacement_reason_types roles notice_types frequency_types activities
+  service_life_calculation_types condition_estimation_types condition_rollup_calculation_types
+  issue_status_types issue_types web_browser_types replacement_reason_types notice_types frequency_types search_types activities manufacturers
   }
 
 lookup_tables.each do |table_name|
@@ -191,6 +204,23 @@ lookup_tables.each do |table_name|
     x = klass.new(row)
     x.save!
   end
+end
+
+table_name = 'roles'
+puts "  Loading #{table_name}"
+if is_mysql
+  ActiveRecord::Base.connection.execute("TRUNCATE TABLE #{table_name};")
+elsif is_sqlite
+  ActiveRecord::Base.connection.execute("DELETE FROM #{table_name};")
+else
+  ActiveRecord::Base.connection.execute("TRUNCATE #{table_name} RESTART IDENTITY;")
+end
+data = eval(table_name)
+klass = table_name.classify.constantize
+data.each do |row|
+  x = klass.new(row.except(:role_parent))
+  x.role_parent = Role.find_by(name: row[:role_parent])
+  x.save!
 end
 
 puts "======= Processing TransAM CORE Reports  ======="

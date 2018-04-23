@@ -3,7 +3,7 @@
     :width: 30px;
   }
 
-#table_actions.btn-group
+#table_actions.btn-toolbar
   - SystemConfig.transam_module_names.each do |mod|
     - if lookup_context.template_exists?("#{mod}_index_actions", 'assets', true)
       = render :partial => "assets/#{mod}_index_actions"
@@ -24,7 +24,6 @@
     :search => 'false',
     :show_columns => 'true',
     :toolbar => "#table_actions",
-    :show_export => 'true',
     :row_style => 'row_style',
     :click_to_select => 'true',
     :query_params => "query_params",
@@ -32,11 +31,14 @@
     :id_field => 'object_key',
     :export_types => "['csv', 'txt', 'excel']",
     :state_save => 'true',
-    :state_save_id_table => "assetid",
+    :state_save_id_table => "assetsid",
     :state_save_expire => "1y",
-    :single_select => 'true'}}
+    :maintain_selected => 'true',
+    :single_select => 'false'}}
     %thead
       %tr
+        - if @early_disposition
+          %th.center{:data => {:field => 'checked', :checkbox => 'true'}}
         %th.center.icon-column{:data => {:field => 'tagged', :formatter => 'tagged_formatter'}}
           %i.fa.fa-star
 
@@ -57,6 +59,8 @@
           %i.fa.fa-image
 :javascript
 
+  var selected_rows = new Set();
+
   var manufacturer_id = #{@manufacturer_id.to_i};
   var asset_type = #{@asset_type.to_i};
   var asset_subtype = #{@asset_subtype.to_i};
@@ -69,6 +73,21 @@
   var path = '#{@early_disposition ? inventory_asset_event_path("x", "event_key") : @transferred_assets ? edit_inventory_path("x") : inventory_path("x")}';
 
   var ids = #{ @id_filter_list };
+
+  $(document).ready(function() {
+
+    // Disable the table actions
+    enable_disable_table_actions();
+
+    // Add a handler for the print action which appends the selected orders to
+    // the href
+    $(".selected-action").on('click', function(e) {
+
+      //get appropriate bulk update form and then update targets
+      $(this).parent().children("input[name='targets']").val(Array.from(selected_rows));
+      return true;
+    });
+  });
 
   function row_style(row, index) {
     return 'action-path';
@@ -102,18 +121,65 @@
     return params;
   }
 
-  $('#asset_server_table').on('click-row.bs.table', function (e, row, $element) {
-    var url = path.replace("x", row['object_key']);
-    if(early_disposition) {
-      url = url.replace("event_key", row['early_disposition_event_object_key']);
+  $('#asset_server_table').on('check.bs.table', function(e, row) {
+    update_selected();
+  }).on('uncheck.bs.table', function(e, row) {
+    update_selected();
+  }).on('check-all.bs.table', function(e, row) {
+    update_selected();
+  }).on('uncheck-all.bs.table', function(e, row) {
+    update_selected();
+  }).on('click-row.bs.table', function (e, row, $element) {
+    if (!$($element.context).hasClass('bs-checkbox')) {
+      var url = path.replace("x", row['object_key']);
+      if(early_disposition) {
+        url = url.replace("event_key", row['early_disposition_event_object_key']);
+      }
+      document.location.href = url;
     }
-    document.location.href = url;
   }).on('sort.bs.table', function(e, name, order) {
     $('#asset_server_table').bootstrapTable('selectPage', 1);
   }).on('post-body.bs.table', function() {
     $('.fixed-table-container').css('min-height', '300px');
     $('#asset_server_table > tbody > tr').addClass('action-path');
+  }).on('load-success.bs.table', function() {
+    // Table reloaded, clear saved selection
+    selected_rows = new Set();
+    enable_disable_table_actions();
   });
+
+  // Enables or disables the package actions depending on how many are selected
+  function enable_disable_table_actions() {
+    var num = selected_rows.size;
+    if (num > 0) {
+      $('.selected-action').removeClass('disabled');
+    } else {
+      $('.selected-action').addClass('disabled');
+    }
+  };
+
+  // Updates the selected rows in the table
+  function update_selected() {
+    var selected = $('#asset_server_table').bootstrapTable('getSelections');
+    selected_rows = new Set();
+    for (i = 0; i < selected.length; i++) {
+      //console.log(selected[i]);
+      if(early_disposition) {
+        selected_rows.add(selected[i].early_disposition_event_object_key);
+      } else {
+        selected_rows.add(selected[i].object_key);
+      }
+
+    }
+    //console.log(selected_rows);
+    enable_disable_table_actions();
+  };
+
+  // Removes an object identified by its object key from the set of objects selected
+  function remove_from_selected(object_key) {
+    selected_rows.delete(object_key);
+    enable_disable_table_actions();
+  };
 
   $(window).resize(function() {
     $('#asset_server_table').bootstrapTable('resetView');
@@ -146,12 +212,7 @@
 
   function date_formatter(value) {
     if (value) {
-      //console.log(value);
-      var date = new Date(value);
-      //console.log(date);
-      var local_date = convertUTCDateToLocalDate(date);
-      //console.log(local_date);
-      return local_date.getMonth() + 1 + "/" + local_date.getDate() + "/" + local_date.getFullYear();
+      return moment(value).format('M/D/YYYY');
     } else {
       return value;
     }

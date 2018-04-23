@@ -10,12 +10,12 @@
         -#= link_to 'About', page_path('about')
     .col-sm-12.col.col-xs-12
       %p.text-muted.credit.text-center
-        &copy; 2013-2015
+        = "&copy; 2013-#{Date.today.year}".html_safe
         = link_to "Cambridge Systematics", "http://camsys.com", :target => "_blank"
   .visible-lg-block.visible-md-block.hidden-sm-block.hidden-xs-block
     .col-lg-4.col-md-4.col-sm-6.col-xs-12
       %p.text-muted.credit
-        &copy; 2013-2015
+        = "&copy; 2013-#{Date.today.year}".html_safe
         = link_to "Cambridge Systematics", "http://camsys.com", :target => "_blank"
     .col-lg-4.col-md-4.col-sm-6.col-xs-12
       %p.text-muted.credit.text-center

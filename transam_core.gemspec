@@ -19,17 +19,21 @@ Gem::Specification.new do |s|
   s.test_files = Dir["test/**/*"]
 
 
-  s.add_dependency 'rails', '~> 4.1.8'
+  s.add_dependency 'rails', '~> 4.2.7.1'
   s.add_dependency "cancan"
-  s.add_dependency "devise", '~> 3.2.2'
+  s.add_dependency "devise"
   s.add_dependency "rolify", '~> 4.1'
   s.add_dependency "high_voltage"
   #s.add_dependency "fullcalendar-rails"
   #s.add_dependency 'mail', '2.5.4'
-  s.add_dependency 'unitwise'
+  s.add_dependency 'unitwise', '~> 2.0.0'
   s.add_dependency 'chronic'
   s.add_dependency "breadcrumbs_on_rails"
-  s.add_dependency 'state_machine'
+
+  s.add_dependency 'state_machines'
+  s.add_dependency 'state_machines-activemodel'
+  s.add_dependency 'state_machines-activerecord'
+
   s.add_dependency 'fog'
   s.add_dependency 'carrierwave'
   s.add_dependency 'kaminari'
@@ -41,7 +45,9 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'simple_form'
 
-  s.add_development_dependency 'mail', '2.5.4'
+  s.add_dependency 'rails-data-migrations'
+
+  s.add_development_dependency 'mail', '2.5.5'
   s.add_development_dependency "rspec-rails"
   s.add_development_dependency "factory_girl_rails"
   s.add_development_dependency "database_cleaner"

@@ -20,11 +20,11 @@ Scenario: Updating an asset group
     And I update an [asset_group] with {:description => "New Test Description 000"}
   Then I will see "New Test Description 000"
 
-Scenario: Adding an asset to an asset group
-  Given an [equipment] exists
-    And an [asset_group] exists
-  When I am at the [equipment] detail page
-    And I press the link "Add to group"
-    And I press the link "Test Group 1"
-  Then I will see "TG1"
+#Scenario: Adding an asset to an asset group
+#  Given an [equipment] exists
+#    And an [asset_group] exists
+#  When I am at the [equipment] detail page
+#    And I press the link "Add to group"
+#    And I press the link "Test Group 1"
+#  Then I will see "TG1"
   # under groups in the summary panel

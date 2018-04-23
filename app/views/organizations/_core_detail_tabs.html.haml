@@ -1,4 +1,4 @@
-- unless @org.assets.empty?
+- if @org.try(:assets).try(:any?)
   %li
     %a{:href => "#assets", :data =>{:toggle => 'tab'}}
       = "Asset Summary"
@@ -7,5 +7,5 @@
   %a{:href => "#users", :data =>{:toggle => 'tab'}}
     %span{:style => 'white-space: nowrap !important;'}
       Staff
-      %span.badge= @org.users.count
+      %span.badge= @org.users.active.count
 

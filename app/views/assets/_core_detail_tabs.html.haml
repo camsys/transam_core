@@ -9,12 +9,17 @@
     %span{:style => 'white-space: nowrap !important;'}
       History
       %span.badge= @asset.asset_events.count
-- if @asset.dependents.present?
+- if @asset.occupants.operational.present?
   %li
-    %a{:href => "#depd", :data =>{:toggle => 'tab'}}
+    %a{:href => "#occ", :data =>{:toggle => 'tab'}}
       %span{:style => 'white-space: nowrap !important;'}
-        Dependents
-        %span.badge= @asset.dependents.count
+        Occupants
+        %span.badge= @asset.occupants.operational.count
+%li
+  %a{:href => "#depd", :data =>{:toggle => 'tab'}}
+    %span{:style => 'white-space: nowrap !important;'}
+      Relational Tree
+      %span.badge= @asset.dependents.count
 %li
   %a{:href => "#task", :data =>{:toggle => 'tab'}}
     %span{:style => 'white-space: nowrap !important;'}

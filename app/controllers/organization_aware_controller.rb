@@ -15,15 +15,6 @@ class OrganizationAwareController < TransamController
 
   protected
 
-  def check_filter
-    if current_user.user_organization_filter != current_user.user_organization_filters.system_filters.first || current_user.user_organization_filters.system_filters.first.get_organizations.count != @organization_list.count
-      set_current_user_organization_filter_(current_user, current_user.user_organization_filters.system_filters.first)
-      notify_user(:filter_warning, "Filter reset to perform this action.", true)
-
-      get_organization_selections
-    end
-  end
-
   # Sets the @organization and @organization_list class variables.
   def get_organization_selections
 
@@ -52,11 +43,14 @@ class OrganizationAwareController < TransamController
         session[USER_SELECTED_ORGANIZATION_ID_LIST] = @organization_list
       end
 
-      @organization_list = session[USER_SELECTED_ORGANIZATION_ID_LIST]
+      # some controllers might want to override the current session's org list as based on the org filter
+      # to do this the controller should skip_before_action get_organization_selections
+      # and then in their own before_action set @viewable_organizations and call get_organization_selections
+      @organization_list = (@viewable_organizations || session[USER_SELECTED_ORGANIZATION_ID_LIST])
       # Make sure the list is not empty. If it is, set it to the list of organizations
       # for the current user
       if @organization_list.empty?
-        @organization_list = current_user.organization_ids
+        @organization_list = current_user.viewable_organization_ids
       end
 
     else
@@ -65,6 +59,13 @@ class OrganizationAwareController < TransamController
       return
     end
 
+  end
+
+
+  def set_viewable_organizations
+    @viewable_organizations = current_user.viewable_organization_ids
+
+    get_organization_selections
   end
 
   def render_typed_organizations

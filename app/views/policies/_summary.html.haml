@@ -5,5 +5,4 @@
   = format_field("Current", format_as_boolean(@policy.active) )
 
 .col-sm-6
-  = format_field("Condition Estimation Calculation", @policy.condition_estimation_type.name, @policy.condition_estimation_type.description )
   = format_field("Condition Threshold", format_as_decimal(@policy.condition_threshold))

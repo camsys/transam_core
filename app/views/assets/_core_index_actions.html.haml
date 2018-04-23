@@ -1,0 +1,13 @@
+.btn-group
+  = link_to current_url(format: :xlsx), class: 'btn btn-default', target: '_blank', title: 'Export all rows and columns to XLSX' do
+    %i.fa.fa-file
+    = " Export All"
+
+- if @early_disposition
+  - EarlyDispositionRequestUpdateEvent.state_machines[:state].events.map(&:name).each do |evt|
+    - unless evt == :approve_via_transfer
+      - if can? evt.to_sym, EarlyDispositionRequestUpdateEvent
+        .btn-group
+          = button_to fire_asset_event_workflow_events_inventory_index_path, :title => 'Approve requests', :role => 'button', :class => "btn btn-default selected-action", :params => {event: evt, asset_event_type_id: EarlyDispositionRequestUpdateEvent.asset_event_type.id, targets: ''} do
+            %i.fa.fa-fw{:class => get_workflow_event_icon(evt.to_s)}
+            = evt.to_s.titleize

@@ -56,6 +56,9 @@
 
     - if task.taskable
       %span.pull-left
-        = link_to eval("#{task.taskable.class.name.underscore}_path(:id => '#{task.taskable.object_key}')") do
-          %i.fa.fa-fw.fa-link
+        - if task.taskable_path
+          = link_to task.taskable_path do
+            %i.fa.fa-fw.fa-link
+            = task.taskable
+        - else
           = task.taskable

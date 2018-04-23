@@ -1,4 +1,4 @@
-- if (can? :update, @asset_event) || (can? :destroy, @asset_event)
+- if @asset_event.can_update? && ((can? :update, @asset_event) || (can? :destroy, @asset_event))
   .btn-group.pull-right.panel-action
     %button.btn.btn-primary.btn-sm.dropdown-toggle{:data => {:toggle => 'dropdown'}}
       %i.fa.fa-cog
@@ -19,7 +19,7 @@
             %i.fa.fa-fw.fa-trash-o
             = " Remove this record"
 
-      - if @asset_event.class.name == "EarlyDispositionRequestUpdateEvent" 
+      - if @asset_event.class.name == "EarlyDispositionRequestUpdateEvent"
         %li.divider
         - @asset_event.allowable_events.each do |evt|
           - if can? evt.to_sym, @asset_event

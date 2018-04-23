@@ -113,7 +113,11 @@ module TransamFormatHelper
   def format_as_currency(val, precision = 0)
     val ||= 0
     if precision == 0
-      val = val + 0.5
+      if val < 0
+        val = val - 0.5
+      else
+        val = val + 0.5
+      end
       number_to_currency(val.to_i, :precision => 0)
     else
       number_to_currency(val, :precision => precision)
@@ -160,6 +164,33 @@ module TransamFormatHelper
       html << "</li>"
     end
     html << "</ul>"
+    html.html_safe
+  end
+
+  # returns a collection as a formatted table without headers
+  def format_as_table_wihtout_headers(data, number_of_columns = 5, cell_padding_in_px = '6px')
+    html = "<table class='table-unstyled'>"
+    counter = 0
+
+    data.each do |datum|
+      if counter == 0
+        html << '<tr>'
+      end
+
+      html << "<td style='padding:#{cell_padding_in_px};'>"
+      html << datum.to_s
+      html << "</td>"
+
+      counter += 1
+
+      if ( (counter >= number_of_columns) || (datum.equal? data.last))
+        html << '</tr>'
+        counter = 0
+      end
+
+
+    end
+    html << "</table>"
     html.html_safe
   end
 
@@ -277,6 +308,36 @@ module TransamFormatHelper
 
     return html.html_safe
 
+  end
+
+  def format_using_format(val, format)
+    case format
+      when :currencyM
+        number_to_currency(val, format: '%u%nM', negative_format: '(%u%nM)')
+      when :currency
+        format_as_currency(val)
+      when :fiscal_year
+        format_as_fiscal_year(val.to_i) unless val.nil?
+      when :integer
+        format_as_integer(val)
+      when :decimal
+        format_as_decimal(val)
+      when :percent
+        format_as_percentage(val)
+      when :string
+        val
+      when :checkbox
+        format_as_checkbox(val)
+      when :boolean
+        # Check for 1/0 val as well as true/false given direct query clause
+        format_as_boolean(val == 0 ? false : val)
+      when :list
+        format_as_list(val)
+      else
+        # Note, current implementation uses rescue and is thus potentially inefficient.
+        # Consider alterantives.
+        format_as_general(val)
+    end
   end
 
 end

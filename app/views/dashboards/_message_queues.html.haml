@@ -5,45 +5,47 @@
   all_messages = Message.where('to_user_id = ? AND opened_at IS NOT NULL AND created_at >= ?', current_user.id, one_wk_ago).order("created_at DESC")
   sent_messages = Message.where('user_id = ? AND created_at >= ?', current_user.id, one_wk_ago).order("created_at DESC")
 
-%fieldset
-  %legend My Messages
-  .panel.panel-default
-    .panel-body
+.panel.panel-default.dashboard-panel
+  .panel-heading
+    My Messages
+    .pull-right
+      = render :partial => 'tool', :locals => {:title => 'New Message', :action_path => new_user_message_path(current_user), :icon => 'fa-envelope-o'}
+  .panel-body
 
-      %ul.nav.nav-tabs#message_tabs
-        %li
-          %a{:href => "#new", :data =>{:toggle => 'tab'}}
-            %span.badge.pull-right= new_messages.count
-            %i.fa.fa-download
-            = " New"
+    %ul.nav.nav-tabs#message_tabs
+      %li
+        %a{:href => "#new", :data =>{:toggle => 'tab'}}
+          %span.badge.pull-right= new_messages.count
+          %i.fa.fa-download
+          = " New"
 
-        %li
-          %a{:href => "#flag", :data =>{:toggle => 'tab'}}
-            %span.badge.pull-right= flagged_messages.count
-            %i.fa.fa-star
-            = " Flagged"
+      %li
+        %a{:href => "#flag", :data =>{:toggle => 'tab'}}
+          %span.badge.pull-right= flagged_messages.count
+          %i.fa.fa-star
+          = " Flagged"
 
-        %li
-          %a{:href => "#inbox", :data =>{:toggle => 'tab'}, :title => 'Messages read within past 7 days'}
-            %span.badge.pull-right= all_messages.count
-            %i.fa.fa-inbox
-            = " Read"
+      %li
+        %a{:href => "#inbox", :data =>{:toggle => 'tab'}, :title => 'Messages read within past 7 days'}
+          %span.badge.pull-right= all_messages.count
+          %i.fa.fa-inbox
+          = " Read"
 
-        %li
-          %a{:href => "#sent", :data =>{:toggle => 'tab'}, :title => 'Messages sent within past 7 days'}
-            %span.badge.pull-right= sent_messages.count
-            %i.fa.fa-send
-            = " Sent"
+      %li
+        %a{:href => "#sent", :data =>{:toggle => 'tab'}, :title => 'Messages sent within past 7 days'}
+          %span.badge.pull-right= sent_messages.count
+          %i.fa.fa-send
+          = " Sent"
 
-      .tab-content{:style => 'min-height: 200px'}
-        .tab-pane.fade{:id => "new"}
-          = render :partial => 'message_queue', :locals => {:name => "New Messages", :messages => new_messages, :filter => MessagesController::NEW_MESSAGE_FILTER}
+    .tab-content{:style => 'min-height: 200px'}
+      .tab-pane.fade{:id => "new"}
+        = render :partial => 'message_queue', :locals => {:name => "New Messages", :messages => new_messages, :filter => MessagesController::NEW_MESSAGE_FILTER}
 
-        .tab-pane.fade{:id => "flag"}
-          = render :partial => 'message_queue', :locals => {:name => "Inbox", :messages => flagged_messages, :filter => MessagesController::FLAGGED_MESSAGE_FILTER} 
+      .tab-pane.fade{:id => "flag"}
+        = render :partial => 'message_queue', :locals => {:name => "Inbox", :messages => flagged_messages, :filter => MessagesController::FLAGGED_MESSAGE_FILTER}
 
-        .tab-pane.fade{:id => "inbox"}
-          = render :partial => 'message_queue', :locals => {:name => "Read", :messages => all_messages, :filter => MessagesController::ALL_MESSAGE_FILTER} 
+      .tab-pane.fade{:id => "inbox"}
+        = render :partial => 'message_queue', :locals => {:name => "Read", :messages => all_messages, :filter => MessagesController::ALL_MESSAGE_FILTER}
 
-        .tab-pane.fade{:id => "sent"}
-          = render :partial => 'message_queue', :locals => {:name => "Inbox", :messages => sent_messages, :filter => MessagesController::SENT_MESSAGE_FILTER} 
+      .tab-pane.fade{:id => "sent"}
+        = render :partial => 'message_queue', :locals => {:name => "Inbox", :messages => sent_messages, :filter => MessagesController::SENT_MESSAGE_FILTER}

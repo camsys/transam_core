@@ -42,7 +42,11 @@ module TransamHelper
   end
 
   def html_help_path
-    '/user_guide/TransAMUserGuide.html'
+    Rails.application.config.help_directory + '/TransAMUserGuide.html'
+  end
+
+  def html_help_pdf_path
+    '/user_guide/CPT_User_Guide.pdf'
   end
 
   # Returns the correct FontAwesomne icon for a file type based on the
@@ -91,7 +95,7 @@ module TransamHelper
       'fa-eject'
     elsif event_name == 'transmit' || event_name == 'submit'
       'fa-share'
-    elsif event_name == 'accept'
+    elsif event_name == 'accept' || event_name == 'authorize'
       'fa-check-square-o'
     elsif event_name == 'start'
       'fa-play'
@@ -99,6 +103,8 @@ module TransamHelper
       'fa-check-square'
     elsif event_name == 'cancel'
       'fa-stop'
+    elsif event_name == 'not_authorize'
+      'fa-ban'
     elsif event_name == 're_start'
       'fa-play'
     elsif event_name == 'halt'

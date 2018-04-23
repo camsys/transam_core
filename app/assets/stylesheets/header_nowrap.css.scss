@@ -1,10 +1,6 @@
 // Smooth header appearance
 
 .navbar-fixed-top .collapse {
-  ul.pull-right > li > a {
-    padding-top: 15px;
-    padding-bottom: 14px;
-  }
 
   div.pull-right .navbar-form {
     margin-top: 10px;
@@ -56,4 +52,18 @@ button.navbar-toggle {
 #wait-for-fa-content {
   position: relative;
   white-space: nowrap;
+}
+
+@media (min-width: 767.001px) {
+  #keyword_search_div {
+    position: absolute;
+    padding-top: 5px;
+    right: 340px;
+  }
+}
+
+@media (max-width: 767px) {
+  #keyword_search_div {
+    position: static;
+  }
 }

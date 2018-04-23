@@ -18,12 +18,14 @@
   :page_list => "[5, 10, 20, 50, 100, 200]",
   :page_size => current_user.num_table_rows,
   :show_pagination_switch => 'true',
-  :search => 'false',
   :show_columns => 'true',
   :show_export => 'true',
   :resizable => 'true',
   :smart_display => 'true',
-  :search => 'false'}}
+  :search => 'false',
+  :state_save => 'true',
+  :state_save_id_table => "assetsid",
+  :state_save_expire => "1y"}}
   %thead
     %tr
       - SystemConfig.transam_module_names.each do |mod|

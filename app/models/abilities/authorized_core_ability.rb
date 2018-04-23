@@ -2,10 +2,14 @@ module Abilities
   class AuthorizedCoreAbility
     include CanCan::Ability
 
-    def initialize(user)
+    def initialize(user, organization_ids=[])
 
-      ['ActivityLog', 'Asset', 'AssetEvent', 'AssetGroup', 'Issue', 'Message', 'Task', 'Upload', 'User', 'UserOrganizationFilter', 'Vendor'].each do |c|
-        ability = "Abilities::Authorized#{c}Ability".constantize.new(user)
+      if organization_ids.empty?
+        organization_ids = user.organization_ids
+      end
+
+      ['ActivityLog', 'Asset', 'AssetEvent', 'AssetGroup', 'Issue', 'Message', 'SavedSearch' ,'Task', 'Upload', 'User', 'UserOrganizationFilter', 'Vendor'].each do |c|
+        ability = "Abilities::Authorized#{c}Ability".constantize.new(user, organization_ids)
 
         self.merge ability if ability.present?
       end

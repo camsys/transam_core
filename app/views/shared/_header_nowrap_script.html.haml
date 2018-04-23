@@ -27,7 +27,11 @@
       // Add all right elements on the collapsible part of the header
       // Add 1px per width because jQuery rounds down non-integer results
       $('.navbar-fixed-top .collapse .pull-right').each(function() {
-        bp += parseFloat($(this).css('width')) + 1;
+        if ($(this).attr('id') != 'keyword_search_div') {
+          bp += parseFloat($(this).css('width')) + 1;
+        } else {
+          console.log('skipping keyword search');
+        }
       });
 
       // Add all left elements on the collapsible part of the header
@@ -36,7 +40,8 @@
         bp += parseFloat($(this).css('width')) + 1;
       });
 
-      var mq = ''
+      var mq = '';
+
       // Only set up new collapse if it would happen before the default
       if (bp > 767) {
         // Define the new collapse media query
@@ -64,7 +69,7 @@
              '.navbar-toggle { display: block; } ' +
 
              // Open dropdown menu item stacking and spacing
-             '.navbar-nav .open .dropdown-menu { position: static; float: none; width: auto; margin-top: 0; background-color: transparent; border: 0; box-shadow: none; } ' +
+             '.navbar-nav .open .dropdown-menu { position: static; float: none; width: auto; margin-top: 0; border: 0; box-shadow: none; } ' +
              '.navbar-nav .open .dropdown-menu > li > a, .navbar-nav .open .dropdown-menu .dropdown-header { padding: 5px 15px 5px 25px; } ' +
              '.navbar-nav .open .dropdown-menu > li > a { line-height: 20px; } ' +
              '.navbar-nav .open .dropdown-menu > li > a:hover, .navbar-nav .open .dropdown-menu > li > a:focus { background-image: none; } ' +
@@ -111,7 +116,6 @@
              '.navbar-default .navbar-nav .open .dropdown-menu > .disabled > a, .navbar-default .navbar-nav .open .dropdown-menu > .disabled > a:hover, .navbar-default .navbar-nav .open .dropdown-menu > .disabled > a:focus { color: #ccc; background-color: transparent; } ' +
              '.navbar-inverse .navbar-nav .open .dropdown-menu > .dropdown-header { border-color: #2b2d2e; } ' +
              '.navbar-inverse .navbar-nav .open .dropdown-menu > .divider { background-color: #2b2d2e; } ' +
-             '.navbar-inverse .navbar-nav .open .dropdown-menu > li > a { color: #a7a7a7; } ' +
              '.navbar-inverse .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-inverse .navbar-nav .open .dropdown-menu > li > a:focus { color: white; background-color: transparent; } ' +
              '.navbar-inverse .navbar-nav .open .dropdown-menu > .active > a, .navbar-inverse .navbar-nav .open .dropdown-menu > .active > a:hover, .navbar-inverse .navbar-nav .open .dropdown-menu > .active > a:focus { color: white; background-color: #2b2d2e; } ' +
              '.navbar-inverse .navbar-nav .open .dropdown-menu > .disabled > a, .navbar-inverse .navbar-nav .open .dropdown-menu > .disabled > a:hover, .navbar-inverse .navbar-nav .open .dropdown-menu > .disabled > a:focus { color: #444; background-color: transparent; } ' +
@@ -119,7 +123,15 @@
              // Organization filter stacking and width
              '.dropdown-menu.multi-column { min-width: 240px !important; } ' +
              '.dropdown-menu.multi-column > .row > div { width: auto; float: none; } ' +
+
+             // navbar right float left on collapse
+            '.left-on-collapse { float: left !important; } ' +
+            '#keyword_search_div { position: static; !important; } ' +
+
+
              '} ';
+
+
       }
 
       // Make needed adjustments to the default collapse
@@ -130,11 +142,21 @@
            '.navbar-fixed-top .collapse div.pull-right .navbar-form { margin-top: 5px; } ' +
            '.navbar-fixed-top .collapsing div.pull-right .navbar-form { margin-top: 5px; } ' +
 
+
+            '.navbar-nav .open .dropdown-menu { position: static; float: none; width: auto; margin-top: 0; border: 0; box-shadow: none; background-color: white; } ' +
+            '.navbar-inverse .navbar-nav .open .dropdown-menu .divider {background-color: #e5e5e5;}' +
+
            // Keyword search form border
            '.navbar-form { border-top: none; border-bottom: none; -webkit-box-shadow: none; box-shadow: none; } ' +
 
            // Organization filter divider color
            '.navbar-inverse .navbar-nav .open .dropdown-menu.multi-column .divider { background-color: #e5e5e5; } ' +
+
+
+           // navbar right float left on collapse
+           '.left-on-collapse { float: left !important; } ' +
+           '#keyword_search_div { position: static; !important; } ' +
+
            '}';
 
       // Add style element to contain the new collapse media query

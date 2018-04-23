@@ -28,7 +28,6 @@ RSpec.describe Equipment, :type => :model do
   it '#allowable_params' do
     expect(Equipment.allowable_params).to eq([
       :quantity,
-      :quantity_units,
       :quantity_units
     ])
   end

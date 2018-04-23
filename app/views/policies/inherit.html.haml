@@ -1,0 +1,40 @@
+= render(:partial => 'shared/form_errors', :locals => {:obj => @distributer_proxy}) unless @distributer_proxy.errors.empty?
+
+.row
+  .col-md-6.col-md-offset-3
+    .page-header
+      %h2 Distribute Policy
+
+#processing
+  = render :partial => 'shared/running_process', :locals => {:message => @message}
+
+.row#form
+  .col-md-6.col-md-offset-3
+    .row
+      .col-sm-12
+        .alert.alert-info.text-center
+          <strong>Notice!</strong>
+          %br
+          %p
+            The parent policy will be distributed to the children policies and if selected, the runner will apply the current changed policies to the asset inventory and recalculate scheduled costs and replacement dates and identify assets in backlog based on the policy criteria.
+          %p
+            WARNING! This may take awhile and should be done after normal office hours.
+      .col-sm-12
+        = render 'policy_inherit_form'
+
+
+:javascript
+
+  // Document Ready
+  $(document).ready(function(){
+    // Hide the processing div and show the form
+    $('#processing').hide();
+    $('#form').show();
+
+    // install a submit handler for the form
+    $('#new_policy_distributer_proxy').submit(function() {
+      $('#processing').show();
+      $('#form').hide();
+      return true;
+    });
+  });

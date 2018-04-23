@@ -4,7 +4,6 @@ class OrganizationsController < OrganizationAwareController
   add_breadcrumb "Organizations", :organizations_path
 
   before_filter :get_org, :only => [:show, :map, :edit, :update]
-  before_filter :check_for_cancel, :only => [:create, :update]
 
   # Lock down the controller
   authorize_resource
@@ -14,6 +13,16 @@ class OrganizationsController < OrganizationAwareController
 
   INDEX_KEY_LIST_VAR    = "organization_key_list_cache_var"
   SESSION_VIEW_TYPE_VAR = 'organization_subnav_view_type'
+
+  def get_policies
+    org_id = params[:organization_id]
+
+    result = Policy.where(organization_id: org_id).order(active: :desc).pluck(:id, :description, :active).map{|p| [p[0], "#{p[1]} #{p[2] ? '(Current)' : ''}"]}
+
+    respond_to do |format|
+      format.json { render json: result.to_json }
+    end
+  end
 
   # GET /asset
   # GET /asset.json
@@ -72,11 +81,13 @@ class OrganizationsController < OrganizationAwareController
     @markers = generate_map_markers(@organizations, true)
 
     # get the data for the tabs
-    @users = @org.users
+    @users = @org.users.active
 
-    rep = AssetSubtypeReport.new
-    @asset_data = rep.get_data_from_collection(@org.assets)
-    @total_assets = @org.assets.count
+    if @org.try(:assets)
+      rep = AssetSubtypeReport.new
+      @asset_data = rep.get_data_from_collection(@org.assets)
+      @total_assets = @org.assets.count
+    end
 
     respond_to do |format|
       format.html # show.html.erb
@@ -84,6 +95,46 @@ class OrganizationsController < OrganizationAwareController
     end
   end
 
+  def new
+
+    add_breadcrumb 'New', new_organization_path
+
+    # TODO expand to allow creation of any/most org types
+
+    org_type = OrganizationType.find_by(id: params[:organization_type_id])
+
+    if org_type
+      @org = org_type.class_name.constantize.new
+    else
+      redirect_to organizations_path, notice: 'Organization cannot be created without an organization type.'
+    end
+  end
+
+  def create
+
+    org_type = OrganizationType.find_by(id: params[:organization][:organization_type_id])
+    if org_type
+      @org = org_type.class_name.constantize.new(form_params)
+
+      if @org.save
+
+        @org.updates_after_create
+
+        # set organization role mappings
+        org_type.role_mappings.each do |role|
+          OrganizationRoleMapping.create(organization_id: @org.id, role_id: role.id)
+        end
+
+        # set current session to current org filter again in case new org in current filter
+        set_current_user_organization_filter_(current_user, current_user.user_organization_filter)
+        get_organization_selections
+
+        redirect_to organization_path(@org), notice: 'Organization was successfully created.'
+      else
+        render :new
+      end
+    end
+  end
 
   # Edit simply returns the selected organization
   def edit
@@ -167,13 +218,6 @@ class OrganizationsController < OrganizationAwareController
   # Never trust parameters from the scary internet, only allow the white list through.
   def form_params
     params.require(:organization).permit(organization_allowable_params)
-  end
-
-  def check_for_cancel
-    unless params[:cancel].blank?
-      @org = get_organization
-      redirect_to organization_url(@org)
-    end
   end
 
 end

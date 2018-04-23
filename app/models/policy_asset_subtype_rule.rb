@@ -32,19 +32,19 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
   validates :policy,                  :presence => true
   validates :asset_subtype,           :presence => true
 
-  validates :min_service_life_months,  :presence => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
-  validates :replacement_cost,         :presence => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
-  validates :cost_fy_year,             :presence => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
+  validates :min_service_life_months,  :presence => true,  :numericality => {:only_integer => true,   :greater_than_or_equal_to => 0}
+  validates :replacement_cost,         :presence => true,  :numericality => {:only_integer => true,   :greater_than_or_equal_to => 0}
+  validates :cost_fy_year,             :presence => true,  :numericality => {:only_integer => true,   :greater_than_or_equal_to => 0}
   validates_inclusion_of :replace_with_new, :in => [true, false]
   validates_inclusion_of :replace_with_leased, :in => [true, false]
-  validates :lease_length_months,       :allow_nil => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
+  validates :lease_length_months,       :allow_nil => true,  :numericality => {:only_integer => true,   :greater_than_or_equal_to => 0}
 
-  validates :rehabilitation_service_month,     :presence => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
-  validates :rehabilitation_labor_cost,     :allow_nil => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
-  validates :rehabilitation_parts_cost,     :allow_nil => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
-  validates :extended_service_life_months, :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0}
+  validates :rehabilitation_service_month,     :presence => true,  :numericality => {:only_integer => true,   :greater_than_or_equal_to => 0}
+  validates :rehabilitation_labor_cost,     :allow_nil => true,  :numericality => {:only_integer => true,   :greater_than_or_equal_to => 0}
+  validates :rehabilitation_parts_cost,     :allow_nil => true,  :numericality => {:only_integer => true,   :greater_than_or_equal_to => 0}
+  validates :extended_service_life_months, :numericality => {:only_integer => true,   :greater_than_or_equal_to => 0}
 
-  validates :min_used_purchase_service_life_months, :presence => true, :numericality => {:only_integer => :true, :greater_than_or_equal_to => 0}
+  validates :min_used_purchase_service_life_months, :presence => true, :numericality => {:only_integer => true, :greater_than_or_equal_to => 0}
 
   # Custom validator for checking values against parent policies
   validate :validate_min_allowable_policy_values

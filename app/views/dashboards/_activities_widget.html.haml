@@ -1,0 +1,15 @@
+:ruby
+  activities = Activity.active.where("show_in_dashboard = ?", true)
+
+- if current_user.has_role? :manager
+  .panel.panel-default.dashboard-panel
+    .panel-heading
+      Activities
+    - if activities.empty?
+      .panel-body
+        %p= "No upcoming activities."
+    - else
+      %ul.list-group
+        - activities.each do |act|
+          - if act.operational?
+            = render :partial => "activities/activity_detail", locals: {:activity => act}

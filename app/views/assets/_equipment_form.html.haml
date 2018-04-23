@@ -19,12 +19,13 @@
         = f.input :asset_tag, :prompt => "Enter the asset tag...", :label => "Asset Tag", :input_html => {:data => {:convert => "uppercase"}}
         = f.input :external_id, :prompt => "Enter any external ID...", :label => "External ID", :input_html => {:maxlength => 32}
         = f.input :description
-        = f.input :quantity
+        = f.input :quantity, :input_html => {:min => 1}
         = f.input :quantity_units, :collection => Uom.units
-        = f.association :manufacturer, :prompt => "Select manufacturer...", :collection => Manufacturer.active_for_asset_type(@asset.asset_type)
+        = f.input :manufacturer_id, :as => :hidden, :input_html => {:value => Manufacturer.find_by(filter: 'Equipment', code: 'ZZZ').id}
+        = f.input :other_manufacturer, :input_html => {:maxlength => 30}
         = f.input :manufacturer_model, :prompt => "Enter manufacturer model...", :label => "Manufacturer Model"
         = f.input :manufacture_year, :label => "Manufacture Year"
-        = f.input :serial_number
+        = f.input :serial_number, :input_html => {:maxlength => 32}
 
     .col-md-6
       = dialog_tag('Purchase', {:icon => 'fa fa-refresh', :class => "form_part"}) do
@@ -49,8 +50,23 @@
             %i.fa.fa-calendar
 
         = f.input :purchased_new, :as => :radio_buttons, :required => true, :label => "Purchased New"
+        = f.input :vendor_id, :as => :hidden
         = f.input :vendor_name, :label => 'Vendor', :input_html => {:autocomplete => 'off', :class => 'form-control', :placeholder => 'Enter vendor name', :id => 'vendor_name', :data => {:url => filter_vendors_path}}
+        = f.input :parent_key, :as => :hidden
+        = f.input :parent_name, :label => 'Parent', :input_html => {:autocomplete => 'off', :class => 'form-control', :placeholder => 'Enter search text', :id => 'parent_name', :data => {:url => filter_inventory_index_path(organization_id: @asset.organization_id)}}
+        - rule = PolicyAssetTypeRule.find_by(policy_id: Policy.find_by(organization_id: @asset.organization_id), asset_type_id: @asset.asset_type_id)
+        - if rule.try(:condition_rollup_calculation_type).nil?
+          - rule = PolicyAssetTypeRule.find_by(policy_id: Policy.where('parent_id IS NULL'), asset_type_id: @asset.asset_type_id)
+        - if rule.condition_rollup_calculation_type.class_name == 'CustomWeightedConditionRollupCalculator'
+          = f.input :weight, :value => @asset.weight || rule.condition_rollup_weight, :min => 0, :max => 100, :hint => 'Give a custom weight between 0-100 for importance in condition rollup.'
         = f.input :expected_useful_life, as: :hidden, :value => 0
+
+        -# render the engine form components if there are any
+        - SystemConfig.transam_module_names.each do |mod|
+          - view_component = "#{mod}_asset_form"
+          - Rails.logger.debug "Checking for #{view_component}: Results = #{lookup_context.template_exists?(view_component, 'assets', true)}"
+          - if lookup_context.template_exists?(view_component, 'assets', true)
+            = render :partial => "assets/#{view_component}", :locals => {:f => f}
 
     .col-md-12
       = f.button :submit, :class => 'btn btn-primary'
@@ -82,9 +98,88 @@
         var item = JSON.parse(obj);
         // Update the UI
         $('#vendor_name').attr('value', item.name);
+        $('#asset_vendor_id').attr('value', item.id);
         return item.name;
       }
     });
+  });
+
+  $('#parent_name').on('focus', function() {
+      _typeahead_source_url = $(this).data('url');
+    });
+
+  // Enable typeahead for the SMO filter
+  $('#parent_name').typeahead({
+    items: 10,
+    minLength: 2,
+    source: _typeahead_searcher,
+    matcher: _typeahead_matcher,
+    highlighter: _typeahead_highlighter,
+    updater: function (obj) {
+      var item = JSON.parse(obj);
+      // Update the UI
+      $('#parent_name').attr('value', item.name);
+      $('#asset_parent_key').attr('value', item.id);
+      return item.name;
+    }
+  });
+
+  $('.equipment_form').validate({
+    submitHandler: function(form) {
+      form.submit();
+    }
+  });
+
+
+  // Document Ready
+  $(document).ready(function(){
+
+    // Force uppercase text for OFT inputs
+    $('[data-convert="uppercase"]').keyup(function(evt) {
+      this.value = this.value.toUpperCase();
+    });
+
+    $('[data-behavior~=datepicker]').datepicker({
+    });
+    $('#vendor_name').on('focus', function() {
+      _typeahead_source_url = $(this).data('url');
+    });
+
+    // Enable typeahead for the SMO filter
+    $('#vendor_name').typeahead({
+      items: 10,
+      minLength: 2,
+      source: _typeahead_searcher,
+      matcher: _typeahead_matcher,
+      highlighter: _typeahead_highlighter,
+      updater: function (obj) {
+        var item = JSON.parse(obj);
+        // Update the UI
+        $('#vendor_name').attr('value', item.name);
+        $('#asset_vendor_id').attr('value', item.id);
+        return item.name;
+      }
+    });
+  });
+
+  $('#parent_name').on('focus', function() {
+      _typeahead_source_url = $(this).data('url');
+    });
+
+  // Enable typeahead for the SMO filter
+  $('#parent_name').typeahead({
+    items: 10,
+    minLength: 2,
+    source: _typeahead_searcher,
+    matcher: _typeahead_matcher,
+    highlighter: _typeahead_highlighter,
+    updater: function (obj) {
+      var item = JSON.parse(obj);
+      // Update the UI
+      $('#parent_name').attr('value', item.name);
+      $('#asset_parent_key').attr('value', item.id);
+      return item.name;
+    }
   });
 
   $('.equipment_form').validate({

@@ -1,0 +1,12 @@
+.modal-dialog.modal-lg
+  .modal-content
+    .modal-header
+      %button.close{:data => {:dismiss => "modal"}}
+        x
+      %h3.modal-title
+        %i{class: @asset_event.asset_event_type.display_icon_name}
+        = @asset_event.asset_event_type.name
+    .modal-body
+      = render(:partial => 'shared/form_errors', :locals => {:obj => @asset_event}) unless @asset_event.errors.empty?
+
+      = render "#{@asset_event.class.name.underscore}_form"

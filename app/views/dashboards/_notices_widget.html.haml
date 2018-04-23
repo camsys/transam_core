@@ -1,0 +1,19 @@
+:ruby
+  notices = Notice.active_for_organizations(@organization_list).order(:display_datetime)
+
+.panel.panel-default.dashboard-panel
+  .panel-heading
+    My Notices
+  - if notices.empty?
+    .panel-body
+      %p= "No notices."
+  - else
+    %ul.list-group
+      - notices.each do |n|
+        = render :partial => "shared/notice_detail", locals: {:notice => n}
+
+
+:javascript
+  $("a[data-toggle='popover']").popover({
+    placement: 'bottom'
+  });

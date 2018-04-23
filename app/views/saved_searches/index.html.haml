@@ -1,0 +1,8 @@
+.col-xs-12.col-sm-10.col-sm-offset-1
+  .page-header
+    %h2 My Saved Searches
+  .row
+    .col-xs-12
+      = render :partial => 'index_table', :locals => {:searches => @searches, :show_actions => 1}
+
+.modal.fade#save-search-modal{:tabindex => -1, :role => 'dialog', :aria => {:hidden => true}}

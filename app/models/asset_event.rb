@@ -79,6 +79,11 @@ class AssetEvent < ActiveRecord::Base
   #
   #------------------------------------------------------------------------------
 
+  # usually no conditions on can create but can be overridden by specific asset events
+  def can_update?
+    asset_event_type.active
+  end
+
   # returns true if the organization instance is strongly typed, i.e., a concrete class
   # false otherwise.
   # true
@@ -106,6 +111,7 @@ class AssetEvent < ActiveRecord::Base
     event = asset.asset_events
       .where('asset_event_type_id = ?', self.asset_event_type_id)
       .where('event_date > ? OR (event_date = ? AND created_at > ?)', self.event_date, self.event_date, (self.new_record? ? Time.current : self.created_at )) # Define a window that backs up to this event
+      .where('object_key != ?', self.object_key)
       .order(:event_date, :created_at => :desc).first
 
     # Return Strongly Typed Asset
@@ -119,6 +125,7 @@ class AssetEvent < ActiveRecord::Base
     event = asset.asset_events
       .where("asset_event_type_id = ?", self.asset_event_type_id) # get events of same type
       .where("event_date < ? OR (event_date = ? AND created_at < ?)", self.event_date, self.event_date, (self.new_record? ? Time.current : self.created_at) ) # Define a window that runs up to this event
+      .where('object_key != ?', self.object_key)
       .order(:event_date, :created_at => :asc).last
 
     # Return Strongly Typed Asset

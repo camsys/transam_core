@@ -132,7 +132,7 @@ class UserOrganizationFiltersController < OrganizationAwareController
           set_current_user_organization_filter_(current_user, @user_organization_filter)
         end
 
-        notify_user(:notice, 'Filter was sucessfully created.')
+        notify_user(:notice, 'Filter was successfully created.')
         format.html { redirect_to [current_user, @user_organization_filter] }
         format.json { render action: 'show', status: :created, location: @user_organization_filter }
       else
@@ -190,7 +190,7 @@ class UserOrganizationFiltersController < OrganizationAwareController
         end
 
 
-        notify_user(:notice, 'Filter was sucessfully updated.')
+        notify_user(:notice, 'Filter was successfully updated.')
         format.html { redirect_to [current_user, @user_organization_filter] }
         format.json { head :no_content }
       else
@@ -204,7 +204,7 @@ class UserOrganizationFiltersController < OrganizationAwareController
   # DELETE /user_organization_filters/1.json
   def destroy
     @user_organization_filter.destroy
-    notify_user(:notice, 'Filter was sucessfully removed.')
+    notify_user(:notice, 'Filter was successfully removed.')
     respond_to do |format|
       format.html { redirect_to user_user_organization_filters_path(current_user) }
       format.json { head :no_content }

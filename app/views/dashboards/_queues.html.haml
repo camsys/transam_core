@@ -1,6 +1,7 @@
-%fieldset
-  %legend My Queues
-  .panel.panel-default
+- unless current_user.has_role? :manager
+  .panel.panel-default.dashboard-panel
+    .panel-heading
+      My Queues
     .panel-body
       %ul.nav.nav-tabs#queue_tabs
         - @queues.each_with_index do |queue, idx|

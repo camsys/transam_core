@@ -43,6 +43,8 @@ class User < ActiveRecord::Base
 
   # every user has access to 0 or more organizations for reporting
   has_and_belongs_to_many :organizations, :join_table => 'users_organizations'
+  has_and_belongs_to_many :viewable_organizations, :join_table => 'users_viewable_organizations', :class_name => 'Organization'
+
   has_many :organization_users, -> {uniq}, through: :organizations, :source => 'users'
 
   # Every user can have 0 or more messages
@@ -69,6 +71,9 @@ class User < ActiveRecord::Base
   # AssetEvents that have been tagged by the user
   has_many    :asset_events,  :foreign_key => :created_by_id
 
+  #
+  has_many    :saved_searches
+
   #-----------------------------------------------------------------------------
   # Transients
   #-----------------------------------------------------------------------------
@@ -92,16 +97,18 @@ class User < ActiveRecord::Base
   validates :state,         :allow_nil => true, :length => { maximum: 2 }
   validates :zip,           :allow_nil => true, :length => { maximum: 12 }
 
-  validates :num_table_rows,:presence => true,  :numericality => {:only_integer => :true, :greater_than_or_equal_to => 5}
+  validates :num_table_rows,:presence => true,  :numericality => {:only_integer => true, :greater_than_or_equal_to => 5}
   validates :organization,  :presence => true
 
   #-----------------------------------------------------------------------------
   # Scopes
   #-----------------------------------------------------------------------------
-  # default scope
-  default_scope { order(:last_name) }
   # Scope only active users
   scope :active, -> { where(active: true) }
+
+  # default scope
+  default_scope { active.order(:last_name) }
+
 
   #-----------------------------------------------------------------------------
   # Lists
@@ -151,6 +158,30 @@ class User < ActiveRecord::Base
     FORM_PARAMS
   end
 
+  # set default widgets and the column they are in. these can be customized at the app level
+  def self.dashboard_widgets
+    return Rails.application.config.dashboard_widgets if Rails.application.config.try(:dashboard_widgets)
+
+    widgets = []
+    SystemConfig.transam_module_names.each do |mod|
+      view_component = "#{mod}_widget"
+      widgets << [view_component, 2]
+    end
+    widgets += [
+        ['assets_widget', 1],
+        #['activities_widget', 1],
+        ['queues', 1],
+        ['users_widget', 1],
+        ['notices_widget', 3],
+        ['search_widget', 3],
+        ['message_queues', 3],
+        ['task_queues', 3]
+    ]
+
+    return widgets
+
+  end
+
   #-----------------------------------------------------------------------------
   # Instance Methods
   #-----------------------------------------------------------------------------
@@ -185,6 +216,22 @@ class User < ActiveRecord::Base
   end
   def on_hold_tasks
     assigned_tasks.where(:state => "halted")
+  end
+
+  def all_searches(search_type_id=nil)
+    if search_type_id
+      saved_searches.where(search_type_id: search_type_id) + searches_shared_with_me.where(search_type_id: search_type_id)
+    else
+      saved_searches + searches_shared_with_me
+    end
+  end
+
+  def shared_searches
+    saved_searches.joins(:organizations)
+  end
+
+  def searches_shared_with_me
+    SavedSearch.joins(:organizations).where(organizations: {id: organizations.ids}).where.not(saved_searches: {user_id: self.id})
   end
 
   # Returns the initials for this user
@@ -250,6 +297,8 @@ class User < ActiveRecord::Base
   end
 
   def update_user_organization_filters
+    self.user_organization_filters = UserOrganizationFilter.joins(:users).where(created_by_user_id: self.id).sorted.group('user_organization_filters.id').having( 'count( user_id ) = 1' )
+
     UserOrganizationFilter.where('resource_type IS NOT NULL').each do |filter|
       puts self.try(filter.resource_type.downcase.pluralize).include? filter.resource
       puts self.organizations.inspect

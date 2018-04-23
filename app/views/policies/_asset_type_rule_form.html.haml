@@ -19,17 +19,32 @@
 
   = f.input :id, :as => :hidden
 
-  - if @rule.new_record?
+  - if @rule.new_record? and !@copy
     .row
       .col-xs-12
-        = f.association :asset_type, :collection => @valid_types, :include_blank => false
+        = f.association :asset_type, :collection => @valid_types, :prompt => 'New Type', :required => false
+
+    #new_type.row
+      .col-sm-6
+        .form-group
+          %label.control-label New Asset Type Name
+          = text_field_tag :new_asset_type_name, '', {class: 'form-control'}
+      .col-sm-6
+        .form-group
+          %label.control-label New Asset Subtype Descriptien
+          = text_field_tag :new_asset_type_description, '', {class: 'form-control'}
+
 
   .row
-    .col-xs-6
+    .col-xs-4
       = f.association :service_life_calculation_type, :include_blank => false, :disabled => parent_rule.present?
 
-    .col-xs-6
+    .col-xs-4
       = f.association :replacement_cost_calculation_type, :include_blank => false
+
+    .col-xs-4
+      = f.association :condition_rollup_calculation_type, :include_blank => false
+
 
     .col-xs-4
       = f.input :annual_inflation_rate, :required => true, :input_html => {:min => 0.01, :max => 100}
@@ -37,11 +52,25 @@
     .col-xs-4
       = f.input :pcnt_residual_value, :required => true, :input_html => {:min => 0, :max => 100}
 
+    .col-xs-4
+      = f.input :condition_rollup_weight, :required => true, :input_html => {:min => 0, :max => 100}
+
   .row
     = f.button :submit, "Save", :class => 'btn btn-primary'
     %button.btn.btn-default{:data => {:dismiss => "modal"}} Cancel
 
 :javascript
+
+    $('#policy_asset_subtype_rule_asset_type_id').on('change', function(event) {
+    var id = $(this).val();
+
+    if (parseInt(id) > 0) {
+      $('#new_type').hide();
+    } else {
+      $('#new_type').show();
+    }
+  });
+
 
   // validate the form before submittal
   $('#edit-form').validate({
@@ -52,3 +81,15 @@
       $(form).ajaxSubmit();
     }
   });
+
+  if ( $("#policy_asset_subtype_rule_asset_type_id" ).length ) {
+    $('#policy_asset_subtype_rule_asset_type_id').rules("add", {
+      required_or_new: true
+    });
+  }
+  $.validator.addMethod("required_or_new", function(value, element) {
+    return parseInt(value) > 0 || (($('#new_asset_type_name').val() != "") && ($('#new_asset_type_description').val() != ""));
+  }, "Create a new type or select one.");
+
+
+

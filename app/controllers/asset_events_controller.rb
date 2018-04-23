@@ -76,7 +76,9 @@ class AssetEventsController < AssetAwareController
     add_new_show_create_breadcrumbs
 
     respond_to do |format|
+      @ajax_request = ajax_request?
       format.html
+      format.js
       format.json { render :json => @asset_event }
     end
 
@@ -112,9 +114,23 @@ class AssetEventsController < AssetAwareController
 
     add_edit_update_breadcrumbs
 
+    respond_to do |format|
+      @ajax_request = ajax_request?
+      format.html
+      format.js
+      format.json { render :json => @asset_event }
+    end
+
   end
 
   def update
+
+    # get variables for updating view via JS if form sent remotely
+    @ajax_request = ajax_request?
+    if @ajax_request
+      @view_div = params[:view_div]
+      @view_name = params[:view_name]
+    end
 
     # if not found or the object does not belong to the asset
     # send them back to index.html.erb
@@ -135,9 +151,11 @@ class AssetEventsController < AssetAwareController
         fire_asset_update_event(@asset_event.asset_event_type, @asset)
 
         format.html { redirect_to inventory_url(@asset) }
+        format.js
         format.json { head :no_content }
       else
         format.html { render "edit" }
+        format.js { render "edit" }
         format.json { render :json => @asset_event.errors, :status => :unprocessable_entity }
       end
     end
@@ -145,10 +163,18 @@ class AssetEventsController < AssetAwareController
 
   def create
 
+    # get variables for updating view via JS if form sent remotely
+
+    @ajax_request = ajax_request?
+    if @ajax_request
+      @view_div = params[:view_div]
+      @view_name = params[:view_name]
+    end
+
     # we need to know what the event type was for this event
     asset_event_type = AssetEventType.find(params[:event_type])
     unless asset_event_type.blank?
-      @asset_event = @asset.build_typed_event(asset_event_type.class_name.constantize)
+      @asset_event = asset_event_type.class_name.constantize.new(form_params.merge({asset: @asset}))
       @asset_event.creator = current_user
     end
 
@@ -163,7 +189,7 @@ class AssetEventsController < AssetAwareController
     add_new_show_create_breadcrumbs
 
     respond_to do |format|
-      if @asset_event.update(form_params)
+      if @asset_event.save
         Rails.logger.debug @asset_event.inspect
 
         notify_user(:notice, "Event was successfully created.")
@@ -186,10 +212,12 @@ class AssetEventsController < AssetAwareController
         end
 
         format.html { redirect_to inventory_url(@asset) }
+        format.js
         format.json { render :json => @asset_event, :status => :created, :location => @asset_event }
       else
         Rails.logger.debug @asset_event.errors.inspect
         format.html { render :action => "new" }
+        format.js { render :action => "new" }
         format.json { render :json => @asset_event.errors, :status => :unprocessable_entity }
       end
     end

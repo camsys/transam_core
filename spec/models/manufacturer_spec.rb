@@ -2,12 +2,8 @@ require 'rails_helper'
 
 RSpec.describe Manufacturer, :type => :model do
 
-  let(:test_manufacturer) { create(:manufacturer) }
+  let(:test_manufacturer) { Manufacturer.first }
   let(:bus) { create(:buslike_asset) }
-
-  before(:each) do
-    Manufacturer.destroy_all
-  end
 
   describe 'associations' do
     it 'has many assets' do
@@ -46,6 +42,6 @@ RSpec.describe Manufacturer, :type => :model do
   end
 
   it '.to_s' do
-    expect(test_manufacturer.to_s).to eq(test_manufacturer.code)
+    expect(test_manufacturer.to_s).to eq("#{test_manufacturer.code}-#{test_manufacturer.name}")
   end
 end

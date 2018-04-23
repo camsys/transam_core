@@ -15,10 +15,10 @@ RSpec.describe FiscalYear do
     expect(test_fy_class.start_of_planning_year).to eq(Date.new(year,7,1))
   end
   it '.fiscal_year_epoch_year' do
-    expect(test_fy_class.fiscal_year_epoch_year).to eq(2010)
+    expect(test_fy_class.fiscal_year_epoch_year).to eq(test_fy_class.fiscal_year_year_on_date(SystemConfig.instance.epoch))
   end
   it '.fiscal_year_epoch' do
-    expect(test_fy_class.fiscal_year_epoch).to eq('FY 10-11')
+    expect(test_fy_class.fiscal_year_epoch).to eq(test_fy_class.fiscal_year_on_date(SystemConfig.instance.epoch))
   end
   it '.current_fiscal_year_year' do
      expected_yr = Date.today.month < 7 ? Date.today.year - 1 : Date.today.year
@@ -117,7 +117,7 @@ RSpec.describe FiscalYear do
       test_date1 = Date.new(2015,7,1)
       test_date2 = Date.new(2015,6,30)
       results = []
-      (2014..current_planning_yr+4).each do |yr|
+      (2014..2021).each do |yr|
         results << ["FY #{(yr-2000).to_s}-#{(yr-2000+1).to_s}", yr]
       end
       expect(test_fy_class.get_fiscal_years(test_date1, 6)).to eq(results[1..results.length-1])

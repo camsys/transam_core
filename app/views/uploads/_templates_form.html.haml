@@ -9,7 +9,7 @@
       - if @organization_list.count == 1
         = f.input :organization_id, :as => :hidden, :input_html => { :value => @organization_list.first }
       - else
-        = f.input :organization_id, :required => true, :collection => Organization.where(id: @organization_list), :label_method => 'coded_name'
+        = f.input :organization_id, :required => true, :collection => Organization.where(id: Policy.where('parent_id IS NOT NULL AND organization_id IN (?)', @organization_list).pluck(:organization_id)), :label_method => 'coded_name'
     .col-sm-6
       = f.input :asset_type_id, :required => true, :collection => @asset_types.map{|type| [type[:name], type[:id]]}, :label => "Asset Type", :prompt => 'Set the asset type...'
     .col-sm-6
@@ -56,7 +56,7 @@
 
     var options = '<option value="">Set the asset type...</option>';
     for (var j = 0; j < asset_types.length; j++){
-      type = asset_types[j]
+      type = asset_types[j];
       var add_to_options = false;
 
       if ((parseInt(file_content_type_id) == new_inventory_id) && (type.class_name != 'Equipment')) {

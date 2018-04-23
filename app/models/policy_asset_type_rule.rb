@@ -26,6 +26,8 @@ class PolicyAssetTypeRule < ActiveRecord::Base
   belongs_to  :service_life_calculation_type
   # Every asset type rule has a replacement cost calculator
   belongs_to  :replacement_cost_calculation_type, :class_name => "CostCalculationType"
+  # Every asset type rule has a condition rollup calculator
+  belongs_to  :condition_rollup_calculation_type
 
   #-----------------------------------------------------------------------------
   # Validations
@@ -35,7 +37,7 @@ class PolicyAssetTypeRule < ActiveRecord::Base
   validates :service_life_calculation_type, :presence => true
   validates :replacement_cost_calculation_type, :presence => true
   validates :annual_inflation_rate,         :presence => true,  :numericality => {:greater_than_or_equal_to => 0.01, :less_than_or_equal_to => 100}
-  validates :pcnt_residual_value,           :presence => true,  :numericality => {:only_integer => :true,   :greater_than_or_equal_to => 0, :less_than_or_equal_to => 100}
+  validates :pcnt_residual_value,           :presence => true,  :numericality => {:only_integer => true,   :greater_than_or_equal_to => 0, :less_than_or_equal_to => 100}
 
   #-----------------------------------------------------------------------------
   # Scopes
@@ -51,8 +53,10 @@ class PolicyAssetTypeRule < ActiveRecord::Base
     :asset_type_id,
     :service_life_calculation_type_id,
     :replacement_cost_calculation_type_id,
+    :condition_rollup_calculation_type_id,
     :annual_inflation_rate,
-    :pcnt_residual_value
+    :pcnt_residual_value,
+    :condition_rollup_weight
   ]
 
   #------------------------------------------------------------------------------
@@ -94,6 +98,7 @@ class PolicyAssetTypeRule < ActiveRecord::Base
   def set_defaults
     self.annual_inflation_rate ||= 1.1
     self.pcnt_residual_value ||= 0
+    self.condition_rollup_weight ||= 0
   end
 
 end

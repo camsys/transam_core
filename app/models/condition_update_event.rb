@@ -8,6 +8,9 @@ class ConditionUpdateEvent < AssetEvent
   after_initialize :set_defaults
 
   # Associations
+  has_many :condition_type_percents, :foreign_key => "asset_event_id", :inverse_of  => :condition_update_event, :dependent => :destroy
+  accepts_nested_attributes_for :condition_type_percents, :allow_destroy => true, :reject_if   => lambda{ |attrs| attrs[:condition_type].blank? }
+
 
   # Condition of the asset
   belongs_to  :condition_type
@@ -19,7 +22,7 @@ class ConditionUpdateEvent < AssetEvent
       :greater_than_or_equal_to => ConditionType.minimum(:rating),
       :less_than_or_equal_to    => ConditionType.maximum(:rating)
       },
-      :allow_nil    => :true
+      :allow_nil    => true
   # validates :comments, :length => {:maximum => ???} # There is no limit in the Database/Schema
 
   before_validation do
@@ -36,6 +39,7 @@ class ConditionUpdateEvent < AssetEvent
   FORM_PARAMS = [
     :condition_type_id,
     :assessed_rating,
+    :condition_type_percents_attributes => [ConditionTypePercent.allowable_params]
   ]
 
   #------------------------------------------------------------------------------
@@ -58,6 +62,11 @@ class ConditionUpdateEvent < AssetEvent
   # Instance Methods
   #
   #------------------------------------------------------------------------------
+
+  # usually no conditions on can create but can be overridden by specific asset events
+  def can_update?
+    asset_event_type.active && asset.dependents.count == 0
+  end
 
   # Override numeric setters to remove any extraneous formats from the number strings eg $, etc.
   def assessed_rating=(num)

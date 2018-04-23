@@ -1,6 +1,10 @@
 class PoliciesController < OrganizationAwareController
 
   add_breadcrumb "Home", :root_path
+  add_breadcrumb "Policies", :rule_sets_path
+
+  skip_before_action :get_organization_selections
+  before_action :set_viewable_organizations
 
   #before_filter :authorize_admin
   before_action :get_policy, :except => [:index, :create, :new]
@@ -42,23 +46,24 @@ class PoliciesController < OrganizationAwareController
   end
 
   def index
-
-    add_breadcrumb "Policies", policies_path
-
-    # create hash to store policies from organization_list
-    policies = Hash.new
-    @organization_list.each do |o|
-		  org = Organization.get_typed_organization(Organization.find(o))
-      policies[org.short_name] = org.policies
+    if params[:organization_id]
+      org_id = params[:organization_id]
+    else
+      org_id = @organization_list.first
     end
 
-    @policies = policies
+    if params[:policy_id]
+      policy = Policy.find_by(id: params[:policy_id], organization_id: org_id)
+    else
+      policy = Policy.active.find_by(organization_id: org_id)
+    end
 
+    redirect_to policy_path(policy)
   end
 
   def show
 
-    add_breadcrumb "Policies", policies_path
+    add_breadcrumb "Asset Replacement/Rehabilitation Policy", policies_path
     add_breadcrumb @policy.name, policy_path(@policy)
 
   end
@@ -145,6 +150,19 @@ class PoliciesController < OrganizationAwareController
 
     if params[:policy_asset_type_rule].present?
       rule = PolicyAssetTypeRule.new(asset_type_rule_form_params)
+
+      if rule.asset_type.nil?
+        # for now default most fields
+        new_type = AssetType.create(
+          name: params[:new_asset_type_name],
+          description: params[:new_asset_type_description],
+          class_name: 'Component',
+          display_icon_name: 'fa fa-cogs',
+          map_icon_name: 'blueIcon',
+          active: true
+        )
+        rule.asset_type = new_type
+      end
     else
       if params[:copied_rule].present? # if the rule is copied, copy from old rule and overwrite with form
         rule = PolicyAssetSubtypeRule.find(params[:copied_rule]).dup
@@ -226,7 +244,7 @@ class PoliciesController < OrganizationAwareController
 
   def edit
 
-    add_breadcrumb "Policies", policies_path
+    add_breadcrumb "Asset Replacement/Rehabilitation Policy", policies_path
     add_breadcrumb @policy.name, policy_path(@policy)
 
     if params[:copy].to_i == 1
@@ -305,7 +323,7 @@ class PoliciesController < OrganizationAwareController
 
   def update
 
-    add_breadcrumb "Policies", policies_path
+    add_breadcrumb "Asset Replacement/Rehabilitation Policy", policies_path
     add_breadcrumb @policy.name, policy_path(@policy)
     add_breadcrumb 'Modify', edit_policy_path(@policy)
 
@@ -332,7 +350,7 @@ class PoliciesController < OrganizationAwareController
   end
 
   def runner
-    add_breadcrumb "Policies", policies_path
+    add_breadcrumb "Asset Replacement/Rehabilitation Policy", policies_path
     add_breadcrumb @policy.name, policy_path(@policy)
     add_breadcrumb "Policy Runner", runner_policy_path(@policy)
 
@@ -360,6 +378,31 @@ class PoliciesController < OrganizationAwareController
       end
     end
 
+  end
+
+  def inherit
+    add_breadcrumb "Asset Replacement/Rehabilitation Policy", policies_path
+    add_breadcrumb @policy.name, policy_path(@policy)
+    add_breadcrumb "Distribute Policy", inherit_policy_path(@policy)
+
+    @distributer_proxy = PolicyDistributerProxy.new(:policy => @policy)
+    @message = "Distributing and applying policies. This may take a while..."
+  end
+
+  def distribute
+    @distributer_proxy = PolicyDistributerProxy.new(params[:policy_distributer_proxy])
+    @distributer_proxy.policy = @policy
+
+    policies = Policy.where(parent_id: @distributer_proxy.policy.id)
+    if policies.empty?
+      notify_user(:alert, 'No children policies to distribute policy rules too.')
+    else
+      Delayed::Job.enqueue PolicyDistributerJob.new(@distributer_proxy, current_user), :priority => 0
+
+      notify_user(:notice, 'Parent policy distributed. Values updated to at least the minimum allowed by the parent policy.')
+    end
+
+    redirect_to policy_path(@policy)
   end
 
   private
@@ -409,6 +452,12 @@ class PoliciesController < OrganizationAwareController
       return
     end
 
+  end
+
+  def set_viewable_organizations
+    @viewable_organizations = current_user.viewable_organization_ids
+
+    get_organization_selections
   end
 
 end

@@ -83,7 +83,7 @@ class EarlyDispositionRequestUpdateEvent < AssetEvent
 
     # Callbacks
     before_transition do |request, transition|
-      Rails.logger.debug "Transitioning early dispositin request #{request.object_key} from #{transition.from_name} to #{transition.to_name} using #{transition.event}"
+      Rails.logger.debug "Transitioning early disposition request #{request.object_key} from #{transition.from_name} to #{transition.to_name} using #{transition.event}"
     end
   end
 
@@ -157,6 +157,8 @@ class EarlyDispositionRequestUpdateEvent < AssetEvent
     when :reject, :approve_via_transfer, :approve
       # notify creator
       [creator]
+    else
+     []
     end
 
     recipients || []
@@ -172,6 +174,8 @@ class EarlyDispositionRequestUpdateEvent < AssetEvent
       'approved'
     when :approve_via_transfer
       'approved via transfer'
+    else
+        ''
     end
   end
 

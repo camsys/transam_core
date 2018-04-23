@@ -25,3 +25,7 @@ rerun.txt
 *.idea
 
 TAGS
+
+*.axlsx~
+
+shadowed_views.log

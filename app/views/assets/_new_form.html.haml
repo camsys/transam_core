@@ -6,16 +6,20 @@
         = form_tag new_inventory_path, :id => 'asset_subtype_form', :method => "get", :class => 'form-vertical', :role => 'form' do
 
           - if @organization_list.count > 1
-            .form-group
-              %label.control-label.string.required
-                * Organization
+            - if params[:parent_id]
+              = hidden_field_tag :organization_id, Asset.find_by(id: params[:parent_id]).organization_id
+              = hidden_field_tag :parent_id, params[:parent_id]
+            - else
+              .form-group
+                %label.control-label.string.required
+                  * Organization
 
-              = select_tag(:organization_id, options_from_collection_for_select(Organization.where(id: @organization_list), :id, :coded_name), :class => 'form-control string required', :prompt => 'Select organization...')
+                = select_tag(:organization_id, options_from_collection_for_select(Organization.where(id: Policy.where('parent_id IS NOT NULL AND organization_id IN (?)', @organization_list).pluck(:organization_id)), :id, :coded_name), :class => 'form-control string required', :prompt => 'Select organization...')
 
           .form-group
             %label.control-label.string.required
               * Asset Type
-            = select_tag(:asset_subtype, option_groups_from_collection_for_select(@asset_types, :asset_subtypes, :name, :id, :name), :class => 'form-control string required', :prompt => 'Select asset type...', :id => 'asset_subtype_filter')
+            = select_tag(:asset_subtype, grouped_options_for_select(@asset_types.each_with_object({}) { |type, hash|  hash[type.to_s] = AssetSubtype.active.where(asset_type_id: type.id).pluck(:name, :id)}), :class => 'form-control string required', :prompt => 'Select asset type...', :id => 'asset_subtype_filter')
 
           = submit_tag 'Create New Asset', :class => "btn btn-primary", :id => "submit_button"
 

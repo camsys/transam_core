@@ -1,4 +1,4 @@
-- unless @org.assets.empty?
+- if @org.try(:assets).try(:any?)
   .tab-pane.fade#assets
     .tab-content
       = render 'asset_summary'

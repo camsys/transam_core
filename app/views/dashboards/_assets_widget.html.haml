@@ -1,0 +1,56 @@
+.panel.panel-default.dashboard-panel
+  .panel-heading
+    Asset Summary
+    .pull-right
+      = select_tag(:asset_summary_type, options_for_select(AssetType.all.map{|a| [ a.to_s, a.id ] }, :selected => params[:asset_summary_type]), :prompt => 'All', :class => "form-control", :style => 'margin-top: -5px;')
+  #assets-widget.panel-body
+
+:javascript
+
+  $('#asset_summary_type').change(function() {
+    $("#spinner").show();
+    update_assets_widget();
+    $("#spinner").hide();
+  });
+
+  // $('#assets-widget').on('click', 'td', function () {
+  //   org = $(this).parent().data('org');
+  //   asset_type = $(this).parent().data('asset-type');
+  //   if (($('#asset_summary_type').val() == "") && ($('tr:not([data-org=""])[data-asset-type=""]').length > 0)) { // there are drilled down rows open (not asset type rows)
+  //     $('tr:not([data-org=""])[data-asset-type=""]').remove();
+  //   }
+  //
+  //   if (asset_type != undefined) {
+  //     update_assets_widget(org, asset_type);
+  //   }
+  //
+  // });
+
+  function update_assets_widget (org, asset_type) {
+
+
+    asset_type = (asset_type || $('#asset_summary_type').val());
+
+    $.ajax({
+      url: "/inventory/get_summary",
+      type: 'GET',
+      dataType: 'json',
+      data: {org: org, asset_type_id: asset_type},
+      complete: function(response, status) {
+        if (response.status == 200) {
+          if (!org) {
+            $('#assets-widget').html(response.responseText);
+          } else {
+            $('tr[data-org="' + org + '"][data-asset-type="'+asset_type+'"]').after(response.responseText);
+
+            if ($('#asset_summary_type').val() == "") {
+              $('tr[data-org='+org+'][data-asset-type=""]').css({"background-color": "#d9edf7"});
+            }
+
+          }
+        } else {
+          $('#assets-widget').html(response.statusText);
+        }
+      }
+    });
+  }

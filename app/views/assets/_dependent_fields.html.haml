@@ -1,0 +1,35 @@
+.nested-fields
+  - if f.object.new_record?
+    .row
+      .col-md-10
+        = f.input :object_key, :as => :hidden
+        = f.input :parent_name, :label => 'Child', :input_html => {:value => f.object.asset_tag.present? ? f.object.to_s : "", :autocomplete => 'off', :class => 'form-control parent_name', :placeholder => 'Enter search text', :data => {:url => filter_inventory_index_path(organization_id: @asset.organization_id, allow_parent: 1)}}
+
+      .col-md-2
+        = link_to_remove_association f, :class => 'btn btn-xs btn-warning', :style => 'margin-top: 27px;' do
+          %i.fa.fa-trash-o
+
+:javascript
+  var typeahead_field_line;
+
+  $('.parent_name').on('focus', function() {
+      nested_id = $(this).attr('id');
+      typeahead_field_line = '#'+nested_id.substr(0,nested_id.length-11);
+      _typeahead_source_url = $(this).data('url');
+    });
+
+  // Enable typeahead for the SMO filter
+  $('.parent_name').typeahead({
+    items: 10,
+    minLength: 2,
+    source: _typeahead_searcher,
+    matcher: _typeahead_matcher,
+    highlighter: _typeahead_highlighter,
+    updater: function (obj) {
+      var item = JSON.parse(obj);
+      // Update the UI
+      $(typeahead_field_line+'parent_name').attr('value', item.name);
+      $(typeahead_field_line+'object_key').attr('value', item.id);
+      return item.name;
+    }
+  })
