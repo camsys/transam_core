@@ -7,9 +7,9 @@ class ErrorsController < TransamController
   end
 
   def system_health
-    unless Delayed::Job.where('locked_at IS NOT NULL').count > 0 || Delayed::Job.count == 0
+    # return 500 if delayed job been locked for at least 8 hours
+    if Delayed::Job.where('locked_at < ?', DateTime.now-8.hours).count > 0
       redirect_to '/500'
-      return
     end
   end
  
