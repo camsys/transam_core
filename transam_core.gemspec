@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'rails', '~> 4.2.7.1'
   s.add_dependency "cancan"
   s.add_dependency "devise"
+  s.add_dependency 'devise_security_extension'
   s.add_dependency "rolify", '~> 4.1'
   s.add_dependency "high_voltage"
   #s.add_dependency "fullcalendar-rails"
