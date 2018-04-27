@@ -32,6 +32,8 @@ Gem::Specification.new do |s|
   s.add_dependency "breadcrumbs_on_rails"
   s.add_dependency 'paper_trail', '8.1.2'
 
+  s.add_dependency 'coffee-rails' # Use CoffeeScript for .js.coffee assets and views
+
   s.add_dependency 'state_machines'
   s.add_dependency 'state_machines-activemodel'
   s.add_dependency 'state_machines-activerecord'
@@ -40,15 +42,16 @@ Gem::Specification.new do |s|
   s.add_dependency 'carrierwave'
   s.add_dependency "fog"
   s.add_dependency "fog-core", "1.32.1"
-  s.add_dependency 'kaminari'
   s.add_dependency 'axlsx_rails'
   s.add_dependency 'countries', "~> 0.11.5"
   # for background processing jobs
   s.add_dependency 'delayed_job_active_record'
   s.add_dependency 'haml-rails'
+  s.add_dependency 'haml', '4.0.7'
   s.add_dependency 'rmagick'
 
   s.add_dependency 'simple_form'
+  s.add_dependency 'font-awesome-rails'
   s.add_dependency "wicked"
 
   s.add_dependency 'rails-data-migrations'
