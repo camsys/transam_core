@@ -38,6 +38,8 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'fog'
   s.add_dependency 'carrierwave'
+  s.add_dependency "fog"
+  s.add_dependency "fog-core", "1.32.1"
   s.add_dependency 'kaminari'
   s.add_dependency 'axlsx_rails'
   s.add_dependency 'countries', "~> 0.11.5"
