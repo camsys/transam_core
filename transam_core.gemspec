@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
   s.add_dependency "cancan"
   s.add_dependency "devise"
   s.add_dependency "rolify", '~> 4.1'
+  s.add_dependency 'rails_email_validator'
   s.add_dependency "high_voltage"
   #s.add_dependency "fullcalendar-rails"
   #s.add_dependency 'mail', '2.5.4'
@@ -37,10 +38,10 @@ Gem::Specification.new do |s|
   s.add_dependency 'state_machines-activemodel'
   s.add_dependency 'state_machines-activerecord'
 
+  s.add_dependency 'roo'
   s.add_dependency 'carrierwave'
   s.add_dependency "fog"
   s.add_dependency "fog-core", "1.32.1"
-  s.add_dependency 'axlsx_rails'
   s.add_dependency 'countries', "~> 0.11.5"
   # for background processing jobs
   s.add_dependency 'delayed_job_active_record'
