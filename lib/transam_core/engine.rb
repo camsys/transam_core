@@ -17,6 +17,13 @@ require 'carrierwave'
 require 'rmagick'
 require 'countries'
 require 'rails-data-migrations'
+require 'font-awesome-sass'
+require 'bootstrap-datepicker-rails'
+require 'bootstrap-editable-rails'
+require 'bootstrap-sass'
+require 'cocoon'
+require 'jquery-ui-rails'
+require 'jquery-form-rails'
 
 module TransamCore
   class Engine < ::Rails::Engine

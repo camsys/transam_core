@@ -20,19 +20,20 @@ Gem::Specification.new do |s|
 
 
   s.add_dependency 'rails', '~> 4.2.7.1'
+  s.add_dependency 'uglifier' # Use Uglifier as compressor for JavaScript assets
   s.add_dependency "cancan"
   s.add_dependency "devise"
   s.add_dependency "rolify", '~> 4.1'
   s.add_dependency 'rails_email_validator'
   s.add_dependency "high_voltage"
   #s.add_dependency "fullcalendar-rails"
+  s.add_dependency 'bootstrap-datepicker-rails'
   #s.add_dependency 'mail', '2.5.4'
   s.add_dependency 'unitwise', '~> 2.0.0'
   s.add_dependency 'chronic'
   s.add_dependency "breadcrumbs_on_rails"
   s.add_dependency 'paper_trail', '8.1.2'
-
-  s.add_dependency 'coffee-rails' # Use CoffeeScript for .js.coffee assets and views
+  s.add_dependency 'jbuilder', '~> 2.0' # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 
   s.add_dependency 'state_machines'
   s.add_dependency 'state_machines-activemodel'
@@ -45,13 +46,22 @@ Gem::Specification.new do |s|
   s.add_dependency 'countries', "~> 0.11.5"
   # for background processing jobs
   s.add_dependency 'delayed_job_active_record'
+
+  s.add_dependency 'bootstrap-sass', '~> 3.2.0' # Lock to 3.2 for now as glyphicons fail in 3.3
   s.add_dependency 'haml-rails'
   s.add_dependency 'haml', '4.0.7'
   s.add_dependency 'rmagick'
 
   s.add_dependency 'simple_form'
-  s.add_dependency 'font-awesome-rails'
+  s.add_dependency 'font-awesome-sass', '4.7.0'
   s.add_dependency "wicked"
+  s.add_dependency 'cocoon'
+  s.add_dependency 'bootstrap-editable-rails'
+
+  # Use jquery as the JavaScript library
+  s.add_dependency 'jquery-rails', '3.1.4'
+  s.add_dependency 'jquery-ui-rails'
+  s.add_dependency 'jquery-form-rails'
 
   s.add_dependency 'rails-data-migrations'
 
