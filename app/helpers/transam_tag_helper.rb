@@ -128,6 +128,17 @@ module TransamTagHelper
     return html.html_safe
   end
 
+  def nav_tab_count_tag(href, title, count)
+    engine = Haml::Engine.new("
+%li
+  %a{:href => '#{href}', :data =>{:toggle => 'tab'}}
+    %span.nowrap
+      #{title}
+      %span.badge= #{count}
+")
+    return engine.render.html_safe
+  end
+  
   def dialog_tag(dialog_name, options={}, &block)
     # Check to see if there is any content in the block
     content = capture(&block)
