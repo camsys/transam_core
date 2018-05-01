@@ -24,7 +24,7 @@
         Manufacturers
       %ul.dropdown-menu
         - asset_types.each do |type|
-          - manufacturers = Manufacturer.joins(:assets).where(assets: {asset_type_id: type[0], organization_id: @organization_list}).distinct.pluck("manufacturers.id", "manufacturers.name")
+          - manufacturers = Manufacturer.joins(:assets).where(assets: {asset_type_id: type[0], organization_id: @organization_list}).distinct
           - if manufacturers.any?
             %li.text-left.dropdown-submenu
               = link_to '#' do
@@ -33,9 +33,9 @@
               %ul.dropdown-menu{style: "overflow-y:scroll; max-height:400px;"}
                 - manufacturers.each do | manufacturer |
                   %li.text-left
-                    = link_to inventory_index_path(:manufacturer_id => manufacturer[0]) do
+                    = link_to inventory_index_path(:manufacturer_id => manufacturer.id) do
                       %i.fa.fa-star.fa-fw
-                      = manufacturer[1]
+                      = manufacturer.name
         %li.divider
         %li.text-left
           = link_to manufacturers_path do
