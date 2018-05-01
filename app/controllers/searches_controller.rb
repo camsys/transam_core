@@ -8,7 +8,7 @@ class SearchesController < OrganizationAwareController
   MAX_ROWS_RETURNED = SystemConfig.instance.max_rows_returned
 
   # Set the view variables form the params @search_type, @searcher_klass
-  before_filter :set_view_vars,     :only => [:create, :new, :reset]
+  before_action :set_view_vars,     :only => [:create, :new, :reset]
 
   def create
 

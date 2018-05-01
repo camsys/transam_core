@@ -4,7 +4,7 @@ class TasksController < NestedResourceController
 
   before_action :set_view_vars, :only => [:index, :filter]
   before_action :set_task, :only => [:show, :edit, :update, :destroy, :fire_workflow_event, :change_owner]
-  before_filter :reformat_date_field, :only => [:create, :update]
+  before_action :reformat_date_field, :only => [:create, :update]
 
   #-----------------------------------------------------------------------------
   # Protect controller methods using the cancan ability

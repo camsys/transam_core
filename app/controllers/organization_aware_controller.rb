@@ -5,7 +5,7 @@
 class OrganizationAwareController < TransamController
 
   # set the @organization and @organization_list variables before any actions are invoked
-  before_filter :get_organization_selections
+  before_action :get_organization_selections
 
   # always use typed organizations for this controller
   RENDER_TYPED_ORGANIZATIONS = true

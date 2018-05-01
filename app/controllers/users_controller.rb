@@ -11,7 +11,7 @@ class UsersController < OrganizationAwareController
 
   #-----------------------------------------------------------------------------
   before_action :set_user, :only => [:show, :edit, :settings, :update, :destroy, :change_password, :update_password, :profile_photo, :reset_password, :authorizations]
-  before_filter :check_for_cancel, :only => [:create, :update, :update_password]
+  before_action :check_for_cancel, :only => [:create, :update, :update_password]
 
   skip_before_action :get_organization_selections,      :only => [:authorizations]
   before_action :set_viewable_organizations,      :only => [:authorizations]

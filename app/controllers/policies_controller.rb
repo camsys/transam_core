@@ -6,7 +6,7 @@ class PoliciesController < OrganizationAwareController
   skip_before_action :get_organization_selections
   before_action :set_viewable_organizations
 
-  #before_filter :authorize_admin
+  #before_action :authorize_admin
   before_action :get_policy, :except => [:index, :create, :new]
 
   # Lock down the controller

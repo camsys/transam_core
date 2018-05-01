@@ -3,7 +3,7 @@ class NoticesController < OrganizationAwareController
   add_breadcrumb "Home", :root_path
   add_breadcrumb "Notices", :notices_path
 
-  before_filter :get_notice, :except => [:index, :create, :new]
+  before_action :get_notice, :except => [:index, :create, :new]
 
   # Protect controller methods using the cancan ability
   authorize_resource
@@ -45,7 +45,7 @@ class NoticesController < OrganizationAwareController
 
   end
 
-  # @notice set in before_filter
+  # @notice set in before_action
   def reactivate
     add_breadcrumb @notice, notice_path(@notice)
     add_breadcrumb "Reactivate"

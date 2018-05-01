@@ -3,9 +3,9 @@ class AssetEventsController < AssetAwareController
   add_breadcrumb "Home", :root_path
 
   # set the @asset_event variable before any actions are invoked
-  before_filter :get_asset_event,       :only => [:show, :edit, :update, :destroy, :fire_workflow_event]
-  before_filter :check_for_cancel,      :only => [:create, :update]
-  before_filter :reformat_date_field,   :only => [:create, :update]
+  before_action :get_asset_event,       :only => [:show, :edit, :update, :destroy, :fire_workflow_event]
+  before_action :check_for_cancel,      :only => [:create, :update]
+  before_action :reformat_date_field,   :only => [:create, :update]
 
   # always use generic untyped assets for this controller
   RENDER_TYPED_ASSETS = true

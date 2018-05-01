@@ -3,7 +3,7 @@ class OrganizationsController < OrganizationAwareController
   add_breadcrumb "Home",  :root_path
   add_breadcrumb "Organizations", :organizations_path
 
-  before_filter :get_org, :only => [:show, :map, :edit, :update]
+  before_action :get_org, :only => [:show, :map, :edit, :update]
 
   # Lock down the controller
   authorize_resource

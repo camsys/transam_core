@@ -1,6 +1,6 @@
 class ReportsController < OrganizationAwareController
 
-  before_filter :get_report, :only => [:show, :load]
+  before_action :get_report, :only => [:show, :load]
 
   # Lock down the controller
   #authorize_resource only: [:index, :show]

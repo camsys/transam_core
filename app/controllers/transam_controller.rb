@@ -1,8 +1,8 @@
 class TransamController < ApplicationController
 
-  before_filter :authenticate_user!, :except => [:system_health]
-  before_filter :set_timezone
-  before_filter :log_session
+  before_action :authenticate_user!, :except => [:system_health]
+  before_action :set_timezone
+  before_action :log_session
 
   # Include the rails4 style form parameters mixin
   include TransamAttributes

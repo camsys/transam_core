@@ -3,14 +3,14 @@ class AssetsController < AssetAwareController
   add_breadcrumb "Home", :root_path
 
   # Set the view variabless form the params @asset_type, @asset_subtype, @search_text, @spatial_filter, @view
-  before_filter :set_view_vars,     :only => [:index, :map]
+  before_action :set_view_vars,     :only => [:index, :map]
   # Don't process cancel buttons
-  before_filter :check_for_cancel,  :only => [:create, :update]
+  before_action :check_for_cancel,  :only => [:create, :update]
   # set the @asset variable before any actions are invoked
-  before_filter :get_asset,         :only => [:tag, :show, :edit, :copy, :update, :destroy, :summary_info, :add_to_group, :remove_from_group, :popup, :get_dependents, :add_dependents]
-  before_filter :reformat_date_fields,  :only => [:create, :update]
+  before_action :get_asset,         :only => [:tag, :show, :edit, :copy, :update, :destroy, :summary_info, :add_to_group, :remove_from_group, :popup, :get_dependents, :add_dependents]
+  before_action :reformat_date_fields,  :only => [:create, :update]
   # Update the vendor_id param if the user is using the vendor_name parameter
-  before_filter :update_vendor_param,  :only => [:create, :update]
+  before_action :update_vendor_param,  :only => [:create, :update]
 
   # Lock down the controller
   authorize_resource only: [:index, :show, :new, :create, :edit, :update, :destroy]

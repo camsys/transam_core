@@ -1,6 +1,6 @@
 class FormsController < OrganizationAwareController
 
-  before_filter :get_form, :only => [:show]
+  before_action :get_form, :only => [:show]
 
   add_breadcrumb "Home", :root_path
   add_breadcrumb "Forms", :forms_path
