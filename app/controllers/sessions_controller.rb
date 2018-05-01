@@ -1,8 +1,8 @@
 class SessionsController < Devise::SessionsController
   
-  after_filter  :log_failed_login, :only => :new
-  after_filter  :clear_flash_messages, :only => [:create, :destroy]  
-  before_filter :log_logout, :only => :destroy 
+  after_action  :log_failed_login, :only => :new
+  after_action  :clear_flash_messages, :only => [:create, :destroy]
+  before_action :log_logout, :only => :destroy
 
   # determine which layout to use based on the current user state
   layout :layout_by_resource
@@ -45,7 +45,7 @@ class SessionsController < Devise::SessionsController
   end 
 
   def failed_login?
-    (options = env["warden.options"]) && options[:action] == "unauthenticated"
+    (options = request.env["warden.options"]) && options[:action] == "unauthenticated"
   end 
   
   def log_logout
