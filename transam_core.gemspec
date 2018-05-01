@@ -19,9 +19,9 @@ Gem::Specification.new do |s|
   s.test_files = Dir["test/**/*"]
 
 
-  s.add_dependency 'rails', '~> 4.2.7.1'
+  s.add_dependency 'rails', '~> 5.2.0'
   s.add_dependency 'uglifier' # Use Uglifier as compressor for JavaScript assets
-  s.add_dependency "cancan"
+  s.add_dependency "cancancan"
   s.add_dependency "devise"
   s.add_dependency "rolify"
   s.add_dependency 'rails_email_validator'
@@ -32,7 +32,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'unitwise'
   s.add_dependency 'chronic'
   s.add_dependency "breadcrumbs_on_rails"
-  s.add_dependency 'paper_trail', '8.1.2'
+  #s.add_dependency 'paper_trail', '8.1.2'
   s.add_dependency 'jbuilder' # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 
   s.add_dependency 'state_machines'
@@ -49,7 +49,6 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'bootstrap-sass', '~> 3.2.0' # Lock to 3.2 for now as glyphicons fail in 3.3
   s.add_dependency 'haml-rails'
-  s.add_dependency 'haml', '4.0.7'
   s.add_dependency 'rmagick'
 
   s.add_dependency 'simple_form'
@@ -59,7 +58,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'bootstrap-editable-rails'
 
   # Use jquery as the JavaScript library
-  s.add_dependency 'jquery-rails', '3.1.4'
+  s.add_dependency 'jquery-rails'
   s.add_dependency 'jquery-ui-rails'
   s.add_dependency 'jquery-form-rails'
 
