@@ -4,42 +4,14 @@
 %li
   %a{:href => "#purc", :data =>{:toggle => 'tab'}}
     Purchase
-%li
-  %a{:href => "#hist", :data =>{:toggle => 'tab'}}
-    %span{:style => 'white-space: nowrap !important;'}
-      History
-      %span.badge= @asset.asset_events.count
+= nav_tab_count_tag("#hist", "History", @asset.asset_events.count)
 - if @asset.occupants.operational.present?
-  %li
-    %a{:href => "#occ", :data =>{:toggle => 'tab'}}
-      %span{:style => 'white-space: nowrap !important;'}
-        Occupants
-        %span.badge= @asset.occupants.operational.count
-%li
-  %a{:href => "#depd", :data =>{:toggle => 'tab'}}
-    %span{:style => 'white-space: nowrap !important;'}
-      Relational Tree
-      %span.badge= @asset.dependents.count
-%li
-  %a{:href => "#task", :data =>{:toggle => 'tab'}}
-    %span{:style => 'white-space: nowrap !important;'}
-      Tasks
-      %span.badge= @asset.tasks.count
-%li
-  %a{:href => "#comm", :data =>{:toggle => 'tab'}}
-    %span{:style => 'white-space: nowrap !important;'}
-      = "Comments"
-      %span.badge= @asset.comments.count
-%li
-  %a{:href => "#docs", :data =>{:toggle => 'tab'}}
-    %span{:style => 'white-space: nowrap !important;'}
-      = "Documents"
-      %span.badge= @asset.documents.count
-%li
-  %a{:href => "#imag", :data =>{:toggle => 'tab'}}
-    %span{:style => 'white-space: nowrap !important;'}
-      = "Photos"
-      %span.badge= @asset.images.count
+  = nav_tab_count_tag("#occ", "Occupants", @asset.occupants.operational.count)
+= nav_tab_count_tag("#depd", "Relational Tree", @asset.dependents.count)
+= nav_tab_count_tag("#task", "Tasks", @asset.tasks.count)
+= nav_tab_count_tag("#comm", "Comments", @asset.comments.count)
+= nav_tab_count_tag("#docs", "Documents", @asset.documents.count)
+= nav_tab_count_tag("#imag", "Photos", @asset.images.count)
 %li
   %a{:href => "#chrt", :data =>{:toggle => 'tab'}}
     Charts
