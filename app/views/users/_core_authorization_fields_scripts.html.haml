@@ -1,6 +1,6 @@
 :javascript
 
-  var role_ids_by_org = JSON.parse('#{(OrganizationRoleMapping.role_ids_by_org || {}).to_json}');
+  var role_ids_by_org = JSON.parse('#{(OrganizationRoleMapping.role_ids_by_org || {}).to_json.html_safe}');
 
   // Document Ready
   $(document).ready(function(){
@@ -36,8 +36,8 @@
     if (t.length) {
       var filter_orgs = [];
       var selected = [];
-      var orgs = JSON.parse('#{escape_javascript(Organization.where(id: @organization_list).map{|o| [o.coded_name, o.id]}.to_json)}');
-      var user_orgs = JSON.parse('#{@user.organizations.pluck(:id).to_json}');
+      var orgs = JSON.parse('#{escape_javascript(Organization.where(id: @organization_list).map{|o| [o.coded_name, o.id]}.to_json.html_safe)}');
+      var user_orgs = JSON.parse('#{@user.organizations.pluck(:id).to_json.html_safe}');
 
 
       $.each(orgs, function( index, value ) {
@@ -136,7 +136,7 @@
   }
 
 
-  var role_ids_by_org = JSON.parse('#{(OrganizationRoleMapping.role_ids_by_org || {}).to_json}');
+  var role_ids_by_org = JSON.parse('#{(OrganizationRoleMapping.role_ids_by_org || {}).to_json.html_safe}');
 
   // Document Ready
   $(document).ready(function(){
@@ -172,8 +172,8 @@
     if (t.length) {
       var filter_orgs = [];
       var selected = [];
-      var orgs = JSON.parse('#{escape_javascript(Organization.where(id: @organization_list).map{|o| [o.coded_name, o.id]}.to_json)}');
-      var user_orgs = JSON.parse('#{@user.organizations.pluck(:id).to_json}');
+      var orgs = JSON.parse('#{escape_javascript(Organization.where(id: @organization_list).map{|o| [o.coded_name, o.id]}.to_json.html_safe)}');
+      var user_orgs = JSON.parse('#{@user.organizations.pluck(:id).to_json.html_safe}');
 
 
       $.each(orgs, function( index, value ) {
@@ -272,7 +272,7 @@
   }
 
 
-  var role_ids_by_org = JSON.parse('#{(OrganizationRoleMapping.role_ids_by_org || {}).to_json}');
+  var role_ids_by_org = JSON.parse('#{(OrganizationRoleMapping.role_ids_by_org || {}).to_json.html_safe}');
 
   // Document Ready
   $(document).ready(function(){
@@ -308,8 +308,8 @@
     if (t.length) {
       var filter_orgs = [];
       var selected = [];
-      var orgs = JSON.parse('#{escape_javascript(Organization.where(id: @organization_list).map{|o| [o.coded_name, o.id]}.to_json)}');
-      var user_orgs = JSON.parse('#{@user.organizations.pluck(:id).to_json}');
+      var orgs = JSON.parse('#{escape_javascript(Organization.where(id: @organization_list).map{|o| [o.coded_name, o.id]}.to_json.html_safe)}');
+      var user_orgs = JSON.parse('#{@user.organizations.pluck(:id).to_json.html_safe}');
 
 
       $.each(orgs, function( index, value ) {

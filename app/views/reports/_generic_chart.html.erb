@@ -40,7 +40,7 @@
 		chart_data.addColumn('number', '<%= col %>');
 		<% end %>
 		<% @data[:data].each do |row| %>
-		chart_data.addRow(<%= raw row.to_json %>);
+		chart_data.addRow(<%= raw row.to_json.html_safe %>);
 		<% end %>
 
 		// Draw it
