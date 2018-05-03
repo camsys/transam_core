@@ -215,4 +215,8 @@ module TransamHelper
     return val
   end
 
+  def current_url(new_params)
+    url_for params: params.permit!.merge(new_params) # allow all params already passed
+  end
+
 end
