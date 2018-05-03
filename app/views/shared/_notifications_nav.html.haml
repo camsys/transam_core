@@ -18,13 +18,10 @@
   function countNotifications() {
     $.ajax({
       url: "/notifications/count",
-      type: 'GET',
-      dataType: 'json',
-      data: {},
-      complete: function(response, status) {
-        if (parseInt(response.responseText) > 0) {
+      success: function(result){
+        if (parseInt(result) > 0) {
           $('#notification_count').show();
-          $('#notification_count').html(response.responseText);
+          $('#notification_count').html(result);
         } else {
           $('#notification_count').hide();
         }
