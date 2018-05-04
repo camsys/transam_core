@@ -571,7 +571,13 @@ body {
       min-width: 8.5em;
     }
   }
+}
 
 .btn-action {
   margin-left: 5px;  
+}
+
+.autoscroll-sm {
+  height: 200px;
+  overflow-y: auto;
 }
