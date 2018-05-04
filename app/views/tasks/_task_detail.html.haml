@@ -2,7 +2,7 @@
   .panel-heading
     - if can? :update, task
       %span.pull-right
-        .btn-group{:style => 'margin-left: 5px;'}
+        .btn-group.btn-action
           %button.btn.btn-default.btn-xs.dropdown-toggle{"data-toggle" => "dropdown", :aria_expanded => "false"}
             = task.state.titleize
             %span.caret
@@ -17,7 +17,7 @@
               = link_to task_path(task), :method => :delete, :data => {:confirm => "Are you sure you want to remove this task? The action can't be undone."} do
                 %i.fa.fa-trash-o.fa-fw
                 = " Remove this task"
-        .btn-group{:style => 'margin-left: 5px;'}
+        .btn-group.btn-action
           %button.btn.btn-default.btn-xs.dropdown-toggle{"data-toggle" => "dropdown", :aria_expanded => "false"}
             - if task.assigned_to_user.nil?
               Assign
@@ -46,7 +46,7 @@
 
   .panel-footer.clearfix
     %span.pull-right.text-muted
-      .btn-group{:style => 'margin-left: 5px;'}
+      .btn-group.btn-action
         = link_to task_path(task), :class => "btn btn-success btn-xs" do
           %i.fa.fa-fw.fa-plus
           Open
