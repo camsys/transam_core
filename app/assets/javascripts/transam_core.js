@@ -4,6 +4,7 @@
 //= require jquery-ui/draggable
 //= require jquery-ui/droppable
 //= require jquery.form
+//= require gritter
 //= require bootstrap-editable
 //= require bootstrap-editable-rails
 //= require cocoon
