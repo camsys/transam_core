@@ -30,7 +30,7 @@
       .col-lg-9.col-md-9.col-sm-9.col-xs-9
         = f.input :subject, :required => true, :placeholder => "Enter a brief summary..."
       .col-lg-3.col-md-3.col-sm-6.col-xs-6
-        = f.input :priority_type_id, :required => true, :collection => PriorityType.active, :include_blank => false, :label => "Priority"
+        = f.input :priority_type_id, :collection => PriorityType.active, :include_blank => false, :label => "Priority"
 
     = f.input :body, :required => true, :label => false, :as => :ckeditor, :input_html => { :ckeditor => {:toolbar => 'mini'}, :class => "form-control"}
 
