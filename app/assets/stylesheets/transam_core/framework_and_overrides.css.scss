@@ -585,3 +585,24 @@ body {
 .content-spacer {
   padding-top: 25px;
 }
+
+/* Loader Panel */
+.modal-backdrop {
+  display: none;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.ajax-loader-message {
+  font-size: 20px;
+}
+.ajax-loader {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin-left: -50px;
+  margin-top: -50px;
+  padding: 20px;
+  z-index: 1099;
+  background-color: #FFF;
+  border: 1px solid #EEE;
+  border-radius:5px;
+}
