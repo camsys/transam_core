@@ -25,8 +25,6 @@
       .jumbotron.text-center
         = yield
     %footer.footer= render 'shared/footer'
-    / push the java script to the bottom so the page loads faster
-    = render 'shared/javascript'
     / Begin analytics
     - unless ENV['GOOGLE_ANALYTICS_ACCOUNT'].blank?
       = render 'shared/analytics'
