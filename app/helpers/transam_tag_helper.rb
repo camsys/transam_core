@@ -29,29 +29,6 @@ module TransamTagHelper
     "<div class='#{html_class} text-center'><i class='fa fa-spin fa-#{spinner} fa-#{size}x'></i><span class='#{html_message_class}'> #{msg}</span></div>".html_safe
   end
 
-  def image_thumbnail_tag(options={}, &block)
-
-    # Check to see if there is any content in the block
-    content = capture(&block)
-    if content.nil?
-      content = "<p>&nbsp;</p>"
-    end
-
-    html = "<div class='"
-    html << options[:class] unless options[:class].blank?
-    html << "'>"
-    html << "<div class='thumbnail action-thumbnail' data-action-path='"
-    html << options[:path]
-    html << "'>"
-
-    html << content
-
-    html << "</div>"
-    html << "</div>"
-
-    html.html_safe
-  end
-
   def action_thumbnail_tag(options={}, &block)
 
     # Check to see if there is any content in the block
@@ -84,46 +61,6 @@ module TransamTagHelper
     html << "</div>"
     html << "</div>"
 
-
-    return html.html_safe
-  end
-
-  #
-  #
-  # Sub Navigation Tag Helpers
-  #
-  #
-  def sub_nav_elem_tag(&block)
-
-    content = capture(&block)
-    html = "<li>"
-    html << content
-    html << "</li>"
-
-    return html.html_safe
-  end
-
-  def sub_nav_tag(options={}, &block)
-
-    # Check to see if there is any content in the block
-    content = capture(&block)
-    if content.nil?
-      content = "<p>&nbsp;</p>"
-    end
-
-    html = "<div class='row "
-    html << options[:class] unless options[:class].blank?
-    html << "'>"
-    html << "<div class='col-md-12'>"
-    html << "<div class='navbar navbar-default' role='navigation'>"
-    html << "<div class='container-fluid'>"
-    html << "<ul class='nav navbar-nav'>"
-    html << content
-    html << "</ul>"
-    html << "</div>"
-    html << "</div>"
-    html << "</div>"
-    html << "</div>"
 
     return html.html_safe
   end

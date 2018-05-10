@@ -150,32 +150,10 @@ module TransamHelper
     end
   end
 
-  # Returns the list of reports that are displayable in the menu for the
-  # current user
-  def get_user_menu_reports report_type
-    a = []
-    report_type.reports.show_in_nav.each do |rep|
-      if current_user.is_in_roles? rep.role_names
-        a << rep
-      end
-    end
-    a
-  end
-
   # Returns the system user.
   def system_user
     # By convention, the first user is always the system user.
     User.find_by_id(1)
-  end
-
-  # Returns a list of asset keys as a delimited string
-  def list_to_delimited_string(list, delimiter = '|')
-    str = ""
-    list.each do |e|
-      str << e
-      str << delimiter unless e == list.last
-    end
-    str
   end
 
   # returns a date as an array of elements suitable for creating a new date in javascript
