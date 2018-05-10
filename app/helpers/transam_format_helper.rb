@@ -253,7 +253,7 @@ module TransamFormatHelper
   end
 
   def format_as_time(time)
-    return time.strftime("%I:%M %p") unless time.nil?
+    return time.strftime("%l:%M %p") unless time.nil?
   end
 
   def format_as_military_time(time)
