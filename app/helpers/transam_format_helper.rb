@@ -168,7 +168,7 @@ module TransamFormatHelper
   end
 
   # returns a collection as a formatted table without headers
-  def format_as_table_wihtout_headers(data, number_of_columns = 5, cell_padding_in_px = '6px')
+  def format_as_table_without_headers(data, number_of_columns = 5, cell_padding_in_px = '6px')
     html = "<table class='table-unstyled'>"
     counter = 0
 
