@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>module TransamFormatHelper - RDoc Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="module">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    
+    <div id="includes-section" class="nav-section">
+  <h3>Included Modules</h3>
+
+  <ul class="link-list">
+  
+  
+    <li><span class="include">FiscalYear</span>
+  
+  
+  </ul>
+</div>
+
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-i-format_as_address">#format_as_address</a>
+    
+    <li ><a href="#method-i-format_as_boolean">#format_as_boolean</a>
+    
+    <li ><a href="#method-i-format_as_checkbox">#format_as_checkbox</a>
+    
+    <li ><a href="#method-i-format_as_currency">#format_as_currency</a>
+    
+    <li ><a href="#method-i-format_as_date">#format_as_date</a>
+    
+    <li ><a href="#method-i-format_as_date_time">#format_as_date_time</a>
+    
+    <li ><a href="#method-i-format_as_date_time_distance">#format_as_date_time_distance</a>
+    
+    <li ><a href="#method-i-format_as_day_date">#format_as_day_date</a>
+    
+    <li ><a href="#method-i-format_as_decimal">#format_as_decimal</a>
+    
+    <li ><a href="#method-i-format_as_fiscal_year">#format_as_fiscal_year</a>
+    
+    <li ><a href="#method-i-format_as_general">#format_as_general</a>
+    
+    <li ><a href="#method-i-format_as_integer">#format_as_integer</a>
+    
+    <li ><a href="#method-i-format_as_label">#format_as_label</a>
+    
+    <li ><a href="#method-i-format_as_labels">#format_as_labels</a>
+    
+    <li ><a href="#method-i-format_as_list">#format_as_list</a>
+    
+    <li ><a href="#method-i-format_as_message_link">#format_as_message_link</a>
+    
+    <li ><a href="#method-i-format_as_military_time">#format_as_military_time</a>
+    
+    <li ><a href="#method-i-format_as_percentage">#format_as_percentage</a>
+    
+    <li ><a href="#method-i-format_as_phone_number">#format_as_phone_number</a>
+    
+    <li ><a href="#method-i-format_as_quantity">#format_as_quantity</a>
+    
+    <li ><a href="#method-i-format_as_table_without_headers">#format_as_table_without_headers</a>
+    
+    <li ><a href="#method-i-format_as_text">#format_as_text</a>
+    
+    <li ><a href="#method-i-format_as_time">#format_as_time</a>
+    
+    <li ><a href="#method-i-format_as_time_difference">#format_as_time_difference</a>
+    
+    <li ><a href="#method-i-format_as_url">#format_as_url</a>
+    
+    <li ><a href="#method-i-format_as_user_link">#format_as_user_link</a>
+    
+    <li ><a href="#method-i-format_as_yes_no">#format_as_yes_no</a>
+    
+    <li ><a href="#method-i-format_asset_groups">#format_asset_groups</a>
+    
+    <li ><a href="#method-i-format_field">#format_field</a>
+    
+    <li ><a href="#method-i-format_using_format">#format_using_format</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="module-TransamFormatHelper">
+  <h1 id="module-TransamFormatHelper" class="module">
+    module TransamFormatHelper
+  </h1>
+
+  <section class="description">
+    
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-format_as_address" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">format_as_address</span><span
+            class="method-args">(m)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>formats an object containing US address fields as html</p>
+          
+          
+
+          
+          <div class="method-source-code" id="format_as_address-source">
+            <pre><span class="ruby-comment"># File transam_format_helper.rb, line 277</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">format_as_address</span>(<span class="ruby-identifier">m</span>)
+  <span class="ruby-identifier">full_address</span> = []
+  <span class="ruby-identifier">full_address</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">address1</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">address1</span>.<span class="ruby-identifier">blank?</span>
+  <span class="ruby-identifier">full_address</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">address2</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">address2</span>.<span class="ruby-identifier">blank?</span>
+
+  <span class="ruby-identifier">address3</span> = []
+  <span class="ruby-identifier">address3</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">city</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">city</span>.<span class="ruby-identifier">blank?</span>
+  <span class="ruby-identifier">address3</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">state</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">state</span>.<span class="ruby-identifier">blank?</span>
+  <span class="ruby-identifier">address3</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">zip</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">zip</span>.<span class="ruby-identifier">blank?</span>
+  <span class="ruby-identifier">address3</span> = <span class="ruby-identifier">address3</span>.<span class="ruby-identifier">compact</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&#39;, &#39;</span>)
+
+  <span class="ruby-identifier">full_address</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">address3</span>
+  <span class="ruby-identifier">full_address</span> = <span class="ruby-identifier">full_address</span>.<span class="ruby-identifier">compact</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&#39;&lt;br/&gt;&#39;</span>)
+
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">full_address</span>.<span class="ruby-identifier">html_safe</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-format_as_boolean" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">format_as_boolean</span><span
+            class="method-args">(val, icon="fa-check", text_class='text-default')</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>formats a boolean field using a flag if the value is true</p>
+          
+          
+
+          
+          <div class="method-source-code" id="format_as_boolean-source">
+            <pre><span class="ruby-comment"># File transam_format_helper.rb, line 205</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">format_as_boolean</span>(<span class="ruby-identifier">val</span>, <span class="ruby-identifier">icon</span>=<span class="ruby-string">&quot;fa-check&quot;</span>, <span class="ruby-identifier">text_class</span>=<span class="ruby-string">&#39;text-default&#39;</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">val</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-node">&quot;&lt;i class=&#39;fa #{icon} #{text_class}&#39;&gt;&lt;/i&gt;&quot;</span>.<span class="ruby-identifier">html_safe</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-node">&quot;&lt;i class=&#39;fa #{icon} #{text_class}&#39; style = &#39;visibility: hidden;&#39;&gt;&lt;/i&gt;&quot;</span>.<span class="ruby-identifier">html_safe</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-format_as_checkbox" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">format_as_checkbox</span><span
+            class="method-args">(val, text_class='text-default')</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>formats a boolean field using a checkbox if the value is true</p>
+          
+          
+
+          
+          <div class="method-source-code" id="format_as_checkbox-source">
+            <pre><span class="ruby-comment"># File transam_format_helper.rb, line 196</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">format_as_checkbox</span>(<span class="ruby-identifier">val</span>, <span class="ruby-identifier">text_class</span>=<span class="ruby-string">&#39;text-default&#39;</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">val</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-node">&quot;&lt;i class=&#39;fa fa-check-square-o #{text_class}&#39;&gt;&lt;/i&gt;&quot;</span>.<span class="ruby-identifier">html_safe</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-node">&quot;&lt;i class=&#39;fa fa-square-o #{text_class}&#39;&gt;&lt;/i&gt;&quot;</span>.<span class="ruby-identifier">html_safe</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-format_as_currency" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">format_as_currency</span><span
+            class="method-args">(val, precision = 0)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>if no precision is set this truncates any decimals and returns the number
+as currency</p>
+          
+          
+
+          
+          <div class="method-source-code" id="format_as_currency-source">
+            <pre><span class="ruby-comment"># File transam_format_helper.rb, line 111</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">format_as_currency</span>(<span class="ruby-identifier">val</span>, <span class="ruby-identifier">precision</span> = <span class="ruby-value">0</span>)
+  <span class="ruby-identifier">val</span> <span class="ruby-operator">||=</span> <span class="ruby-value">0</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">precision</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">val</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">0</span>
+      <span class="ruby-identifier">val</span> = <span class="ruby-identifier">val</span> <span class="ruby-operator">-</span> <span class="ruby-value">0.5</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">val</span> = <span class="ruby-identifier">val</span> <span class="ruby-operator">+</span> <span class="ruby-value">0.5</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">number_to_currency</span>(<span class="ruby-identifier">val</span>.<span class="ruby-identifier">to_i</span>, <span class="ruby-value">:precision</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">number_to_currency</span>(<span class="ruby-identifier">val</span>, <span class="ruby-value">:precision</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">precision</span>)
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-format_as_date" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">format_as_date</span><span
+            class="method-args">(date, use_slashes=true)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>formats a date, where use_slashes indicates eg 10/24/2014 instead of 24 Oct
+2014</p>
+          
+          
+
+          
+          <div class="method-source-code" id="format_as_date-source">
+            <pre><span class="ruby-comment"># File transam_format_helper.rb, line 246</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">format_as_date</span>(<span class="ruby-identifier">date</span>, <span class="ruby-identifier">use_slashes</span>=<span class="ruby-keyword">true</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">use_slashes</span>
+    <span class="ruby-identifier">date</span>.<span class="ruby-identifier">strftime</span>(<span class="ruby-string">&quot;%m/%d/%Y&quot;</span>) <span class="ruby-keyword">unless</span> (<span class="ruby-identifier">date</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">date</span>.<span class="ruby-identifier">year</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">date</span>.<span class="ruby-identifier">strftime</span>(<span class="ruby-string">&quot;%b %d %Y&quot;</span>) <span class="ruby-keyword">unless</span> (<span class="ruby-identifier">date</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">date</span>.<span class="ruby-identifier">year</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>)
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-format_as_date_time" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">format_as_date_time</span><span
+            class="method-args">(datetime, use_slashes=true)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>formats a date/time, where use_slashes indicates eg 10/24/2014 instead of
+24 Oct 2014</p>
+          
+          
+
+          
+          <div class="method-source-code" id="format_as_date_time-source">
+            <pre><span class="ruby-comment"># File transam_format_helper.rb, line 237</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">format_as_date_time</span>(<span class="ruby-identifier">datetime</span>, <span class="ruby-identifier">use_slashes</span>=<span class="ruby-keyword">true</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">use_slashes</span>
+    <span class="ruby-identifier">datetime</span>.<span class="ruby-identifier">strftime</span>(<span class="ruby-string">&quot;%I:%M %p %m/%d/%Y&quot;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">datetime</span>.<span class="ruby-identifier">nil?</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">datetime</span>.<span class="ruby-identifier">strftime</span>(<span class="ruby-string">&quot;%I:%M %p %b %d %Y&quot;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">datetime</span>.<span class="ruby-identifier">nil?</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-format_as_date_time_distance" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">format_as_date_time_distance</span><span
+            class="method-args">(datetime)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>formats a date/time as a distance in words. e.g. 6 days ago</p>
+          
+          
+
+          
+          <div class="method-source-code" id="format_as_date_time_distance-source">
+            <pre><span class="ruby-comment"># File transam_format_helper.rb, line 228</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">format_as_date_time_distance</span>(<span class="ruby-identifier">datetime</span>)
+  <span class="ruby-identifier">dist</span> = <span class="ruby-identifier">distance_of_time_in_words_to_now</span>(<span class="ruby-identifier">datetime</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">current</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">datetime</span>
+    <span class="ruby-identifier">dist</span> = <span class="ruby-identifier">dist</span> <span class="ruby-operator">+</span> <span class="ruby-string">&quot; ago&quot;</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">dist</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-format_as_day_date" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">format_as_day_date</span><span
+            class="method-args">(date)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Formats a date as a day date eg Mon 24 Oct</p>
+          
+          
+
+          
+          <div class="method-source-code" id="format_as_day_date-source">
+            <pre><span class="ruby-comment"># File transam_format_helper.rb, line 223</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">format_as_day_date</span>(<span class="ruby-identifier">date</span>)
+  <span class="ruby-identifier">date</span>.<span class="ruby-identifier">strftime</span>(<span class="ruby-string">&quot;%a %d %b&quot;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">date</span>.<span class="ruby-identifier">nil?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-format_as_decimal" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">format_as_decimal</span><span
+            class="method-args">(val, precision = 2)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>returns a number as a decimal</p>
+          
+          
+
+          
+          <div class="method-source-code" id="format_as_decimal-source">
+            <pre><span class="ruby-comment"># File transam_format_helper.rb, line 142</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">format_as_decimal</span>(<span class="ruby-identifier">val</span>, <span class="ruby-identifier">precision</span> = <span class="ruby-value">2</span>)
+  <span class="ruby-identifier">number_with_precision</span>(<span class="ruby-identifier">val</span>, <span class="ruby-value">:precision</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">precision</span>, <span class="ruby-value">:delimiter</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;,&quot;</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-format_as_fiscal_year" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">format_as_fiscal_year</span><span
+            class="method-args">(val)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>formats a year value as a fiscal year string &#39;FY XX-YY&#39;</p>
+          
+          
+
+          
+          <div class="method-source-code" id="format_as_fiscal_year-source">
+            <pre><span class="ruby-comment"># File transam_format_helper.rb, line 101</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">format_as_fiscal_year</span>(<span class="ruby-identifier">val</span>)
+  <span class="ruby-identifier">fiscal_year</span>(<span class="ruby-identifier">val</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">val</span>.<span class="ruby-identifier">nil?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-format_as_general" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">format_as_general</span><span
+            class="method-args">(val, precision = 2)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>if the value is a number it is formatted as a decimal or integer otherwise
+we assume it is a string and is returned</p>
+          
+          
+
+          
+          <div class="method-source-code" id="format_as_general-source">
+            <pre><span class="ruby-comment"># File transam_format_helper.rb, line 127</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">format_as_general</span>(<span class="ruby-identifier">val</span>, <span class="ruby-identifier">precision</span> = <span class="ruby-value">2</span>)
+  <span class="ruby-keyword">begin</span>
+    <span class="ruby-constant">Float</span>(<span class="ruby-identifier">val</span>)
+    <span class="ruby-identifier">number_with_precision</span>(<span class="ruby-identifier">val</span>, <span class="ruby-value">:precision</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">precision</span>, <span class="ruby-value">:delimiter</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;,&quot;</span>)
+  <span class="ruby-keyword">rescue</span>
+    <span class="ruby-identifier">val</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-format_as_integer" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">format_as_integer</span><span
+            class="method-args">(val)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>truncates any decimals and returns the number with thousands delimiters</p>
+          
+          
+
+          
+          <div class="method-source-code" id="format_as_integer-source">
+            <pre><span class="ruby-comment"># File transam_format_helper.rb, line 137</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">format_as_integer</span>(<span class="ruby-identifier">val</span>)
+  <span class="ruby-identifier">format_as_decimal</span>(<span class="ruby-identifier">val</span>, <span class="ruby-value">0</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-format_as_label" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">format_as_label</span><span
+            class="method-args">(elem, style = 'info')</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>formats an element as a label. By default labels are displayed using
+label-info but can be controlled using the optional style param</p>
+          
+          
+
+          
+          <div class="method-source-code" id="format_as_label-source">
+            <pre><span class="ruby-comment"># File transam_format_helper.rb, line 93</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">format_as_label</span>(<span class="ruby-identifier">elem</span>, <span class="ruby-identifier">style</span> = <span class="ruby-string">&#39;info&#39;</span>)
+  <span class="ruby-identifier">html</span> = <span class="ruby-node">&quot;&lt;span class=&#39;label label-#{style}&#39;&gt;&quot;</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">elem</span>.<span class="ruby-identifier">to_s</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;/span&gt;&quot;</span>
+  <span class="ruby-identifier">html</span>.<span class="ruby-identifier">html_safe</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-format_as_labels" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">format_as_labels</span><span
+            class="method-args">(coll, style = 'info')</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>formats a collection of objecsts as labels/tags. By default labels are
+displayed using label-info but can be controlled using the optional style
+param. Label text is generated using to_s unless the object has a
+&#39;code&#39; method</p>
+          
+          
+
+          
+          <div class="method-source-code" id="format_as_labels-source">
+            <pre><span class="ruby-comment"># File transam_format_helper.rb, line 78</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">format_as_labels</span>(<span class="ruby-identifier">coll</span>, <span class="ruby-identifier">style</span> = <span class="ruby-string">&#39;info&#39;</span>)
+  <span class="ruby-identifier">html</span> = <span class="ruby-string">&#39;&#39;</span>
+  <span class="ruby-identifier">coll</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">respond_to?</span> <span class="ruby-value">:code</span>
+      <span class="ruby-identifier">txt</span> = <span class="ruby-identifier">e</span>.<span class="ruby-identifier">code</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">txt</span> = <span class="ruby-identifier">e</span>.<span class="ruby-identifier">to_s</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">format_as_label</span>(<span class="ruby-identifier">txt</span>, <span class="ruby-identifier">style</span>)
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">html</span>.<span class="ruby-identifier">html_safe</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-format_as_list" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">format_as_list</span><span
+            class="method-args">(coll)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>returns a collection as a formatted list</p>
+          
+          
+
+          
+          <div class="method-source-code" id="format_as_list-source">
+            <pre><span class="ruby-comment"># File transam_format_helper.rb, line 157</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">format_as_list</span>(<span class="ruby-identifier">coll</span>)
+  <span class="ruby-identifier">html</span> = <span class="ruby-string">&quot;&lt;ul class=&#39;list-unstyled&#39;&gt;&quot;</span>
+  <span class="ruby-identifier">coll</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">e</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;li&gt;&quot;</span>
+    <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">e</span>.<span class="ruby-identifier">to_s</span>
+    <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;/li&gt;&quot;</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;/ul&gt;&quot;</span>
+  <span class="ruby-identifier">html</span>.<span class="ruby-identifier">html_safe</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-format_as_message_link" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">format_as_message_link</span><span
+            class="method-args">(user, options = {})</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Formats a user name and provides message link and optional messaging
+options available via the options hash</p>
+          
+          
+
+          
+          <div class="method-source-code" id="format_as_message_link-source">
+            <pre><span class="ruby-comment"># File transam_format_helper.rb, line 14</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">format_as_message_link</span>(<span class="ruby-identifier">user</span>, <span class="ruby-identifier">options</span> = {})
+  <span class="ruby-identifier">html</span> = <span class="ruby-string">&#39;&#39;</span>
+  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">blank?</span>
+    <span class="ruby-identifier">options</span>[<span class="ruby-value">:to_user</span>] = <span class="ruby-identifier">user</span>
+    <span class="ruby-identifier">options</span>[<span class="ruby-value">:subject</span>] = <span class="ruby-identifier">options</span>[<span class="ruby-value">:subject</span>] <span class="ruby-operator">||</span> <span class="ruby-string">&#39;&#39;</span>
+    <span class="ruby-identifier">options</span>[<span class="ruby-value">:body</span>] = <span class="ruby-identifier">options</span>[<span class="ruby-value">:body</span>] <span class="ruby-operator">||</span> <span class="ruby-string">&#39;&#39;</span>
+    <span class="ruby-identifier">message_url</span> = <span class="ruby-identifier">new_user_message_path</span>(<span class="ruby-identifier">current_user</span>, <span class="ruby-identifier">options</span>)
+    <span class="ruby-identifier">html</span> = <span class="ruby-node">&quot;&lt;a href=&#39;#{message_url}&#39;&gt;#{user.email}&quot;</span>
+    <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&#39;&amp;nbsp;&#39;</span>
+    <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;i class = &#39;fa fa-envelope&#39;&gt;&lt;/i&gt;&quot;</span>
+    <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;/a&gt;&quot;</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">html</span>.<span class="ruby-identifier">html_safe</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-format_as_military_time" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">format_as_military_time</span><span
+            class="method-args">(time)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>formats a time as eg “08:00” or “23:00”</p>
+          
+          
+
+          
+          <div class="method-source-code" id="format_as_military_time-source">
+            <pre><span class="ruby-comment"># File transam_format_helper.rb, line 260</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">format_as_military_time</span>(<span class="ruby-identifier">time</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">time</span>.<span class="ruby-identifier">strftime</span>(<span class="ruby-string">&quot;%H:%M&quot;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">time</span>.<span class="ruby-identifier">nil?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-format_as_percentage" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">format_as_percentage</span><span
+            class="method-args">(val, precision = 0)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>returns a number as a percentage</p>
+          
+          
+
+          
+          <div class="method-source-code" id="format_as_percentage-source">
+            <pre><span class="ruby-comment"># File transam_format_helper.rb, line 147</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">format_as_percentage</span>(<span class="ruby-identifier">val</span>, <span class="ruby-identifier">precision</span> = <span class="ruby-value">0</span>)
+  <span class="ruby-node">&quot;#{number_with_precision(val, :precision =&gt; precision)}%&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-format_as_phone_number" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">format_as_phone_number</span><span
+            class="method-args">(val, area_code = true)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>returns a number formatted as a phone number</p>
+          
+          
+
+          
+          <div class="method-source-code" id="format_as_phone_number-source">
+            <pre><span class="ruby-comment"># File transam_format_helper.rb, line 152</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">format_as_phone_number</span>(<span class="ruby-identifier">val</span>, <span class="ruby-identifier">area_code</span> = <span class="ruby-keyword">true</span>)
+  <span class="ruby-identifier">number_to_phone</span>(<span class="ruby-identifier">val</span>, <span class="ruby-value">:area_code</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">area_code</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-format_as_quantity" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">format_as_quantity</span><span
+            class="method-args">(count, unit_type = 'unit')</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Formats a quantity as an integer followed by a unit type</p>
+          
+          
+
+          
+          <div class="method-source-code" id="format_as_quantity-source">
+            <pre><span class="ruby-comment"># File transam_format_helper.rb, line 55</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">format_as_quantity</span>(<span class="ruby-identifier">count</span>, <span class="ruby-identifier">unit_type</span> = <span class="ruby-string">&#39;unit&#39;</span>)
+  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">unit_type</span>.<span class="ruby-identifier">blank?</span>
+    <span class="ruby-node">&quot;#{format_as_integer(count)} #{unit_type}&quot;</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-node">&quot;#{count}&quot;</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-format_as_table_without_headers" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">format_as_table_without_headers</span><span
+            class="method-args">(data, number_of_columns = 5, cell_padding_in_px = '6px')</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>returns a collection as a formatted table without headers</p>
+          
+          
+
+          
+          <div class="method-source-code" id="format_as_table_without_headers-source">
+            <pre><span class="ruby-comment"># File transam_format_helper.rb, line 169</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">format_as_table_without_headers</span>(<span class="ruby-identifier">data</span>, <span class="ruby-identifier">number_of_columns</span> = <span class="ruby-value">5</span>, <span class="ruby-identifier">cell_padding_in_px</span> = <span class="ruby-string">&#39;6px&#39;</span>)
+  <span class="ruby-identifier">html</span> = <span class="ruby-string">&quot;&lt;table class=&#39;table-unstyled&#39;&gt;&quot;</span>
+  <span class="ruby-identifier">counter</span> = <span class="ruby-value">0</span>
+
+  <span class="ruby-identifier">data</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">datum</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">counter</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+      <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&#39;&lt;tr&gt;&#39;</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;&lt;td style=&#39;padding:#{cell_padding_in_px};&#39;&gt;&quot;</span>
+    <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">datum</span>.<span class="ruby-identifier">to_s</span>
+    <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;/td&gt;&quot;</span>
+
+    <span class="ruby-identifier">counter</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+
+    <span class="ruby-keyword">if</span> ( (<span class="ruby-identifier">counter</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">number_of_columns</span>) <span class="ruby-operator">||</span> (<span class="ruby-identifier">datum</span>.<span class="ruby-identifier">equal?</span> <span class="ruby-identifier">data</span>.<span class="ruby-identifier">last</span>))
+      <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&#39;&lt;/tr&gt;&#39;</span>
+      <span class="ruby-identifier">counter</span> = <span class="ruby-value">0</span>
+    <span class="ruby-keyword">end</span>
+
+
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;/table&gt;&quot;</span>
+  <span class="ruby-identifier">html</span>.<span class="ruby-identifier">html_safe</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-format_as_text" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">format_as_text</span><span
+            class="method-args">(val, sanitize=false)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Formats text as as HTML using simple_format</p>
+          
+          
+
+          
+          <div class="method-source-code" id="format_as_text-source">
+            <pre><span class="ruby-comment"># File transam_format_helper.rb, line 8</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">format_as_text</span>(<span class="ruby-identifier">val</span>, <span class="ruby-identifier">sanitize</span>=<span class="ruby-keyword">false</span>)
+  <span class="ruby-identifier">simple_format</span>(<span class="ruby-identifier">val</span>, {}, <span class="ruby-value">:sanitize</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">sanitize</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-format_as_time" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">format_as_time</span><span
+            class="method-args">(time)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>formats a time as eg “ 8:00 am” or “11:00 pm”</p>
+          
+          
+
+          
+          <div class="method-source-code" id="format_as_time-source">
+            <pre><span class="ruby-comment"># File transam_format_helper.rb, line 255</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">format_as_time</span>(<span class="ruby-identifier">time</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">time</span>.<span class="ruby-identifier">strftime</span>(<span class="ruby-string">&quot;%l:%M %p&quot;</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">time</span>.<span class="ruby-identifier">nil?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-format_as_time_difference" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">format_as_time_difference</span><span
+            class="method-args">(s, show_seconds = false)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>formats a number of seconds as the corresponding days, hours, minutes, and
+optional seconds</p>
+          
+          
+
+          
+          <div class="method-source-code" id="format_as_time_difference-source">
+            <pre><span class="ruby-comment"># File transam_format_helper.rb, line 265</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">format_as_time_difference</span>(<span class="ruby-identifier">s</span>, <span class="ruby-identifier">show_seconds</span> = <span class="ruby-keyword">false</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">blank?</span>
+  <span class="ruby-identifier">dhms</span> = [<span class="ruby-value">60</span>,<span class="ruby-value">60</span>,<span class="ruby-value">24</span>].<span class="ruby-identifier">reduce</span>([<span class="ruby-identifier">s</span>]) { <span class="ruby-operator">|</span><span class="ruby-identifier">m</span>,<span class="ruby-identifier">o</span><span class="ruby-operator">|</span> <span class="ruby-identifier">m</span>.<span class="ruby-identifier">unshift</span>(<span class="ruby-identifier">m</span>.<span class="ruby-identifier">shift</span>.<span class="ruby-identifier">divmod</span>(<span class="ruby-identifier">o</span>)).<span class="ruby-identifier">flatten</span> }
+  <span class="ruby-identifier">val</span> = []
+  <span class="ruby-identifier">val</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;#{dhms[0]} days&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">dhms</span>[<span class="ruby-value">0</span>] <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+  <span class="ruby-identifier">val</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;#{dhms[1]}h&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">dhms</span>[<span class="ruby-value">1</span>] <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+  <span class="ruby-identifier">val</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;#{dhms[2]}m&quot;</span>
+  <span class="ruby-identifier">val</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;#{dhms[3]}s&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">show_seconds</span>
+  <span class="ruby-identifier">val</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&#39; &#39;</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-format_as_url" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">format_as_url</span><span
+            class="method-args">(url, target = '_blank')</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>formats a URL as a link</p>
+          
+          
+
+          
+          <div class="method-source-code" id="format_as_url-source">
+            <pre><span class="ruby-comment"># File transam_format_helper.rb, line 106</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">format_as_url</span>(<span class="ruby-identifier">url</span>, <span class="ruby-identifier">target</span> = <span class="ruby-string">&#39;_blank&#39;</span>)
+  <span class="ruby-identifier">link_to</span>(<span class="ruby-identifier">url</span>, <span class="ruby-identifier">url</span>, <span class="ruby-value">:target</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">target</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-format_as_user_link" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">format_as_user_link</span><span
+            class="method-args">(user, options = {})</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Formats a user name and provides an optional (defaulted) message link and
+messaging options</p>
+          
+          
+
+          
+          <div class="method-source-code" id="format_as_user_link-source">
+            <pre><span class="ruby-comment"># File transam_format_helper.rb, line 32</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">format_as_user_link</span>(<span class="ruby-identifier">user</span>, <span class="ruby-identifier">options</span> = {})
+  <span class="ruby-identifier">html</span> = <span class="ruby-string">&#39;&#39;</span>
+  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">blank?</span>
+    <span class="ruby-identifier">options</span>[<span class="ruby-value">:to_user</span>] = <span class="ruby-identifier">user</span>
+    <span class="ruby-identifier">options</span>[<span class="ruby-value">:subject</span>] = <span class="ruby-identifier">options</span>[<span class="ruby-value">:subject</span>] <span class="ruby-operator">||</span> <span class="ruby-string">&#39;&#39;</span>
+    <span class="ruby-identifier">options</span>[<span class="ruby-value">:body</span>] = <span class="ruby-identifier">options</span>[<span class="ruby-value">:body</span>] <span class="ruby-operator">||</span> <span class="ruby-string">&#39;&#39;</span>
+    <span class="ruby-identifier">user_url</span> = <span class="ruby-identifier">user_path</span>(<span class="ruby-identifier">user</span>)
+    <span class="ruby-identifier">html</span> = <span class="ruby-node">&quot;&lt;a href=&#39;#{user_url}&#39;&gt;#{user}&lt;/a&gt;&quot;</span>
+    <span class="ruby-identifier">from_user</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:from_user</span>]
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">from_user</span>.<span class="ruby-identifier">present?</span>
+      <span class="ruby-identifier">message_url</span> = <span class="ruby-identifier">new_user_message_path</span>(<span class="ruby-identifier">from_user</span>, <span class="ruby-identifier">options</span>)
+      <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&#39;&amp;nbsp;&#39;</span>
+      <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;span class = &#39;message-link&#39;&gt;&quot;</span>
+      <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;&lt;a href=&#39;#{message_url}&#39;&gt;&quot;</span>
+      <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;i class = &#39;fa fa-envelope&#39;&gt;&lt;/i&gt;&quot;</span>
+      <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;/a&gt;&quot;</span>
+      <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;/span&gt;&quot;</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">html</span>.<span class="ruby-identifier">html_safe</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-format_as_yes_no" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">format_as_yes_no</span><span
+            class="method-args">(val)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>formats a boolean field as Yes or No</p>
+          
+          
+
+          
+          <div class="method-source-code" id="format_as_yes_no-source">
+            <pre><span class="ruby-comment"># File transam_format_helper.rb, line 214</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">format_as_yes_no</span>(<span class="ruby-identifier">val</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">val</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-string">&quot;Yes&quot;</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-string">&quot;No&quot;</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-format_asset_groups" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">format_asset_groups</span><span
+            class="method-args">(asset, style = 'info')</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>formats an assets list of asset groups with remove option</p>
+          
+          
+
+          
+          <div class="method-source-code" id="format_asset_groups-source">
+            <pre><span class="ruby-comment"># File transam_format_helper.rb, line 64</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">format_asset_groups</span>(<span class="ruby-identifier">asset</span>, <span class="ruby-identifier">style</span> = <span class="ruby-string">&#39;info&#39;</span>)
+  <span class="ruby-identifier">html</span> = <span class="ruby-string">&quot;&quot;</span>
+  <span class="ruby-identifier">asset</span>.<span class="ruby-identifier">asset_groups</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">grp</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;&lt;span class=&#39;label label-#{style}&#39;&gt;&quot;</span>
+    <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">grp</span>.<span class="ruby-identifier">code</span>
+    <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;&lt;span data-role=&#39;remove&#39; data-action-path=&#39;#{remove_from_group_inventory_path(asset, :asset_group =&gt; grp)}&#39;&gt;&lt;/span&gt;&quot;</span>
+    <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;/span&gt;&quot;</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">html</span>.<span class="ruby-identifier">html_safe</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-format_field" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">format_field</span><span
+            class="method-args">(label, value, popover_text=nil, popover_iconcls=nil, popover_label=nil)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>formats a label/value combination, providing optional popover support</p>
+          
+          
+
+          
+          <div class="method-source-code" id="format_field-source">
+            <pre><span class="ruby-comment"># File transam_format_helper.rb, line 295</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">format_field</span>(<span class="ruby-identifier">label</span>, <span class="ruby-identifier">value</span>, <span class="ruby-identifier">popover_text</span>=<span class="ruby-keyword">nil</span>, <span class="ruby-identifier">popover_iconcls</span>=<span class="ruby-keyword">nil</span>, <span class="ruby-identifier">popover_label</span>=<span class="ruby-keyword">nil</span>)
+
+  <span class="ruby-identifier">html</span> = <span class="ruby-string">&quot;&lt;div class=&#39;row control-group&#39;&gt;&quot;</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;div class=&#39;col-xs-5 display-label&#39;&gt;&quot;</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">label</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;/div&gt;&quot;</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;div class=&#39;col-xs-7 display-value&#39;&gt;&quot;</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">value</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">value</span>.<span class="ruby-identifier">nil?</span>
+  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">popover_text</span>.<span class="ruby-identifier">nil?</span>
+    <span class="ruby-identifier">popover_iconcls</span> = <span class="ruby-string">&#39;fa fa-info-circle info-icon&#39;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">popover_iconcls</span>
+    <span class="ruby-identifier">popover_label</span> = <span class="ruby-identifier">label</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">popover_label</span>
+    <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;&lt;i class=&#39;#{popover_iconcls} info-icon&#39; data-toggle=&#39;popover&#39; data-trigger=&#39;hover&#39; title=&#39;#{popover_label}&#39; data-placement=&#39;right&#39; data-content=&#39;#{popover_text}&#39;&gt;&lt;/i&gt;&quot;</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;/div&gt;&quot;</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;/div&gt;&quot;</span>
+
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">html</span>.<span class="ruby-identifier">html_safe</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-format_using_format" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">format_using_format</span><span
+            class="method-args">(val, format)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>formats a value using the indicated format</p>
+          
+          
+
+          
+          <div class="method-source-code" id="format_using_format-source">
+            <pre><span class="ruby-comment"># File transam_format_helper.rb, line 316</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">format_using_format</span>(<span class="ruby-identifier">val</span>, <span class="ruby-identifier">format</span>)
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">format</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-value">:currencyM</span>
+      <span class="ruby-identifier">number_to_currency</span>(<span class="ruby-identifier">val</span>, <span class="ruby-identifier">format</span><span class="ruby-operator">:</span> <span class="ruby-string">&#39;%u%nM&#39;</span>, <span class="ruby-identifier">negative_format</span><span class="ruby-operator">:</span> <span class="ruby-string">&#39;(%u%nM)&#39;</span>)
+    <span class="ruby-keyword">when</span> <span class="ruby-value">:currency</span>
+      <span class="ruby-identifier">format_as_currency</span>(<span class="ruby-identifier">val</span>)
+    <span class="ruby-keyword">when</span> <span class="ruby-value">:fiscal_year</span>
+      <span class="ruby-identifier">format_as_fiscal_year</span>(<span class="ruby-identifier">val</span>.<span class="ruby-identifier">to_i</span>) <span class="ruby-keyword">unless</span> <span class="ruby-identifier">val</span>.<span class="ruby-identifier">nil?</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-value">:integer</span>
+      <span class="ruby-identifier">format_as_integer</span>(<span class="ruby-identifier">val</span>)
+    <span class="ruby-keyword">when</span> <span class="ruby-value">:decimal</span>
+      <span class="ruby-identifier">format_as_decimal</span>(<span class="ruby-identifier">val</span>)
+    <span class="ruby-keyword">when</span> <span class="ruby-value">:percent</span>
+      <span class="ruby-identifier">format_as_percentage</span>(<span class="ruby-identifier">val</span>)
+    <span class="ruby-keyword">when</span> <span class="ruby-value">:string</span>
+      <span class="ruby-identifier">val</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-value">:checkbox</span>
+      <span class="ruby-identifier">format_as_checkbox</span>(<span class="ruby-identifier">val</span>)
+    <span class="ruby-keyword">when</span> <span class="ruby-value">:boolean</span>
+      <span class="ruby-comment"># Check for 1/0 val as well as true/false given direct query clause</span>
+      <span class="ruby-identifier">format_as_boolean</span>(<span class="ruby-identifier">val</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span> <span class="ruby-operator">?</span> <span class="ruby-keyword">false</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">val</span>)
+    <span class="ruby-keyword">when</span> <span class="ruby-value">:list</span>
+      <span class="ruby-identifier">format_as_list</span>(<span class="ruby-identifier">val</span>)
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-comment"># Note, current implementation uses rescue and is thus potentially inefficient.</span>
+      <span class="ruby-comment"># Consider alterantives.</span>
+      <span class="ruby-identifier">format_as_general</span>(<span class="ruby-identifier">val</span>)
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+
