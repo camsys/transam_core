@@ -31,7 +31,7 @@
                 %span.input-group-addon
                   %i.fa.fa-calendar
           .col-sm-3
-            = f.input :end_datetime_hour, :as => :select, :collection => 0..23, :label_method => lambda { |hr| format_as_date(Time.current.change(:hour => hr)}, :requred => true, :label => "Hour"
+            = f.input :end_datetime_hour, :as => :select, :collection => 0..23, :label_method => lambda { |hr| format_as_time(Time.current.change(:hour => hr))}, :requred => true, :label => "Hour"
         = f.association :notice_type, :include_blank => false
       = f.button :submit, :class => 'btn btn-primary'
 
