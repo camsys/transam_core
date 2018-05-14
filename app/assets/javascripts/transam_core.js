@@ -53,3 +53,9 @@ $(document).ready(function() {
         text: '<i class="fa fa-align-justify"></i>'
     });
 });
+
+
+// make any table a bootstrap table. deals with ajax loading of data on initial load
+$(document).on('turbolinks:load', function() {
+    $('[data-toggle="table"]').bootstrapTable();
+});
