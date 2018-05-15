@@ -19,6 +19,9 @@ class SessionCacheCleanupJob < Job
     end
     Rails.cache.fetch(key, :force => true, :expires_in => 1.week) { session_list }
 
+
+    # Add a row into the activity table
+    ActivityLog.create({:organization_id => Grantor.first.id, :user_id => User.find_by(first_name: 'system').id, :item_type => self.class.name, :activity => 'Executing Session Cache Cleanup', :activity_time => Time.now})
   end
 
   def prepare

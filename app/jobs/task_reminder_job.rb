@@ -41,6 +41,9 @@ class TaskReminderJob < Job
       msg.save
     end
 
+    # Add a row into the activity table
+    ActivityLog.create({:organization_id => Grantor.first.id, :user_id => sys_user.id, :item_type => self.class.name, :activity => 'Sent reminders for tasks due', :activity_time => Time.now})
+
   end
 
   def prepare

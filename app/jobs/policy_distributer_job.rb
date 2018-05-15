@@ -38,6 +38,9 @@ class PolicyDistributerJob < Job
 
     msg = 'Parent policy has been distributed.'
 
+    # Add a row into the activity table
+    ActivityLog.create({:organization_id =>policy_distributer_proxy.policy.organization_id, :user_id => creator.id, :item_type => "Policy Distributor", :activity => msg, :activity_time => Time.now})
+
     event_url = Rails.application.routes.url_helpers.policy_path policy_distributer_proxy.policy
     policy_notification = Notification.create(text: msg, link: event_url, notifiable_type: 'Organization', notifiable_id: policy_distributer_proxy.policy.organization_id)
     UserNotification.create(user: creator, notification: policy_notification)
