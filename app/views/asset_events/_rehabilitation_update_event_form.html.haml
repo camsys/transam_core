@@ -8,7 +8,7 @@
 
 = render :layout => "update_event_form" do |f|
   = f.input :event_date, :label => 'Date of Report', :wrapper => :vertical_append do
-    = f.input_field :event_date, :as => :string, :class => 'form-control datepicker', :data => {'behavior' => 'datepicker'}, :value => format_as_date(f.object.event_date)
+    = f.input_field :event_date, :as => :string, :class => 'form-control datepicker', :data => {'date-container' => "##{format_as_id(@asset_event.asset_event_type.name)}_dialog"}, :value => format_as_date(f.object.event_date)
     %span.input-group-addon
       %i.fa.fa-calendar
   - if AssetSubsystem.active.count > 0

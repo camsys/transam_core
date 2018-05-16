@@ -291,6 +291,11 @@ module TransamFormatHelper
     return full_address.html_safe
   end
 
+  # formats an unconstrained string as a valid HTML id
+  def format_as_id(val)
+    val.parameterize.underscore
+  end
+  
   # formats a label/value combination, providing optional popover support
   def format_field(label, value, popover_text=nil, popover_iconcls=nil, popover_label=nil)
 
