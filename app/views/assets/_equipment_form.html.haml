@@ -35,17 +35,17 @@
           = f.input_field :purchase_cost, :class => "form-control"
 
         = f.input :purchase_date, :wrapper => :vertical_append, :label => "Purchase Date" do
-          = f.input_field :purchase_date, :as => :string, :class => 'form-control datepicker', :data => {'behavior' => 'datepicker'}, :value => format_as_date(f.object.purchase_date)
+          = f.input_field :purchase_date, :as => :string, :class => 'form-control datepicker', :data => {'date-container' => '#purchase_dialog'}, :value => format_as_date(f.object.purchase_date)
           %span.input-group-addon
             %i.fa.fa-calendar
 
         = f.input :warranty_date, :wrapper => :vertical_append, :label => "Warranty Date" do
-          = f.input_field :warranty_date, :as => :string, :class => 'form-control datepicker', :data => {'behavior' => 'datepicker'}, :value => format_as_date(f.object.warranty_date)
+          = f.input_field :warranty_date, :as => :string, :class => 'form-control datepicker', :data => {'date-container' => '#purchase_dialog'}, :value => format_as_date(f.object.warranty_date)
           %span.input-group-addon
             %i.fa.fa-calendar
 
         = f.input :in_service_date, :wrapper => :vertical_append, :label => "In Service Date" do
-          = f.input_field :in_service_date, :as => :string, :class => 'form-control datepicker', :data => {'behavior' => 'datepicker'}, :value => format_as_date(f.object.in_service_date)
+          = f.input_field :in_service_date, :as => :string, :class => 'form-control datepicker', :data => {'date-container' => '#purchase_dialog'}, :value => format_as_date(f.object.in_service_date)
           %span.input-group-addon
             %i.fa.fa-calendar
 
@@ -81,8 +81,6 @@
       this.value = this.value.toUpperCase();
     });
 
-    $('[data-behavior~=datepicker]').datepicker({
-    });
     $('#vendor_name').on('focus', function() {
       _typeahead_source_url = $(this).data('url');
     });
@@ -104,86 +102,9 @@
     });
   });
 
-  $('#parent_name').on('focus', function() {
-      _typeahead_source_url = $(this).data('url');
-    });
-
-  // Enable typeahead for the SMO filter
-  $('#parent_name').typeahead({
-    items: 10,
-    minLength: 2,
-    source: _typeahead_searcher,
-    matcher: _typeahead_matcher,
-    highlighter: _typeahead_highlighter,
-    updater: function (obj) {
-      var item = JSON.parse(obj);
-      // Update the UI
-      $('#parent_name').attr('value', item.name);
-      $('#asset_parent_key').attr('value', item.id);
-      return item.name;
-    }
-  });
-
   $('.equipment_form').validate({
     submitHandler: function(form) {
       form.submit();
     }
   });
 
-
-  // Document Ready
-  $(document).ready(function(){
-
-    // Force uppercase text for OFT inputs
-    $('[data-convert="uppercase"]').keyup(function(evt) {
-      this.value = this.value.toUpperCase();
-    });
-
-    $('[data-behavior~=datepicker]').datepicker({
-    });
-    $('#vendor_name').on('focus', function() {
-      _typeahead_source_url = $(this).data('url');
-    });
-
-    // Enable typeahead for the SMO filter
-    $('#vendor_name').typeahead({
-      items: 10,
-      minLength: 2,
-      source: _typeahead_searcher,
-      matcher: _typeahead_matcher,
-      highlighter: _typeahead_highlighter,
-      updater: function (obj) {
-        var item = JSON.parse(obj);
-        // Update the UI
-        $('#vendor_name').attr('value', item.name);
-        $('#asset_vendor_id').attr('value', item.id);
-        return item.name;
-      }
-    });
-  });
-
-  $('#parent_name').on('focus', function() {
-      _typeahead_source_url = $(this).data('url');
-    });
-
-  // Enable typeahead for the SMO filter
-  $('#parent_name').typeahead({
-    items: 10,
-    minLength: 2,
-    source: _typeahead_searcher,
-    matcher: _typeahead_matcher,
-    highlighter: _typeahead_highlighter,
-    updater: function (obj) {
-      var item = JSON.parse(obj);
-      // Update the UI
-      $('#parent_name').attr('value', item.name);
-      $('#asset_parent_key').attr('value', item.id);
-      return item.name;
-    }
-  });
-
-  $('.equipment_form').validate({
-    submitHandler: function(form) {
-      form.submit();
-    }
-  });
