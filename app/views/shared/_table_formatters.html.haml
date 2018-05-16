@@ -94,7 +94,7 @@
   };
 
   function ali_fiscal_year_formatter(value) {
-    return "#{format_as_fiscal_year(ali.fy_year)}";
+    return format_as_fiscal_year(value);
   };
 
   function popup_formatter_for_date_name(value, data) {
@@ -164,14 +164,22 @@
   }
 
   function description_formatter(value, data) {
-  // if (value) {
-  //   if (is_rehabilitation) {
-  //     str = "Rehabilitation";
-  //   } else {
-  //     str = "Replacement";
-  //   }
-  //   return str + " for " + data.asset_subtype_id + " " + data.fuel_type + " " + value + " replaced in " + data.scheduled_replacement_year;
-  // } else {
-  //   return "";
-  // }
-  // };
+    if (value) {
+      if (is_rehabilitation) {
+        str = "Rehabilitation";
+      } else {
+        str = "Replacement";
+      }
+      return str + " for " + data.asset_subtype_id + " " + data.fuel_type + " " + value + " replaced in " + data.scheduled_replacement_year;
+    } else {
+      return "";
+    }
+  };
+
+  function pcnt_formatter(value) {
+    if (value == "") {
+      return value;
+    } else {
+      return format("##0.000", value) + "%";
+    }
+  };
