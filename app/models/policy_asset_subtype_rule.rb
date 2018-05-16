@@ -14,7 +14,9 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
   #-----------------------------------------------------------------------------
   # Callbacks
   #-----------------------------------------------------------------------------
-  after_initialize :set_defaults
+  after_initialize  :set_defaults
+
+  after_save        :apply_policy
 
   #-----------------------------------------------------------------------------
   # Associations
@@ -189,6 +191,26 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
     self.extended_service_life_months ||= 0
     self.min_used_purchase_service_life_months ||= 0
     self.cost_fy_year ||= current_planning_year_year
+  end
+
+  def apply_policy
+    Asset.where(organization_id: self.organization_id).each do |asset|
+      [:update_sogr, :update_estimated_replacement_cost, :update_scheduled_replacement_cost].each do |m|
+        begin
+          asset.send(m, false)
+        rescue Exception => e
+          Rails.logger.warn e.message
+        end
+      end
+
+      begin
+        asset.save!
+      rescue Exception => e
+        Rails.logger.warn e.message
+        Rails.logger.warn e.backtrace
+      end
+
+    end
   end
 
   #-----------------------------------------------------------------------------

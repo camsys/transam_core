@@ -17,6 +17,8 @@ class Policy < ActiveRecord::Base
   #------------------------------------------------------------------------------
   after_initialize :set_defaults
 
+  after_save :apply_policy
+
   #------------------------------------------------------------------------------
   # Associations
   #------------------------------------------------------------------------------
@@ -192,6 +194,26 @@ class Policy < ActiveRecord::Base
   def set_defaults
     self.condition_estimation_type_id ||= 1
     self.condition_threshold ||= 2.5
+  end
+
+  def apply_policy
+    Asset.where(organization_id: self.organization_id).each do |asset|
+      [:update_sogr, :update_estimated_replacement_cost, :update_scheduled_replacement_cost].each do |m|
+        begin
+          asset.send(m, false)
+        rescue Exception => e
+          Rails.logger.warn e.message
+        end
+      end
+
+      begin
+        asset.save!
+      rescue Exception => e
+        Rails.logger.warn e.message
+        Rails.logger.warn e.backtrace
+      end
+
+    end
   end
 
 end
