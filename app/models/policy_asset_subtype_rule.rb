@@ -194,7 +194,7 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
   end
 
   def apply_policy
-    Asset.where(organization_id: self.organization_id).each do |asset|
+    Asset.operational.where(organization_id: self.organization_id).each do |asset|
       [:update_sogr, :update_estimated_replacement_cost, :update_scheduled_replacement_cost].each do |m|
         begin
           asset.send(m, false)
