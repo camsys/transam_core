@@ -131,6 +131,19 @@
         }
     };
 
+    var getFieldIndex = function (columns, field) {
+        var index = -1;
+
+        $.each(columns, function (i, column) {
+            if (column.field === field) {
+                index = i;
+                return false;
+            }
+            return true;
+        });
+        return index;
+    };
+
     var getScrollBarWidth = function () {
         if (cachedWidth === null) {
             var inner = $('<p/>').addClass('fixed-table-scroll-inner'),
@@ -3283,7 +3296,8 @@
         calculateObjectValue: calculateObjectValue,
         getItemField: getItemField,
         objectKeys: objectKeys,
-        isIEBrowser: isIEBrowser
+        isIEBrowser: isIEBrowser,
+        getFieldIndex: getFieldIndex
     };
 
     // BOOTSTRAP TABLE INIT

@@ -4,7 +4,7 @@
  * @version: v1.0.1
  */
 
-$.getScript("https://rawgit.com/akottr/dragtable/master/jquery.dragtable.js", function() {
+$.getScript("https://cdnjs.cloudflare.com/ajax/libs/jqgrid/4.6.0/plugins/jquery.tablednd.js", function() {
 });
 
 (function ($) {
