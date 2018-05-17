@@ -31,11 +31,13 @@ module TransamHelper
     APP_VERSION
   end
 
+  # returns application title set in environment, with fallback
   def app_title
     title = ENV["APPLICATION_TITLE"] ? ENV["APPLICATION_TITLE"] : 'TransAM Application'
     return title.html_safe
   end
 
+  # returns credits set in environment, with fallback
   def credits
     credit = ENV["APPLICATION_CREDITS"] ? ENV["APPLICATION_CREDITS"] : 'TransAM Core Asset Management Platform<br/>Configure me in Application.yml'
     return credit.html_safe
@@ -88,7 +90,7 @@ module TransamHelper
     end
   end
 
-  # Returns the correct icon for a workflow asset
+  # Returns the correct icon for a workflow event
   def get_workflow_event_icon(event_name)
 
     if event_name == 'retract'
@@ -137,6 +139,7 @@ module TransamHelper
     end
   end
 
+  # Maps priority_types to bootstrap text-* classes
   def bootstrap_class_priority_type priority_type
     case priority_type.id
     when 1
@@ -150,32 +153,10 @@ module TransamHelper
     end
   end
 
-  # Returns the list of reports that are displayable in the menu for the
-  # current user
-  def get_user_menu_reports report_type
-    a = []
-    report_type.reports.show_in_nav.each do |rep|
-      if current_user.is_in_roles? rep.role_names
-        a << rep
-      end
-    end
-    a
-  end
-
   # Returns the system user.
   def system_user
     # By convention, the first user is always the system user.
     User.find_by_id(1)
-  end
-
-  # Returns a list of asset keys as a delimited string
-  def list_to_delimited_string(list, delimiter = '|')
-    str = ""
-    list.each do |e|
-      str << e
-      str << delimiter unless e == list.last
-    end
-    str
   end
 
   # returns a date as an array of elements suitable for creating a new date in javascript
@@ -213,6 +194,11 @@ module TransamHelper
       end
     end
     return val
+  end
+
+  # returns the current url with any new params tacked on
+  def current_url(new_params)
+    url_for params: params.permit!.merge(new_params) # allow all params already passed
   end
 
 end

@@ -45,9 +45,7 @@
         - orgs = f.get_organizations
         %td.right
           = orgs.count
-          %a.transam-popover{data: {placement: 'left', toggle: 'popover', html: 'true', content: orgs.map{|o| o.short_name}.join(', ')}, title: 'Organizations', tabindex: '0'}
-            %i.fa.fa-info-circle
-
+          =popover_tag('', content: orgs.map{|o| o.short_name}.join(', '), title: 'Organizations', icon: 'fa-info-circle')
         %td.left= f.creator
         %td.right= format_as_date_time(f.created_at)
         %td.right= format_as_date_time(f.updated_at)

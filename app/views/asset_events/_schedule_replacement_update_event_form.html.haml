@@ -1,6 +1,6 @@
 = render :layout => "update_event_form" do |f|
   = f.input :event_date, :as => :hidden, :input_html => { :value => Date.today.strftime('%m/%d/%Y') }
-  = f.input :replacement_year, :label => 'Replacement year', :as => :select, :collection => get_planning_fiscal_years, :required => true, :include_blank => false
+  = f.input :replacement_year, :label => 'Replacement year', :as => :select, :collection => get_planning_fiscal_years, :include_blank => false
   = f.association :replacement_reason_type, :label => 'Reason for replacing', :include_blank => false
   = f.input :comments, :input_html => { :rows => 6 }, :placeholder => "Enter any additional comments..."
   .form-group

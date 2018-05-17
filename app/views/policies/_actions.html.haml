@@ -22,12 +22,6 @@
             = link_to inherit_policy_path(@policy), :onclick => "$('#spinner').show();"  do
               %i.fa.fa-paper-plane.fa-fw
               = " Distribute this policy"
-        - else
-          %li.divider
-          %li
-            = link_to runner_policy_path(@policy) do
-              %i.fa.fa-fw.fa-cogs
-              = " Apply this policy"
       - else
         %li.divider
         %li

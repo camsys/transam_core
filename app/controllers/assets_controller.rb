@@ -35,7 +35,7 @@ class AssetsController < AssetAwareController
     end
 
     # Always display the last view
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
   # Removes the asset from the specified group
@@ -53,7 +53,7 @@ class AssetsController < AssetAwareController
     end
 
     # Always display the last view
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
   def parent
@@ -192,7 +192,7 @@ class AssetsController < AssetAwareController
 
     end
 
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
   # makes a copy of an asset and renders it. The new asset is not saved
@@ -318,7 +318,7 @@ class AssetsController < AssetAwareController
       end
     end
 
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
   def new_asset

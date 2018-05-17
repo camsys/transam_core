@@ -3,9 +3,8 @@ module TransamFormatHelper
   # Include the fiscal year mixin
   include FiscalYear
 
-  #-----------------------------------------------------------------------------
-  # Formats a text field
-  #-----------------------------------------------------------------------------
+
+  # Formats text as as HTML using simple_format
   def format_as_text(val, sanitize=false)
     simple_format(val, {}, :sanitize => sanitize)
   end
@@ -52,7 +51,7 @@ module TransamFormatHelper
     html.html_safe
   end
 
-  # Formats a quantity
+  # Formats a quantity as an integer followed by a unit type
   def format_as_quantity(count, unit_type = 'unit')
     unless unit_type.blank?
       "#{format_as_integer(count)} #{unit_type}"
@@ -73,8 +72,9 @@ module TransamFormatHelper
     html.html_safe
   end
 
-  # formats a list of labels/tags. By default labels are displayed
-  # using label-info but can be controlled using the optional style param
+  # formats a collection of objecsts as labels/tags. By default labels are displayed
+  # using label-info but can be controlled using the optional style param. Label text
+  # is generated using to_s unless the object has a 'code' method
   def format_as_labels(coll, style = 'info')
     html = ''
     coll.each do |e|
@@ -83,9 +83,7 @@ module TransamFormatHelper
       else
         txt = e.to_s
       end
-      html << "<span class='label label-#{style}'>"
-      html << txt
-      html << "</span>"
+      html << format_as_label(txt, style)
     end
     html.html_safe
   end
@@ -135,7 +133,7 @@ module TransamFormatHelper
     end
   end
 
-  # truncates any decimals and returns the number as currency
+  # truncates any decimals and returns the number with thousands delimiters
   def format_as_integer(val)
     format_as_decimal(val, 0)
   end
@@ -168,7 +166,7 @@ module TransamFormatHelper
   end
 
   # returns a collection as a formatted table without headers
-  def format_as_table_wihtout_headers(data, number_of_columns = 5, cell_padding_in_px = '6px')
+  def format_as_table_without_headers(data, number_of_columns = 5, cell_padding_in_px = '6px')
     html = "<table class='table-unstyled'>"
     counter = 0
 
@@ -235,31 +233,35 @@ module TransamFormatHelper
     return dist
   end
 
-  # Standard formats for dates and times
-  def format_as_date_time(datetime, compact=true)
-    if compact
+  # formats a date/time, where use_slashes indicates eg 10/24/2014 instead of 24 Oct 2014
+  def format_as_date_time(datetime, use_slashes=true)
+    if use_slashes
       datetime.strftime("%I:%M %p %m/%d/%Y") unless datetime.nil?
     else
       datetime.strftime("%I:%M %p %b %d %Y") unless datetime.nil?
     end
   end
 
-  def format_as_date(date, compact=true)
-    if compact
+  # formats a date, where use_slashes indicates eg 10/24/2014 instead of 24 Oct 2014
+  def format_as_date(date, use_slashes=true)
+    if use_slashes
       date.strftime("%m/%d/%Y") unless (date.nil? || date.year == 1)
     else
       date.strftime("%b %d %Y") unless (date.nil? || date.year == 1)
     end
   end
 
+  # formats a time as eg " 8:00 am" or "11:00 pm"
   def format_as_time(time)
-    return time.strftime("%I:%M %p") unless time.nil?
+    return time.strftime("%l:%M %p") unless time.nil?
   end
 
+  # formats a time as eg "08:00" or "23:00"
   def format_as_military_time(time)
     return time.strftime("%H:%M") unless time.nil?
   end
 
+  # formats a number of seconds as the corresponding days, hours, minutes, and optional seconds
   def format_as_time_difference(s, show_seconds = false)
     return if s.blank?
     dhms = [60,60,24].reduce([s]) { |m,o| m.unshift(m.shift.divmod(o)).flatten }
@@ -271,7 +273,7 @@ module TransamFormatHelper
     val.join(' ')
   end
 
-  # formats an address
+  # formats an object containing US address fields as html
   def format_as_address(m)
     full_address = []
     full_address << m.address1 unless m.address1.blank?
@@ -289,7 +291,7 @@ module TransamFormatHelper
     return full_address.html_safe
   end
 
-  # format for a field
+  # formats a label/value combination, providing optional popover support
   def format_field(label, value, popover_text=nil, popover_iconcls=nil, popover_label=nil)
 
     html = "<div class='row control-group'>"
@@ -310,6 +312,7 @@ module TransamFormatHelper
 
   end
 
+  # formats a value using the indicated format
   def format_using_format(val, format)
     case format
       when :currencyM

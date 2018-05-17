@@ -20,7 +20,7 @@ class UserOrganizationFiltersController < OrganizationAwareController
 
     if @user_organization_filter.nil?
       notify_user(:alert, 'Record not found!')
-      redirect_to :back
+      redirect_back(fallback_location: root_path)
       return
     end
 
@@ -38,7 +38,7 @@ class UserOrganizationFiltersController < OrganizationAwareController
 
     if @user_organization_filter.nil?
       notify_user(:alert, 'Record not found!')
-      redirect_to :back
+      redirect_back(fallback_location: root_path)
       return
     end
 
@@ -48,7 +48,7 @@ class UserOrganizationFiltersController < OrganizationAwareController
     if URI(request.referer).path =~ /\/users\/[[:alnum:]]{12}\/user_organization_filters\/[[:alnum:]]{12}/
       redirect_to user_user_organization_filter_path(current_user, @user_organization_filter)
     else
-      redirect_to :back
+      redirect_back(fallback_location: root_path)
     end
 
   end
@@ -58,14 +58,14 @@ class UserOrganizationFiltersController < OrganizationAwareController
 
     if @user_organization_filter.nil?
       notify_user(:alert, 'Record not found!')
-      redirect_to :back
+      redirect_back(fallback_location: root_path)
       return
     end
 
     # Set the session variable to store the org selected
     set_selected_organization_list(Organization.where(id: params[:org_user_organization_filter]))
 
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
 
 
   end
@@ -84,7 +84,7 @@ class UserOrganizationFiltersController < OrganizationAwareController
 
     if @user_organization_filter.nil?
       notify_user(:alert, 'Record not found!')
-      redirect_to :back
+      redirect_back(fallback_location: root_path)
       return
     end
 
@@ -148,7 +148,7 @@ class UserOrganizationFiltersController < OrganizationAwareController
 
     if @user_organization_filter.nil?
       notify_user(:alert, 'Record not found!')
-      redirect_to :back
+      redirect_back(fallback_location: root_path)
     end
 
     respond_to do |format|

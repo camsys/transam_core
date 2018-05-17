@@ -116,7 +116,7 @@ class RuleSetAwareController < OrganizationAwareController
     end
 
     respond_to do |format|
-      format.html { redirect_to :back }
+      format.html { redirect_back(fallback_location: root_path) }
       format.js { render 'fire_workflow_event'}
     end
 

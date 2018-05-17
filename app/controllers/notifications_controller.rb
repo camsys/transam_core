@@ -23,7 +23,7 @@ class NotificationsController < OrganizationAwareController
     @count = current_user ? current_user.user_notifications.unopened.count : 0
 
     respond_to do |format|
-      format.js { render text: @count }
+      format.json { render :json => @count.to_json }
     end
   end
 

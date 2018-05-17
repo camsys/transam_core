@@ -50,7 +50,7 @@ class DocumentsController < NestedResourceController
     respond_to do |format|
       if @document.save
         notify_user(:notice, 'Document was successfully created.')
-        format.html { redirect_to :back }
+        format.html { redirect_back(fallback_location: root_path) }
         format.json { render action: 'show', status: :created, location: @document }
       else
         format.html { render action: 'new' }
@@ -86,7 +86,7 @@ class DocumentsController < NestedResourceController
 
     notify_user(:notice, 'Document was successfully removed.')
     respond_to do |format|
-      format.html { redirect_to :back }
+      format.html { redirect_back(fallback_location: root_path) }
       format.json { head :no_content }
     end
   end

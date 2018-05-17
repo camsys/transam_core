@@ -23,7 +23,7 @@ class NestedResourceController < OrganizationAwareController
   # case where the controller is aliased and we need to determine this and replace the correct
   # resource class name
   def find_resource
-    params.reverse_each do |name, value|
+    params.permit!.to_h.reverse_each do |name, value|
       if name =~ /(.+)_id$/
         if $1 == 'inventory'
           return 'asset'.classify.constantize.find_by_object_key(value)

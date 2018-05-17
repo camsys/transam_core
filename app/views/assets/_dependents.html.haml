@@ -4,7 +4,7 @@
   = render 'dependent_form', asset: @asset
 
 :javascript
-  var tree_data = JSON.parse('#{[@asset.top_parent.to_node(@asset)].to_json}');
+  var tree_data = JSON.parse('#{[@asset.top_parent.to_node(@asset)].to_json.html_safe}');
 
   $(document).ready(function() {
     $('#tree').treeview({

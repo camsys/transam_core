@@ -106,7 +106,7 @@ class NoticesController < OrganizationAwareController
     @notice.active = false
     @notice.save
 
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
 
   end
 

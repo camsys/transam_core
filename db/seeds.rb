@@ -179,7 +179,9 @@ activities = [
       frequency_type_id: 4,
       execution_time: 'Monday 00:01',
       job_name: 'IssuesReportJob',
-      active: true }
+      active: true },
+    {:name => 'Task Reminders', :description => 'Send messages to users with task reminders for tasks due in a day or week.', :job_name => 'TaskReminderJob', :frequency_quantity => 1, :frequency_type_id => 3, :execution_time => '08:00', :show_in_dashboard => true, :active => true},
+    {:name => 'Session Cleanup', :description => 'Session cleanup job every 15 mins.', :job_name => 'SessionCacheCleanupJob', :frequency_quantity => 15, :frequency_type_id => 2, :execution_time => '**:15', :show_in_dashboard => false, :active => true}
 ]
 
 
