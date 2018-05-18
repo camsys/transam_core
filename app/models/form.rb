@@ -16,6 +16,8 @@ class Form < ActiveRecord::Base
   # Include the object key mixin
   include TransamObjectKey
 
+  default_scope { order(:sort_order) }
+
   # Allow selection of active instances
   scope :active, -> { where(:active => true) }
 
