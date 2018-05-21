@@ -18,7 +18,7 @@
           .col-sm-9
             .form-group
               = f.input :display_datetime, :label => 'Start Displaying', :wrapper => :vertical_append do
-                = f.input_field :display_datetime_date, :class => "form-control", :as => :string, :data => {'behavior' => 'datepicker'}, :value => format_as_date(f.object.display_datetime)
+                = f.input_field :display_datetime_date, :class => "form-control datepicker", :as => :string, :data => {'date-container' => '.notice_form'}, :value => format_as_date(f.object.display_datetime)
                 %span.input-group-addon
                   %i.fa.fa-calendar
           .col-sm-3
@@ -27,7 +27,7 @@
           .col-sm-9
             .form-group
               = f.input :end_datetime_date, :label => 'Stop Displaying', :wrapper => :vertical_append do
-                = f.input_field :end_datetime_date, :class => "form-control", :as => :string, :data => {'behavior' => 'datepicker'}, :value => format_as_date(f.object.end_datetime)
+                = f.input_field :end_datetime_date, :class => "form-control datepicker", :as => :string, :data => {'date-container' => '.notice_form'}, :value => format_as_date(f.object.end_datetime)
                 %span.input-group-addon
                   %i.fa.fa-calendar
           .col-sm-3
