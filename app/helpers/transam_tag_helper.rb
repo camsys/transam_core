@@ -88,11 +88,9 @@ module TransamTagHelper
       content = "<p>&nbsp;</p>"
     end
 
-    html = "<div class='panel panel-default "
-    unless options[:class].blank?
-      html << options[:class]
-    end
-    html << "'>"
+    id = options[:id]
+    id_str = id ? "id='#{id}'" : "id='#{format_as_id(dialog_name)}_dialog'"
+    html = "<div class='panel panel-default #{options[:class]}' #{id_str}>"
     html << "<div class='panel-heading'>"
     html << "<h3 class='panel-title'>"
     unless options[:icon].blank?

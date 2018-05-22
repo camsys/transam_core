@@ -5,7 +5,7 @@
     = f.input :current_mileage, :label => "Current Mileage", :input_html => { :min => 0  }
 
   = f.input :event_date, :label => 'Date of Report', :wrapper => :vertical_append do
-    = f.input_field :event_date, :class => "form-control", :as => :string, :data => {'behavior' => 'datepicker'}, :value => format_as_date(f.object.event_date)
+    = f.input_field :event_date, :class => "form-control datepicker", :as => :string, :data => {'date-container' => "##{format_as_id(@asset_event.asset_event_type.name)}_dialog"}, :value => format_as_date(f.object.event_date)
     %span.input-group-addon
       %i.fa.fa-calendar
   = f.input :comments, :input_html => { :rows => 6 }, :placeholder => "Enter any additional comments..."

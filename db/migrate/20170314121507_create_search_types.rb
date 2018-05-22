@@ -7,8 +7,7 @@ class CreateSearchTypes < ActiveRecord::Migration
     end
 
     search_types = [
-        {:active => 1, :name => 'Asset', :class_name => 'AssetSearcher'},
-        {:active => 1, :name => 'Capital Plan', :class_name => 'CapitalProjectSearcher'}
+        {:active => 1, :name => 'Asset', :class_name => 'AssetSearcher'}
     ]
     search_types.each do |type|
       SearchType.create!(type)
