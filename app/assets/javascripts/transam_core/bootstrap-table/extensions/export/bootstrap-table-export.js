@@ -3,7 +3,7 @@
  * extensions: https://github.com/kayalshri/tableExport.jquery.plugin
  */
 
-$.getScript("https://cdn.rawgit.com/kayalshri/tableExport.jquery.plugin/a891806f/tableExport.js", function() {});
+// $.getScript("https://cdn.rawgit.com/kayalshri/tableExport.jquery.plugin/a891806f/tableExport.js", function() {});
 $.getScript("https://cdn.rawgit.com/kayalshri/tableExport.jquery.plugin/a891806f/jquery.base64.js", function() {});
 // $.getScript("https://cdn.rawgit.com/kayalshri/tableExport.jquery.plugin/a891806f/html2canvas.js", function() {});
 
@@ -19,16 +19,16 @@ $.getScript("https://cdn.rawgit.com/kayalshri/tableExport.jquery.plugin/a891806f
         csv: 'CSV',
         txt: 'TXT',
         sql: 'SQL',
-        doc: 'MS-Word',
-        excel: 'MS-Excel',
-        xlsx: 'MS-Excel (OpenXML)',
-        powerpoint: 'MS-Powerpoint',
+        doc: 'DOC',
+        excel: 'XLS',
+        xlsx: 'XLSX',
+        powerpoint: 'PPT',
         pdf: 'PDF'
     };
 
     $.extend($.fn.bootstrapTable.defaults, {
         showExport: false,
-        exportDataType: 'selected', // basic, all, selected
+        exportDataType: 'basic', // basic, all, selected
         // 'json', 'xml', 'png', 'csv', 'txt', 'sql', 'doc', 'excel', 'powerpoint', 'pdf'
         exportTypes: ['json', 'xml', 'csv', 'txt', 'sql', 'excel', 'xlsx'],
         exportOptions: {}
@@ -49,7 +49,7 @@ $.getScript("https://cdn.rawgit.com/kayalshri/tableExport.jquery.plugin/a891806f
         _initToolbar = BootstrapTable.prototype.initToolbar;
 
     BootstrapTable.prototype.initToolbar = function () {
-        this.showToolbar = this.showToolbar || this.options.showExport;
+        this.showToolbar = this.options.showExport;
 
         _initToolbar.apply(this, Array.prototype.slice.apply(arguments));
 
@@ -61,17 +61,17 @@ $.getScript("https://cdn.rawgit.com/kayalshri/tableExport.jquery.plugin/a891806f
             if (!$export.length) {
                 $export = $([
                     '<div class="export btn-group">',
-                        '<button class="btn' +
-                            sprintf(' btn-%s', this.options.buttonsClass) +
-                            sprintf(' btn-%s', this.options.iconSize) +
-                            ' dropdown-toggle" aria-label="export type" ' +
-                            'title="' + this.options.formatExport() + '" ' +
-                            'data-toggle="dropdown" type="button">',
-                            sprintf('<i class="%s %s"></i> ', this.options.iconsPrefix, this.options.icons.export),
-                            '<span class="caret"></span>',
-                        '</button>',
-                        '<ul class="dropdown-menu" role="menu">',
-                        '</ul>',
+                    '<button class="btn btn-default' +
+                    sprintf(' btn-%s', this.options.buttonsClass) +
+                    sprintf(' btn-%s', this.options.iconSize) +
+                    ' dropdown-toggle" aria-label="export type" ' +
+                    'title="' + this.options.formatExport() + '" ' +
+                    'data-toggle="dropdown" type="button">',
+                    sprintf('<i class="%s %s"></i> ', this.options.iconsPrefix, this.options.icons.export),
+                    '<span class="caret"></span>',
+                    '</button>',
+                    '<ul class="dropdown-menu" role="menu">',
+                    '</ul>',
                     '</div>'].join('')).appendTo($btnGroup);
 
                 var $menu = $export.find('.dropdown-menu'),
@@ -88,9 +88,9 @@ $.getScript("https://cdn.rawgit.com/kayalshri/tableExport.jquery.plugin/a891806f
                 $.each(exportTypes, function (i, type) {
                     if (TYPE_NAME.hasOwnProperty(type)) {
                         $menu.append(['<li role="menuitem" data-type="' + type + '">',
-                                '<a href="javascript:void(0)">',
-                                    TYPE_NAME[type],
-                                '</a>',
+                            '<a href="javascript:void(0)">',
+                            TYPE_NAME[type],
+                            '</a>',
                             '</li>'].join(''));
                     }
                 });
@@ -139,43 +139,28 @@ $.getScript("https://cdn.rawgit.com/kayalshri/tableExport.jquery.plugin/a891806f
 
                     if (that.options.exportDataType === 'all' && that.options.pagination) {
                         that.$el.one(that.options.sidePagination === 'server' ? 'post-body.bs.table' : 'page-change.bs.table', function () {
-                            if (stateField) {
-                                that.hideColumn(stateField);
-                            }
                             doExport();
                             that.togglePagination();
                         });
                         that.togglePagination();
                     } else if (that.options.exportDataType === 'selected') {
                         var data = that.getData(),
-                            selectedData = that.getSelections();
-                        if (!selectedData.length) {
-                            return;
-                        }
+                            selectedData = that.getAllSelections();
 
+                        // Quick fix #2220
                         if (that.options.sidePagination === 'server') {
-                            var dataServer = {total: that.options.totalRows};
-                            dataServer[that.options.dataField] = data;
-                            data = dataServer;
-                            var selectedDataServer = {total: selectedData.length};
-                            selectedDataServer[that.options.dataField] = selectedData;
-                            selectedData = selectedDataServer;
+                            data = {total: that.options.totalRows};
+                            data[that.options.dataField] = that.getData();
+
+                            selectedData = {total: that.options.totalRows};
+                            selectedData[that.options.dataField] = that.getAllSelections();
                         }
 
                         that.load(selectedData);
-                        if (stateField) {
-                            that.hideColumn(stateField);
-                        }
                         doExport();
                         that.load(data);
                     } else {
-                        if (stateField) {
-                            that.hideColumn(stateField);
-                        }
                         doExport();
-                    }
-                    if (stateField) {
-                        that.showColumn(stateField);
                     }
                 });
             }
