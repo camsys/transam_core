@@ -20,6 +20,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.*/
 
+//The original version was https://cdn.rawgit.com/kayalshri/tableExport.jquery.plugin/a891806f/tableExport.js
+
+(function(f,a){"function"==typeof define&&define.amd?define([],a):"object"==typeof exports?module.exports=a():f.download=a()})(this,function(){return function(f,a,b){function n(l){var a=l.split(/[:;,]/);l=a[1];var a=("base64"==a[2]?atob:decodeURIComponent)(a.pop()),c=a.length,b=0,d=new Uint8Array(c);for(b;b<c;++b)d[b]=a.charCodeAt(b);return new g([d],{type:l})}function k(a,b){if("download"in d)return d.href=a,d.setAttribute("download",m),d.innerHTML="downloading...",h.body.appendChild(d),setTimeout(function(){d.click(),h.body.removeChild(d),!0===b&&setTimeout(function(){e.URL.revokeObjectURL(d.href)},250)},66),!0;if("undefined"!=typeof safari)return a="data:"+a.replace(/^data:([\w\/\-\+]+)/,"application/octet-stream"),!window.open(a)&&confirm("Displaying New Document\n\nUse Save As... to download, then click back to return to this page.")&&(location.href=a),!0;var c=h.createElement("iframe");h.body.appendChild(c),b||(a="data:"+a.replace(/^data:([\w\/\-\+]+)/,"application/octet-stream")),c.src=a,setTimeout(function(){h.body.removeChild(c)},333)}var e=window;b=b||"application/octet-stream";var c=f,h=document,d=h.createElement("a");f=function(a){return String(a)};var g=e.Blob||e.MozBlob||e.WebKitBlob||f,g=g.call?g.bind(e):Blob,m=a||"download";"true"===String(this)&&(c=[c,b],b=c[0],c=c[1]);if(String(c).match(/^data\:[\w+\-]+\/[\w+\-]+[,;]/))return navigator.msSaveBlob?navigator.msSaveBlob(n(c),m):k(c);a=c instanceof g?c:new g([c],{type:b});if(navigator.msSaveBlob)return navigator.msSaveBlob(a,m);if(e.URL)k(e.URL.createObjectURL(a),!0);else{if("string"==typeof a||a.constructor===f)try{return k("data:"+b+";base64,"+e.btoa(a))}catch(p){return k("data:"+b+","+encodeURIComponent(a))}b=new FileReader,b.onload=function(a){k(this.result)},b.readAsDataURL(a)}return!0}});
 (function($){
     $.fn.extend({
         tableExport: function(options) {
@@ -75,7 +78,8 @@ THE SOFTWARE.*/
                     console.log(tdData);
                 }
                 var base64data = "base64," + $.base64.encode(tdData);
-                window.open('data:application/'+defaults.type+';filename=exportData;' + base64data);
+                //window.open('data:application/'+defaults.type+';filename=exportData;' + base64data);
+                download('data:text/plain;'+base64data,'download.'+defaults.type,'text/plain');
             }else if(defaults.type == 'sql'){
 
                 // Header
@@ -119,8 +123,8 @@ THE SOFTWARE.*/
                 }
 
                 var base64data = "base64," + $.base64.encode(tdData);
-                window.open('data:application/sql;filename=exportData;' + base64data);
-
+                //window.open('data:text/plain;filename=filename.sql;' + base64data);
+                download('data:text/plain;'+base64data,'download.'+defaults.type,'text/plain');
 
             }else if(defaults.type == 'json'){
 
@@ -168,7 +172,8 @@ THE SOFTWARE.*/
                     console.log(JSON.stringify(jsonExportArray));
                 }
                 var base64data = "base64," + $.base64.encode(JSON.stringify(jsonExportArray));
-                window.open('data:application/json;filename=exportData;' + base64data);
+                //window.open('data:application/json;filename=exportData;' + base64data);
+                download('data:application/json;'+base64data,'download.'+defaults.type,'application/json');
             }else if(defaults.type == 'xml'){
 
                 var xml = '<?xml version="1.0" encoding="utf-8"?>';
@@ -209,7 +214,8 @@ THE SOFTWARE.*/
                 }
 
                 var base64data = "base64," + $.base64.encode(xml);
-                window.open('data:application/xml;filename=exportData;' + base64data);
+                //window.open('data:application/xml;filename=exportData;' + base64data);
+                download('data:application/xml;'+base64data,'download.'+defaults.type,'application/xml');
 
             }else if(defaults.type == 'excel' || defaults.type == 'doc'|| defaults.type == 'powerpoint'  ){
                 //console.log($(this).html());
@@ -276,7 +282,17 @@ THE SOFTWARE.*/
                 excelFile += "</html>";
 
                 var base64data = "base64," + $.base64.encode(excelFile);
-                window.open('data:application/vnd.ms-'+defaults.type+';filename=exportData.doc;' + base64data);
+                switch(defaults.type){
+                    case 'excel':
+                        window.open('data:application/vnd.ms-'+defaults.type+';'+base64data);
+                        break;
+                    case 'powerpoint':
+                        window.open('data:application/vnd.ms-'+defaults.type+';'+base64data);
+                        break;
+                    case 'doc':
+                        download('data:application/msword;'+base64data,'download.doc','application/msword');
+                        break;
+                }
 
             }else if(defaults.type == 'png'){
                 html2canvas($(el), {
