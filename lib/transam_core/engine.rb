@@ -1,3 +1,4 @@
+require 'active_record/acts_as'
 require 'devise'
 require 'rolify'
 require 'cancan'
@@ -25,6 +26,7 @@ require 'wicked'
 require 'cocoon'
 require 'jquery-ui-rails'
 require 'jquery-form-rails'
+
 
 module TransamCore
   class Engine < ::Rails::Engine

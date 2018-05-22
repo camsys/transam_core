@@ -37,6 +37,8 @@ class Asset < ActiveRecord::Base
   # Associations common to all asset types
   #-----------------------------------------------------------------------------
 
+  has_one :transit_asset
+
   # each asset belongs to a single organization
   belongs_to  :organization
 
@@ -175,6 +177,7 @@ class Asset < ActiveRecord::Base
   #-----------------------------------------------------------------------------
   # Scopes
   #-----------------------------------------------------------------------------
+
   # Returns a list of assets that have been disposed
   scope :disposed,    -> { where('assets.disposition_date IS NOT NULL') }
   # Returns a list of assets that are still operational
@@ -287,6 +290,12 @@ class Asset < ActiveRecord::Base
   # Class Methods
   #
   #-----------------------------------------------------------------------------
+
+  def self.decorates
+    decor = AssetDecorator.new(self.unscoped.ids)
+    decor.whichHierarchy(true)
+    return decor
+  end
 
   # Returns an array of classes which are descendents of Asset, this includes classes
   # that are both direct and in-direct assendents.
