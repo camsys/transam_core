@@ -3,6 +3,11 @@
  * extensions: https://github.com/kayalshri/tableExport.jquery.plugin
  */
 
+$.getScript("https://cdn.rawgit.com/kayalshri/tableExport.jquery.plugin/a891806f/tableExport.js", function() {});
+$.getScript("https://cdn.rawgit.com/kayalshri/tableExport.jquery.plugin/a891806f/jquery.base64.js", function() {});
+// $.getScript("https://cdn.rawgit.com/kayalshri/tableExport.jquery.plugin/a891806f/html2canvas.js", function() {});
+
+
 (function ($) {
     'use strict';
     var sprintf = $.fn.bootstrapTable.utils.sprintf;
@@ -23,9 +28,9 @@
 
     $.extend($.fn.bootstrapTable.defaults, {
         showExport: false,
-        exportDataType: 'basic', // basic, all, selected
+        exportDataType: 'selected', // basic, all, selected
         // 'json', 'xml', 'png', 'csv', 'txt', 'sql', 'doc', 'excel', 'powerpoint', 'pdf'
-        exportTypes: ['json', 'xml', 'csv', 'txt', 'sql', 'excel'],
+        exportTypes: ['json', 'xml', 'csv', 'txt', 'sql', 'excel', 'xlsx'],
         exportOptions: {}
     });
 
