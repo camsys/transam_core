@@ -9,7 +9,7 @@ class TransamAsset < ApplicationRecord
   belongs_to  :manufacturer
   belongs_to  :vendor
   belongs_to  :operator
-  belongs_to  :title_owner
+  belongs_to  :title_ownership_organization, :class_name => 'Organization'
   belongs_to  :lienholder
 
   def self.specific
