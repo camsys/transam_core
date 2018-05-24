@@ -19,30 +19,6 @@
                 = link_to subtype[0], inventory_index_path(:asset_subtype => subtype[1], :asset_group => 0)
     %li.divider
     %li.text-left.dropdown-submenu
-      = link_to manufacturers_path do
-        %i.fa.fa-fw.fa-star
-        Manufacturers
-      %ul.dropdown-menu
-        - asset_types.each do |type|
-          - manufacturers = Manufacturer.joins(:assets).where(assets: {asset_type_id: type[0], organization_id: @organization_list}).distinct
-          - if manufacturers.any?
-            %li.text-left.dropdown-submenu
-              = link_to '#' do
-                %i{:class => "#{type[2]} fa-fw"}
-                = type[1].pluralize(2)
-              %ul.dropdown-menu{style: "overflow-y:scroll; max-height:400px;"}
-                - manufacturers.each do | manufacturer |
-                  %li.text-left
-                    = link_to inventory_index_path(:manufacturer_id => manufacturer.id) do
-                      %i.fa.fa-star.fa-fw
-                      = manufacturer.name
-        %li.divider
-        %li.text-left
-          = link_to manufacturers_path do
-            %i.fa.fa-star.fa-fw
-            All Manufacturers
-    %li.divider
-    %li.text-left.dropdown-submenu
       = link_to asset_groups_path do
         %i.fa.fa-tags.fa-fw
         Groups
