@@ -6,6 +6,7 @@ class CreateTransamAssets < ActiveRecord::Migration[5.2]
       t.references  :organization, index: true, null: false
       t.references  :asset_subtype, index: true
       t.string      :asset_tag, null: false
+      t.date        :disposition_date
       t.string      :external_id
       t.text        :description
       t.references  :manufacturer
@@ -20,8 +21,8 @@ class CreateTransamAssets < ActiveRecord::Migration[5.2]
       t.references  :operator
       t.string      :other_operator
       t.string      :title_number
-      t.references  :title_owner
-      t.string      :other_title_owner
+      t.references  :title_ownership_organization
+      t.string      :other_title_ownership_organization
       t.references  :lienholder
       t.string      :other_lienholder
 
