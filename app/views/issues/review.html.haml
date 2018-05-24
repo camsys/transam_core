@@ -1,0 +1,29 @@
+.col-xs-12.col-sm-8.col-sm-offset-2
+  .page-header
+    %h2 Issue Review
+    .row
+      .col-sm-12.col-xs-12
+        = format_field("Reporter", @issue.creator)
+    .row
+      .col-sm-12.col-xs-12
+        = format_field("Phone", @issue.creator.phone)
+
+    .row
+      .col-sm-12.col-xs-12
+        = format_field("Issue Type", @issue.issue_type.name)
+      -#.col-sm-6.col-xs-12
+    .row
+      .col-sm-12.col-xs-12
+        = format_field("Web Browser", @issue.web_browser_type.name)
+
+    .row
+      .col-sm-12.col-xs-12
+        = format_field("Comments", @issue.comments)
+
+    .row
+      .col-sm-12.col-xs-12
+        = format_field("Issue Status", @issue.issue_status_type.name)
+
+    .row
+      .col-sm-12.col-xs-12
+        = format_field("Resolution Comments", @issue.resolution_comments)

@@ -55,6 +55,8 @@
       return newDate;
   };
 
+  //Bellow are new formatters to this _table_formatters class before they were duplicated across 2 or more tables.
+
   function tagged_formatter(value) {
     if (value == '1') {
       return '<i class="fa fa-star"></i>';
@@ -89,4 +91,95 @@
       return '<i class="fa fa-image"></i>';
     }
     return "";
+  };
+
+  function ali_fiscal_year_formatter(value) {
+    return format_as_fiscal_year(value);
+  };
+
+  function popup_formatter_for_date_name(value, data) {
+    return '<a class="transam-popover" id="' + data.object_key + '" data-container="body" data-content="" data-html="true" data-placement="left" data-title="' + data.name + '" data-toggle="popover" tabindex="0"><i class="fa fa-info-circle fa-1-25x text-info"></i></a>';
+  }
+
+  function popup_formatter(value, data) {
+    if(value) {
+    return '<a class="transam-popover" data-container="body" data-content="' + value + '" data-html="true" data-placement="left" data-title="' + data.project_number + ': Activity Line Items" data-toggle="popover" tabindex="0" data-original-title="" title=""><i class="fa fa-info-circle fa-1-25x text-info"></i></a>';
+    } else {
+      return "";
+    }
+  }
+
+  function replace_with_subtype_formatter(value, data) {
+    if (value) {
+      return value;
+    } else if (data) {
+      return data.asset_subtype_id
+    } else {
+      return "";
+    }
+  }
+
+  function replace_with_fuel_type_formatter(value, data) {
+    if (value) {
+      return value;
+    } else if (data) {
+      return data.fuel_type
+    } else {
+      return "";
+    }
+  }
+
+  function special_icons_formatter(value, data) {
+    var special_icons = '';
+    if (data.is_rehabilitated) {
+      special_icons = special_icons + '<a class="transam-tooltip" data-placement="top" data-title="Rehabilitated" data-toggle="tooltip" tabindex="0" data-original-title="" title=""><i class="fa fa-wrench" style="color: maroon !important;"></i></a>';
+    }
+
+    if (data.is_early_replacement) {
+      special_icons = special_icons + '<a class="transam-popover" data-placement="left" data-toggle="popover" tabindex="0" data-html="true" data-container="body" title="Early Replacement" data-content="<p>' + data.formatted_early_replacement_reason + '</p>"><i class="fa fa-exclamation-triangle text-danger"></i></a>';
+    }
+
+    if((data.replace_with_subtype) && (data.replace_with_subtype != data.asset_subtype_id)) {
+      special_icons = special_icons + '<a class="transam-tooltip" data-placement="top" data-title="Replaced Asset Subtype" data-toggle="tooltip" tabindex="0" data-original-title="" title=""><i class="fa fa-retweet" style="color: green !important;"></i></a>';
+    }
+
+    if((data.replace_with_fuel_type) && (data.replace_with_fuel_type != data.fuel_type)) {
+      special_icons = special_icons + '<a class="transam-tooltip" data-placement="top" data-title="Replaced Fuel Type" data-toggle="tooltip" tabindex="0" data-original-title="" title=""><i class="fa fa-car" style="color: orange !important;"></i></a>';
+    }
+
+    return special_icons;
+  }
+
+  function early_replacement_flag_formatter(value) {
+    if(value) {
+      return '<a class="transam-tooltip" data-placement="left" data-title="Contains early replacement assets" data-toggle="tooltip" tabindex="0" data-original-title="" title=""><i class="fa fa-exclamation-triangle text-danger"></i></a>';
+    } else {
+      return "";
+    }
+  }
+
+  //TODO this could be moved into the _table_formatter lets double check that assumption
+  function total_cost_formatter(value) {
+    return '#{format_as_currency(@total_projects_cost)}';
+  }
+
+  function description_formatter(value, data) {
+    if (value) {
+      if (is_rehabilitation) {
+        str = "Rehabilitation";
+      } else {
+        str = "Replacement";
+      }
+      return str + " for " + data.asset_subtype_id + " " + data.fuel_type + " " + value + " replaced in " + data.scheduled_replacement_year;
+    } else {
+      return "";
+    }
+  };
+
+  function pcnt_formatter(value) {
+    if (value == "") {
+      return value;
+    } else {
+      return format("##0.000", value) + "%";
+    }
   };
