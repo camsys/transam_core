@@ -12,8 +12,8 @@ class TransamAsset < ApplicationRecord
   belongs_to  :title_ownership_organization, :class_name => 'Organization'
   belongs_to  :lienholder
 
-  def self.specific
-    klass = self
+  def self.very_specific
+    klass = self.all
     assoc = klass.column_names.select{|col| col.end_with? 'ible_type'}.first
     assoc_arr = Hash.new
     assoc_arr[assoc] = nil
@@ -30,6 +30,16 @@ class TransamAsset < ApplicationRecord
 
     return klass
 
+  end
+
+  def very_specific
+    a = self.specific
+
+    while a.try(:specific) != a
+      a = a.specific
+    end
+
+    return a
   end
 
 end
