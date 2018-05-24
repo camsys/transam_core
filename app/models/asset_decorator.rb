@@ -7,7 +7,7 @@ class AssetDecorator < SimpleDelegator
   end
 
   def whichHierarchy(new = true)
-    __setobj__(new ? TransitAsset.where(asset_id: @assets).specific : Asset.unscoped.where(id: @assets))
+    __setobj__(new ? TransitAsset.where(asset_id: @assets).very_specific : Asset.unscoped.where(id: @assets))
     new
   end
 
