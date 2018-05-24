@@ -57,6 +57,9 @@
           %i.fa.fa-files-o
         %th.center.flag-column{:data => {:field => 'photos', :visible => 'false', :formatter => 'images_formatter'}}
           %i.fa.fa-image
+
+= render 'shared/table_formatters'
+
 :javascript
 
   var selected_rows = new Set();
@@ -185,81 +188,3 @@
     $('#asset_server_table').bootstrapTable('resetView');
   });
 
-  function boolean_formatter(value) {
-    if (value) {
-      // add hidden div for exporting
-      return '<i class="fa fa-check"></i><div style = "visibility: hidden;">Yes</div>';
-    } else {
-      return '<div style = "visibility: hidden;">No</div>';
-    }
-  };
-
-  function integer_formatter(value) {
-    return format("###,##0.", value);
-  };
-
-  function currency_formatter(value) {
-    return '$' + integer_formatter(value);
-  };
-
-  function percentage_formatter(value) {
-    if (value) {
-      return format("##0.00", value) + "%";
-    } else {
-      return value;
-    }
-  };
-
-  function date_formatter(value) {
-    if (value) {
-      return moment(value).format('M/D/YYYY');
-    } else {
-      return value;
-    }
-  };
-
-  function convertUTCDateToLocalDate(date) {
-      var newDate = new Date(date.getTime()+date.getTimezoneOffset()*60*1000);
-
-      var offset = date.getTimezoneOffset() / 60;
-      var hours = date.getHours();
-
-      newDate.setHours(hours - offset);
-
-      return newDate;
-  };
-  function tagged_formatter(value) {
-    if (value == '1') {
-      return '<i class="fa fa-star"></i>';
-    } else {
-      return '<i class="fa fa-star-o"></i>';
-    }
-  };
-
-  function tasks_formatter(value) {
-    if (value > 0) {
-      return '<i class="fa fa-flag"></i>';
-    }
-    return "";
-  };
-
-  function documents_formatter(value) {
-    if (value > 0) {
-      return '<i class="fa fa-file-o"></i>';
-    }
-    return "";
-  };
-
-  function comments_formatter(value) {
-    if (value > 0) {
-      return '<i class="fa fa-comments"></i>';
-    }
-    return "";
-  };
-
-  function images_formatter(value) {
-    if (value > 0) {
-      return '<i class="fa fa-image"></i>';
-    }
-    return "";
-  };

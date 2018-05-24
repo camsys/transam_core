@@ -17,7 +17,7 @@
   });
   $(function() {
     // Find the previously selected tab
-    var selected_tab = $('a[href='+transam.get_ui_key_value(user_tab_key)+']');
+    var selected_tab = $('a[href="'+transam.get_ui_key_value(user_tab_key)+'"]');
     // Default to the first tab if no tab is stored or stored tab isn't available to current user
     if (selected_tab.length) {
       selected_tab.tab('show');
