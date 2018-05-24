@@ -1,9 +1,9 @@
 .tab-pane.fade#conf
   .tab-content
-    = render "#{@asset.class.name.underscore}_configuration"
+    = render "#{@asset.asset.class.name.underscore}_configuration"
 .tab-pane.fade#purc
   .tab-content
-    = render "#{@asset.class.name.underscore}_purchase"
+    = render "#{@asset.asset.class.name.underscore}_purchase"
 .tab-pane.fade#hist
   .tab-content
     = render 'history'
