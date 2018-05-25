@@ -270,31 +270,31 @@ class AssetsController < AssetAwareController
   end
 
   def update
-    @asset.updator = current_user
+    @asset = @asset.transit_asset.very_specific
 
     add_breadcrumb "#{@asset.asset_type.name}".pluralize(2), inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
     add_breadcrumb @asset.name, inventory_path(@asset)
     add_breadcrumb "Modify", edit_inventory_path(@asset)
 
     # transfered assets need to remove notification if exists
-    if @asset.asset_tag == @asset.object_key
-      notification = Notification.where("text = 'A new asset has been transferred to you. Please update the asset.' AND link LIKE ?" , "%#{@asset.object_key}%").first
-      notification.update(active: false) if notification.present?
-    end
+    # if @asset.asset_tag == @asset.object_key
+    #   notification = Notification.where("text = 'A new asset has been transferred to you. Please update the asset.' AND link LIKE ?" , "%#{@asset.object_key}%").first
+    #   notification.update(active: false) if notification.present?
+    # end
 
     respond_to do |format|
-      if @asset.update_attributes(form_params)
+      if @asset.update_attributes(new_form_params(@asset.class.name))
 
         # If the asset was successfully updated, schedule update the condition and disposition asynchronously
-        Delayed::Job.enqueue AssetUpdateJob.new(@asset.object_key), :priority => 0
+        Delayed::Job.enqueue AssetUpdateJob.new(@asset.asset.object_key), :priority => 0
         # See if this asset has any dependents that use its spatial reference
         if @asset.geometry and @asset.occupants.count > 0
           # schedule an update to the spatial references of the dependent assets
-          Delayed::Job.enqueue AssetDependentSpatialReferenceUpdateJob.new(@asset.object_key), :priority => 0
+          Delayed::Job.enqueue AssetDependentSpatialReferenceUpdateJob.new(@asset.asset.object_key), :priority => 0
         end
         notify_user(:notice, "Asset #{@asset.name} was successfully updated.")
 
-        format.html { redirect_to inventory_url(@asset) }
+        format.html { redirect_to inventory_url(@asset.asset) }
         format.json { head :no_content }
       else
         format.html { render :action => "edit" }
@@ -751,6 +751,10 @@ class AssetsController < AssetAwareController
   # Never trust parameters from the scary internet, only allow the white list through.
   def form_params
     params.require(:asset).permit(asset_allowable_params)
+  end
+
+  def new_form_params(klass)
+    params.require(:asset).permit(klass.constantize.new.allowable_params)
   end
 
   #
