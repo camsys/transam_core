@@ -16,10 +16,12 @@ if($.fn.bootstrapTable) {
   $.fn.bootstrapTable.defaults.silentSort = false;
 }
 
+$.fn.bootstrapDP = $.fn.datepicker.noConflict();
+
 $(document).ready(function() {
     $('body').on('click', '.input-group-addon:has(.fa-calendar)', function(event) {
         event.preventDefault();
-        $(this).parent().find('input').datepicker('show');
+        $(this).parent().find('input').bootstrapDP('show');
     });
 
 
