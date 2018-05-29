@@ -292,9 +292,7 @@ class Asset < ActiveRecord::Base
   #-----------------------------------------------------------------------------
 
   def self.decorates
-    decor = AssetDecorator.new(self.unscoped.ids)
-    decor.whichHierarchy(true)
-    return decor
+    TransitAsset.where(asset_id: self.ids).very_specific
   end
 
   # Returns an array of classes which are descendents of Asset, this includes classes
