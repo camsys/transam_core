@@ -106,7 +106,7 @@ class PolicyAssetTypeRule < ActiveRecord::Base
 
   def apply_condition_rollup_policy_changes
     if previous_changes.keys.any? {|x| x.include? 'condition_rollup' }
-      Asset.operational.where(organization_id: self.organization_id).each do |asset|
+      Asset.operational.where(organization_id: self.policy.organization_id).each do |asset|
         begin
           asset.update_condition
         rescue Exception => e
