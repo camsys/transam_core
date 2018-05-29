@@ -466,6 +466,11 @@ class AssetsController < AssetAwareController
 
   end
 
+  def inventory_index
+
+
+  end
+
   #------------------------------------------------------------------------------
   #
   # Protected Methods

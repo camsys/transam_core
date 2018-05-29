@@ -1,6 +1,7 @@
 :ruby
   asset_types = AssetType.pluck(:id, :name, :display_icon_name)
 
+
 %li{:class => "dropdown #{get_nav_link_class('assets')}"}
   = link_to "#", :class => "dropdown-toggle", :data => {"toggle" => "dropdown"}, :title => 'Inventory' do
     %i.fa.fa-bus.fa-2x
@@ -17,6 +18,82 @@
             - subtypes.keys.each do |subtype|
               %li.text-left
                 = link_to subtype[0], inventory_index_path(:asset_subtype => subtype[1], :asset_group => 0)
+    %li.divider
+    %li.divider
+    %li.divider
+    %li.text-left.dropdown-submenu
+      = link_to inventory_index_two_path_inventory_path(:asset_category => 'Revenue Vehicles', :asset_class => 0, :asset_group => 0)  do
+        %i{:class => "fa fa-bus fa-fw"}
+        Revenue Vehicles
+      %ul.dropdown-menu
+        %li.text-left
+          = link_to subtype[0], inventory_index_two_path_inventory_index_path(:asset_class => 'Buses', :asset_group => 0) do
+            %i{:class => "fa fa-bus fa-fw"}
+            Buses (Rubber Tire Vehicles)
+        %li.text-left
+          = link_to subtype[0], inventory_index_two_path_inventory_index_path(:asset_class => 'Railcars', :asset_group => 0) do
+            %i{:class => "fa fa-bus fa-fw"}
+            Railcars
+        %li.text-left
+          = link_to subtype[0], inventory_index_two_path_inventory_index_path(:asset_class => 'sdfsdf', :asset_group => 0) do
+            %i{:class => "fa fa-bus fa-fw"}
+            asdfasdf
+        %li.text-left
+          = link_to subtype[0], inventory_index_two_path_inventory_index_path(:asset_class => 'Other', :asset_group => 0) do
+            %i{:class => "fa fa-bus fa-fw"}
+            Other Passenger Vehicles
+    %li.text-left.dropdown-submenu
+      = link_to inventory_index_two_path(:asset_category => 'Equipment', :asset_class => 0, :asset_group => 0)  do
+        %i{:class => "fa fa-cog fa-fw"}
+        = 'Equipment'
+      %ul.dropdown-menu
+        %li.text-left
+          = link_to subtype[0], inventory_index_two_path_inventory_index_path(:asset_class => 'Service Vehicles', :asset_group => 0) do
+            %i{:class => "fa fa-bus fa-fw"}
+            = 'Service Vehicles (Non-Revenue)'
+        %li.text-left
+          = link_to subtype[0], inventory_index_two_path_inventory_index_path(:asset_class => 'Capital Equipment', :asset_group => 0) do
+            %i{:class => "fa fa-bus fa-fw"}
+            = 'Capital Equipment'
+    %li.text-left.dropdown-submenu
+      = link_to inventory_index_two_path_inventory_index_path(:asset_category => 'Facilities', :asset_class => 0, :asset_group => 0)  do
+        %i{:class => "fa fa-building fa-fw"}
+        = 'Facilities'
+      %ul.dropdown-menu
+        %li.text-left
+          = link_to subtype[0], inventory_index_two_path_inventory_index_path(:asset_class => 'Administration', :asset_group => 0) do
+            %i{:class => "fa fa-bus fa-fw"}
+            = 'Administration'
+        %li.text-left
+          = link_to subtype[0], inventory_index_two_path_inventory_index_path(:asset_class => 'Maintenance', :asset_group => 0) do
+            %i{:class => "fa fa-bus fa-fw"}
+            = 'Maintenance'
+        %li.text-left
+          = link_to subtype[0], inventory_index_two_path_inventory_index_path(:asset_class => 'Passenger', :asset_group => 0) do
+            %i{:class => "fa fa-bus fa-fw"}
+            = 'Passenger'
+        %li.text-left
+          = link_to subtype[0], inventory_index_two_path_inventory_path(:asset_class => 'Parking', :asset_group => 0) do
+            %i{:class => "fa fa-bus fa-fw"}
+            = 'Parking'
+    %li.text-left.dropdown-submenu
+      = link_to inventory_index_two_path_inventory_index_path(:asset_category => 'Infrastructure', :asset_class => 0, :asset_group => 0) do
+        %i{:class => "fa fa-train fa-fw"}
+        = 'Infrastructure'
+      %ul.dropdown-menu
+        %li.text-left
+          = link_to subtype[0], inventory_index_two_path_inventory_index_path(:asset_class => 'Guideway', :asset_group => 0) do
+            %i{:class => "fa fa-bus fa-fw"}
+            = 'Guideway'
+        %li.text-left
+          = link_to subtype[0], inventory_index_two_path_inventory_index_path(:asset_class => 'Power & Signal', :asset_group => 0) do
+            %i{:class => "fa fa-bus fa-fw"}
+            = 'Power & Signal'
+        %li.text-left
+          = link_to subtype[0], inventory_index_two_path_inventory_index_path(:asset_class => 'Track', :asset_group => 0) do
+            %i{:class => "fa fa-bus fa-fw"}
+            = 'Track'
+
     %li.divider
     %li.text-left.dropdown-submenu
       = link_to asset_groups_path do

@@ -47,7 +47,9 @@ Rails.application.routes.draw do
         get 'parent'
         post 'fire_asset_event_workflow_events'
         get 'get_summary'
+        get 'inventory_index'
       end
+
       member do
         get 'tag'
         get 'summary_info'
