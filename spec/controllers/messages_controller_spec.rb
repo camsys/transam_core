@@ -16,7 +16,7 @@ RSpec.describe MessagesController, :type => :controller do
     subject.current_user.messages << flagged_msg
     subject.current_user.save!
     sent_msg = create(:message, :user_id => subject.current_user.id)
-    get :index, {:user_id => subject.current_user.object_key}
+    get :index, params: {:user_id => subject.current_user.object_key}
 
     expect(assigns(:messages)).to include(new_msg)
     expect(assigns(:messages)).to include(opened_msg)
@@ -30,17 +30,17 @@ RSpec.describe MessagesController, :type => :controller do
 
   it 'POST tag' do
     # tag
-    post :tag, {:user_id => subject.current_user.object_key, :id => test_msg.object_key}
+    post :tag, params: {:user_id => subject.current_user.object_key, :id => test_msg.object_key}
     expect(test_msg.users).to include(subject.current_user)
 
     #untag
-    post :tag, {:user_id => subject.current_user.object_key, :id => test_msg.object_key}
+    post :tag, params: {:user_id => subject.current_user.object_key, :id => test_msg.object_key}
     expect(test_msg.users).not_to include(subject.current_user)
   end
 
   it 'GET show' do
     test_msg.update!(:to_user => subject.current_user)
-    get :show, {:user_id => subject.current_user.object_key, :id => test_msg.object_key}
+    get :show, params: {:user_id => subject.current_user.object_key, :id => test_msg.object_key}
 
     expect(assigns(:message)).to eq(test_msg)
     expect(assigns(:response).to_json).to eq(Message.new(:organization => assigns(:organization), :user => subject.current_user, :priority_type => assigns(:message).priority_type).to_json)
@@ -49,7 +49,7 @@ RSpec.describe MessagesController, :type => :controller do
 
   it 'GET new' do
     receiver = create(:normal_user)
-    get :new, {:user_id => subject.current_user.object_key, :to_user => receiver.object_key, :subject => 'Test Subject', :body => 'Test Body'}
+    get :new, params: {:user_id => subject.current_user.object_key, :to_user => receiver.object_key, :subject => 'Test Subject', :body => 'Test Body'}
 
     expect(assigns(:message_proxy).priority_type_id).to eq(PriorityType.default.id)
     expect(assigns(:message_proxy).to_user_ids).to include(receiver.id)
@@ -63,7 +63,7 @@ RSpec.describe MessagesController, :type => :controller do
   end
 
   it 'POST reply' do
-    post :reply, {:user_id => subject.current_user.object_key, :id => test_msg.object_key, :message => {:body => 'Reply Body'}}
+    post :reply, params: {:user_id => subject.current_user.object_key, :id => test_msg.object_key, :message => {:body => 'Reply Body'}}
 
     expect(assigns(:message)).to eq(test_msg)
     expect(assigns(:new_message).organization).to eq(assigns(:organization))
