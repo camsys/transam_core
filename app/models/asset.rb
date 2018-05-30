@@ -37,8 +37,6 @@ class Asset < ActiveRecord::Base
   # Associations common to all asset types
   #-----------------------------------------------------------------------------
 
-  has_one :transit_asset
-
   # each asset belongs to a single organization
   belongs_to  :organization
 
@@ -290,10 +288,6 @@ class Asset < ActiveRecord::Base
   # Class Methods
   #
   #-----------------------------------------------------------------------------
-
-  def self.decorates
-    TransitAsset.where(asset_id: self.ids).very_specific
-  end
 
   # Returns an array of classes which are descendents of Asset, this includes classes
   # that are both direct and in-direct assendents.
