@@ -15,6 +15,58 @@ class TransamAsset < ApplicationRecord
 
   has_and_belongs_to_many     :asset_groups, join_table: :asset_groups_assets, foreign_key: :transam_asset_id
 
+  # Each asset can have 0 or more dependents (parent-child relationships)
+  has_many    :dependents,  :class_name => 'TransamAsset', :foreign_key => :parent_id, :dependent => :nullify
+
+  # Facilities can have many vehicles stored on their premises
+  has_many    :occupants,   :class_name => 'TransamAsset', :foreign_key => :location_id, :dependent => :nullify
+
+  belongs_to :parent, class_name: 'TransamAsset', foreign_key: :parent_id
+  belongs_to :location, class_name: 'TransamAsset', foreign_key: :location_id
+
+  # Each asset has zero or more asset events. These are all events regardless of
+  # event type. Events are deleted when the asset is deleted
+  has_many   :asset_events, :dependent => :destroy, :foreign_key => :transam_asset_id
+
+  # each asset has zero or more condition updates
+  has_many   :condition_updates, -> {where :asset_event_type_id => ConditionUpdateEvent.asset_event_type.id }, :class_name => "ConditionUpdateEvent", :foreign_key => :transam_asset_id
+
+  # each asset has zero or more scheduled replacement updates
+  has_many   :schedule_replacement_updates, -> {where :asset_event_type_id => ScheduleReplacementUpdateEvent.asset_event_type.id }, :class_name => "ScheduleReplacementUpdateEvent", :foreign_key => :transam_asset_id
+
+  # each asset has zero or more scheduled rehabilitation updates
+  has_many   :schedule_rehabilitation_updates, -> {where :asset_event_type_id => ScheduleRehabilitationUpdateEvent.asset_event_type.id }, :class_name => "ScheduleRehabilitationUpdateEvent", :foreign_key => :transam_asset_id
+
+  # each asset has zero or more recorded rehabilitation events
+  has_many   :rehabilitation_updates, -> {where :asset_event_type_id => RehabilitationUpdateEvent.asset_event_type.id}, :class_name => "RehabilitationUpdateEvent", :foreign_key => :transam_asset_id
+
+  # each asset has zero or more scheduled disposition updates
+  has_many   :schedule_disposition_updates, -> {where :asset_event_type_id => ScheduleDispositionUpdateEvent.asset_event_type.id }, :class_name => "ScheduleDispositionUpdateEvent", :foreign_key => :transam_asset_id
+
+  # each asset has zero or more service status updates
+  has_many   :service_status_updates, -> {where :asset_event_type_id => ServiceStatusUpdateEvent.asset_event_type.id }, :class_name => "ServiceStatusUpdateEvent", :foreign_key => :transam_asset_id
+
+  # each asset has zero or more disposition updates
+  has_many   :disposition_updates, -> {where :asset_event_type_id => DispositionUpdateEvent.asset_event_type.id }, :class_name => "DispositionUpdateEvent", :foreign_key => :transam_asset_id
+
+  # each asset has zero or more early disposition requests
+  has_many   :early_disposition_requests, -> {where :asset_event_type_id => EarlyDispositionRequestUpdateEvent.asset_event_type.id }, :class_name => "EarlyDispositionRequestUpdateEvent", :foreign_key => :transam_asset_id
+
+  # each asset has zero or more location updates.
+  has_many   :location_updates, -> {where :asset_event_type_id => LocationUpdateEvent.asset_event_type.id }, :class_name => "LocationUpdateEvent", :foreign_key => :transam_asset_id
+
+  # Each asset has zero or more images. Images are deleted when the asset is deleted
+  has_many    :images,      :as => :imagable,       :dependent => :destroy
+
+  # Each asset has zero or more documents. Documents are deleted when the asset is deleted
+  has_many    :documents,   :as => :documentable, :dependent => :destroy
+
+  # Each asset has zero or more comments. Documents are deleted when the asset is deleted
+  has_many    :comments,    :as => :commentable,  :dependent => :destroy
+
+  # Each asset has zero or more tasks. Tasks are deleted when the asset is deleted
+  has_many    :tasks,       :as => :taskable,     :dependent => :destroy
+
   FORM_PARAMS = [
       :organization_id,
       :asset_subtype_id,
@@ -116,6 +168,10 @@ class TransamAsset < ApplicationRecord
     end
 
     return arr.flatten
+  end
+
+  def to_s
+    asset_tag
   end
 
   def policy
