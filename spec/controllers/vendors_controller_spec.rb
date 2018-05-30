@@ -20,14 +20,14 @@ RSpec.describe VendorsController, :type => :controller do
 
   it 'GET filter' do
     test_vendor = create(:vendor, :organization => subject.current_user.organization)
-    get :filter, :query => test_vendor.name, :format => :json
+    get :filter, params: {:query => test_vendor.name, :format => :json}
 
     expect(JSON.parse(response.body)).to include({"id" => test_vendor.id, "name" => test_vendor.name})
   end
 
   it 'GET show' do
     test_vendor = create(:vendor, :organization => subject.current_user.organization)
-    get :show, :id => test_vendor.object_key
+    get :show, params: {:id => test_vendor.object_key}
 
     expect(assigns(:vendor)).to eq(test_vendor)
   end
@@ -40,13 +40,13 @@ RSpec.describe VendorsController, :type => :controller do
 
   it 'GET edit' do
     test_vendor = create(:vendor, :organization => subject.current_user.organization)
-    get :edit, :id => test_vendor.object_key
+    get :edit, params: {:id => test_vendor.object_key}
 
     expect(assigns(:vendor)).to eq(test_vendor)
   end
 
   it 'POST create' do
-    post :create, :vendor => attributes_for(:vendor, :name => 'vendor name2', :organization_id => subject.current_user.organization_id)
+    post :create, params: {:vendor => attributes_for(:vendor, :name => 'vendor name2', :organization_id => subject.current_user.organization_id)}
 
     expect(assigns(:vendor).name).to eq('vendor name2')
   end
@@ -54,7 +54,7 @@ RSpec.describe VendorsController, :type => :controller do
   it 'POST update' do
     test_vendor = create(:vendor, :organization => subject.current_user.organization)
 
-    post :update, :id => test_vendor.object_key, :vendor => {:name => 'vendor name3'}
+    post :update, params: {:id => test_vendor.object_key, :vendor => {:name => 'vendor name3'}}
     test_vendor.reload
 
     expect(test_vendor.name).to eq('vendor name3')
@@ -63,7 +63,7 @@ RSpec.describe VendorsController, :type => :controller do
   it 'DELETE destroy' do
     test_vendor = create(:vendor, :organization => subject.current_user.organization)
 
-    delete :destroy, :id => test_vendor.object_key
+    delete :destroy, params: {:id => test_vendor.object_key}
 
     expect(Vendor.find_by(:object_key => test_vendor.object_key)).to be nil
   end
