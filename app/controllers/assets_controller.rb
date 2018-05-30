@@ -56,6 +56,7 @@ class AssetsController < AssetAwareController
     redirect_back(fallback_location: root_path)
   end
 
+  # NOT USED
   def parent
     parent_asset = @organization.assets.find_by_object_key(params[:parent_key])
     respond_to do |format|
@@ -219,6 +220,7 @@ class AssetsController < AssetAwareController
 
   end
 
+  # not used
   def summary_info
 
     respond_to do |format|
@@ -237,11 +239,6 @@ class AssetsController < AssetAwareController
     # Set the asset class view var. This can be used to determine which view components
     # are rendered, for example, which tabs and action items the user sees
     @asset_class_name = @asset.class.name.underscore
-
-    # get the @prev_record_path and @next_record_path view vars
-    get_next_and_prev_object_keys(@asset, INDEX_KEY_LIST_VAR)
-    @prev_record_path = @prev_record_key.nil? ? "#" : inventory_path(@prev_record_key)
-    @next_record_path = @next_record_key.nil? ? "#" : inventory_path(@next_record_key)
 
     respond_to do |format|
       format.html # show.html.erb
@@ -434,6 +431,7 @@ class AssetsController < AssetAwareController
 
   # Adds the assets to the user's tag list or removes it if the asset
   # is already tagged. called by ajax so no response is rendered
+  # NOT USED
   def tag
 
     if @asset.tagged? current_user
@@ -448,6 +446,7 @@ class AssetsController < AssetAwareController
   end
 
   # Called via AJAX to get dynamic content via AJAX
+  # NOT USED (I think)
   def popup
 
     str = ""
@@ -715,26 +714,6 @@ class AssetsController < AssetAwareController
       end
     end
     cache_objects(ASSET_KEY_LIST_VAR, list)
-  end
-
-  # called from a show request
-  def get_next_and_prev_asset_ids(asset)
-    @prev_record_path = "#"
-    @next_record_path = "#"
-    id_list = get_cached_objects(ASSET_KEY_LIST_VAR)
-    # make sure we have a list and an asset to find
-    if id_list && asset
-      # get the index of the current asset in the array
-      current_index = id_list.index(@asset.object_key)
-      if current_index
-        if current_index > 0
-          @prev_record_path = inventory_path(id_list[current_index - 1])
-        end
-        if current_index < id_list.size
-          @next_record_path = inventory_path(id_list[current_index + 1])
-        end
-      end
-    end
   end
 
   #------------------------------------------------------------------------------
