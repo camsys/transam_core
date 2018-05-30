@@ -14,39 +14,13 @@ class AssetAwareController < OrganizationAwareController
   RENDER_TYPED_ASSETS = true
 
   # returns details for an asset subtype using an ajax query
+  # NOT USED
   def details
     @asset_subtype = AssetSubtype.find(params[:asset_subtype])
 
     respond_to do |format|
       format.js
       format.json { render :json => @asset_subtype.to_json }
-    end
-
-  end
-
-  # Returns a JSON array of matching asset subtypes based on a typeahead name or description
-  def filter
-
-    query = params[:query]
-    orgs = params[:organization_id] ? [params[:organization_id].to_i] : @organization_list
-    query_str = "%" + query + "%"
-    Rails.logger.debug query_str
-
-    matches = []
-    assets = Asset.where("organization_id in (?) AND (asset_tag LIKE ? OR object_key LIKE ? OR description LIKE ?)", orgs, query_str, query_str, query_str)
-    if params[:allow_parent].to_i == 1 # only allow assets of types that allow parents and dont already have parents
-      assets = assets.where(asset_type: AssetType.where(allow_parent: true), parent_id: nil)
-    end
-    assets.each do |asset|
-      matches << {
-        "id" => asset.object_key,
-        "name" => "#{asset.name}: #{asset.description}"
-      }
-    end
-
-    respond_to do |format|
-      format.js { render :json => matches.to_json }
-      format.json { render :json => matches.to_json }
     end
 
   end

@@ -4,8 +4,6 @@ class AssetsController < AssetAwareController
 
   # Set the view variabless form the params @asset_type, @asset_subtype, @search_text, @spatial_filter, @view
   before_action :set_view_vars,     :only => [:index, :map]
-  # Don't process cancel buttons
-  before_action :check_for_cancel,  :only => [:create, :update]
   # set the @asset variable before any actions are invoked
   before_action :get_asset,         :only => [:tag, :show, :edit, :copy, :update, :destroy, :summary_info, :add_to_group, :remove_from_group, :popup, :get_dependents, :add_dependents]
   before_action :reformat_date_fields,  :only => [:create, :update]
@@ -19,6 +17,34 @@ class AssetsController < AssetAwareController
 
   # Session Variables
   INDEX_KEY_LIST_VAR        = "asset_key_list_cache_var"
+
+  # Returns a JSON array of matching asset subtypes based on a typeahead name or description
+  def filter
+
+    query = params[:query]
+    orgs = params[:organization_id] ? [params[:organization_id].to_i] : @organization_list
+    query_str = "%" + query + "%"
+    Rails.logger.debug query_str
+
+    matches = []
+    assets = TransamAsset.where("organization_id in (?) AND (asset_tag LIKE ? OR object_key LIKE ? OR description LIKE ?)", orgs, query_str, query_str, query_str)
+    if params[:allow_parent].to_i == 1 # only allow assets of types that allow parents and dont already have parents
+      # temporarily comment out
+      #assets = assets.where(asset_type: AssetType.where(allow_parent: true), parent_id: nil)
+    end
+    assets.each do |asset|
+      matches << {
+          "id" => asset.object_key,
+          "name" => "#{asset.to_s}: #{asset.description}"
+      }
+    end
+
+    respond_to do |format|
+      format.js { render :json => matches.to_json }
+      format.json { render :json => matches.to_json }
+    end
+
+  end
 
   # Adds the asset to the specified group
   def add_to_group
@@ -200,10 +226,10 @@ class AssetsController < AssetAwareController
   # and has any identifying chracteristics identified as CLEANSABLE_FIELDS are nilled
   def copy
 
-    add_breadcrumb "#{@asset.asset_type.name}".pluralize(2), inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
-    add_breadcrumb "#{@asset.asset_subtype.name}", inventory_index_path(:asset_subtype => @asset.asset_subtype)
-    add_breadcrumb @asset.asset_tag, inventory_path(@asset)
-    add_breadcrumb "Copy"
+    # add_breadcrumb "#{@asset.asset_type.name}".pluralize(2), inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
+    # add_breadcrumb "#{@asset.asset_subtype.name}", inventory_index_path(:asset_subtype => @asset.asset_subtype)
+    # add_breadcrumb @asset.asset_tag, inventory_path(@asset)
+    # add_breadcrumb "Copy"
 
     # create a copy of the asset and null out all the fields that are identified as cleansable
     new_asset = @asset.copy(true)
@@ -306,7 +332,7 @@ class AssetsController < AssetAwareController
   def add_dependents
     params[:asset][:dependents_attributes].each do |key, val|
       unless val[:id]
-        dependent = Asset.find_by(object_key: val[:object_key])
+        dependent = TransamAsset.find_by(object_key: val[:object_key])
         if dependent
           @asset.dependents << dependent
           @asset.update_condition # might need to change to run full AssetUpdateJob
@@ -743,18 +769,6 @@ class AssetsController < AssetAwareController
       asset = selected_asset
     end
     return asset
-  end
-
-  def check_for_cancel
-    unless params[:cancel].blank?
-      @asset = get_selected_asset(true)
-      if @asset.nil?
-        notify_user(:alert, 'Record not found!')
-        redirect_to(root_url)
-      else
-        redirect_to inventory_url(@asset)
-      end
-    end
   end
 
   def reformat_date(date_str)
