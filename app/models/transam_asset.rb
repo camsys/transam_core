@@ -4,9 +4,10 @@ class TransamAsset < ApplicationRecord
 
   actable as: :transam_assetible
 
-  belongs_to  :organization
+  belongs_to  :organization, :class_name => 'TransitOperator'
   belongs_to  :asset_subtype
   belongs_to  :manufacturer
+  belongs_to  :manufacturer_model
   belongs_to  :vendor
   belongs_to  :operator, :class_name => 'Organization'
   belongs_to  :title_ownership_organization, :class_name => 'Organization'
@@ -19,7 +20,9 @@ class TransamAsset < ApplicationRecord
       :external_id,
       :description,
       :manufacturer_id,
-      :manufacturer_model,
+      :other_manufacturer,
+      :manufacturer_model_id,
+      :other_manufacturer_model,
       :manufacture_year,
       :purchase_cost,
       :purchase_date,
@@ -35,6 +38,16 @@ class TransamAsset < ApplicationRecord
       :lienholder_id,
       :other_lienholder
   ]
+
+  # Factory method to return a strongly typed subclass of a new asset
+  # based on the asset_base_class_name
+  def self.new_asset(asset_base_class_name, params={})
+
+    asset_class_name = asset_base_class_name.class_name
+    asset = asset_class_name.constantize.new(params)
+    return asset
+
+  end
 
   def self.allowable_params
 
@@ -101,6 +114,10 @@ class TransamAsset < ApplicationRecord
     end
 
     return arr.flatten
+  end
+
+  def policy
+    asset.organization.get_policy
   end
 
 end

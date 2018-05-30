@@ -230,12 +230,9 @@ class AssetsController < AssetAwareController
 
   def show
 
-    # set new asset
-    @asset = @asset.transit_asset.very_specific
-
-    add_breadcrumb "#{@asset.asset_type.name}".pluralize(2), inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
-    add_breadcrumb "#{@asset.asset_subtype.name}", inventory_index_path(:asset_subtype => @asset.asset_subtype)
-    add_breadcrumb @asset.asset_tag, inventory_path(@asset)
+    # add_breadcrumb "#{@asset.asset_type.name}".pluralize(2), inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
+    # add_breadcrumb "#{@asset.asset_subtype.name}", inventory_index_path(:asset_subtype => @asset.asset_subtype)
+    # add_breadcrumb @asset.asset_tag, inventory_path(@asset)
 
     # Set the asset class view var. This can be used to determine which view components
     # are rendered, for example, which tabs and action items the user sees
@@ -255,8 +252,8 @@ class AssetsController < AssetAwareController
 
   def edit
 
-    add_breadcrumb "#{@asset.asset_type.name}".pluralize(2), inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
-    add_breadcrumb "#{@asset.asset_subtype.name}", inventory_index_path(:asset_subtype => @asset.asset_subtype)
+    # add_breadcrumb "#{@asset.asset_type.name}".pluralize(2), inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
+    # add_breadcrumb "#{@asset.asset_subtype.name}", inventory_index_path(:asset_subtype => @asset.asset_subtype)
     # When editing a newly transferred asset this link is invalid so we don't want to show it.
     if @asset.asset_tag == @asset.object_key
       @asset.asset_tag = nil
@@ -270,11 +267,10 @@ class AssetsController < AssetAwareController
   end
 
   def update
-    @asset = @asset.transit_asset.very_specific
 
-    add_breadcrumb "#{@asset.asset_type.name}".pluralize(2), inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
-    add_breadcrumb @asset.name, inventory_path(@asset)
-    add_breadcrumb "Modify", edit_inventory_path(@asset)
+    #add_breadcrumb "#{@asset.asset_type.name}".pluralize(2), inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
+    #add_breadcrumb @asset.name, inventory_path(@asset)
+    #add_breadcrumb "Modify", edit_inventory_path(@asset)
 
     # transfered assets need to remove notification if exists
     # if @asset.asset_tag == @asset.object_key
@@ -329,27 +325,23 @@ class AssetsController < AssetAwareController
     
     add_breadcrumb "Add Asset", new_asset_inventory_index_path
 
-    @page_title = 'New Asset'
-    # Get the asset types for the filter dropdown
-    @asset_types = params[:asset_type_id].present? ? AssetType.where(id: params[:asset_type_id]) : AssetType.active
-
   end
 
   def new
 
-    asset_subtype = AssetSubtype.find(params[:asset_subtype])
-    if asset_subtype.nil?
-      notify_user(:alert, "Asset subtype '#{params[:asset_subtype]}' not found. Can't create new asset!")
+    asset_class = SystemConfig.instance.asset_base_class_name.constantize.find_by(id: params[:asset_base_class_id])
+    if asset_class.nil?
+      notify_user(:alert, "Asset class '#{params[:asset_base_class_id]}' not found. Can't create new asset!")
       redirect_to(root_url)
       return
     end
 
-    add_breadcrumb "#{asset_subtype.asset_type.name}".pluralize(2), inventory_index_path(:asset_type => asset_subtype.asset_type)
-    add_breadcrumb "#{asset_subtype.name}", inventory_index_path(:asset_subtype => asset_subtype)
-    add_breadcrumb "New", new_inventory_path(asset_subtype)
+    #add_breadcrumb "#{asset_subtype.asset_type.name}".pluralize(2), inventory_index_path(:asset_type => asset_subtype.asset_type)
+    #add_breadcrumb "#{asset_subtype.name}", inventory_index_path(:asset_subtype => asset_subtype)
+    #add_breadcrumb "New", new_inventory_path(asset_subtype)
 
-    # Use the base class to create an asset of the correct type
-    @asset = Asset.new_asset(asset_subtype)
+    # Use the asset class to create an asset of the correct type
+    @asset = TransamAsset.new_asset(asset_class)
 
     # See if the user selected an org to associate the asset with
     if params[:organization_id].present?
@@ -358,9 +350,10 @@ class AssetsController < AssetAwareController
       @asset.organization_id = @organization_list.first
     end
 
-    if params[:parent_id].present?
-      @asset.parent_id = params[:parent_id].to_i
-    end
+    # comment out old work on old asset to set parent-child relationships
+    # if params[:parent_id].present?
+    #   @asset.parent_id = params[:parent_id].to_i
+    # end
 
     respond_to do |format|
       format.html # new.html.haml this had been an erb and is now an haml the change should just be caught
@@ -370,15 +363,15 @@ class AssetsController < AssetAwareController
 
   def create
 
-    # Need to determine which type of asset we are creating
-    asset_type = AssetType.find(params[:asset][:asset_type_id])
-    asset_subtype = asset_type.asset_subtypes.find(params[:asset][:asset_subtype_id])
-    # get the class name for this asset event type
-    class_name = asset_type.class_name
-    klass = Object.const_get class_name
-    @asset = klass.new(form_params)
-    @asset.asset_type = asset_type
-    @asset.asset_subtype = asset_subtype
+    asset_class = SystemConfig.instance.asset_base_class_name.constantize.find_by(id: params[:asset_base_class_id])
+    if asset_class.nil?
+      notify_user(:alert, "Asset class '#{params[:asset_base_class_id]}' not found. Can't create new asset!")
+      redirect_to(root_url)
+      return
+    end
+
+    # Use the asset class to create an asset of the correct type
+    @asset = TransamAsset.new_asset(asset_class, new_form_params(asset_class.class_name))
 
     # If the asset does not have an org already defined, set to the default for
     # the user
@@ -386,27 +379,27 @@ class AssetsController < AssetAwareController
       @asset.organization_id = @organization_list.first
     end
 
-    @asset.creator = current_user
-    @asset.updator = current_user
+    #@asset.creator = current_user
+    #@asset.updator = current_user
 
     #Rails.logger.debug @asset.inspect
 
-    add_breadcrumb "#{asset_type.name}".pluralize(2), inventory_index_path(:asset_type => asset_subtype.asset_type)
-    add_breadcrumb "#{asset_subtype.name}", inventory_index_path(:asset_subtype => asset_subtype)
-    add_breadcrumb "New", new_inventory_path(asset_subtype)
+    # add_breadcrumb "#{asset_type.name}".pluralize(2), inventory_index_path(:asset_type => asset_subtype.asset_type)
+    # add_breadcrumb "#{asset_subtype.name}", inventory_index_path(:asset_subtype => asset_subtype)
+    # add_breadcrumb "New", new_inventory_path(asset_subtype)
 
     respond_to do |format|
       if @asset.save
 
         # Make sure the policy has rules for this asset
         policy = @asset.policy
-        policy.find_or_create_asset_type_rule @asset.asset_type
+        policy.find_or_create_asset_type_rule @asset.asset_subtype.asset_type
         policy.find_or_create_asset_subtype_rule @asset.asset_subtype
 
         # If the asset was successfully saved, schedule update the condition and disposition asynchronously
-        Delayed::Job.enqueue AssetUpdateJob.new(@asset.object_key), :priority => 0
+        #Delayed::Job.enqueue AssetUpdateJob.new(@asset.object_key), :priority => 0
 
-        notify_user(:notice, "Asset #{@asset.name} was successfully created.")
+        notify_user(:notice, "Asset #{@asset.to_s} was successfully created.")
 
         format.html { redirect_to inventory_url(@asset) }
         format.json { render :json => @asset, :status => :created, :location => @asset }
@@ -576,6 +569,9 @@ class AssetsController < AssetAwareController
 
     # If the asset type and subtypes are not set we default to the asset base class
     if @id_filter_list.present? or (@asset_type == 0 and @asset_subtype == 0)
+      # THIS WILL NO LONGER WORK
+      # asset base class name should really be seed to pull typed asset class
+      # base class here is just Asset or the new TransamAsset
       @asset_class_name = SystemConfig.instance.asset_base_class_name
     elsif @asset_subtype > 0
       # we have an asset subtype so get it and get the asset type from it. We also set the filter form
