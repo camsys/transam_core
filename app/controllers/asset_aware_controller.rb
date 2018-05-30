@@ -65,25 +65,20 @@ class AssetAwareController < OrganizationAwareController
   # otherwise a base class asset is returned
   #
   def get_selected_asset(convert=true)
-    selected_asset = Asset.find_by(:organization_id => @organization_list, :object_key => params[:inventory_id]) unless params[:inventory_id].blank?
+    selected_asset = TransamAsset.find_by(:organization_id => @organization_list, :object_key => params[:inventory_id]) unless params[:inventory_id].blank?
     if convert
-      asset = get_typed_asset(selected_asset)
+      asset = selected_asset.very_specific
     else
       asset = selected_asset
     end
     return asset
   end
 
-  # returns the typed version of the asset
-  def get_typed_asset(asset)
-    Asset.get_typed_asset(asset)
-  end
-
   def get_asset
     # check that the asset is owned by the agency
     @asset = get_selected_asset(render_typed_assets)
     if @asset.nil?
-      if  Asset.find_by(:organization_id => current_user.user_organization_filters.system_filters.first.get_organizations.map{|x| x.id}, :object_key => params[:id]).nil?
+      if  TransamAsset.find_by(:organization_id => current_user.user_organization_filters.system_filters.first.get_organizations.map{|x| x.id}, :object_key => params[:id]).nil?
         redirect_to '/404'
       else
         notify_user(:warning, 'This record is outside your filter. Change your filter if you want to access it.')
