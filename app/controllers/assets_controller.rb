@@ -373,10 +373,9 @@ class AssetsController < AssetAwareController
       @asset.organization_id = @organization_list.first
     end
 
-    # comment out old work on old asset to set parent-child relationships
-    # if params[:parent_id].present?
-    #   @asset.parent_id = params[:parent_id].to_i
-    # end
+    if params[:parent_id].present?
+      @asset.parent_id = params[:parent_id].to_i
+    end
 
     respond_to do |format|
       format.html # new.html.haml this had been an erb and is now an haml the change should just be caught
