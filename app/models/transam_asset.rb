@@ -13,6 +13,8 @@ class TransamAsset < ApplicationRecord
   belongs_to  :title_ownership_organization, :class_name => 'Organization'
   belongs_to  :lienholder, :class_name => 'Organization'
 
+  has_and_belongs_to_many     :asset_groups, join_table: :asset_groups_assets, foreign_key: :transam_asset_id
+
   FORM_PARAMS = [
       :organization_id,
       :asset_subtype_id,
