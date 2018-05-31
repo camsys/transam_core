@@ -281,7 +281,9 @@ class AssetEventsController < AssetAwareController
       notify_user(:alert, "#{params[:event_name]} is not a valid event for a #{asset_event_class.name}")
     end
 
-    redirect_to(:back) unless is_redirected
+    unless is_redirected
+      redirect_back fallback_location: root_path
+    end
 
   end
 

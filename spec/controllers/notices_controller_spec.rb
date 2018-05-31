@@ -37,7 +37,7 @@ RSpec.describe NoticesController, :type => :controller do
     test_notice1 = create(:notice)
     test_notice2 = create(:notice)
     test_notice3 = create(:notice)
-    get :show, :id => test_notice2.object_key
+    get :show, params: {:id => test_notice2.object_key}
     # expect(assigns(:prev_record_key)).to eq(test_notice1.object_key)
     expect(assigns(:notice)).to eq(test_notice2)
     # expect(assigns(:next_record_key)).to eq(test_notice3.object_key)
@@ -51,38 +51,38 @@ RSpec.describe NoticesController, :type => :controller do
 
   it 'POST reactivate' do
     test_notice.update!(:active => false)
-    post :reactivate, :id => test_notice.object_key
+    post :reactivate, params: {:id => test_notice.object_key}
     test_notice.reload
 
     expect(test_notice.active).to be true
   end
 
   it 'GET edit' do
-    get :edit, :id => test_notice.object_key
+    get :edit, params: {:id => test_notice.object_key}
 
     expect(assigns(:notice)).to eq(test_notice)
   end
   it 'POST create' do
     test_notice_type = create(:notice_type)
-    post :create, {:notice => attributes_for(:notice, :notice_type_id => test_notice_type.id, :details => 'rspec details')}
+    post :create, params: {:notice => attributes_for(:notice, :notice_type_id => test_notice_type.id, :details => 'rspec details')}
 
     expect(Notice.last.details).to eq('rspec details')
   end
   it 'POST update' do
-    post :update, {:id => test_notice.object_key, :notice => {:details => 'Test Details2'}}
+    post :update, params: {:id => test_notice.object_key, :notice => {:details => 'Test Details2'}}
     test_notice.reload
 
     expect(test_notice.details).to eq('Test Details2')
   end
   it 'POST deactivate' do
     request.env["HTTP_REFERER"] = root_path
-    post :deactivate, :id => test_notice.object_key
+    post :deactivate, params: {:id => test_notice.object_key}
     test_notice.reload
 
     expect(test_notice.active).to be false
   end
   it 'DELETE destroy' do
-    delete :destroy, {:id => test_notice.object_key}
+    delete :destroy, params: {:id => test_notice.object_key}
 
     expect(Notice.find_by(:object_key => test_notice.object_key)).to be nil
   end

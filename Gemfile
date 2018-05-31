@@ -18,3 +18,4 @@ gem "capybara", '2.6.2' # lock gem for old capybara behavior on hidden element x
 gem 'ckeditor'
 gem 'rack-test'
 gem 'sass-rails'
+gem 'rails-controller-testing' # assigns has been extracted to this gem
