@@ -761,9 +761,9 @@ class AssetsController < AssetAwareController
   # Overrides the utility method in the base class
   #
   def get_selected_asset(convert=true)
-    selected_asset = params[:id].nil? ? nil : Asset.where('organization_id IN (?) AND object_key = ?', @organization_list, params[:id]).first
+    selected_asset = TransamAsset.find_by(:organization_id => @organization_list, :object_key => params[:id]) unless params[:id].blank?
     if convert
-      asset = get_typed_asset(selected_asset)
+      asset = selected_asset.very_specific
     else
       asset = selected_asset
     end
