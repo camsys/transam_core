@@ -4,7 +4,7 @@ class TransamAsset < ApplicationRecord
 
   actable as: :transam_assetible
 
-  belongs_to  :organization, :class_name => 'TransitOperator'
+  belongs_to  :organization
   belongs_to  :asset_subtype
   belongs_to  :manufacturer
   belongs_to  :manufacturer_model
@@ -67,6 +67,19 @@ class TransamAsset < ApplicationRecord
   # Each asset has zero or more tasks. Tasks are deleted when the asset is deleted
   has_many    :tasks,       :as => :taskable,     :dependent => :destroy
 
+  #-----------------------------------------------------------------------------
+  # Scopes
+  #-----------------------------------------------------------------------------
+
+  # Returns a list of assets that have been disposed
+  scope :disposed,    -> { where.not(disposition_date: nil) }
+  # Returns a list of assets that are still operational
+  scope :operational, -> { where('transam_assets.disposition_date IS NULL AND transam_assets.asset_tag != transam_assets.object_key') }
+
+  # Returns a list of asset that in early replacement
+  scope :early_replacement, -> { where('policy_replacement_year is not NULL and scheduled_replacement_year is not NULL and scheduled_replacement_year < policy_replacement_year') }
+
+
   FORM_PARAMS = [
       :organization_id,
       :asset_subtype_id,
@@ -103,31 +116,6 @@ class TransamAsset < ApplicationRecord
 
   end
 
-  def self.allowable_params
-
-
-
-    klass = self.all
-    a = FORM_PARAMS
-    assoc = klass.column_names.select{|col| col.end_with? 'ible_type'}.first
-    assoc_arr = Hash.new
-    assoc_arr[assoc] = nil
-    t = klass.distinct.where.not(assoc_arr).pluck(assoc)
-
-    while t.count == 1
-      id_col = assoc[0..-6] + '_id'
-      klass = t.first.constantize
-      a << klass::FORM_PARAMS
-      klass = klass.where(id: klass.pluck(id_col))
-      assoc = klass.column_names.select{|col| col.end_with? 'ible_type'}.first
-      assoc_arr = Hash.new
-      assoc_arr[assoc] = nil
-      t = klass.distinct.where.not(assoc_arr).pluck(assoc)
-    end
-
-    return a.flatten
-  end
-
   def self.very_specific
     klass = self.all
     assoc = klass.column_names.select{|col| col.end_with? 'ible_type'}.first
@@ -151,7 +139,7 @@ class TransamAsset < ApplicationRecord
   def very_specific
     a = self.specific
 
-    while a.try(:specific) != a
+    while a.try(:specific).present? && a.specific != a
       a = a.specific
     end
 
@@ -159,13 +147,15 @@ class TransamAsset < ApplicationRecord
   end
 
   def allowable_params
-    arr = FORM_PARAMS
+    arr = FORM_PARAMS.dup
     a = self.specific
 
-    while a.try(:specific) != a
-      arr << a.class::FORM_PARAMS
+    while a.try(:specific).present? && a.specific != a
+      arr << a.class::FORM_PARAMS.dup
       a = a.specific
     end
+
+    arr << a.class::FORM_PARAMS.dup
 
     return arr.flatten
   end
