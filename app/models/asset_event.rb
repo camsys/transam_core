@@ -31,7 +31,7 @@ class AssetEvent < ActiveRecord::Base
   # Every event belongs to a creator
   belongs_to :creator, :class_name => "User", :foreign_key => :created_by_id
 
-  validates :asset_id,            :presence => true
+  validates :transam_asset_id,            :presence => true
   validates :asset_event_type_id, :presence => true
   validates :event_date,          :presence => true
   validate  :validate_event_date_with_purchase
