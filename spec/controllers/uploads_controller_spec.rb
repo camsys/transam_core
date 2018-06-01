@@ -22,12 +22,12 @@ RSpec.describe UploadsController, :type => :controller do
   end
 
   it 'GET show' do
-    get :show, :id => test_upload.object_key
+    get :show, params: {:id => test_upload.object_key}
 
     expect(assigns(:upload)).to eq(test_upload)
   end
   it 'GET undo' do
-    get :undo, :id => test_upload.object_key
+    get :undo, params: {:id => test_upload.object_key}
     test_upload.reload
 
     expect(assigns(:upload)).to eq(test_upload)
@@ -49,14 +49,14 @@ RSpec.describe UploadsController, :type => :controller do
     expect(assigns(:upload).to_json).to eq(Upload.new.to_json)
   end
   it 'POST create' do
-    post :create, :upload => attributes_for(:upload)
+    post :create, params: {:upload => attributes_for(:upload)}
 
     expect(assigns(:upload).user).to eq(subject.current_user)
     expect(assigns(:upload).file_content_type_id).to eq(1)
     expect(assigns(:upload).force_update).to be false
   end
   it 'DELETE destroy' do
-    delete :destroy, :id => test_upload.object_key
+    delete :destroy, params: {:id => test_upload.object_key}
 
     expect(Upload.find_by(:object_key => test_upload.object_key)).to be nil
   end

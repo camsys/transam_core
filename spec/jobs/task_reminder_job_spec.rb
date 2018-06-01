@@ -48,12 +48,7 @@ RSpec.describe TaskReminderJob, :type => :job do
 
   it '.prepare' do
     allow(Time).to receive(:now).and_return(Time.utc(2000,"jan",1,20,15,1))
-    expect(Rails.logger).to receive(:info).with("Executing TaskReminderJob at #{Time.now.to_s} for tasks due in 1 days.")
+    expect(Rails.logger).to receive(:info).with("Executing TaskReminderJob at #{Time.now.to_s} for tasks due.")
     TaskReminderJob.new(1, PriorityType.first).prepare
-  end
-
-  it '.check' do
-    expect{TaskReminderJob.new(1,nil).check}.to raise_error(ArgumentError, "priority_type can't be nil ")
-    expect{TaskReminderJob.new(nil,PriorityType.first).check}.to raise_error(ArgumentError, "days_from_now can't be nil ")
   end
 end

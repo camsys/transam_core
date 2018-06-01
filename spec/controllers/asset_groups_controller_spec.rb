@@ -16,7 +16,7 @@ RSpec.describe AssetGroupsController, :type => :controller do
   end
   it 'GET show' do
     create(:buslike_asset, :asset_groups => [test_group])
-    get :show, :id => test_group.object_key
+    get :show, params: {id: test_group.object_key}
 
     expect(assigns(:asset_group)).to eq(test_group)
     expect(assigns(:total_assets)).to eq(1)
@@ -28,20 +28,20 @@ RSpec.describe AssetGroupsController, :type => :controller do
     expect(assigns(:asset_group).to_json).to eq(AssetGroup.new.to_json)
   end
   it 'GET edit' do
-    get :edit, :id => test_group.object_key
+    get :edit, params: {id: test_group.object_key}
 
     expect(assigns(:asset_group)).to eq(test_group)
   end
 
   it 'POST create' do
-    post :create, :asset_group => attributes_for(:asset_group, :description => 'new asset group test')
+    post :create, params: {asset_group: attributes_for(:asset_group, :description => 'new asset group test')}
 
     expect(assigns(:asset_group).description).to eq('new asset group test')
     expect(assigns(:asset_group).active).to be true
     expect(assigns(:asset_group).organization).to eq(Organization.get_typed_organization(subject.current_user.organization))
   end
   it 'PUT update' do
-    put :update, :id => test_group.object_key, :asset_group => {:description => 'new description'}
+    put :update, params: {id: test_group.object_key, asset_group: {:description => 'new description'}}
     test_group.reload
 
     expect(assigns(:asset_group)).to eq(test_group)
@@ -49,7 +49,7 @@ RSpec.describe AssetGroupsController, :type => :controller do
   end
 
   it 'DELETE destroy' do
-    delete :destroy, :id => test_group.object_key
+    delete :destroy, params: {id: test_group.object_key}
 
     expect(AssetGroup.find_by(:object_key => test_group.object_key)).to be nil
   end
