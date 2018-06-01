@@ -1,4 +1,4 @@
-class TransamAsset < ApplicationRecord
+class TransamAsset < TransamAssetRecord
 
   include TransamObjectKey
 
@@ -123,13 +123,15 @@ class TransamAsset < ApplicationRecord
     assoc_arr[assoc] = nil
     t = klass.distinct.where.not(assoc_arr).pluck(assoc)
 
-    while t.count == 1
+    while t.count == 1 && assoc.present?
       id_col = assoc[0..-6] + '_id'
       klass = t.first.constantize.where(id: klass.pluck(id_col))
       assoc = klass.column_names.select{|col| col.end_with? 'ible_type'}.first
-      assoc_arr = Hash.newev
-      assoc_arr[assoc] = nil
-      t = klass.distinct.where.not(assoc_arr).pluck(assoc)
+      if assoc.present?
+        assoc_arr = Hash.new
+        assoc_arr[assoc] = nil
+        t = klass.distinct.where.not(assoc_arr).pluck(assoc)
+      end
     end
 
     return klass
@@ -165,7 +167,12 @@ class TransamAsset < ApplicationRecord
   end
 
   def policy
-    asset.organization.get_policy
+    organization.get_policy
+  end
+
+  # returns the list of events associated with this asset ordered by date, newest first
+  def history
+    AssetEvent.unscoped.where('asset_id = ?', id).order('event_date DESC, created_at DESC')
   end
 
 end
