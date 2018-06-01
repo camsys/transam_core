@@ -1,4 +1,4 @@
-class CreateConditionTypePercents < ActiveRecord::Migration
+class CreateConditionTypePercents < ActiveRecord::Migration[5.2]
   def change
     create_table :condition_type_percents do |t|
       t.references :asset_event, index: true
