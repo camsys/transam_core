@@ -11,7 +11,7 @@ class Message < ActiveRecord::Base
 
   # Associations
   belongs_to :organization
-  belongs_to :user
+  belongs_to :user, -> { unscope(where: :active) }
   belongs_to :to_user, :class_name => 'User', :foreign_key => "to_user_id"
   belongs_to :priority_type
   has_many   :responses, :class_name => "Message", :foreign_key => "thread_message_id"
