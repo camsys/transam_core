@@ -1,4 +1,4 @@
-class TransamAsset < ApplicationRecord
+class TransamAsset < TransamAssetRecord
 
   include TransamObjectKey
 
@@ -162,8 +162,8 @@ class TransamAsset < ApplicationRecord
     return arr.flatten
   end
 
-  def to_s
-    asset_tag
+  def disposed?
+    disposition_date.present?
   end
 
   def event_classes
@@ -183,6 +183,14 @@ class TransamAsset < ApplicationRecord
   # returns the list of events associated with this asset ordered by date, newest first
   def history
     AssetEvent.unscoped.where('asset_id = ?', id).order('event_date DESC, created_at DESC')
+  end
+
+  def service_status_type
+    ServiceStatusType.find_by(id: service_status_updates.last.try(:service_status_type_id))
+  end
+
+  def reported_condition_type
+    ConditionType.find_by(id: condition_updates.last.try(:condition_type_id))
   end
 
 end
