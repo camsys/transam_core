@@ -49,10 +49,6 @@ class AssetEvent < ActiveRecord::Base
     :comments
   ]
 
-  def associated_asset_tag
-    asset.asset_tag
-  end
-
   #------------------------------------------------------------------------------
   #
   # Class Methods
@@ -109,7 +105,7 @@ class AssetEvent < ActiveRecord::Base
   # If one already exists for the same event_date, return the last created
   # If none exists, returns nil
   def next_event_of_type
-    event = asset.asset_events
+    event = transam_asset.asset_events
       .where('asset_event_type_id = ?', self.asset_event_type_id)
       .where('event_date > ? OR (event_date = ? AND created_at > ?)', self.event_date, self.event_date, (self.new_record? ? Time.current : self.created_at )) # Define a window that backs up to this event
       .where('object_key != ?', self.object_key)
@@ -123,7 +119,7 @@ class AssetEvent < ActiveRecord::Base
   # If one already exists for the same event_date, return the last created
   # If none exists, returns nil
   def previous_event_of_type
-    event = asset.asset_events
+    event = transam_asset.asset_events
       .where("asset_event_type_id = ?", self.asset_event_type_id) # get events of same type
       .where("event_date < ? OR (event_date = ? AND created_at < ?)", self.event_date, self.event_date, (self.new_record? ? Time.current : self.created_at) ) # Define a window that runs up to this event
       .where('object_key != ?', self.object_key)
@@ -148,7 +144,7 @@ class AssetEvent < ActiveRecord::Base
   def validate_event_date_with_purchase
     if event_date.nil?
       errors.add(:event_date, "must exist")
-    elsif asset.purchased_new && event_date < asset.purchase_date
+    elsif transam_asset.purchased_new && event_date < transam_asset.purchase_date
       errors.add(:event_date, "must be on or after purchase date if new purchase")
     end
   end

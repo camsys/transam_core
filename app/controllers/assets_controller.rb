@@ -313,7 +313,7 @@ class AssetsController < AssetAwareController
         end
         notify_user(:notice, "Asset #{@asset.name} was successfully updated.")
 
-        format.html { redirect_to inventory_url(@asset.asset) }
+        format.html { redirect_to inventory_url(@asset) }
         format.json { head :no_content }
       else
         format.html { render :action => "edit" }
