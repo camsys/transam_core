@@ -20,6 +20,10 @@ module TransamHelper
     get_fiscal_years
   end
 
+  def get_fy_label
+    SystemConfig.instance.default_fiscal_year_formatter ? 'Year' : 'FY'
+  end
+
   # Return the version of TransAM core that is running
   def transam_version
     Gem.loaded_specs['transam_core'].version

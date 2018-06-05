@@ -48,17 +48,6 @@ module FiscalYear
     current_fiscal_year_year + SystemConfig.instance.num_forecasting_years
   end
 
-  # returns the year for a fiscal year string
-  def to_year(fy_str, century = 2000)
-    elems = fy_str.split(' ') # split "FY" substring from year
-
-    # get year. returns century if invalid string
-    if elems.size == 2
-      year = elems.last
-    end
-    century + year.to_i
-  end
-
   # Returns the fiscal year on a given date
   def fiscal_year_year_on_date(date)
 
