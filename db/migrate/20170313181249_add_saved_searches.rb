@@ -1,4 +1,4 @@
-class AddSavedSearches < ActiveRecord::Migration
+class AddSavedSearches < ActiveRecord::Migration[5.2]
   def change
     create_table "saved_searches", force: true do |t|
       t.string   "object_key",        limit: 12,  null: false

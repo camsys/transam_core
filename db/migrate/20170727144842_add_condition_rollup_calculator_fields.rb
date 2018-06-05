@@ -1,4 +1,4 @@
-class AddConditionRollupCalculatorFields < ActiveRecord::Migration
+class AddConditionRollupCalculatorFields < ActiveRecord::Migration[5.2]
   def change
 
     # add condition rollup calculators

@@ -1,4 +1,4 @@
-class CreateSearchTypes < ActiveRecord::Migration
+class CreateSearchTypes < ActiveRecord::Migration[5.2]
   def change
     create_table :search_types do |t|
       t.string :name
