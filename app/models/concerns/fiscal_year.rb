@@ -118,11 +118,8 @@ module FiscalYear
       klass = self.class.to_s
     end
 
-    if Rails.application.config.try(:special_fiscal_year_formatters)
-      formatter = Rails.application.config.special_fiscal_year_formatters[klass]
-    else
-      formatter = nil
-    end
+    formatter = SystemConfig.instance.special_fiscal_year_formatters[klass]
+    formatter = SystemConfig.instance.default_fiscal_year_formatter if formatter.nil?
 
     if formatter == 'start_year'
       "#{year}"
