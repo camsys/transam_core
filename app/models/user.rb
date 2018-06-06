@@ -191,7 +191,7 @@ class User < ActiveRecord::Base
     if weather_code
       weather_code.code
     else
-      Rails.application.config.default_weather_code
+      SystemConfig.instance.default_weather_code
     end
   end
 
