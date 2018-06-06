@@ -434,13 +434,13 @@ class UsersController < OrganizationAwareController
   # Get the configured service to handle user creation, defaulting
   #-----------------------------------------------------------------------------
   def get_new_user_service
-    Rails.application.config.new_user_service.constantize.new
+    SystemConfig.instance.new_user_service.constantize.new
   end
 
   #-----------------------------------------------------------------------------
   # Get the configured service to handle user role management, defaulting
   #-----------------------------------------------------------------------------
   def get_user_role_service
-    Rails.application.config.user_role_service.constantize.new
+    SystemConfig.instance.user_role_service.constantize.new
   end
 end
