@@ -184,11 +184,16 @@ activities = [
     {:name => 'Session Cleanup', :description => 'Session cleanup job every 15 mins.', :job_name => 'SessionCacheCleanupJob', :frequency_quantity => 15, :frequency_type_id => 2, :execution_time => '**:15', :show_in_dashboard => false, :active => true}
 ]
 
+system_config_extensions = [
+    {class_name: 'User', extension_name: 'TransamKeywordSearchable', active: true},
+    {class_name: 'Vendor', extension_name: 'TransamKeywordSearchable', active: true},
+]
+
 
 lookup_tables = %w{asset_event_types condition_types disposition_types cost_calculation_types license_types priority_types
   file_content_types file_status_types report_types service_status_types
   service_life_calculation_types condition_estimation_types condition_rollup_calculation_types
-  issue_status_types issue_types web_browser_types replacement_reason_types notice_types frequency_types search_types activities manufacturers
+  issue_status_types issue_types web_browser_types replacement_reason_types notice_types frequency_types search_types activities manufacturers system_config_extensions
   }
 
 lookup_tables.each do |table_name|
