@@ -1,5 +1,5 @@
 class FiscalYearInput < SimpleForm::Inputs::Base
-  include TransamHelper
+  include FiscalYearHelper
   
   def input
     field_name = "#{@builder.object_name}_#{attribute_name}"

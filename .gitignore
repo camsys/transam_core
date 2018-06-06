@@ -30,3 +30,4 @@ TAGS
 *.axlsx~
 
 shadowed_views.log
+*.rb~

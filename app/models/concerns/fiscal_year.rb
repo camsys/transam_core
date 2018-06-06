@@ -6,7 +6,8 @@
 #
 #-------------------------------------------------------------------------------
 module FiscalYear
-
+  include FiscalYearHelper
+  
   # Returns the date of the start of a fiscal year for a given calendar year. For
   # a year like 2015 we return the start of the FY-15-16 year
   def start_of_fiscal_year date_year
