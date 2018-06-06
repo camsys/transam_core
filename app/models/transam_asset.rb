@@ -4,6 +4,12 @@ class TransamAsset < TransamAssetRecord
 
   actable as: :transam_assetible
 
+  # Before the asset is updated we may need to update things like estimated
+  # replacement cost if they updated other things
+  # updates the calculated values of an asset
+  after_save      :update_asset_state
+
+
   belongs_to  :organization
   belongs_to  :asset_subtype
   belongs_to  :manufacturer
@@ -180,6 +186,62 @@ class TransamAsset < TransamAssetRecord
     organization.get_policy
   end
 
+  #-----------------------------------------------------------------------------
+  # Return the policy analyzer for this asset. If a policy is not provided the
+  # default policy for the asset is used
+  #-----------------------------------------------------------------------------
+  def policy_analyzer(policy_to_use=nil)
+    if policy_to_use.blank?
+      policy_to_use = policy
+    end
+    policy_analyzer = SystemConfig.instance.policy_analyzer.constantize.new(self, policy_to_use)
+  end
+
+  def expected_useful_life
+    purchased_new ? policy_analyzer.get_min_service_life_months : policy_analyzer.get_min_used_purchase_service_life_months
+  end
+
+  def policy_rehabilitation_year
+    # Check for rehabilitation policy events
+    begin
+      # Use the calculator to calculate the policy rehabilitation fiscal year
+      calculator = RehabilitationYearCalculator.new
+      return calculator.calculate(asset)
+    rescue Exception => e
+      Rails.logger.warn e.message
+    end
+  end
+
+  def estimated_replacement_year
+    # Estimate the year that the asset will need replacing
+    begin
+      class_name = policy_analyzer.get_condition_estimation_type.class_name
+      calculate(asset, class_name, 'last_servicable_year') + 1
+    rescue Exception => e
+      Rails.logger.warn e.message
+    end
+  end
+
+  def estimated_replacement_cost
+    if self.policy_replacement_year < current_planning_year_year
+      start_date = start_of_fiscal_year(scheduled_replacement_year)
+    else
+      start_date = start_of_fiscal_year(policy_replacement_year)
+    end
+    # Update the estimated replacement costs
+    class_name = this_policy_analyzer.get_replacement_cost_calculation_type.class_name
+    calculator_instance = class_name.constantize.new
+    (calculator_instance.calculate_on_date(self, start_date)+0.5).to_i
+  end
+
+  def replacement_by_policy?
+    true # all assets in core are in replacement cycle. To plan and/or make exceptions to normal schedule, see CPT.
+  end
+
+  def replacement_pinned?
+    false # all assets can be locked into place to prevent sched replacement year changes but by default none are locked
+  end
+
   # returns the list of events associated with this asset ordered by date, newest first
   def history
     AssetEvent.unscoped.where('asset_id = ?', id).order('event_date DESC, created_at DESC')
@@ -189,8 +251,120 @@ class TransamAsset < TransamAssetRecord
     ServiceStatusType.find_by(id: service_status_updates.last.try(:service_status_type_id))
   end
 
+  def reported_condition_date
+    if dependents.count > 0
+      dependents.order(:reported_condition_date).pluck(:reported_condition_date).last
+    else
+      condition_updates.last.try(:event_date)
+    end
+  end
+  def reported_condition_rating
+    if dependents.count > 0
+      policy_analyzer.get_condition_rollup_calculation_type.class_name.constantize.new.calculate(self)
+    else
+      condition_updates.last.try(:assessed_rating)
+    end
+  end
   def reported_condition_type
-    ConditionType.find_by(id: condition_updates.last.try(:condition_type_id))
+    ConditionType.from_rating(reported_condition_rating)
   end
 
+  def estimated_condition_rating
+    # Estimate the year that the asset will need replacing amd the estimated
+    # condition of the asset
+    begin
+      class_name = policy_analyzer.get_condition_estimation_type.class_name
+      calculate(asset, class_name)
+    rescue Exception => e
+      Rails.logger.warn e.message
+    end
+  end
+  def estimated_condition_type
+    ConditionType.from_rating(estimated_condition_rating)
+  end
+
+
+  protected
+
+  # updates the calculated values of an asset
+  def update_asset_state
+
+    return unless self.replacement_by_policy? || self.replacement_pinned?
+
+    Rails.logger.debug "Updating SOGR for asset = #{object_key}"
+
+    if disposed?
+      Rails.logger.debug "Asset #{object_key} is disposed"
+    end
+
+    # returns the year in which the asset should be replaced based on the policy and asset
+    # characteristics
+    begin
+      # store old policy replacement year for use later
+      old_policy_replacement_year = policy_replacement_year
+
+      # see what metric we are using to determine the service life of the asset
+      class_name = policy_analyzer.get_service_life_calculation_type.class_name
+      self.policy_replacement_year = calculate(asset, class_name)
+
+      if self.scheduled_replacement_year.nil? or self.scheduled_replacement_year == old_policy_replacement_year
+        Rails.logger.debug "Setting scheduled replacement year to #{asset.policy_replacement_year}"
+        self.scheduled_replacement_year = self.policy_replacement_year unless self.replacement_pinned?
+        self.in_backlog = false
+      end
+      # If the asset is in backlog set the scheduled year to the current FY year
+      if self.scheduled_replacement_year < current_planning_year_year
+        Rails.logger.debug "Asset is in backlog. Setting scheduled replacement year to #{current_planning_year_year}"
+        self.scheduled_replacement_year = current_planning_year_year
+        self.in_backlog = true
+      end
+    rescue Exception => e
+      Rails.logger.warn e.message
+    end
+
+    # If the policy replacement year changes we need to check to see if the asset
+    # is in backlog and update the scheduled replacement year to the first planning
+    # year
+    if self.policy_replacement_year < current_planning_year_year
+      self.scheduled_replacement_year = current_planning_year_year
+      self.in_backlog = true
+    else
+      self.in_backlog = false
+    end
+
+    if self.changes.include? "scheduled_replacement_year"
+      check_early_replacement = true
+      Rails.logger.debug "New scheduled_replacement_year = #{self.scheduled_replacement_year}"
+      # Get the calculator class from the policy analyzer
+      class_name = this_policy_analyzer.get_replacement_cost_calculation_type.class_name
+      calculator_instance = class_name.constantize.new
+      start_date = start_of_fiscal_year(scheduled_replacement_year) unless scheduled_replacement_year.blank?
+      Rails.logger.debug "Start Date = #{start_date}"
+      self.scheduled_replacement_cost = (calculator_instance.calculate_on_date(self, start_date)+0.5).to_i
+    end
+
+    self.early_replacement_reason = nil if check_early_replacement && !is_early_replacement?
+
+    self.save!
+  end
+
+  private
+
+  # Calls a calculate method on a Calculator class to perform a condition or cost calculation
+  # for the asset. The method name defaults to x.calculate(asset) but other methods
+  # with the same signature can be passed in
+  def calculate(asset, class_name, target_method = 'calculate')
+    begin
+      Rails.logger.debug "#{class_name}, #{target_method}"
+      # create an instance of this class and call the method
+      calculator_instance = class_name.constantize.new
+      Rails.logger.debug "Instance created #{calculator_instance}"
+      method_object = calculator_instance.method(target_method)
+      Rails.logger.debug "Instance method created #{method_object}"
+      method_object.call(asset)
+    rescue Exception => e
+      Rails.logger.error e.message
+      raise RuntimeError.new "#{class_name} calculation failed for asset #{asset.object_key} and policy #{policy.name}"
+    end
+  end
 end
