@@ -30,6 +30,11 @@ TODO: Write usage instructions here
 
 ## Test Status
 
+#### transam_core
 [![Build Status](https://travis-ci.org/camsys/transam_core.svg?branch=quarter2)](https://travis-ci.org/camsys/transam_core)
+
+#### transam_transit
+[![Build Status](https://travis-ci.org/camsys/transam_transit.svg?branch=quarter2)](https://travis-ci.org/camsys/transam_transit)
+
 
              
