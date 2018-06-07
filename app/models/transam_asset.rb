@@ -242,6 +242,10 @@ class TransamAsset < TransamAssetRecord
     false # all assets can be locked into place to prevent sched replacement year changes but by default none are locked
   end
 
+  def formatted_early_replacement_reason
+    early_disposition_requests.count == 0 ? '(Reason not provided)' : early_disposition_requests.last.comments
+  end
+
   # returns the list of events associated with this asset ordered by date, newest first
   def history
     AssetEvent.unscoped.where('asset_id = ?', id).order('event_date DESC, created_at DESC')
@@ -343,7 +347,7 @@ class TransamAsset < TransamAssetRecord
       self.scheduled_replacement_cost = (calculator_instance.calculate_on_date(self, start_date)+0.5).to_i
     end
 
-    self.early_replacement_reason = nil if check_early_replacement && !is_early_replacement?
+    #self.early_replacement_reason = nil if check_early_replacement && !is_early_replacement?
 
     self.save!
   end
