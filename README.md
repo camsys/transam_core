@@ -27,4 +27,9 @@ TODO: Write usage instructions here
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
+## Test Status
+
+[![Build Status](https://travis-ci.org/camsys/transam_core.svg?branch=quarter2)](https://travis-ci.org/camsys/transam_core)
+
              
