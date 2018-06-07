@@ -6,3 +6,6 @@ test:
   timeout: 5000
   host: localhost
   database: transam_core_testing
+  variables:
+    sql_mode: traditional
+
