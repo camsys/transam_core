@@ -6,7 +6,8 @@
 #
 #-------------------------------------------------------------------------------
 module FiscalYear
-
+  include FiscalYearHelper
+  
   # Returns the date of the start of a fiscal year for a given calendar year. For
   # a year like 2015 we return the start of the FY-15-16 year
   def start_of_fiscal_year date_year
@@ -46,17 +47,6 @@ module FiscalYear
   # Returns the last fiscal year in the planning horizon
   def last_fiscal_year_year
     current_fiscal_year_year + SystemConfig.instance.num_forecasting_years
-  end
-
-  # returns the year for a fiscal year string
-  def to_year(fy_str, century = 2000)
-    elems = fy_str.split(' ') # split "FY" substring from year
-
-    # get year. returns century if invalid string
-    if elems.size == 2
-      year = elems.last
-    end
-    century + year.to_i
   end
 
   # Returns the fiscal year on a given date

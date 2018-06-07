@@ -33,17 +33,6 @@ RSpec.describe FiscalYear do
     expected_yr += SystemConfig.instance.num_forecasting_years
     expect(test_fy_class.last_fiscal_year_year).to eq(expected_yr)
   end
-  describe '.to_year' do
-    it 'must be a FY string else returns century' do
-      expect(test_fy_class.to_year('2010')).to eq(2000)
-    end
-    it 'gets year' do
-      expect(test_fy_class.to_year('FY 00-01')).to eq(2000)
-      expect(test_fy_class.to_year('FY 01-02')).to eq(2001)
-      expect(test_fy_class.to_year('FY 10-11')).to eq(2010)
-      expect(test_fy_class.to_year('FY 11-12')).to eq(2011)
-    end
-  end
   it '.fiscal_year_year_on_date' do
     expect(test_fy_class.fiscal_year_year_on_date(Date.new(2015,5,1))).to eq(2014)
     expect(test_fy_class.fiscal_year_year_on_date(Date.new(2015,10,1))).to eq(2015)
