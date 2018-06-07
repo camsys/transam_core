@@ -28,7 +28,7 @@ TODO: Write usage instructions here
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
 
-## Tests Status
+## Test Status
 
 [![Build Status](https://travis-ci.org/camsys/transam_core.svg?branch=quarter2)](https://travis-ci.org/camsys/transam_core)
 
