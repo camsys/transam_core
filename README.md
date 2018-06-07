@@ -33,11 +33,15 @@ TODO: Write usage instructions here
 #### transam_core
 [![Build Status](https://travis-ci.org/camsys/transam_core.svg?branch=quarter2)](https://travis-ci.org/camsys/transam_core)
 
+#### transam_cpt
+[![Build Status](https://travis-ci.org/camsys/transam_cpt.svg?branch=quarter2)](https://travis-ci.org/camsys/transam_cpt)
+
 #### transam_funding
 [![Build Status](https://travis-ci.org/camsys/transam_funding.svg?branch=quarter2)](https://travis-ci.org/camsys/transam_funding)
 
 #### transam_transit
 [![Build Status](https://travis-ci.org/camsys/transam_transit.svg?branch=quarter2)](https://travis-ci.org/camsys/transam_transit)
+
 
 
              
