@@ -59,7 +59,8 @@ module FiscalYear
 
     # If the start of the fiscal year in the calendar year is before date, we are in the fiscal year that starts in this
     # calendar years, otherwise the date is in the fiscal year that started the previous calendar year
-    date < start_of_fiscal_year(date_year) ? date_year - 1 : date_year
+    ((date < start_of_fiscal_year(date_year)) ||
+     Rails.application.config.try(:delay_fiscal_year_rollover)) ? date_year - 1 : date_year
 
   end
 
