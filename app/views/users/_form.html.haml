@@ -44,7 +44,7 @@
       .col-sm-6
         = f.input :city
       .col-sm-3
-        = f.input :state, :as => :select, :collection => Country['US'].states, :include_blank => false
+        = f.input :state, :as => :select, :collection => ISO3166::Country['US'].states.keys, :include_blank => false
       .col-sm-3
         = f.input :zip
 
