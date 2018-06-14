@@ -1,3 +1,5 @@
+- email_domains = Organization.pluck(:id,:allowed_email_domains).to_h
+
 = simple_form_for(@user,
   :html => {:class => 'form-vertical user_profile_form'},
   :wrapper => :vertical_form,
@@ -50,6 +52,8 @@
 
 :javascript
 
+  var email_domains = JSON.parse('#{email_domains.to_json.html_safe}');
+
   $('.user_profile_form').validate({
     ignore: '#user_organization_ids, .filtered, .filter-input',
     rules: {
@@ -64,4 +68,30 @@
       }
     }
   });
+
+  $.validator.addMethod("in_email_domain_list", function(value, element) {
+    var org_id;
+    if ($('#user_organization_id').val() == undefined) {
+      org_id = parseInt('#{@user.organization_id}');
+    } else {
+      org_id = parseInt($('#user_organization_id').val());
+    }
+
+    if (isNaN(org_id)) {
+      console.log('pigs');
+      return true;
+    } else {
+      var allowed_domains = email_domains[org_id].split('|')
+      var domain = value.split('@')[1];
+
+      return $.inArray( domain, allowed_domains ) >= 0;
+    }
+  }, "Email domain is not allowed.");
+
+- if User.new.respond_to? :email_in_org_domain_list
+  :javascript
+     $('#user_email').rules("add", {
+        email: true,
+        in_email_domain_list: true
+      });
 
