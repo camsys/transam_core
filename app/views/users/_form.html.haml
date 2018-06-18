@@ -1,4 +1,4 @@
-- email_domains = Organization.pluck(:id,:allowed_email_domains).to_h
+- email_domains = User.new.respond_to?(:email_in_org_domain_list) ? Organization.pluck(:id,:allowed_email_domains).to_h : Hash.new
 
 = simple_form_for(@user,
   :html => {:class => 'form-vertical user_profile_form'},
@@ -34,7 +34,7 @@
         = f.input :phone, :as => :tel, :placeholder => "Users primary phone number...", :hint => 'Format 123-456-7890', :required => true
       .col-lg-2.col-md-2.col-sm-2.col-xs-3
         = f.input :phone_ext, :label => "Ext."
-      .col-lg-6col-md-6.col-sm-6.col-xs-6
+      .col-lg-6.col-md-6.col-sm-6.col-xs-6
         = f.input :timezone, :as => :time_zone, priority: /US/, :prompt => "Select timezone..."
 
 
