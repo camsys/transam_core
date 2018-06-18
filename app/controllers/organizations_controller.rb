@@ -6,7 +6,7 @@ class OrganizationsController < OrganizationAwareController
   before_action :get_org, :only => [:show, :map, :edit, :update]
 
   # Lock down the controller
-  authorize_resource
+  authorize_resource except: [:show]
 
   # include the transam markers mixin
   include TransamMapMarkers
