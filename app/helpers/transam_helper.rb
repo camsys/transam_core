@@ -169,6 +169,16 @@ module TransamHelper
     [year,1,1].compact.join(',')
   end
 
+  # Returns a list of asset keys as a delimited string
+  def list_to_delimited_string(list, delimiter = '|')
+    str = ""
+    list.each do |e|
+      str << e
+      str << delimiter unless e == list.last
+    end
+    str
+  end
+
   # Returns the class for the navigation link
   def get_nav_link_class(controller_name, session_var=nil, param_value=nil)
     if controller_name.kind_of?(Array)
