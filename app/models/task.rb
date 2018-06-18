@@ -31,7 +31,7 @@ class Task < ActiveRecord::Base
   belongs_to :taskable,  :polymorphic => true
 
   # Every task is created by a user
-  belongs_to :user
+  belongs_to :user, -> { unscope(where: :active) }
 
   # Every task is owned by an organization. This is the
   # organization that the task has been assigned to
