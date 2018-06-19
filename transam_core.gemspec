@@ -66,7 +66,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'mail', '2.5.5'
   s.add_development_dependency "rspec-rails"
-  s.add_development_dependency "factory_girl_rails"
+  s.add_development_dependency "factory_bot_rails"
   s.add_development_dependency "database_cleaner"
   s.add_development_dependency "mysql2"
   s.add_development_dependency "cucumber-rails"

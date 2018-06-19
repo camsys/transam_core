@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
 
   trait :basic_event_traits do
     association :asset, :factory => :equipment_asset

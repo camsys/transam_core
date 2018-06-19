@@ -1,6 +1,6 @@
 # Read about factories at https://github.com/thoughtbot/factory_girl
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :notice, :aliases => [:system_notice] do
     subject "Test Subject"
     summary "Test Summary"

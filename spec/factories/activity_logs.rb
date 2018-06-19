@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :activity_log do
     association :user, factory: :normal_user
     organization_id 1
