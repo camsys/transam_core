@@ -4,7 +4,7 @@
   = format_field("Asset Tag", asset.asset_tag )
   = format_field("External ID", asset.external_id ) if asset.external_id
   = format_field("Manufacturer", link_to(asset.manufacturer.code, inventory_index_path(:manufacturer_id => asset.manufacturer_id)) ) unless asset.manufacturer_id.blank?
-  = format_field("Class", asset.asset_type )
+  = format_field("Class", asset.asset_subtype.asset_type )
   = format_field("Type", asset.asset_subtype )
   = format_field("Status",  asset.service_status_type.nil? ? 'Unknown' : asset.service_status_type.name )
   - unless asset.asset_groups.empty?

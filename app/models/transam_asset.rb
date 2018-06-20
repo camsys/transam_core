@@ -1,6 +1,7 @@
 class TransamAsset < TransamAssetRecord
 
   include TransamObjectKey
+  include FiscalYear
 
   actable as: :transam_assetible
 

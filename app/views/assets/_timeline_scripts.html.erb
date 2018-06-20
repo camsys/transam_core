@@ -1,60 +1,61 @@
-<script type="text/javascript">
+<% if @asset.asset.present? %>
+  <script type="text/javascript">
 
-  ///////// TIMELINE RELATED FUNCTIONS ////////////////////////////////
-  var timeline;
-  google.setOnLoadCallback(draw_timeline);
-  
-  // Called when a user mouses over a row
-  function select_event(row) {
-    timeline.setSelection([{row: row}])
-  };
+    ///////// TIMELINE RELATED FUNCTIONS ////////////////////////////////
+    var timeline;
+    google.setOnLoadCallback(draw_timeline);
 
-  // Capture the show event and re-render the timeline
-  $("a[href='#hist']").on('shown.bs.tab', function(e) {
-    draw_timeline();
-  });
-  
-  // Called when the Visualization API is loaded.
-  function draw_timeline() {
-
-    // Create a JSON data table
-    data = [
-      <% @asset.asset_events.each do |e| %>
-        {
-        'start': new Date(<%= js_date(e.event_date) %>),
-        'content': '<%= e.asset_event_type.description %>'
-        },
-      <% end %>
-      <% unless @asset.policy_replacement_year.nil? %>
-        {
-        'start': new Date(<%= js_year(@asset.policy_replacement_year) %>),
-        'content': 'End of Useful Life'
-        },
-      <% end %>
-      <% unless @asset.estimated_replacement_year.nil? %>
-        {
-        'start': new Date(<%= js_year(@asset.estimated_replacement_year) %>),
-        'content': 'Est. End of Service'
-        }
-      <% end %>
-    ];
-  
-    // specify options
-    options = {
-      "width" : "100%",
-      "height" : "auto",
-      "minHeight" : "100%",
-      "style" : "box"
+    // Called when a user mouses over a row
+    function select_event(row) {
+      timeline.setSelection([{row: row}])
     };
-  
-    // Instantiate our timeline object.
-    timeline = new links.Timeline(document.getElementById('timeline'));
-  
-    // Draw our timeline with the created data and options
-    timeline.draw(data, options);
-  };
-  ///////// END OF TIMELINE RELATED FUNCTIONS //////////////////////
 
-</script>
+    // Capture the show event and re-render the timeline
+    $("a[href='#hist']").on('shown.bs.tab', function(e) {
+      draw_timeline();
+    });
 
+    // Called when the Visualization API is loaded.
+    function draw_timeline() {
+
+      // Create a JSON data table
+      data = [
+        <% @asset.asset_events.each do |e| %>
+          {
+          'start': new Date(<%= js_date(e.event_date) %>),
+          'content': '<%= e.asset_event_type.description %>'
+          },
+        <% end %>
+        <% unless @asset.policy_replacement_year.nil? %>
+          {
+          'start': new Date(<%= js_year(@asset.policy_replacement_year) %>),
+          'content': 'End of Useful Life'
+          },
+        <% end %>
+        <% unless @asset.estimated_replacement_year.nil? %>
+          {
+          'start': new Date(<%= js_year(@asset.estimated_replacement_year) %>),
+          'content': 'Est. End of Service'
+          }
+        <% end %>
+      ];
+
+      // specify options
+      options = {
+        "width" : "100%",
+        "height" : "auto",
+        "minHeight" : "100%",
+        "style" : "box"
+      };
+
+      // Instantiate our timeline object.
+      timeline = new links.Timeline(document.getElementById('timeline'));
+
+      // Draw our timeline with the created data and options
+      timeline.draw(data, options);
+    };
+    ///////// END OF TIMELINE RELATED FUNCTIONS //////////////////////
+
+  </script>
+<% end %>
 
