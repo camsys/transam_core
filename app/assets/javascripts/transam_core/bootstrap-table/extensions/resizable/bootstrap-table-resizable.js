@@ -8,21 +8,25 @@
     'use strict';
 
     var initResizable = function (that) {
-        //Deletes the plugin to re-create it
-        that.$el.colResizable({disable: true});
 
-        //Creates the plugin
-        that.$el.colResizable({
-            liveDrag: that.options.liveDrag,
-            fixed: that.options.fixed,
-            headerOnly: that.options.headerOnly,
-            minWidth: that.options.minWidth,
-            hoverCursor: that.options.hoverCursor,
-            dragCursor: that.options.dragCursor,
-            onResize: that.onResize,
-            onDrag: that.options.onResizableDrag,
-            resizeMode: that.options.resizeMode
-        });
+        if(that != null && that.$el != null && that.$el.colResizable)
+        {
+            //Deletes the plugin to re-create it
+            that.$el.colResizable({disable: true});
+
+            //Creates the plugin
+            that.$el.colResizable({
+                liveDrag: that.options.liveDrag,
+                fixed: that.options.fixed,
+                headerOnly: that.options.headerOnly,
+                minWidth: that.options.minWidth,
+                hoverCursor: that.options.hoverCursor,
+                dragCursor: that.options.dragCursor,
+                onResize: that.onResize,
+                onDrag: that.options.onResizableDrag,
+                resizeMode: that.options.resizeMode
+            });
+        }
     };
 
     $.extend($.fn.bootstrapTable.defaults, {
