@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :task do
     association :user, factory: :admin
     priority_type_id 1

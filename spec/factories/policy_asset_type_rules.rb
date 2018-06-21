@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
 
   factory :policy_asset_type_rule do
     association :asset_type

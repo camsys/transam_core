@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :archived_fiscal_year do
     organization nil
     fy_year 1

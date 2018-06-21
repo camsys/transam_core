@@ -6,7 +6,7 @@ RSpec.describe MessagesController, :type => :controller do
 
   before(:each) do
     Organization.destroy_all
-    sign_in FactoryGirl.create(:admin)
+    sign_in FactoryBot.create(:admin)
   end
 
   it 'GET index' do
