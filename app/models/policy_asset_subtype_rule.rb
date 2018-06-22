@@ -217,8 +217,10 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
 
   # this has to be done after_commit in case there are other after_save calls that distribute other policy fields
   def apply_distributed_policy
-    puts "apply distriboted policy"
-    Delayed::Job.enqueue PolicyAssetSubtypeRuleDistributerJob.new(PolicyAssetSubtypeRule.includes(:policy).where(policies: {parent_id: self.policy_id},policy_asset_subtype_rules: {asset_subtype_id: self.asset_subtype_id}).pluck('policy_asset_subtype_rules.id')), :priority => 0
+    if self.policy.parent_id.nil? && (previous_changes.keys.map(&:to_s) & min_allowable_policy_attributes.map(&:to_s)).count > 0
+      puts "apply distriboted policy"
+      Delayed::Job.enqueue PolicyAssetSubtypeRuleDistributerJob.new(PolicyAssetSubtypeRule.includes(:policy).where(policies: {parent_id: self.policy_id},policy_asset_subtype_rules: {asset_subtype_id: self.asset_subtype_id}).pluck('policy_asset_subtype_rules.id')), :priority => 0
+    end
   end
 
   def apply_policy
