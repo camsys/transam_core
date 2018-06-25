@@ -1256,7 +1256,7 @@ class Asset < ActiveRecord::Base
     policy_analyzer = asset.policy_analyzer
 
     # Use policy to update service life values
-    update_service_life
+    asset.update_service_life
 
     # returns the year in which the asset should be replaced based on the policy and asset
     # characteristics
