@@ -17,7 +17,7 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
   after_initialize  :set_defaults
 
   after_save        :distribute_policy
-  after_save        :apply_policy
+  after_commit        :apply_policy
   after_commit      :apply_distributed_policy
 
   #-----------------------------------------------------------------------------
@@ -224,12 +224,14 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
       [:update_sogr, :update_estimated_replacement_cost, :update_scheduled_replacement_cost].each do |m|
         begin
           asset.send(m, false)
+          puts asset.inspect
         rescue Exception => e
           Rails.logger.warn e.message
         end
       end
 
       begin
+        puts asset.inspect
         asset.save!
       rescue Exception => e
         Rails.logger.warn e.message

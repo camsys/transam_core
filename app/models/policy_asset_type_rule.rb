@@ -15,8 +15,8 @@ class PolicyAssetTypeRule < ActiveRecord::Base
   #------------------------------------------------------------------------------
   after_initialize  :set_defaults
 
-  after_save        :apply_condition_rollup_policy_changes
-  after_save        :apply_policy
+  after_commit        :apply_condition_rollup_policy_changes
+  after_commit        :apply_policy
 
   #-----------------------------------------------------------------------------
   # Associations
