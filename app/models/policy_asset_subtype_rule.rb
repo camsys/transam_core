@@ -200,11 +200,8 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
   end
 
   def distribute_policy
-    puts "distributeXXXXXX"
-    puts previous_changes.keys.inspect
     # distribute rule if parent policy
     if self.policy.parent_id.nil? && (previous_changes.keys.map(&:to_s) & min_allowable_policy_attributes.map(&:to_s)).count > 0
-      puts "Distributing parent policy"
       subtype_rules = PolicyAssetSubtypeRule.includes(:policy).where(policies: {parent_id: self.policy_id},policy_asset_subtype_rules: {asset_subtype_id: self.asset_subtype_id})
       subtype_rules.each do |subtype_rule|
         parent_rules = subtype_rule.min_allowable_policy_values
@@ -218,13 +215,11 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
   # this has to be done after_commit in case there are other after_save calls that distribute other policy fields
   def apply_distributed_policy
     if self.policy.parent_id.nil? && (previous_changes.keys.map(&:to_s) & min_allowable_policy_attributes.map(&:to_s)).count > 0
-      puts "apply distriboted policy"
       Delayed::Job.enqueue PolicyAssetSubtypeRuleDistributerJob.new(PolicyAssetSubtypeRule.includes(:policy).where(policies: {parent_id: self.policy_id},policy_asset_subtype_rules: {asset_subtype_id: self.asset_subtype_id}).pluck('policy_asset_subtype_rules.id')), :priority => 0
     end
   end
 
   def apply_policy
-    puts "apply policy"
     Asset.operational.where(organization_id: self.policy.organization_id, asset_subtype_id: self.asset_subtype_id, fuel_type_id: self.fuel_type_id).each do |asset|
       [:update_sogr, :update_estimated_replacement_cost, :update_scheduled_replacement_cost].each do |m|
         begin
