@@ -224,8 +224,8 @@ var transam = new function() {
 	};
 
 	this.enable_date_pickers = function() {
-		// Use jquery to render date pickers for all datepicker input classes
-		$('.datepicker').datepicker({
+		// Use bootstrap to render date pickers for all datepicker input classes
+		$('.datepicker').bootstrapDP({
 		});
 	};
 
