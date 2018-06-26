@@ -24,13 +24,13 @@
     / Begin page content
     #view.container-fluid
       / Main Page Content
+      / add a spinner default that can be called by any page
+      #processing_spinner{style: 'display:none;'}= loader_panel_tag({:message => "Processing...", :size => 3, :spinner => "cog"})
       = render 'shared/breadcrumbs'
       = render 'shared/messages'
       = content_for?(:content) ? yield(:content) : yield
     / Begin footer content
     %footer.footer= render 'shared/footer'
-    / push the java script to the bottom so the page loads faster
-    = render 'shared/javascript'
     / Begin analytics
     - unless ENV['GOOGLE_ANALYTICS_ACCOUNT'].blank?
       = render 'shared/analytics'

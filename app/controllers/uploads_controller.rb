@@ -5,6 +5,9 @@ class UploadsController < OrganizationAwareController
 
   before_action :set_upload, :only => [:show, :destroy, :resubmit, :undo, :download]
 
+  # Lock down the controller
+  authorize_resource only: [:index, :show, :new, :create, :destroy]
+
   # Session Variables
   INDEX_KEY_LIST_VAR        = "uploads_key_list_cache_var"
 

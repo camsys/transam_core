@@ -13,7 +13,10 @@ class PolicyAssetTypeRule < ActiveRecord::Base
   #------------------------------------------------------------------------------
   # Callbacks
   #------------------------------------------------------------------------------
-  after_initialize :set_defaults
+  after_initialize  :set_defaults
+
+  after_commit        :apply_condition_rollup_policy_changes
+  after_commit        :apply_policy
 
   #-----------------------------------------------------------------------------
   # Associations
@@ -99,6 +102,39 @@ class PolicyAssetTypeRule < ActiveRecord::Base
     self.annual_inflation_rate ||= 1.1
     self.pcnt_residual_value ||= 0
     self.condition_rollup_weight ||= 0
+  end
+
+  def apply_condition_rollup_policy_changes
+    if previous_changes.keys.any? {|x| x.include? 'condition_rollup' }
+      Asset.operational.where(organization_id: self.policy.organization_id, asset_type_id: self.asset_type_id).each do |asset|
+        begin
+          asset.update_condition
+        rescue Exception => e
+          Rails.logger.warn e.message
+        end
+      end
+    end
+  end
+
+  def apply_policy
+    Asset.operational.where(organization_id: self.policy.organization_id, asset_type_id: self.asset_type_id).each do |a|
+      asset = Asset.get_typed_asset(a)
+      [:update_sogr, :update_estimated_replacement_cost, :update_scheduled_replacement_cost].each do |m|
+        begin
+          asset.send(m, false)
+        rescue Exception => e
+          Rails.logger.warn e.message
+        end
+      end
+
+      begin
+        asset.save!
+      rescue Exception => e
+        Rails.logger.warn e.message
+        Rails.logger.warn e.backtrace
+      end
+
+    end
   end
 
 end

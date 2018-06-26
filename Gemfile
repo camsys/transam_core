@@ -13,8 +13,10 @@ gemspec
 # To use debugger
 # gem 'debugger'
 gem 'countries', "~> 0.11.5"  # lock gem for dummy app
-gem 'mysql2', '~> 0.3.20' # lock gem for dummy app
+gem 'mysql2', "~> 0.5.1" # lock gem for dummy app
 gem "capybara", '2.6.2' # lock gem for old capybara behavior on hidden element xpath
 gem 'ckeditor'
 gem 'rack-test'
 gem 'sass-rails'
+gem 'rails-controller-testing' # assigns has been extracted to this gem
+gem 'awesome_print'

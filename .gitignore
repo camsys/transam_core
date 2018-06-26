@@ -1,3 +1,4 @@
+app/helpers/doc/*
 **.orig
 **.sqlite3
 *.rbc
@@ -27,3 +28,6 @@ rerun.txt
 TAGS
 
 *.axlsx~
+
+shadowed_views.log
+*.rb~

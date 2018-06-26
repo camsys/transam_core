@@ -3,9 +3,5 @@
     %a{:href => "#assets", :data =>{:toggle => 'tab'}}
       = "Asset Summary"
 
-%li
-  %a{:href => "#users", :data =>{:toggle => 'tab'}}
-    %span{:style => 'white-space: nowrap !important;'}
-      Staff
-      %span.badge= @org.users.active.count
+= nav_tab_count_tag("#users", "Staff", @org.users.active.count)
 

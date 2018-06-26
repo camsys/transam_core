@@ -45,7 +45,7 @@ namespace :transam_core_data do
     all_policy_asset_subtype_rules = PolicyAssetSubtypeRule.all
 
     all_policy_asset_subtype_rules.each do |rule|
-      if !rule.valid?
+      unless rule.valid?
         puts "#{rule} with id #{rule.id} with an asset subtype of #{rule.asset_subtype} and a fuel type #{rule.fuel_type_id} failed validation. Likely due to the uniqueness constraint."
       end
     end

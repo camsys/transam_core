@@ -11,8 +11,10 @@ class UsersController < OrganizationAwareController
 
   #-----------------------------------------------------------------------------
   before_action :set_user, :only => [:show, :edit, :settings, :update, :destroy, :change_password, :update_password, :profile_photo, :reset_password, :authorizations]
-  before_filter :check_for_cancel, :only => [:create, :update, :update_password]
-  before_action :check_filter,     :only => [:authorizations]
+  before_action :check_for_cancel, :only => [:create, :update, :update_password]
+
+  skip_before_action :get_organization_selections,      :only => [:authorizations]
+  before_action :set_viewable_organizations,      :only => [:authorizations]
 
   #-----------------------------------------------------------------------------
   INDEX_KEY_LIST_VAR    = "user_key_list_cache_var"
@@ -83,9 +85,9 @@ class UsersController < OrganizationAwareController
 
     # Get the Users but check to see if a role was selected
     if @role.blank?
-      @users = User.where(conditions.join(' AND '), *values).order(:organization_id, :last_name)
+      @users = User.unscoped.where(conditions.join(' AND '), *values).order(:organization_id, :last_name)
     else
-      @users = User.with_role(@role).where(conditions.join(' AND '), *values).order(:organization_id, :last_name)
+      @users = User.unscoped.with_role(@role).where(conditions.join(' AND '), *values).order(:organization_id, :last_name)
     end
 
     # Set the breadcrumbs
@@ -336,8 +338,10 @@ class UsersController < OrganizationAwareController
   def destroy
     if @user.active
       @user.active = false
+      @user.notify_via_email = false
     else
       @user.active = true
+      @user.notify_via_email = true
     end
     @user.save(:validate => false)
     respond_to do |format|
@@ -388,13 +392,13 @@ class UsersController < OrganizationAwareController
     if params[:id] == current_user.object_key
       @user = User.find_by(:object_key => params[:id])
     elsif FILTERS_IGNORED
-      @user = User.find_by(:object_key => params[:id])
+      @user = User.unscoped.find_by(:object_key => params[:id])
 
       if @user.nil?
         redirect_to '/404'
       end
     else
-      @user = User.find_by(:object_key => params[:id], :organization_id => @organization_list)
+      @user = User.unscoped.find_by(:object_key => params[:id], :organization_id => @organization_list)
 
       if @user.nil?
         if User.find_by(:object_key => params[:id], :organization_id => current_user.user_organization_filters.system_filters.first.get_organizations.map{|x| x.id}).nil?

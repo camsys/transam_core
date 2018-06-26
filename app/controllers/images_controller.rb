@@ -1,6 +1,9 @@
 class ImagesController < NestedResourceController
   before_action :set_image, :only => [:edit, :update, :destroy, :download]
 
+  # Lock down the controller
+  authorize_resource only: [:index, :new, :create, :edit, :update, :destroy]
+
   # GET /images
   # GET /images.json
   def index
@@ -84,7 +87,7 @@ class ImagesController < NestedResourceController
 
     notify_user(:notice, 'Image was successfully removed.')
     respond_to do |format|
-      format.html { redirect_to :back }
+      format.html { redirect_back(fallback_location: root_path) }
       format.json { head :no_content }
     end
   end

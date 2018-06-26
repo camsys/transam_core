@@ -18,20 +18,20 @@
           .col-sm-9
             .form-group
               = f.input :display_datetime, :label => 'Start Displaying', :wrapper => :vertical_append do
-                = f.input_field :display_datetime_date, :class => "form-control", :as => :string, :data => {'behavior' => 'datepicker'}, :value => format_as_date(f.object.display_datetime)
+                = f.input_field :display_datetime_date, :class => "form-control datepicker", :as => :string, :data => {'date-container' => '.notice_form'}, :value => format_as_date(f.object.display_datetime)
                 %span.input-group-addon
                   %i.fa.fa-calendar
           .col-sm-3
-            = f.input :display_datetime_hour, :as => :select, :collection => 0..23, :label_method => lambda { |hr| Time.current.change(:hour => hr).strftime("%l:%M %p")}, :label => "Hour"
+            = f.input :display_datetime_hour, :as => :select, :collection => 0..23, :label_method => lambda { |hr| format_as_time(Time.current.change(:hour => hr))}, :label => "Hour"
         .row
           .col-sm-9
             .form-group
               = f.input :end_datetime_date, :label => 'Stop Displaying', :wrapper => :vertical_append do
-                = f.input_field :end_datetime_date, :class => "form-control", :as => :string, :data => {'behavior' => 'datepicker'}, :value => format_as_date(f.object.end_datetime)
+                = f.input_field :end_datetime_date, :class => "form-control datepicker", :as => :string, :data => {'date-container' => '.notice_form'}, :value => format_as_date(f.object.end_datetime)
                 %span.input-group-addon
                   %i.fa.fa-calendar
           .col-sm-3
-            = f.input :end_datetime_hour, :as => :select, :collection => 0..23, :label_method => lambda { |hr| Time.current.change(:hour => hr).strftime("%l:%M %p")}, :requred => true, :label => "Hour"
+            = f.input :end_datetime_hour, :as => :select, :collection => 0..23, :label_method => lambda { |hr| format_as_time(Time.current.change(:hour => hr))}, :requred => true, :label => "Hour"
         = f.association :notice_type, :include_blank => false
       = f.button :submit, :class => 'btn btn-primary'
 

@@ -15,7 +15,7 @@
                 .col-xs-3
                   .pull-right
                     - if can? :update, task
-                      = link_to edit_task_path(task), :class => "btn btn-primary btn-xs pull-right", :style => "margin-left: 5px;" do
+                      = link_to edit_task_path(task), :class => "btn btn-primary btn-xs pull-right bnt-action" do
                         %i.fa.fa-edit
                         Edit
 

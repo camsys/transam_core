@@ -135,6 +135,10 @@ class SystemConfig < ActiveRecord::Base
     [[min_lat, min_lon], [max_lat, max_lon]]
   end
 
+  def special_fiscal_year_formatters
+    Rails.application.config.try(:special_fiscal_year_formatters) || Hash.new
+  end
+
   #------------------------------------------------------------------------------
   #
   # Private Methods

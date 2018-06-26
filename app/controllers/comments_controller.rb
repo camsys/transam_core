@@ -1,6 +1,9 @@
 class CommentsController < NestedResourceController
   before_action :set_comment, :only => [:edit, :update, :destroy]
 
+  # Lock down the controller
+  authorize_resource except: [:show]
+
   # GET /comments
   # GET /comments.json
   def index
@@ -38,7 +41,7 @@ class CommentsController < NestedResourceController
     respond_to do |format|
       if @comment.save
         notify_user(:notice, 'Comment was successfully created.')
-        format.html { redirect_to :back }
+        format.html { redirect_back(fallback_location: root_path) }
         format.json { render action: 'show', status: :created, location: @comment }
       else
         format.html { render action: 'new' }
@@ -74,7 +77,7 @@ class CommentsController < NestedResourceController
 
     notify_user(:notice, 'Comment was successfully removed.')
     respond_to do |format|
-      format.html { redirect_to :back }
+      format.html { redirect_back(fallback_location: root_path) }
       format.json { head :no_content }
     end
   end

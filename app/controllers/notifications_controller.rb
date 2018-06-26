@@ -4,6 +4,9 @@ class NotificationsController < OrganizationAwareController
 
   before_action :set_notification, :only => [:show, :update]
 
+  # Lock down the controller
+  authorize_resource only: [:index, :show, :update]
+
   # always get all notifications only for the current user logged in
   def index
     @notifications = current_user ? current_user.user_notifications.unopened : []
@@ -20,7 +23,7 @@ class NotificationsController < OrganizationAwareController
     @count = current_user ? current_user.user_notifications.unopened.count : 0
 
     respond_to do |format|
-      format.js { render text: @count }
+      format.json { render :json => @count.to_json }
     end
   end
 

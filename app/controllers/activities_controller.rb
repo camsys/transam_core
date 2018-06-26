@@ -6,7 +6,7 @@
 class ActivitiesController < OrganizationAwareController
 
   before_action :set_activity,          :only =>  [:show, :edit, :update, :destroy]
-  before_filter :reformat_date_fields,  :only =>  [:create, :update]
+  before_action :reformat_date_fields,  :only =>  [:create, :update]
 
   INDEX_KEY_LIST_VAR  = "activities_list_cache_var"
   ACTIVE_FLAG         = '1'

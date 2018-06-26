@@ -15,7 +15,7 @@ RSpec.describe Asset, :type => :model do
   describe ".new_asset" do # pending
     it "returns a typed asset" do
       pending "There is a coupling here. Do we need to test the seed data?"
-      a = Asset.new_asset(FactoryGirl.build(:asset_subtype))
+      a = Asset.new_asset(FactoryBot.build(:asset_subtype))
 
       expect(a.class).to eq("AssetType")
     end

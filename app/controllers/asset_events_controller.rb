@@ -3,12 +3,15 @@ class AssetEventsController < AssetAwareController
   add_breadcrumb "Home", :root_path
 
   # set the @asset_event variable before any actions are invoked
-  before_filter :get_asset_event,       :only => [:show, :edit, :update, :destroy, :fire_workflow_event]
-  before_filter :check_for_cancel,      :only => [:create, :update]
-  before_filter :reformat_date_field,   :only => [:create, :update]
+  before_action :get_asset_event,       :only => [:show, :edit, :update, :destroy, :fire_workflow_event]
+  before_action :check_for_cancel,      :only => [:create, :update]
+  before_action :reformat_date_field,   :only => [:create, :update]
 
   # always use generic untyped assets for this controller
   RENDER_TYPED_ASSETS = true
+
+  # Lock down the controller
+  authorize_resource only: [:index, :show, :new, :create, :edit, :update, :destroy]
 
   # always render untyped assets for this controller
   def render_typed_assets
@@ -278,7 +281,9 @@ class AssetEventsController < AssetAwareController
       notify_user(:alert, "#{params[:event_name]} is not a valid event for a #{asset_event_class.name}")
     end
 
-    redirect_to(:back) unless is_redirected
+    unless is_redirected
+      redirect_back fallback_location: root_path
+    end
 
   end
 

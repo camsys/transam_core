@@ -72,7 +72,7 @@
   $(function() {
     var last_tab = transam.get_ui_key_value(queue_tab_key);
     if (last_tab) {
-      $('#queue_tabs a[href='+last_tab+']').tab('show');
+      $('#queue_tabs a[href="'+last_tab+'"]').tab('show');
     } else {
       // Default to the first tab if no tab is stored
       $('#queue_tabs a[data-toggle="tab"]:first').tab('show');
@@ -81,7 +81,7 @@
   $(function() {
     var last_tab = transam.get_ui_key_value(message_tab_key);
     if (last_tab) {
-      $('#message_tabs a[href='+last_tab+']').tab('show');
+      $('#message_tabs a[href="'+last_tab+'"]').tab('show');
     } else {
       // Default to the first tab if no tab is stored
       $('#message_tabs a[data-toggle="tab"]:first').tab('show');
@@ -90,7 +90,7 @@
   $(function() {
     var last_tab = transam.get_ui_key_value(task_tab_key);
     if (last_tab) {
-      $('#task_tabs a[href='+last_tab+']').tab('show');
+      $('#task_tabs a[href="'+last_tab+'"]').tab('show');
     } else {
       // Default to the first tab if no tab is stored
       $('#task_tabs a[data-toggle="tab"]:first').tab('show');

@@ -28,7 +28,7 @@
           .col-sm-6
             = f.input :city, :required => true
           .col-sm-3
-            = f.input :state, :required => true, :as => :select, :collection => Country['US'].states
+            = f.input :state, :required => true, :as => :select, :collection => ISO3166::Country['US'].states.keys
           .col-sm-3
             = f.input :zip, :required => true
         - if User.new.respond_to? :email_in_org_domain_list

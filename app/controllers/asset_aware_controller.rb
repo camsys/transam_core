@@ -4,7 +4,7 @@
 #
 class AssetAwareController < OrganizationAwareController
   # set the @asset variable before any actions are invoked
-  before_filter :get_asset
+  before_action :get_asset
 
   # From the application config
   MAX_RETURNS_FOR_SEARCH = Rails.application.config.ui_search_items

@@ -15,20 +15,7 @@
           = link_to edit_policy_path(@policy) do
             %i.fa.fa-edit.fa-fw
             = " Modify this policy"
-      - if @policy.active
-        - if @policy.parent.nil? && (current_user.has_role? :admin)
-          %li.divider
-          %li
-            = link_to inherit_policy_path(@policy), :onclick => "$('#spinner').show();"  do
-              %i.fa.fa-paper-plane.fa-fw
-              = " Distribute this policy"
-        - else
-          %li.divider
-          %li
-            = link_to runner_policy_path(@policy) do
-              %i.fa.fa-fw.fa-cogs
-              = " Apply this policy"
-      - else
+      - unless @policy.active
         %li.divider
         %li
           = link_to make_current_policy_path(@policy) do

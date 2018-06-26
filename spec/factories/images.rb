@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :image do
     association :creator, factory: :normal_user
     original_filename 'test_pic.png'

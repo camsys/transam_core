@@ -1,8 +1,8 @@
 class TransamController < ApplicationController
 
-  before_filter :authenticate_user!, :except => [:system_health]
-  before_filter :set_timezone
-  before_filter :log_session
+  before_action :authenticate_user!, :except => [:system_health]
+  before_action :set_timezone
+  before_action :log_session
 
   # Include the rails4 style form parameters mixin
   include TransamAttributes
@@ -207,7 +207,7 @@ class TransamController < ApplicationController
       else
         h = session_list
       end
-      if ! h.has_key? session.id
+      unless h.has_key? session.id
         h[session.id] = {:start_time => Time.now, :views => 0, :user_id => current_user.id}
       end
       h[session.id][:last_view] = Time.now

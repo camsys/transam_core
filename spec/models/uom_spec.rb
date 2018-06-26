@@ -21,13 +21,13 @@ RSpec.describe Uom, :type => :model do
 
   describe '#convert?' do
     it 'converts correctly' do
-      expect(Uom.convert(1, Uom::MILE, Uom::METER)).to eq(1609.3472186944373)
+      expect(Uom.convert(1, Uom::MILE, Uom::METER)).to eq(1609.344)
     end
     it 'converts correctly' do
-      expect(Uom.convert(0.25, Uom::MILE, Uom::METER)).to eq(402.3368046736093)
+      expect(Uom.convert(0.25, Uom::MILE, Uom::METER)).to eq(402.336)
     end
     it 'converts correctly' do
-      expect(Uom.convert(1, Uom::METER, Uom::MILE)).to eq(0.0006213699494949495)
+      expect(Uom.convert(1, Uom::METER, Uom::MILE)).to eq(0.0006213711922373339)
     end
     it 'fails to convert' do
       expect { Uom.convert(1, Uom::METER, 'monkeys')}.to raise_error(ArgumentError)

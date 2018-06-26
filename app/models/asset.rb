@@ -928,7 +928,7 @@ class Asset < ActiveRecord::Base
     Rails.logger.debug "Updating the scheduled replacement year for asset = #{object_key}"
 
     unless new_record? or disposed?
-      if !schedule_replacement_updates.empty?
+      unless schedule_replacement_updates.empty?
         event = schedule_replacement_updates.last
         self.scheduled_replacement_year = event.replacement_year unless event.replacement_year.nil?
         self.replacement_reason_type_id = event.replacement_reason_type_id unless event.replacement_reason_type_id.nil?
@@ -1256,7 +1256,7 @@ class Asset < ActiveRecord::Base
     policy_analyzer = asset.policy_analyzer
 
     # Use policy to update service life values
-    update_service_life asset
+    asset.update_service_life
 
     # returns the year in which the asset should be replaced based on the policy and asset
     # characteristics
@@ -1308,13 +1308,13 @@ class Asset < ActiveRecord::Base
     asset.save(:validate => false) if save_asset
   end
 
-  def update_service_life typed_asset
+  def update_service_life
     # Get the policy analyzer
-    policy_analyzer = typed_asset.policy_analyzer
+    policy_analyzer = self.policy_analyzer
 
-    typed_asset.purchased_new ?
-        typed_asset.expected_useful_life = policy_analyzer.get_min_service_life_months :
-        typed_asset.expected_useful_life = policy_analyzer.get_min_used_purchase_service_life_months
+    self.purchased_new ?
+        self.expected_useful_life = policy_analyzer.get_min_service_life_months :
+        self.expected_useful_life = policy_analyzer.get_min_used_purchase_service_life_months
   end
 
 

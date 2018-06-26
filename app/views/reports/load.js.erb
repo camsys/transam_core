@@ -12,7 +12,7 @@ function <%= "chart_func_#{@report.id}" %>() {
   chart_data.addColumn('number', '<%= col %>');
   <% end %>
   <% @data[:data].each do |row| %>
-  chart_data.addRow(<%= raw row.to_json %>);
+  chart_data.addRow(<%= raw row.to_json.html_safe %>);
   <% end %>
   
   transam.draw_chart(div_id, chart_type, chart_options, chart_data);	

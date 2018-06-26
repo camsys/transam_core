@@ -11,8 +11,8 @@ class Message < ActiveRecord::Base
 
   # Associations
   belongs_to :organization
-  belongs_to :user
-  belongs_to :to_user, :class_name => 'User', :foreign_key => "to_user_id"
+  belongs_to :user, -> { unscope(where: :active) }
+  belongs_to :to_user, -> { unscope(where: :active) }, :class_name => 'User', :foreign_key => "to_user_id"
   belongs_to :priority_type
   has_many   :responses, :class_name => "Message", :foreign_key => "thread_message_id"
 
@@ -78,5 +78,9 @@ class Message < ActiveRecord::Base
       Delayed::Job.enqueue SendMessageAsEmailJob.new(object_key), :priority => 0
     end
   end
+
+  # def to_user
+  #   User.unscope(where: :active).find_by(id: to_user_id)
+  # end
 
 end

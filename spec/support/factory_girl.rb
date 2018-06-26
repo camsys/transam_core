@@ -2,7 +2,7 @@ RSpec.configure do |config|
   # additional factory_girl configuration
   config.before(:suite) do
     begin
-      #FactoryGirl.lint
+      #FactoryBot.lint
     ensure
     end
   end

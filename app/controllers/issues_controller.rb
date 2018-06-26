@@ -2,6 +2,9 @@ class IssuesController < OrganizationAwareController
 
   before_action :set_issue, only: [:show, :edit, :update, :destroy, :success, :review]
 
+  # Lock down the controller
+  authorize_resource only: [:index, :show, :new, :create, :edit, :update, :destroy]
+
   add_breadcrumb "Home", :root_path
 
   # GET /issues

@@ -1,3 +1,5 @@
+- email_domains = User.new.respond_to?(:email_in_org_domain_list) ? Organization.pluck(:id,:allowed_email_domains).to_h : Hash.new
+
 = simple_form_for(@user,
   :html => {:class => 'form-vertical user_profile_form'},
   :wrapper => :vertical_form,
@@ -32,7 +34,7 @@
         = f.input :phone, :as => :tel, :placeholder => "Users primary phone number...", :hint => 'Format 123-456-7890', :required => true
       .col-lg-2.col-md-2.col-sm-2.col-xs-3
         = f.input :phone_ext, :label => "Ext."
-      .col-lg-6col-md-6.col-sm-6.col-xs-6
+      .col-lg-6.col-md-6.col-sm-6.col-xs-6
         = f.input :timezone, :as => :time_zone, priority: /US/, :prompt => "Select timezone..."
 
 
@@ -42,13 +44,15 @@
       .col-sm-6
         = f.input :city
       .col-sm-3
-        = f.input :state, :as => :select, :collection => Country['US'].states, :include_blank => false
+        = f.input :state, :as => :select, :collection => ISO3166::Country['US'].states.keys, :include_blank => false
       .col-sm-3
         = f.input :zip
 
     = f.button :submit, :class => "btn btn-primary"
 
 :javascript
+
+  var email_domains = JSON.parse('#{email_domains.to_json.html_safe}');
 
   $('.user_profile_form').validate({
     ignore: '#user_organization_ids, .filtered, .filter-input',
@@ -64,4 +68,30 @@
       }
     }
   });
+
+  $.validator.addMethod("in_email_domain_list", function(value, element) {
+    var org_id;
+    if ($('#user_organization_id').val() == undefined) {
+      org_id = parseInt('#{@user.organization_id}');
+    } else {
+      org_id = parseInt($('#user_organization_id').val());
+    }
+
+    if (isNaN(org_id)) {
+      console.log('pigs');
+      return true;
+    } else {
+      var allowed_domains = email_domains[org_id].split('|')
+      var domain = value.split('@')[1];
+
+      return $.inArray( domain, allowed_domains ) >= 0;
+    }
+  }, "Email domain is not allowed.");
+
+- if User.new.respond_to? :email_in_org_domain_list
+  :javascript
+     $('#user_email').rules("add", {
+        email: true,
+        in_email_domain_list: true
+      });
 

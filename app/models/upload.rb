@@ -16,7 +16,7 @@ class Upload < ActiveRecord::Base
   before_destroy    :unassociate_assets_and_events
 
   # Associations
-  belongs_to :user
+  belongs_to :user, -> { unscope(where: :active) }
   belongs_to :organization
   belongs_to :file_status_type
   belongs_to :file_content_type

@@ -37,7 +37,7 @@ class FormAwareController < OrganizationAwareController
       notify_user(:alert, "#{params[:event_name]} is not a valid event for a #{@form.class.name}")
     end
 
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
 
   end
 

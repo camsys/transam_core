@@ -32,6 +32,8 @@ class IssuesReportJob < ActivityJob
       end
     end
 
+    write_to_activity_log system_user.organization, "Issues Report sent to admin users"
+
   end
 
   def clean_up
