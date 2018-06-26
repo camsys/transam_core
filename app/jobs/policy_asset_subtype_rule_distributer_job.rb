@@ -11,7 +11,7 @@ class PolicyAssetSubtypeRuleDistributerJob < Job
   attr_accessor :is_mileage
 
   def run
-    PolicyAssetSubtypeRule.where(id: policy_asset_subtype_rules).each do |policy_asset_subtype_rule|
+    PolicyAssetSubtypeRule.where(id: policy_asset_subtype_rules.split(',')).each do |policy_asset_subtype_rule|
       policy_asset_subtype_rule.send(:apply_policy)
     end
 
