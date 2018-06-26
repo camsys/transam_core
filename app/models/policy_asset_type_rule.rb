@@ -117,7 +117,8 @@ class PolicyAssetTypeRule < ActiveRecord::Base
   end
 
   def apply_policy
-    Asset.operational.where(organization_id: self.policy.organization_id, asset_type_id: self.asset_type_id).each do |asset|
+    Asset.operational.where(organization_id: self.policy.organization_id, asset_type_id: self.asset_type_id).each do |a|
+      asset = Asset.get_typed_asset(a)
       [:update_sogr, :update_estimated_replacement_cost, :update_scheduled_replacement_cost].each do |m|
         begin
           asset.send(m, false)
