@@ -195,7 +195,7 @@ class TransamAsset < TransamAssetRecord
     if policy_to_use.blank?
       policy_to_use = policy
     end
-    policy_analyzer = SystemConfig.instance.policy_analyzer.constantize.new(self, policy_to_use)
+    policy_analyzer = Rails.application.config.policy_analyzer.constantize.new(self, policy_to_use)
   end
 
   def expected_useful_life
