@@ -169,6 +169,14 @@ class TransamAsset < TransamAssetRecord
     return arr.flatten
   end
 
+  def asset_type_id
+    asset_subtype.asset_type_id
+  end
+
+  def asset_type
+    asset_subtype.asset_type
+  end
+
   def disposed?
     disposition_date.present?
   end
@@ -195,7 +203,7 @@ class TransamAsset < TransamAssetRecord
     if policy_to_use.blank?
       policy_to_use = policy
     end
-    policy_analyzer = Rails.application.config.policy_analyzer.constantize.new(self, policy_to_use)
+    policy_analyzer = Rails.application.config.policy_analyzer.constantize.new(self.very_specific, policy_to_use)
   end
 
   def expected_useful_life
@@ -245,6 +253,10 @@ class TransamAsset < TransamAssetRecord
 
   def formatted_early_replacement_reason
     early_disposition_requests.count == 0 ? '(Reason not provided)' : early_disposition_requests.last.comments
+  end
+
+  def cost
+    purchase_cost
   end
 
   # returns the list of events associated with this asset ordered by date, newest first
@@ -341,7 +353,7 @@ class TransamAsset < TransamAssetRecord
       check_early_replacement = true
       Rails.logger.debug "New scheduled_replacement_year = #{self.scheduled_replacement_year}"
       # Get the calculator class from the policy analyzer
-      class_name = this_policy_analyzer.get_replacement_cost_calculation_type.class_name
+      class_name = policy_analyzer.get_replacement_cost_calculation_type.class_name
       calculator_instance = class_name.constantize.new
       start_date = start_of_fiscal_year(scheduled_replacement_year) unless scheduled_replacement_year.blank?
       Rails.logger.debug "Start Date = #{start_date}"
@@ -349,8 +361,6 @@ class TransamAsset < TransamAssetRecord
     end
 
     #self.early_replacement_reason = nil if check_early_replacement && !is_early_replacement?
-
-    self.save!
   end
 
   private
