@@ -251,6 +251,10 @@ class TransamAsset < TransamAssetRecord
     false # all assets can be locked into place to prevent sched replacement year changes but by default none are locked
   end
 
+  def is_early_replacement?
+    policy_replacement_year && scheduled_replacement_year && scheduled_replacement_year < policy_replacement_year
+  end
+
   def formatted_early_replacement_reason
     early_disposition_requests.count == 0 ? '(Reason not provided)' : early_disposition_requests.last.comments
   end
