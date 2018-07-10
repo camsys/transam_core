@@ -218,7 +218,6 @@ THE SOFTWARE.*/
                 download('data:application/xml;'+base64data,'download.'+defaults.type,'application/xml');
 
             }else if(defaults.type == 'excel' || defaults.type == 'doc'|| defaults.type == 'powerpoint' || defaults.type == 'xlsx'  ){
-                console.log('IN defaults.type excell');
                 // console.log($(this).html());
                 var excel="<table>";
                 // Header
