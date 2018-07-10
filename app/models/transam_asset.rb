@@ -238,7 +238,7 @@ class TransamAsset < TransamAssetRecord
       start_date = start_of_fiscal_year(policy_replacement_year)
     end
     # Update the estimated replacement costs
-    class_name = this_policy_analyzer.get_replacement_cost_calculation_type.class_name
+    class_name = policy_analyzer.get_replacement_cost_calculation_type.class_name
     calculator_instance = class_name.constantize.new
     (calculator_instance.calculate_on_date(self, start_date)+0.5).to_i
   end
