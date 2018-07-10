@@ -217,8 +217,9 @@ THE SOFTWARE.*/
                 //window.open('data:application/xml;filename=exportData;' + base64data);
                 download('data:application/xml;'+base64data,'download.'+defaults.type,'application/xml');
 
-            }else if(defaults.type == 'excel' || defaults.type == 'doc'|| defaults.type == 'powerpoint'  ){
-                //console.log($(this).html());
+            }else if(defaults.type == 'excel' || defaults.type == 'doc'|| defaults.type == 'powerpoint' || defaults.type == 'xlsx'  ){
+                console.log('IN defaults.type excell');
+                // console.log($(this).html());
                 var excel="<table>";
                 // Header
                 $(el).find('thead').find('tr').each(function() {
@@ -284,13 +285,18 @@ THE SOFTWARE.*/
                 var base64data = "base64," + $.base64.encode(excelFile);
                 switch(defaults.type){
                     case 'excel':
-                        window.open('data:application/vnd.ms-'+defaults.type+';'+base64data);
+                        // window.open('data:application/vnd.ms-'+defaults.type+';'+base64data);
+                        download('data:application/xml;'+base64data,'download.xls','application/vnd.ms-excel');
                         break;
                     case 'powerpoint':
-                        window.open('data:application/vnd.ms-'+defaults.type+';'+base64data);
+                        // window.open('data:application/vnd.ms-'+defaults.type+';'+base64data);
+                        download('data:application/xml;'+base64data,'download.ppt','application/vnd.ms-powerpoint');
                         break;
                     case 'doc':
                         download('data:application/msword;'+base64data,'download.doc','application/msword');
+                        break;
+                    case 'xlsx':
+                        download('data:application/msword;'+base64data,'download.xlsx','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
                         break;
                 }
 
