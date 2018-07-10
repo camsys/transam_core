@@ -243,6 +243,11 @@ class TransamAsset < TransamAssetRecord
     (calculator_instance.calculate_on_date(self, start_date)+0.5).to_i
   end
 
+  # Returns true if an asset is scheduled for disposition
+  def scheduled_for_disposition?
+    (scheduled_disposition_year.present? and disposed? == false)
+  end
+
   def replacement_by_policy?
     true # all assets in core are in replacement cycle. To plan and/or make exceptions to normal schedule, see CPT.
   end
@@ -255,8 +260,20 @@ class TransamAsset < TransamAssetRecord
     policy_replacement_year && scheduled_replacement_year && scheduled_replacement_year < policy_replacement_year
   end
 
+  def update_early_replacement_reason(reason = nil)
+    if is_early_replacement?
+      self.early_replacement_reason = reason
+    else
+      self.early_replacement_reason = nil
+    end
+  end
+
   def formatted_early_replacement_reason
-    early_disposition_requests.count == 0 ? '(Reason not provided)' : early_disposition_requests.last.comments
+    if early_replacement_reason.present?
+      early_replacement_reason
+    else
+      '(Reason not provided)'
+    end
   end
 
   def cost
