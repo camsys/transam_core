@@ -3,9 +3,6 @@
 #
 class BaseSearcher
 
-  # From the application config
-  MAX_ROWS_RETURNED         = SystemConfig.instance.max_rows_returned
-
   # Every search must have a user as the searcher
   attr_accessor :user
 
