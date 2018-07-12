@@ -596,7 +596,7 @@ class AssetsController < AssetAwareController
       # THIS WILL NO LONGER WORK
       # asset base class name should really be seed to pull typed asset class
       # base class here is just Asset or the new TransamAsset
-      @asset_class_name = SystemConfig.instance.asset_base_class_name
+      @asset_class_name = 'TransamAsset'
     elsif @asset_subtype > 0
       # we have an asset subtype so get it and get the asset type from it. We also set the filter form
       # to the name of the selected subtype
@@ -631,10 +631,10 @@ class AssetsController < AssetAwareController
     clauses = []
     values = []
     unless @org_id == 0
-      clauses << ['assets.organization_id = ?']
+      clauses << ['organization_id = ?']
       values << @org_id
     else
-      clauses << ['assets.organization_id IN (?)']
+      clauses << ['organization_id IN (?)']
       values << @organization_list
     end
 
