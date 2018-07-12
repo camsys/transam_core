@@ -48,10 +48,12 @@
 
     $(function(){
       $('#upload_file_content_type_id').change(function() {
+
         if($(this).val() == new_inventory_file_content_type_id) {
           $(".force_update").show();
           $('label[for="upload_organization_id"] abbr').hide();
           $('#upload_organization_id').removeClass('required');
+          $('#upload_organization_id').prop('required',false);
           $('#upload_organization_id option').first().text("#{@organization_list.count == 1 ? '' : 'Multi Org'}");
           $('#upload_organization_id').val('');
         } else {
