@@ -181,6 +181,46 @@ class TransamAsset < TransamAssetRecord
     disposition_date.present?
   end
 
+  # Returns true if the asset can be disposed in the next planning cycle,
+  # false otherwise
+  def disposable?( include_early_disposal_request_approved_via_transfer = false)
+    return false if disposed?
+    # otherwise check the policy year and see if it is less than or equal to
+    # the current planning year
+    return false if policy_replacement_year.blank?
+
+    if policy_replacement_year <= current_planning_year_year
+      # After ESL disposal
+      true
+    else
+      # Prior ESL disposal request
+      last_request = early_disposition_requests.last
+      if include_early_disposal_request_approved_via_transfer
+        last_request.try(:is_approved?)
+      else
+        last_request.try(:is_unconditional_approved?)
+      end
+    end
+  end
+
+  # Returns true if the asset can be requested for early disposal
+  def eligible_for_early_disposition_request?
+    return false if disposed?
+    # otherwise check the policy year and see if it is less than or equal to
+    # the current planning year
+    return false if policy_replacement_year.blank?
+
+    if policy_replacement_year <= current_planning_year_year
+      # Eligible for after ESL disposal
+      false
+    else
+      # Prior ESL disposal request
+      last_request = early_disposition_requests.last
+      # No previous request or was rejected
+      !last_request || last_request.try(:is_rejected?)
+    end
+  end
+
   def event_classes
     a = []
     # Use reflection to return the list of has many associatiopns and filter those which are
