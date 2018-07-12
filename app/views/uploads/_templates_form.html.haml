@@ -78,6 +78,7 @@
       options += '<option value="' + equipment_asset_type_id + '">Equipment</option>';
       $('label[for="template_proxy_organization_id"] abbr').hide();
       $('#template_proxy_organization_id').removeClass('required');
+      $('#template_proxy_organization_id').prop('required',false);
       $('#template_proxy_organization_id option').first().text('Multi Org');
     } else {
     $('label[for="template_proxy_organization_id"] abbr').show();
