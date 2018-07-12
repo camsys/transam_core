@@ -20,6 +20,8 @@ class User < ActiveRecord::Base
   #-----------------------------------------------------------------------------
   after_initialize  :set_defaults
 
+  before_save       :set_viewable_organizations
+
   # Clean up any HABTM associations before the user is destroyed
   before_destroy { :clean_habtm_relationships }
 
@@ -45,7 +47,7 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :organizations, :join_table => 'users_organizations'
   has_and_belongs_to_many :viewable_organizations, :join_table => 'users_viewable_organizations', :class_name => 'Organization'
 
-  has_many :organization_users, -> {uniq}, through: :organizations, :source => 'users'
+  has_many :organization_users, -> {distinct}, through: :organizations, :source => 'users'
 
   # Every user can have 0 or more messages
   has_many   :messages
@@ -375,8 +377,15 @@ class User < ActiveRecord::Base
     self.active ||= false
   end
 
+  # right now the orgs you belong to are always the same orgs you can view
+  # may change in the future
+  def set_viewable_organizations
+    self.viewable_organizations = self.organizations
+  end
+
   def clean_habtm_relationships
     organizations.clear
+    viewable_organizations.clear
   end
 
   #-----------------------------------------------------------------------------
