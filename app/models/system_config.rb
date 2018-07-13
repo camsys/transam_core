@@ -42,7 +42,7 @@ class SystemConfig < ActiveRecord::Base
   #------------------------------------------------------------------------------
   def self.instance
     # there will be only one row, and its ID must be '1'
-    find(1)
+    find_by(id: 1)
   end
 
   #
