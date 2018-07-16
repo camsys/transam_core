@@ -145,6 +145,13 @@ class TransamAsset < TransamAssetRecord
 
   end
 
+  # mirror method on Asset to get typed version
+  def self.get_typed_asset(asset)
+    if asset
+      asset.very_specific
+    end
+  end
+
   def very_specific
     a = self.specific
 
@@ -167,6 +174,17 @@ class TransamAsset < TransamAssetRecord
     arr << a.class::FORM_PARAMS.dup
 
     return arr.flatten
+  end
+
+  # Instantiate an asset event of the appropriate type.
+  def build_typed_event(asset_event_type_class)
+    # Could also add:  raise ArgumentError 'Asset Must be strongly typed' unless is_typed?
+
+    # DO NOT cast to concrete type.  Want to enforce that client has a concrete asset
+    unless self.event_classes.include? asset_event_type_class
+      raise ArgumentError, 'Invalid Asset Event Type'
+    end
+    asset_event_type_class.new(:transam_asset => self)
   end
 
   def asset_type_id
