@@ -352,7 +352,7 @@ class AssetsController < AssetAwareController
 
   def new
 
-    asset_class = SystemConfig.instance.asset_base_class_name.constantize.find_by(id: params[:asset_base_class_id])
+    asset_class = Rails.application.config.asset_seed_class_name.constantize.find_by(id: params[:asset_base_class_id])
     if asset_class.nil?
       notify_user(:alert, "Asset class '#{params[:asset_base_class_id]}' not found. Can't create new asset!")
       redirect_to(root_url)
@@ -364,7 +364,7 @@ class AssetsController < AssetAwareController
     #add_breadcrumb "New", new_inventory_path(asset_subtype)
 
     # Use the asset class to create an asset of the correct type
-    @asset = TransamAsset.new_asset(asset_class)
+    @asset = Rails.application.config.asset_base_class_name.constantize.new_asset(asset_class)
 
     # See if the user selected an org to associate the asset with
     if params[:organization_id].present?
@@ -385,7 +385,7 @@ class AssetsController < AssetAwareController
 
   def create
 
-    asset_class = SystemConfig.instance.asset_base_class_name.constantize.find_by(id: params[:asset_base_class_id])
+    asset_class = Rails.application.config.asset_seed_class_name.constantize.find_by(id: params[:asset_base_class_id])
     if asset_class.nil?
       notify_user(:alert, "Asset class '#{params[:asset_base_class_id]}' not found. Can't create new asset!")
       redirect_to(root_url)
@@ -393,7 +393,7 @@ class AssetsController < AssetAwareController
     end
 
     # Use the asset class to create an asset of the correct type
-    @asset = TransamAsset.new_asset(asset_class, new_form_params(asset_class.class_name))
+    @asset = Rails.application.config.asset_base_class_name.constantize.new_asset(asset_class, new_form_params(asset_class.class_name))
 
     # If the asset does not have an org already defined, set to the default for
     # the user
