@@ -132,7 +132,7 @@ class TransamAsset < TransamAssetRecord
   # based on the asset_base_class_name
   def self.new_asset(asset_base_class_name, params={})
 
-    asset_class_name = asset_base_class_name.class_name
+    asset_class_name = asset_base_class_name.try(:class_name, params) || asset_base_class_name.class_name
     asset = asset_class_name.constantize.new(params)
     return asset
 
