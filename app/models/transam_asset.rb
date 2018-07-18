@@ -110,7 +110,22 @@ class TransamAsset < TransamAssetRecord
       :title_ownership_organization_id,
       :other_titel_ownership_organization,
       :lienholder_id,
-      :other_lienholder
+      :other_lienholder,
+      :parent_id
+  ]
+
+  CLEANSABLE_FIELDS = [
+      'object_key',
+      'asset_tag',
+      'external_id',
+      'disposition_date',
+      'policy_replacement_year',
+      'scheduled_relpacement_year',
+      'scheduled_replacement_cost',
+      'early_replacement_reason',
+      'in_backlog',
+      'scheduled_rehabilitation_year',
+      'scheduled_disposition_year'
   ]
 
   # Factory method to return a strongly typed subclass of a new asset
@@ -172,6 +187,34 @@ class TransamAsset < TransamAssetRecord
     end
 
     arr << a.class::FORM_PARAMS.dup
+
+    return arr.flatten
+  end
+
+  # Creates a duplicate that has all asset-specific attributes nilled
+  def copy(cleanse = true)
+    a = dup
+    a.cleanse if cleanse
+    a
+  end
+
+  # nils out all fields identified to be cleansed
+  def cleanse
+    cleansable_fields.each do |field|
+      send(:"#{field}=", nil) # Rather than set methods directly, delegate to setters.  This supports aliased attributes
+    end
+  end
+
+  def cleansable_fields
+    arr = CLEANSABLE_FIELDS.dup
+    a = self.specific
+
+    while a.try(:specific).present? && a.specific != a
+      arr << a.class::CLEANSABLE_FIELDS.dup
+      a = a.specific
+    end
+
+    arr << a.class::CLEANSABLE_FIELDS.dup
 
     return arr.flatten
   end
