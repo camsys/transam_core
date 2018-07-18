@@ -298,7 +298,7 @@ module TransamFormatHelper
   
   # Formats an object attribute using format_field
   def format_attribute(attribute, object)
-    format_field(attribute.titleize, object.send(attribute))
+    format_field(attribute.to_s.titleize, object.send(attribute))
   end
   
   # formats a label/value combination, providing optional popover support
