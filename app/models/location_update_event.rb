@@ -6,7 +6,7 @@ class LocationUpdateEvent < AssetEvent
 
   # Callbacks
   after_initialize :set_defaults
-  after_save       :update_location
+  after_save       :update_asset
 
   # Associations
 
@@ -69,7 +69,7 @@ class LocationUpdateEvent < AssetEvent
   protected
 
   # Forces an update of an assets location. This performs an update on the record.
-  def update_location
+  def update_asset
 
     Rails.logger.debug "Updating the recorded location for asset = #{transam_asset.object_key}"
 

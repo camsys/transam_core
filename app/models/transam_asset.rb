@@ -387,7 +387,11 @@ class TransamAsset < TransamAssetRecord
   end
 
   def service_status_type
-    ServiceStatusType.find_by(id: service_status_updates.last.try(:service_status_type_id))
+    if disposed?
+      ServiceStatusType.find_by(name: 'Disposed')
+    else
+      ServiceStatusType.find_by(id: service_status_updates.last.try(:service_status_type_id))
+    end
   end
 
   def reported_condition_date
