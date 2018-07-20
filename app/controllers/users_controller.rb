@@ -392,13 +392,13 @@ class UsersController < OrganizationAwareController
     if params[:id] == current_user.object_key
       @user = User.find_by(:object_key => params[:id])
     elsif FILTERS_IGNORED
-      @user = User.find_by(:object_key => params[:id])
+      @user = User.unscoped.find_by(:object_key => params[:id])
 
       if @user.nil?
         redirect_to '/404'
       end
     else
-      @user = User.find_by(:object_key => params[:id], :organization_id => @organization_list)
+      @user = User.unscoped.find_by(:object_key => params[:id], :organization_id => @organization_list)
 
       if @user.nil?
         if User.find_by(:object_key => params[:id], :organization_id => current_user.user_organization_filters.system_filters.first.get_organizations.map{|x| x.id}).nil?
@@ -434,13 +434,13 @@ class UsersController < OrganizationAwareController
   # Get the configured service to handle user creation, defaulting
   #-----------------------------------------------------------------------------
   def get_new_user_service
-    Rails.application.config.new_user_service.constantize.new
+    SystemConfig.instance.new_user_service.constantize.new
   end
 
   #-----------------------------------------------------------------------------
   # Get the configured service to handle user role management, defaulting
   #-----------------------------------------------------------------------------
   def get_user_role_service
-    Rails.application.config.user_role_service.constantize.new
+    SystemConfig.instance.user_role_service.constantize.new
   end
 end

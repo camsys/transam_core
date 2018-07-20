@@ -26,6 +26,7 @@ class AssetGroup < ActiveRecord::Base
 
   # Every asset grouop has zero or more assets
   has_and_belongs_to_many :assets
+  has_and_belongs_to_many :transam_assets, :join_table => :asset_groups_assets, :foreign_key => :transam_asset_id
 
   #------------------------------------------------------------------------------
   # Scopes

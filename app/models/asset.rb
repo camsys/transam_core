@@ -10,7 +10,7 @@ class Asset < ActiveRecord::Base
 
   OBJECT_CACHE_EXPIRE_SECONDS = Rails.application.config.object_cache_expire_seconds
   # The policy analyzer to use comes from the Rails config
-  POLICY_ANALYZER = Rails.application.config.policy_analyzer
+  POLICY_ANALYZER = SystemConfig.instance.try(:policy_analyzer)
 
   #-----------------------------------------------------------------------------
   # Behaviors

@@ -1,4 +1,4 @@
-class CreateDualFuelTypes < ActiveRecord::Migration
+class CreateDualFuelTypes < ActiveRecord::Migration[5.2]
   def change
     create_table :dual_fuel_types do |t|
       t.integer :primary_fuel_type_id, index: true

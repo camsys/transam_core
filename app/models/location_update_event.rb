@@ -55,7 +55,7 @@ class LocationUpdateEvent < AssetEvent
   end
  
   def parent_key=(object_key)
-    self.parent = Asset.find_by_object_key(object_key)
+    self.parent = TransamAsset.find_by_object_key(object_key)
   end
   def parent_key
     parent.object_key if parent
@@ -70,8 +70,7 @@ class LocationUpdateEvent < AssetEvent
   # Set resonable defaults for a new condition update event
   def set_defaults
     super
-    typed_asset = Asset.get_typed_asset(asset)
-    self.parent ||= typed_asset.parent
+    self.parent ||= transam_asset.parent
     self.asset_event_type ||= AssetEventType.find_by_class_name(self.name)
   end
 

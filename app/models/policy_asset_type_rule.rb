@@ -104,35 +104,9 @@ class PolicyAssetTypeRule < ActiveRecord::Base
     self.condition_rollup_weight ||= 0
   end
 
-  def apply_condition_rollup_policy_changes
-    if previous_changes.keys.any? {|x| x.include? 'condition_rollup' }
-      Asset.operational.where(organization_id: self.organization_id).each do |asset|
-        begin
-          asset.update_condition
-        rescue Exception => e
-          Rails.logger.warn e.message
-        end
-      end
-    end
-  end
-
   def apply_policy
-    Asset.operational.where(organization_id: self.policy.organization_id).each do |asset|
-      [:update_sogr, :update_estimated_replacement_cost, :update_scheduled_replacement_cost].each do |m|
-        begin
-          asset.send(m, false)
-        rescue Exception => e
-          Rails.logger.warn e.message
-        end
-      end
-
-      begin
-        asset.save!
-      rescue Exception => e
-        Rails.logger.warn e.message
-        Rails.logger.warn e.backtrace
-      end
-
+    TransamAsset.operational.where(organization_id: self.policy.organization_id).each do |asset|
+      Rails.logger.warn "Issue applying policy on TransAM Asset #{asset}" unless asset.save
     end
   end
 

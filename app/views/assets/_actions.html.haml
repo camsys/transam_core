@@ -15,7 +15,7 @@
         - if early_disposition_events.length > 0
           -if can_view_early_disposition && event_type.active
             %li
-              = link_to inventory_asset_event_path(@asset.asset.object_key, early_disposition_events.first.object_key) do
+              = link_to inventory_asset_event_path(@asset, early_disposition_events.first.object_key) do
                 %i.fa.fa-fw{:class => event_type.display_icon_name}
                 = "Manage Early Disposition"
         - else
@@ -28,9 +28,9 @@
               %ul.dropdown-menu.scrollable-menu
                 - @asset.event_classes.each do |klass|
                   - unless klass.name == 'DispositionUpdateEvent' or klass.name == 'EarlyDispositionRequestUpdateEvent'
-                    - if klass.new(asset: @asset.asset).can_update?
+                    - if klass.new(transam_asset: @asset.transam_asset).can_update?
                       %li.text-left
-                        = link_to new_inventory_asset_event_path(@asset.asset, :event_type => klass.asset_event_type.id) do
+                        = link_to new_inventory_asset_event_path(@asset, :event_type => klass.asset_event_type.id) do
                           %i.fa.fa-fw{:class => klass.asset_event_type.display_icon_name}
                           = klass.asset_event_type.name
 
@@ -55,14 +55,14 @@
                   - @organization.asset_groups.each do |grp|
                     - unless @asset.asset_groups.include? grp
                       %li.text-left
-                        = link_to add_to_group_inventory_path(@asset.asset, :asset_group => grp) do
+                        = link_to add_to_group_inventory_path(@asset, :asset_group => grp) do
                           %i.fa.fa-fw.fa-tag
                           = grp.name
 
           - if can? :create, Asset
             %li.divider
             %li
-              = link_to copy_inventory_path(@asset.asset) do
+              = link_to copy_inventory_path(@asset) do
                 %i.fa.fa-fw.fa-copy
                 = " Make a copy"
           - if can_dispose_asset
@@ -70,7 +70,7 @@
             %li
               - event_type = DispositionUpdateEvent.asset_event_type
               - if event_type.active
-                = link_to new_inventory_asset_event_path(@asset.asset, :event_type => event_type.id) do
+                = link_to new_inventory_asset_event_path(@asset, :event_type => event_type.id) do
                   %i.fa.fa-fw{:class => event_type.display_icon_name}
                   = " #{event_type.name}"
           - elsif can_request_early_disposition
@@ -78,13 +78,13 @@
             %li
               - event_type = EarlyDispositionRequestUpdateEvent.asset_event_type
               - if event_type.active
-                = link_to new_inventory_asset_event_path(@asset.asset, :event_type => event_type.id) do
+                = link_to new_inventory_asset_event_path(@asset, :event_type => event_type.id) do
                   %i.fa.fa-fw{:class => event_type.display_icon_name}
                   = " #{event_type.name}"
 
           - if can? :destroy, @asset
             %li.divider
             %li
-              = link_to inventory_path(@asset.asset), :method => :delete, :data => {:confirm => "Are you sure you want to remove this asset? The action can't be undone."} do
+              = link_to inventory_path(@asset), :method => :delete, :data => {:confirm => "Are you sure you want to remove this asset? The action can't be undone."} do
                 %i.fa.fa-fw.fa-trash-o
                 = " Remove this asset"

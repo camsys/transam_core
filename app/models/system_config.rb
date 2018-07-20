@@ -32,7 +32,7 @@ class SystemConfig < ActiveRecord::Base
   validates :geocoder_region,             :presence => true
   validates :num_forecasting_years,       :presence => true
   validates :num_reporting_years,         :presence => true
-  validates :asset_base_class_name,       :presence => true
+  validates :asset_base_class_name,       :presence => true # this returns the seed model to use to look up the typed asset
   validates :max_rows_returned,           :presence => true
 
   #------------------------------------------------------------------------------
@@ -133,6 +133,10 @@ class SystemConfig < ActiveRecord::Base
   end
   def map_bounds
     [[min_lat, min_lon], [max_lat, max_lon]]
+  end
+
+  def special_fiscal_year_formatters
+    Rails.application.config.try(:special_fiscal_year_formatters) || Hash.new
   end
 
   #------------------------------------------------------------------------------

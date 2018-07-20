@@ -5,11 +5,11 @@
   // Document Ready
   $(document).ready(function(){
 
-  	var selected_set_name = 'user_organization_ids';
-  	var shuttle_target_id = 'selected_grantees';
+    var selected_set_name = 'user_organization_ids';
+    var shuttle_target_id = 'selected_grantees';
 
-  	// Add an submit event handler for the form
-  	$(".user_profile_form").submit(function(){
+    // Add an submit event handler for the form
+    $(".user_profile_form").submit(function(){
       if ($(this).valid()) {
         var shuttle_target = $('#' + shuttle_target_id);
         var form_target = $('#' + selected_set_name);
@@ -27,12 +27,12 @@
         //alert($('#' + target_id).val());
         return true;
       }
-  	});
+    });
 
     var t = $('#org_select').bootstrapTransfer({
-    	target_id: shuttle_target_id,
-     	hilite_selection: false
-     });
+      target_id: shuttle_target_id,
+      hilite_selection: false
+    });
     if (t.length) {
       var filter_orgs = [];
       var selected = [];
@@ -52,7 +52,6 @@
       t.set_values(selected);
     }
 
-
     $('#user_role_ids').change();
 
     $('btn.selector-clearall').hide();
@@ -64,36 +63,33 @@
 
 
   $('#user_role_ids').change(function() {
-      $('.super-privilege').each(function(){
+    $('.super-privilege').each(function(){
 
-          if(parseInt($(this).data('resource-id')) == parseInt($('#user_role_ids').val())) {
-              $(this).parent().parent().show(); // get span of checkbox
-          } else {
-              $(this).parent().parent().hide();
-          }
-      });
-
+      if(parseInt($(this).data('resource-id')) == parseInt($('#user_role_ids').val())) {
+        $(this).parent().parent().show(); // get span of checkbox
+      } else {
+        $(this).parent().parent().hide();
+      }
+    });
   });
 
   // Organization change: reset role, borough, and boroughs
   $('#user_organization_id').on('change', function(e) {
-      var org_id = $(this).val();
+    var org_id = $(this).val();
 
-      $('#org_select').data().bootstrapTransfer.move_all(true, false); // clear out all selected values
-      $('#org_select').data().bootstrapTransfer.set_values([org_id])
+    $('#org_select').data().bootstrapTransfer.move_all(true, false); // clear out all selected values
+    $('#org_select').data().bootstrapTransfer.set_values([org_id])
 
-      all_org_updates(org_id);
+    all_org_updates(org_id);
 
-      $('#user_role_ids').val('');
-      $('#privilege-ids-div input').attr('checked', false);
-
-
+    $('#user_role_ids').val('');
+    $('#privilege-ids-div input').attr('checked', false);
   });
 
   // disable main org after adding to org list
   // must add event to body because button is a dynamically created object
   $('body').on('click', 'btn.selector', function() {
-      update_disabled_orgs();
+    update_disabled_orgs();
   });
 
   function all_org_updates(org_id) {
@@ -105,294 +101,22 @@
   }
 
   function update_role_list_by_organization(org_id) {
-      if(org_id) {
-          org_id = parseInt(org_id);
-          var role_ids = role_ids_by_org[org_id];
-          //console.log(role_ids);
-          $('#user_role_ids option').each(function() {
-              var val = $(this).val();
-              if(val && role_ids != undefined && role_ids.indexOf(parseInt(val)) < 0) {
-                  $(this).hide();
-              } else {
-                  $(this).show();
-              }
-          });
-      } else {
-          $('#user_role_ids option').hide();
-          $('#user_role_ids option[value=""]').show();
-      }
-  }
-
-  // can be overwritten in other engine
-  function update_disabled_orgs() {
-    var org_id = $('#user_organization_id').val();
-    $('#selected_grantees option').attr('disabled', false);
-    $('#selected_grantees option[value="' + org_id + '"]').attr('disabled', true);
-  }
-
-  // can be overwritten in other engine
-  function special_updates(org_id) {
-    console.log('core has no special updates');
-  }
-
-
-  var role_ids_by_org = JSON.parse('#{(OrganizationRoleMapping.role_ids_by_org || {}).to_json.html_safe}');
-
-  // Document Ready
-  $(document).ready(function(){
-
-  	var selected_set_name = 'user_organization_ids';
-  	var shuttle_target_id = 'selected_grantees';
-
-  	// Add an submit event handler for the form
-  	$(".user_profile_form").submit(function(){
-      if ($(this).valid()) {
-        var shuttle_target = $('#' + shuttle_target_id);
-        var form_target = $('#' + selected_set_name);
-        // select all the options in the selected array from the other shuttle list list
-        var id_list = new Array();
-        shuttle_target.children().map(function () {
-          id_list.push($(this).val());
-        });
-        //var id_list = new Array();
-        //alert(id_list);
-        form_target.val(id_list);
-        //elem.children().map(function() {
-        //	id_list.push($(this).val());
-        //});
-        //alert($('#' + target_id).val());
-        return true;
-      }
-  	});
-
-    var t = $('#org_select').bootstrapTransfer({
-    	target_id: shuttle_target_id,
-     	hilite_selection: false
-     });
-    if (t.length) {
-      var filter_orgs = [];
-      var selected = [];
-      var orgs = JSON.parse('#{escape_javascript(Organization.where(id: @organization_list).map{|o| [o.coded_name, o.id]}.to_json.html_safe)}');
-      var user_orgs = JSON.parse('#{@user.organizations.pluck(:id).to_json.html_safe}');
-
-
-      $.each(orgs, function( index, value ) {
-        filter_orgs.push({value: value[1], content: value[0]});
+    if(org_id) {
+      org_id = parseInt(org_id);
+      var role_ids = role_ids_by_org[org_id];
+      //console.log(role_ids);
+      $('#user_role_ids option').each(function() {
+        var val = $(this).val();
+        if(val && role_ids != undefined && role_ids.indexOf(parseInt(val)) < 0) {
+          $(this).hide();
+        } else {
+          $(this).show();
+        }
       });
-
-      $.each(user_orgs, function( index, value ) {
-        selected.push(value);
-      });
-
-      t.populate(filter_orgs);
-      t.set_values(selected);
+    } else {
+      $('#user_role_ids option').hide();
+      $('#user_role_ids option[value=""]').show();
     }
-
-
-    $('#user_role_ids').change();
-
-    $('btn.selector-clearall').hide();
-
-    all_org_updates($('#user_organization_id').val());
-
-    transam.make_same_height('.form-part');
-  });
-
-
-  $('#user_role_ids').change(function() {
-      $('.super-privilege').each(function(){
-
-          if(parseInt($(this).data('resource-id')) == parseInt($('#user_role_ids').val())) {
-              $(this).parent().parent().show(); // get span of checkbox
-          } else {
-              $(this).parent().parent().hide();
-          }
-      });
-
-  });
-
-  // Organization change: reset role, borough, and boroughs
-  $('#user_organization_id').on('change', function(e) {
-      var org_id = $(this).val();
-
-      $('#org_select').data().bootstrapTransfer.move_all(true, false); // clear out all selected values
-      $('#org_select').data().bootstrapTransfer.set_values([org_id]);
-
-      all_org_updates(org_id);
-
-      $('#user_role_ids').val('');
-      $('#privilege-ids-div input').attr('checked', false);
-
-
-  });
-
-  // disable main org after adding to org list
-  // must add event to body because button is a dynamically created object
-  $('body').on('click', 'btn.selector', function() {
-      update_disabled_orgs();
-  });
-
-  function all_org_updates(org_id) {
-    update_role_list_by_organization(org_id);
-
-    update_disabled_orgs();
-
-    special_updates(org_id);
-  }
-
-  function update_role_list_by_organization(org_id) {
-      if(org_id) {
-          org_id = parseInt(org_id);
-          var role_ids = role_ids_by_org[org_id];
-          //console.log(role_ids);
-          $('#user_role_ids option').each(function() {
-              var val = $(this).val();
-              if(val && role_ids != undefined && role_ids.indexOf(parseInt(val)) < 0) {
-                  $(this).hide();
-              } else {
-                  $(this).show();
-              }
-          });
-      } else {
-          $('#user_role_ids option').hide();
-          $('#user_role_ids option[value=""]').show();
-      }
-  }
-
-  // can be overwritten in other engine
-  function update_disabled_orgs() {
-    var org_id = $('#user_organization_id').val();
-    $('#selected_grantees option').attr('disabled', false);
-    $('#selected_grantees option[value="' + org_id + '"]').attr('disabled', true);
-  }
-
-  // can be overwritten in other engine
-  function special_updates(org_id) {
-    console.log('core has no special updates');
-  }
-
-
-  var role_ids_by_org = JSON.parse('#{(OrganizationRoleMapping.role_ids_by_org || {}).to_json.html_safe}');
-
-  // Document Ready
-  $(document).ready(function(){
-
-  	var selected_set_name = 'user_organization_ids';
-  	var shuttle_target_id = 'selected_grantees';
-
-  	// Add an submit event handler for the form
-  	$(".user_profile_form").submit(function(){
-      if ($(this).valid()) {
-        var shuttle_target = $('#' + shuttle_target_id);
-        var form_target = $('#' + selected_set_name);
-        // select all the options in the selected array from the other shuttle list list
-        var id_list = new Array();
-        shuttle_target.children().map(function () {
-          id_list.push($(this).val());
-        });
-        //var id_list = new Array();
-        //alert(id_list);
-        form_target.val(id_list);
-        //elem.children().map(function() {
-        //	id_list.push($(this).val());
-        //});
-        //alert($('#' + target_id).val());
-        return true;
-      }
-  	});
-
-    var t = $('#org_select').bootstrapTransfer({
-    	target_id: shuttle_target_id,
-     	hilite_selection: false
-     });
-    if (t.length) {
-      var filter_orgs = [];
-      var selected = [];
-      var orgs = JSON.parse('#{escape_javascript(Organization.where(id: @organization_list).map{|o| [o.coded_name, o.id]}.to_json.html_safe)}');
-      var user_orgs = JSON.parse('#{@user.organizations.pluck(:id).to_json.html_safe}');
-
-
-      $.each(orgs, function( index, value ) {
-        filter_orgs.push({value: value[1], content: value[0]});
-      });
-
-      $.each(user_orgs, function( index, value ) {
-        selected.push(value);
-      });
-
-      t.populate(filter_orgs);
-      t.set_values(selected);
-    }
-
-
-    $('#user_role_ids').change();
-
-    $('btn.selector-clearall').hide();
-
-    all_org_updates($('#user_organization_id').val());
-
-    transam.make_same_height('.form-part');
-  });
-
-
-  $('#user_role_ids').change(function() {
-      $('.super-privilege').each(function(){
-
-          if(parseInt($(this).data('resource-id')) == parseInt($('#user_role_ids').val())) {
-              $(this).parent().parent().show(); // get span of checkbox
-          } else {
-              $(this).parent().parent().hide();
-          }
-      });
-
-  });
-
-  // Organization change: reset role, borough, and boroughs
-  $('#user_organization_id').on('change', function(e) {
-      var org_id = $(this).val();
-
-      $('#org_select').data().bootstrapTransfer.move_all(true, false); // clear out all selected values
-      $('#org_select').data().bootstrapTransfer.set_values([org_id]);
-
-      all_org_updates(org_id);
-
-      $('#user_role_ids').val('');
-      $('#privilege-ids-div input').attr('checked', false);
-
-
-  });
-
-  // disable main org after adding to org list
-  // must add event to body because button is a dynamically created object
-  $('body').on('click', 'btn.selector', function() {
-      update_disabled_orgs();
-  });
-
-  function all_org_updates(org_id) {
-    update_role_list_by_organization(org_id);
-
-    update_disabled_orgs();
-
-    special_updates(org_id);
-  }
-
-  function update_role_list_by_organization(org_id) {
-      if(org_id) {
-          org_id = parseInt(org_id);
-          var role_ids = role_ids_by_org[org_id];
-          //console.log(role_ids);
-          $('#user_role_ids option').each(function() {
-              var val = $(this).val();
-              if(val && role_ids != undefined && role_ids.indexOf(parseInt(val)) < 0) {
-                  $(this).hide();
-              } else {
-                  $(this).show();
-              }
-          });
-      } else {
-          $('#user_role_ids option').hide();
-          $('#user_role_ids option[value=""]').show();
-      }
   }
 
   // can be overwritten in other engine

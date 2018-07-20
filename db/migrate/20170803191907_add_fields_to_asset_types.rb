@@ -1,4 +1,4 @@
-class AddFieldsToAssetTypes < ActiveRecord::Migration
+class AddFieldsToAssetTypes < ActiveRecord::Migration[5.2]
   def change
     add_column :asset_types, :allow_parent, :boolean, after: :description
 

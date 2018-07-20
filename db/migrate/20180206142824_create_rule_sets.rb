@@ -1,4 +1,4 @@
-class CreateRuleSets < ActiveRecord::Migration
+class CreateRuleSets < ActiveRecord::Migration[5.2]
   def change
     create_table :rule_sets do |t|
       t.string :object_key

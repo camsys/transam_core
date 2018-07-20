@@ -9,32 +9,32 @@ RSpec.describe UserOrganizationFiltersController, :type => :controller do
   end
 
   it 'GET index' do
-    get :index, :user_id => subject.current_user.object_key
+    get :index, params: {:user_id => subject.current_user.object_key}
 
     expect(assigns(:user_organization_filters)).to eq(subject.current_user.user_organization_filters)
   end
 
   it 'GET show' do
-    get :show, :user_id => subject.current_user.object_key, :id => test_filter.object_key
+    get :show, params: {:user_id => subject.current_user.object_key, :id => test_filter.object_key}
 
     expect(assigns(:user_organization_filter)).to eq(test_filter)
   end
 
   it 'GET use' do
     request.env["HTTP_REFERER"] = root_path
-    get :use, :user_id => subject.current_user.object_key, :user_organization_filter_id => test_filter.object_key
+    get :use, params: {:user_id => subject.current_user.object_key, :user_organization_filter_id => test_filter.object_key}
 
     expect(assigns(:user_organization_filter)).to eq(test_filter)
     expect(subject.current_user.user_organization_filter).to eq(test_filter)
   end
 
   it 'GET new' do
-    get :new, :user_id => subject.current_user.object_key
+    get :new, params: {:user_id => subject.current_user.object_key}
 
     expect(assigns(:user_organization_filter).to_json).to eq(UserOrganizationFilter.new.to_json)
   end
   it 'GET edit' do
-    get :edit, :user_id => subject.current_user.object_key, :id => test_filter.object_key
+    get :edit, params: {:user_id => subject.current_user.object_key, :id => test_filter.object_key}
 
     expect(assigns(:user_organization_filter)).to eq(test_filter)
   end
@@ -42,7 +42,7 @@ RSpec.describe UserOrganizationFiltersController, :type => :controller do
   it 'POST create' do
     UserOrganizationFilter.destroy_all
     test_org = create(:organization)
-    post :create, :user_id => subject.current_user.object_key, :user_organization_filter => attributes_for(:user_organization_filter, :organization_ids => "#{test_org.id}")
+    post :create, params: {:user_id => subject.current_user.object_key, :user_organization_filter => attributes_for(:user_organization_filter, :organization_ids => "#{test_org.id}")}
 
     expect(UserOrganizationFilter.count).to eq(1)
     test_filter = UserOrganizationFilter.first
@@ -52,7 +52,7 @@ RSpec.describe UserOrganizationFiltersController, :type => :controller do
   end
   it 'PUT update' do
     test_org = create(:organization)
-    put :update, :user_id => subject.current_user.object_key, :id => test_filter.object_key, :user_organization_filter => {:description => 'new descrip222', :organization_ids => "#{test_org.id}"}
+    put :update, params: {:user_id => subject.current_user.object_key, :id => test_filter.object_key, :user_organization_filter => {:description => 'new descrip222', :organization_ids => "#{test_org.id}"}}
     test_filter.reload
 
     expect(assigns(:user_organization_filter)).to eq(test_filter)
@@ -61,7 +61,7 @@ RSpec.describe UserOrganizationFiltersController, :type => :controller do
   end
 
   it 'DELETE destroy' do
-    delete :destroy, :user_id => subject.current_user.object_key, :id => test_filter.object_key
+    delete :destroy, params: {:user_id => subject.current_user.object_key, :id => test_filter.object_key}
 
     expect(UserOrganizationFilter.find_by(:object_key => test_filter.object_key)).to be nil
   end

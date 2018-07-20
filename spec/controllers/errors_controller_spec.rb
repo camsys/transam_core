@@ -5,7 +5,7 @@ RSpec.describe ErrorsController, :type => :controller do
   
   it 'GET show' do
     sign_in create(:admin)
-    get :show, use_route: '/500'
+    get :show, params: {use_route: '/500'}
 
     expect(response.body).to include('Error 500 Application Error')
   end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_05_23_143723) do
+ActiveRecord::Schema.define(version: 2018_05_18_133236) do
 
   create_table "activities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "object_key", limit: 12
@@ -799,13 +799,6 @@ ActiveRecord::Schema.define(version: 2018_05_23_143723) do
     t.boolean "active"
   end
 
-  create_table "serial_numbers", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "identifiable_type"
-    t.bigint "identifiable_id"
-    t.string "identification"
-    t.index ["identifiable_type", "identifiable_id"], name: "index_serial_numbers_on_identifiable_type_and_identifiable_id"
-  end
-
   create_table "service_life_calculation_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name", limit: 64, null: false
     t.string "class_name", limit: 64, null: false
@@ -864,44 +857,6 @@ ActiveRecord::Schema.define(version: 2018_05_23_143723) do
     t.index ["organization_id"], name: "tasks_idx4"
     t.index ["state"], name: "tasks_idx3"
     t.index ["user_id"], name: "tasks_idx2"
-  end
-
-  create_table "transam_assets", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "transam_assetible_type"
-    t.bigint "transam_assetible_id"
-    t.string "object_key", limit: 12, null: false
-    t.bigint "organization_id", null: false
-    t.bigint "asset_subtype_id"
-    t.string "asset_tag", null: false
-    t.date "disposition_date"
-    t.string "external_id"
-    t.text "description"
-    t.bigint "manufacturer_id"
-    t.string "manufacturer_model"
-    t.integer "manufacture_year"
-    t.integer "purchase_cost"
-    t.date "purchase_date"
-    t.boolean "purchased_new"
-    t.date "in_service_date"
-    t.bigint "vendor_id"
-    t.string "other_vendor"
-    t.bigint "operator_id"
-    t.string "other_operator"
-    t.string "title_number"
-    t.bigint "title_ownership_organization_id"
-    t.string "other_title_ownership_organization"
-    t.bigint "lienholder_id"
-    t.string "other_lienholder"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["asset_subtype_id"], name: "index_transam_assets_on_asset_subtype_id"
-    t.index ["lienholder_id"], name: "index_transam_assets_on_lienholder_id"
-    t.index ["manufacturer_id"], name: "index_transam_assets_on_manufacturer_id"
-    t.index ["operator_id"], name: "index_transam_assets_on_operator_id"
-    t.index ["organization_id"], name: "index_transam_assets_on_organization_id"
-    t.index ["title_ownership_organization_id"], name: "index_transam_assets_on_title_ownership_organization_id"
-    t.index ["transam_assetible_type", "transam_assetible_id"], name: "transam_assetible_idx"
-    t.index ["vendor_id"], name: "index_transam_assets_on_vendor_id"
   end
 
   create_table "uploads", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|

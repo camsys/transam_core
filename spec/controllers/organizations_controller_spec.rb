@@ -20,18 +20,18 @@ RSpec.describe OrganizationsController, :type => :controller do
 
   describe 'GET show' do
     it 'by short name' do
-      get :show, :id => test_org.short_name
+      get :show, params: {:id => test_org.short_name}
 
       expect(assigns(:org)).to eq(Organization.get_typed_organization(test_org))
     end
     it 'does not exist' do
-      get :show, :id => 'ABCD'
+      get :show, params: {:id => 'ABCD'}
 
       expect(assigns(:org)).to be nil
     end
     it 'sets assets and users' do
       test_asset = create(:buslike_asset, :organization => subject.current_user.organization)
-      get :show, :id => subject.current_user.organization.short_name
+      get :show, params: {:id => subject.current_user.organization.short_name}
 
       expect(assigns(:users)).to include(subject.current_user)
       expect(assigns(:total_assets)).to eq(1)
@@ -39,14 +39,14 @@ RSpec.describe OrganizationsController, :type => :controller do
   end
 
   it 'GET edit' do
-    get :edit, :id => test_org.short_name
+    get :edit, params: {:id => test_org.short_name}
 
     expect(assigns(:org)).to eq(Organization.get_typed_organization(test_org))
     expect(assigns(:page_title)).to eq("Update: #{test_org.name}")
   end
 
   it 'PUT update' do
-    put :update, :id => test_org.short_name, :organization => {:name => 'new org name'}
+    put :update, params: {:id => test_org.short_name, :organization => {:name => 'new org name'}}
     test_org.reload
 
     expect(assigns(:org)).to eq(Organization.get_typed_organization(test_org))

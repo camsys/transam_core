@@ -42,7 +42,10 @@ class TaskReminderJob < Job
     end
 
     # Add a row into the activity table
-    ActivityLog.create({:organization_id => Grantor.first.id, :user_id => sys_user.id, :item_type => self.class.name, :activity => 'Sent reminders for tasks due', :activity_time => Time.now})
+    # add to activity log for all admin users
+    User.with_role(:admin).pluck('DISTINCT organization_id').each do |org_id|
+      ActivityLog.create({:organization_id => org_id, :user_id => sys_user.id, :item_type => self.class.name, :activity => 'Sent reminders for tasks due', :activity_time => Time.now})
+    end
 
   end
 

@@ -10,7 +10,9 @@ class CreateTransamAssets < ActiveRecord::Migration[5.2]
       t.string      :external_id
       t.text        :description
       t.references  :manufacturer
-      t.string      :manufacturer_model
+      t.string      :other_manufacturer
+      t.references  :manufacturer_model
+      t.string      :other_manufacturer_model
       t.integer     :manufacture_year
       t.integer     :purchase_cost
       t.date        :purchase_date

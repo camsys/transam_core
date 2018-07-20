@@ -17,12 +17,12 @@ RSpec.describe FormsController, :type => :controller do
     expect(assigns(:forms)).not_to include(test_form2)
   end
   it 'GET show', :skip do
-    get :show, :id => test_form.object_key
+    get :show, params: {:id => test_form.object_key}
 
     expect(assigns(:form)).to eq(test_form)
   end
   it 'negative test' do
-    get :show, :id => 'ABCDEFGHIJK'
+    get :show, params: {:id => 'ABCDEFGHIJK'}
 
     expect(assigns(:form)).to be nil
     expect(response).to redirect_to('/404')
