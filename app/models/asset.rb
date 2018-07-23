@@ -321,6 +321,14 @@ class Asset < ActiveRecord::Base
 
   end
 
+  def self.very_specific
+    if self.distinct.pluck(:asset_type_id).count == 1
+      self.first.asset_type.class_name.constantize.where(id: self.ids)
+    else
+      self
+    end
+  end
+
   # Returns a typed version of an asset. Every asset has a type and this will
   # return a specific asset type based on the AssetType attribute
   def self.get_typed_asset(asset)
@@ -451,7 +459,7 @@ class Asset < ActiveRecord::Base
     node_options = {
       :text => self.asset_tag,
       :href => "/inventory/#{self.object_key}",
-      :nodes => self.dependents.uniq.map{|d| d.to_node(selected)}
+      :nodes => self.dependents.distinct.map{|d| d.to_node(selected)}
     }
 
     # expands everything above selected and then selects selected
