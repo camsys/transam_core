@@ -82,6 +82,23 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :transam_assets, :controller => 'assets', :only => [] do
+    resources :tasks,       :only => [:create, :update, :edit, :new, :destroy]
+    resources :comments,    :only => [:create, :update, :edit, :new, :destroy]
+
+    resources :images,      :only => [:create, :update, :edit, :new, :destroy] do
+      member do
+        get 'download'
+      end
+    end
+
+    resources :documents,   :only => [:create, :update, :edit, :new, :destroy] do
+      member do
+        get 'download'
+      end
+    end
+  end
+
   # Provide an alias for asset paths which are discovered by form helpers such as
   # commentable, documentable, and imagable controllers
   resources :assets, :path => :inventory do
