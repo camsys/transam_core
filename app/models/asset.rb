@@ -313,7 +313,7 @@ class Asset < ActiveRecord::Base
 
   # Factory method to return a strongly typed subclass of a new asset
   # based on the asset subtype
-  def self.new_asset(asset_subtype)
+  def self.new_asset(asset_subtype, params={})
 
     asset_class_name = asset_subtype.asset_type.class_name
     asset = asset_class_name.constantize.new({:asset_subtype_id => asset_subtype.id, :asset_type_id => asset_subtype.asset_type.id})

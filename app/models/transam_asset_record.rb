@@ -29,6 +29,19 @@ class TransamAssetRecord < ActiveRecord::Base
     asset_tag
   end
 
+  # Creates a duplicate that has all asset-specific attributes nilled
+  def copy(cleanse = true)
+    a = dup
+    a.cleanse if cleanse
+    a
+  end
+
+  # nils out all fields identified to be cleansed
+  def cleanse
+    cleansable_fields.each do |field|
+      send(:"#{field}=", nil) # Rather than set methods directly, delegate to setters.  This supports aliased attributes
+    end
+  end
 
   def transfer new_organization_id
     org = Organization.where(:id => new_organization_id).first

@@ -120,7 +120,7 @@ class TransamAsset < TransamAssetRecord
       'external_id',
       'disposition_date',
       'policy_replacement_year',
-      'scheduled_relpacement_year',
+      'scheduled_replacement_year',
       'scheduled_replacement_cost',
       'early_replacement_reason',
       'in_backlog',
@@ -133,7 +133,7 @@ class TransamAsset < TransamAssetRecord
   def self.new_asset(asset_base_class_name, params={})
 
     asset_class_name = asset_base_class_name.try(:class_name, params) || asset_base_class_name.class_name
-    asset = asset_class_name.constantize.new(params)
+    asset = asset_class_name.constantize.new(params.slice(asset_class_name.constantize.new.allowable_params))
     return asset
 
   end
@@ -189,20 +189,6 @@ class TransamAsset < TransamAssetRecord
     arr << a.class::FORM_PARAMS.dup
 
     return arr.flatten
-  end
-
-  # Creates a duplicate that has all asset-specific attributes nilled
-  def copy(cleanse = true)
-    a = dup
-    a.cleanse if cleanse
-    a
-  end
-
-  # nils out all fields identified to be cleansed
-  def cleanse
-    cleansable_fields.each do |field|
-      send(:"#{field}=", nil) # Rather than set methods directly, delegate to setters.  This supports aliased attributes
-    end
   end
 
   def cleansable_fields

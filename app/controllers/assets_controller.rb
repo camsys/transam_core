@@ -362,7 +362,7 @@ class AssetsController < AssetAwareController
     #add_breadcrumb "New", new_inventory_path(asset_subtype)
 
     # Use the asset class to create an asset of the correct type
-    @asset = Rails.application.config.asset_base_class_name.constantize.new_asset(asset_class, {facility_component_type_id: params[:facility_component_type_id]})
+    @asset = Rails.application.config.asset_base_class_name.constantize.new_asset(asset_class, params)
 
     # See if the user selected an org to associate the asset with
     if params[:organization_id].present?
