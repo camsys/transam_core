@@ -35,14 +35,17 @@ class TransamAssetRecord < ActiveRecord::Base
 
     transferred_asset = self.very_specific.copy false
     transferred_asset.object_key = nil
+    transferred_asset.external_id = nil
 
     transferred_asset.disposition_date = nil
     transferred_asset.in_service_date = nil
-    transferred_asset.purchase_cost = nil
-    transferred_asset.purchase_date = nil
+    transferred_asset.purchase_date = self.disposition_date
     transferred_asset.purchased_new = false
+    transferred_asset.pcnt_capital_responsibility = nil
     transferred_asset.title_ownership_organization_id = nil
     transferred_asset.other_title_ownership_organization = nil
+    transferred_asset.operator_id = nil
+    transferred_asset.other_operator = nil
 
     transferred_asset.organization = org
     transferred_asset.generate_object_key(:object_key)
