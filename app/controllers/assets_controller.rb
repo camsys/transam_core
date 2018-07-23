@@ -52,7 +52,7 @@ class AssetsController < AssetAwareController
     if asset_group.nil?
       notify_user(:alert, "Can't find the asset group selected.")
     else
-      if @asset.asset_groups.exists? asset_group
+      if @asset.asset_groups.exists? asset_group.id
         notify_user(:alert, "Asset #{@asset.name} is already a member of '#{asset_group}'.")
       else
         @asset.asset_groups << asset_group
@@ -70,7 +70,7 @@ class AssetsController < AssetAwareController
     if asset_group.nil?
       notify_user(:alert, "Can't find the asset group selected.")
     else
-      if @asset.asset_groups.exists? asset_group
+      if @asset.asset_groups.exists? asset_group.id
         @asset.asset_groups.delete asset_group
         notify_user(:notice, "Asset #{@asset.name} was removed from '#{asset_group}'.")
       else
