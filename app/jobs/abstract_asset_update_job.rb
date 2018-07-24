@@ -27,10 +27,10 @@ class AbstractAssetUpdateJob < Job
   # checks it was there and then runs the execution logic
   #
   def run
-    asset = Asset.find_by_object_key(object_key)
+    asset = Rails.application.config.asset_base_class_name.constantize.find_by_object_key(object_key)
     if asset
       # Make sure the asset is typed
-      a = Asset.get_typed_asset(asset)
+      a = Rails.application.config.asset_base_class_name.constantize.get_typed_asset(asset)
 
       execute_job(a)
 
