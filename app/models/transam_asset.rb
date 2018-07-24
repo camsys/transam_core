@@ -379,7 +379,7 @@ class TransamAsset < TransamAssetRecord
     age_in_years = if in_service_date.nil?
                      0
                    else
-                     (on_date.year * 12 + on_date.month) - (in_service_date.year * 12 + in_service_date.month)
+                     ((on_date.year * 12 + on_date.month) - (in_service_date.year * 12 + in_service_date.month))/12.0
                    end
     [(age_in_years).floor, 0].max
   end
