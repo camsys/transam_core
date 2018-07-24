@@ -120,7 +120,7 @@ class TransamAsset < TransamAssetRecord
       'external_id',
       'disposition_date',
       'policy_replacement_year',
-      'scheduled_relpacement_year',
+      'scheduled_replacement_year',
       'scheduled_replacement_cost',
       'early_replacement_reason',
       'in_backlog',
@@ -133,7 +133,7 @@ class TransamAsset < TransamAssetRecord
   def self.new_asset(asset_base_class_name, params={})
 
     asset_class_name = asset_base_class_name.try(:class_name, params) || asset_base_class_name.class_name
-    asset = asset_class_name.constantize.new(params)
+    asset = asset_class_name.constantize.new(params.slice(asset_class_name.constantize.new.allowable_params))
     return asset
 
   end
@@ -189,20 +189,6 @@ class TransamAsset < TransamAssetRecord
     arr << a.class::FORM_PARAMS.dup
 
     return arr.flatten
-  end
-
-  # Creates a duplicate that has all asset-specific attributes nilled
-  def copy(cleanse = true)
-    a = dup
-    a.cleanse if cleanse
-    a
-  end
-
-  # nils out all fields identified to be cleansed
-  def cleanse
-    cleansable_fields.each do |field|
-      send(:"#{field}=", nil) # Rather than set methods directly, delegate to setters.  This supports aliased attributes
-    end
   end
 
   def cleansable_fields
@@ -316,9 +302,10 @@ class TransamAsset < TransamAssetRecord
     begin
       # Use the calculator to calculate the policy rehabilitation fiscal year
       calculator = RehabilitationYearCalculator.new
-      return calculator.calculate(asset)
+      return calculator.calculate(self.very_specific)
     rescue Exception => e
       Rails.logger.warn e.message
+      Rails.logger.error e.backtrace
     end
   end
 
@@ -326,9 +313,10 @@ class TransamAsset < TransamAssetRecord
     # Estimate the year that the asset will need replacing
     begin
       class_name = policy_analyzer.get_condition_estimation_type.class_name
-      calculate(asset, class_name, 'last_servicable_year') + 1
+      calculate(self.very_specific, class_name, 'last_servicable_year') + 1
     rescue Exception => e
       Rails.logger.warn e.message
+      Rails.logger.error e.backtrace
     end
   end
 
@@ -386,12 +374,26 @@ class TransamAsset < TransamAssetRecord
     AssetEvent.unscoped.where('asset_id = ?', id).order('event_date DESC, created_at DESC')
   end
 
+  # returns the number of years since the asset was placed in service.
+  def age(on_date=Date.today)
+    age_in_years = if in_service_date.nil?
+                     0
+                   else
+                     (on_date.year * 12 + on_date.month) - (in_service_date.year * 12 + in_service_date.month)
+                   end
+    [(age_in_years).floor, 0].max
+  end
+
   def service_status_type
     if disposed?
       ServiceStatusType.find_by(name: 'Disposed')
     else
       ServiceStatusType.find_by(id: service_status_updates.last.try(:service_status_type_id))
     end
+  end
+
+  def last_rehabilitation_date
+    rehabilitation_updates.last.try(:event_date)
   end
 
   def reported_condition_date
@@ -417,9 +419,10 @@ class TransamAsset < TransamAssetRecord
     # condition of the asset
     begin
       class_name = policy_analyzer.get_condition_estimation_type.class_name
-      calculate(asset, class_name)
+      calculate(self.very_specific, class_name)
     rescue Exception => e
       Rails.logger.warn e.message
+      Rails.logger.error e.backtrace
     end
   end
   def estimated_condition_type
@@ -434,7 +437,7 @@ class TransamAsset < TransamAssetRecord
 
     return unless self.replacement_by_policy? || self.replacement_pinned?
 
-    Rails.logger.debug "Updating SOGR for asset = #{object_key}"
+    Rails.logger.debug "Updating SOGR for transam asset = #{object_key}"
 
     if disposed?
       Rails.logger.debug "Asset #{object_key} is disposed"
@@ -448,10 +451,10 @@ class TransamAsset < TransamAssetRecord
 
       # see what metric we are using to determine the service life of the asset
       class_name = policy_analyzer.get_service_life_calculation_type.class_name
-      self.policy_replacement_year = calculate(asset, class_name)
+      self.policy_replacement_year = calculate(self.very_specific, class_name)
 
       if self.scheduled_replacement_year.nil? or self.scheduled_replacement_year == old_policy_replacement_year
-        Rails.logger.debug "Setting scheduled replacement year to #{asset.policy_replacement_year}"
+        Rails.logger.debug "Setting scheduled replacement year to #{policy_replacement_year}"
         self.scheduled_replacement_year = self.policy_replacement_year unless self.replacement_pinned?
         self.in_backlog = false
       end
@@ -463,6 +466,7 @@ class TransamAsset < TransamAssetRecord
       end
     rescue Exception => e
       Rails.logger.warn e.message
+      Rails.logger.warn e.backtrace
     end
 
     # If the policy replacement year changes we need to check to see if the asset
@@ -505,6 +509,7 @@ class TransamAsset < TransamAssetRecord
       method_object.call(asset)
     rescue Exception => e
       Rails.logger.error e.message
+      Rails.logger.error e.backtrace
       raise RuntimeError.new "#{class_name} calculation failed for asset #{asset.object_key} and policy #{policy.name}"
     end
   end

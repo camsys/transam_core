@@ -313,12 +313,20 @@ class Asset < ActiveRecord::Base
 
   # Factory method to return a strongly typed subclass of a new asset
   # based on the asset subtype
-  def self.new_asset(asset_subtype)
+  def self.new_asset(asset_subtype, params={})
 
     asset_class_name = asset_subtype.asset_type.class_name
     asset = asset_class_name.constantize.new({:asset_subtype_id => asset_subtype.id, :asset_type_id => asset_subtype.asset_type.id})
     return asset
 
+  end
+
+  def self.very_specific
+    if self.distinct.pluck(:asset_type_id).count == 1
+      self.first.asset_type.class_name.constantize.where(id: self.ids)
+    else
+      self
+    end
   end
 
   # Returns a typed version of an asset. Every asset has a type and this will
@@ -451,7 +459,7 @@ class Asset < ActiveRecord::Base
     node_options = {
       :text => self.asset_tag,
       :href => "/inventory/#{self.object_key}",
-      :nodes => self.dependents.uniq.map{|d| d.to_node(selected)}
+      :nodes => self.dependents.distinct.map{|d| d.to_node(selected)}
     }
 
     # expands everything above selected and then selects selected
