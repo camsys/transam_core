@@ -755,9 +755,9 @@ class AssetsController < AssetAwareController
   # Overrides the utility method in the base class
   #
   def get_selected_asset(convert=true)
-    selected_asset = TransamAsset.find_by(:organization_id => @organization_list, :object_key => params[:id]) unless params[:id].blank?
+    selected_asset = Rails.application.config.asset_base_class_name.constantize.find_by(:organization_id => @organization_list, :object_key => params[:id]) unless params[:id].blank?
     if convert
-      asset = selected_asset.very_specific
+      asset = Rails.application.config.asset_base_class_name.constantize.get_typed_asset(selected_asset)
     else
       asset = selected_asset
     end
