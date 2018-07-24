@@ -222,7 +222,7 @@ class Organization < ActiveRecord::Base
   # Set resonable defaults for a new organization
   def set_defaults
     self.active = self.active.nil? ? true : self.active
-    self.state ||= SystemConfig.instance.default_state_code
+    self.state ||= SystemConfig.instance.try(:default_state_code)
   end
 
 end

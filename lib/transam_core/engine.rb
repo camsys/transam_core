@@ -26,6 +26,8 @@ require 'wicked'
 require 'cocoon'
 require 'jquery-ui-rails'
 require 'jquery-form-rails'
+require 'roo'
+
 
 
 module TransamCore

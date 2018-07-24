@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_05_18_133236) do
+ActiveRecord::Schema.define(version: 2018_06_05_144511) do
 
   create_table "activities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "object_key", limit: 12
@@ -817,6 +817,7 @@ ActiveRecord::Schema.define(version: 2018_05_18_133236) do
   create_table "system_configs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "customer_id"
     t.string "start_of_fiscal_year", limit: 5
+    t.string "default_fiscal_year_formatter"
     t.string "map_tile_provider", limit: 64
     t.integer "srid"
     t.float "min_lat"

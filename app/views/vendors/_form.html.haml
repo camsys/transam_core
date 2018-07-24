@@ -10,7 +10,7 @@
     .col-sm-7
       = f.input :city
     .col-sm-2
-      = f.input :state, :as => :select, :collection => Country['US'].states
+      = f.input :state, :as => :select, :collection => ISO3166::Country['US'].states.keys
     .col-sm-3
       = f.input :zip
 

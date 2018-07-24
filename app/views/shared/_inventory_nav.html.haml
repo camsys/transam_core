@@ -6,17 +6,26 @@
     %i.fa.fa-bus.fa-2x
     %b.caret
   %ul.dropdown-menu.multi-level{:role => "menu"}
-    - asset_types.each do |type|
-      - subtypes = Asset.operational.where('organization_id IN (?) AND asset_subtypes.asset_type_id = ?', @organization_list, type[0]).joins(:asset_subtype).group(['asset_subtypes.name', 'asset_subtypes.id']).order(:asset_subtype_id).count
-      - if subtypes.count > 0
-        %li.text-left.dropdown-submenu
-          = link_to inventory_index_path(:asset_type => type[0], :asset_subtype => 0, :asset_group => 0)  do
-            %i{:class => "#{type[2]} fa-fw"}
-            = type[1].pluralize(2)
-          %ul.dropdown-menu
-            - subtypes.keys.each do |subtype|
-              %li.text-left
-                = link_to subtype[0], inventory_index_path(:asset_subtype => subtype[1], :asset_group => 0)
+    -#- asset_types.each do |type|
+    -#  - subtypes = Asset.operational.where('organization_id IN (?) AND asset_subtypes.asset_type_id = ?', @organization_list, type[0]).joins(:asset_subtype).group(['asset_subtypes.name', 'asset_subtypes.id']).order(:asset_subtype_id).count
+    -#  - if subtypes.count > 0
+    -#    %li.text-left.dropdown-submenu
+    -#      = link_to inventory_index_path(:asset_type => type[0], :asset_subtype => 0, :asset_group => 0)  do
+    -#        %i{:class => "#{type[2]} fa-fw"}
+    -#        = type[1].pluralize(2)
+    -#      %ul.dropdown-menu
+    -#        - subtypes.keys.each do |subtype|
+    -#          %li.text-left
+    -#            = link_to subtype[0], inventory_index_path(:asset_subtype => subtype[1], :asset_group => 0)
+    - FtaAssetCategory.all.each do |fta_category|
+      %li.text-left.dropdown-submenu
+        = link_to '#' do
+          = fta_category
+        %ul.dropdown-menu
+          - fta_category.fta_asset_classes.each do |fta_asset_class|
+            %li.text-left
+              = link_to inventory_index_path(:asset_type => 0, :asset_subtype => 0, :asset_group => 0, :fta_asset_class_id => fta_asset_class.id)  do
+                = fta_asset_class
     %li.divider
     %li.text-left.dropdown-submenu
       = link_to asset_groups_path do

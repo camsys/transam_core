@@ -12,7 +12,7 @@ end
 ### UTILITY METHODS ###
 def create_user(email, org_short_name)
   o = Organization.find_by(:short_name => org_short_name)
-  user = FactoryGirl.build(:normal_user, :email => email, :organization => o)
+  user = FactoryBot.build(:normal_user, :email => email, :organization => o)
 
   user.organizations << o
   user.save!

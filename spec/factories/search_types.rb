@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :search_type do
     name "MyString"
 class_name "MyString"

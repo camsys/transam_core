@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>module TransamTagHelper - RDoc Documentation</title>
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script src="./js/jquery.js"></script>
+<script src="./js/darkfish.js"></script>
+
+<link href="./css/fonts.css" rel="stylesheet">
+<link href="./css/rdoc.css" rel="stylesheet">
+
+
+
+<body id="top" role="document" class="module">
+<nav role="navigation">
+  <div id="project-navigation">
+    <div id="home-section" role="region" title="Quick navigation" class="nav-section">
+  <h2>
+    <a href="./index.html" rel="home">Home</a>
+  </h2>
+
+  <div id="table-of-contents-navigation">
+    <a href="./table_of_contents.html#pages">Pages</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </div>
+</div>
+
+    <div id="search-section" role="search" class="project-section initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <div id="search-field-wrapper">
+      <input id="search-field" role="combobox" aria-label="Search"
+             aria-autocomplete="list" aria-controls="search-results"
+             type="text" name="search" placeholder="Search" spellcheck="false"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </div>
+
+    <ul id="search-results" aria-label="Search Results"
+        aria-busy="false" aria-expanded="false"
+        aria-atomic="false" class="initially-hidden"></ul>
+  </form>
+</div>
+
+  </div>
+
+  
+
+  <div id="class-metadata">
+    
+    
+    
+    
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
+    
+    <li ><a href="#method-i-action_thumbnail_tag">#action_thumbnail_tag</a>
+    
+    <li ><a href="#method-i-dialog_tag">#dialog_tag</a>
+    
+    <li ><a href="#method-i-loader_panel_tag">#loader_panel_tag</a>
+    
+    <li ><a href="#method-i-nav_tab_count_tag">#nav_tab_count_tag</a>
+    
+    <li ><a href="#method-i-popover_tag">#popover_tag</a>
+    
+  </ul>
+</div>
+
+  </div>
+</nav>
+
+<main role="main" aria-labelledby="module-TransamTagHelper">
+  <h1 id="module-TransamTagHelper" class="module">
+    module TransamTagHelper
+  </h1>
+
+  <section class="description">
+    
+  </section>
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-action_thumbnail_tag" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">action_thumbnail_tag</span><span
+            class="method-args">(options={}, &block)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>returns html for the old style action “cards”</p>
+          
+          
+
+          
+          <div class="method-source-code" id="action_thumbnail_tag-source">
+            <pre><span class="ruby-comment"># File transam_tag_helper.rb, line 35</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">action_thumbnail_tag</span>(<span class="ruby-identifier">options</span>={}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+
+  <span class="ruby-comment"># Check to see if there is any content in the block</span>
+  <span class="ruby-identifier">content</span> = <span class="ruby-identifier">capture</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">content</span>.<span class="ruby-identifier">nil?</span>
+    <span class="ruby-identifier">content</span> = <span class="ruby-string">&quot;&lt;p&gt;&amp;nbsp;&lt;/p&gt;&quot;</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">html</span> = <span class="ruby-string">&quot;&lt;div class=&#39;&quot;</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:class</span>] <span class="ruby-keyword">unless</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:class</span>].<span class="ruby-identifier">blank?</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&#39;&gt;&quot;</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;div class=&#39;thumbnail action-thumbnail&#39; data-action-path=&#39;&quot;</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:path</span>]
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&#39;&gt;&quot;</span>
+
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;div class=&#39;well well-small thumbnail-content&#39; style=&#39;padding:10px;margin-bottom:0;&#39;&gt;&quot;</span>
+
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;div class=&#39;caption&#39; style=&#39;padding:0;&#39;&gt;&quot;</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;h3 style=&#39;margin-top:0;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;&#39;&gt;&quot;</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;i class=&#39;&quot;</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:icon</span>]
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot; fa-2x&#39;&gt;&lt;/i&gt; &quot;</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:title</span>]
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;/h3&gt;&quot;</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;/div&gt;&quot;</span>
+
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">content</span>
+
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;/div&gt;&quot;</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;/div&gt;&quot;</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;/div&gt;&quot;</span>
+
+
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">html</span>.<span class="ruby-identifier">html_safe</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-dialog_tag" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">dialog_tag</span><span
+            class="method-args">(dialog_name, options={}, &block)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>returns html for a panel comprising a subcomponent of a form</p>
+          
+          
+
+          
+          <div class="method-source-code" id="dialog_tag-source">
+            <pre><span class="ruby-comment"># File transam_tag_helper.rb, line 84</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">dialog_tag</span>(<span class="ruby-identifier">dialog_name</span>, <span class="ruby-identifier">options</span>={}, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+  <span class="ruby-comment"># Check to see if there is any content in the block</span>
+  <span class="ruby-identifier">content</span> = <span class="ruby-identifier">capture</span>(<span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">content</span>.<span class="ruby-identifier">nil?</span>
+    <span class="ruby-identifier">content</span> = <span class="ruby-string">&quot;&lt;p&gt;&amp;nbsp;&lt;/p&gt;&quot;</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">html</span> = <span class="ruby-string">&quot;&lt;div class=&#39;panel panel-default &quot;</span>
+  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:class</span>].<span class="ruby-identifier">blank?</span>
+    <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:class</span>]
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&#39;&gt;&quot;</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;div class=&#39;panel-heading&#39;&gt;&quot;</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;h3 class=&#39;panel-title&#39;&gt;&quot;</span>
+  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:icon</span>].<span class="ruby-identifier">blank?</span>
+    <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;i class=&#39;&quot;</span>
+    <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:icon</span>]
+    <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&#39;&gt;&lt;/i&gt; &quot;</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">dialog_name</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;/h3&gt;&quot;</span>
+  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:link_path</span>].<span class="ruby-identifier">blank?</span>
+    <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;div style=&#39;float:right;position:relative;top:-15px;&#39;&gt;&quot;</span>
+    <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">link_to</span>(<span class="ruby-identifier">options</span>[<span class="ruby-value">:link_text</span>], <span class="ruby-identifier">options</span>[<span class="ruby-value">:link_path</span>], <span class="ruby-value">:class</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;&quot;</span>)
+    <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;/div&gt;&quot;</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;/div&gt;&quot;</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;div class=&#39;panel-body&#39;&gt;&quot;</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">content</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;/div&gt;&quot;</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;/div&gt;&quot;</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">html</span>.<span class="ruby-identifier">html_safe</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-loader_panel_tag" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">loader_panel_tag</span><span
+            class="method-args">(options={})</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>returns html for a spinner panel</p>
+          
+          
+
+          
+          <div class="method-source-code" id="loader_panel_tag-source">
+            <pre><span class="ruby-comment"># File transam_tag_helper.rb, line 24</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">loader_panel_tag</span>(<span class="ruby-identifier">options</span>={})
+
+  <span class="ruby-identifier">msg</span> = (<span class="ruby-identifier">options</span>[<span class="ruby-value">:message</span>] <span class="ruby-operator">||=</span> <span class="ruby-string">&quot;Loading...&quot;</span>)
+  <span class="ruby-identifier">spinner</span> = (<span class="ruby-identifier">options</span>[<span class="ruby-value">:spinner</span>] <span class="ruby-operator">||=</span> <span class="ruby-string">&quot;spinner&quot;</span>)
+  <span class="ruby-identifier">size</span> = (<span class="ruby-identifier">options</span>[<span class="ruby-value">:size</span>] <span class="ruby-operator">||=</span> <span class="ruby-value">3</span>)
+  <span class="ruby-identifier">html_class</span> = (<span class="ruby-identifier">options</span>[<span class="ruby-value">:html_class</span>] <span class="ruby-operator">||=</span> <span class="ruby-string">&#39;ajax-loader&#39;</span>)
+  <span class="ruby-identifier">html_message_class</span> = (<span class="ruby-identifier">options</span>[<span class="ruby-value">:html_message_class</span>] <span class="ruby-operator">||=</span> <span class="ruby-string">&#39;ajax-loader-message&#39;</span>)
+  <span class="ruby-node">&quot;&lt;div class=&#39;#{html_class} text-center&#39;&gt;&lt;i class=&#39;fa fa-spin fa-#{spinner} fa-#{size}x&#39;&gt;&lt;/i&gt;&lt;span class=&#39;#{html_message_class}&#39;&gt; #{msg}&lt;/span&gt;&lt;/div&gt;&quot;</span>.<span class="ruby-identifier">html_safe</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-nav_tab_count_tag" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">nav_tab_count_tag</span><span
+            class="method-args">(href, title, count)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>returns html for nav tabs that include a count of items under the tab</p>
+          
+          
+
+          
+          <div class="method-source-code" id="nav_tab_count_tag-source">
+            <pre><span class="ruby-comment"># File transam_tag_helper.rb, line 72</span>
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier">nav_tab_count_tag</span>(<span class="ruby-identifier">href</span>, <span class="ruby-identifier">title</span>, <span class="ruby-identifier">count</span>)
+    <span class="ruby-identifier">engine</span> = <span class="ruby-constant">Haml</span><span class="ruby-operator">::</span><span class="ruby-constant">Engine</span>.<span class="ruby-identifier">new</span>(<span class="ruby-node">&quot;
+%li
+  %a{:href =&gt; &#39;#{href}&#39;, :data =&gt;{:toggle =&gt; &#39;tab&#39;}}
+    %span.nowrap
+      #{title}
+      %span.badge= #{count}
+&quot;</span>)
+    <span class="ruby-keyword">return</span> <span class="ruby-identifier">engine</span>.<span class="ruby-identifier">render</span>.<span class="ruby-identifier">html_safe</span>
+  <span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-popover_tag" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">popover_tag</span><span
+            class="method-args">(text, options={})</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>returns html for a popover</p>
+          
+          
+
+          
+          <div class="method-source-code" id="popover_tag-source">
+            <pre><span class="ruby-comment"># File transam_tag_helper.rb, line 4</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">popover_tag</span>(<span class="ruby-identifier">text</span>, <span class="ruby-identifier">options</span>={})
+
+  <span class="ruby-identifier">tag_class</span> = (<span class="ruby-identifier">options</span>[<span class="ruby-value">:class</span>] <span class="ruby-operator">||=</span> <span class="ruby-string">&quot;transam-popover&quot;</span>)
+  <span class="ruby-identifier">placement</span> = (<span class="ruby-identifier">options</span>[<span class="ruby-value">:placement</span>] <span class="ruby-operator">||=</span> <span class="ruby-string">&quot;auto&quot;</span>)
+
+  <span class="ruby-identifier">html</span> = <span class="ruby-node">&quot;&lt;a tabindex=&#39;0&#39; class=&#39;#{tag_class}&#39; role=&#39;button&#39; data-placement=&#39;#{placement}&#39; data-container=&#39;body&#39; data-html=&#39;true&#39; data-toggle=&#39;popover&#39; data-trigger=&#39;focus&#39;&quot;</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot; title=&#39;#{options[:title]}&#39;&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:title</span>].<span class="ruby-identifier">blank?</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot; data-content=&#39;#{options[:content]}&#39;&gt;&quot;</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:icon</span>].<span class="ruby-identifier">present?</span>
+    <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;&lt;i class=&#39;fa #{options[:icon]}&#39;&gt;&quot;</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">text</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">text</span>.<span class="ruby-identifier">blank?</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:icon</span>].<span class="ruby-identifier">present?</span>
+    <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;/i&gt;&quot;</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">html</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">&quot;&lt;/a&gt;&quot;</span>
+  <span class="ruby-identifier">html</span>.<span class="ruby-identifier">html_safe</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
+  </section>
+</main>
+
+
+<footer id="validator-badges" role="contentinfo">
+  <p><a href="http://validator.w3.org/check/referer">Validate</a>
+  <p>Generated by <a href="http://docs.seattlerb.org/rdoc/">RDoc</a> 4.2.0.
+  <p>Based on <a href="http://deveiate.org/projects/Darkfish-RDoc/">Darkfish</a> by <a href="http://deveiate.org">Michael Granger</a>.
+</footer>
+

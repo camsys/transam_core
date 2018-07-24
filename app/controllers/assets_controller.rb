@@ -280,8 +280,6 @@ class AssetsController < AssetAwareController
     # When editing a newly transferred asset this link is invalid so we don't want to show it.
     if @asset.asset_tag == @asset.object_key
       @asset.asset_tag = nil
-
-      @asset.fta_ownership_type = nil if @asset.respond_to?(:fta_ownership_type)
     else
       add_breadcrumb @asset.asset_tag, inventory_path(@asset)
     end
@@ -352,7 +350,7 @@ class AssetsController < AssetAwareController
 
   def new
 
-    asset_class = SystemConfig.instance.asset_base_class_name.constantize.find_by(id: params[:asset_base_class_id])
+    asset_class = Rails.application.config.asset_seed_class_name.constantize.find_by(id: params[:asset_base_class_id])
     if asset_class.nil?
       notify_user(:alert, "Asset class '#{params[:asset_base_class_id]}' not found. Can't create new asset!")
       redirect_to(root_url)
@@ -364,7 +362,7 @@ class AssetsController < AssetAwareController
     #add_breadcrumb "New", new_inventory_path(asset_subtype)
 
     # Use the asset class to create an asset of the correct type
-    @asset = TransamAsset.new_asset(asset_class)
+    @asset = Rails.application.config.asset_base_class_name.constantize.new_asset(asset_class, {facility_component_type_id: params[:facility_component_type_id]})
 
     # See if the user selected an org to associate the asset with
     if params[:organization_id].present?
@@ -385,7 +383,7 @@ class AssetsController < AssetAwareController
 
   def create
 
-    asset_class = SystemConfig.instance.asset_base_class_name.constantize.find_by(id: params[:asset_base_class_id])
+    asset_class = Rails.application.config.asset_seed_class_name.constantize.find_by(id: params[:asset_base_class_id])
     if asset_class.nil?
       notify_user(:alert, "Asset class '#{params[:asset_base_class_id]}' not found. Can't create new asset!")
       redirect_to(root_url)
@@ -393,7 +391,7 @@ class AssetsController < AssetAwareController
     end
 
     # Use the asset class to create an asset of the correct type
-    @asset = TransamAsset.new_asset(asset_class, new_form_params(asset_class.class_name))
+    @asset = Rails.application.config.asset_base_class_name.constantize.new_asset(asset_class, new_form_params(asset_class.class_name))
 
     # If the asset does not have an org already defined, set to the default for
     # the user
@@ -596,7 +594,7 @@ class AssetsController < AssetAwareController
       # THIS WILL NO LONGER WORK
       # asset base class name should really be seed to pull typed asset class
       # base class here is just Asset or the new TransamAsset
-      @asset_class_name = SystemConfig.instance.asset_base_class_name
+      @asset_class_name = 'TransamAsset'
     elsif @asset_subtype > 0
       # we have an asset subtype so get it and get the asset type from it. We also set the filter form
       # to the name of the selected subtype
@@ -631,10 +629,10 @@ class AssetsController < AssetAwareController
     clauses = []
     values = []
     unless @org_id == 0
-      clauses << ['assets.organization_id = ?']
+      clauses << ['organization_id = ?']
       values << @org_id
     else
-      clauses << ['assets.organization_id IN (?)']
+      clauses << ['organization_id IN (?)']
       values << @organization_list
     end
 

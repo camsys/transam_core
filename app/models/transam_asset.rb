@@ -1,6 +1,7 @@
 class TransamAsset < TransamAssetRecord
 
   include TransamObjectKey
+  include FiscalYear
 
   actable as: :transam_assetible
 
@@ -109,14 +110,29 @@ class TransamAsset < TransamAssetRecord
       :title_ownership_organization_id,
       :other_titel_ownership_organization,
       :lienholder_id,
-      :other_lienholder
+      :other_lienholder,
+      :parent_id
+  ]
+
+  CLEANSABLE_FIELDS = [
+      'object_key',
+      'asset_tag',
+      'external_id',
+      'disposition_date',
+      'policy_replacement_year',
+      'scheduled_relpacement_year',
+      'scheduled_replacement_cost',
+      'early_replacement_reason',
+      'in_backlog',
+      'scheduled_rehabilitation_year',
+      'scheduled_disposition_year'
   ]
 
   # Factory method to return a strongly typed subclass of a new asset
   # based on the asset_base_class_name
   def self.new_asset(asset_base_class_name, params={})
 
-    asset_class_name = asset_base_class_name.class_name
+    asset_class_name = asset_base_class_name.try(:class_name, params) || asset_base_class_name.class_name
     asset = asset_class_name.constantize.new(params)
     return asset
 
@@ -144,6 +160,13 @@ class TransamAsset < TransamAssetRecord
 
   end
 
+  # mirror method on Asset to get typed version
+  def self.get_typed_asset(asset)
+    if asset
+      asset.very_specific
+    end
+  end
+
   def very_specific
     a = self.specific
 
@@ -168,8 +191,95 @@ class TransamAsset < TransamAssetRecord
     return arr.flatten
   end
 
+  # Creates a duplicate that has all asset-specific attributes nilled
+  def copy(cleanse = true)
+    a = dup
+    a.cleanse if cleanse
+    a
+  end
+
+  # nils out all fields identified to be cleansed
+  def cleanse
+    cleansable_fields.each do |field|
+      send(:"#{field}=", nil) # Rather than set methods directly, delegate to setters.  This supports aliased attributes
+    end
+  end
+
+  def cleansable_fields
+    arr = CLEANSABLE_FIELDS.dup
+    a = self.specific
+
+    while a.try(:specific).present? && a.specific != a
+      arr << a.class::CLEANSABLE_FIELDS.dup
+      a = a.specific
+    end
+
+    arr << a.class::CLEANSABLE_FIELDS.dup
+
+    return arr.flatten
+  end
+
+  # Instantiate an asset event of the appropriate type.
+  def build_typed_event(asset_event_type_class)
+    # Could also add:  raise ArgumentError 'Asset Must be strongly typed' unless is_typed?
+
+    # DO NOT cast to concrete type.  Want to enforce that client has a concrete asset
+    unless self.event_classes.include? asset_event_type_class
+      raise ArgumentError, 'Invalid Asset Event Type'
+    end
+    asset_event_type_class.new(:transam_asset => self)
+  end
+
+  def asset_type_id
+    asset_subtype.asset_type_id
+  end
+
+  def asset_type
+    asset_subtype.asset_type
+  end
+
   def disposed?
     disposition_date.present?
+  end
+
+  # Returns true if the asset can be disposed in the next planning cycle,
+  # false otherwise
+  def disposable?( include_early_disposal_request_approved_via_transfer = false)
+    return false if disposed?
+    # otherwise check the policy year and see if it is less than or equal to
+    # the current planning year
+    return false if policy_replacement_year.blank?
+
+    if policy_replacement_year <= current_planning_year_year
+      # After ESL disposal
+      true
+    else
+      # Prior ESL disposal request
+      last_request = early_disposition_requests.last
+      if include_early_disposal_request_approved_via_transfer
+        last_request.try(:is_approved?)
+      else
+        last_request.try(:is_unconditional_approved?)
+      end
+    end
+  end
+
+  # Returns true if the asset can be requested for early disposal
+  def eligible_for_early_disposition_request?
+    return false if disposed?
+    # otherwise check the policy year and see if it is less than or equal to
+    # the current planning year
+    return false if policy_replacement_year.blank?
+
+    if policy_replacement_year <= current_planning_year_year
+      # Eligible for after ESL disposal
+      false
+    else
+      # Prior ESL disposal request
+      last_request = early_disposition_requests.last
+      # No previous request or was rejected
+      !last_request || last_request.try(:is_rejected?)
+    end
   end
 
   def event_classes
@@ -194,7 +304,7 @@ class TransamAsset < TransamAssetRecord
     if policy_to_use.blank?
       policy_to_use = policy
     end
-    policy_analyzer = SystemConfig.instance.policy_analyzer.constantize.new(self, policy_to_use)
+    policy_analyzer = Rails.application.config.policy_analyzer.constantize.new(self.very_specific, policy_to_use)
   end
 
   def expected_useful_life
@@ -229,9 +339,14 @@ class TransamAsset < TransamAssetRecord
       start_date = start_of_fiscal_year(policy_replacement_year)
     end
     # Update the estimated replacement costs
-    class_name = this_policy_analyzer.get_replacement_cost_calculation_type.class_name
+    class_name = policy_analyzer.get_replacement_cost_calculation_type.class_name
     calculator_instance = class_name.constantize.new
     (calculator_instance.calculate_on_date(self, start_date)+0.5).to_i
+  end
+
+  # Returns true if an asset is scheduled for disposition
+  def scheduled_for_disposition?
+    (scheduled_disposition_year.present? and disposed? == false)
   end
 
   def replacement_by_policy?
@@ -242,8 +357,28 @@ class TransamAsset < TransamAssetRecord
     false # all assets can be locked into place to prevent sched replacement year changes but by default none are locked
   end
 
+  def is_early_replacement?
+    policy_replacement_year && scheduled_replacement_year && scheduled_replacement_year < policy_replacement_year
+  end
+
+  def update_early_replacement_reason(reason = nil)
+    if is_early_replacement?
+      self.early_replacement_reason = reason
+    else
+      self.early_replacement_reason = nil
+    end
+  end
+
   def formatted_early_replacement_reason
-    early_disposition_requests.count == 0 ? '(Reason not provided)' : early_disposition_requests.last.comments
+    if early_replacement_reason.present?
+      early_replacement_reason
+    else
+      '(Reason not provided)'
+    end
+  end
+
+  def cost
+    purchase_cost
   end
 
   # returns the list of events associated with this asset ordered by date, newest first
@@ -252,7 +387,11 @@ class TransamAsset < TransamAssetRecord
   end
 
   def service_status_type
-    ServiceStatusType.find_by(id: service_status_updates.last.try(:service_status_type_id))
+    if disposed?
+      ServiceStatusType.find_by(name: 'Disposed')
+    else
+      ServiceStatusType.find_by(id: service_status_updates.last.try(:service_status_type_id))
+    end
   end
 
   def reported_condition_date
@@ -340,7 +479,7 @@ class TransamAsset < TransamAssetRecord
       check_early_replacement = true
       Rails.logger.debug "New scheduled_replacement_year = #{self.scheduled_replacement_year}"
       # Get the calculator class from the policy analyzer
-      class_name = this_policy_analyzer.get_replacement_cost_calculation_type.class_name
+      class_name = policy_analyzer.get_replacement_cost_calculation_type.class_name
       calculator_instance = class_name.constantize.new
       start_date = start_of_fiscal_year(scheduled_replacement_year) unless scheduled_replacement_year.blank?
       Rails.logger.debug "Start Date = #{start_date}"
@@ -348,8 +487,6 @@ class TransamAsset < TransamAssetRecord
     end
 
     #self.early_replacement_reason = nil if check_early_replacement && !is_early_replacement?
-
-    self.save!
   end
 
   private
