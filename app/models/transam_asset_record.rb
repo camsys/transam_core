@@ -54,6 +54,7 @@ class TransamAssetRecord < ActiveRecord::Base
     transferred_asset.in_service_date = nil
     transferred_asset.purchase_date = self.disposition_date
     transferred_asset.purchased_new = false
+    transferred_asset.purchase_cost = self.disposition_updates.last.sales_proceeds
     transferred_asset.pcnt_capital_responsibility = nil
     transferred_asset.title_ownership_organization_id = nil
     transferred_asset.other_title_ownership_organization = nil
@@ -65,6 +66,10 @@ class TransamAssetRecord < ActiveRecord::Base
     transferred_asset.asset_tag = transferred_asset.object_key
 
     transferred_asset.save(:validate => false)
+
+    # create last condition, status
+    transferred_asset.condition_updates << self.condition_updates.last.dup
+    transferred_asset.service_status_updates << self.service_status_updates.last.dup
 
     return transferred_asset
   end

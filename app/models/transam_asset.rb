@@ -138,7 +138,7 @@ class TransamAsset < TransamAssetRecord
 
   end
 
-  def self.very_specific
+  callable_by_submodel def self.very_specific
     klass = self.all
     assoc = klass.column_names.select{|col| col.end_with? 'ible_type'}.first
     assoc_arr = Hash.new
@@ -379,7 +379,7 @@ class TransamAsset < TransamAssetRecord
     age_in_years = if in_service_date.nil?
                      0
                    else
-                     (on_date.year * 12 + on_date.month) - (in_service_date.year * 12 + in_service_date.month)
+                     ((on_date.year * 12 + on_date.month) - (in_service_date.year * 12 + in_service_date.month))/12.0
                    end
     [(age_in_years).floor, 0].max
   end

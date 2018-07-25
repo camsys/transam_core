@@ -94,11 +94,11 @@ class AssetsController < AssetAwareController
     asset_type_id = params[:asset_type_id]
 
     if asset_type_id.blank?
-      results = ActiveRecord::Base.connection.exec_query(TransamAsset.operational.select('organization_id, asset_subtypes.asset_type_id, organizations.short_name AS org_short_name, asset_types.name AS subtype_name, COUNT(*) AS assets_count, SUM(purchase_cost) AS sum_purchase_cost, SUM(book_value) AS sum_book_value').joins(:organization, asset_subtype: :asset_type).where(organization_id: @organization_list).group(:organization_id, :asset_type_id).to_sql)
+      results = ActiveRecord::Base.connection.exec_query(Rails.application.config.asset_base_class_name.constantize.operational.select('organization_id, asset_subtypes.asset_type_id, organizations.short_name AS org_short_name, asset_types.name AS subtype_name, COUNT(*) AS assets_count, SUM(purchase_cost) AS sum_purchase_cost, SUM(book_value) AS sum_book_value').joins(:organization, asset_subtype: :asset_type).where(organization_id: @organization_list).group(:organization_id, :asset_type_id).to_sql)
       level = 'type'
     else
       asset_subtype_ids = AssetType.includes(:asset_subtypes).find_by(id: asset_type_id).asset_subtypes.ids
-      results = ActiveRecord::Base.connection.exec_query(TransamAsset.operational.select('organization_id, asset_subtype_id, organizations.short_name AS org_short_name, asset_subtypes.name AS subtype_name, COUNT(*) AS assets_count, SUM(purchase_cost) AS sum_purchase_cost, SUM(book_value) AS sum_book_value').joins(:organization, :asset_subtype).where(organization_id: (params[:org] || @organization_list), asset_subtype_id: asset_subtype_ids).group(:organization_id, :asset_subtype_id).to_sql)
+      results = ActiveRecord::Base.connection.exec_query(Rails.application.config.asset_base_class_name.constantize.operational.select('organization_id, asset_subtype_id, organizations.short_name AS org_short_name, asset_subtypes.name AS subtype_name, COUNT(*) AS assets_count, SUM(purchase_cost) AS sum_purchase_cost, SUM(book_value) AS sum_book_value').joins(:organization, :asset_subtype).where(organization_id: (params[:org] || @organization_list), asset_subtype_id: asset_subtype_ids).group(:organization_id, :asset_subtype_id).to_sql)
       level = 'subtype'
     end
 
@@ -755,9 +755,9 @@ class AssetsController < AssetAwareController
   # Overrides the utility method in the base class
   #
   def get_selected_asset(convert=true)
-    selected_asset = TransamAsset.find_by(:organization_id => @organization_list, :object_key => params[:id]) unless params[:id].blank?
+    selected_asset = Rails.application.config.asset_base_class_name.constantize.find_by(:organization_id => @organization_list, :object_key => params[:id]) unless params[:id].blank?
     if convert
-      asset = selected_asset.very_specific
+      asset = Rails.application.config.asset_base_class_name.constantize.get_typed_asset(selected_asset)
     else
       asset = selected_asset
     end
