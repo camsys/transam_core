@@ -78,10 +78,11 @@ class ReportsController < OrganizationAwareController
         @asset_types << [at.name, at.id]
       end
     end
-
-    puts @asset_types.ai 
+    puts 1
 
     if @report
+      puts 2
+      puts @report.ai 
       @report_view = @report.view_name
       add_breadcrumb @report.name
 
@@ -90,8 +91,6 @@ class ReportsController < OrganizationAwareController
       params[:sql] = @report.custom_sql unless @report.custom_sql.blank?
       # get the report data
       @data = @report_instance.get_data(@organization_list, params)
-
-      puts @report_instance.ai 
 
       # String return value indicates an error message.
       if @data.is_a? String
