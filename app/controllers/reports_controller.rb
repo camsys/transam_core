@@ -69,14 +69,17 @@ class ReportsController < OrganizationAwareController
   # This method does the work of setting up the report, allowing the subclass to pass
   # a different respond_to block.
   def handle_show &block
+
     @report_filter_type = params[:report_filter_type]
     @asset_types = []
     AssetType.active.each do |at|
-      count = Asset.where('assets.organization_id IN (?) AND assets.asset_type_id = ?', @organization_list, at.id).count
+      count = TransamAsset.where('transam_assets.organization_id IN (?) AND transam_assets.asset_subtype_id = ?', @organization_list, at.id).count
       if count > 0
         @asset_types << [at.name, at.id]
       end
     end
+
+    puts @asset_types.ai 
 
     if @report
       @report_view = @report.view_name
@@ -87,6 +90,8 @@ class ReportsController < OrganizationAwareController
       params[:sql] = @report.custom_sql unless @report.custom_sql.blank?
       # get the report data
       @data = @report_instance.get_data(@organization_list, params)
+
+      puts @report_instance.ai 
 
       # String return value indicates an error message.
       if @data.is_a? String
