@@ -138,7 +138,7 @@ class TransamAsset < TransamAssetRecord
 
   end
 
-  def self.very_specific
+  callable_by_submodel def self.very_specific
     klass = self.all
     assoc = klass.column_names.select{|col| col.end_with? 'ible_type'}.first
     assoc_arr = Hash.new
