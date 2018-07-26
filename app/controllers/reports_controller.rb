@@ -80,7 +80,6 @@ class ReportsController < OrganizationAwareController
     end
 
     if @report
-      puts @report.ai 
       @report_view = @report.view_name
       add_breadcrumb @report.name
 
