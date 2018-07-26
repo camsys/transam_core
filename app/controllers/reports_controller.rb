@@ -78,10 +78,8 @@ class ReportsController < OrganizationAwareController
         @asset_types << [at.name, at.id]
       end
     end
-    puts 1
 
     if @report
-      puts 2
       puts @report.ai 
       @report_view = @report.view_name
       add_breadcrumb @report.name
