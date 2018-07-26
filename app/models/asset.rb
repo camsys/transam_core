@@ -9,8 +9,6 @@
 class Asset < ActiveRecord::Base
 
   OBJECT_CACHE_EXPIRE_SECONDS = Rails.application.config.object_cache_expire_seconds
-  # The policy analyzer to use comes from the Rails config
-  POLICY_ANALYZER = SystemConfig.instance.try(:policy_analyzer)
 
   #-----------------------------------------------------------------------------
   # Behaviors
@@ -774,7 +772,7 @@ class Asset < ActiveRecord::Base
     if policy_to_use.blank?
       policy_to_use = policy
     end
-    policy_analyzer = POLICY_ANALYZER.constantize.new(self, policy_to_use)
+    policy_analyzer = SystemConfig.instance.policy_analyzer.constantize.new(self, policy_to_use)
   end
   #-----------------------------------------------------------------------------
   # returns the the organizations's policy that governs the replacement of this
