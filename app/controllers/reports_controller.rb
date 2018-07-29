@@ -73,7 +73,7 @@ class ReportsController < OrganizationAwareController
     @report_filter_type = params[:report_filter_type]
     @asset_types = []
     AssetType.active.each do |at|
-      count = TransamAsset.where('transam_assets.organization_id IN (?) AND transam_assets.asset_subtype_id = ?', @organization_list, at.id).count
+      count = Rails.application.config.asset_base_class_name.constantize.where('transam_assets.organization_id IN (?) AND transam_assets.asset_subtype_id = ?', @organization_list, at.id).count
       if count > 0
         @asset_types << [at.name, at.id]
       end
