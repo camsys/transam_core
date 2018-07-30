@@ -22,7 +22,7 @@ class AssetAgeReport < AbstractReport
       labels << asset_type.name
     else
       AssetType.all.each do |at|
-        count = TransamAsset.where('transam_assets.organization_id IN (?) AND transam_assets.asset_subtype_id = ?', organization_id_list, at.id).count
+        count = Rails.application.config.asset_base_class_name.constantize.where('transam_assets.organization_id IN (?) AND transam_assets.asset_subtype_id = ?', organization_id_list, at.id).count
         asset_counts << count
         labels << at.name unless count == 0
       end
@@ -33,10 +33,10 @@ class AssetAgeReport < AbstractReport
       counts << "#{year}"
       manufacture_year = year.year.ago.year
       if report_filter_type > 0
-        counts << TransamAsset.where("transam_assets.organization_id IN (?) AND transam_assets.asset_subtype_id = ? AND transam_assets.manufacture_year = ?", organization_id_list, report_filter_type, manufacture_year).count
+        counts << Rails.application.config.asset_base_class_name.constantize.where("transam_assets.organization_id IN (?) AND transam_assets.asset_subtype_id = ? AND transam_assets.manufacture_year = ?", organization_id_list, report_filter_type, manufacture_year).count
       else
         AssetType.all.each_with_index do |type, idx|
-          counts << TransamAsset.where("transam_assets.organization_id IN (?) AND transam_assets.asset_subtype_id = ? AND manufacture_year = ?", organization_id_list, type.id, manufacture_year).count unless asset_counts[idx] == 0
+          counts << Rails.application.config.asset_base_class_name.constantize.where("transam_assets.organization_id IN (?) AND transam_assets.asset_subtype_id = ? AND manufacture_year = ?", organization_id_list, type.id, manufacture_year).count unless asset_counts[idx] == 0
         end
       end
       a << counts
@@ -48,10 +48,10 @@ class AssetAgeReport < AbstractReport
     counts << "+#{year}"
     manufacture_year = MAX_REPORTING_YEARS.year.ago.year
     if report_filter_type > 0
-      counts << TransamAsset.where("transam_assets.organization_id IN (?) AND transam_assets.asset_subtype_id = ? AND transam_assets.manufacture_year < ?", organization_id_list, report_filter_type, manufacture_year).count
+      counts << Rails.application.config.asset_base_class_name.constantize.where("transam_assets.organization_id IN (?) AND transam_assets.asset_subtype_id = ? AND transam_assets.manufacture_year < ?", organization_id_list, report_filter_type, manufacture_year).count
     else
       AssetType.all.each_with_index do |type, idx|
-        counts << TransamAsset.where("transam_assets.organization_id IN (?) AND transam_assets.asset_subtype_id = ? AND transam_assets.manufacture_year < ?", organization_id_list, type.id, manufacture_year).count unless asset_counts[idx] == 0
+        counts << Rails.application.config.asset_base_class_name.constantize.where("transam_assets.organization_id IN (?) AND transam_assets.asset_subtype_id = ? AND transam_assets.manufacture_year < ?", organization_id_list, type.id, manufacture_year).count unless asset_counts[idx] == 0
       end
     end
     a << counts
