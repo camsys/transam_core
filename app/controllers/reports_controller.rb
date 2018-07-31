@@ -69,10 +69,11 @@ class ReportsController < OrganizationAwareController
   # This method does the work of setting up the report, allowing the subclass to pass
   # a different respond_to block.
   def handle_show &block
+
     @report_filter_type = params[:report_filter_type]
     @asset_types = []
     AssetType.active.each do |at|
-      count = Asset.where('assets.organization_id IN (?) AND assets.asset_type_id = ?', @organization_list, at.id).count
+      count = Rails.application.config.asset_base_class_name.constantize.where(organization_id: @organization_list, asset_subtype_id: at.id).count
       if count > 0
         @asset_types << [at.name, at.id]
       end
