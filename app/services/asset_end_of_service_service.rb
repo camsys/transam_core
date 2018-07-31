@@ -51,7 +51,7 @@ class AssetEndOfServiceService
       values << asset_subtype_id
     end
 
-    TransamAsset.operational.where(conditions.join(' AND '), *values)
+    Rails.application.config.asset_base_class_name.constantize.operational.where(conditions.join(' AND '), *values)
   end
 
   #------------------------------------------------------------------------------
