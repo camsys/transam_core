@@ -35,6 +35,9 @@ class TransamAsset < TransamAssetRecord
   # event type. Events are deleted when the asset is deleted
   has_many   :asset_events, :dependent => :destroy, :foreign_key => :transam_asset_id
 
+  has_many :serial_numbers, as: :identifiable, inverse_of: :transam_asset, dependent: :destroy
+  accepts_nested_attributes_for :serial_numbers
+
   # each asset has zero or more condition updates
   has_many   :condition_updates, -> {where :asset_event_type_id => ConditionUpdateEvent.asset_event_type.id }, :class_name => "ConditionUpdateEvent", :foreign_key => :transam_asset_id
 
@@ -111,7 +114,9 @@ class TransamAsset < TransamAssetRecord
       :other_titel_ownership_organization,
       :lienholder_id,
       :other_lienholder,
-      :parent_id
+      :parent_id,
+      :quantity,
+      :quantity_unit
   ]
 
   CLEANSABLE_FIELDS = [

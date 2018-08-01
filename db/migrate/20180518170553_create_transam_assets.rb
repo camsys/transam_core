@@ -14,6 +14,8 @@ class CreateTransamAssets < ActiveRecord::Migration[5.2]
       t.references  :manufacturer_model
       t.string      :other_manufacturer_model
       t.integer     :manufacture_year
+      t.integer     :quantity
+      t.string      :quantity_unit
       t.integer     :purchase_cost
       t.date        :purchase_date
       t.boolean     :purchased_new
