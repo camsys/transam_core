@@ -35,7 +35,7 @@ class TransamAsset < TransamAssetRecord
   # event type. Events are deleted when the asset is deleted
   has_many   :asset_events, :dependent => :destroy, :foreign_key => :transam_asset_id
 
-  has_many :serial_numbers, as: :identifiable, inverse_of: :transam_asset, dependent: :destroy
+  has_many :serial_numbers, as: :identifiable, inverse_of: :identifiable, dependent: :destroy
   accepts_nested_attributes_for :serial_numbers
 
   # each asset has zero or more condition updates
