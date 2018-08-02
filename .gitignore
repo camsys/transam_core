@@ -31,3 +31,4 @@ TAGS
 
 shadowed_views.log
 *.rb~
+*.haml~
