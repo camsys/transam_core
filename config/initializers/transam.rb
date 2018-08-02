@@ -12,3 +12,7 @@ Rails.application.config.max_rows_returned = 500          # maximum number of ro
 
 Rails.application.config.max_upload_file_size = 4          # maximum file size able to be uploaded
 Rails.application.config.epoch = Date.new(1900,1,1)      # epoch
+
+
+Rails.application.config.rails_admin_core_lookup_tables = ['AssetEventType', 'AssetType', 'AssetSubtype', 'ConditionType', 'DispositionType', 'DistrictType', 'FrequencyType', 'FundingTemplateType','IssueType', 'LicenseType', 'LocationReferenceType', 'MaintenanceType', 'ManufacturerModel', 'NoticeType','PriorityType', 'ReportType', 'ServiceStatusType', 'WebBrowserType']
+Rails.application.config.rails_admin_core_models = ['Asset', 'AssetGroup', 'Comment', 'Document', 'FundingTemplate', 'Image', 'Manufacturer', 'Organization','Report', 'Role', 'User', 'Vendor']
