@@ -81,6 +81,10 @@ file_content_types = [
   {:active => 1, :name => 'New Inventory',    :class_name => 'NewInventoryFileHandler',   :builder_name => "NewInventoryTemplateBuilder",  :description => 'Worksheet records updated condition, status, and mileage for existing inventory.'}
 ]
 
+manufacturer_models = [
+    {name: 'Other', description: 'Other', active: true}
+]
+
 license_types = [
   {:active => 1, :name => 'Full',              :asset_manager => 1, :web_services => 1, :description => 'Access to application and web services.'},
   {:active => 1, :name => 'Application Only',  :asset_manager => 1, :web_services => 0, :description => 'Access to application only.'},
@@ -190,7 +194,7 @@ system_config_extensions = [
 ]
 
 
-lookup_tables = %w{asset_event_types condition_types disposition_types cost_calculation_types license_types priority_types
+lookup_tables = %w{asset_event_types condition_types disposition_types cost_calculation_types license_types manufacturer_models priority_types
   file_content_types file_status_types report_types service_status_types
   service_life_calculation_types condition_estimation_types condition_rollup_calculation_types
   issue_status_types issue_types web_browser_types replacement_reason_types notice_types frequency_types search_types activities manufacturers system_config_extensions
