@@ -81,7 +81,7 @@ class TransamAsset < TransamAssetRecord
   validates :asset_subtype_id, presence: true
   validates :asset_tag, presence: true
   validates :purchase_cost, presence: true
-  validates :purchase_cost, numericality: { greater_than: 0 }
+  validates :purchase_cost, numericality: { greater_than_or_equal_to: 0 }
   validates :purchased_new, inclusion: { in: [ true, false ] }
   validates :in_service_date, presence: true 
   validates :manufacturer_id, presence: true
@@ -89,38 +89,18 @@ class TransamAsset < TransamAssetRecord
   validates :manufacture_year, presence: true
   validates :description, presence: true
   validates :other_manufacturer, presence: true, if: :uses_other_manufacturer?
-  validates :other_vendor, presence: true, if: :uses_other_vendor?
-  validates :quantity, numericality: { greater_than: 0 }
-  validates :quantity, presence: true
-  validates :quanitty_units, presence: true
-  validates :presence :other_operator, if: :uses_other_operator?
-  vaiidates :presence :other_titel_ownership_organization, if: :uses_other_title_ownership_organization?
-  validates :presence :other_lienholder, if: :uses_other_lienholder?
-  validates :presence :other_manufacturer_model, if: :uses_other_manufacturer_model?
+  #validates :quantity, numericality: { greater_than: 0 }
+  #validates :quantity, presence: true
+  #validates :quantity_units, presence: true
+  validates :other_manufacturer_model, presence: true, if: :uses_other_manufacturer_model?
 
 
   def uses_other_manufacturer?
     manufacturer.try(:code) == "ZZZ"
   end
 
-  def uses_other_vendor?
-    vendor.try(:name).downcase == "other"
-  end
-
-  def uses_other_operator?
-    operator.try(:code) == "OTHR"
-  end
-
-  def uses_other_title_ownership_organization?
-    title_ownership_organization.try(:code) == "OTHR"
-  end
-
-  def uses_other_lienholder?
-    lienholder.try(:code) == "OTHR"
-  end
-
   def uses_other_manufacturer_model?
-    manufacturer_model.try(:name).downcase == "other"
+    manufacturer_model.try(:name).try(:downcase) == "other"
   end
 
   #-----------------------------------------------------------------------------
