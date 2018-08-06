@@ -10,11 +10,14 @@ class UsersController < OrganizationAwareController
   add_breadcrumb "Users", :users_path
 
   #-----------------------------------------------------------------------------
+  skip_before_action :get_organization_selections,      :only => [:authorizations]
+  before_action :set_viewable_organizations,      :only => [:authorizations]
+
+
   before_action :set_user, :only => [:show, :edit, :settings, :update, :destroy, :change_password, :update_password, :profile_photo, :reset_password, :authorizations]
   before_action :check_for_cancel, :only => [:create, :update, :update_password]
 
-  skip_before_action :get_organization_selections,      :only => [:authorizations]
-  before_action :set_viewable_organizations,      :only => [:authorizations]
+
 
   #-----------------------------------------------------------------------------
   INDEX_KEY_LIST_VAR    = "user_key_list_cache_var"
