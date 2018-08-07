@@ -82,29 +82,19 @@ class TransamAsset < TransamAssetRecord
   #-----------------------------------------------------------------------------
 
   validates :asset_subtype_id, presence: true
-  validates :asset_tag, presence: true
+  validates :organization_id, presence: true
+  validates :asset_tag, presence: true, uniqueness: {scope: :organization_id }
   validates :purchase_cost, presence: true
   validates :purchase_cost, numericality: { greater_than_or_equal_to: 0 }
   validates :purchased_new, inclusion: { in: [ true, false ] }
-  validates :in_service_date, presence: true 
-  validates :manufacturer_id, presence: true
-  validates :manufacturer_model_id, presence: true
+  validates :in_service_date, presence: true
+  validates :manufacturer_id, inclusion: {in: Manufacturer.where(code: 'ZZZ').pluck(:id)}, if: Proc.new{|a| a.other_manufacturer.present?}
+  validates :manufacturer_model_id, inclusion: {in: ManufacturerModel.where(name: 'Other').pluck(:id)}, if: Proc.new{|a| a.other_manufacturer_model.present?}
   validates :manufacture_year, presence: true
-  validates :description, presence: true
-  validates :other_manufacturer, presence: true, if: :uses_other_manufacturer?
+
   #validates :quantity, numericality: { greater_than: 0 }
   #validates :quantity, presence: true
   #validates :quantity_units, presence: true
-  validates :other_manufacturer_model, presence: true, if: :uses_other_manufacturer_model?
-
-
-  def uses_other_manufacturer?
-    manufacturer.try(:code) == "ZZZ"
-  end
-
-  def uses_other_manufacturer_model?
-    manufacturer_model.try(:name).try(:downcase) == "other"
-  end
 
   #-----------------------------------------------------------------------------
   # Scopes
