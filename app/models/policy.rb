@@ -197,7 +197,7 @@ class Policy < ActiveRecord::Base
   end
 
   def apply_policy
-    TransamAsset.operational.where(organization_id: self.policy.organization_id).each do |asset|
+    TransamAsset.operational.where(organization_id: self.organization_id).each do |asset|
       Rails.logger.warn "Issue applying policy on TransAM Asset #{asset}" unless asset.save
     end
   end
