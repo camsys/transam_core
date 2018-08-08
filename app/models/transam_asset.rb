@@ -9,6 +9,7 @@ class TransamAsset < TransamAssetRecord
   # replacement cost if they updated other things
   # updates the calculated values of an asset
   after_save      :update_asset_state
+  after_save      :check_policy_rule
 
 
   belongs_to  :organization
@@ -515,6 +516,26 @@ class TransamAsset < TransamAssetRecord
     end
 
     #self.early_replacement_reason = nil if check_early_replacement && !is_early_replacement?
+  end
+
+  def check_policy_rule
+
+    policy.find_or_create_asset_type_rule self.asset_subtype.asset_type
+
+    typed_asset = TransamAsset.get_typed_asset self
+    if (typed_asset.respond_to? :fuel_type)
+      policy.find_or_create_asset_subtype_rule asset_subtype, typed_asset.fuel_type
+    else
+      policy.find_or_create_asset_subtype_rule asset_subtype
+    end
+  end
+
+  def calculate_term_estimation(on_date)
+    if on_date
+      TermEstimationCalculator.new.calculate_on_date(self, on_date)
+    else
+      0
+    end
   end
 
   private
