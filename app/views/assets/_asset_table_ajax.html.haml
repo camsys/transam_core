@@ -8,55 +8,58 @@
     - if lookup_context.template_exists?("#{mod}_index_actions", 'assets', true)
       = render :partial => "assets/#{mod}_index_actions"
 
-.table-responsive
-  %table.table.table-condensed.table-hover{:id => 'asset_server_table',
-    :data => {:toggle => 'table',
-    :url => inventory_index_path(:format => :json),
-    :card_view => "false",
-    :pagination => 'true',
-    :sort_order => 'asc',
-    :sortable => 'true',
-    :side_pagination => 'server',
-    :show_pagination_switch => 'true',
-    :page_number => '1',
-    :page_list => "[5, 10, 20, 50, 100, 200]",
-    :page_size => current_user.num_table_rows,
-    :search => 'false',
-    :show_columns => 'true',
-    :toolbar => "#table_actions",
-    :row_style => 'row_style',
-    :click_to_select => 'true',
-    :query_params => "query_params",
-    :show_export => 'true',
-    :id_field => 'object_key',
-    :export_types => "['csv', 'txt', 'excel']",
-    :state_save => 'true',
-    :state_save_id_table => "assetsid",
-    :state_save_expire => "1y",
-    :maintain_selected => 'true',
-    :single_select => 'false'}}
-    %thead
-      %tr
-        - if @early_disposition
-          %th.center{:data => {:field => 'checked', :checkbox => 'true'}}
-        %th.center.icon-column{:data => {:field => 'tagged', :formatter => 'tagged_formatter'}}
-          %i.fa.fa-star
+  -if lookup_context.template_exists?("transit_asset_table_head", 'assets', true)
+    = render :partial => "transit_asset_table_head"
+  -else
+    .table-responsive
+      %table.table.table-condensed.table-hover{:id => 'asset_server_table',
+        :data => {:toggle => 'table',
+        :url => inventory_index_path(:format => :json),
+        :card_view => "false",
+        :pagination => 'true',
+        :sort_order => 'asc',
+        :sortable => 'true',
+        :side_pagination => 'server',
+        :show_pagination_switch => 'true',
+        :page_number => '1',
+        :page_list => "[5, 10, 20, 50, 100, 200]",
+        :page_size => current_user.num_table_rows,
+        :search => 'false',
+        :show_columns => 'true',
+        :toolbar => "#table_actions",
+        :row_style => 'row_style',
+        :click_to_select => 'true',
+        :query_params => "query_params",
+        :show_export => 'true',
+        :id_field => 'object_key',
+        :export_types => "['csv', 'txt', 'excel']",
+        :state_save => 'true',
+        :state_save_id_table => "assetsid",
+        :state_save_expire => "1y",
+        :maintain_selected => 'true',
+        :single_select => 'false'}}
+        %thead
+          %tr
+            - if @early_disposition
+              %th.center{:data => {:field => 'checked', :checkbox => 'true'}}
+            %th.center.icon-column{:data => {:field => 'tagged', :formatter => 'tagged_formatter'}}
+              %i.fa.fa-star
 
-        - SystemConfig.transam_module_names.each do |mod|
-          - if lookup_context.template_exists?("#{mod}_asset_table_head", 'assets', true)
-            = render :partial => "assets/#{mod}_asset_table_head"
+            - SystemConfig.transam_module_names.each do |mod|
+              - if lookup_context.template_exists?("#{mod}_asset_table_head", 'assets', true)
+                = render :partial => "assets/#{mod}_asset_table_head"
 
-        - if @early_disposition
-          %th.center{:data => {:field => "early_disposition_notes", :sort_name => 'early_disposition_notes', :align => 'left', :sortable => 'true',  :searchable => 'true'}} Early Disposition Reason
+            - if @early_disposition
+              %th.center{:data => {:field => "early_disposition_notes", :sort_name => 'early_disposition_notes', :align => 'left', :sortable => 'true',  :searchable => 'true'}} Early Disposition Reason
 
-        %th.center.flag-column{:data => {:field => 'tasks', :formatter => 'tasks_formatter'}}
-          %i.fa.fa-flag
-        %th.center.flag-column{:data => {:field => 'comments', :visible => 'false', :formatter => 'comments_formatter'}}
-          %i.fa.fa-comments
-        %th.center.flag-column{:data => {:field => 'documents', :visible => 'false', :formatter => 'documents_formatter'}}
-          %i.fa.fa-files-o
-        %th.center.flag-column{:data => {:field => 'photos', :visible => 'false', :formatter => 'images_formatter'}}
-          %i.fa.fa-image
+            %th.center.flag-column{:data => {:field => 'tasks', :formatter => 'tasks_formatter'}}
+              %i.fa.fa-flag
+            %th.center.flag-column{:data => {:field => 'comments', :visible => 'false', :formatter => 'comments_formatter'}}
+              %i.fa.fa-comments
+            %th.center.flag-column{:data => {:field => 'documents', :visible => 'false', :formatter => 'documents_formatter'}}
+              %i.fa.fa-files-o
+            %th.center.flag-column{:data => {:field => 'photos', :visible => 'false', :formatter => 'images_formatter'}}
+              %i.fa.fa-image
 
 = render 'shared/table_formatters'
 
