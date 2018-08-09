@@ -68,8 +68,8 @@ class TransamAssetRecord < ActiveRecord::Base
     transferred_asset.save(:validate => false)
 
     # create last condition, status
-    transferred_asset.condition_updates << self.condition_updates.last.dup
-    transferred_asset.service_status_updates << self.service_status_updates.last.dup
+    transferred_asset.condition_updates << self.condition_updates.last.dup if self.condition_updates.count > 0
+    transferred_asset.service_status_updates << self.service_status_updates.last.dup if self.service_status_updates.count > 0
 
     return transferred_asset
   end
