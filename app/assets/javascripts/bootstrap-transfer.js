@@ -148,7 +148,7 @@
                 <div class="col-md-6">\
                   <div class="selector-available">\
                     <div class="row">\
-                      <h3>Not Selected</h3>\
+                      <h5>Not Selected</h5>\
                     </div>\
                     <div class="row">\
                       <div class="selector-filter">\
@@ -186,7 +186,7 @@
                 <div class="col-md-5">\
                   <div class="selector-chosen">\
                     <div class="row">\
-                      <h3>Selected</h3>\
+                      <h5>Selected</h5>\
                     </div>\
                     <div class="row">\
                       <select class="filtered target form-control" multiple=true></select>\
