@@ -1,0 +1,31 @@
+:javascript
+
+  $(function() {
+    $.fn.editable.defaults.mode = 'inline';
+    $.fn.editable.defaults.clear = false;
+
+    $('.editable-field').editable({});
+    $('.not-editable-field').editable('disable');
+
+    // select all text when editable input shows up so to speed up input
+    $('.editable-field').on('shown', function(e, editable) {
+      setTimeout( function() {
+        editable.input.$input.select();
+      }, 10 );
+    });
+
+    // click an editable cell to bring up editable-input
+    $('.editable-field:not(.editable-disabled)').closest('td').click(function() {
+      if (editableActive) return;
+      
+      var that = this;
+      setTimeout(function() {
+        $(that).find('.editable-field').editable('show');
+        }, 10);
+    });
+
+    // if the cell is editable enabled, show up editable input when it gets focus
+    $('.editable-field:not(.editable-disabled)').focus(function() {
+      $(this).editable('show');
+    });
+  });

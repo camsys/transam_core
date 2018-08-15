@@ -80,6 +80,17 @@ module TransamTagHelper
     return engine.render.html_safe
   end
 
+  def editable_asset_field_tag(field, label, asset)
+    engine = Haml::Engine.new("
+.form-group
+  %label.control-label
+    #{label}
+  .display-value
+    %a.editable-field{href:'#', id: '#{field}', data: {name: 'asset[#{field}]', value: '#{asset.send(field)}', url: '#{asset_path(asset)}'}}
+")
+    return engine.render.html_safe
+  end
+    
   # returns html for a panel comprising a subcomponent of a form
   def dialog_tag(dialog_name, options={}, &block)
     # Check to see if there is any content in the block
