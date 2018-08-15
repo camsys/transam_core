@@ -22,16 +22,16 @@ class AssetsController < AssetAwareController
   def filter
 
     query = params[:query]
-    orgs = params[:organization_id] ? [params[:organization_id].to_i] : @organization_list
+    orgs = params[:search_params][:organization_id] ? [params[:search_params][:organization_id].to_i] : @organization_list
     query_str = "%" + query + "%"
     Rails.logger.debug query_str
 
     matches = []
-    assets = TransamAsset.where("organization_id in (?) AND (asset_tag LIKE ? OR object_key LIKE ? OR description LIKE ?)", orgs, query_str, query_str, query_str)
-    if params[:allow_parent].to_i == 1 # only allow assets of types that allow parents and dont already have parents
-      # temporarily comment out
-      #assets = assets.where(asset_type: AssetType.where(allow_parent: true), parent_id: nil)
-    end
+    assets = Rails.application.config.asset_base_class_name.constantize
+                 .where(organization_id: @organization_list)
+                 .where(params[:search_params])
+                 .where("(asset_tag LIKE ? OR object_key LIKE ? OR description LIKE ?)", query_str, query_str, query_str)
+
     assets.each do |asset|
       matches << {
           "id" => asset.object_key,
@@ -379,7 +379,7 @@ class AssetsController < AssetAwareController
 
   def create
 
-    asset_class = Rails.application.config.asset_seed_class_name.constantize.find_by(id: params[:asset_base_class_id])
+    asset_class = Rails.application.config.asset_seed_class_name.constantize.find_by(id: params[:asset][Rails.application.config.asset_seed_class_name.foreign_key.to_sym])
     if asset_class.nil?
       notify_user(:alert, "Asset class '#{params[:asset_base_class_id]}' not found. Can't create new asset!")
       redirect_to(root_url)

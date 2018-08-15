@@ -46,7 +46,7 @@
         %i.fa.fa-usd
       = f.input_field :total_cost, :class => 'form-control', :required => true, :value => 0, :label => false
   = f.input :extended_useful_life_months
-  = f.input :extended_useful_life_miles if @asset.type_of? :rolling_stock
+  = f.input :extended_useful_life_miles if @asset.class.to_s.include? 'Vehicle'
 
   - SystemConfig.transam_module_names.each do |mod|
     - view_component = "#{mod}_rehabilitation_update_event_form"

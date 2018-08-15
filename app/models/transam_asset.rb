@@ -36,6 +36,7 @@ class TransamAsset < TransamAssetRecord
   # Each asset has zero or more asset events. These are all events regardless of
   # event type. Events are deleted when the asset is deleted
   has_many   :asset_events, :dependent => :destroy, :foreign_key => :transam_asset_id
+  accepts_nested_attributes_for :asset_events, :reject_if => :all_blank, :allow_destroy => true
 
   has_many :serial_numbers, as: :identifiable, inverse_of: :identifiable, dependent: :destroy
   accepts_nested_attributes_for :serial_numbers
@@ -136,7 +137,11 @@ class TransamAsset < TransamAssetRecord
       :other_lienholder,
       :parent_id,
       :quantity,
-      :quantity_unit
+      :quantity_unit,
+      {condition_updates_attributes: ConditionUpdateEvent.allowable_params},
+      {service_status_updates_attributes: ServiceStatusUpdatEvent.allowable_params},
+      {location_updates_attributes: LocationUpdatEvent.allowable_params},
+      {rehabilitation_updates_attributes: RehabilitationUpdateEvent.allowable_params}
   ]
 
   CLEANSABLE_FIELDS = [
@@ -155,10 +160,11 @@ class TransamAsset < TransamAssetRecord
 
   # Factory method to return a strongly typed subclass of a new asset
   # based on the asset_base_class_name
-  def self.new_asset(asset_base_class_name, params={})
+  def self.new_asset(asset_seed_class_name, params={})
 
-    asset_class_name = asset_base_class_name.try(:class_name, params) || asset_base_class_name.class_name
+    asset_class_name = asset_seed_class_name.try(:class_name, params) || asset_seed_class_name.class_name
     asset = asset_class_name.constantize.new(params.slice(asset_class_name.constantize.new.allowable_params))
+    asset.send("#{asset_seed_class_name.class.to_s.foreign_key}=",asset_seed_class_name.id)
     return asset
 
   end
