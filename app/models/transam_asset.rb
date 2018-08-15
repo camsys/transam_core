@@ -188,7 +188,9 @@ class TransamAsset < TransamAssetRecord
   # mirror method on Asset to get typed version
   def self.get_typed_asset(asset)
     if asset
-      asset.very_specific
+      asset = asset.very_specific
+
+      asset.becomes(asset.fta_asset_class.class_name.constantize)
     end
   end
 
