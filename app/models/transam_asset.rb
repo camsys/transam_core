@@ -429,6 +429,28 @@ class TransamAsset < TransamAssetRecord
     end
   end
 
+  def parent_name
+    parent.to_s unless parent.nil?
+  end
+
+  def parent_key=(object_key)
+    self.parent = TransamAsset.find_by_object_key(object_key)
+  end
+  def parent_key
+    parent.object_key if parent
+  end
+
+  def location_name
+    location.to_s unless location.nil?
+  end
+
+  def location_key=(object_key)
+    self.location = TransamAsset.find_by_object_key(object_key)
+  end
+  def location_key
+    location.object_key if location
+  end
+
   def cost
     purchase_cost
   end
