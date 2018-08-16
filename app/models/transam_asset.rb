@@ -139,8 +139,8 @@ class TransamAsset < TransamAssetRecord
       :quantity,
       :quantity_unit,
       {condition_updates_attributes: ConditionUpdateEvent.allowable_params},
-      {service_status_updates_attributes: ServiceStatusUpdatEvent.allowable_params},
-      {location_updates_attributes: LocationUpdatEvent.allowable_params},
+      {service_status_updates_attributes: ServiceStatusUpdateEvent.allowable_params},
+      {location_updates_attributes: LocationUpdateEvent.allowable_params},
       {rehabilitation_updates_attributes: RehabilitationUpdateEvent.allowable_params}
   ]
 
