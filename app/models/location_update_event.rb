@@ -88,7 +88,7 @@ class LocationUpdateEvent < AssetEvent
   # Set resonable defaults for a new condition update event
   def set_defaults
     super
-    self.parent ||= transam_asset.parent
+    self.parent ||= transam_asset.try(:parent)
     self.asset_event_type ||= AssetEventType.find_by_class_name(self.name)
   end
 
