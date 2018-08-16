@@ -80,17 +80,33 @@ module TransamTagHelper
     return engine.render.html_safe
   end
 
-  def editable_asset_field_tag(field, label, asset)
+  def editable_asset_field_tag(field, label, asset, required=false)
+    engine = Haml::Engine.new("
+.form-group
+  %label.control-label{class: '#{required ? 'required' : ''}'}
+    #{label}
+  .display-value
+    %a.editable-field{href:'#', id: '#{field}', class: '#{required ? 'required' : ''}', data: {name: 'asset[#{field}]', value: '#{asset.send(field)}', type: 'text', placeholder: '#{required ? 'Required' : ''}', url: '#{asset_path(asset)}'}}
+")
+    return engine.render.html_safe
+  end
+    
+  def editable_asset_association_tag(field, label, asset, collection=nil)
+    value = collection ? asset.send(field) : asset.send("#{field.to_s}_id")
+    unless collection
+      klass = field.to_s.classify.constantize
+      collection = klass.all.map{|f| "{value: #{f.id}, text: '#{f.name}'}"}.join(',')
+    end
     engine = Haml::Engine.new("
 .form-group
   %label.control-label
     #{label}
   .display-value
-    %a.editable-field{href:'#', id: '#{field}', data: {name: 'asset[#{field}]', value: '#{asset.send(field)}', url: '#{asset_path(asset)}'}}
+    %a.editable-field{href:'#', id: '#{field}', data: {name: 'asset[#{field}]', value: '#{value}', type: 'select', url: '#{asset_path(asset)}', source: \"[#{collection}]\"}}
 ")
     return engine.render.html_safe
   end
-    
+
   # returns html for a panel comprising a subcomponent of a form
   def dialog_tag(dialog_name, options={}, &block)
     # Check to see if there is any content in the block

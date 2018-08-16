@@ -4,6 +4,14 @@
     $.fn.editable.defaults.mode = 'inline';
     $.fn.editable.defaults.clear = false;
 
+
+    $('.editable-field.required').editable({
+        validate: function(value) {
+           console.log('validate');
+           console.log(value);
+           if($.trim(value) == '') return 'This field is required';
+        }
+    });
     $('.editable-field').editable({});
     $('.not-editable-field').editable('disable');
 
