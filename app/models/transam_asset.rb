@@ -90,10 +90,13 @@ class TransamAsset < TransamAssetRecord
   validates :purchase_cost, presence: true
   validates :purchase_cost, numericality: { greater_than_or_equal_to: 0 }
   validates :purchased_new, inclusion: { in: [ true, false ] }
+  validates :purchase_date, presence: true #temporarily force in case used in other places but eventually will not be required
   validates :in_service_date, presence: true
   validates :manufacturer_id, inclusion: {in: Manufacturer.where(code: 'ZZZ').pluck(:id)}, if: Proc.new{|a| a.other_manufacturer.present?}
   validates :manufacturer_model_id, inclusion: {in: ManufacturerModel.where(name: 'Other').pluck(:id)}, if: Proc.new{|a| a.other_manufacturer_model.present?}
   validates :manufacture_year, presence: true
+
+  validate        :object_key_is_not_asset_tag
 
   #validates :quantity, numericality: { greater_than: 0 }
   #validates :quantity, presence: true
@@ -617,6 +620,14 @@ class TransamAsset < TransamAssetRecord
       Rails.logger.error e.message
       Rails.logger.error e.backtrace
       raise RuntimeError.new "#{class_name} calculation failed for asset #{asset.object_key} and policy #{policy.name}"
+    end
+  end
+
+  def object_key_is_not_asset_tag
+    unless self.asset_tag.nil? || self.object_key.nil?
+      if self.asset_tag == self.object_key
+        @errors.add(:asset_tag, "should not be the same as the asset id")
+      end
     end
   end
 end
