@@ -5,7 +5,7 @@ class AssetsController < AssetAwareController
   # Set the view variabless form the params @asset_type, @asset_subtype, @search_text, @spatial_filter, @view
   before_action :set_view_vars,     :only => [:index, :map]
   # set the @asset variable before any actions are invoked
-  before_action :get_asset,         :only => [:tag, :show, :edit, :copy, :update, :destroy, :summary_info, :add_to_group, :remove_from_group, :popup, :get_dependents, :add_dependents]
+  before_action :get_asset,         :only => [:tag, :show, :edit, :copy, :update, :destroy, :summary_info, :add_to_group, :remove_from_group, :popup, :get_dependents, :add_dependents, :get_dependent_subform]
   before_action :reformat_date_fields,  :only => [:create, :update]
   # Update the vendor_id param if the user is using the vendor_name parameter
   before_action :update_vendor_param,  :only => [:create, :update]
@@ -308,9 +308,11 @@ class AssetsController < AssetAwareController
         notify_user(:notice, "Asset #{@asset.name} was successfully updated.")
 
         format.html { redirect_to inventory_url(@asset) }
+        format.js { notify_user(:notice, "#{@asset} successfully updated.") }
         format.json { head :no_content }
       else
         format.html { render :action => "edit" }
+        format.js { render :action => "edit" }
         format.json { render :json => @asset.errors, :status => :unprocessable_entity }
       end
     end
@@ -335,6 +337,19 @@ class AssetsController < AssetAwareController
     end
 
     redirect_back(fallback_location: root_path)
+  end
+
+  def get_dependent_subform
+
+    @dependent = @asset.dependents.find_by(params[:dependent_object_key])
+
+    @dependent_subform_target = params[:dependent_subform_target]
+    @dependent_subform_view = params[:dependent_subform_view]
+
+    respond_to do |format|
+      format.js
+    end
+
   end
 
   def new_asset
@@ -387,7 +402,7 @@ class AssetsController < AssetAwareController
     end
 
     # Use the asset class to create an asset of the correct type
-    @asset = Rails.application.config.asset_base_class_name.constantize.new_asset(asset_class, new_form_params(asset_class.class_name))
+    @asset = Rails.application.config.asset_base_class_name.constantize.new_asset(asset_class, new_form_params(asset_class.class_name).except(:dependents_attributes))
 
     # If the asset does not have an org already defined, set to the default for
     # the user

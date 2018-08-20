@@ -60,6 +60,7 @@ Rails.application.routes.draw do
         get 'popup'
         get 'get_dependents'
         patch 'add_dependents'
+        get 'get_dependent_subform'
       end
 
     resources :asset_events do 
