@@ -8,7 +8,8 @@
 class TemplateBuilder
 
   attr_accessor :organization
-  attr_accessor :asset_types
+  attr_accessor :search_parameter_field
+  attr_accessor :search_parameter_value
   attr_accessor :assets
   attr_accessor :organization_list
 

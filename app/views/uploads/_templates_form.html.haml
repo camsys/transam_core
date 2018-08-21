@@ -11,7 +11,7 @@
       - else
         = f.input :organization_id, :required => true, :collection => Organization.where(id: Policy.where('parent_id IS NOT NULL AND organization_id IN (?)', @organization_list).pluck(:organization_id)), :label_method => 'coded_name'
     .col-sm-6
-      = f.input :asset_type_id, :required => true, :collection => @asset_types.map{|type| [type[:name], type[:id]]}, :label => "Asset Type", :prompt => 'Set the asset type...'
+      = f.input :search_parameter_value, :required => true, :collection => Rails.application.config.asset_seed_class_name.constantize.active, :label => Rails.application.config.asset_seed_class_name.titleize, :prompt => "Select #{Rails.application.config.asset_seed_class_name.titleize.downcase}..."
     .col-sm-6
       = f.button :submit, 'Create template', :class => 'btn btn-primary'
 
