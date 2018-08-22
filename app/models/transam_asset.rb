@@ -24,7 +24,8 @@ class TransamAsset < TransamAssetRecord
   has_and_belongs_to_many     :asset_groups, join_table: :asset_groups_assets, foreign_key: :transam_asset_id
 
   # Each asset can have 0 or more dependents (parent-child relationships)
-  has_many    :dependents,  :class_name => 'TransamAsset', :foreign_key => :parent_id, :dependent => :nullify
+  has_many    :dependents,  :class_name => 'TransamAsset', :foreign_key => :parent_id, :dependent => :nullify, :inverse_of => :parent
+  accepts_nested_attributes_for :dependents, :reject_if => :all_blank, :allow_destroy => true
 
   # Facilities can have many vehicles stored on their premises
   has_many    :occupants,   :class_name => 'TransamAsset', :foreign_key => :location_id, :dependent => :nullify
@@ -109,7 +110,6 @@ class TransamAsset < TransamAssetRecord
   # Returns a list of asset that in early replacement
   scope :early_replacement, -> { where('policy_replacement_year is not NULL and scheduled_replacement_year is not NULL and scheduled_replacement_year < policy_replacement_year') }
 
-
   FORM_PARAMS = [
       :organization_id,
       :asset_subtype_id,
@@ -188,7 +188,9 @@ class TransamAsset < TransamAssetRecord
   # mirror method on Asset to get typed version
   def self.get_typed_asset(asset)
     if asset
-      asset.very_specific
+      asset = asset.very_specific
+
+      asset.becomes(asset.fta_asset_class.class_name.constantize)
     end
   end
 
@@ -203,6 +205,28 @@ class TransamAsset < TransamAssetRecord
   end
 
   def allowable_params
+    arr = if self.very_specific.class.child_asset_class?
+      typed_asset_params
+    else
+      dependent_params = []
+      TransamAssetRecord.subclasses.each do |sub|
+        dependent_params << sub.new.typed_asset_params if sub.child_asset_class?
+      end
+
+      typed_asset_params + [:dependents_attributes =>dependent_params.flatten]
+    end
+
+    SystemConfigExtension.where(class_name: 'TransamAsset').pluck(:extension_name).each do |ext_name|
+      if ext_name.constantize::ClassMethods.try(:allowable_params)
+        arr << ext_name.constantize::ClassMethods.allowable_params
+      end
+    end
+
+    return arr.flatten
+
+  end
+
+  def typed_asset_params
     arr = FORM_PARAMS.dup
     a = self.specific
 
@@ -212,6 +236,15 @@ class TransamAsset < TransamAssetRecord
     end
 
     arr << a.class::FORM_PARAMS.dup
+
+    SystemConfigExtension.where(class_name: 'TransamAsset').pluck(:extension_name).each do |ext_name|
+      if ext_name.constantize.respond_to? :mixin_params
+        puts ext_name.constantize.mixin_params
+        arr << ext_name.constantize.mixin_params
+
+      end
+
+    end
 
     return arr.flatten
   end
@@ -396,7 +429,7 @@ class TransamAsset < TransamAssetRecord
 
   # returns the list of events associated with this asset ordered by date, newest first
   def history
-    AssetEvent.unscoped.where('asset_id = ?', id).order('event_date DESC, created_at DESC')
+    AssetEvent.unscoped.where('transam_asset_id = ?', id).order('event_date DESC, created_at DESC')
   end
 
   # returns the number of years since the asset was placed in service.

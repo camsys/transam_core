@@ -4,6 +4,15 @@
 class TransamAssetRecord < ActiveRecord::Base
   self.abstract_class = true
 
+  class << self
+    attr_accessor :child_asset_class
+  end
+
+  # Returns whether this class is an abstract class or not.
+  def self.child_asset_class?
+    defined?(@child_asset_class) && @child_asset_class == true
+  end
+
   # Returns true if the asset is of the specified class or has the specified class as
   # and ancestor (superclass).
   #

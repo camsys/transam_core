@@ -53,6 +53,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'rmagick'
 
   s.add_dependency 'simple_form'
+  s.add_dependency 'country_select'
   s.add_dependency 'font-awesome-sass', '4.7.0' # lock to 4.7.0 set of font awesome icons
   s.add_dependency "wicked"
   s.add_dependency 'cocoon'
