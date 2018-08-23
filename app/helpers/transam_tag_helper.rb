@@ -112,8 +112,8 @@ module TransamTagHelper
     unless collection
       klass = asset.association(field).reflection.class_name.constantize
       collection = klass.column_names.include?('name') ?
-            klass.pluck(:id, :name) :
-            klass.all.collect{|a| [a.id, a.to_s]}
+            klass.active.pluck(:id, :name) :
+            klass.active.collect{|a| [a.id, a.to_s]}
                                                  
     end
     # The source will wind up being parsed twice by X-editable, so embedded apostrophes
