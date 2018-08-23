@@ -780,8 +780,10 @@ class AssetsController < AssetAwareController
   end
 
   def reformat_date(date_str)
-    form_date = Date.strptime(date_str, '%m/%d/%Y')
-    return form_date.strftime('%Y-%m-%d')
+    # See if it's already in iso8601 format first
+    return date_str if date_str.match(/\A\d{4}-\d{2}-\d{2}\z/)
+
+    Date.strptime(date_str, '%m/%d/%Y').strftime('%Y-%m-%d')
   end
 
   def reformat_date_fields
