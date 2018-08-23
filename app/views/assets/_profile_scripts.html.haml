@@ -4,6 +4,13 @@
     $.fn.editable.defaults.mode = 'inline';
     $.fn.editable.defaults.clear = false;
 
+    $('.editable-field.combodate').editable({
+        template: 'MMM D YYYY',    
+        viewformat: 'MM/DD/YYYY',
+        combodate: {
+          maxYear: (new Date()).getFullYear()
+        }
+    });
 
     $('.editable-field.required').editable({
         validate: function(value) {
