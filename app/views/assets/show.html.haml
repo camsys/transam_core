@@ -1,10 +1,16 @@
+:css
+  .panel-body-fixed {
+    height: 300px;
+    overflow: scroll;
+  }
+
 .row
   .col-sm-12
     .panel.panel-default
       .panel-heading
         %h3.panel-title
           Highlights
-      .panel-body
+      .panel-body.panel-body-fixed
         = render 'details'        
 .row
   .col-sm-12.col-md-3
