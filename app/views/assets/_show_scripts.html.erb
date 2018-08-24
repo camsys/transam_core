@@ -1,0 +1,67 @@
+<script type="text/javascript">
+
+  var user_detail_tab_key = 'assets_detail_tab_key';
+  var user_profile_tab_key = 'assets_profile_tab_key';
+  var tag_url = '<%= tag_inventory_path(@asset) + ".js" %>';
+
+  $(document).ready(function() {
+    console.log('core_ready');
+
+    // Make the tabs responsive if the viewport gets smaller than the displayed tabs
+    $('.responsive-tabs').tabdrop({
+      text: '<i class="fa fa-align-justify"></i>'
+    });
+
+    // Manage the tabs
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+      console.log('core_handler');
+      // save the latest tab
+      var this_tab = $(this).attr('href');
+      if ($(this).attr('data-panel') == 'profile') {
+        transam.set_ui_key_value(user_profile_tab_key, this_tab);
+      } else {
+	transam.set_ui_key_value(user_detail_tab_key, this_tab);
+      }
+    });
+
+  });
+
+  // Register a click-handler for the taggable class
+  $('.taggable').on('click', function() {
+    var elem = $(this);
+    var order = elem.data('id');
+    // Toggle the class
+    if (elem.hasClass('fa-star-o')) {
+      // Tag this
+      elem.removeClass('fa-star-o');
+      elem.addClass('fa-star');
+    } else {
+      // Untag this
+      elem.removeClass('fa-star');
+      elem.addClass('fa-star-o');
+    }
+    // Send an ajax request to make the change
+    $.ajax({
+      url: tag_url,
+      type: 'get',
+      success: function(result) {
+      },
+      error: function (xhr, ajaxOptions, thrownError) {
+      }
+    });
+  });
+
+  $(function() {
+    // Find the previously selected tabs
+    [user_detail_tab_key, user_profile_tab_key].forEach(function(key) {
+      var selected_tab = $('a[href="'+transam.get_ui_key_value(key)+'"]');
+      // Default to first tab if no tab is stored or stored tab isn't available to current user
+      if (selected_tab.length) {
+	selected_tab.tab('show');
+      } else {
+	$('a[data-toggle="tab"]:first').tab('show');
+      }
+    });
+  });
+
+</script>

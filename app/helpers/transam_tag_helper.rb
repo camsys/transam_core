@@ -80,6 +80,57 @@ module TransamTagHelper
     return engine.render.html_safe
   end
 
+  def editable_asset_field_tag(asset, field, label=nil, required: true, type: 'text', min: nil, max: nil)
+    if type == 'boolean'
+      return editable_asset_association_tag(asset, field, label,
+                                            [[1, 'Yes'],[0, 'No']],
+                                            current_value: @asset.send(field) ? 1 : 0)
+    end
+    extras = ''
+    extras += ", min: #{min}" if min
+    extras += ", max: #{max}" if max
+    classes = ' '
+    classes += 'require ' if required
+    # classes += 'datepicker ' if type == 'date'
+    if type == 'date'
+      type = 'combodate'
+      classes += 'combodate'
+      # extras += ", format: 'MM/DD/YYYY', viewformat: 'MM/DD/YYYY'"
+    end
+    engine = Haml::Engine.new("
+.form-group
+  %label.control-label{class: '#{classes}'}
+    #{label || field.to_s.titleize}
+  .display-value
+    %a.editable-field{href:'#', id: '#{field}', class: '#{classes}', data: {name: 'asset[#{field}]', value: '#{escape_javascript(asset.send(field).to_s)}', type: '#{type}', placeholder: '#{required ? 'Required' : ''}', url: '#{asset_path(asset)}'#{extras}}}
+")
+    return engine.render.html_safe
+  end
+    
+  def editable_asset_association_tag(asset, field, label=nil, collection=nil, current_method: nil, include_blank: false, current_value: nil, type: 'select')
+    value = current_value || (collection ? asset.send(current_method || field).to_s : asset.send(current_method || "#{field.to_s}_id").to_s)
+    unless collection
+      klass = asset.association(field).reflection.class_name.constantize
+      collection = klass.column_names.include?('name') ?
+            klass.active.pluck(:id, :name) :
+            klass.active.collect{|a| [a.id, a.to_s]}
+                                                 
+    end
+    # The source will wind up being parsed twice by X-editable, so embedded apostrophes
+    # have to be doubly escaped.
+    source = include_blank ? "{value: '', text: ''}," : ''
+    source += collection.map{|pair| "{value: '#{pair[0]}', text: '#{pair[1].gsub("'"){"\\\\'"}}'}"}.join(',')
+    
+    engine = Haml::Engine.new("
+.form-group
+  %label.control-label
+    #{label || field.to_s.titleize}
+  .display-value
+    %a.editable-field{href:'#', id: '#{field}', data: {name: 'asset[#{field}]', value: '#{value}', type: '#{type}', url: '#{asset_path(asset)}', source: \"[#{source}]\"}}
+")
+    return engine.render.html_safe
+  end
+
   # returns html for a panel comprising a subcomponent of a form
   def dialog_tag(dialog_name, options={}, &block)
     # Check to see if there is any content in the block

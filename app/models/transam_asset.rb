@@ -21,6 +21,9 @@ class TransamAsset < TransamAssetRecord
   belongs_to  :title_ownership_organization, :class_name => 'Organization'
   belongs_to  :lienholder, :class_name => 'Organization'
 
+  # an upload can be added by bulk updates - new inventory
+  belongs_to :upload
+
   has_and_belongs_to_many     :asset_groups, join_table: :asset_groups_assets, foreign_key: :transam_asset_id
 
   # Each asset can have 0 or more dependents (parent-child relationships)
@@ -36,6 +39,7 @@ class TransamAsset < TransamAssetRecord
   # Each asset has zero or more asset events. These are all events regardless of
   # event type. Events are deleted when the asset is deleted
   has_many   :asset_events, :dependent => :destroy, :foreign_key => :transam_asset_id
+  accepts_nested_attributes_for :asset_events, :reject_if => :all_blank, :allow_destroy => true
 
   has_many :serial_numbers, as: :identifiable, inverse_of: :identifiable, dependent: :destroy
   accepts_nested_attributes_for :serial_numbers
@@ -89,10 +93,13 @@ class TransamAsset < TransamAssetRecord
   validates :purchase_cost, presence: true
   validates :purchase_cost, numericality: { greater_than_or_equal_to: 0 }
   validates :purchased_new, inclusion: { in: [ true, false ] }
+  validates :purchase_date, presence: true #temporarily force in case used in other places but eventually will not be required
   validates :in_service_date, presence: true
   validates :manufacturer_id, inclusion: {in: Manufacturer.where(code: 'ZZZ').pluck(:id)}, if: Proc.new{|a| a.other_manufacturer.present?}
   validates :manufacturer_model_id, inclusion: {in: ManufacturerModel.where(name: 'Other').pluck(:id)}, if: Proc.new{|a| a.other_manufacturer_model.present?}
   validates :manufacture_year, presence: true
+
+  validate        :object_key_is_not_asset_tag
 
   #validates :quantity, numericality: { greater_than: 0 }
   #validates :quantity, presence: true
@@ -136,7 +143,11 @@ class TransamAsset < TransamAssetRecord
       :other_lienholder,
       :parent_id,
       :quantity,
-      :quantity_unit
+      :quantity_unit,
+      {condition_updates_attributes: ConditionUpdateEvent.allowable_params},
+      {service_status_updates_attributes: ServiceStatusUpdateEvent.allowable_params},
+      {location_updates_attributes: LocationUpdateEvent.allowable_params},
+      {rehabilitation_updates_attributes: RehabilitationUpdateEvent.allowable_params}
   ]
 
   CLEANSABLE_FIELDS = [
@@ -155,10 +166,11 @@ class TransamAsset < TransamAssetRecord
 
   # Factory method to return a strongly typed subclass of a new asset
   # based on the asset_base_class_name
-  def self.new_asset(asset_base_class_name, params={})
+  def self.new_asset(asset_seed_class_name, params={})
 
-    asset_class_name = asset_base_class_name.try(:class_name, params) || asset_base_class_name.class_name
+    asset_class_name = asset_seed_class_name.try(:class_name, params) || asset_seed_class_name.class_name
     asset = asset_class_name.constantize.new(params.slice(asset_class_name.constantize.new.allowable_params))
+    asset.send("#{asset_seed_class_name.class.to_s.foreign_key}=",asset_seed_class_name.id)
     return asset
 
   end
@@ -423,6 +435,28 @@ class TransamAsset < TransamAssetRecord
     end
   end
 
+  def parent_name
+    parent.to_s unless parent.nil?
+  end
+
+  def parent_key=(object_key)
+    self.parent = TransamAsset.find_by_object_key(object_key)
+  end
+  def parent_key
+    parent.object_key if parent
+  end
+
+  def location_name
+    location.to_s unless location.nil?
+  end
+
+  def location_key=(object_key)
+    self.location = TransamAsset.find_by_object_key(object_key)
+  end
+  def location_key
+    location.object_key if location
+  end
+
   def cost
     purchase_cost
   end
@@ -589,6 +623,14 @@ class TransamAsset < TransamAssetRecord
       Rails.logger.error e.message
       Rails.logger.error e.backtrace
       raise RuntimeError.new "#{class_name} calculation failed for asset #{asset.object_key} and policy #{policy.name}"
+    end
+  end
+
+  def object_key_is_not_asset_tag
+    unless self.asset_tag.nil? || self.object_key.nil?
+      if self.asset_tag == self.object_key
+        @errors.add(:asset_tag, "should not be the same as the asset id")
+      end
     end
   end
 end

@@ -5,7 +5,7 @@ class AssetsController < AssetAwareController
   # Set the view variabless form the params @asset_type, @asset_subtype, @search_text, @spatial_filter, @view
   before_action :set_view_vars,     :only => [:index, :map]
   # set the @asset variable before any actions are invoked
-  before_action :get_asset,         :only => [:tag, :show, :edit, :copy, :update, :destroy, :summary_info, :add_to_group, :remove_from_group, :popup, :get_dependents, :add_dependents]
+  before_action :get_asset,         :only => [:tag, :show, :edit, :copy, :update, :destroy, :summary_info, :add_to_group, :remove_from_group, :popup, :get_dependents, :add_dependents, :get_dependent_subform]
   before_action :reformat_date_fields,  :only => [:create, :update]
   # Update the vendor_id param if the user is using the vendor_name parameter
   before_action :update_vendor_param,  :only => [:create, :update]
@@ -22,16 +22,16 @@ class AssetsController < AssetAwareController
   def filter
 
     query = params[:query]
-    orgs = params[:organization_id] ? [params[:organization_id].to_i] : @organization_list
+    orgs = params[:search_params][:organization_id] ? [params[:search_params][:organization_id].to_i] : @organization_list
     query_str = "%" + query + "%"
     Rails.logger.debug query_str
 
     matches = []
-    assets = TransamAsset.where("organization_id in (?) AND (asset_tag LIKE ? OR object_key LIKE ? OR description LIKE ?)", orgs, query_str, query_str, query_str)
-    if params[:allow_parent].to_i == 1 # only allow assets of types that allow parents and dont already have parents
-      # temporarily comment out
-      #assets = assets.where(asset_type: AssetType.where(allow_parent: true), parent_id: nil)
-    end
+    assets = Rails.application.config.asset_base_class_name.constantize
+                 .where(organization_id: @organization_list)
+                 .where(params[:search_params])
+                 .where("(asset_tag LIKE ? OR object_key LIKE ? OR description LIKE ?)", query_str, query_str, query_str)
+
     assets.each do |asset|
       matches << {
           "id" => asset.object_key,
@@ -308,9 +308,11 @@ class AssetsController < AssetAwareController
         notify_user(:notice, "Asset #{@asset.name} was successfully updated.")
 
         format.html { redirect_to inventory_url(@asset) }
+        format.js { notify_user(:notice, "#{@asset} successfully updated.") }
         format.json { head :no_content }
       else
         format.html { render :action => "edit" }
+        format.js { render :action => "edit" }
         format.json { render :json => @asset.errors, :status => :unprocessable_entity }
       end
     end
@@ -335,6 +337,19 @@ class AssetsController < AssetAwareController
     end
 
     redirect_back(fallback_location: root_path)
+  end
+
+  def get_dependent_subform
+
+    @dependent = @asset.dependents.find_by(params[:dependent_object_key])
+
+    @dependent_subform_target = params[:dependent_subform_target]
+    @dependent_subform_view = params[:dependent_subform_view]
+
+    respond_to do |format|
+      format.js
+    end
+
   end
 
   def new_asset
@@ -379,7 +394,7 @@ class AssetsController < AssetAwareController
 
   def create
 
-    asset_class = Rails.application.config.asset_seed_class_name.constantize.find_by(id: params[:asset_base_class_id])
+    asset_class = Rails.application.config.asset_seed_class_name.constantize.find_by(id: params[:asset][Rails.application.config.asset_seed_class_name.foreign_key.to_sym])
     if asset_class.nil?
       notify_user(:alert, "Asset class '#{params[:asset_base_class_id]}' not found. Can't create new asset!")
       redirect_to(root_url)
@@ -387,7 +402,7 @@ class AssetsController < AssetAwareController
     end
 
     # Use the asset class to create an asset of the correct type
-    @asset = Rails.application.config.asset_base_class_name.constantize.new_asset(asset_class, new_form_params(asset_class.class_name))
+    @asset = Rails.application.config.asset_base_class_name.constantize.new_asset(asset_class, new_form_params(asset_class.class_name).except(:dependents_attributes))
 
     # If the asset does not have an org already defined, set to the default for
     # the user
@@ -765,8 +780,10 @@ class AssetsController < AssetAwareController
   end
 
   def reformat_date(date_str)
-    form_date = Date.strptime(date_str, '%m/%d/%Y')
-    return form_date.strftime('%Y-%m-%d')
+    # See if it's already in iso8601 format first
+    return date_str if date_str.match(/\A\d{4}-\d{2}-\d{2}\z/)
+
+    Date.strptime(date_str, '%m/%d/%Y').strftime('%Y-%m-%d')
   end
 
   def reformat_date_fields

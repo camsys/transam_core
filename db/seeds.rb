@@ -51,6 +51,10 @@ service_status_types = [
   {:active => 0, :name => 'Disposed',         :code => 'D', :description => 'Asset has been permanently disposed.'}
 ]
 
+rule_sets = [
+    {name: 'Asset Replacement/Rehabilitation Policy', class_name: 'Policy', rule_set_aware: false, active: true}
+]
+
 cost_calculation_types = [
   {:active => 1, :name => 'Replacement Cost',             :class_name => "ReplacementCostCalculator",             :description => 'Calculate the replacement cost using the policy schedule only.'},
   {:active => 1, :name => 'Replacement Cost + Interest',  :class_name => "ReplacementCostPlusInterestCalculator", :description => 'Calculate the replacement cost using the policy schedule plus interest accrued between policy year and replacement year.'},
@@ -194,7 +198,7 @@ system_config_extensions = [
 ]
 
 
-lookup_tables = %w{asset_event_types condition_types disposition_types cost_calculation_types license_types manufacturer_models priority_types
+lookup_tables = %w{asset_event_types condition_types disposition_types rule_sets cost_calculation_types license_types manufacturer_models priority_types
   file_content_types file_status_types report_types service_status_types
   service_life_calculation_types condition_estimation_types condition_rollup_calculation_types
   issue_status_types issue_types web_browser_types replacement_reason_types notice_types frequency_types search_types activities manufacturers system_config_extensions
