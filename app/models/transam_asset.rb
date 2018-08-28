@@ -207,6 +207,8 @@ class TransamAsset < TransamAssetRecord
         asset = asset.becomes(asset.fta_asset_class.class_name.constantize)
         asset.reload
       end
+
+      asset
     end
   end
 
