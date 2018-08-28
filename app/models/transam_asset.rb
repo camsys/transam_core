@@ -8,8 +8,9 @@ class TransamAsset < TransamAssetRecord
   # Before the asset is updated we may need to update things like estimated
   # replacement cost if they updated other things
   # updates the calculated values of an asset
-  after_save      :update_asset_state
   after_save      :check_policy_rule
+  after_save      :update_asset_state
+
 
 
   belongs_to  :organization
@@ -169,7 +170,7 @@ class TransamAsset < TransamAssetRecord
   def self.new_asset(asset_seed_class_name, params={})
 
     asset_class_name = asset_seed_class_name.try(:class_name, params) || asset_seed_class_name.class_name
-    asset = asset_class_name.constantize.new(params.slice(asset_class_name.constantize.new.allowable_params))
+    asset = asset_class_name.constantize.new
     asset.send("#{asset_seed_class_name.class.to_s.foreign_key}=",asset_seed_class_name.id)
     return asset
 
@@ -202,7 +203,10 @@ class TransamAsset < TransamAssetRecord
     if asset
       asset = asset.very_specific
 
-      asset.becomes(asset.fta_asset_class.class_name.constantize)
+      if asset.class.to_s != asset.fta_asset_class.class_name
+        asset = asset.becomes(asset.fta_asset_class.class_name.constantize)
+        asset.reload
+      end
     end
   end
 
@@ -629,7 +633,7 @@ class TransamAsset < TransamAssetRecord
   def object_key_is_not_asset_tag
     unless self.asset_tag.nil? || self.object_key.nil?
       if self.asset_tag == self.object_key
-        @errors.add(:asset_tag, "should not be the same as the asset id")
+        @errors.add(:asset_tag, "should not be the same as the object key")
       end
     end
   end

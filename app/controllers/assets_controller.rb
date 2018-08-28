@@ -402,7 +402,9 @@ class AssetsController < AssetAwareController
     end
 
     # Use the asset class to create an asset of the correct type
-    @asset = Rails.application.config.asset_base_class_name.constantize.new_asset(asset_class, new_form_params(asset_class.class_name).except(:dependents_attributes))
+    @asset = Rails.application.config.asset_base_class_name.constantize.new_asset(asset_class)
+    @asset.attributes = new_form_params(asset_class.class_name)
+    puts @asset.inspect
 
     # If the asset does not have an org already defined, set to the default for
     # the user
@@ -421,11 +423,6 @@ class AssetsController < AssetAwareController
 
     respond_to do |format|
       if @asset.save
-
-        # Make sure the policy has rules for this asset
-        policy = @asset.policy
-        policy.find_or_create_asset_type_rule @asset.asset_subtype.asset_type
-        policy.find_or_create_asset_subtype_rule @asset.asset_subtype
 
         # If the asset was successfully saved, schedule update the condition and disposition asynchronously
         #Delayed::Job.enqueue AssetUpdateJob.new(@asset.object_key), :priority => 0
@@ -776,6 +773,8 @@ class AssetsController < AssetAwareController
     else
       asset = selected_asset
     end
+
+
     return asset
   end
 
