@@ -80,7 +80,7 @@ module TransamTagHelper
     return engine.render.html_safe
   end
 
-  def editable_asset_field_tag(asset, field, label=nil, required: true, type: 'text', min: nil, max: nil)
+  def editable_asset_field_tag(asset, field, label=nil, required: true, type: 'text', min: nil, max: nil, suffix: '')
     if type == 'boolean'
       return editable_asset_association_tag(asset, field, label,
                                             [[1, 'Yes'],[0, 'No']],
@@ -90,19 +90,22 @@ module TransamTagHelper
     extras += ", min: #{min}" if min
     extras += ", max: #{max}" if max
     classes = ' '
-    classes += 'require ' if required
+    classes += 'required ' if required
     # classes += 'datepicker ' if type == 'date'
     if type == 'date'
       type = 'combodate'
       classes += 'combodate'
       # extras += ", format: 'MM/DD/YYYY', viewformat: 'MM/DD/YYYY'"
     end
+    # Escape for HAML
+    label = label.gsub('%','\%') if label
     engine = Haml::Engine.new("
-.form-group
+##{field}_group.form-group
   %label.control-label{class: '#{classes}'}
     #{label || field.to_s.titleize}
   .display-value
     %a.editable-field{href:'#', id: '#{field}', class: '#{classes}', data: {name: 'asset[#{field}]', value: '#{escape_javascript(asset.send(field).to_s)}', type: '#{type}', placeholder: '#{required ? 'Required' : ''}', url: '#{asset_path(asset)}'#{extras}}}
+    #{suffix}
 ")
     return engine.render.html_safe
   end
