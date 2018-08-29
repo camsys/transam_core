@@ -112,8 +112,9 @@ class TransamAsset < TransamAssetRecord
 
   # Returns a list of assets that have been disposed
   scope :disposed,    -> { where.not(disposition_date: nil) }
+
   # Returns a list of assets that are still operational
-  scope :operational, -> { where('transam_assets.disposition_date IS NULL AND transam_assets.asset_tag != transam_assets.object_key') }
+  scope :operational, -> { where(TransamAsset.arel_table[:asset_tag].not_eq(TransamAsset.arel_table[:object_key])).where(disposition_date: nil) }
 
   # Returns a list of asset that in early replacement
   scope :early_replacement, -> { where('policy_replacement_year is not NULL and scheduled_replacement_year is not NULL and scheduled_replacement_year < policy_replacement_year') }
