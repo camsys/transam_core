@@ -26,7 +26,7 @@ class Uom
   ACRE                = "acre"
 
   # Predefined volumes
-  LITRE               = "litre"
+  LITER               = "liter"
   GALLON              = "gallon"
 
   # Pre-defined distance metrics that can be used to define linear distances
@@ -39,13 +39,24 @@ class Uom
 
   AREA_UNITS      = [SQUARE_FOOT, SQUARE_YARD, SQUARE_METER, SQUARE_MILE, ACRE]
   DISTANCE_UNITS  = [INCH, FEET, YARD, MILE, METER, KILOMETER]
-  VOLUME_UNITS    = [LITRE, GALLON]
+  VOLUME_UNITS    = [LITER, GALLON]
   WEIGHT_UNITS    = [KILOGRAM, POUND, TONNE, SHORT_TON]
   OTHER_UNITS     = [UNIT]
 
+  SI_UNITS        = [SQUARE_METER, METER, KILOMETER, LITER, KILOGRAM, TONNE]
+  USC_UNITS       = [SQUARE_FOOT, SQUARE_YARD, SQUARE_MILE, ACRE, INCH, FEET, YARD, MILE, GALLON, POUND, SHORT_TON]
+  
   # Returns an array of units
   def self.units
     OTHER_UNITS + AREA_UNITS + DISTANCE_UNITS + VOLUME_UNITS + WEIGHT_UNITS
+  end
+
+  def self.si_units
+    OTHER_UNITS + SI_UNITS
+  end
+
+  def self.usc_units
+    OTHER_UNITS + USC_UNITS
   end
 
   # Check to see if a measurement unit is valid

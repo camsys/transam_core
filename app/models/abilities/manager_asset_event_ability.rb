@@ -21,7 +21,7 @@ module Abilities
       end
 
       cannot :create, EarlyDispositionRequestUpdateEvent do |ae|
-        !ae.asset.eligible_for_early_disposition_request?
+        !ae.asset.try(:eligible_for_early_disposition_request?)
       end
 
       # managers can manage asset events if the asset's organization is in their list
@@ -34,7 +34,7 @@ module Abilities
       end
 
       cannot :create, EarlyDispositionRequestUpdateEvent do |ae|
-        !ae.transam_asset.eligible_for_early_disposition_request?
+        !ae.transam_asset.try(:eligible_for_early_disposition_request?)
       end
 
     end

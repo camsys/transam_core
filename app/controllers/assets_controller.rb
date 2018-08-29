@@ -305,7 +305,7 @@ class AssetsController < AssetAwareController
           # schedule an update to the spatial references of the dependent assets
           Delayed::Job.enqueue AssetDependentSpatialReferenceUpdateJob.new(@asset.asset.object_key), :priority => 0
         end
-        notify_user(:notice, "Asset #{@asset.name} was successfully updated.")
+        notify_user(:notice, "Asset #{@asset.to_s} was successfully updated.")
 
         format.html { redirect_to inventory_url(@asset) }
         format.js { notify_user(:notice, "#{@asset} successfully updated.") }

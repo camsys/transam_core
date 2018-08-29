@@ -4,5 +4,7 @@ class SerialNumber < ApplicationRecord
   validates :identifiable, presence: true
   validates :identification, presence: true
 
-
+  def to_s
+    identification
+  end
 end
