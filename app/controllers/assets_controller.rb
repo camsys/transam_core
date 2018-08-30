@@ -401,7 +401,7 @@ class AssetsController < AssetAwareController
     end
 
     # Use the asset class to create an asset of the correct type
-    @asset = Rails.application.config.asset_base_class_name.constantize.new_asset(asset_class)
+    @asset = Rails.application.config.asset_base_class_name.constantize.new_asset(asset_class, params)
     @asset.attributes = new_form_params(asset_class.class_name)
     puts @asset.inspect
 
