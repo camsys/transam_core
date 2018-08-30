@@ -18,7 +18,7 @@ module Abilities
 
 
       cannot :create, EarlyDispositionRequestUpdateEvent do |ae|
-        !ae.asset.eligible_for_early_disposition_request?
+        !ae.asset.try(:eligible_for_early_disposition_request?)
       end
 
       cannot [:approve, :reject, :approve_via_transfer], EarlyDispositionRequestUpdateEvent
@@ -39,7 +39,7 @@ module Abilities
 
 
       cannot :create, EarlyDispositionRequestUpdateEvent do |ae|
-        !ae.transam_asset.eligible_for_early_disposition_request?
+        !ae.transam_asset.try(:eligible_for_early_disposition_request?)
       end
 
     end

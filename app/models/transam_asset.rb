@@ -8,8 +8,9 @@ class TransamAsset < TransamAssetRecord
   # Before the asset is updated we may need to update things like estimated
   # replacement cost if they updated other things
   # updates the calculated values of an asset
-  after_save      :update_asset_state
   after_save      :check_policy_rule
+  after_save      :update_asset_state
+
 
 
   belongs_to  :organization
@@ -39,7 +40,7 @@ class TransamAsset < TransamAssetRecord
   # Each asset has zero or more asset events. These are all events regardless of
   # event type. Events are deleted when the asset is deleted
   has_many   :asset_events, :dependent => :destroy, :foreign_key => :transam_asset_id
-  accepts_nested_attributes_for :asset_events, :reject_if => :all_blank, :allow_destroy => true
+  accepts_nested_attributes_for :asset_events, :reject_if => Proc.new{|ae| !ae.valid? }, :allow_destroy => true
 
   has_many :serial_numbers, as: :identifiable, inverse_of: :identifiable, dependent: :destroy
   accepts_nested_attributes_for :serial_numbers
@@ -111,8 +112,9 @@ class TransamAsset < TransamAssetRecord
 
   # Returns a list of assets that have been disposed
   scope :disposed,    -> { where.not(disposition_date: nil) }
+
   # Returns a list of assets that are still operational
-  scope :operational, -> { where('transam_assets.disposition_date IS NULL AND transam_assets.asset_tag != transam_assets.object_key') }
+  scope :operational, -> { where(TransamAsset.arel_table[:asset_tag].not_eq(TransamAsset.arel_table[:object_key])).where(disposition_date: nil) }
 
   # Returns a list of asset that in early replacement
   scope :early_replacement, -> { where('policy_replacement_year is not NULL and scheduled_replacement_year is not NULL and scheduled_replacement_year < policy_replacement_year') }
@@ -169,7 +171,7 @@ class TransamAsset < TransamAssetRecord
   def self.new_asset(asset_seed_class_name, params={})
 
     asset_class_name = asset_seed_class_name.try(:class_name, params) || asset_seed_class_name.class_name
-    asset = asset_class_name.constantize.new(params.slice(asset_class_name.constantize.new.allowable_params))
+    asset = asset_class_name.constantize.new
     asset.send("#{asset_seed_class_name.class.to_s.foreign_key}=",asset_seed_class_name.id)
     return asset
 
@@ -202,7 +204,12 @@ class TransamAsset < TransamAssetRecord
     if asset
       asset = asset.very_specific
 
-      asset.becomes(asset.fta_asset_class.class_name.constantize)
+      if asset.class.to_s != asset.fta_asset_class.class_name
+        asset = asset.becomes(asset.fta_asset_class.class_name.constantize)
+        asset.reload
+      end
+
+      asset
     end
   end
 
@@ -629,7 +636,7 @@ class TransamAsset < TransamAssetRecord
   def object_key_is_not_asset_tag
     unless self.asset_tag.nil? || self.object_key.nil?
       if self.asset_tag == self.object_key
-        @errors.add(:asset_tag, "should not be the same as the asset id")
+        @errors.add(:asset_tag, "should not be the same as the object key")
       end
     end
   end

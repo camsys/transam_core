@@ -3,6 +3,7 @@
   $(function() {
     $.fn.editable.defaults.mode = 'inline';
     $.fn.editable.defaults.clear = false;
+    $.fn.editable.defaults.savenochange = true;
 
     $('.editable-field.combodate').editable({
         template: 'MMM D YYYY',    
@@ -14,8 +15,6 @@
 
     $('.editable-field.required').editable({
         validate: function(value) {
-           console.log('validate');
-           console.log(value);
            if($.trim(value) == '') return 'This field is required';
         }
     });
@@ -42,5 +41,33 @@
     // if the cell is editable enabled, show up editable input when it gets focus
     $('.editable-field:not(.editable-disabled)').focus(function() {
       $(this).editable('show');
+    });
+
+    $('#pcnt_capital_responsibility_group').each(function() {
+      if ($("input[name='direct_capital_responsibility']:checked").val() == 'no') {
+        $(this).hide();
+      }
+    });
+    
+    $("input[name='direct_capital_responsibility']").on("click", function(value) {
+      var pcnt_ctl = $('#pcnt_capital_responsibility');
+      if ($(this).val() == 'yes') {
+        pcnt_ctl.editable('setValue', 100)
+        pcnt_ctl.editable('option', 'showbuttons', false);
+        pcnt_ctl.editable('option', 'validate', function(value) {
+           if($.trim(value) == '') return 'This field is required';
+        });
+        pcnt_ctl.editable('option', 'onblur', 'submit')
+        $('#pcnt_capital_responsibility_group').show();
+        setTimeout(function() {
+          pcnt_ctl.editable('show');
+        }, 10);
+        setTimeout(function() {
+          pcnt_ctl.editable('option', 'showbuttons', true);
+        }, 10);
+      } else {
+        pcnt_ctl.editable('option', 'validate', null).editable('setValue', '').editable('submit', {ajaxOptions: {type: "put", dataType: "json"}, data: {asset: {pcnt_capital_responsibility: ''}}});
+        $('#pcnt_capital_responsibility_group').hide();
+      }
     });
   });

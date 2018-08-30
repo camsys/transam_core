@@ -22,13 +22,12 @@ class AssetsController < AssetAwareController
   def filter
 
     query = params[:query]
-    orgs = params[:search_params][:organization_id] ? [params[:search_params][:organization_id].to_i] : @organization_list
     query_str = "%" + query + "%"
     Rails.logger.debug query_str
 
     matches = []
     assets = Rails.application.config.asset_base_class_name.constantize
-                 .where(organization_id: @organization_list)
+                 .where(organization_id: current_user.viewable_organization_ids)
                  .where(params[:search_params])
                  .where("(asset_tag LIKE ? OR object_key LIKE ? OR description LIKE ?)", query_str, query_str, query_str)
 
@@ -305,7 +304,7 @@ class AssetsController < AssetAwareController
           # schedule an update to the spatial references of the dependent assets
           Delayed::Job.enqueue AssetDependentSpatialReferenceUpdateJob.new(@asset.asset.object_key), :priority => 0
         end
-        notify_user(:notice, "Asset #{@asset.name} was successfully updated.")
+        notify_user(:notice, "Asset #{@asset.to_s} was successfully updated.")
 
         format.html { redirect_to inventory_url(@asset) }
         format.js { notify_user(:notice, "#{@asset} successfully updated.") }
@@ -402,7 +401,9 @@ class AssetsController < AssetAwareController
     end
 
     # Use the asset class to create an asset of the correct type
-    @asset = Rails.application.config.asset_base_class_name.constantize.new_asset(asset_class, new_form_params(asset_class.class_name).except(:dependents_attributes))
+    @asset = Rails.application.config.asset_base_class_name.constantize.new_asset(asset_class, params)
+    @asset.attributes = new_form_params(asset_class.class_name)
+    puts @asset.inspect
 
     # If the asset does not have an org already defined, set to the default for
     # the user
@@ -420,12 +421,7 @@ class AssetsController < AssetAwareController
     # add_breadcrumb "New", new_inventory_path(asset_subtype)
 
     respond_to do |format|
-      if @asset.save
-
-        # Make sure the policy has rules for this asset
-        policy = @asset.policy
-        policy.find_or_create_asset_type_rule @asset.asset_subtype.asset_type
-        policy.find_or_create_asset_subtype_rule @asset.asset_subtype
+      if @asset.save!
 
         # If the asset was successfully saved, schedule update the condition and disposition asynchronously
         #Delayed::Job.enqueue AssetUpdateJob.new(@asset.object_key), :priority => 0
@@ -776,6 +772,8 @@ class AssetsController < AssetAwareController
     else
       asset = selected_asset
     end
+
+
     return asset
   end
 
