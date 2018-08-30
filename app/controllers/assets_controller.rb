@@ -22,13 +22,12 @@ class AssetsController < AssetAwareController
   def filter
 
     query = params[:query]
-    orgs = params[:search_params][:organization_id] ? [params[:search_params][:organization_id].to_i] : @organization_list
     query_str = "%" + query + "%"
     Rails.logger.debug query_str
 
     matches = []
     assets = Rails.application.config.asset_base_class_name.constantize
-                 .where(organization_id: @organization_list)
+                 .where(organization_id: current_user.viewable_organization_ids)
                  .where(params[:search_params])
                  .where("(asset_tag LIKE ? OR object_key LIKE ? OR description LIKE ?)", query_str, query_str, query_str)
 
@@ -422,7 +421,7 @@ class AssetsController < AssetAwareController
     # add_breadcrumb "New", new_inventory_path(asset_subtype)
 
     respond_to do |format|
-      if @asset.save
+      if @asset.save!
 
         # If the asset was successfully saved, schedule update the condition and disposition asynchronously
         #Delayed::Job.enqueue AssetUpdateJob.new(@asset.object_key), :priority => 0

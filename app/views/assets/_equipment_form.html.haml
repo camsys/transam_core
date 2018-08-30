@@ -53,7 +53,7 @@
         = f.input :vendor_id, :as => :hidden
         = f.input :vendor_name, :label => 'Vendor', :input_html => {:autocomplete => 'off', :class => 'form-control', :placeholder => 'Enter vendor name', :id => 'vendor_name', :data => {:url => filter_vendors_path}}
         = f.input :parent_key, :as => :hidden
-        = f.input :parent_name, :label => 'Parent', :input_html => {:autocomplete => 'off', :class => 'form-control', :placeholder => 'Enter search text', :id => 'parent_name', :data => {:url => filter_inventory_index_path(organization_id: @asset.organization_id)}}
+        = f.input :parent_name, :label => 'Parent', :input_html => {:autocomplete => 'off', :class => 'form-control', :placeholder => 'Enter search text', :id => 'parent_name', :data => {:url => filter_inventory_index_path}}
         - rule = PolicyAssetTypeRule.find_by(policy_id: Policy.find_by(organization_id: @asset.organization_id), asset_type_id: @asset.asset_type_id)
         - if rule.try(:condition_rollup_calculation_type).nil?
           - rule = PolicyAssetTypeRule.find_by(policy_id: Policy.where('parent_id IS NULL'), asset_type_id: @asset.asset_type_id)
