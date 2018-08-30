@@ -40,7 +40,7 @@ class TransamAsset < TransamAssetRecord
   # Each asset has zero or more asset events. These are all events regardless of
   # event type. Events are deleted when the asset is deleted
   has_many   :asset_events, :dependent => :destroy, :foreign_key => :transam_asset_id
-  accepts_nested_attributes_for :asset_events, :reject_if => :all_blank, :allow_destroy => true
+  accepts_nested_attributes_for :asset_events, :reject_if => Proc.new{|ae| !ae.valid? }, :allow_destroy => true
 
   has_many :serial_numbers, as: :identifiable, inverse_of: :identifiable, dependent: :destroy
   accepts_nested_attributes_for :serial_numbers
