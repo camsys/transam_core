@@ -126,7 +126,7 @@ module TransamTagHelper
       source += collection.map{|pair| "{value: '#{pair[0]}', text: '#{pair[1].gsub("'"){"\\\\'"}}'}"}.join(',')
     end    
     engine = Haml::Engine.new("
-.form-group
+##{field}_group.form-group
   %label.control-label
     #{label || field.to_s.titleize}
   .display-value
