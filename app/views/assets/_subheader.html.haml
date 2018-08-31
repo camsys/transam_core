@@ -1,0 +1,6 @@
+%legend
+  - # Load module subheader fields if they exist
+  - SystemConfig.transam_module_names.each do |mod|
+    - view_component = "#{mod}_subheader"
+    - if lookup_context.template_exists?(view_component, 'assets', true)
+      = render :partial => "assets/#{view_component}"

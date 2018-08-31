@@ -253,7 +253,8 @@ class AssetsController < AssetAwareController
 
   def show
 
-    # add_breadcrumb "#{@asset.asset_type.name}".pluralize(2), inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
+    add_breadcrumb "#{@asset.asset_type.name}".pluralize, inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
+    add_breadcrumb "#{@asset.asset_type.name.singularize} Profile"
     # add_breadcrumb "#{@asset.asset_subtype.name}", inventory_index_path(:asset_subtype => @asset.asset_subtype)
     # add_breadcrumb @asset.asset_tag, inventory_path(@asset)
 
