@@ -22,6 +22,7 @@ class TransamAssetRecord < ActiveRecord::Base
   #    a class name eg Vehicle
   #    a string eg "vehicle"
   #
+
   def type_of?(type)
     begin
       self.class.ancestors.include?(type.to_s.classify.constantize)
@@ -81,6 +82,44 @@ class TransamAssetRecord < ActiveRecord::Base
     transferred_asset.service_status_updates << self.service_status_updates.last.dup if self.service_status_updates.count > 0
 
     return transferred_asset
+  end
+
+  def allowable_params
+    arr = if self.class.child_asset_class?
+            typed_asset_params
+          else
+            dependent_params = []
+            TransamAssetRecord.subclasses.each do |sub|
+              dependent_params << sub.new.typed_asset_params if sub.child_asset_class?
+            end
+
+            typed_asset_params + [:dependents_attributes =>dependent_params.flatten]
+          end
+
+    SystemConfigExtension.where(class_name: 'TransamAsset').pluck(:extension_name).each do |ext_name|
+      if ext_name.constantize::ClassMethods.try(:allowable_params)
+        arr << ext_name.constantize::ClassMethods.allowable_params
+      end
+    end
+
+    return arr.flatten
+
+  end
+
+  def typed_asset_params
+    arr = self.class::FORM_PARAMS.dup
+
+    if self.class.superclass.name != "TransamAssetRecord"
+      arr << self.class.superclass::FORM_PARAMS
+    end
+
+    a = self.class.try(:acting_as_model)
+    while a.present?
+      arr << a::FORM_PARAMS.dup
+      a = a.try(:acting_as_model)
+    end
+
+    return arr.flatten
   end
 
 end

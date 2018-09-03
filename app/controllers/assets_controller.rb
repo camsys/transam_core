@@ -296,7 +296,7 @@ class AssetsController < AssetAwareController
     # end
 
     respond_to do |format|
-      if @asset.update_attributes(new_form_params(@asset.class.name))
+      if @asset.update_attributes(new_form_params(@asset))
 
         # If the asset was successfully updated, schedule update the condition and disposition asynchronously
         Delayed::Job.enqueue AssetUpdateJob.new(@asset.asset.object_key), :priority => 0
@@ -403,8 +403,8 @@ class AssetsController < AssetAwareController
 
     # Use the asset class to create an asset of the correct type
     @asset = Rails.application.config.asset_base_class_name.constantize.new_asset(asset_class, params)
-    @asset.attributes = new_form_params(asset_class.class_name)
-    puts @asset.inspect
+    @asset.attributes = new_form_params(@asset)
+
 
     # If the asset does not have an org already defined, set to the default for
     # the user
@@ -759,8 +759,8 @@ class AssetsController < AssetAwareController
     params.require(:asset).permit(asset_allowable_params)
   end
 
-  def new_form_params(klass)
-    params.require(:asset).permit(klass.constantize.new.allowable_params)
+  def new_form_params(asset)
+    params.require(:asset).permit(asset.allowable_params)
   end
 
   #

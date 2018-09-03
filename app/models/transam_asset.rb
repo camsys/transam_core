@@ -204,8 +204,9 @@ class TransamAsset < TransamAssetRecord
     if asset
       asset = asset.very_specific
 
-      if asset.class.to_s != asset.fta_asset_class.class_name
-        asset = asset.becomes(asset.fta_asset_class.class_name.constantize)
+      seed_assoc = Rails.application.config.asset_seed_class_name.underscore
+      if asset.class.to_s != asset.send(seed_assoc).class_name
+        asset = asset.becomes(asset.send(seed_assoc).class_name.constantize)
         asset.reload
       end
 
@@ -221,51 +222,6 @@ class TransamAsset < TransamAssetRecord
     end
 
     return a
-  end
-
-  def allowable_params
-    arr = if self.very_specific.class.child_asset_class?
-      typed_asset_params
-    else
-      dependent_params = []
-      TransamAssetRecord.subclasses.each do |sub|
-        dependent_params << sub.new.typed_asset_params if sub.child_asset_class?
-      end
-
-      typed_asset_params + [:dependents_attributes =>dependent_params.flatten]
-    end
-
-    SystemConfigExtension.where(class_name: 'TransamAsset').pluck(:extension_name).each do |ext_name|
-      if ext_name.constantize::ClassMethods.try(:allowable_params)
-        arr << ext_name.constantize::ClassMethods.allowable_params
-      end
-    end
-
-    return arr.flatten
-
-  end
-
-  def typed_asset_params
-    arr = FORM_PARAMS.dup
-    a = self.specific
-
-    while a.try(:specific).present? && a.specific != a
-      arr << a.class::FORM_PARAMS.dup
-      a = a.specific
-    end
-
-    arr << a.class::FORM_PARAMS.dup
-
-    SystemConfigExtension.where(class_name: 'TransamAsset').pluck(:extension_name).each do |ext_name|
-      if ext_name.constantize.respond_to? :mixin_params
-        puts ext_name.constantize.mixin_params
-        arr << ext_name.constantize.mixin_params
-
-      end
-
-    end
-
-    return arr.flatten
   end
 
   def cleansable_fields
