@@ -31,7 +31,8 @@ class AssetEvent < ActiveRecord::Base
   # Every event belongs to a creator
   belongs_to :creator, :class_name => "User", :foreign_key => :created_by_id
 
-  validates :transam_asset_id,            :presence => true
+  #validates :transam_asset,            :presence => true
+  validates_associated :transam_asset
   validates :asset_event_type_id, :presence => true
   validates :event_date,          :presence => true
   validate  :validate_event_date_with_purchase
@@ -144,7 +145,7 @@ class AssetEvent < ActiveRecord::Base
   def validate_event_date_with_purchase
     if event_date.nil?
       errors.add(:event_date, "must exist")
-    elsif transam_asset.purchased_new && event_date < transam_asset.purchase_date
+    elsif transam_asset.try(:purchased_new) && event_date < transam_asset.purchase_date
       errors.add(:event_date, "must be on or after purchase date if new purchase")
     end
   end
