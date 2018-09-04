@@ -11,8 +11,6 @@ class TransamAsset < TransamAssetRecord
   after_save      :check_policy_rule
   after_save      :update_asset_state
 
-
-
   belongs_to  :organization
   belongs_to  :asset_subtype
   belongs_to  :manufacturer
@@ -40,7 +38,6 @@ class TransamAsset < TransamAssetRecord
   # Each asset has zero or more asset events. These are all events regardless of
   # event type. Events are deleted when the asset is deleted
   has_many   :asset_events, :dependent => :destroy, :foreign_key => :transam_asset_id
-
 
   has_many :serial_numbers, as: :identifiable, inverse_of: :identifiable, dependent: :destroy
   accepts_nested_attributes_for :serial_numbers
@@ -218,6 +215,10 @@ class TransamAsset < TransamAssetRecord
     end
   end
 
+  def transam_asset_id
+    id
+  end
+
   def very_specific
     a = self.specific
 
@@ -327,7 +328,7 @@ class TransamAsset < TransamAssetRecord
     if policy_to_use.blank?
       policy_to_use = policy
     end
-    policy_analyzer = Rails.application.config.policy_analyzer.constantize.new(self.very_specific, policy_to_use)
+    policy_analyzer = Rails.application.config.policy_analyzer.constantize.new(TransamAsset.get_typed_asset(self), policy_to_use)
   end
 
   def expected_useful_life

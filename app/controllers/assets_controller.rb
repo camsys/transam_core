@@ -296,14 +296,14 @@ class AssetsController < AssetAwareController
     # end
 
     respond_to do |format|
-      if @asset.update_attributes(new_form_params(@asset))
+      if @asset.update_attributes!(new_form_params(@asset))
 
         # If the asset was successfully updated, schedule update the condition and disposition asynchronously
-        Delayed::Job.enqueue AssetUpdateJob.new(@asset.asset.object_key), :priority => 0
+        #Delayed::Job.enqueue AssetUpdateJob.new(@asset.asset.object_key), :priority => 0
         # See if this asset has any dependents that use its spatial reference
         if @asset.geometry and @asset.occupants.count > 0
           # schedule an update to the spatial references of the dependent assets
-          Delayed::Job.enqueue AssetDependentSpatialReferenceUpdateJob.new(@asset.asset.object_key), :priority => 0
+          Delayed::Job.enqueue AssetDependentSpatialReferenceUpdateJob.new(@asset.object_key), :priority => 0
         end
         notify_user(:notice, "Asset #{@asset.to_s} was successfully updated.")
 
@@ -340,8 +340,9 @@ class AssetsController < AssetAwareController
   end
 
   def get_dependent_subform
+    @dependent_subform_target_model = params[:dependent_subform_target_model]
 
-    @dependent = @asset.dependents.find_by(params[:dependent_object_key])
+    @dependent = @dependent_subform_target_model.constantize.find_by(object_key: params[:dependent_object_key])
 
     @dependent_subform_target = params[:dependent_subform_target]
     @dependent_subform_view = params[:dependent_subform_view]
