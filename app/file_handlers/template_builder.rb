@@ -48,6 +48,12 @@ class TemplateBuilder
       sheet.col_style col_style[:column], style_cache[col_style[:name]]
     end
 
+    # Add the row styles
+    row_styles.each do |row_style|
+      Rails.logger.debug row_style.inspect
+      sheet.row_style row_style[:row], style_cache[row_style[:name]]
+    end
+
     # set column widths
     sheet.column_widths *column_widths
 
@@ -93,6 +99,10 @@ class TemplateBuilder
   # Override this to add custom column widths
   # Only allow: nil, or numeric values
   def column_widths
+    []
+  end
+
+  def row_styles
     []
   end
 
