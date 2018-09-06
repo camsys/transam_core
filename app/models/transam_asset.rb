@@ -171,7 +171,7 @@ class TransamAsset < TransamAssetRecord
   # based on the asset_base_class_name
   def self.new_asset(asset_seed_class_name, params={})
 
-    asset_class_name = asset_seed_class_name.try(:class_name, params) || asset_seed_class_name.class_name
+    asset_class_name = asset_seed_class_name.try(:class_name, opts: params) || asset_seed_class_name.class_name
     asset = asset_class_name.constantize.new
     asset.send("#{asset_seed_class_name.class.to_s.foreign_key}=",asset_seed_class_name.id)
     return asset
@@ -206,9 +206,8 @@ class TransamAsset < TransamAssetRecord
       asset = asset.very_specific
 
       seed_assoc = Rails.application.config.asset_seed_class_name.underscore
-      if asset.class.to_s != asset.send(seed_assoc).class_name
-        asset = asset.becomes(asset.send(seed_assoc).class_name.constantize)
-        asset.reload
+      if asset.class.to_s != asset.send(seed_assoc).class_name(asset: asset)
+        asset = asset.send(seed_assoc).class_name(asset: asset).constantize.find_by(object_key: asset.object_key)
       end
 
       asset
@@ -340,7 +339,7 @@ class TransamAsset < TransamAssetRecord
     begin
       # Use the calculator to calculate the policy rehabilitation fiscal year
       calculator = RehabilitationYearCalculator.new
-      return calculator.calculate(self.very_specific)
+      return calculator.calculate(TransamAsset.get_typed_asset(self))
     rescue Exception => e
       Rails.logger.warn e.message
       Rails.logger.error e.backtrace
@@ -351,7 +350,7 @@ class TransamAsset < TransamAssetRecord
     # Estimate the year that the asset will need replacing
     begin
       class_name = policy_analyzer.get_condition_estimation_type.class_name
-      calculate(self.very_specific, class_name, 'last_servicable_year') + 1
+      calculate(TransamAsset.get_typed_asset(self), class_name, 'last_servicable_year') + 1
     rescue Exception => e
       Rails.logger.warn e.message
       Rails.logger.error e.backtrace
@@ -479,7 +478,7 @@ class TransamAsset < TransamAssetRecord
     # condition of the asset
     begin
       class_name = policy_analyzer.get_condition_estimation_type.class_name
-      calculate(self.very_specific, class_name)
+      calculate(TransamAsset.get_typed_asset(self), class_name)
     rescue Exception => e
       Rails.logger.warn e.message
       Rails.logger.error e.backtrace
@@ -511,7 +510,7 @@ class TransamAsset < TransamAssetRecord
 
       # see what metric we are using to determine the service life of the asset
       class_name = policy_analyzer.get_service_life_calculation_type.class_name
-      self.policy_replacement_year = calculate(self.very_specific, class_name)
+      self.policy_replacement_year = calculate(TransamAsset.get_typed_asset(self), class_name)
 
       if self.scheduled_replacement_year.nil? or self.scheduled_replacement_year == old_policy_replacement_year
         Rails.logger.debug "Setting scheduled replacement year to #{policy_replacement_year}"

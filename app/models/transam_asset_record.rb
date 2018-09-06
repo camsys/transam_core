@@ -56,7 +56,7 @@ class TransamAssetRecord < ActiveRecord::Base
   def transfer new_organization_id
     org = Organization.where(:id => new_organization_id).first
 
-    transferred_asset = self.very_specific.copy false
+    transferred_asset = TransamAsset.get_typed_asset(self).copy false
     transferred_asset.object_key = nil
     transferred_asset.external_id = nil
 

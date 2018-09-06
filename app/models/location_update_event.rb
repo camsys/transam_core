@@ -11,7 +11,7 @@ class LocationUpdateEvent < AssetEvent
   # Associations
 
   # Each event has a location_id and a location description
-  belongs_to  :parent,  :class_name => 'Asset', :foreign_key => :parent_id
+  belongs_to  :parent,  :class_name => Rails.application.config.asset_base_class_name, :foreign_key => :parent_id
 
   validates   :parent, :presence => true
 
