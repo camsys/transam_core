@@ -183,3 +183,7 @@
       return format("##0.000", value) + "%";
     }
   };
+
+  function asset_formatter(value, data) {
+    return "<a href='/inventory/" + data.transam_asset_object_key + "'>" + value + "</a>"
+  };
