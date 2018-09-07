@@ -15,7 +15,8 @@ module TransamObjectKey
       generate_object_key(:object_key)
     end
 
-    validates :object_key, :presence => true, :uniqueness => true, :length => { is: 12 }
+    validates :object_key, :presence => true, :length => { is: 12 }
+    validates :object_key, :uniqueness => true, unless: :skip_uniqueness?
   end
 
   # Only generate an objecrt key if one is not set. This allows objects to be
@@ -33,4 +34,9 @@ module TransamObjectKey
     object_key
   end
 
+  protected
+
+  def skip_uniqueness?
+    false
+  end
 end
