@@ -33,10 +33,10 @@ class TemplateBuilder
       style_cache[s[:name]] = style
     end
     Rails.logger.debug style_cache.inspect
-
     # Add the header rows
+    title = sheet.styles.add_style(:bg_color => "00A9A9A9", :sz=>12)
     header_rows.each do |header_row|
-      sheet.add_row header_row
+      sheet.add_row header_row, :style => title 
     end
 
     # add the rows
