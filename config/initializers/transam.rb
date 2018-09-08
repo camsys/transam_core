@@ -14,5 +14,14 @@ Rails.application.config.max_upload_file_size = 4          # maximum file size a
 Rails.application.config.epoch = Date.new(1900,1,1)      # epoch
 
 
+begin
+  if ActiveRecord::Base.connection.table_exists?(:system_config_extensions)
+    Rails.application.config.transam_keyword_searchable_classes = SystemConfigExtension.where(extension_name: 'TransamKeywordSearchable').pluck(:class_name)
+  end
+rescue ActiveRecord::NoDatabaseError
+  puts "no database so not loading system config extensions"
+end
+
+
 Rails.application.config.rails_admin_core_lookup_tables = ['AssetEventType', 'AssetType', 'AssetSubtype', 'ConditionType', 'DispositionType', 'DistrictType', 'FrequencyType', 'FundingTemplateType','IssueType', 'LicenseType', 'LocationReferenceType', 'MaintenanceType', 'ManufacturerModel', 'NoticeType','PriorityType', 'ReportType', 'ServiceStatusType', 'WebBrowserType']
 Rails.application.config.rails_admin_core_models = ['Asset', 'AssetGroup', 'Comment', 'Document', 'FundingTemplate', 'Image', 'Manufacturer', 'Organization','Report', 'Role', 'User', 'Vendor']
