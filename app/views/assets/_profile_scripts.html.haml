@@ -19,6 +19,7 @@
         }
     });
     $('.editable-field').editable({});
+    $('.editable-field').editable('#{cannot?(:update, @asset) ? "disable" : ""}');
     $('.not-editable-field').editable('disable');
 
     // select all text when editable input shows up so to speed up input
