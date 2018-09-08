@@ -1,2 +1,4 @@
 $("##{@dependent_subform_target}").html("#{escape_javascript(render @dependent_subform_view)}");
 $('.editable-field').editable({});
+$('.editable-field').editable('#{cannot?(:update, @asset) ? "disable" : ""}');
+$('.not-editable-field').editable('disable');
