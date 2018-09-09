@@ -28,7 +28,8 @@
               %ul.dropdown-menu.scrollable-menu
                 - @asset.event_classes.each do |klass|
                   - unless klass.name == 'DispositionUpdateEvent' or klass.name == 'EarlyDispositionRequestUpdateEvent'
-                    - if klass.new(transam_asset: @asset.transam_asset).can_update?
+                    - assoc = klass.reflect_on_association(:transam_asset).class_name
+                    - if klass.new(transam_asset: @asset.class.to_s == assoc ? @asset : @asset.send(assoc.underscore)).can_update?
                       %li.text-left
                         = link_to new_inventory_asset_event_path(@asset, :event_type => klass.asset_event_type.id) do
                           %i.fa.fa-fw{:class => klass.asset_event_type.display_icon_name}
