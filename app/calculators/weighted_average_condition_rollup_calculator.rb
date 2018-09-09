@@ -8,7 +8,7 @@ class WeightedAverageConditionRollupCalculator < Calculator
 
     # only assets with a replacement cost really have a weight so can ignore any without
     return nil if not (asset.respond_to? :reported_condition_rating)
-    ratings = asset.dependents.where('scheduled_replacement_cost > 0').pluck(:scheduled_replacement_cost, :reported_condition_rating)
+    ratings = asset.dependents.where('scheduled_replacement_cost > 0').map{|x| [x.scheduled_replacement_cost, x.reported_condition_rating]}
     return nil if ratings.size == 0
 
     temp_sum = 0
