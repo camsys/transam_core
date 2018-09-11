@@ -184,6 +184,56 @@
     }
   };
 
-  function asset_formatter(value, data) {
+  function asset_record_link_formatter(value, data) {
     return "<a href='/inventory/" + data.transam_asset_object_key + "'>" + value + "</a>"
   };
+
+  function asset_view_manufacturer(value, data){
+    if (data.transam_asset_manufacturer_name == "Other")
+      return data.transam_asset_other_manufacturer
+    else
+      return data.transam_asset_manufacturer_code + ' - ' + data.transam_asset_manufacturer_name
+  };
+
+  function asset_view_model (value, data) {
+    if(data.transam_asset_manufacturer_model_name == "Other")
+      return data.transam_asset_other_manufacturer_model
+    else
+      return data.transam_asset_manufacturer_model_name
+  };
+
+  function asset_view_status(value, data) {
+    if(data.service_status_event_id)
+      return 'No Service Status Event Recorded'
+    else
+      return data.most_recent_service_status_event_service_status_type_name
+  };
+
+   function asset_view_direct_capital_responsibility(value, data) {
+    if(data.transit_asset_pcnt_capital_responsibility)
+      return "Yes"
+    else
+      return "No"
+  };
+
+  function asset_view_age(value, data) {
+
+  };
+
+  function asset_view_useful_life_benchmark(value, data) {
+
+  };
+
+  function asset_view_useful_life_benchmark_adjusted(value, data) {
+
+  };
+
+  function asset_view_replacemet_status(value, data) {
+    if (data.most_recent_early_replacement_event_replacement_status_type_name)
+      return data.most_recent_early_replacement_event_replacement_status_type_name
+    else
+      return 'By Policy'
+  };
+
+
+
