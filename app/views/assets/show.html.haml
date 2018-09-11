@@ -12,25 +12,24 @@
   .col-sm-12
     .panel.panel-default
       .panel-heading
-        %h3.panel-title
-          Highlights
+        .row
+          .col-sm-10
+            %h3.panel-title
+              Highlights
+          .col-sm-2
+            = render 'actions'
       .panel-body.panel-body-fixed
         = render 'details'        
 .row
-  .col-sm-12.col-md-3
+  .col-sm-12.col-md-2
     .panel.panel-default
       .panel-heading
-        .row
-          .col-sm-6
-            %h3.panel-title
-              %i.fa.fa-star
-              = @asset
-          .col-sm-6
-            = render 'actions'
+        %h3.panel-title
+          Asset Summary
       .panel-body
         = render :partial => 'summary', :locals => {:asset => @asset}
 
-  .col-sm-12.col-md-9#profile
+  .col-sm-12.col-md-10#profile
     .panel.panel-default
       .panel-heading
         %h3.panel-title

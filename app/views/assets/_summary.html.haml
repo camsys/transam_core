@@ -1,3 +1,5 @@
+%legend
+  Profile
 - SystemConfig.transam_module_names.each do |mod|
   - view_component = "#{mod}_asset_info_detail"
   - Rails.logger.debug "Checking for #{view_component}: Results = #{lookup_context.template_exists?(view_component, 'assets', true)}"

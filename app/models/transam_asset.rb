@@ -35,10 +35,6 @@ class TransamAsset < TransamAssetRecord
   belongs_to :parent, class_name: 'TransamAsset', foreign_key: :parent_id
   belongs_to :location, class_name: 'TransamAsset', foreign_key: :location_id
 
-  # Each asset has zero or more asset events. These are all events regardless of
-  # event type. Events are deleted when the asset is deleted
-  has_many   :asset_events, :dependent => :destroy, :foreign_key => :transam_asset_id
-
   has_many :serial_numbers, as: :identifiable, inverse_of: :identifiable, dependent: :destroy
   accepts_nested_attributes_for :serial_numbers
 
@@ -167,6 +163,16 @@ class TransamAsset < TransamAssetRecord
       'scheduled_disposition_year'
   ]
 
+  SEARCHABLE_FIELDS = [
+      :object_key,
+      :asset_tag,
+      :external_id,
+      :description,
+      :manufacturer_model,
+      :title_number
+  ]
+
+
   # Factory method to return a strongly typed subclass of a new asset
   # based on the asset_base_class_name
   def self.new_asset(asset_seed_class_name, params={})
@@ -214,10 +220,6 @@ class TransamAsset < TransamAssetRecord
     end
   end
 
-  def transam_asset_id
-    id
-  end
-
   def very_specific
     a = self.specific
 
@@ -242,6 +244,56 @@ class TransamAsset < TransamAssetRecord
     return arr.flatten
   end
 
+  def searchable_fields
+    typed_self = TransamAsset.get_typed_asset(self)
+
+    arr = (defined? typed_self.class::SEARCHABLE_FIELDS) ? typed_self.class::SEARCHABLE_FIELDS.dup : []
+
+
+    if typed_self.class.superclass.name != "TransamAssetRecord"
+      arr << typed_self.class.superclass::SEARCHABLE_FIELDS if defined? typed_self.class.superclass::SEARCHABLE_FIELDS
+    end
+
+    a = typed_self.class.try(:acting_as_model)
+    while a.present?
+      arr << a::SEARCHABLE_FIELDS.dup if defined? a::SEARCHABLE_FIELDS
+      a = a.try(:acting_as_model)
+    end
+
+    return arr.flatten
+  end
+
+  def event_classes
+    a = []
+    # Use reflection to return the list of has many associatiopns and filter those which are
+    # events
+    very_specific.class.reflect_on_all_associations(:has_many).each do |assoc|
+      a << assoc.klass if assoc.class_name.end_with? 'UpdateEvent'
+    end
+    a
+  end
+
+  def asset_events(unscoped=false)
+    events = []
+    event_classes.each do |e|
+      assoc_name = e.name.gsub('Event', '').underscore.pluralize
+      assoc_name = 'early_disposition_requests' if assoc_name == 'early_disposition_request_updates'
+      events << very_specific.send(assoc_name).ids
+    end
+    if unscoped
+      AssetEvent.unscoped.where(id: events.flatten)
+    else
+      AssetEvent.where(id: events.flatten)
+    end
+
+  end
+
+  # returns the list of events associated with this asset ordered by date, newest first
+  def history
+    asset_events(true).order('event_date DESC, created_at DESC')
+  end
+
+
   # Instantiate an asset event of the appropriate type.
   def build_typed_event(asset_event_type_class)
     # Could also add:  raise ArgumentError 'Asset Must be strongly typed' unless is_typed?
@@ -250,7 +302,10 @@ class TransamAsset < TransamAssetRecord
     unless self.event_classes.include? asset_event_type_class
       raise ArgumentError, 'Invalid Asset Event Type'
     end
-    asset_event_type_class.new(:transam_asset => self)
+
+    assoc = asset_event_type_class.reflect_on_association(:transam_asset).class_name
+    typed_asset = TransamAsset.get_typed_asset(self)
+    asset_event_type_class.new(transam_asset: (typed_asset.type_of? assoc) ? typed_asset : typed_asset.send(assoc.underscore))
   end
 
   def asset_type_id
@@ -303,16 +358,6 @@ class TransamAsset < TransamAssetRecord
       # No previous request or was rejected
       !last_request || last_request.try(:is_rejected?)
     end
-  end
-
-  def event_classes
-    a = []
-    # Use reflection to return the list of has many associatiopns and filter those which are
-    # events
-    very_specific.class.reflect_on_all_associations(:has_many).each do |assoc|
-      a << assoc.klass if assoc.class_name.end_with? 'UpdateEvent'
-    end
-    a
   end
 
   def policy
@@ -426,11 +471,6 @@ class TransamAsset < TransamAssetRecord
 
   def cost
     purchase_cost
-  end
-
-  # returns the list of events associated with this asset ordered by date, newest first
-  def history
-    AssetEvent.unscoped.where('transam_asset_id = ?', id).order('event_date DESC, created_at DESC')
   end
 
   # returns the number of years since the asset was placed in service.

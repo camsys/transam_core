@@ -16,9 +16,9 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
   #-----------------------------------------------------------------------------
   after_initialize  :set_defaults
 
-  after_save        :distribute_policy
-  after_commit        :apply_policy
-  after_commit      :apply_distributed_policy
+  after_save          :distribute_policy
+  after_update_commit :apply_policy
+  after_commit        :apply_distributed_policy
 
   #-----------------------------------------------------------------------------
   # Associations

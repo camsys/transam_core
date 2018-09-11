@@ -21,33 +21,38 @@
         - else
           - if can? :update, @asset
             - # Add in event actions. These are discovered from the asset
-            %li.text-left.dropdown-submenu
+            %li.text-left.dropdown-submenu.dropdown-submenu-right
               = link_to '#' do
                 %i.fa.fa-fw.fa-edit
                 = " Update"
               %ul.dropdown-menu.scrollable-menu
                 - @asset.event_classes.each do |klass|
                   - unless klass.name == 'DispositionUpdateEvent' or klass.name == 'EarlyDispositionRequestUpdateEvent'
-                    - if klass.new(transam_asset: @asset.transam_asset).can_update?
+                    - assoc = klass.reflect_on_association(:transam_asset).class_name
+                    - if klass.new(transam_asset: (@asset.type_of? assoc) ? @asset : @asset.send(assoc.underscore)).can_update?
                       %li.text-left
                         = link_to new_inventory_asset_event_path(@asset, :event_type => klass.asset_event_type.id) do
                           %i.fa.fa-fw{:class => klass.asset_event_type.display_icon_name}
                           = klass.asset_event_type.name
 
-            %li.text-left.dropdown-submenu
+            %li.text-left.dropdown-submenu.dropdown-submenu-right
               = link_to '#' do
                 %i.fa.fa-fw.fa-edit
                 = " Edit"
               %ul.dropdown-menu.scrollable-menu
                 - # Load module specific tabs if they exist
+                - idx = 0
                 - SystemConfig.transam_module_names.each do |mod|
                   - if lookup_context.template_exists?("#{mod}_detail_actions", 'assets', true)
+                    - if idx > 0
+                      %li.divider
+                      - idx +=1
                     = render :partial => "assets/#{mod}_detail_actions"
 
             - # Add in asset groups if 1 or more asset groups are defined for this org
             - if @organization.asset_groups.count > 0
               %li.divider
-              %li.text-left.dropdown-submenu
+              %li.text-left.dropdown-submenu.dropdown-submenu-right
                 = link_to '#' do
                   %i.fa.fa-fw.fa-tags
                   = " Add to group"
@@ -59,7 +64,7 @@
                           %i.fa.fa-fw.fa-tag
                           = grp.name
 
-          - if can? :create, Asset
+          - if can? :create, Rails.application.config.asset_base_class_name.constantize
             %li.divider
             %li
               = link_to copy_inventory_path(@asset) do
