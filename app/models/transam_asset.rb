@@ -302,7 +302,10 @@ class TransamAsset < TransamAssetRecord
     unless self.event_classes.include? asset_event_type_class
       raise ArgumentError, 'Invalid Asset Event Type'
     end
-    asset_event_type_class.new(:transam_asset => self)
+
+    assoc = asset_event_type_class.reflect_on_association(:transam_asset).class_name
+    typed_asset = TransamAsset.get_typed_asset(self)
+    asset_event_type_class.new(transam_asset: (typed_asset.type_of? assoc) ? typed_asset : typed_asset.send(assoc.underscore))
   end
 
   def asset_type_id
