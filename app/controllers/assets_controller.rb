@@ -162,7 +162,7 @@ class AssetsController < AssetAwareController
       format.json {
         render :json => {
           :total => @assets.count,
-          :rows =>  @assets.order("#{params[:sort]} #{params[:order]}").limit(params[:limit]).offset(params[:offset]).as_json(user: current_user, include_early_disposition: @early_disposition)
+          :rows =>  index_rows_as_json
           }
         }
       format.xls do
@@ -176,6 +176,24 @@ class AssetsController < AssetAwareController
     end
   end
 
+  def index_rows_as_json
+    multi_sort = params[:multiSort]
+
+    if(mulit_sort.nil?)
+      sorting_string = ""
+
+      mulit_sort.each { |x|
+        sorting_string = sorting_string + "#{x[0]}: :#{x[1]}"
+      }
+
+    else
+      sorting_string = "#{params[:sort]} #{params[:order]}"
+    end
+
+
+      @assets.order(sorting_string).limit(params[:limit]).offset(params[:offset]).as_json(user: current_user, include_early_disposition: @early_disposition)
+
+  end
 
   def fire_asset_event_workflow_events
 
