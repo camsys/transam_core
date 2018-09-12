@@ -547,6 +547,11 @@ class AssetsController < AssetAwareController
       @asset_subtype = params[:asset_subtype].to_i
     end
 
+    # Check to see if we got an fta asset class id to sub select on.
+    unless params[:fta_asset_class_id].nil?
+      @fta_asset_class_id = params[:fta_asset_class_id]
+    end
+
     # Check to see if we got an organization to sub select on.
     if params[:org_id].nil?
       @org_id = 0
@@ -635,6 +640,7 @@ class AssetsController < AssetAwareController
     Rails.logger.debug "@asset_subtype = #{@asset_subtype}"
     Rails.logger.debug "@asset_class_name = #{@asset_class_name}"
     Rails.logger.debug "@view = #{@view}"
+    Rails.logger.debug "@view = #{@fta_asset_class_id}"
 
   end
 
