@@ -66,4 +66,47 @@
     $("input[name='infrastructure_segment_unit_type_id']").on("click", function(value) {
       show_fields_segment_unit_type_changes($(this).val());
     });
+
+    // show Other text entry only if it's a Other type; otherwise, hide and empty its value
+    // type_el: HTML element of the Type dropdown
+    // type_id: Type dropdown value
+    function show_hide_other_text_entry(type_el, type_id) {
+      var other_text_container = $(type_el).parents('.other-fields-container').find('.other-value-container');
+      if(other_text_container) {
+        var other_ids = $(type_el).parents('.other-type-container').data('other-type-ids');
+        if(!other_ids || other_ids.indexOf(type_id) < 0) {
+          other_text_container.find('.editable-field').editable('setValue', '');
+          other_text_container.hide();
+        } else {
+          other_text_container.show();
+        }
+      }
+
+      var dual_text_container = $(type_el).parents('.other-fields-container').find('.dual-value-container');
+      if(dual_text_container) {
+        var dual_ids = $(type_el).parents('.other-type-container').data('dual-type-ids');
+        if(!dual_ids || dual_ids.indexOf(type_id) < 0) {
+          dual_text_container.find('.editable-field').editable('setValue', '');
+          dual_text_container.hide();
+        } else {
+          dual_text_container.show();
+        }
+      }
+    }
+
+    $('.other-type-container .editable-field').on('save', function(e, params) {
+      var type_id = params.newValue;
+      if(type_id) {
+        type_id = parseInt(type_id);
+      }
+      show_hide_other_text_entry(this, type_id);
+    });
+
+    $('.other-type-container .editable-field').each(function() {
+      var type_id = $(this).editable('getValue')[$(this).data('name')];
+      if(type_id) {
+        type_id = parseInt(type_id);
+      }
+      show_hide_other_text_entry(this, type_id);
+    });
   });

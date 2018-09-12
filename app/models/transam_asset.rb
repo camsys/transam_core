@@ -10,6 +10,7 @@ class TransamAsset < TransamAssetRecord
   # updates the calculated values of an asset
   after_save      :check_policy_rule
   after_save      :update_asset_state
+  before_validation   :cleanup_others
 
   belongs_to  :organization
   belongs_to  :asset_subtype
@@ -93,8 +94,8 @@ class TransamAsset < TransamAssetRecord
   validates :purchased_new, inclusion: { in: [ true, false ] }
   validates :purchase_date, presence: true #temporarily force in case used in other places but eventually will not be required
   validates :in_service_date, presence: true
-  validates :manufacturer_id, inclusion: {in: Manufacturer.where(code: 'ZZZ').pluck(:id)}, if: Proc.new{|a| a.other_manufacturer.present?}
-  validates :manufacturer_model_id, inclusion: {in: ManufacturerModel.where(name: 'Other').pluck(:id)}, if: Proc.new{|a| a.other_manufacturer_model.present?}
+  validates :manufacturer_id, inclusion: {in: Manufacturer.where(code: 'ZZZ').pluck(:id)}, if: Proc.new{|a| a.manufacturer_id.present? && a.other_manufacturer.present?}
+  validates :manufacturer_model_id, inclusion: {in: ManufacturerModel.where(name: 'Other').pluck(:id)}, if: Proc.new{|a| a.manufacturer_model_id.present? && a.other_manufacturer_model.present?}
   validates :manufacture_year, presence: true
 
   validate        :object_key_is_not_asset_tag
@@ -638,6 +639,34 @@ class TransamAsset < TransamAssetRecord
       if self.asset_tag == self.object_key
         @errors.add(:asset_tag, "should not be the same as the object key")
       end
+    end
+  end
+
+  def cleanup_others
+    # other_manufacturer only has value when type is one of Other types
+    if self.changes.include?("manufacturer_id") && self.other_manufacturer.present?
+      self.other_manufacturer = nil unless Manufacturer.where(code: 'ZZZ').pluck(:id).include?(self.manufacturer_id)
+    end
+
+    # other_manufacturer_model only has value when model type is one of Other types
+    if self.changes.include?("manufacturer_model_id") && self.other_manufacturer_model.present?
+      self.other_manufacturer_model = nil unless ManufacturerModel.where(name: 'Other').pluck(:id).include?(self.manufacturer_model_id)
+    end
+
+    if self.changes.include?("vendor_id") && self.other_vendor.present?
+      self.other_vendor = nil if self.vendor_id
+    end
+
+    if self.changes.include?("operator_id") && self.other_operator.present?
+      self.other_operator = nil if self.operator_id
+    end
+
+    if self.changes.include?("title_ownership_organization_id") && self.other_title_ownership_organization.present?
+      self.other_titel_ownership_organization = nil if self.title_ownership_organization_id
+    end
+
+    if self.changes.include?("lienholder_id") && self.other_lienholder.present?
+      self.other_lienholder = nil if self.lienholder_id
     end
   end
 end
