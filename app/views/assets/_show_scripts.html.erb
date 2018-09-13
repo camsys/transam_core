@@ -52,16 +52,9 @@
   });
 
   $(function() {
-    // Find the previously selected tabs
-    [user_detail_tab_key, user_profile_tab_key].forEach(function(key) {
-      var selected_tab = $('a[href="'+transam.get_ui_key_value(key)+'"]');
-      // Default to first tab if no tab is stored or stored tab isn't available to current user
-      if (selected_tab.length) {
-	selected_tab.tab('show');
-      } else {
-	$('a[data-toggle="tab"]:first').tab('show');
-      }
-    });
+    // open first tab in each section
+    $('#asset-details a[data-toggle="tab"]:first').tab('show');
+    $('#profile a[data-toggle="tab"]:first').tab('show');
   });
 
 </script>
