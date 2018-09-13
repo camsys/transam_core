@@ -13,9 +13,25 @@
         }
     });
 
+    $('.editable-field.currency-number').editable({
+        display: function(value) {
+          if($.trim(value) == '') {
+            return "";
+          } else {
+            var currency_val = Number((parseFloat(value)).toFixed(1)).toLocaleString();
+            $(this).text('$ ' + currency_val);
+          }
+        },
+        validate: function(value) {
+          if($(this).hasClass('required')) {
+            if($.trim(value) == '') return 'This field is required';
+          }
+        }
+    });
+
     $('.editable-field.required').editable({
         validate: function(value) {
-           if($.trim(value) == '') return 'This field is required';
+          if($.trim(value) == '') return 'This field is required';
         }
     });
     $('.editable-field').editable({});

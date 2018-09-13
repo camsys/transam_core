@@ -96,6 +96,9 @@ module TransamTagHelper
       type = 'combodate'
       classes += 'combodate'
       # extras += ", format: 'MM/DD/YYYY', viewformat: 'MM/DD/YYYY'"
+    elsif type == 'currency'
+      type = 'number'
+      classes += 'currency-number'
     end
     # Escape for HAML
     label = label.gsub('%','\%') if label
