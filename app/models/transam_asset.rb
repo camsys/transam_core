@@ -96,7 +96,6 @@ class TransamAsset < TransamAssetRecord
   validates :in_service_date, presence: true
   validates :manufacturer_id, inclusion: {in: Manufacturer.where(code: 'ZZZ').pluck(:id)}, if: Proc.new{|a| a.manufacturer_id.present? && a.other_manufacturer.present?}
   validates :manufacturer_model_id, inclusion: {in: ManufacturerModel.where(name: 'Other').pluck(:id)}, if: Proc.new{|a| a.manufacturer_model_id.present? && a.other_manufacturer_model.present?}
-  validates :manufacture_year, presence: true
 
   validate        :object_key_is_not_asset_tag
 
