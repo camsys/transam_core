@@ -20,6 +20,15 @@ module TransamHelper
     get_fiscal_years
   end
 
+  def get_system_asset_starting_year
+    SystemConfig.instance.epoch.year 
+  end
+
+  # return collection of earliest year to current year
+  def get_years_to_date_collection
+    (get_system_asset_starting_year..Date.today.year).to_a
+  end
+
   # Return the version of TransAM core that is running
   def transam_version
     Gem.loaded_specs['transam_core'].version
