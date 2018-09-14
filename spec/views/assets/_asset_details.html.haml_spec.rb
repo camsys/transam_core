@@ -17,6 +17,6 @@ describe "assets/_asset_details.html.haml", :type => :view do
     expect(rendered).to have_content(test_asset.asset_type.to_s)
     expect(rendered).to have_content(test_asset.asset_subtype.to_s)
     expect(rendered).to have_content(ServiceStatusType.first.to_s)
-    expect(rendered).to have_link(test_asset.parent.name)
+    expect(rendered).to have_link(test_asset.parent.to_s)
   end
 end

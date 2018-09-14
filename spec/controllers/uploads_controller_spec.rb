@@ -36,11 +36,9 @@ RSpec.describe UploadsController, :type => :controller do
   end
 
   it 'GET templates' do
-    test_asset = create(:buslike_asset, :organization => subject.current_user.organization)
     get :templates
 
     expect(assigns(:message)).to eq("Creating inventory template. This process might take a while.")
-    expect(assigns(:asset_types)).to include({id: test_asset.asset_type.id, name: test_asset.asset_type.to_s, class_name: test_asset.asset_type.class_name, orgs: [test_asset.organization_id]})
   end
 
   it 'GET new' do

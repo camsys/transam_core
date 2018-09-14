@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 describe "assets/_actions.html.haml", :type => :view do
+  before { skip('DispositionUpdateEvent assumes transam_asset. Not yet testable.') }
 
   it 'actions' do
     allow(controller).to receive(:current_ability).and_return(Ability.new(create(:admin)))
