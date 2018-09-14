@@ -35,7 +35,7 @@ TODO: Write usage instructions here
 
 ---
 
-#### transam_accounting
+#### [transam_accounting](../transam_accounting)
 [![Build Status](https://travis-ci.org/camsys/transam_accounting.svg)](https://travis-ci.org/camsys/transam_accounting)
 
 #### transam_audit
@@ -50,7 +50,7 @@ TODO: Write usage instructions here
 #### transam_reporting
 [![Build Status](https://travis-ci.org/camsys/transam_reporting.svg)](https://travis-ci.org/camsys/transam_reporting)
 
-#### transam_spatial
+#### [transam_spatial](../transam_spatial)
 [![Build Status](https://travis-ci.org/camsys/transam_spatial.svg)](https://travis-ci.org/camsys/transam_spatial)
 
 #### transam_transit
