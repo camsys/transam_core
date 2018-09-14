@@ -13,28 +13,34 @@
         }
     });
 
-    $('.editable-field.currency-number').editable({
-        display: function(value) {
-          if($.trim(value) == '') {
-            return "";
-          } else {
-            var currency_val = Number((parseFloat(value)).toFixed(1)).toLocaleString();
-            $(this).text('$ ' + currency_val);
-          }
-        },
-        validate: function(value) {
-          if($(this).hasClass('required')) {
-            if($.trim(value) == '') return 'This field is required';
-          }
-        }
-    });
-
-    $('.editable-field.required').editable({
-        validate: function(value) {
+    var generic_xeditable_options = {
+      validate: function(value) {
+        if($(this).hasClass('required')) {
           if($.trim(value) == '') return 'This field is required';
         }
-    });
-    $('.editable-field').editable({});
+      },
+      error: function() {
+        return "invalid input or service unavailable";
+      }
+    };
+
+    var currency_xeditable_options = {
+      display: function(value) {
+        if($.trim(value) == '') {
+          $(this).text('');
+        } else {
+          var currency_val = Number((parseFloat(value)).toFixed(1)).toLocaleString();
+          $(this).text('$ ' + currency_val);
+        }
+      }
+    };
+    for(var attr in generic_xeditable_options) {  
+      currency_xeditable_options[attr] = generic_xeditable_options[attr];
+    } 
+
+    $('.editable-field:not(.currency-number)').editable(generic_xeditable_options);
+
+    $('.editable-field.currency-number').editable(currency_xeditable_options);
 
     disabled = "#{cannot?(:update, @asset) ? 'disable' : ''}";
     if (disabled.length > 0) {
