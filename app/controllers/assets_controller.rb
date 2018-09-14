@@ -119,6 +119,8 @@ class AssetsController < AssetAwareController
   # Parameters include asset_type, asset_subtype, id_list, box, or search_text
   #
   def index
+    
+    add_index_breadcrumbs
 
     # disable any spatial filters for this view
     @spatial_filter = nil
@@ -266,8 +268,8 @@ class AssetsController < AssetAwareController
 
   def show
 
-    add_breadcrumb "#{@asset.asset_type.name}".pluralize, inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
-    add_breadcrumb "#{@asset.asset_type.name.singularize} Profile"
+    add_breadcrumbs
+
     # add_breadcrumb "#{@asset.asset_subtype.name}", inventory_index_path(:asset_subtype => @asset.asset_subtype)
     # add_breadcrumb @asset.asset_tag, inventory_path(@asset)
 
@@ -648,6 +650,15 @@ class AssetsController < AssetAwareController
     Rails.logger.debug "@view = #{@view}"
     Rails.logger.debug "@view = #{@fta_asset_class_id}"
 
+  end
+
+  def add_index_breadcrumbs
+    # placeholder
+  end
+
+  def add_breadcrumbs
+    add_breadcrumb "#{@asset.asset_type.name}".pluralize, inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
+    add_breadcrumb "#{@asset.asset_type.name.singularize} Profile"
   end
 
   # returns a list of assets for an index view (index, map) based on user selections. Called after
