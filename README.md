@@ -35,25 +35,25 @@ TODO: Write usage instructions here
 
 ---
 
-#### [transam_accounting](../transam_accounting)
+#### [transam_accounting](https://github.com/camsys/transam_accounting)
 [![Build Status](https://travis-ci.org/camsys/transam_accounting.svg)](https://travis-ci.org/camsys/transam_accounting)
 
-#### transam_audit
+#### [transam_audit](https://github.com/camsys/transam_audit)
 [![Build Status](https://travis-ci.org/camsys/transam_audit.svg)](https://travis-ci.org/camsys/transam_audit)
 
-#### transam_cpt
+#### [transam_cpt](https://github.com/camsys/transam_cpt)
 [![Build Status](https://travis-ci.org/camsys/transam_cpt.svg)](https://travis-ci.org/camsys/transam_cpt)
 
-#### transam_funding
+#### [transam_funding](https://github.com/camsys/transam_funding)
 [![Build Status](https://travis-ci.org/camsys/transam_funding.svg)](https://travis-ci.org/camsys/transam_funding)
 
-#### transam_reporting
+#### [transam_reporting](https://github.com/camsys/transam_reporting)
 [![Build Status](https://travis-ci.org/camsys/transam_reporting.svg)](https://travis-ci.org/camsys/transam_reporting)
 
-#### [transam_spatial](../transam_spatial)
+#### [transam_spatial](https://github.com/camsys/transam_spatial)
 [![Build Status](https://travis-ci.org/camsys/transam_spatial.svg)](https://travis-ci.org/camsys/transam_spatial)
 
-#### transam_transit
+#### [transam_transit](https://github.com/camsys/transam_transit)
 [![Build Status](https://travis-ci.org/camsys/transam_transit.svg)](https://travis-ci.org/camsys/transam_transit)
 
 
