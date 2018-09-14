@@ -1,6 +1,16 @@
-# TransamCore
+# TransAM Core
 
-TODO: Write a gem description
+TransAM is a fully open source software platform for managing transportation assets. As an open
+source solution, TransAM provides a low-cost, license-free alternative to proprietary asset management
+systems. Specifically designed to address the unique challenges of asset management within public
+transportation agencies, the platform is feature rich, including a variety of industry-standard models
+to forecast asset condition and replacement cycles, quantify capital needs, and
+develop and implement state-of-good-repair policies. TransAM accommodates all types of transportation-related
+assets, including rolling stock, rail, facilities, shelters, signage and other infrastructure,
+maintenance equipment, communications equipment, and computers and software.
+
+TransAM functionality is decomposed into a set of Rails Engines, which can be incorporated into a Rails application framework 
+to build a fully functional TransAM application. The Core engine provides the foundation for all other engines and TransAM applications.
 
 ## Installation
 
