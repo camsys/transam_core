@@ -58,6 +58,7 @@ Rails.application.routes.draw do
         get 'add_to_group'
         get 'remove_from_group'
         get 'popup'
+        get 'get_subheader'
         get 'get_dependents'
         patch 'add_dependents'
         get 'get_dependent_subform'

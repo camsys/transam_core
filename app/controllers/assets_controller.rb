@@ -5,7 +5,7 @@ class AssetsController < AssetAwareController
   # Set the view variabless form the params @asset_type, @asset_subtype, @search_text, @spatial_filter, @view
   before_action :set_view_vars,     :only => [:index, :map]
   # set the @asset variable before any actions are invoked
-  before_action :get_asset,         :only => [:tag, :show, :edit, :copy, :update, :destroy, :summary_info, :add_to_group, :remove_from_group, :popup, :get_dependents, :add_dependents, :get_dependent_subform]
+  before_action :get_asset,         :only => [:tag, :show, :edit, :copy, :update, :destroy, :summary_info, :add_to_group, :remove_from_group, :popup, :get_dependents, :add_dependents, :get_dependent_subform, :get_subheader]
   before_action :reformat_date_fields,  :only => [:create, :update]
   # Update the vendor_id param if the user is using the vendor_name parameter
   before_action :update_vendor_param,  :only => [:create, :update]
@@ -328,6 +328,12 @@ class AssetsController < AssetAwareController
         format.js { render :action => "edit" }
         format.json { render :json => @asset.errors, :status => :unprocessable_entity }
       end
+    end
+  end
+
+  def get_subheader
+    respond_to do |format|
+      format.js
     end
   end
 

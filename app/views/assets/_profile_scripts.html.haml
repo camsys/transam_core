@@ -19,6 +19,14 @@
           if($.trim(value) == '') return 'This field is required';
         }
       },
+      success: function(response, newValue) {
+        // if related to subheader, then refresh
+        if($('.subheader_' + $(this).attr('id')).length > 0) {
+          $.ajax({
+            url: "#{asset_path(@asset)}/get_subheader"
+          });
+        }
+      },
       error: function() {
         return "invalid input or service unavailable";
       }
