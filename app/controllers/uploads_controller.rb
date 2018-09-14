@@ -32,7 +32,7 @@ class UploadsController < OrganizationAwareController
       add_breadcrumb type.name unless type.nil?
     end
 
-    @uploads = Upload.where(conditions.join(' AND ')).order(:created_at)
+    @uploads = Upload.where(conditions.join(' AND '), *values).order(:created_at)
 
     # cache the set of asset ids in case we need them later
     cache_list(@uploads, INDEX_KEY_LIST_VAR)
