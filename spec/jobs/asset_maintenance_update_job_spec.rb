@@ -9,6 +9,8 @@ RSpec.describe AssetMaintenanceUpdateJob, :type => :job do
   end
 
   it '.run' do
+    skip 'No TransamMaintainable classes in core.'
+    
     test_event = test_asset.maintenance_updates.create!(attributes_for(:maintenance_update_event, :maintenance_type_id => create(:maintenance_type).id))
     AssetMaintenanceUpdateJob.new(test_asset.object_key).run
     test_asset.reload

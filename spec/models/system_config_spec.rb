@@ -61,10 +61,6 @@ RSpec.describe SystemConfig, :type => :model do
       test_config.num_reporting_years = nil
       expect(test_config.valid?).to be false
     end
-    it 'must have asset base class name' do
-      test_config.asset_base_class_name = nil
-      expect(test_config.valid?).to be false
-    end
   end
 
   it '#instance' do

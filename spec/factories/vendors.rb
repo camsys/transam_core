@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :vendor do
-    name 'Test Vendor'
+    name { 'Test Vendor' }
     association :organization
   end
 end

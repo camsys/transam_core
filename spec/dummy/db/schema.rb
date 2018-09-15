@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_08_07_202313) do
+ActiveRecord::Schema.define(version: 2018_09_12_191549) do
 
   create_table "activities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "object_key", limit: 12
@@ -895,6 +895,7 @@ ActiveRecord::Schema.define(version: 2018_08_07_202313) do
     t.string "object_key", limit: 12, null: false
     t.bigint "organization_id", null: false
     t.bigint "asset_subtype_id"
+    t.bigint "upload_id"
     t.string "asset_tag", null: false
     t.date "disposition_date"
     t.string "external_id"
@@ -938,6 +939,7 @@ ActiveRecord::Schema.define(version: 2018_08_07_202313) do
     t.index ["organization_id"], name: "index_transam_assets_on_organization_id"
     t.index ["title_ownership_organization_id"], name: "index_transam_assets_on_title_ownership_organization_id"
     t.index ["transam_assetible_type", "transam_assetible_id"], name: "transam_assetible_idx"
+    t.index ["upload_id"], name: "index_transam_assets_on_upload_id"
     t.index ["vendor_id"], name: "index_transam_assets_on_vendor_id"
   end
 

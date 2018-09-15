@@ -5,7 +5,7 @@ class AssetsController < AssetAwareController
   # Set the view variabless form the params @asset_type, @asset_subtype, @search_text, @spatial_filter, @view
   before_action :set_view_vars,     :only => [:index, :map]
   # set the @asset variable before any actions are invoked
-  before_action :get_asset,         :only => [:tag, :show, :edit, :copy, :update, :destroy, :summary_info, :add_to_group, :remove_from_group, :popup, :get_dependents, :add_dependents, :get_dependent_subform]
+  before_action :get_asset,         :only => [:tag, :show, :edit, :copy, :update, :destroy, :summary_info, :add_to_group, :remove_from_group, :popup, :get_dependents, :add_dependents, :get_dependent_subform, :get_subheader]
   before_action :reformat_date_fields,  :only => [:create, :update]
   # Update the vendor_id param if the user is using the vendor_name parameter
   before_action :update_vendor_param,  :only => [:create, :update]
@@ -119,6 +119,8 @@ class AssetsController < AssetAwareController
   # Parameters include asset_type, asset_subtype, id_list, box, or search_text
   #
   def index
+    
+    add_index_breadcrumbs
 
     # disable any spatial filters for this view
     @spatial_filter = nil
@@ -266,8 +268,8 @@ class AssetsController < AssetAwareController
 
   def show
 
-    add_breadcrumb "#{@asset.asset_type.name}".pluralize, inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
-    add_breadcrumb "#{@asset.asset_type.name.singularize} Profile"
+    add_breadcrumbs
+
     # add_breadcrumb "#{@asset.asset_subtype.name}", inventory_index_path(:asset_subtype => @asset.asset_subtype)
     # add_breadcrumb @asset.asset_tag, inventory_path(@asset)
 
@@ -328,6 +330,12 @@ class AssetsController < AssetAwareController
         format.js { render :action => "edit" }
         format.json { render :json => @asset.errors, :status => :unprocessable_entity }
       end
+    end
+  end
+
+  def get_subheader
+    respond_to do |format|
+      format.js
     end
   end
 
@@ -642,6 +650,15 @@ class AssetsController < AssetAwareController
     Rails.logger.debug "@view = #{@view}"
     Rails.logger.debug "@view = #{@fta_asset_class_id}"
 
+  end
+
+  def add_index_breadcrumbs
+    # placeholder
+  end
+
+  def add_breadcrumbs
+    add_breadcrumb "#{@asset.asset_type.name}".pluralize, inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
+    add_breadcrumb "#{@asset.asset_type.name.singularize} Profile"
   end
 
   # returns a list of assets for an index view (index, map) based on user selections. Called after
