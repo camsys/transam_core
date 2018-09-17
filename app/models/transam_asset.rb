@@ -270,7 +270,15 @@ class TransamAsset < TransamAssetRecord
     very_specific.class.reflect_on_all_associations(:has_many).each do |assoc|
       a << assoc.klass if assoc.class_name.end_with? 'UpdateEvent'
     end
-    a
+
+    if very_specific.class.superclass.name != "TransamAssetRecord"
+      klass = very_specific.class.superclass
+      klass.reflect_on_all_associations(:has_many).each do |assoc|
+        a << assoc.klass if assoc.class_name.end_with? 'UpdateEvent'
+      end
+    end
+
+    a.uniq
   end
 
   def asset_events(unscoped=false)
