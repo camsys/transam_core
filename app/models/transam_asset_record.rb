@@ -122,4 +122,12 @@ class TransamAssetRecord < ActiveRecord::Base
     return arr.flatten
   end
 
+  def replacement_by_policy?
+    true # all assets in core are in replacement cycle. To plan and/or make exceptions to normal schedule, see CPT.
+  end
+
+  def replacement_pinned?
+    false # all assets can be locked into place to prevent sched replacement year changes but by default none are locked
+  end
+
 end
