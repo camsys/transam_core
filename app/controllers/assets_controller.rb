@@ -244,7 +244,7 @@ class AssetsController < AssetAwareController
     # create a copy of the asset and null out all the fields that are identified as cleansable
     new_asset = @asset.copy(true)
 
-    notify_user(:notice, "Complete the master record to copy Asset #{@asset.name}.")
+    notify_user(:notice, "Complete the master record to copy Asset #{@asset.to_s}.")
 
     @asset = new_asset
 

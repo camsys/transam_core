@@ -270,7 +270,15 @@ class TransamAsset < TransamAssetRecord
     very_specific.class.reflect_on_all_associations(:has_many).each do |assoc|
       a << assoc.klass if assoc.class_name.end_with? 'UpdateEvent'
     end
-    a
+
+    if very_specific.class.superclass.name != "TransamAssetRecord"
+      klass = very_specific.class.superclass
+      klass.reflect_on_all_associations(:has_many).each do |assoc|
+        a << assoc.klass if assoc.class_name.end_with? 'UpdateEvent'
+      end
+    end
+
+    a.uniq
   end
 
   def asset_events(unscoped=false)
@@ -417,14 +425,6 @@ class TransamAsset < TransamAssetRecord
   # Returns true if an asset is scheduled for disposition
   def scheduled_for_disposition?
     (scheduled_disposition_year.present? and disposed? == false)
-  end
-
-  def replacement_by_policy?
-    true # all assets in core are in replacement cycle. To plan and/or make exceptions to normal schedule, see CPT.
-  end
-
-  def replacement_pinned?
-    false # all assets can be locked into place to prevent sched replacement year changes but by default none are locked
   end
 
   def is_early_replacement?
