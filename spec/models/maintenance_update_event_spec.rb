@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe MaintenanceUpdateEvent, :type => :model do
+  before { skip('No TransamMaintainable classes in core.') }
 
   let(:test_event) { create(:equipment_asset, :parent => create(:equipment_asset)).maintenance_updates.create!(attributes_for(:maintenance_update_event, :maintenance_type_id => create(:maintenance_type).id)) }
 

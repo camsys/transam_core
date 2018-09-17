@@ -26,6 +26,9 @@ class NewUserService
 
     user.update_user_organization_filters
 
+    user.viewable_organizations = user.user_organization_filter.try(:get_organizations) || []
+    user.save!
+
     UserMailer.send_email_on_user_creation(user).deliver
   end
 end

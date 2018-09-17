@@ -1,3 +1,4 @@
+require 'active_record/acts_as'
 require 'devise'
 require 'rolify'
 require 'cancan'
@@ -12,6 +13,7 @@ require 'delayed_job_active_record'
 require 'high_voltage'
 require 'haml-rails'
 require 'simple_form'
+require 'country_select'
 require 'gritter'
 require 'carrierwave'
 require 'rmagick'
@@ -26,6 +28,8 @@ require 'cocoon'
 require 'jquery-ui-rails'
 require 'jquery-form-rails'
 require 'roo'
+
+
 
 module TransamCore
   class Engine < ::Rails::Engine

@@ -184,9 +184,10 @@ class EarlyDispositionRequestUpdateEvent < AssetEvent
 
     event_desc = event_in_passive_tense(event)
 
-    event_url = Rails.application.routes.url_helpers.inventory_asset_event_path self.try(:asset), self
+    event_url = Rails.application.routes.url_helpers.inventory_asset_event_path self.try(Rails.application.config.asset_base_class_name.underscore), self
 
-    early_notification = Notification.create(text: "Early disposition request for #{asset.asset_tag} #{event_desc}", link: event_url, notifiable_type: 'Organization', notifiable_id: self.try(:asset).try(:organization_id))
+    early_notification = Notification.create(text: "Early disposition request for #{transam_asset} #{event_desc}", link: event_url, notifiable_type: 'Organization', notifiable_id: self.try(:asset).try(:organization_id))
+
 
     recipients = if self.respond_to?(:notification_recipients)
       notification_recipients(event)

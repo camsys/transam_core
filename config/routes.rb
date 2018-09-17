@@ -47,7 +47,9 @@ Rails.application.routes.draw do
         get 'parent'
         post 'fire_asset_event_workflow_events'
         get 'get_summary'
+        get 'inventory_index'
       end
+
       member do
         get 'tag'
         get 'summary_info'
@@ -56,8 +58,10 @@ Rails.application.routes.draw do
         get 'add_to_group'
         get 'remove_from_group'
         get 'popup'
+        get 'get_subheader'
         get 'get_dependents'
         patch 'add_dependents'
+        get 'get_dependent_subform'
       end
 
     resources :asset_events do 
@@ -66,6 +70,23 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :tasks,       :only => [:create, :update, :edit, :new, :destroy]
+    resources :comments,    :only => [:create, :update, :edit, :new, :destroy]
+
+    resources :images,      :only => [:create, :update, :edit, :new, :destroy] do
+      member do
+        get 'download'
+      end
+    end
+
+    resources :documents,   :only => [:create, :update, :edit, :new, :destroy] do
+      member do
+        get 'download'
+      end
+    end
+  end
+
+  resources :transam_assets, :controller => 'assets', :only => [] do
     resources :tasks,       :only => [:create, :update, :edit, :new, :destroy]
     resources :comments,    :only => [:create, :update, :edit, :new, :destroy]
 

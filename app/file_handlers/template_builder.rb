@@ -8,7 +8,7 @@
 class TemplateBuilder
 
   attr_accessor :organization
-  attr_accessor :asset_types
+  attr_accessor :search_parameter_value
   attr_accessor :assets
   attr_accessor :organization_list
 
@@ -33,10 +33,10 @@ class TemplateBuilder
       style_cache[s[:name]] = style
     end
     Rails.logger.debug style_cache.inspect
-
     # Add the header rows
+    title = sheet.styles.add_style(:bg_color => "00A9A9A9", :sz=>12)
     header_rows.each do |header_row|
-      sheet.add_row header_row
+      sheet.add_row header_row, :style => title 
     end
 
     # add the rows
@@ -46,6 +46,12 @@ class TemplateBuilder
     column_styles.each do |col_style|
       Rails.logger.debug col_style.inspect
       sheet.col_style col_style[:column], style_cache[col_style[:name]]
+    end
+
+    # Add the row styles
+    row_styles.each do |row_style|
+      Rails.logger.debug row_style.inspect
+      sheet.row_style row_style[:row], style_cache[row_style[:name]]
     end
 
     # set column widths
@@ -93,6 +99,10 @@ class TemplateBuilder
   # Override this to add custom column widths
   # Only allow: nil, or numeric values
   def column_widths
+    []
+  end
+
+  def row_styles
     []
   end
 

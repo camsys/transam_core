@@ -17,7 +17,7 @@ class Policy < ActiveRecord::Base
   #------------------------------------------------------------------------------
   after_initialize :set_defaults
 
-  after_commit :apply_policy
+  after_save :apply_policy
 
   #------------------------------------------------------------------------------
   # Associations
@@ -197,23 +197,8 @@ class Policy < ActiveRecord::Base
   end
 
   def apply_policy
-    Asset.operational.where(organization_id: self.organization_id).each do |a|
-      asset = Asset.get_typed_asset(a)
-      [:update_sogr, :update_estimated_replacement_cost, :update_scheduled_replacement_cost].each do |m|
-        begin
-          asset.send(m, false)
-        rescue Exception => e
-          Rails.logger.warn e.message
-        end
-      end
-
-      begin
-        asset.save!
-      rescue Exception => e
-        Rails.logger.warn e.message
-        Rails.logger.warn e.backtrace
-      end
-
+    TransamAsset.operational.where(organization_id: self.organization_id).each do |asset|
+      Rails.logger.warn "Issue applying policy on TransAM Asset #{asset}" unless asset.save
     end
   end
 

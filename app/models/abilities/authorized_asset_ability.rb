@@ -21,6 +21,17 @@ module Abilities
         a.disposed?
       end
 
+
+      # Create
+      can :create,  [TransamAssetRecord]
+
+      # update assets for any organization in their list
+      can :update,  TransamAssetRecord, :organization_id => organization_ids
+      # Prevent updating or removing assets that have been previously disposed
+      cannot [:update, :destroy], TransamAssetRecord do |a|
+        a.disposed?
+      end
+
     end
   end
 end

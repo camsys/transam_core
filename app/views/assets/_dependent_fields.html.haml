@@ -3,7 +3,7 @@
     .row
       .col-md-10
         = f.input :object_key, :as => :hidden
-        = f.input :parent_name, :label => 'Child', :input_html => {:value => f.object.asset_tag.present? ? f.object.to_s : "", :autocomplete => 'off', :class => 'form-control parent_name', :placeholder => 'Enter search text', :data => {:url => filter_inventory_index_path(organization_id: @asset.organization_id, allow_parent: 1)}}
+        = f.input :parent_name, :label => 'Child', :input_html => {:value => f.object.asset_tag.present? ? f.object.to_s : "", :autocomplete => 'off', :class => 'form-control parent_name', :placeholder => 'Enter search text', :data => {:url => filter_inventory_index_path(allow_parent: 1)}}
 
       .col-md-2
         = link_to_remove_association f, :class => 'btn btn-xs btn-warning', :style => 'margin-top: 27px;' do

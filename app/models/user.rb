@@ -20,8 +20,6 @@ class User < ActiveRecord::Base
   #-----------------------------------------------------------------------------
   after_initialize  :set_defaults
 
-  before_save       :set_viewable_organizations
-
   # Clean up any HABTM associations before the user is destroyed
   before_destroy { :clean_habtm_relationships }
 
@@ -193,7 +191,7 @@ class User < ActiveRecord::Base
     if weather_code
       weather_code.code
     else
-      Rails.application.config.default_weather_code
+      SystemConfig.instance.default_weather_code
     end
   end
 
@@ -375,12 +373,6 @@ class User < ActiveRecord::Base
     self.notify_via_email ||= false
     self.failed_attempts ||= 0
     self.active ||= false
-  end
-
-  # right now the orgs you belong to are always the same orgs you can view
-  # may change in the future
-  def set_viewable_organizations
-    self.viewable_organizations = self.organizations
   end
 
   def clean_habtm_relationships

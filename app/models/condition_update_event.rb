@@ -65,7 +65,7 @@ class ConditionUpdateEvent < AssetEvent
 
   # usually no conditions on can create but can be overridden by specific asset events
   def can_update?
-    asset_event_type.active && asset.dependents.count == 0
+    asset_event_type.active && transam_asset.dependents.count == 0
   end
 
   # Override numeric setters to remove any extraneous formats from the number strings eg $, etc.
@@ -88,7 +88,7 @@ class ConditionUpdateEvent < AssetEvent
   # Should be overridden by any form fields during save
   def set_defaults
     super
-    self.assessed_rating ||= (asset.reported_condition_rating || ConditionType.maximum(:rating))
+    self.assessed_rating ||= transam_asset ? (transam_asset.condition_updates.last.try(:reported_condition_rating)) : ConditionType.maximum(:rating)
     self.asset_event_type ||= AssetEventType.find_by_class_name(self.name)
   end
 

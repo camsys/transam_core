@@ -2,6 +2,9 @@ require 'rails_helper'
 
 describe "uploads/_templates_form.html.haml", :type => :view do
   it 'form' do
+    # Add equipment type for uploads template form
+    AssetType.create!({:active => 1, :name => 'Maintenance Equipment',    :description => 'Maintenance Equipment',      :class_name => 'Equipment',         :map_icon_name => "blueIcon",     :display_icon_name => "fa fa-wrench"})
+
     test_user = create(:admin)
     test_user.organizations = [test_user.organization, create(:organization)]
     test_user.save!
@@ -12,6 +15,6 @@ describe "uploads/_templates_form.html.haml", :type => :view do
 
     expect(rendered).to have_field('template_proxy_organization_id')
     expect(rendered).to have_field('template_proxy_file_content_type_id')
-    expect(rendered).to have_field('template_proxy_asset_type_id')
+    expect(rendered).to have_field('template_proxy_search_parameter_value')
   end
 end

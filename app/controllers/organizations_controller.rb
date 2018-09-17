@@ -114,9 +114,17 @@ class OrganizationsController < OrganizationAwareController
 
     org_type = OrganizationType.find_by(id: params[:organization][:organization_type_id])
     if org_type
-      @org = org_type.class_name.constantize.new(form_params)
+      bootstrap_toggle_fields = organization_allowable_params.select{|x| (x.to_s.include? '_ids') && !(x.to_s.include? '[]')}
+      @org = org_type.class_name.constantize.new(form_params.except(*bootstrap_toggle_fields))
 
       if @org.save
+
+        bootstrap_toggle_fields.each do |field|
+          if form_params[field].present?
+            list = form_params[field].split(',')
+            @org.send("#{field.to_s}=",list)
+          end
+        end
 
         @org.updates_after_create
 
@@ -164,7 +172,14 @@ class OrganizationsController < OrganizationAwareController
     add_breadcrumb "Update"
 
     respond_to do |format|
-      if @org.update_attributes(form_params)
+      bootstrap_toggle_fields = organization_allowable_params.select{|x| (x.to_s.include? '_ids') && !(x.to_s.include? '[]')}
+      if @org.update_attributes(form_params.except(*bootstrap_toggle_fields))
+        bootstrap_toggle_fields.each do |field|
+          if form_params[field].present?
+            list = form_params[field].split(',')
+            @org.send("#{field.to_s}=",list)
+          end
+        end
         notify_user(:notice, "#{@org.name} was successfully updated.")
         format.html { redirect_to organization_url(@org) }
         format.json { head :no_content }

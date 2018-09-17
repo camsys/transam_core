@@ -13,7 +13,7 @@ class AssetDependentSpatialReferenceUpdateJob < AbstractAssetUpdateJob
     # get their geometry set to null       
     geom = asset.geometry
     count = 0
-    assets = Asset.where('parent_id = ?', asset.id)
+    assets = Rails.application.config.asset_base_class_name.constantize.where(parent_id: asset.id)
     assets.each do |a|
       a.geometry = geom
       a.save

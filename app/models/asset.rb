@@ -9,8 +9,6 @@
 class Asset < ActiveRecord::Base
 
   OBJECT_CACHE_EXPIRE_SECONDS = Rails.application.config.object_cache_expire_seconds
-  # The policy analyzer to use comes from the Rails config
-  POLICY_ANALYZER = Rails.application.config.policy_analyzer
 
   #-----------------------------------------------------------------------------
   # Behaviors
@@ -36,6 +34,8 @@ class Asset < ActiveRecord::Base
   #-----------------------------------------------------------------------------
   # Associations common to all asset types
   #-----------------------------------------------------------------------------
+
+  has_one :transit_asset
 
   # each asset belongs to a single organization
   belongs_to  :organization
@@ -175,6 +175,7 @@ class Asset < ActiveRecord::Base
   #-----------------------------------------------------------------------------
   # Scopes
   #-----------------------------------------------------------------------------
+
   # Returns a list of assets that have been disposed
   scope :disposed,    -> { where('assets.disposition_date IS NOT NULL') }
   # Returns a list of assets that are still operational
@@ -288,6 +289,12 @@ class Asset < ActiveRecord::Base
   #
   #-----------------------------------------------------------------------------
 
+  def self.decorates
+    decor = AssetDecorator.new(self.unscoped.ids)
+    decor.whichHierarchy(true)
+    return decor
+  end
+
   # Returns an array of classes which are descendents of Asset, this includes classes
   # that are both direct and in-direct assendents.
   #
@@ -312,12 +319,20 @@ class Asset < ActiveRecord::Base
 
   # Factory method to return a strongly typed subclass of a new asset
   # based on the asset subtype
-  def self.new_asset(asset_subtype)
+  def self.new_asset(asset_subtype, params={})
 
     asset_class_name = asset_subtype.asset_type.class_name
     asset = asset_class_name.constantize.new({:asset_subtype_id => asset_subtype.id, :asset_type_id => asset_subtype.asset_type.id})
     return asset
 
+  end
+
+  def self.very_specific
+    if self.distinct.pluck(:asset_type_id).count == 1
+      self.first.asset_type.class_name.constantize.where(id: self.ids)
+    else
+      self
+    end
   end
 
   # Returns a typed version of an asset. Every asset has a type and this will
@@ -450,7 +465,7 @@ class Asset < ActiveRecord::Base
     node_options = {
       :text => self.asset_tag,
       :href => "/inventory/#{self.object_key}",
-      :nodes => self.dependents.uniq.map{|d| d.to_node(selected)}
+      :nodes => self.dependents.distinct.map{|d| d.to_node(selected)}
     }
 
     # expands everything above selected and then selects selected
@@ -757,7 +772,7 @@ class Asset < ActiveRecord::Base
     if policy_to_use.blank?
       policy_to_use = policy
     end
-    policy_analyzer = POLICY_ANALYZER.constantize.new(self, policy_to_use)
+    policy_analyzer = Rails.application.config.policy_analyzer.constantize.new(self, policy_to_use)
   end
   #-----------------------------------------------------------------------------
   # returns the the organizations's policy that governs the replacement of this

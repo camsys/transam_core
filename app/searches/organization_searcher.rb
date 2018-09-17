@@ -4,8 +4,7 @@
 class OrganizationSearcher < BaseSearcher
 
   # From the application config    
-  ASSET_BASE_CLASS_NAME     = SystemConfig.instance.asset_base_class_name   
-  MAX_ROWS_RETURNED         = SystemConfig.instance.max_rows_returned
+  ASSET_BASE_CLASS_NAME     = Rails.application.config.asset_base_class_name
 
   # add any search params to this list
   attr_accessor :district_id,

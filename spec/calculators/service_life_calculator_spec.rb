@@ -7,7 +7,7 @@ RSpec.describe ServiceLifeCalculator, :type => :calculator do
     @organization = create(:organization)
     @test_asset = create(:buslike_asset, :organization => @organization)
     @policy = create(:policy, :organization => @organization)
-    @condition_update_event = ConditionUpdateEvent.create(:asset => @test_asset)
+    @condition_update_event = ConditionUpdateEvent.create(:asset => @test_asset, assessed_rating: 2.0)
     create(:policy_asset_type_rule, :policy => @policy, :asset_type => @test_asset.asset_type)
     create(:policy_asset_subtype_rule, :policy => @policy, :asset_subtype => @test_asset.asset_subtype)
   end

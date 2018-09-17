@@ -13,7 +13,12 @@ class KeywordSearchIndex < ActiveRecord::Base
 
 	# Return the Rails path to this object
 	def name
-		"#{object_class.underscore}_path(:id => '#{object_key}')"
+		if object_class == Rails.application.config.asset_base_class_name
+			"inventory_path(:id => '#{object_key}')"
+		else
+			"#{object_class.underscore}_path(:id => '#{object_key}')"
+		end
+
 	end
 
 end

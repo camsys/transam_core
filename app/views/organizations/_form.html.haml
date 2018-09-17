@@ -15,7 +15,7 @@
     .col-md-6
       = dialog_tag('Corporate', {:icon => 'fa fa-book', :class => "header-part"}) do
         = f.input :name, :required => true
-        = f.input :short_name, :required => true, :label => "Short Name"
+        = f.input :short_name, :required => true, :label => "Short Name", :disabled => (SystemConfig.instance.special_locked_fields.try(:include?,'organizations.short_name') && !(current_user.has_role? :admin))
         = f.input :external_id, :label => "External ID"
     .col-md-6
       = dialog_tag('Contact', {:icon => 'fa fa-book', :class => "header-part"}) do

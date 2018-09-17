@@ -3,7 +3,7 @@
   ///////// TIMELINE RELATED FUNCTIONS ////////////////////////////////
   var timeline;
   google.setOnLoadCallback(draw_timeline);
-  
+
   // Called when a user mouses over a row
   function select_event(row) {
     timeline.setSelection([{row: row}])
@@ -13,7 +13,7 @@
   $("a[href='#hist']").on('shown.bs.tab', function(e) {
     draw_timeline();
   });
-  
+
   // Called when the Visualization API is loaded.
   function draw_timeline() {
 
@@ -38,7 +38,7 @@
         }
       <% end %>
     ];
-  
+
     // specify options
     options = {
       "width" : "100%",
@@ -46,15 +46,14 @@
       "minHeight" : "100%",
       "style" : "box"
     };
-  
+
     // Instantiate our timeline object.
     timeline = new links.Timeline(document.getElementById('timeline'));
-  
+
     // Draw our timeline with the created data and options
     timeline.draw(data, options);
   };
   ///////// END OF TIMELINE RELATED FUNCTIONS //////////////////////
 
 </script>
-
 

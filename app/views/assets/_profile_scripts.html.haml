@@ -1,0 +1,142 @@
+:javascript
+
+  $(function() {
+    $.fn.editable.defaults.mode = 'inline';
+    $.fn.editable.defaults.clear = false;
+    $.fn.editable.defaults.savenochange = true;
+
+    $('.editable-field.combodate').editable({
+        template: 'MMM D YYYY',    
+        viewformat: 'MM/DD/YYYY',
+        combodate: {
+          maxYear: (new Date()).getFullYear()
+        }
+    });
+
+    var generic_xeditable_options = {
+      validate: function(value) {
+        if($(this).hasClass('required')) {
+          if($.trim(value) == '') return 'This field is required';
+        }
+      },
+      success: function(response, newValue) {
+        // if related to subheader, then refresh
+        if($('.subheader_' + $(this).attr('id')).length > 0) {
+          $.ajax({
+            url: "#{asset_path(@asset)}/get_subheader"
+          });
+        }
+      },
+      error: function() {
+        return "invalid input or service unavailable";
+      }
+    };
+
+    var currency_xeditable_options = {
+      display: function(value) {
+        if($.trim(value) == '') {
+          $(this).text('');
+        } else {
+          var currency_val = Number((parseFloat(value)).toFixed(1)).toLocaleString();
+          $(this).text('$ ' + currency_val);
+        }
+      }
+    };
+    for(var attr in generic_xeditable_options) {  
+      currency_xeditable_options[attr] = generic_xeditable_options[attr];
+    } 
+
+    $('.editable-field:not(.currency-number)').editable(generic_xeditable_options);
+
+    $('.editable-field.currency-number').editable(currency_xeditable_options);
+
+    disabled = "#{cannot?(:update, @asset) ? 'disable' : ''}";
+    if (disabled.length > 0) {
+      $('.editable-field').editable(disabled);
+    }
+
+    $('.not-editable-field').editable('disable');
+
+    // select all text when editable input shows up so to speed up input
+    $('.editable-field').on('shown', function(e, editable) {
+      setTimeout( function() {
+        editable.input.$input.select();
+      }, 10 );
+    });
+
+    // click an editable cell to bring up editable-input
+    $('.editable-field:not(.editable-disabled)').closest('td').click(function() {
+      if (editableActive) return;
+      
+      var that = this;
+      setTimeout(function() {
+        $(that).find('.editable-field').editable('show');
+        }, 10);
+    });
+
+    // if the cell is editable enabled, show up editable input when it gets focus
+    $('.editable-field:not(.editable-disabled)').focus(function() {
+      $(this).editable('show');
+    });
+
+    function show_fields_segment_unit_type_changes(segment_unit_type_id) {
+      if (parseInt(segment_unit_type_id) == parseInt('#{InfrastructureSegmentUnitType.find_by(name: "Marker Posts").try(:id)}')) {
+        $('.segment-unit-type-marker-posts').show();
+        $('.segment-unit-type:not(.segment-unit-type-marker-posts)').hide();
+      } else if (parseInt(segment_unit_type_id) == parseInt('#{InfrastructureSegmentUnitType.find_by(name: "Chaining").try(:id)}')) {
+        $('.segment-unit-type-chaining').show();
+        $('.segment-unit-type:not(.segment-unit-type-chaining)').hide();
+      } else {
+        $('.segment-unit-type-lat-long').show();
+        $('.segment-unit-type:not(.segment-unit-type-lat-long)').hide();
+      }
+    }
+    show_fields_segment_unit_type_changes($("input[name='infrastructure_segment_unit_type_id']:checked").val());
+
+    $("input[name='infrastructure_segment_unit_type_id']").on("click", function(value) {
+      show_fields_segment_unit_type_changes($(this).val());
+    });
+
+    // show Other text entry only if it's a Other type; otherwise, hide and empty its value
+    // type_el: HTML element of the Type dropdown
+    // type_id: Type dropdown value
+    function show_hide_other_text_entry(type_el, type_id) {
+      var other_text_container = $(type_el).parents('.other-fields-container').find('.other-value-container');
+      if(other_text_container) {
+        var other_ids = $(type_el).parents('.other-type-container').data('other-type-ids');
+        if(!other_ids || other_ids.indexOf(type_id) < 0) {
+          other_text_container.find('.editable-field').editable('setValue', '');
+          other_text_container.hide();
+        } else {
+          other_text_container.show();
+        }
+      }
+
+      var dual_text_container = $(type_el).parents('.other-fields-container').find('.dual-value-container');
+      if(dual_text_container) {
+        var dual_ids = $(type_el).parents('.other-type-container').data('dual-type-ids');
+        if(!dual_ids || dual_ids.indexOf(type_id) < 0) {
+          dual_text_container.find('.editable-field').editable('setValue', '');
+          dual_text_container.hide();
+        } else {
+          dual_text_container.show();
+        }
+      }
+    }
+
+    $('.other-type-container .editable-field').on('save', function(e, params) {
+      var type_id = params.newValue;
+      if(type_id) {
+        type_id = parseInt(type_id);
+      }
+      show_hide_other_text_entry(this, type_id);
+    });
+
+    $('.other-type-container .editable-field').each(function() {
+      var type_id = $(this).editable('getValue')[$(this).data('name')];
+      if(type_id) {
+        type_id = parseInt(type_id);
+      }
+      show_hide_other_text_entry(this, type_id);
+    });
+  });

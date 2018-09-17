@@ -41,17 +41,17 @@ class AssetEndOfServiceService
     values << fy_year
 
     # Limit by asset type
-    unless asset_type_id.blank?
-      conditions << "asset_type_id = ?"
-      values << asset_type_id
-    end
+    #unless asset_type_id.blank?
+    #  conditions << "asset_subtype_id = ?"
+    #  values << asset_type_id
+    #end
 
     unless asset_subtype_id.blank?
       conditions << "asset_subtype_id = ?"
       values << asset_subtype_id
     end
 
-    Asset.operational.where(conditions.join(' AND '), *values)
+    Rails.application.config.asset_base_class_name.constantize.operational.where(conditions.join(' AND '), *values)
   end
 
   #------------------------------------------------------------------------------

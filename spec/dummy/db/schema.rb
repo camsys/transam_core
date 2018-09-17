@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_06_05_144511) do
+ActiveRecord::Schema.define(version: 2018_09_12_191549) do
 
   create_table "activities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "object_key", limit: 12
@@ -69,7 +69,8 @@ ActiveRecord::Schema.define(version: 2018_06_05_144511) do
 
   create_table "asset_events", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "object_key", limit: 12, null: false
-    t.integer "asset_id", null: false
+    t.integer "asset_id"
+    t.integer "transam_asset_id"
     t.integer "asset_event_type_id", null: false
     t.integer "upload_id"
     t.date "event_date", null: false
@@ -130,8 +131,9 @@ ActiveRecord::Schema.define(version: 2018_06_05_144511) do
     t.index ["organization_id"], name: "asset_groups_idx2"
   end
 
-  create_table "asset_groups_assets", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.integer "asset_id", null: false
+  create_table "asset_groups_assets", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.integer "asset_id"
+    t.integer "transam_asset_id"
     t.integer "asset_group_id", null: false
     t.index ["asset_id", "asset_group_id"], name: "asset_groups_assets_idx1"
   end
@@ -513,6 +515,16 @@ ActiveRecord::Schema.define(version: 2018_06_05_144511) do
     t.boolean "active", null: false
   end
 
+  create_table "manufacturer_models", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.bigint "organization_id"
+    t.boolean "active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organization_id"], name: "index_manufacturer_models_on_organization_id"
+  end
+
   create_table "manufacturers", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "filter", limit: 32, null: false
     t.string "name", limit: 128, null: false
@@ -799,6 +811,13 @@ ActiveRecord::Schema.define(version: 2018_06_05_144511) do
     t.boolean "active"
   end
 
+  create_table "serial_numbers", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "identifiable_type"
+    t.bigint "identifiable_id"
+    t.string "identification"
+    t.index ["identifiable_type", "identifiable_id"], name: "index_serial_numbers_on_identifiable_type_and_identifiable_id"
+  end
+
   create_table "service_life_calculation_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name", limit: 64, null: false
     t.string "class_name", limit: 64, null: false
@@ -814,10 +833,19 @@ ActiveRecord::Schema.define(version: 2018_06_05_144511) do
     t.boolean "active", null: false
   end
 
+  create_table "system_config_extensions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "class_name"
+    t.string "extension_name"
+    t.boolean "active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "system_configs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "customer_id"
     t.string "start_of_fiscal_year", limit: 5
     t.string "default_fiscal_year_formatter"
+    t.string "default_weather_code"
     t.string "map_tile_provider", limit: 64
     t.integer "srid"
     t.float "min_lat"
@@ -830,8 +858,9 @@ ActiveRecord::Schema.define(version: 2018_06_05_144511) do
     t.string "geocoder_region", limit: 64
     t.integer "num_forecasting_years"
     t.integer "num_reporting_years"
-    t.string "asset_base_class_name", limit: 64
     t.integer "max_rows_returned"
+    t.string "special_locked_fields"
+    t.string "measurement_system"
     t.string "data_file_path", limit: 64
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -858,6 +887,60 @@ ActiveRecord::Schema.define(version: 2018_06_05_144511) do
     t.index ["organization_id"], name: "tasks_idx4"
     t.index ["state"], name: "tasks_idx3"
     t.index ["user_id"], name: "tasks_idx2"
+  end
+
+  create_table "transam_assets", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "transam_assetible_type"
+    t.bigint "transam_assetible_id"
+    t.string "object_key", limit: 12, null: false
+    t.bigint "organization_id", null: false
+    t.bigint "asset_subtype_id"
+    t.bigint "upload_id"
+    t.string "asset_tag", null: false
+    t.date "disposition_date"
+    t.string "external_id"
+    t.text "description"
+    t.bigint "manufacturer_id"
+    t.string "other_manufacturer"
+    t.bigint "manufacturer_model_id"
+    t.string "other_manufacturer_model"
+    t.integer "manufacture_year"
+    t.integer "quantity"
+    t.string "quantity_unit"
+    t.integer "purchase_cost"
+    t.date "purchase_date"
+    t.boolean "purchased_new"
+    t.date "in_service_date"
+    t.bigint "vendor_id"
+    t.string "other_vendor"
+    t.bigint "operator_id"
+    t.string "other_operator"
+    t.string "title_number"
+    t.bigint "title_ownership_organization_id"
+    t.string "other_title_ownership_organization"
+    t.bigint "lienholder_id"
+    t.string "other_lienholder"
+    t.integer "parent_id"
+    t.integer "location_id"
+    t.integer "policy_replacement_year"
+    t.integer "scheduled_replacement_year"
+    t.integer "scheduled_replacement_cost"
+    t.text "early_replacement_reason"
+    t.boolean "in_backlog"
+    t.integer "scheduled_rehabilitation_year"
+    t.integer "scheduled_disposition_year"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["asset_subtype_id"], name: "index_transam_assets_on_asset_subtype_id"
+    t.index ["lienholder_id"], name: "index_transam_assets_on_lienholder_id"
+    t.index ["manufacturer_id"], name: "index_transam_assets_on_manufacturer_id"
+    t.index ["manufacturer_model_id"], name: "index_transam_assets_on_manufacturer_model_id"
+    t.index ["operator_id"], name: "index_transam_assets_on_operator_id"
+    t.index ["organization_id"], name: "index_transam_assets_on_organization_id"
+    t.index ["title_ownership_organization_id"], name: "index_transam_assets_on_title_ownership_organization_id"
+    t.index ["transam_assetible_type", "transam_assetible_id"], name: "transam_assetible_idx"
+    t.index ["upload_id"], name: "index_transam_assets_on_upload_id"
+    t.index ["vendor_id"], name: "index_transam_assets_on_vendor_id"
   end
 
   create_table "uploads", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|

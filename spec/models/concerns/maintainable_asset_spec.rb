@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Asset, :type => :model do
+  before { skip('No TransamMaintainable classes in core.') }
 
   let(:test_asset) { create(:buslike_asset) }
 

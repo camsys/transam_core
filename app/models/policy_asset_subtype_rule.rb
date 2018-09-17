@@ -16,9 +16,9 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
   #-----------------------------------------------------------------------------
   after_initialize  :set_defaults
 
-  after_save        :distribute_policy
-  after_commit        :apply_policy
-  after_commit      :apply_distributed_policy
+  after_save          :distribute_policy
+  after_update_commit :apply_policy
+  after_commit        :apply_distributed_policy
 
   #-----------------------------------------------------------------------------
   # Associations
@@ -220,23 +220,8 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
   end
 
   def apply_policy
-    Asset.operational.where(organization_id: self.policy.organization_id, asset_subtype_id: self.asset_subtype_id, fuel_type_id: self.fuel_type_id).each do |a|
-      asset = Asset.get_typed_asset(a)
-      [:update_sogr, :update_estimated_replacement_cost, :update_scheduled_replacement_cost].each do |m|
-        begin
-          asset.send(m, false)
-        rescue Exception => e
-          Rails.logger.warn e.message
-        end
-      end
-
-      begin
-        asset.save!
-      rescue Exception => e
-        Rails.logger.warn e.message
-        Rails.logger.warn e.backtrace
-      end
-
+    TransamAsset.operational.where(organization_id: self.policy.organization_id).each do |asset|
+      Rails.logger.warn "Issue applying policy on TransAM Asset #{asset}" unless asset.save
     end
   end
 

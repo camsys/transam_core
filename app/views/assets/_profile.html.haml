@@ -1,0 +1,24 @@
+%ul.nav.nav-tabs
+  - # Load module specific tabs if they exist
+  - SystemConfig.transam_module_names.each do |mod|
+    - view_component = "#{mod}_profile_tabs"
+    - Rails.logger.debug "Checking for #{view_component}: Results = #{lookup_context.template_exists?(view_component, 'assets', true)}"
+    - if lookup_context.template_exists?(view_component, 'assets', true)
+      = render :partial => "assets/#{view_component}"
+
+.tab-content
+  - # Load module specific tab content if they exist
+  - SystemConfig.transam_module_names.each do |mod|
+    - view_component = "#{mod}_profile_tabs_content"
+    - Rails.logger.debug "Checking for #{view_component}: Results = #{lookup_context.template_exists?(view_component, 'assets', true)}"
+    - if lookup_context.template_exists?(view_component, 'assets', true)
+      = render :partial => "assets/#{view_component}"
+
+= render 'profile_scripts'
+
+- # Load module specific tab if they exist
+- SystemConfig.transam_module_names.each do |mod|
+  - view_component = "#{mod}_profile_tabs_scripts"
+  - Rails.logger.debug "Checking for #{view_component}: Results = #{lookup_context.template_exists?(view_component, 'assets', true)}"
+  - if lookup_context.template_exists?(view_component, 'assets', true)
+    = render :partial => "assets/#{view_component}"

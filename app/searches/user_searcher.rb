@@ -3,9 +3,6 @@
 #
 class UserSearcher < BaseSearcher # TODO Not Implemented.  Just copied from other models
 
-  # From the application config    
-  MAX_ROWS_RETURNED         = SystemConfig.instance.max_rows_returned
-
   # add any search params to this list
   attr_accessor :organization_id,
                 :keywords

@@ -32,7 +32,6 @@ class SystemConfig < ActiveRecord::Base
   validates :geocoder_region,             :presence => true
   validates :num_forecasting_years,       :presence => true
   validates :num_reporting_years,         :presence => true
-  validates :asset_base_class_name,       :presence => true
   validates :max_rows_returned,           :presence => true
 
   #------------------------------------------------------------------------------
@@ -42,7 +41,7 @@ class SystemConfig < ActiveRecord::Base
   #------------------------------------------------------------------------------
   def self.instance
     # there will be only one row, and its ID must be '1'
-    find(1)
+    find_by(id: 1)
   end
 
   #

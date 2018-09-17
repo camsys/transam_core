@@ -6,11 +6,12 @@ class LocationUpdateEvent < AssetEvent
 
   # Callbacks
   after_initialize :set_defaults
+  after_save       :update_asset
 
   # Associations
 
   # Each event has a location_id and a location description
-  belongs_to  :parent,  :class_name => 'Asset', :foreign_key => :parent_id
+  belongs_to  :parent,  :class_name => Rails.application.config.asset_base_class_name, :foreign_key => :parent_id
 
   validates   :parent, :presence => true
 
@@ -55,7 +56,7 @@ class LocationUpdateEvent < AssetEvent
   end
  
   def parent_key=(object_key)
-    self.parent = Asset.find_by_object_key(object_key)
+    self.parent = TransamAsset.find_by_object_key(object_key)
   end
   def parent_key
     parent.object_key if parent
@@ -67,11 +68,27 @@ class LocationUpdateEvent < AssetEvent
 
   protected
 
+  # Forces an update of an assets location. This performs an update on the record.
+  def update_asset
+
+    Rails.logger.debug "Updating the recorded location for asset = #{transam_asset.object_key}"
+
+    if transam_asset.location_updates.empty?
+      transam_asset.location_id = nil
+      transam_asset.location_comments = nil
+    else
+      event = transam_asset.location_updates.last
+      transam_asset.location_id = event.parent_id
+      transam_asset.location_comments = event.comments
+    end
+    # save changes to this asset
+    transam_asset.save
+  end
+
   # Set resonable defaults for a new condition update event
   def set_defaults
     super
-    typed_asset = Asset.get_typed_asset(asset)
-    self.parent ||= typed_asset.parent
+    self.parent ||= transam_asset.try(:parent)
     self.asset_event_type ||= AssetEventType.find_by_class_name(self.name)
   end
 

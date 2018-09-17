@@ -1,9 +1,3 @@
-%li
-  %a{:href => "#conf", :data =>{:toggle => 'tab'}}
-    Configuration
-%li
-  %a{:href => "#purc", :data =>{:toggle => 'tab'}}
-    Purchase
 = nav_tab_count_tag("#hist", "History", @asset.asset_events.count)
 - if @asset.occupants.operational.present?
   = nav_tab_count_tag("#occ", "Occupants", @asset.occupants.operational.count)
