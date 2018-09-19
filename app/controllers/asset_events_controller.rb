@@ -330,6 +330,24 @@ class AssetEventsController < AssetAwareController
     end
   end
 
+  def add_asset_breadcrumbs
+    add_breadcrumb @asset.asset_type.name.pluralize(2), inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
+    add_breadcrumb @asset.asset_subtype.name.pluralize(2), inventory_index_path(:asset_subtype => @asset.asset_subtype)
+    add_breadcrumb @asset.asset_tag, inventory_path(@asset)
+  end
+
+  def add_new_show_create_breadcrumbs
+    add_asset_breadcrumbs
+    add_breadcrumb "#{@asset_event.asset_event_type.name} Update"
+  end
+
+  def add_edit_update_breadcrumbs
+    add_asset_breadcrumbs
+    add_breadcrumb @asset_event.asset_event_type.name, edit_inventory_asset_event_path(@asset, @asset_event)
+    add_breadcrumb "Update"
+  end
+
+
   #------------------------------------------------------------------------------
   #
   # Private Methods
@@ -348,23 +366,6 @@ class AssetEventsController < AssetAwareController
   # Never trust parameters from the scary internet, only allow the white list through.
   def form_params
     params.require(:asset_event).permit(asset_event_allowable_params)
-  end
-
-  def add_new_show_create_breadcrumbs
-    add_asset_breadcrumbs
-    add_breadcrumb @asset_event.asset_event_type.name
-  end
-
-  def add_edit_update_breadcrumbs
-    add_asset_breadcrumbs
-    add_breadcrumb @asset_event.asset_event_type.name, edit_inventory_asset_event_path(@asset, @asset_event)
-    add_breadcrumb "Update"
-  end
-
-  def add_asset_breadcrumbs
-    add_breadcrumb @asset.asset_type.name.pluralize(2), inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
-    add_breadcrumb @asset.asset_subtype.name.pluralize(2), inventory_index_path(:asset_subtype => @asset.asset_subtype)
-    add_breadcrumb @asset.asset_tag, inventory_path(@asset)
   end
 
   def check_for_cancel

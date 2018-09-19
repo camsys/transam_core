@@ -75,11 +75,9 @@ class LocationUpdateEvent < AssetEvent
 
     if transam_asset.location_updates.empty?
       transam_asset.location_id = nil
-      transam_asset.location_comments = nil
     else
       event = transam_asset.location_updates.last
       transam_asset.location_id = event.parent_id
-      transam_asset.location_comments = event.comments
     end
     # save changes to this asset
     transam_asset.save

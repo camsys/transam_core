@@ -13,7 +13,7 @@ class NestedResourceController < OrganizationAwareController
     #puts resource.inspect
     controller_name = resource.class.name.underscore
     #puts controller_name
-    if controller_name == 'asset'
+    if controller_name == Rails.application.config.asset_base_class_name.underscore
       controller_name = 'inventory'
     end
     eval("#{controller_name}_url('#{resource.object_key}')")
