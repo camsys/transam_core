@@ -10,7 +10,17 @@
     } else {
       return '<div style = "visibility: hidden;">No</div>';
     }
-  };
+  }
+
+  // above boolean_formatter converts to integer, this doesn't
+  function raw_boolean_formatter(value) {
+    if (value) {
+      // hidden div for exporting
+      return '<i class="fa fa-check"></i><div style = "visibility: hidden;">Yes</div>';
+    } else {
+      return '<div style = "visibility: hidden;">No</div>';
+    }
+  }
 
   function integer_formatter(value) {
     if (value == null) {
