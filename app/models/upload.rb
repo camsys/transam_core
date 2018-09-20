@@ -118,7 +118,7 @@ class Upload < ActiveRecord::Base
 
     if assets.empty?
       asset_events.each do |evt|
-        updates << [evt.asset, evt]
+        updates << [evt.send(Rails.application.config.asset_base_class_name.underscore), evt]
       end
     else
       assets.each do |a|
