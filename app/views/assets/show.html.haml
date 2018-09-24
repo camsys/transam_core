@@ -7,6 +7,9 @@
     width: 94%;
   }
 
+.subheader-label
+  %h2 #{@asset.asset_type.name.singularize}
+
 = render 'subheader'
 .row
   .col-sm-12
