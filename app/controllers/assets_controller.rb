@@ -19,17 +19,16 @@ class AssetsController < AssetAwareController
   INDEX_KEY_LIST_VAR        = "asset_key_list_cache_var"
 
   # Returns a JSON array of matching asset subtypes based on a typeahead name or description
-  def filter
+  def filter(klass=Rails.application.config.asset_base_class_name.constantize)
 
     query = params[:query]
     query_str = "%" + query + "%"
     Rails.logger.debug query_str
 
     matches = []
-    assets = Rails.application.config.asset_base_class_name.constantize
-                 .where(organization_id: current_user.viewable_organization_ids)
-                 .where(params[:search_params])
-                 .where("(asset_tag LIKE ? OR object_key LIKE ? OR description LIKE ?)", query_str, query_str, query_str)
+    assets = klass.where(organization_id: current_user.viewable_organization_ids)
+                  .where(params[:search_params])
+                  .where("(asset_tag LIKE ? OR object_key LIKE ? OR description LIKE ?)", query_str, query_str, query_str)
 
     assets.each do |asset|
       matches << {

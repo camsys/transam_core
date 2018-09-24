@@ -123,11 +123,17 @@
                     that.options.sortName = '';
 
                     if (that.options.sidePagination === 'server') {
-                        var t = that.options.queryParams;
+                        /* TODO There must be a better way to do what we have to do which is to get the query_params method from the table.
+                        If you just use that.options.queryParams instead of 'query_params' it will find the right method
+                        the first time but after that it will use the function that become query params a few lines down.
+                         */
+                        var t = window['query_params'];
+
                         that.options.queryParams = function(params) {
                             params.multiSort = that.options.sortPriority;
                             return t(params);
                         };
+
                         isSingleSort=false;
                         that.initServer(that.options.silentSort);
                         return;

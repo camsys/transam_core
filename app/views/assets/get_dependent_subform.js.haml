@@ -4,3 +4,11 @@
   var disabled = "#{cannot?(:update, @asset) ? 'disable' : ''}";
   if (disabled.length > 0) {$('.editable-field').editable(disabled);}
   $('.not-editable-field').editable('disable');
+
+  $('.editable-field.combodate').editable({
+      template: 'MMM D YYYY',
+      viewformat: 'MM/DD/YYYY',
+      combodate: {
+        maxYear: (new Date()).getFullYear()
+      }
+  });

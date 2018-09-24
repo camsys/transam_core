@@ -496,18 +496,20 @@ class TransamAsset < TransamAssetRecord
   end
 
   def reported_condition_date
-    if dependents.count > 0
-      dependents.order(:reported_condition_date).pluck(:reported_condition_date).last
-    else
-      condition_updates.last.try(:event_date)
-    end
+    # if dependents.count > 0
+    #   dependents.order(:reported_condition_date).pluck(:reported_condition_date).last
+    # else
+    #   condition_updates.last.try(:event_date)
+    # end
+    condition_updates.last.try(:event_date)
   end
   def reported_condition_rating
-    if dependents.count > 0
-      policy_analyzer.get_condition_rollup_calculation_type.class_name.constantize.new.calculate(self)
-    else
-      condition_updates.last.try(:assessed_rating)
-    end
+    # if dependents.count > 0
+    #   policy_analyzer.get_condition_rollup_calculation_type.class_name.constantize.new.calculate(self)
+    # else
+    #   condition_updates.last.try(:assessed_rating)
+    # end
+    condition_updates.last.try(:assessed_rating)
   end
   def reported_condition_type
     ConditionType.from_rating(reported_condition_rating)
