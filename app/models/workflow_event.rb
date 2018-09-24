@@ -23,7 +23,7 @@ class WorkflowEvent < ActiveRecord::Base
   # Associations
   belongs_to :accountable,  :polymorphic => true
 
-  belongs_to :creator,    :class_name => 'User', :foreign_key => :created_by_id
+  belongs_to :creator, -> { unscope(where: :active) },    :class_name => 'User', :foreign_key => :created_by_id
 
   # default scope
   default_scope { order('created_at DESC') }
