@@ -42,6 +42,6 @@ RSpec.describe Manufacturer, :type => :model do
   end
 
   it '.to_s' do
-    expect(test_manufacturer.to_s).to eq("#{test_manufacturer.code}-#{test_manufacturer.name}")
+    expect(test_manufacturer.to_s).to eq("#{test_manufacturer.code} - #{test_manufacturer.name}")
   end
 end
