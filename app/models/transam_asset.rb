@@ -552,18 +552,16 @@ class TransamAsset < TransamAssetRecord
 
       # see what metric we are using to determine the service life of the asset
       class_name = policy_analyzer.get_service_life_calculation_type.class_name
-      self.policy_replacement_year = calculate(TransamAsset.get_typed_asset(self), class_name)
+      update_columns(policy_replacement_year: calculate(TransamAsset.get_typed_asset(self), class_name))
 
       if self.scheduled_replacement_year.nil? or self.scheduled_replacement_year == old_policy_replacement_year
         Rails.logger.debug "Setting scheduled replacement year to #{policy_replacement_year}"
-        self.scheduled_replacement_year = self.policy_replacement_year unless self.replacement_pinned?
-        self.in_backlog = false
+        update_columns(scheduled_replacement_year: self.policy_replacement_year, in_backlog: false)
       end
       # If the asset is in backlog set the scheduled year to the current FY year
       if self.scheduled_replacement_year < current_planning_year_year
         Rails.logger.debug "Asset is in backlog. Setting scheduled replacement year to #{current_planning_year_year}"
-        self.scheduled_replacement_year = current_planning_year_year
-        self.in_backlog = true
+        update_columns(scheduled_replacement_year: current_planning_year_year, in_backlog: true)
       end
     rescue Exception => e
       Rails.logger.warn e.message
@@ -574,10 +572,9 @@ class TransamAsset < TransamAssetRecord
     # is in backlog and update the scheduled replacement year to the first planning
     # year
     if self.policy_replacement_year < current_planning_year_year
-      self.scheduled_replacement_year = current_planning_year_year
-      self.in_backlog = true
+      update_columns(scheduled_replacement_year: current_planning_year_year, in_backlog: true)
     else
-      self.in_backlog = false
+      update_columns(in_backlog: false)
     end
 
     if self.changes.include? "scheduled_replacement_year"
@@ -588,7 +585,7 @@ class TransamAsset < TransamAssetRecord
       calculator_instance = class_name.constantize.new
       start_date = start_of_fiscal_year(scheduled_replacement_year) unless scheduled_replacement_year.blank?
       Rails.logger.debug "Start Date = #{start_date}"
-      self.scheduled_replacement_cost = (calculator_instance.calculate_on_date(self, start_date)+0.5).to_i
+      update_columns(scheduled_replacement_cost: (calculator_instance.calculate_on_date(self, start_date)+0.5).to_i)
     end
 
     #self.early_replacement_reason = nil if check_early_replacement && !is_early_replacement?
