@@ -19,7 +19,7 @@ module FiscalYear
   end
 
   def end_of_fiscal_year date_year
-    (start_of_fiscal_year(@report.ntd_form.fy_year) + 1.year) - 1.day
+    (start_of_fiscal_year(date_year) + 1.year) - 1.day
   end
 
   # Returns the first day of the planning year which is the next fiscal year
