@@ -150,8 +150,6 @@ class AssetsController < AssetAwareController
 
     end
     add_breadcrumb terminal_crumb if terminal_crumb
-
-    @subheader_class = FtaAssetClass.find(@fta_asset_class_id)
     
     # check that an order param was provided otherwise use asset_tag as the default
     params[:sort] ||= 'asset_tag'
