@@ -108,5 +108,6 @@ class PolicyAssetTypeRule < ActiveRecord::Base
       Rails.logger.warn "Issue applying policy on TransAM Asset #{asset}" unless asset.save
     end
   end
+  handle_asynchronously :apply_policy
 
 end
