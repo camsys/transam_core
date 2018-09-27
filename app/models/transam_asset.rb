@@ -577,16 +577,13 @@ class TransamAsset < TransamAssetRecord
       update_columns(in_backlog: false)
     end
 
-    if self.changes.include? "scheduled_replacement_year"
-      check_early_replacement = true
-      Rails.logger.debug "New scheduled_replacement_year = #{self.scheduled_replacement_year}"
-      # Get the calculator class from the policy analyzer
-      class_name = policy_analyzer.get_replacement_cost_calculation_type.class_name
-      calculator_instance = class_name.constantize.new
-      start_date = start_of_fiscal_year(scheduled_replacement_year) unless scheduled_replacement_year.blank?
-      Rails.logger.debug "Start Date = #{start_date}"
-      update_columns(scheduled_replacement_cost: (calculator_instance.calculate_on_date(self, start_date)+0.5).to_i)
-    end
+    Rails.logger.debug "New scheduled_replacement_year = #{self.scheduled_replacement_year}"
+    # Get the calculator class from the policy analyzer
+    class_name = policy_analyzer.get_replacement_cost_calculation_type.class_name
+    calculator_instance = class_name.constantize.new
+    start_date = start_of_fiscal_year(scheduled_replacement_year) unless scheduled_replacement_year.blank?
+    Rails.logger.debug "Start Date = #{start_date}"
+    update_columns(scheduled_replacement_cost: (calculator_instance.calculate_on_date(self, start_date)+0.5).to_i)
 
     #self.early_replacement_reason = nil if check_early_replacement && !is_early_replacement?
   end
