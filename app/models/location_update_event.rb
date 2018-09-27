@@ -63,7 +63,7 @@ class LocationUpdateEvent < AssetEvent
   end
 
   def parent_name
-    parent.name if parent
+    parent.to_s
   end
 
   protected
