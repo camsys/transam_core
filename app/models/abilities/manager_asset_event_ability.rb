@@ -17,7 +17,7 @@ module Abilities
       end
 
       cannot :create, DispositionUpdateEvent do |ae|
-        !ae.asset.disposable?(true)
+        !ae.asset.try(:disposable?,true)
       end
 
       cannot :create, EarlyDispositionRequestUpdateEvent do |ae|
@@ -30,7 +30,7 @@ module Abilities
       end
 
       cannot :create, DispositionUpdateEvent do |ae|
-        !ae.transam_asset.disposable?(true)
+        !ae.transam_asset.try(:disposable?,true)
       end
 
       cannot :create, EarlyDispositionRequestUpdateEvent do |ae|

@@ -13,7 +13,7 @@ module Abilities
       end
 
       cannot :create, DispositionUpdateEvent do |ae|
-        !ae.asset.disposable?(false)
+        !ae.asset.try(:disposable?,false)
       end
 
 
@@ -34,7 +34,7 @@ module Abilities
       end
 
       cannot :create, DispositionUpdateEvent do |ae|
-        !ae.transam_asset.disposable?(false)
+        !ae.transam_asset.try(:disposable?,false)
       end
 
 
