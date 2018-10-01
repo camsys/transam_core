@@ -9,7 +9,7 @@ module Abilities
       #-------------------------------------------------------------------------
       # Can manage asset events if the asset is owned by their organization
       can :manage, AssetEvent do |ae|
-        ae.asset_event_type.try(:active) && organization_ids.include?(ae.asset.organization_id)
+        ae.asset_event_type.try(:active) && organization_ids.include?(ae.asset.try(:organization_id))
       end
 
       cannot :create, DispositionUpdateEvent do |ae|
@@ -30,7 +30,7 @@ module Abilities
 
       # Can manage asset events if the asset is owned by their organization
       can :manage, AssetEvent do |ae|
-        ae.asset_event_type.try(:active) && organization_ids.include?(ae.transam_asset.organization_id)
+        ae.asset_event_type.try(:active) && organization_ids.include?(ae.transam_asset.try(:organization_id))
       end
 
       cannot :create, DispositionUpdateEvent do |ae|

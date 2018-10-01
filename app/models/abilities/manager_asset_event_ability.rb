@@ -9,7 +9,7 @@ module Abilities
       #-------------------------------------------------------------------------
       # managers can manage asset events if the asset's organization is in their list
       can :manage, AssetEvent do |ae|
-        ae.asset_event_type.try(:active) && user.organization_ids.include?(ae.asset.organization_id)
+        ae.asset_event_type.try(:active) && user.organization_ids.include?(ae.asset.try(:organization_id))
       end
 
       can :manage, EarlyDispositionRequestUpdateEvent do |ae|
@@ -26,7 +26,7 @@ module Abilities
 
       # managers can manage asset events if the asset's organization is in their list
       can :manage, AssetEvent do |ae|
-        ae.asset_event_type.try(:active) && user.organization_ids.include?(ae.transam_asset.organization_id)
+        ae.asset_event_type.try(:active) && user.organization_ids.include?(ae.transam_asset.try(:organization_id))
       end
 
       cannot :create, DispositionUpdateEvent do |ae|
