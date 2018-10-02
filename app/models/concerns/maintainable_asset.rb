@@ -15,7 +15,7 @@ module MaintainableAsset
     #---------------------------------------------------------------------------
 
     # each asset has zero or more condition updates
-    has_many   :maintenance_updates, -> {where :asset_event_type_id => MaintenanceUpdateEvent.asset_event_type.id }, :foreign_key => :asset_id, :class_name => "MaintenanceUpdateEvent"
+    has_many   :maintenance_updates, -> {where :asset_event_type_id => MaintenanceUpdateEvent.asset_event_type.id }, :foreign_key => Rails.application.config.asset_base_class_name.foreign_key, :class_name => "MaintenanceUpdateEvent"
     #---------------------------------------------------------------------------
     # Validations
     #---------------------------------------------------------------------------
