@@ -169,6 +169,7 @@ notice_types = [
 frequency_types = [
   {:active => 1, :name => 'second', :description => 'Second'},
   {:active => 1, :name => 'minute', :description => 'Minute'},
+  {:active => 1, :name => 'hour', :description => 'Hour'},
   {:active => 1, :name => 'day', :description => 'Day'},
   {:active => 1, :name => 'week', :description => 'Week'},
   {:active => 1, :name => 'month', :description => 'Month'}
