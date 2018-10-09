@@ -56,7 +56,9 @@
 
     $('btn.selector-clearall').hide();
 
-    $('#user_organization_id').change();
+    if (parseInt('#{params[:organization_id]}') > 0) { // new user for a specific org
+      $('#user_organization_id').change();
+    }
     all_org_updates($('#user_organization_id').val());
 
     transam.make_same_height('.form-part');
