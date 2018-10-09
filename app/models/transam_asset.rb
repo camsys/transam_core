@@ -264,14 +264,16 @@ class TransamAsset < TransamAssetRecord
   end
 
   def event_classes
+    typed_asset = TransamAsset.get_typed_asset(self)
+
     a = []
     # Use reflection to return the list of has many associatiopns and filter those which are
     # events
-    very_specific.class.reflect_on_all_associations(:has_many).each do |assoc|
+    typed_asset.class.reflect_on_all_associations(:has_many).each do |assoc|
       a << assoc.klass if assoc.class_name.end_with? 'UpdateEvent'
     end
 
-    if very_specific.class.superclass.name != "TransamAssetRecord"
+    if typed_asset.class.superclass.name != "TransamAssetRecord"
       klass = very_specific.class.superclass
       klass.reflect_on_all_associations(:has_many).each do |assoc|
         a << assoc.klass if assoc.class_name.end_with? 'UpdateEvent'
@@ -282,11 +284,13 @@ class TransamAsset < TransamAssetRecord
   end
 
   def asset_events(unscoped=false)
+    typed_asset = TransamAsset.get_typed_asset(self)
+
     events = []
     event_classes.each do |e|
       assoc_name = e.name.gsub('Event', '').underscore.pluralize
       assoc_name = 'early_disposition_requests' if assoc_name == 'early_disposition_request_updates'
-      events << very_specific.send(assoc_name).ids
+      events << typed_asset.send(assoc_name).ids
     end
     if unscoped
       AssetEvent.unscoped.where(id: events.flatten)
