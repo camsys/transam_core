@@ -199,7 +199,7 @@
   };
 
   function asset_view_manufacturer(value, data){
-    if (data.transam_asset_manufacturer_name == "Other")
+    if (data.transam_asset_manufacturer_name == "Other (Describe)")
       return data.transam_asset_other_manufacturer
     else
       return data.transam_asset_manufacturer_code + ' - ' + data.transam_asset_manufacturer_name
