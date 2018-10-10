@@ -8,6 +8,7 @@ class MaintenanceUpdateEvent < AssetEvent
 
   # Callbacks
   after_initialize :set_defaults
+  after_save       :update_asset
 
   # Associations
 
@@ -64,6 +65,13 @@ class MaintenanceUpdateEvent < AssetEvent
   def set_defaults
     super
     self.asset_event_type ||= AssetEventType.find_by_class_name(self.name)
+  end
+
+  def update_asset
+    if current_mileage.present?
+      typed_asset = TransamAsset.get_typed_asset(transam_asset)
+      typed_asset.mileage_updates.create(event_date: self.event_date, current_mileage: self.current_mileage) if (typed_asset.respond_to? :mileage_updates)
+    end
   end
 
 end
