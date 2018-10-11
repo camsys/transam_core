@@ -26,51 +26,38 @@
           %th Update
           %th Notes
       %tbody
-        :ruby
-          # Extract into a hash array in order to include full updates from EarlyDispositionRequestUpdateEvent
-          # EarlyDispositionRequestUpdateEvent is a special case as it is state-ful and each state represent one history
-          asset_history = @asset.history.order(:event_date => :desc, :created_at => :desc).collect { |evt| 
-            if evt.asset_event_type.try(:class_name) == 'EarlyDispositionRequestUpdateEvent' 
-              ae = [{
-                object_key: evt.object_key,
-                description: evt.asset_event_type.description,
-                event_date: evt.created_at,
-                update: evt.get_update,
-                comments: (evt.comments.blank? ? " " : evt.comments)
-              }]
-
-              ae << {
-                object_key: evt.object_key,
-                description: evt.asset_event_type.description,
-                event_date: evt.updated_at,
-                update: AssetEvent.as_typed_event(evt).get_latest_update,
-                comments: (evt.comments.blank? ? " " : evt.comments)
-              } unless AssetEvent.as_typed_event(evt).is_new?
-
-              ae
-
-            else
-              {
-                object_key: evt.object_key,
-                description: evt.asset_event_type.description,
-                event_date: evt.event_date,
-                update: evt.get_update,
-                comments: (evt.comments.blank? ? " " : evt.comments)
-              }
-            end
-            
-          }.flatten.sort_by {|evt| evt[:event_date]}.reverse
-
-        - asset_history.each do |evt|
-          %tr{:data => {:action_path => "#{inventory_asset_event_path(@asset, evt[:object_key])}"}}
-            %td
-              = evt[:description]
-            %td
-              = evt[:event_date]
-            %td
-              = evt[:update]
-            %td
-              = evt[:comments].html_safe
+        -# EarlyDispositionRequestUpdateEvent is a special case as it is state-ful and each state represent one history
+        - @asset.history.each do |evt|
+          - if evt.asset_event_type.try(:class_name) == 'EarlyDispositionRequestUpdateEvent'
+            %tr{:data => {:action_path => "#{inventory_asset_event_path(evt.transam_asset, evt.object_key)}"}}
+              %td
+                = evt.asset_event_type.description
+              %td
+                = evt.created_at
+              %td
+                = evt.get_update
+              %td
+                = (evt.comments.blank? ? " " : evt.comments).html_safe
+            - unless AssetEvent.as_typed_event(evt).is_new?
+              %tr{:data => {:action_path => "#{inventory_asset_event_path(evt.transam_asset, evt.object_key)}"}}
+                %td
+                  = evt.asset_event_type.description
+                %td
+                  = evt.updated_at
+                %td
+                  = AssetEvent.as_typed_event(evt).get_latest_update
+                %td
+                  = (evt.comments.blank? ? " " : evt.comments).html_safe
+          - else
+            %tr{:data => {:action_path => "#{inventory_asset_event_path(evt.transam_asset, evt.object_key)}"}}
+              %td
+                = evt.asset_event_type.description
+              %td
+                = evt.event_date
+              %td
+                = evt.get_update
+              %td
+                = (evt.comments.blank? ? " " : evt.comments).html_safe
 
 :javascript
   $(window).resize(function() {
