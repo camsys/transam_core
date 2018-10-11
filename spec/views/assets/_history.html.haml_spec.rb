@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 describe "assets/_history.html.haml", :type => :view do
+  before { skip('Needs transam_asset. Not yet testable.') }
   it 'info' do
     allow(controller).to receive(:current_user).and_return(create(:admin))
     test_asset = create(:buslike_asset)
