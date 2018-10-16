@@ -7,6 +7,8 @@ class AssetEventsController < AssetAwareController
   before_action :check_for_cancel,      :only => [:create, :update]
   before_action :reformat_date_field,   :only => [:create, :update]
 
+  skip_before_action :get_asset,        :only => [:get_summary]
+
   # always use generic untyped assets for this controller
   RENDER_TYPED_ASSETS = true
 
@@ -44,7 +46,7 @@ class AssetEventsController < AssetAwareController
         idx -= 1
       end
 
-      results = asset_event_klass.where(Rails.application.config.asset_base_class_name.tableize.to_sym => {organization_id: @organization_list})
+      results = asset_event_klass.joins(join_relations).where(Rails.application.config.asset_base_class_name.tableize.to_sym => {organization_id: @organization_list})
 
       unless params[:scope].blank?
         if asset_event_klass.respond_to? params[:scope]
