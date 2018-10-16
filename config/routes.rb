@@ -86,6 +86,12 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :asset_events, :only => [] do
+    collection do
+      get 'get_summary'
+    end
+  end
+
   resources :transam_assets, :controller => 'assets', :only => [] do
     resources :tasks,       :only => [:create, :update, :edit, :new, :destroy]
     resources :comments,    :only => [:create, :update, :edit, :new, :destroy]

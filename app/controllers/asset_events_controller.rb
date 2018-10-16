@@ -18,6 +18,50 @@ class AssetEventsController < AssetAwareController
     RENDER_TYPED_ASSETS
   end
 
+  def get_summary
+    asset_event_type = AssetEventType.find_by(id: params[:asset_event_type_id])
+
+    unless asset_event_type.nil?
+      asset_event_klass = asset_event_type.class_name.constantize
+      asset_klass = asset_event_klass.reflect_on_association(Rails.application.config.asset_base_class_name.underscore.to_sym).klass
+
+      asset_joins = [Rails.application.config.asset_base_class_name.underscore]
+
+      while asset_klass.try(:acting_as_name)
+        asset_joins << asset_klass.acting_as_name
+        asset_klass = asset_klass.acting_as_name.classify.constantize
+      end
+
+
+      idx = asset_joins.length-2
+      join_relations = Hash.new
+      join_relations[asset_joins[idx]] = asset_joins[idx+1]
+      idx -= 1
+      while idx >= 0
+        tmp = Hash.new
+        tmp[asset_joins[idx]] = join_relations
+        join_relations = tmp
+        idx -= 1
+      end
+
+      results = asset_event_klass.where(Rails.application.config.asset_base_class_name.tableize.to_sym => {organization_id: @organization_list})
+
+      unless params[:scope].blank?
+        if asset_event_klass.respond_to? params[:scope]
+          results = results.send(params[:scope])
+        end
+      end
+
+
+      respond_to do |format|
+        format.js {
+          render partial: "dashboards/#{asset_event_type.class_name.underscore}_widget_table", locals: {results: results }
+        }
+      end
+
+    end
+  end
+
   def index
 
     add_asset_breadcrumbs
