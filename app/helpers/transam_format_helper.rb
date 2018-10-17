@@ -236,9 +236,9 @@ module TransamFormatHelper
   # formats a date/time, where use_slashes indicates eg 10/24/2014 instead of 24 Oct 2014
   def format_as_date_time(datetime, use_slashes=true)
     if use_slashes
-      datetime.strftime("%I:%M %p %m/%d/%Y") unless datetime.nil?
+      datetime.strftime("%m/%d/%Y %I:%M %p") unless datetime.nil?
     else
-      datetime.strftime("%I:%M %p %b %d %Y") unless datetime.nil?
+      datetime.strftime("%b %d %Y %I:%M %p ") unless datetime.nil?
     end
   end
 
