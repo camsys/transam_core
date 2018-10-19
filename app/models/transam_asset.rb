@@ -264,14 +264,16 @@ class TransamAsset < TransamAssetRecord
   end
 
   def event_classes
+    typed_asset = TransamAsset.get_typed_asset(self)
+
     a = []
     # Use reflection to return the list of has many associatiopns and filter those which are
     # events
-    very_specific.class.reflect_on_all_associations(:has_many).each do |assoc|
+    typed_asset.class.reflect_on_all_associations(:has_many).each do |assoc|
       a << assoc.klass if assoc.class_name.end_with? 'UpdateEvent'
     end
 
-    if very_specific.class.superclass.name != "TransamAssetRecord"
+    if typed_asset.class.superclass.name != "TransamAssetRecord"
       klass = very_specific.class.superclass
       klass.reflect_on_all_associations(:has_many).each do |assoc|
         a << assoc.klass if assoc.class_name.end_with? 'UpdateEvent'
@@ -282,11 +284,13 @@ class TransamAsset < TransamAssetRecord
   end
 
   def asset_events(unscoped=false)
+    typed_asset = TransamAsset.get_typed_asset(self)
+
     events = []
     event_classes.each do |e|
       assoc_name = e.name.gsub('Event', '').underscore.pluralize
       assoc_name = 'early_disposition_requests' if assoc_name == 'early_disposition_request_updates'
-      events << very_specific.send(assoc_name).ids
+      events << typed_asset.send(assoc_name).ids
     end
     if unscoped
       AssetEvent.unscoped.where(id: events.flatten)
@@ -552,7 +556,9 @@ class TransamAsset < TransamAssetRecord
 
       # see what metric we are using to determine the service life of the asset
       class_name = policy_analyzer.get_service_life_calculation_type.class_name
-      update_columns(policy_replacement_year: calculate(TransamAsset.get_typed_asset(self), class_name))
+
+      new_policy_replacement_year = calculate(TransamAsset.get_typed_asset(self), class_name)
+      update_columns(policy_replacement_year: new_policy_replacement_year) if old_policy_replacement_year != new_policy_replacement_year
 
       if self.scheduled_replacement_year.nil? or self.scheduled_replacement_year == old_policy_replacement_year
         Rails.logger.debug "Setting scheduled replacement year to #{policy_replacement_year}"
@@ -572,9 +578,9 @@ class TransamAsset < TransamAssetRecord
     # is in backlog and update the scheduled replacement year to the first planning
     # year
     if self.policy_replacement_year < current_planning_year_year
-      update_columns(scheduled_replacement_year: current_planning_year_year, in_backlog: true)
+      update_columns(in_backlog: true)
     else
-      update_columns(in_backlog: false)
+      update_columns(in_backlog: false) if self.in_backlog != false
     end
 
     Rails.logger.debug "New scheduled_replacement_year = #{self.scheduled_replacement_year}"
@@ -583,7 +589,8 @@ class TransamAsset < TransamAssetRecord
     calculator_instance = class_name.constantize.new
     start_date = start_of_fiscal_year(scheduled_replacement_year) unless scheduled_replacement_year.blank?
     Rails.logger.debug "Start Date = #{start_date}"
-    update_columns(scheduled_replacement_cost: (calculator_instance.calculate_on_date(self, start_date)+0.5).to_i)
+    get_sched_cost = (calculator_instance.calculate_on_date(self, start_date)+0.5).to_i
+    update_columns(scheduled_replacement_cost: get_sched_cost) if get_sched_cost != self.scheduled_replacement_cost
 
     #self.early_replacement_reason = nil if check_early_replacement && !is_early_replacement?
   end

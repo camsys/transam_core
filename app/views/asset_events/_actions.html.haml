@@ -19,12 +19,12 @@
             %i.fa.fa-fw.fa-trash-o
             = " Remove this record"
 
-      - if @asset_event.class.name == "EarlyDispositionRequestUpdateEvent"
+      - if @asset_event.respond_to? :allowable_events
         %li.divider
         - @asset_event.allowable_events.each do |evt|
           - if can? evt.to_sym, @asset_event
             %li
-              = link_to fire_workflow_event_inventory_asset_event_path(@asset_event.asset, @asset_event, :event => evt, :transferred => 1) do
+              = link_to fire_workflow_event_inventory_asset_event_path(@asset_event.send(Rails.application.config.asset_base_class_name.underscore), @asset_event, :event => evt) do
                 %i.fa.fa-fw{:class => get_workflow_event_icon(evt)}
                 -if evt == 'approve_via_transfer'
                   = 'Approve via Transfer'
