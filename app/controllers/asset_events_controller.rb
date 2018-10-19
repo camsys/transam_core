@@ -265,7 +265,7 @@ class AssetEventsController < AssetAwareController
       if asset_event_class.name == 'EarlyDispositionRequestUpdateEvent' && event_name == "approve_via_transfer"
         is_redirected = true
         # we do not want to fire approval of the application event approval
-        redirect_to new_inventory_asset_event_path(@asset_event.asset, :event_type => DispositionUpdateEvent.asset_event_type.id, :transferred => 1, :causal_asset_event_id => @asset_event.object_key, :causal_asset_event_name => event_name)
+        redirect_to new_inventory_asset_event_path(@asset_event.send(Rails.application.config.asset_base_class_name.underscore), :event_type => DispositionUpdateEvent.asset_event_type.id, :transferred => 1, :causal_asset_event_id => @asset_event.object_key, :causal_asset_event_name => event_name)
       elsif @asset_event.fire_state_event(event_name)
         event = WorkflowEvent.new
         event.creator = current_user
