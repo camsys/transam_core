@@ -28,8 +28,9 @@
       %tbody
         -# EarlyDispositionRequestUpdateEvent is a special case as it is state-ful and each state represent one history
         - @asset.history.each do |evt|
+          - evt = AssetEvent.as_typed_event(evt)
           - if evt.asset_event_type.try(:class_name) == 'EarlyDispositionRequestUpdateEvent'
-            %tr{:data => {:action_path => "#{inventory_asset_event_path(evt.transam_asset, evt.object_key)}"}}
+            %tr{:data => {:action_path => "#{inventory_asset_event_path(evt.transam_asset.object_key, evt.object_key)}"}}
               %td
                 = evt.asset_event_type.description
               %td
@@ -38,18 +39,18 @@
                 = evt.get_update
               %td
                 = (evt.comments.blank? ? " " : evt.comments).html_safe
-            - unless AssetEvent.as_typed_event(evt).is_new?
-              %tr{:data => {:action_path => "#{inventory_asset_event_path(evt.transam_asset, evt.object_key)}"}}
+            - unless evt.is_new?
+              %tr{:data => {:action_path => "#{inventory_asset_event_path(evt.transam_asset.object_key, evt.object_key)}"}}
                 %td
                   = evt.asset_event_type.description
                 %td
                   = evt.updated_at
                 %td
-                  = AssetEvent.as_typed_event(evt).get_latest_update
+                  = evt.get_latest_update
                 %td
                   = (evt.comments.blank? ? " " : evt.comments).html_safe
           - else
-            %tr{:data => {:action_path => "#{inventory_asset_event_path(evt.transam_asset, evt.object_key)}"}}
+            %tr{:data => {:action_path => "#{inventory_asset_event_path(evt.transam_asset.object_key, evt.object_key)}"}}
               %td
                 = evt.asset_event_type.description
               %td
