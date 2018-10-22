@@ -23,7 +23,7 @@ class AssetEvent < ActiveRecord::Base
 
   # Every event belongs to an asset
   belongs_to  :asset
-  belongs_to  :transam_asset
+  belongs_to  :transam_asset, polymorphic: true
   # Every event is of a type
   belongs_to  :asset_event_type
   # Assets can be associated with Uploads
