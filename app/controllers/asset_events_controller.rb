@@ -222,9 +222,9 @@ class AssetEventsController < AssetAwareController
     unless asset_event_type.blank?
       assoc_name = asset_event_type.class_name.gsub('Event', '').underscore.pluralize
       assoc_name = 'early_disposition_requests' if assoc_name == 'early_disposition_request_updates'
-      id = @asset.send(assoc_name).proxy_association.owner.id
+      owner = @asset.send(assoc_name).proxy_association.owner
       asset_params = Hash.new
-      asset_params[Rails.application.config.asset_base_class_name.foreign_key] = id
+      asset_params[Rails.application.config.asset_base_class_name.underscore] = owner
       @asset_event = asset_event_type.class_name.constantize.new(form_params.merge(asset_params))
       @asset_event.creator = current_user
     end
