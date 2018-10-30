@@ -25,28 +25,33 @@ class AssetEventsController < AssetAwareController
 
     unless asset_event_type.nil?
       asset_event_klass = asset_event_type.class_name.constantize
-      asset_klass = asset_event_klass.reflect_on_association(Rails.application.config.asset_base_class_name.underscore.to_sym).klass
+      if asset_event_klass.count > 0
+        asset_klass = asset_event_klass.first.send(Rails.application.config.asset_base_class_name.underscore).class
 
-      asset_joins = [Rails.application.config.asset_base_class_name.underscore]
+        asset_joins = [Rails.application.config.asset_base_class_name.underscore]
 
-      while asset_klass.try(:acting_as_name)
-        asset_joins << asset_klass.acting_as_name
-        asset_klass = asset_klass.acting_as_name.classify.constantize
-      end
+        while asset_klass.try(:acting_as_name)
+          asset_joins << asset_klass.acting_as_name
+          asset_klass = asset_klass.acting_as_name.classify.constantize
+        end
 
 
-      idx = asset_joins.length-2
-      join_relations = Hash.new
-      join_relations[asset_joins[idx]] = asset_joins[idx+1]
-      idx -= 1
-      while idx >= 0
-        tmp = Hash.new
-        tmp[asset_joins[idx]] = join_relations
-        join_relations = tmp
+        idx = asset_joins.length-2
+        join_relations = Hash.new
+        join_relations[asset_joins[idx]] = asset_joins[idx+1]
         idx -= 1
-      end
+        while idx >= 0
+          tmp = Hash.new
+          tmp[asset_joins[idx]] = join_relations
+          join_relations = tmp
+          idx -= 1
+        end
 
-      results = asset_event_klass.joins(join_relations).where(Rails.application.config.asset_base_class_name.tableize.to_sym => {organization_id: @organization_list})
+        results = asset_event_klass.includes(join_relations).where(transam_asset: asset_event_klass.first.send(Rails.application.config.asset_base_class_name.underscore).class.where(organization_id: @organization_list))
+
+      else
+        results = asset_event_klass.all
+      end
 
       unless params[:scope].blank?
         if asset_event_klass.respond_to? params[:scope]
