@@ -120,7 +120,7 @@ class AssetEvent < ActiveRecord::Base
   # If one already exists for the same event_date, return the last created
   # If none exists, returns nil
   def previous_event_of_type
-    event = transam_asset.asset_events
+    event = Rails.application.config.asset_base_class_name.constantize.get_typed_asset(self.send(Rails.application.config.asset_base_class_name.underscore)).asset_events
       .where("asset_event_type_id = ?", self.asset_event_type_id) # get events of same type
       .where("event_date < ? OR (event_date = ? AND created_at < ?)", self.event_date, self.event_date, (self.new_record? ? Time.current : self.created_at) ) # Define a window that runs up to this event
       .where('object_key != ?', self.object_key)
