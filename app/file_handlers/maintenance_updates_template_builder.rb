@@ -21,16 +21,13 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
 
     assets.each do |a|
 
-      asset = Asset.get_typed_asset(a)
+      asset = Rails.application.config.asset_base_class_name.constantize.get_typed_asset(a)
       row_data  = []
       row_data << asset.object_key
       row_data << asset.organization.short_name
       row_data << asset.asset_tag
       row_data << asset.external_id
-      row_data << asset.fta_asset_class.name
-      row_data << asset.fta_type.name
       row_data << asset.asset_subtype
-      row_data << asset.try(:esl_category).try(:name)
       row_data << asset.description
       row_data << asset.try(:serial_number)
 
@@ -77,9 +74,9 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
     sheet.sheet_protection
 
     # Merge Cells
-    sheet.merge_cells("A1:J1")
-    sheet.merge_cells("K1:M1")
-    sheet.merge_cells("N1:Q1")
+    sheet.merge_cells("A1:G1")
+    sheet.merge_cells("H1:J1")
+    sheet.merge_cells("K1:N1")
 
 
     # This is used to get the column name of a lookup table based on its length
@@ -87,7 +84,7 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
     earliest_date = SystemConfig.instance.epoch
 
     # Maintenance Type
-    sheet.add_data_validation("N3:N1000", {
+    sheet.add_data_validation("K3:K1000", {
       :type => :list,
       :formula1 => "lists!$A$1:$#{alphabet[@maintenance_types.size]}$1",
       :allow_blank => true,
@@ -100,7 +97,7 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
       :prompt => 'Only values in the list are allowed'})
 
     # Milage -Integer > 0
-    sheet.add_data_validation("O3:O1000", {
+    sheet.add_data_validation("L3:L1000", {
       :type => :whole,
       :operator => :greaterThan,
       :allow_blank => true,
@@ -113,7 +110,7 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
       :prompt => 'Only values greater than 0'})
 
     # Maintenance Date
-    sheet.add_data_validation("P3:P1000", {
+    sheet.add_data_validation("M3:M1000", {
       :type => :time,
       :operator => :greaterThan,
       :formula1 => earliest_date.strftime("%-m/%d/%Y"),
@@ -150,18 +147,11 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
         'Agency',
         'Asset ID',
         'External ID',
-        'Class',
-        'Type',
         'Subtype',
-        'ESL Category',
         'Description'
     ]
 
-    if include_mileage_columns?
-      detail_row << 'VIN'
-    else
-      detail_row << 'Serial Number'
-    end
+    detail_row << 'Serial Number'
 
     detail_row.concat([
         # Maintenance Report Columns
@@ -186,19 +176,17 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
         {:name => 'asset_id_col', :column => 4},
         {:name => 'asset_id_col', :column => 5},
         {:name => 'asset_id_col', :column => 6},
-        {:name => 'asset_id_col', :column => 7},
-        {:name => 'asset_id_col', :column => 8},
-        {:name => 'asset_id_col', :column => 9}
+        {:name => 'asset_id_col', :column => 7}
     ]
 
     styles.concat([
-      {:name => 'maintenance_type_locked',  :column => 10},
-      {:name => 'mileage_locked',           :column => 11},
-      {:name => 'maintenance_date_locked',  :column => 12},
-      {:name => 'maintenance_type',         :column => 13},
-      {:name => 'mileage',                  :column => 14},
-      {:name => 'maintenance_date',         :column => 15},
-      {:name => 'maintenance_notes',        :column => 16}
+      {:name => 'maintenance_type_locked',  :column => 8},
+      {:name => 'mileage_locked',           :column => 9},
+      {:name => 'maintenance_date_locked',  :column => 10},
+      {:name => 'maintenance_type',         :column => 11},
+      {:name => 'mileage',                  :column => 12},
+      {:name => 'maintenance_date',         :column => 13},
+      {:name => 'maintenance_notes',        :column => 14}
     ])
 
     styles
@@ -259,7 +247,7 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
 
   def include_mileage_columns?
 
-    if @fta_asset_class.class_name.include? "Vehicle"
+    if @search_parameter.class_name.include? "Vehicle"
       true
     else
       false
