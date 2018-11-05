@@ -308,16 +308,14 @@ class TransamAsset < TransamAssetRecord
 
   # Instantiate an asset event of the appropriate type.
   def build_typed_event(asset_event_type_class)
-    # Could also add:  raise ArgumentError 'Asset Must be strongly typed' unless is_typed?
 
-    # DO NOT cast to concrete type.  Want to enforce that client has a concrete asset
     unless self.event_classes.include? asset_event_type_class
       raise ArgumentError, 'Invalid Asset Event Type'
     end
 
-    assoc = asset_event_type_class.reflect_on_association(:transam_asset).class_name
     typed_asset = TransamAsset.get_typed_asset(self)
-    asset_event_type_class.new(transam_asset: (typed_asset.type_of? assoc) ? typed_asset : typed_asset.send(assoc.underscore))
+    assoc = typed_asset.class.reflect_on_all_associations(:has_many).select{|x| x.class_name == asset_event_type_class.to_s}.first.name
+    typed_asset.send(assoc).build
   end
 
   def asset_type_id

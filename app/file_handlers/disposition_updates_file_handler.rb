@@ -11,8 +11,7 @@
 class DispositionUpdatesFileHandler < AbstractFileHandler
 
   OBJECT_KEY_COL = 0
-  ASSET_SUBTYPE_COL = 2
-  ASSET_TAG_COL = 3
+  ASSET_TAG_COL = 2
 
   NUM_HEADER_ROWS = 2
   SHEET_NAME = "Updates"
@@ -61,16 +60,15 @@ class DispositionUpdatesFileHandler < AbstractFileHandler
 
           # Get the asset by the object key
           object_key = cells[OBJECT_KEY_COL].to_s
-          subtype_str = cells[ASSET_SUBTYPE_COL].to_s
           # asset tags are sometimes stored as numbers
           asset_tag   = cells[ASSET_TAG_COL].to_s
 
-          Rails.logger.debug "  Processing row #{row}. Asset ID = '#{object_key}', Subtype = '#{subtype_str}', Asset Tag = '#{asset_tag}'"
+          Rails.logger.debug "  Processing row #{row}. Asset ID = '#{object_key}', Asset Tag = '#{asset_tag}'"
 
           if object_key.present?
-            asset = Asset.find_by('organization_id = ? AND object_key = ?', organization.id, object_key)
+            asset = Rails.application.config.asset_base_class_name.constantize.find_by(organization_id: organization.id, object_key: object_key)
           else
-            assets = Asset.where('asset_tag = ?', asset_tag)
+            assets = Rails.application.config.asset_base_class_name.constantize.where(asset_tag: asset_tag)
             if assets.count == 1
               asset = assets.first
             end
@@ -82,17 +80,10 @@ class DispositionUpdatesFileHandler < AbstractFileHandler
             @num_rows_failed += 1
             next
           else
-            add_processing_message(1, 'success', "Processing row[#{row}]  Asset ID: '#{object_key}', Subtype: '#{subtype_str}', Asset Tag: '#{asset_tag}'")
+            add_processing_message(1, 'success', "Processing row[#{row}]  Asset ID: '#{asset_tag}' (#{object_key})")
           end
 
-          #### Validations on Asset ####
-          # Check to see if this asset tag and subtype are the same
-          unless asset.asset_subtype.name == subtype_str
-            add_processing_message(2, 'warning', "Mismatch on asset subtype. Found subtype '#{subtype_str}' expected '#{asset.asset_subtype.name}'. Skipping row.")
-            @num_rows_failed += 1
-            next
-          end
-
+          #### Validations on Asset ####b
           # Check to see if this asset tag and subtype are the same
           unless asset.asset_tag == asset_tag
             add_processing_message(2, 'warning', "Mismatch on asset tag. Found tag '#{asset_tag}' expected '#{asset.asset_tag}'. Skipping row.")
@@ -101,44 +92,42 @@ class DispositionUpdatesFileHandler < AbstractFileHandler
           end
 
           # Make sure this row has data otherwise skip it
-          if reader.empty?(6,9)
+          idx = -4
+          if reader.empty?(cells.length+idx,cells.length+idx)
             @num_rows_skipped += 1
             add_processing_message(2, 'info', "No data for row. Skipping.")
             next
           end
 
           # If all the validations have passed, type the asset
-          asset = Asset.get_typed_asset(asset)
+          asset = Rails.application.config.asset_base_class_name.constantize.get_typed_asset(asset)
 
           #---------------------------------------------------------------------
           # Disposition
           #---------------------------------------------------------------------
-          idx = included_serial_number?(asset) ? 7 : 6
-          unless reader.empty?(idx,idx)
-            add_processing_message(2, 'success', 'Processing Disposition Report')
-            loader = DispositionUpdateEventLoader.new
-            loader.process(asset, cells[idx..idx+3])
-            if loader.errors?
-              row_errored = true
-              loader.errors.each { |e| add_processing_message(3, 'warning', e)}
-            end
-            if loader.warnings?
-              loader.warnings.each { |e| add_processing_message(3, 'info', e)}
-            end
 
-            # Check for any validation errors
-            event = loader.event
-            if event.valid?
-              event.upload = upload
-              event.save
-              add_processing_message(3, 'success', 'Disposition Update added.')
-              Delayed::Job.enqueue AssetDispositionUpdateJob.new(asset.object_key), :priority => 10
-              @num_rows_added +=  1
-            else
-              Rails.logger.info "Disposition Update did not pass validation."
-              event.errors.full_messages.each { |e| add_processing_message(3, 'warning', e)}
-              @num_rows_failed += 1
-            end
+          add_processing_message(2, 'success', 'Processing Disposition Report')
+          loader = DispositionUpdateEventLoader.new
+          loader.process(asset, cells[idx..idx+3])
+          if loader.errors?
+            row_errored = true
+            loader.errors.each { |e| add_processing_message(3, 'warning', e)}
+          end
+          if loader.warnings?
+            loader.warnings.each { |e| add_processing_message(3, 'info', e)}
+          end
+
+          # Check for any validation errors
+          event = loader.event
+          if event.valid?
+            event.upload = upload
+            event.save
+            add_processing_message(3, 'success', 'Disposition Update added.')
+            @num_rows_added +=  1
+          else
+            Rails.logger.info "Disposition Update did not pass validation."
+            event.errors.full_messages.each { |e| add_processing_message(3, 'warning', e)}
+            @num_rows_failed += 1
           end
         end
       end
@@ -160,10 +149,6 @@ class DispositionUpdatesFileHandler < AbstractFileHandler
   def initialize(upload)
     super
     @upload = upload
-  end
-
-  def included_serial_number?(asset)
-    asset.type_of? :vehicle or asset.type_of? :support_vehicle or asset.type_of? :equipment
   end
 
 end
