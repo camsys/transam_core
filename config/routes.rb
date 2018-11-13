@@ -2,6 +2,13 @@ Rails.application.routes.draw do
 
   devise_for :users, :controllers => { :sessions => "sessions", :unlocks => "unlocks", :passwords => "passwords" }
 
+  # JSON API #
+  namespace :api do
+    namespace :v1 do
+      get 'users/profile'
+    end
+  end
+  
   # server static pages
   get "/pages/*id" => 'pages#show', :as => :page, :format => false
 

@@ -1,0 +1,2 @@
+json.(@user, :name, :email)
+
