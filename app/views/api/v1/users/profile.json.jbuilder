@@ -1,2 +1,2 @@
-json.(@user, :name, :email)
+json.(@user, :name, :email) if @user
 
