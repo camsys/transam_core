@@ -65,7 +65,7 @@ class ConditionUpdateEvent < AssetEvent
 
   # usually no conditions on can create but can be overridden by specific asset events
   def can_update?
-    asset_event_type.active && transam_asset.dependents.count == 0
+    asset_event_type.active #&& transam_asset.dependents.count == 0 ## temporaritly disable since not putting condition rollup in UI yet
   end
 
   # Override numeric setters to remove any extraneous formats from the number strings eg $, etc.
