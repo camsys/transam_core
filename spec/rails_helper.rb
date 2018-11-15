@@ -20,7 +20,6 @@ end
 
 require File.expand_path("../dummy/config/environment", __FILE__)
 require 'rspec/rails'
-require 'spec_helper'
 require 'factory_bot_rails'
 require 'database_cleaner'
 require 'devise'
@@ -38,6 +37,8 @@ Dir[TransamCore::Engine.root.join("spec/support/**/*.rb")].each { |f| require f 
 ActiveRecord::Migration.maintain_test_schema!
 
 RSpec.configure do |config|
+  config.infer_spec_type_from_file_location!
+
   config.include FactoryBot::Syntax::Methods
   config.include Devise::Test::ControllerHelpers, :type => :controller
   config.include RequestSpecHelper, type: :request
