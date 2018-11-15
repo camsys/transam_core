@@ -89,6 +89,7 @@ Rails.application.routes.draw do
   resources :asset_events, :only => [] do
     collection do
       get 'get_summary'
+      get 'popup'
     end
   end
 
