@@ -67,14 +67,20 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'rails-data-migrations'
 
+  # API
+  s.add_dependency 'zero-rails_openapi'
+  s.add_dependency 'jbuilder'
+  
+  # Development
   s.add_development_dependency 'mail', '2.5.5'
   s.add_development_dependency "rspec-rails"
   s.add_development_dependency "factory_bot_rails"
   s.add_development_dependency "database_cleaner"
+  s.add_development_dependency "faker"
   s.add_development_dependency "mysql2"
   s.add_development_dependency "cucumber-rails"
   s.add_development_dependency "shoulda-matchers"
   s.add_development_dependency "codacy-coverage"
   s.add_development_dependency "simplecov"
-
+  s.add_development_dependency "rb-readline"
 end

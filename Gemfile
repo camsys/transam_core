@@ -20,3 +20,5 @@ gem 'rack-test'
 gem 'sass-rails'
 gem 'rails-controller-testing' # assigns has been extracted to this gem
 gem 'awesome_print'
+gem 'jbuilder'
+gem 'responders'
