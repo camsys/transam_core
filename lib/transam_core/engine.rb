@@ -29,6 +29,11 @@ require 'jquery-ui-rails'
 require 'jquery-form-rails'
 require 'roo'
 
+# API
+#require 'open_api'
+require 'jbuilder'
+require 'responders'
+require 'simple_token_authentication'
 
 
 module TransamCore
