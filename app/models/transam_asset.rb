@@ -209,7 +209,11 @@ class TransamAsset < TransamAssetRecord
   # mirror method on Asset to get typed version
   def self.get_typed_asset(asset)
     if asset
-      asset = asset.very_specific
+      if asset.very_specific
+        asset = asset.very_specific
+      else
+        return asset
+      end
 
       seed_assoc = Rails.application.config.asset_seed_class_name.underscore
       if asset.class.to_s != asset.send(seed_assoc).class_name(asset: asset)
