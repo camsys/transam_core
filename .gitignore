@@ -33,3 +33,4 @@ shadowed_views.log
 *.rb~
 *.haml~
 *.erb~
+*.jbuilder~

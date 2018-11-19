@@ -4,7 +4,8 @@
 # Base class for all users. This class represents a generic user.
 #-------------------------------------------------------------------------------
 class User < ActiveRecord::Base
-
+  acts_as_token_authenticatable
+  
   # Enable user roles for this use
   rolify
 
@@ -15,6 +16,8 @@ class User < ActiveRecord::Base
   # Include the object key mixin
   include TransamObjectKey
 
+  include TransamTokenAuthentication
+  
   #-----------------------------------------------------------------------------
   # Callbacks
   #-----------------------------------------------------------------------------
