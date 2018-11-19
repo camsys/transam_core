@@ -1,0 +1,18 @@
+<% if @asset_event %>
+  // close all other popovers
+  $('.has-popover').popover('hide');
+
+  var popup_id = "#asset_event_popup_<%= @asset_event.id %>";
+  console.log(popup_id);
+  $(popup_id).data('content', "<%= escape_javascript(render "asset_events/#{@asset_event.asset_event_type.class_name.underscore}_summary", :asset_event => @asset_event) %>");
+
+  $(popup_id).popover({
+    trigger: 'hover',
+    container: 'body',
+    placement: 'right',
+    animation: 'true',
+    html: 'true'
+  }).popover('show');
+
+  $(popup_id).addClass('has-popover');
+<% end %>
