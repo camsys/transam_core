@@ -27,7 +27,7 @@ require 'wicked'
 require 'cocoon'
 require 'jquery-ui-rails'
 require 'jquery-form-rails'
-require 'roo'
+require 'roo-xls'
 
 # API
 #require 'open_api'

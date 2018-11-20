@@ -40,7 +40,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'state_machines-activemodel'
   s.add_dependency 'state_machines-activerecord'
 
-  s.add_dependency 'roo'
+  s.add_dependency 'roo-xls'
   s.add_dependency 'carrierwave'
   s.add_dependency "fog"
   s.add_dependency "fog-core"
