@@ -4,6 +4,7 @@ Rails.application.routes.draw do
 
   # JSON API #
   namespace :api do
+    get 'touch_session' => "api#touch_session"
     namespace :v1 do
       get 'users/profile'
       post 'sign_in' => 'users#new_session'

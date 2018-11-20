@@ -2,16 +2,24 @@ module Api
   ## Base controller for API controllers
   class ApiController < ActionController::API
     include ActionView::Layouts
-    
     layout "jsend"
     
+    skip_before_action :authenticate_user!, :verify_authenticity_token, raise: false
     acts_as_token_authentication_handler_for User, fallback: :none
+    
+    before_action :require_authentication
+
     respond_to :json
 
     # Catches 500 errors and sends back JSON with headers.
     include JsonResponseHelper::ApiErrorCatcher 
 
     before_action :initialize_errors_hash
+
+    def touch_session
+      render status: 200,
+        json: {}
+    end
 
     protected
     
@@ -21,7 +29,7 @@ module Api
       return nil unless auth_headers.present? && auth_headers[:email] && auth_headers[:authentication_token]
       @user = User.find_by(email: auth_headers[:email], 
                            authentication_token: auth_headers[:authentication_token]) ||
-              @user
+      @user
     end
 
     # Initializes an empty errors hash, before each action
@@ -35,6 +43,22 @@ module Api
         email: request.headers["X-User-Email"], 
         authentication_token: request.headers["X-User-Token"]
       }
+    end
+
+    # Returns true if authentication has successfully completed
+    def authentication_successful?
+      @user.present?
+    end
+
+    # Renders a 401 failure response if authentication was not successful
+    def require_authentication
+      render_failed_auth_response unless authentication_successful? # render a 401 error
+    end
+
+    # Renders a failed user auth response
+    def render_failed_auth_response
+      render status: 401,
+        json: json_response(:fail, data: {user: "Valid username and token must be present."})
     end
 
   end
