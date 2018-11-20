@@ -8,7 +8,7 @@
 class TemplateBuilder
 
   attr_accessor :organization
-  attr_accessor :search_parameter_value
+  attr_accessor :asset_seed_class_id
   attr_accessor :assets
   attr_accessor :organization_list
 
@@ -134,6 +134,8 @@ class TemplateBuilder
     args.each do |k, v|
       self.send "#{k}=", v
     end
+    @search_parameter = Rails.application.config.asset_seed_class_name.constantize.find_by(id: @asset_seed_class_id)
+    @asset_class_name = @search_parameter.class_name unless @asset_class_name.present?
   end
 
 end

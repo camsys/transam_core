@@ -15,7 +15,7 @@ class InventoryUpdatesTemplateBuilder < TemplateBuilder
   def add_rows(sheet)
 
     if @assets.nil?
-      assets =  @search_parameter.class_name.constantize.operational.where(organization_id: @organization.id).where(Rails.application.config.asset_seed_class_name.foreign_key => @search_parameter.id)
+      assets =  @asset_class_name.constantize.operational.where(organization_id: @organization.id).where(Rails.application.config.asset_seed_class_name.foreign_key => @search_parameter.id)
     else
       assets = @assets
     end
@@ -262,12 +262,11 @@ class InventoryUpdatesTemplateBuilder < TemplateBuilder
 
   def initialize(*args)
     super
-    @search_parameter = Rails.application.config.asset_seed_class_name.constantize.find_by(id: @search_parameter_value)
   end
 
   def include_mileage_columns?
 
-    if @search_parameter.class_name.include? "Vehicle"
+    if @asset_class_name.include? "Vehicle"
       true
     else
       false

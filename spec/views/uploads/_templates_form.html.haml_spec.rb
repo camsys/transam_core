@@ -15,6 +15,6 @@ describe "uploads/_templates_form.html.haml", :type => :view do
 
     expect(rendered).to have_field('template_proxy_organization_id')
     expect(rendered).to have_field('template_proxy_file_content_type_id')
-    expect(rendered).to have_field('template_proxy_search_parameter_value')
+    expect(rendered).to have_field('template_proxy_asset_seed_class_id')
   end
 end

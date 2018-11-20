@@ -9,7 +9,8 @@ class TemplateProxy < Proxy
   attr_accessor   :organization_id
 
   # Type of asset to process
-  attr_accessor    :search_parameter_value
+  attr_accessor    :asset_class_name
+  attr_accessor    :asset_seed_class_id, :presence => true
 
   # Basic validations. Just checking that the form is complete
   validates :file_content_type_id, :presence => true

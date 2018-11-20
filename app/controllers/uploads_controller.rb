@@ -32,7 +32,8 @@ class UploadsController < OrganizationAwareController
       add_breadcrumb type.name unless type.nil?
     end
 
-    @uploads = Upload.where(conditions.join(' AND '), *values).order(:created_at)
+    asset_ids = Rails.application.config.asset_base_class_name.constantize.where.not(upload_id: nil).where(organization_id: @organization_list).pluck(:upload_id)
+    @uploads = Upload.where('('+conditions.join(' AND ')+') OR id IN (?) OR user_id = ?', *values, asset_ids, current_user.id).order(:created_at)
 
     # cache the set of asset ids in case we need them later
     cache_list(@uploads, INDEX_KEY_LIST_VAR)
@@ -133,6 +134,7 @@ class UploadsController < OrganizationAwareController
     add_breadcrumb "Download Template"
 
     @message = "Creating inventory template. This process might take a while."
+
   end
 
   #-----------------------------------------------------------------------------
@@ -189,7 +191,7 @@ class UploadsController < OrganizationAwareController
     end
 
     # Find out which builder is used to construct the template and create an instance
-    builder = file_content_type.builder_name.constantize.new(:organization => org, :search_parameter_value => template_proxy.try(:search_parameter_value), :organization_list => @organization_list)
+    builder = file_content_type.builder_name.constantize.new(:organization => org, :asset_class_name => template_proxy.try(:asset_class_name), :asset_seed_class_id => template_proxy.try(:asset_seed_class_id), :organization_list => @organization_list)
 
     # Generate the spreadsheet. This returns a StringIO that has been rewound
     if params[:targets].present?
