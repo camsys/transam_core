@@ -184,7 +184,7 @@ class UploadsController < OrganizationAwareController
       # The request came from the audit results page. We have a list of asset
       # object keys
       file_content_type = FileContentType.find(params[:file_content_type_id])
-      assets = Asset.operational.where(:object_key => params[:targets].split(','))
+      assets = Rails.application.config.asset_base_class_name.constantize.operational.where(:object_key => params[:targets].split(','))
       org = nil
     end
 
