@@ -7,7 +7,7 @@
   $(popup_id).data('content', "<%= escape_javascript(render "asset_events/#{@asset_event.asset_event_type.class_name.underscore}_summary", :asset_event => @asset_event) %>");
 
   $(popup_id).popover({
-    trigger: 'hover',
+    trigger: 'focus',
     container: 'body',
     placement: 'right',
     animation: 'true',
