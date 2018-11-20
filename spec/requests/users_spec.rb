@@ -5,6 +5,8 @@ RSpec.describe Api::V1::UsersController, type: :request do
   let(:email) {test_user.email}
   let(:pw) { attributes_for(:user)[:password] }
 
+  let(:valid_headers) { {"X-User-Email" => test_user.email, "X-User-Token" => test_user.authentication_token} }
+
   before(:each) do
     test_user.organizations = [test_user.organization]
     test_user.viewable_organizations = [test_user.organization]
@@ -13,7 +15,7 @@ RSpec.describe Api::V1::UsersController, type: :request do
 
   describe 'GET /api/v1/users/profile' do
 
-    before { get "/api/v1/users/profile.json?email=#{email}" }
+    before { get "/api/v1/users/profile.json?email=#{email}", headers: valid_headers }
 
     context 'when the record exists' do
       it 'returns user profile' do
@@ -42,11 +44,10 @@ RSpec.describe Api::V1::UsersController, type: :request do
 
   describe "user sign in" do
 
-    before { post "/api/v1/sign_in.json", params: {email: email, password: pw} }
+    before { post "/api/v1/sign_in.json", params: {email: email, password: pw}, headers: valid_headers }
 
     context 'good password' do
       it 'signs in an existing user' do
-        puts json
         expect(response).to be_successful
         
         # Expect a session hash with an email and auth token
@@ -64,21 +65,25 @@ RSpec.describe Api::V1::UsersController, type: :request do
 
     it 'locks out user after configured number of attempts' do
       
-      pw = "somerandombadpw"
+      wrong_pw = "somerandombadpw"
 
       expect(test_user.access_locked?).to be false
       expect(test_user.failed_attempts).to eq(0)
       
-      (2..User.maximum_attempts).each do |n|
-        post "/api/v1/sign_in.json", params: { email: test_user.email, password: pw }
+      (1..User.maximum_attempts).each do |idx|
+        post "/api/v1/sign_in.json", 
+          params: { email: test_user.email, password: wrong_pw }, 
+          headers: valid_headers
         
         test_user.reload
-        expect(test_user.access_locked?).to be (n == User.maximum_attempts)
-        expect(test_user.failed_attempts).to eq(n)
+        expect(test_user.access_locked?).to be (idx == User.maximum_attempts)
+        expect(test_user.failed_attempts).to eq(idx) # first try was correct
       end
       
       # Last attempt (with correct pw)
-      post "/api/v1/sign_in.json", params: { email: test_user.email, password: attributes_for(:user)[:password] }
+      post "/api/v1/sign_in.json", 
+        params: { email: test_user.email, password: attributes_for(:user)[:password] },
+        headers: valid_headers
       expect(response).to have_http_status(:unauthorized)
     end
   end
@@ -89,27 +94,13 @@ RSpec.describe Api::V1::UsersController, type: :request do
       original_auth_token = test_user.authentication_token
       
       delete "/api/v1/sign_out.json",
-           headers: { 'X-User-Token' => original_auth_token, 'X-User-Email' => email }
+           headers: valid_headers
     
       expect(response).to be_successful
       
       # Expect user to have a new auth token after sign out
       test_user.reload
       expect(test_user.authentication_token).not_to eq(original_auth_token)
-    end
-
-    it 'requires a valid auth token for sign out' do
-      
-      original_auth_token = test_user.authentication_token
-      
-      delete "/api/v1/sign_out.json",
-           headers: { 'X-User-Token' => original_auth_token + "_bloop", 'X-User-Email' => email }
-
-      expect(response).to have_http_status(:bad_request)
-      
-      # Expect traveler to have the same auth token
-      test_user.reload
-      expect(test_user.authentication_token).to eq(original_auth_token)
     end
   end
   

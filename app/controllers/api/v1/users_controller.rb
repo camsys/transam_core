@@ -18,7 +18,7 @@ class Api::V1::UsersController < Api::ApiController
     # Check if a user was found based on the passed email. If so, continue authentication.
     if @user.present?
       # checks if password is incorrect and user is locked, and unlocks if lock is expired
-      if @user.valid_for_api_authentication?
+      if @user.valid_for_api_authentication?(params[:password])
         @user.ensure_authentication_token
       else
         # Otherwise, add some errors to the response depending on what went wrong.
