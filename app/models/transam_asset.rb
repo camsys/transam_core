@@ -211,13 +211,11 @@ class TransamAsset < TransamAssetRecord
     if asset
       if asset.very_specific
         asset = asset.very_specific
-      else
-        return asset
-      end
 
-      seed_assoc = Rails.application.config.asset_seed_class_name.underscore
-      if asset.class.to_s != asset.send(seed_assoc).class_name(asset: asset)
-        asset = asset.send(seed_assoc).class_name(asset: asset).constantize.find_by(object_key: asset.object_key)
+        seed_assoc = Rails.application.config.asset_seed_class_name.underscore
+        if asset.class.to_s != asset.send(seed_assoc).class_name(assets: asset)
+          asset = asset.send(seed_assoc).class_name(assets: asset).constantize.find_by(object_key: asset.object_key)
+        end
       end
 
       asset
