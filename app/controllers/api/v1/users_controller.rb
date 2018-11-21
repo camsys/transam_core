@@ -71,6 +71,8 @@ class Api::V1::UsersController < Api::ApiController
     end
   end
 
+  # Given organization_id, look up users
+  # GET /list
   def list
     @organization = Organization.find_by_id(params[:organization_id])
     if @organization
