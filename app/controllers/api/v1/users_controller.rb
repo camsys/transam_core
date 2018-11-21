@@ -1,4 +1,6 @@
 class Api::V1::UsersController < Api::ApiController
+  # Given email, look up user profile
+  # GET /profile
   def profile
     @user = User.find_by(email: params[:email].try(:downcase))
     unless @user

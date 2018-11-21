@@ -26,10 +26,7 @@ module Api
     # Actions to take after successfully authenticated a user token.
     # This is run automatically on successful token authentication
     def after_successful_token_authentication
-      return nil unless auth_headers.present? && auth_headers[:email] && auth_headers[:authentication_token]
-      @user = User.find_by(email: auth_headers[:email], 
-                           authentication_token: auth_headers[:authentication_token]) ||
-      @user
+      @user = current_user
     end
 
     # Initializes an empty errors hash, before each action
