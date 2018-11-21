@@ -342,13 +342,15 @@ class UsersController < OrganizationAwareController
     if @user.active
       @user.active = false
       @user.notify_via_email = false
+      activation = "deactivated"
     else
       @user.active = true
       @user.notify_via_email = true
+      activation = "reactivated"
     end
     @user.save(:validate => false)
     respond_to do |format|
-      notify_user(:notice, "User #{@user} has been deactivated.")
+      notify_user(:notice, "User #{@user} has been #{activation}.")
       format.html { redirect_to user_url(@user) }
       format.json { head :no_content }
     end
