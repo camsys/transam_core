@@ -29,7 +29,7 @@ RSpec.describe Api::V1::UsersController, type: :request do
       end
     end
 
-    context 'when the record does not exist', :skip => true do
+    context 'when the record does not exist' do
       let(:email) { 'foo@bar.baz' }
 
       it 'returns status code 404' do
