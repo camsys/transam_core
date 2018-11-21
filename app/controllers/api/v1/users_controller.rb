@@ -1,15 +1,4 @@
 class Api::V1::UsersController < Api::ApiController
-  # Given email, look up user profile
-  # GET /profile
-  def profile
-    @user = User.find_by(email: params[:email].try(:downcase))
-    unless @user
-      @status = :fail
-      @data = {email: "User #{params[:email]} not found."}
-      render status: :not_found
-    end
-  end
-
   # Signs in an existing user, returning auth token
   # POST /sign_in
   # Leverages devise lockable module: https://github.com/plataformatec/devise/blob/master/lib/devise/models/lockable.rb
@@ -68,6 +57,28 @@ class Api::V1::UsersController < Api::ApiController
         auth_headers: auth_headers
       }
       render status: :bad_request
+    end
+  end
+
+  # Given email, look up user profile
+  # GET /profile
+  def profile
+    @user = User.find_by(email: params[:email].try(:downcase))
+    unless @user
+      @status = :fail
+      @data = {email: "User #{params[:email]} not found."}
+      render status: :not_found
+    end
+  end
+
+  def list
+    @organization = Organization.find_by_id(params[:organization_id])
+    if @organization
+      @users = @organization.users
+    else
+      @status = :fail
+      @data = {organization: "Organization #{params[:organization_id]} not found."}
+      render status: :not_found
     end
   end
 end
