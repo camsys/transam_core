@@ -110,13 +110,13 @@ RSpec.describe Api::V1::UsersController, type: :request do
     end
   end
 
-  describe 'GET /api/v1/users/list' do
+  describe 'GET /api/v1/users' do
 
-    before { get "/api/v1/users/list.json?organization_id=#{organization_id}", headers: valid_headers }
+    before { get "/api/v1/users.json?organization_id=#{organization_id}", headers: valid_headers }
 
     context 'when the record exists' do
       it 'contains user' do
-        expect(response).to render_template(:list)
+        expect(response).to render_template(:index)
         expect(json).not_to be_empty
         expect(json['status']).to eq('success')
 
@@ -125,7 +125,7 @@ RSpec.describe Api::V1::UsersController, type: :request do
         expect(json['data']['organization'].keys).to match(["id", "name", "short_name"])
         expect(json['data']['users']).to include({"id" => test_user.id, "name" => test_user.name, "email" => test_user.email})
       end
-      
+
       it 'returns status code 200' do
         expect(response).to have_http_status(200)
       end

@@ -8,8 +8,15 @@ Rails.application.routes.draw do
     namespace :v1 do
       post 'sign_in' => 'users#new_session'
       delete 'sign_out' => 'users#end_session'
-      get 'users/profile'
-      get 'users/list'
+
+      resources :users, only: [:index] do 
+        collection do 
+          get :profile
+        end
+      end
+
+      resources :assets, only: [:show] do 
+      end
     end
   end
   
