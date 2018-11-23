@@ -1,9 +1,8 @@
 class Api::V1::AssetsController < Api::ApiController
   # Given asset object key, look up asset profile
-  # GET assets/{id}
+  # GET /assets/{id}
   def show
     @asset = get_selected_asset(params[:id])
-
     unless @asset
       @status = :fail
       @data = {id: "Asset #{params[:id]} not found."}
