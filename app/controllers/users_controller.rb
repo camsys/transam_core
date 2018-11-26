@@ -116,7 +116,13 @@ class UsersController < OrganizationAwareController
       format.json {
         render :json => {
           :total => @users.count,
-          :rows => @users.limit(params[:limit]).offset(params[:offset]).as_json
+          :rows => @users.limit(params[:limit]).offset(params[:offset]).collect{ |u|
+            u.as_json.merge!({
+                 organization_short_name: u.organization.short_name,
+                 role_name: u.roles.roles.last.label,
+                 privilege_names: u.roles.privileges.collect{|x| x.label}.join(', ')
+            })
+          }
         }
       }
 

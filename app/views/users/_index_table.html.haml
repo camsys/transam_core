@@ -36,7 +36,7 @@
     %tr
       %th.left{:data => {:field => "object_key", :visible => 'false'}} Object Key
       %th.left{:data => {:field => "external_id", :visible => 'false'}} External Id
-      %th.left{:data => {:field => "organization_id", :sortable => 'true'}} Organization
+      %th.left{:data => {:field => "organization_short_name", :sortable => 'true'}} Organization
       %th.left.nowrap{:data => {:field => "title", :sortable => 'true'}} Title
       %th.left.nowrap{:data => {:field => "first_name", :sortable => 'true'}} First
       %th.left.nowrap{:data => {:field => "last_name", :sortable => 'true'}} Last
@@ -45,8 +45,8 @@
       %th.left{:data => {:field => "timezone", :visible => 'false', :sortable => 'true'}} Timezone
       %th.center{:data => {:field => "notify_via_email", :visible => 'false', :sortable => 'true'}} Send Emails
       %th.right{:data => {:field => "num_table_rows", :visible => 'false', :sortable => 'true'}} Table Rows
-      %th.left{:data => {:field => "role_ids", :sortable => 'true'}} Role
-      %th.left{:data => {:field => "privilege_ids", :sortable => 'true'}} Privileges
+      %th.left{:data => {:field => "role_name", :sortable => 'true'}} Role
+      %th.left{:data => {:field => "privilege_names", :sortable => 'true'}} Privileges
       - if current_user.has_role? :admin
         %th.right{:data => {:field => "sign_in_count", :visible => 'false', :sortable => 'true'}} Num Logins
         %th.right{:data => {:field => "last_sign_in_at", :visible => 'false', :sortable => 'true'}} Last Login
