@@ -34,3 +34,4 @@ shadowed_views.log
 *.haml~
 *.erb~
 *.jbuilder~
+.byebug_history

@@ -16,7 +16,7 @@ RSpec.describe Api::V1::AssetsController, type: :request do
     test_asset.save!
   end
 
-  describe 'GET /api/v1/assets/{id}' do
+  describe 'GET /api/v1/assets/{id}', :skip do
 
     before { get "/api/v1/assets/#{asset_id}.json", headers: valid_headers }
 
@@ -47,6 +47,5 @@ RSpec.describe Api::V1::AssetsController, type: :request do
       end
     end
   end
-
 end
 

@@ -10,8 +10,7 @@ gemspec
 # Git. Remember to move these dependencies to your gemspec before releasing
 # your gem to rubygems.org.
 
-# To use debugger
-# gem 'debugger'
+gem 'byebug'
 gem 'countries', "~> 0.11.5"  # lock gem for dummy app
 gem 'mysql2', "~> 0.5.1" # lock gem for dummy app
 gem "capybara", '2.6.2' # lock gem for old capybara behavior on hidden element xpath

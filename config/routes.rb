@@ -15,7 +15,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :assets, only: [:show] do 
+      resources :assets, only: [:show, :index] do 
       end
 
       resources :organizations, only: [:show] do 
