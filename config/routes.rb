@@ -6,8 +6,8 @@ Rails.application.routes.draw do
   namespace :api do
     get 'touch_session' => "api#touch_session"
     namespace :v1 do
-      post 'sign_in' => 'users#new_session'
-      delete 'sign_out' => 'users#end_session'
+      post 'sign_in' => 'sessions#create'
+      delete 'sign_out' => 'sessions#destroy'
 
       resources :users, only: [:index] do 
         collection do 
