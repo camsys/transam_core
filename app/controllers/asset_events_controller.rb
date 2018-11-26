@@ -59,6 +59,10 @@ class AssetEventsController < AssetAwareController
         end
       end
 
+      unless params[:order].blank?
+        results = results.order(params[:order])
+      end
+
 
       respond_to do |format|
         format.js {
