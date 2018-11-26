@@ -7,10 +7,15 @@
     = render :partial => "users/index_actions"
 
 %table.table.table-hover{:id => table_dom_id, :data => {:toggle => 'table',
+  :url => users_path(:format => :json),
   :pagination => 'true',
+  :side_pagination => 'server',
   :show_pagination_switch => 'true',
+  :page_number => '1',
   :page_list => "[5, 10, 20, 50, 100, 200]",
-  :page_size => current_user.num_table_rows,
+  # Just pull 5 records per page in order to test pagination with a small data set
+  :page_size => 5,
+  :query_params => "query_params",
   :search => 'false',
   :toolbar => "#table_actions",
   :export_types => "['csv', 'txt', 'excel']",
@@ -44,31 +49,5 @@
         %th.center{:data => {:visible => 'false', :sortable => 'true'}} Active
         %th.right{:data => {:visible => 'false', :sortable => 'true'}} Created At
         %th.right{:data => {:visible => 'false', :sortable => 'true'}} Updated At
-
-  %tbody
-    - @users.each do |u|
-      %tr{ :id => u.object_key, :class => 'action-path' }
-        %td= u.object_key
-        %td= u.external_id
-        %td= link_to( u.organization.to_s, organization_path(u.organization.short_name))
-        %td= u.title
-        %td= u.first_name
-        %td= u.last_name
-        %td= link_to( u.email.to_s, user_path(u))
-        %td= format_as_phone_number(u.phone)
-        %td= u.timezone
-        %td= format_as_boolean(u.notify_via_email)
-        %td= format_as_integer(u.num_table_rows)
-        %td= u.roles.roles.last.label
-        %td= format_as_list(u.roles.privileges.collect{|x| x.label})
-        - if current_user.has_role? :admin
-          %td= format_as_integer(u.sign_in_count)
-          %td= format_as_date_time(u.last_sign_in_at)
-          %td= u.last_sign_in_ip
-          %td= format_as_integer(u.failed_attempts)
-          %td= format_as_boolean(u.locked_at.present?)
-          %td= format_as_boolean(u.active)
-          %td= format_as_date_time(u.created_at)
-          %td= format_as_date_time(u.updated_at)
 
 = render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :path_pattern => user_path("xxx")}

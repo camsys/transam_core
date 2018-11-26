@@ -110,7 +110,13 @@ class UsersController < OrganizationAwareController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render :json => @users }
+      format.json {
+        render :json => {
+          :total => @users.count,
+          :rows => @users.order(:organization_id).limit(params[:limit]).offset(params[:offset]).as_json(user: current_user)
+        }
+      }
+
     end
   end
 
