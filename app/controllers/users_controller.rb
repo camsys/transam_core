@@ -88,9 +88,15 @@ class UsersController < OrganizationAwareController
 
     # Get the Users but check to see if a role was selected
     if @role.blank?
-      @users = User.unscoped.where(conditions.join(' AND '), *values).order(:organization_id, :last_name)
+      @users = User.unscoped.where(conditions.join(' AND '), *values)
     else
-      @users = User.unscoped.with_role(@role).where(conditions.join(' AND '), *values).order(:organization_id, :last_name)
+      @users = User.unscoped.with_role(@role).where(conditions.join(' AND '), *values)
+    end
+
+    if params[:sort] && params[:order]
+      @users = @users.order(params[:sort] => params[:order])
+    else
+      @users = @users.order(:organization_id, :last_name)
     end
 
     # Set the breadcrumbs
@@ -102,9 +108,6 @@ class UsersController < OrganizationAwareController
       add_breadcrumb @role.titleize, users_path(:role => @role)
     end
 
-    # cache the set of object keys in case we need them later
-    cache_list(@users, INDEX_KEY_LIST_VAR)
-
     # remember the view type
     @view_type = get_view_type(SESSION_VIEW_TYPE_VAR)
 
@@ -113,7 +116,7 @@ class UsersController < OrganizationAwareController
       format.json {
         render :json => {
           :total => @users.count,
-          :rows => @users.order(:organization_id).limit(params[:limit]).offset(params[:offset]).as_json(user: current_user)
+          :rows => @users.limit(params[:limit]).offset(params[:offset]).as_json
         }
       }
 
