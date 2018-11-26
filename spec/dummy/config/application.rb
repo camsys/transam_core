@@ -26,6 +26,7 @@ module Dummy
     # config.i18n.default_locale = :de
 
     config.help_directory = (ENV['HELP_PATH'] || "https://camsys.github.io/transam_user_guide/user_guide")
+    config.time_zone = 'Eastern Time (US & Canada)'
 
     # Sends back appropriate JSON 400 response if a bad JSON request is sent.
     config.middleware.insert_before Rack::Head, JsonResponseHelper::CatchJsonParseErrors
