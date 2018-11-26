@@ -13,7 +13,6 @@
   :show_pagination_switch => 'true',
   :page_number => '1',
   :page_list => "[5, 10, 20, 50, 100, 200]",
-  # Just pull 5 records per page in order to test pagination with a small data set
   :page_size => 5,
   :query_params => "query_params",
   :search => 'false',
@@ -27,27 +26,27 @@
   :state_save_expire => "1y"}}
   %thead
     %tr
-      %th.left{:data => {:visible => 'false'}} Object Key
-      %th.left{:data => {:visible => 'false'}} External Id
-      %th.left{:data => {:sortable => 'true'}} Organization
-      %th.left.nowrap{:data => {:sortable => 'true'}} Title
-      %th.left.nowrap{:data => {:sortable => 'true'}} First
-      %th.left.nowrap{:data => {:sortable => 'true'}} Last
-      %th.left.nowrap{:data => {:sortable => 'true'}} Email
-      %th.left.nowrap{:data => {:sortable => 'true'}} Phone
-      %th.left{:data => {:visible => 'false', :sortable => 'true'}} Timezone
-      %th.center{:data => {:visible => 'false', :sortable => 'true'}} Send Emails
-      %th.right{:data => {:visible => 'false', :sortable => 'true'}} Table Rows
-      %th.left{:data => {:sortable => 'true'}} Role
-      %th.left{:data => {:sortable => 'true'}} Privileges
+      %th.left{:data => {:field => "object_key", :visible => 'false'}} Object Key
+      %th.left{:data => {:field => "external_id", :visible => 'false'}} External Id
+      %th.left{:data => {:field => "organization_id", :sortable => 'true'}} Organization
+      %th.left.nowrap{:data => {:field => "title", :sortable => 'true'}} Title
+      %th.left.nowrap{:data => {:field => "first_name", :sortable => 'true'}} First
+      %th.left.nowrap{:data => {:field => "last_name", :sortable => 'true'}} Last
+      %th.left.nowrap{:data => {:field => "email", :sortable => 'true'}} Email
+      %th.left.nowrap{:data => {:field => "phone", :sortable => 'true'}} Phone
+      %th.left{:data => {:field => "timezone", :visible => 'false', :sortable => 'true'}} Timezone
+      %th.center{:data => {:field => "notify_via_email", :visible => 'false', :sortable => 'true'}} Send Emails
+      %th.right{:data => {:field => "num_table_rows", :visible => 'false', :sortable => 'true'}} Table Rows
+      %th.left{:data => {:field => "role_ids", :sortable => 'true'}} Role
+      %th.left{:data => {:field => "privilege_ids", :sortable => 'true'}} Privileges
       - if current_user.has_role? :admin
-        %th.right{:data => {:visible => 'false', :sortable => 'true'}} Num Logins
-        %th.right{:data => {:visible => 'false', :sortable => 'true'}} Last Login
-        %th.left.nowrap{:data => {:visible => 'false', :sortable => 'true'}} Last Login IP
-        %th.right{:data => {:visible => 'false', :sortable => 'true'}} Num Failed
-        %th.center{:data => {:visible => 'false', :sortable => 'true'}} Locked
-        %th.center{:data => {:visible => 'false', :sortable => 'true'}} Active
-        %th.right{:data => {:visible => 'false', :sortable => 'true'}} Created At
-        %th.right{:data => {:visible => 'false', :sortable => 'true'}} Updated At
+        %th.right{:data => {:field => "sign_in_count", :visible => 'false', :sortable => 'true'}} Num Logins
+        %th.right{:data => {:field => "last_sign_in_at", :visible => 'false', :sortable => 'true'}} Last Login
+        %th.left.nowrap{:data => {:field => "last_sign_in_ip", :visible => 'false', :sortable => 'true'}} Last Login IP
+        %th.right{:data => {:field => "failed_attempts", :visible => 'false', :sortable => 'true'}} Num Failed
+        %th.center{:data => {:field => "locked_at", :visible => 'false', :sortable => 'true'}} Locked
+        %th.center{:data => {:field => "active", :visible => 'false', :sortable => 'true'}} Active
+        %th.right{:data => {:field => "created_at", :visible => 'false', :sortable => 'true'}} Created At
+        %th.right{:data => {:field => "updated_at", :visible => 'false', :sortable => 'true'}} Updated At
 
 = render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :path_pattern => user_path("xxx")}
