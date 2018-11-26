@@ -3,19 +3,6 @@
 
 :javascript
 
-  $("##{table_id}").on('click-row.bs.table', function (e, row, $element) {
-    var id = $element.attr('id');
-    //alert(id);
-    if (id.length > 0) {
-      var url = "#{path_pattern}".replace("xxx", $element.attr('id'));
-      //alert(url);
-      document.location.href = url;
-    }
-  }).on('all.bs.table', function(evt, name, args) {
-    $('.fixed-table-container').css('min-height', '300px');
-    transam.make_same_height('.header-part');
-  });
-
   $(window).load(function() {
     // Make sure the paginator is set to the first page
     $("##{table_id}").bootstrapTable('selectPage', 1);

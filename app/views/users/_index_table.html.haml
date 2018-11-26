@@ -16,7 +16,7 @@
   :export_types => "['csv', 'txt', 'excel']",
   :show_export => 'true',
   :show_columns => 'true',
-  :show_toggle => 'true',
+  :show_toggle => 'false',
   :state_save => 'true',
   :state_save_id_table => "usersid",
   :state_save_expire => "1y"}}
@@ -36,13 +36,13 @@
       %th.left{:data => {:sortable => 'true'}} Role
       %th.left{:data => {:sortable => 'true'}} Privileges
       - if current_user.has_role? :admin
-        %th.right{:data => {:sortable => 'true'}} Num Logins
-        %th.right{:data => {:sortable => 'true'}} Last Login
+        %th.right{:data => {:visible => 'false', :sortable => 'true'}} Num Logins
+        %th.right{:data => {:visible => 'false', :sortable => 'true'}} Last Login
         %th.left.nowrap{:data => {:visible => 'false', :sortable => 'true'}} Last Login IP
         %th.right{:data => {:visible => 'false', :sortable => 'true'}} Num Failed
-        %th.center{:data => {:sortable => 'true'}} Locked
-        %th.center{:data => {:sortable => 'true'}} Active
-        %th.right{:data => {:sortable => 'true'}} Created At
+        %th.center{:data => {:visible => 'false', :sortable => 'true'}} Locked
+        %th.center{:data => {:visible => 'false', :sortable => 'true'}} Active
+        %th.right{:data => {:visible => 'false', :sortable => 'true'}} Created At
         %th.right{:data => {:visible => 'false', :sortable => 'true'}} Updated At
 
   %tbody
@@ -54,7 +54,7 @@
         %td= u.title
         %td= u.first_name
         %td= u.last_name
-        %td= u.email
+        %td= link_to( u.email.to_s, user_path(u))
         %td= format_as_phone_number(u.phone)
         %td= u.timezone
         %td= format_as_boolean(u.notify_via_email)
