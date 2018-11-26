@@ -36,7 +36,9 @@
   $(document).ready(function() {
 
     // update tables for filters
-    update_assets_widget();
+    if ($('#assets-widget').length > 0) {
+      update_assets_widget();
+    }
     if ($('#capital-projects-widget').length > 0) {
       update_capital_projects_widget();
     }

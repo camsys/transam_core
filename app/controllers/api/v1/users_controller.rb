@@ -61,7 +61,7 @@ class Api::V1::UsersController < Api::ApiController
   end
 
   # Given email, look up user profile
-  # GET /profile
+  # GET /users/profile
   def profile
     @user = User.find_by(email: params[:email].try(:downcase))
     unless @user
@@ -71,7 +71,9 @@ class Api::V1::UsersController < Api::ApiController
     end
   end
 
-  def list
+  # Given organization_id, look up users
+  # GET /users
+  def index
     @organization = Organization.find_by_id(params[:organization_id])
     if @organization
       @users = @organization.users

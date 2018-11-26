@@ -30,8 +30,8 @@ class UserOrganizationFilter < ActiveRecord::Base
   scope :sorted, -> { order('sort_order IS NULL, sort_order ASC', :name) }
 
   # Named Scopes
-  scope :system_filters, -> { where('created_by_user_id = ? AND active = ?', 1, 1 ) }
-  scope :other_filters, -> { where('created_by_user_id > ? AND active = ?', 1, 1 ) }
+  scope :system_filters, -> { where(created_by_user_id: 1, active: 1) }
+  scope :other_filters, -> { where.not(created_by_user_id: 1).where(active: 1) }
 
   # List of allowable form param hash keys
   FORM_PARAMS = [
