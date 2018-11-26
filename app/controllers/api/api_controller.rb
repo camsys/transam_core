@@ -55,7 +55,7 @@ module Api
     # Renders a failed user auth response
     def render_failed_auth_response
       render status: 401,
-        json: json_response(:fail, data: {user: "Valid username and token must be present."})
+        json: json_response(:fail, data: {user: "Valid email and token must be present."})
     end
 
   end
