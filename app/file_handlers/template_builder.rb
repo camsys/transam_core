@@ -9,6 +9,7 @@ class TemplateBuilder
 
   attr_accessor :organization
   attr_accessor :asset_seed_class_id
+  attr_accessor :asset_class_name
   attr_accessor :assets
   attr_accessor :organization_list
 
