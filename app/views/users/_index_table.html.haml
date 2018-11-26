@@ -57,6 +57,9 @@
         %th.right{:data => {:field => "created_at", :visible => 'false', :sortable => 'true'}} Created At
         %th.right{:data => {:field => "updated_at", :visible => 'false', :sortable => 'true'}} Updated At
 
+
+= render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :path_pattern => user_path("xxx")}
+
 :javascript
   $(document).ready(function() {
     $('#' + '#{table_dom_id}').bootstrapTable('resetWidth');
