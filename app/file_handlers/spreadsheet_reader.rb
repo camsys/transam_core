@@ -45,7 +45,28 @@ class SpreadsheetReader
     end
     return true
   end
-  
+
+  def includes_sheet sheet_name
+    find_sheets.include? sheet_name
+  end
+
+  def find_sheets
+    Rails.logger.debug "Opening spreadsheet #{@file_url}"
+
+    # See what type of spreadsheet we are opening, XLSX or XLS
+    file_ext = File.extname(@file_url)
+    if file_ext == ".xlsx"
+      @sheet = Roo::Excelx.new(@file_url)
+    elsif file_ext == ".xls"
+      @sheet = Roo::Excel.new(@file_url)
+    else
+      # exit with an error if the type is something else
+      raise ArgumentError, "Invalid spreadsheet type #{file_ext} for file #{@file_url}. Expected 'xls' or 'xlsx'."
+    end
+
+    @sheet.sheets
+  end
+
   # Open the spreadsheet so the rows can be processed
   def open(sheet_name = default_sheet_name)
     
