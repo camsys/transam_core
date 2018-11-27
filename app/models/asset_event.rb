@@ -18,12 +18,14 @@ class AssetEvent < ActiveRecord::Base
 
   # Callbacks
   after_initialize :set_defaults
+  before_create     :set_base_transam_asset
 
   # Associations
 
   # Every event belongs to an asset
   belongs_to  :asset
   belongs_to  :transam_asset, polymorphic: true
+  belongs_to  :base_transam_asset, class_name: 'TransamAsset'
   # Every event is of a type
   belongs_to  :asset_event_type
   # Assets can be associated with Uploads
@@ -140,6 +142,10 @@ class AssetEvent < ActiveRecord::Base
   # Set resonable defaults for a new asset event
   def set_defaults
     self.event_date ||= Date.today
+  end
+
+  def set_base_transam_asset
+    self.base_transam_asset = transam_asset.try(:transam_asset) || transam_asset
   end
 
   def validate_event_date_with_purchase
