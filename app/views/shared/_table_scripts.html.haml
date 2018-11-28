@@ -1,5 +1,22 @@
+- allow_row_click ||= 1
 - unless @core_tbl_formatter_load_count == 1
   = render 'shared/table_formatters'
+
+- if allow_row_click > 0
+  :javascript
+
+    $("##{table_id}").on('click-row.bs.table', function (e, row, $element) {
+      var id = $element.attr('id');
+      //alert(id);
+      if (id.length > 0) {
+        var url = "#{path_pattern}".replace("xxx", $element.attr('id'));
+        //alert(url);
+        document.location.href = url;
+      }
+    }).on('all.bs.table', function(evt, name, args) {
+      $('.fixed-table-container').css('min-height', '300px');
+      transam.make_same_height('.header-part');
+    });
 
 :javascript
 

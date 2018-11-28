@@ -58,7 +58,7 @@
         %th.right{:data => {:field => "updated_at", :visible => 'false', :sortable => 'true'}} Updated At
 
 
-= render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :path_pattern => user_path("xxx")}
+= render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :path_pattern => user_path("xxx"), :allow_row_click => 0}
 
 :javascript
   $(document).ready(function() {
