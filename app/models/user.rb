@@ -121,6 +121,7 @@ class User < ActiveRecord::Base
     :last_name,
     :email,
     :phone,
+    :title,
   ]
 
   # List of allowable form param hash keys
