@@ -5,11 +5,6 @@ class TransamAsset < TransamAssetRecord
 
   actable as: :transam_assetible
 
-  # Before the asset is updated we may need to update things like estimated
-  # replacement cost if they updated other things
-  # updates the calculated values of an asset
-  after_save      :check_policy_rule
-  after_save      :update_asset_state
   before_validation   :cleanup_others
 
   belongs_to  :organization
@@ -43,28 +38,9 @@ class TransamAsset < TransamAssetRecord
   has_many   :condition_updates, -> {where :asset_event_type_id => ConditionUpdateEvent.asset_event_type.id }, :class_name => "ConditionUpdateEvent", :as => :transam_asset
   accepts_nested_attributes_for :condition_updates, :reject_if => Proc.new{|ae| ae['assessed_rating'].blank? }, :allow_destroy => true
 
-  # each asset has zero or more scheduled replacement updates
-  has_many   :schedule_replacement_updates, -> {where :asset_event_type_id => ScheduleReplacementUpdateEvent.asset_event_type.id }, :class_name => "ScheduleReplacementUpdateEvent", :as => :transam_asset
-
-  # each asset has zero or more scheduled rehabilitation updates
-  has_many   :schedule_rehabilitation_updates, -> {where :asset_event_type_id => ScheduleRehabilitationUpdateEvent.asset_event_type.id }, :class_name => "ScheduleRehabilitationUpdateEvent", :as => :transam_asset
-
-  # each asset has zero or more recorded rehabilitation events
-  has_many   :rehabilitation_updates, -> {where :asset_event_type_id => RehabilitationUpdateEvent.asset_event_type.id}, :class_name => "RehabilitationUpdateEvent", :as => :transam_asset
-  accepts_nested_attributes_for :rehabilitation_updates, :reject_if => Proc.new{|ae| ae['total_cost'].blank? }, :allow_destroy => true
-
-  # each asset has zero or more scheduled disposition updates
-  has_many   :schedule_disposition_updates, -> {where :asset_event_type_id => ScheduleDispositionUpdateEvent.asset_event_type.id }, :class_name => "ScheduleDispositionUpdateEvent", :as => :transam_asset
-
   # each asset has zero or more service status updates
   has_many   :service_status_updates, -> {where :asset_event_type_id => ServiceStatusUpdateEvent.asset_event_type.id }, :class_name => "ServiceStatusUpdateEvent", :as => :transam_asset
   accepts_nested_attributes_for :service_status_updates, :reject_if => Proc.new{|ae| ae['service_status_type_id'].blank? }, :allow_destroy => true
-
-  # each asset has zero or more disposition updates
-  has_many   :disposition_updates, -> {where :asset_event_type_id => DispositionUpdateEvent.asset_event_type.id }, :class_name => "DispositionUpdateEvent", :as => :transam_asset
-
-  # each asset has zero or more early disposition requests
-  has_many   :early_disposition_requests, -> {where :asset_event_type_id => EarlyDispositionRequestUpdateEvent.asset_event_type.id }, :class_name => "EarlyDispositionRequestUpdateEvent", :as => :transam_asset
 
   # each asset has zero or more location updates.
   has_many   :location_updates, -> {where :asset_event_type_id => LocationUpdateEvent.asset_event_type.id }, :class_name => "LocationUpdateEvent", :as => :transam_asset
@@ -107,14 +83,7 @@ class TransamAsset < TransamAssetRecord
   # Scopes
   #-----------------------------------------------------------------------------
 
-  # Returns a list of assets that have been disposed
-  scope :disposed,    -> { where.not(disposition_date: nil) }
 
-  # Returns a list of assets that are still operational
-  scope :operational, -> { where(TransamAsset.arel_table[:asset_tag].not_eq(TransamAsset.arel_table[:object_key])).where(disposition_date: nil) }
-
-  # Returns a list of asset that in early replacement
-  scope :early_replacement, -> { where('policy_replacement_year is not NULL and scheduled_replacement_year is not NULL and scheduled_replacement_year < policy_replacement_year') }
 
   FORM_PARAMS = [
       :organization_id,
@@ -145,22 +114,13 @@ class TransamAsset < TransamAssetRecord
       :quantity_unit,
       {condition_updates_attributes: ConditionUpdateEvent.allowable_params},
       {service_status_updates_attributes: ServiceStatusUpdateEvent.allowable_params},
-      {location_updates_attributes: LocationUpdateEvent.allowable_params},
-      {rehabilitation_updates_attributes: RehabilitationUpdateEvent.allowable_params}
+      {location_updates_attributes: LocationUpdateEvent.allowable_params}
   ]
 
   CLEANSABLE_FIELDS = [
       'object_key',
       'asset_tag',
       'external_id',
-      'disposition_date',
-      'policy_replacement_year',
-      'scheduled_replacement_year',
-      'scheduled_replacement_cost',
-      'early_replacement_reason',
-      'in_backlog',
-      'scheduled_rehabilitation_year',
-      'scheduled_disposition_year'
   ]
 
   SEARCHABLE_FIELDS = [
@@ -242,6 +202,12 @@ class TransamAsset < TransamAssetRecord
     end
 
     arr << a.class::CLEANSABLE_FIELDS.dup
+
+    SystemConfigExtension.where(class_name: 'TransamAsset').pluck(:extension_name).each do |ext_name|
+      if ext_name.constantize::ClassMethods.try(:cleansable_fields)
+        arr << ext_name.constantize::ClassMethods.cleansable_fields
+      end
+    end
 
     return arr.flatten
   end
@@ -328,129 +294,6 @@ class TransamAsset < TransamAssetRecord
     asset_subtype.asset_type
   end
 
-  def disposed?
-    disposition_date.present?
-  end
-
-  # Returns true if the asset can be disposed in the next planning cycle,
-  # false otherwise
-  def disposable?( include_early_disposal_request_approved_via_transfer = false)
-    return false if disposed?
-    # otherwise check the policy year and see if it is less than or equal to
-    # the current planning year
-    return false if policy_replacement_year.blank?
-
-    if policy_replacement_year <= current_planning_year_year
-      # After ESL disposal
-      true
-    else
-      # Prior ESL disposal request
-      last_request = early_disposition_requests.last
-      if include_early_disposal_request_approved_via_transfer
-        last_request.try(:is_approved?)
-      else
-        last_request.try(:is_unconditional_approved?)
-      end
-    end
-  end
-
-  # Returns true if the asset can be requested for early disposal
-  def eligible_for_early_disposition_request?
-    return false if disposed?
-    # otherwise check the policy year and see if it is less than or equal to
-    # the current planning year
-    return false if policy_replacement_year.blank?
-
-    if policy_replacement_year <= current_planning_year_year
-      # Eligible for after ESL disposal
-      false
-    else
-      # Prior ESL disposal request
-      last_request = early_disposition_requests.last
-      # No previous request or was rejected
-      !last_request || last_request.try(:is_rejected?)
-    end
-  end
-
-  def policy
-    organization.get_policy
-  end
-
-  #-----------------------------------------------------------------------------
-  # Return the policy analyzer for this asset. If a policy is not provided the
-  # default policy for the asset is used
-  #-----------------------------------------------------------------------------
-  def policy_analyzer(policy_to_use=nil)
-    if policy_to_use.blank?
-      policy_to_use = policy
-    end
-    policy_analyzer = Rails.application.config.policy_analyzer.constantize.new(TransamAsset.get_typed_asset(self), policy_to_use)
-  end
-
-  def expected_useful_life
-    purchased_new ? policy_analyzer.get_min_service_life_months : policy_analyzer.get_min_used_purchase_service_life_months
-  end
-
-  def policy_rehabilitation_year
-    # Check for rehabilitation policy events
-    begin
-      # Use the calculator to calculate the policy rehabilitation fiscal year
-      calculator = RehabilitationYearCalculator.new
-      return calculator.calculate(TransamAsset.get_typed_asset(self))
-    rescue Exception => e
-      Rails.logger.warn e.message
-      Rails.logger.error e.backtrace
-    end
-  end
-
-  def estimated_replacement_year
-    # Estimate the year that the asset will need replacing
-    begin
-      class_name = policy_analyzer.get_condition_estimation_type.class_name
-      calculate(TransamAsset.get_typed_asset(self), class_name, 'last_servicable_year') + 1
-    rescue Exception => e
-      Rails.logger.warn e.message
-      Rails.logger.error e.backtrace
-    end
-  end
-
-  def estimated_replacement_cost
-    if self.policy_replacement_year < current_planning_year_year
-      start_date = start_of_fiscal_year(scheduled_replacement_year)
-    else
-      start_date = start_of_fiscal_year(policy_replacement_year)
-    end
-    # Update the estimated replacement costs
-    class_name = policy_analyzer.get_replacement_cost_calculation_type.class_name
-    calculator_instance = class_name.constantize.new
-    (calculator_instance.calculate_on_date(self, start_date)+0.5).to_i
-  end
-
-  # Returns true if an asset is scheduled for disposition
-  def scheduled_for_disposition?
-    (scheduled_disposition_year.present? and disposed? == false)
-  end
-
-  def is_early_replacement?
-    policy_replacement_year && scheduled_replacement_year && scheduled_replacement_year < policy_replacement_year
-  end
-
-  def update_early_replacement_reason(reason = nil)
-    if is_early_replacement?
-      self.early_replacement_reason = reason
-    else
-      self.early_replacement_reason = nil
-    end
-  end
-
-  def formatted_early_replacement_reason
-    if early_replacement_reason.present?
-      early_replacement_reason
-    else
-      '(Reason not provided)'
-    end
-  end
-
   def parent_name
     parent.to_s unless parent.nil?
   end
@@ -495,9 +338,7 @@ class TransamAsset < TransamAssetRecord
     end
   end
 
-  def last_rehabilitation_date
-    rehabilitation_updates.last.try(:event_date)
-  end
+
 
   def reported_condition_date
     # if dependents.count > 0
@@ -519,122 +360,8 @@ class TransamAsset < TransamAssetRecord
     ConditionType.from_rating(reported_condition_rating)
   end
 
-  def estimated_condition_rating
-    # Estimate the year that the asset will need replacing amd the estimated
-    # condition of the asset
-    begin
-      class_name = policy_analyzer.get_condition_estimation_type.class_name
-      calculate(TransamAsset.get_typed_asset(self), class_name)
-    rescue Exception => e
-      Rails.logger.warn e.message
-      Rails.logger.error e.backtrace
-    end
-  end
-  def estimated_condition_type
-    ConditionType.from_rating(estimated_condition_rating)
-  end
-
-
-  protected
-
-  # updates the calculated values of an asset
-  def update_asset_state
-
-    return unless self.replacement_by_policy? || self.replacement_pinned?
-
-    Rails.logger.debug "Updating SOGR for transam asset = #{object_key}"
-
-    if disposed?
-      Rails.logger.debug "Asset #{object_key} is disposed"
-    end
-
-    # returns the year in which the asset should be replaced based on the policy and asset
-    # characteristics
-    begin
-      # store old policy replacement year for use later
-      old_policy_replacement_year = policy_replacement_year
-
-      # see what metric we are using to determine the service life of the asset
-      class_name = policy_analyzer.get_service_life_calculation_type.class_name
-
-      new_policy_replacement_year = calculate(TransamAsset.get_typed_asset(self), class_name)
-      update_columns(policy_replacement_year: new_policy_replacement_year) if old_policy_replacement_year != new_policy_replacement_year
-
-      if self.scheduled_replacement_year.nil? or self.scheduled_replacement_year == old_policy_replacement_year
-        Rails.logger.debug "Setting scheduled replacement year to #{policy_replacement_year}"
-        update_columns(scheduled_replacement_year: self.policy_replacement_year, in_backlog: false)
-      end
-      # If the asset is in backlog set the scheduled year to the current FY year
-      if self.scheduled_replacement_year < current_planning_year_year
-        Rails.logger.debug "Asset is in backlog. Setting scheduled replacement year to #{current_planning_year_year}"
-        update_columns(scheduled_replacement_year: current_planning_year_year, in_backlog: true)
-      end
-    rescue Exception => e
-      Rails.logger.warn e.message
-      Rails.logger.warn e.backtrace
-    end
-
-    # If the policy replacement year changes we need to check to see if the asset
-    # is in backlog and update the scheduled replacement year to the first planning
-    # year
-    if self.policy_replacement_year < current_planning_year_year
-      update_columns(in_backlog: true)
-    else
-      update_columns(in_backlog: false) if self.in_backlog != false
-    end
-
-    Rails.logger.debug "New scheduled_replacement_year = #{self.scheduled_replacement_year}"
-    # Get the calculator class from the policy analyzer
-    class_name = policy_analyzer.get_replacement_cost_calculation_type.class_name
-    calculator_instance = class_name.constantize.new
-    start_date = start_of_fiscal_year(scheduled_replacement_year) unless scheduled_replacement_year.blank?
-    Rails.logger.debug "Start Date = #{start_date}"
-    get_sched_cost = (calculator_instance.calculate_on_date(self, start_date)+0.5).to_i
-    update_columns(scheduled_replacement_cost: get_sched_cost) if get_sched_cost != self.scheduled_replacement_cost
-
-    #self.early_replacement_reason = nil if check_early_replacement && !is_early_replacement?
-  end
-
-  def check_policy_rule
-
-    policy.find_or_create_asset_type_rule self.asset_subtype.asset_type
-
-    typed_asset = TransamAsset.get_typed_asset self
-    if (typed_asset.respond_to? :fuel_type)
-      policy.find_or_create_asset_subtype_rule asset_subtype, typed_asset.fuel_type
-    else
-      policy.find_or_create_asset_subtype_rule asset_subtype
-    end
-  end
-
-  def calculate_term_estimation(on_date)
-    if on_date
-      TermEstimationCalculator.new.calculate_on_date(self, on_date)
-    else
-      0
-    end
-  end
 
   private
-
-  # Calls a calculate method on a Calculator class to perform a condition or cost calculation
-  # for the asset. The method name defaults to x.calculate(asset) but other methods
-  # with the same signature can be passed in
-  def calculate(asset, class_name, target_method = 'calculate')
-    begin
-      Rails.logger.debug "#{class_name}, #{target_method}"
-      # create an instance of this class and call the method
-      calculator_instance = class_name.constantize.new
-      Rails.logger.debug "Instance created #{calculator_instance}"
-      method_object = calculator_instance.method(target_method)
-      Rails.logger.debug "Instance method created #{method_object}"
-      method_object.call(asset)
-    rescue Exception => e
-      Rails.logger.error e.message
-      Rails.logger.error e.backtrace
-      raise RuntimeError.new "#{class_name} calculation failed for asset #{asset.object_key} and policy #{policy.name}"
-    end
-  end
 
   def object_key_is_not_asset_tag
     unless self.asset_tag.nil? || self.object_key.nil?
