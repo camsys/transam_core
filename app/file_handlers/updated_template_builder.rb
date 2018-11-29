@@ -13,6 +13,8 @@ class UpdatedTemplateBuilder
   attr_accessor :asset_types
   attr_accessor :assets
   attr_accessor :organization_list
+  attr_accessor :asset_class_name
+  attr_accessor :asset_seed_class_id
 
   def build
 
@@ -35,25 +37,33 @@ class UpdatedTemplateBuilder
     header_row = []
     idx = 0
     @header_category_row.each do |key, fields|
-      category_row << key
+      # category_row << key
       fields.each do |i|
         unless i == fields[0]
-          category_row << ''
+          # category_row << ''
         end
-        header_row << i
 
-        unless @data_validations[i].empty?
-          column_letter = convert_index_to_letter(idx)
-          if @default_values[i].present?
-            sheet.add_data_validation("#{column_letter}3", @data_validations[i].merge({:allowBlank => false}))
-            sheet.add_data_validation("#{column_letter}4:#{column_letter}1000", @data_validations[i])
-          else
-            sheet.add_data_validation("#{column_letter}3:#{column_letter}1000", @data_validations[i])
+        if fields.index(i) == 0
+          category_row << i
+        else
+          # add an empty cell except for the last since the first cell holds category text
+          category_row << '' unless fields.index(i) == fields.length-1
+          header_row << i
+
+          if !@data_validations[i].nil? && !@data_validations[i].empty?
+            column_letter = convert_index_to_letter(idx)
+            if @default_values[i].present?
+              sheet.add_data_validation("#{column_letter}3", @data_validations[i].merge({:allowBlank => false}))
+              sheet.add_data_validation("#{column_letter}4:#{column_letter}1000", @data_validations[i])
+            else
+              sheet.add_data_validation("#{column_letter}3:#{column_letter}1000", @data_validations[i])
+            end
           end
+          idx+=1
         end
-        idx+=1
       end
     end
+
     sheet.add_row category_row
     sheet.add_row header_row
 
@@ -64,10 +74,13 @@ class UpdatedTemplateBuilder
     start = 0
     @header_category_row.each do |key, fields|
       fields.each_with_index do |val, index|
-        sheet.col_style start+index, @column_styles[val]
+        if !@column_styles[val].nil?
+          sheet.col_style start+index, @column_styles[val]
+        end
       end
-      sheet.merge_cells("#{convert_index_to_letter(start)}1:#{convert_index_to_letter(start+fields.length-1)}1")
-      start += fields.length
+      # fields contain header category text
+      sheet.merge_cells("#{convert_index_to_letter(start)}1:#{convert_index_to_letter(start+fields.length-2)}1")
+      start += fields.length-1
     end
 
     # set column widths
@@ -78,6 +91,45 @@ class UpdatedTemplateBuilder
 
     # Serialize the spreadsheet to the stream and return it
     p.to_stream()
+
+  end
+
+  # These had been protected but I am unclear why
+  def get_lookup_cells(lookup_table_name)
+    row = @lookups[lookup_table_name][:row]
+    column = convert_index_to_letter(@lookups[lookup_table_name][:count]-1)
+
+    return "$A$#{row}:$#{column}$#{row}"
+  end
+
+  def add_column(sheet, name, name_category, col_style, data_validation={}, *other_args)
+    # add column to header row
+    if @header_category_row[name_category].blank?
+      @header_category_row[name_category] = [name_category]
+      @header_category_row[name_category] << name
+    else
+      @header_category_row[name_category] << name
+    end
+
+    # get index
+    categories = @header_category_row.keys
+    column_index = categories[0..categories.index(name_category)].sum{|c| @header_category_row[c].length}-1
+
+    # add style
+    if @style_cache[col_style[:name]].nil?
+      @style_cache[col_style[:name]] = sheet.workbook.styles.add_style(col_style)
+    end
+    @column_styles[name] = @style_cache[col_style[:name]]
+
+    # add data validation
+    @data_validations[name] = data_validation
+
+    # set any other variables
+    unless other_args.empty?
+      (0..other_args.length/2-1).each do |arg_idx|
+        instance_variable_set("@#{other_args[arg_idx*2]}", instance_variable_get("@#{other_args[arg_idx*2]}").merge({name => other_args[arg_idx*2+1]}))
+      end
+    end
 
   end
 
@@ -118,17 +170,13 @@ class UpdatedTemplateBuilder
     ######### END MODIFY THIS SECTION ##############
   end
 
-  def add_column(sheet, name, name_category, col_style, data_validation={}, *other_args)
-    # add column to header row
+  def update_column(sheet, name, column_number, name_category, col_style, data_validation, *other_args)
+    # TODO update this to start on the second row
     if @header_category_row[name_category].blank?
       @header_category_row[name_category] = [name]
     else
       @header_category_row[name_category] << name
     end
-
-    # get index
-    categories = @header_category_row.keys
-    column_index = categories[0..categories.index(name_category)].sum{|c| @header_category_row[c].length}-1
 
     # add style
     if @style_cache[col_style[:name]].nil?
@@ -143,11 +191,12 @@ class UpdatedTemplateBuilder
     unless other_args.empty?
       (0..other_args.length/2-1).each do |arg_idx|
         instance_variable_set("@#{other_args[arg_idx*2]}", instance_variable_get("@#{other_args[arg_idx*2]}").merge({name => other_args[arg_idx*2+1]}))
-
       end
     end
 
   end
+
+
 
   def add_event_column(sheet, event_class, data_validation={}, include_latest_event=false, asset_field=nil)
 
@@ -195,18 +244,17 @@ class UpdatedTemplateBuilder
     end
   end
 
-  def get_lookup_cells(lookup_table_name)
-    row = @lookups[lookup_table_name][:row]
-    column = convert_index_to_letter(@lookups[lookup_table_name][:count]-1)
-
-    return "$A$#{row}:$#{column}$#{row}"
-  end
 
   private
 
   def initialize(args = {})
     args.each do |k, v|
       self.send "#{k}=", v
+    end
+
+    if @asset_seed_class_id
+      @search_parameter = Rails.application.config.asset_seed_class_name.constantize.find_by(id: @asset_seed_class_id)
+      @asset_class_name = @search_parameter.class_name unless @asset_class_name.present?
     end
   end
 
