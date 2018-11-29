@@ -137,7 +137,7 @@ class TransamAsset < TransamAssetRecord
       :other_operator,
       :title_number,
       :title_ownership_organization_id,
-      :other_titel_ownership_organization,
+      :other_title_ownership_organization,
       :lienholder_id,
       :other_lienholder,
       :parent_id,
