@@ -46,6 +46,8 @@ class UpdatedTemplateBuilder
         if fields.index(i) == 0
           category_row << i
         else
+          # add an empty cell except for the last since the first cell holds category text
+          category_row << '' unless fields.index(i) == fields.length-1
           header_row << i
 
           if !@data_validations[i].nil? && !@data_validations[i].empty?
@@ -61,6 +63,7 @@ class UpdatedTemplateBuilder
         end
       end
     end
+
     sheet.add_row category_row
     sheet.add_row header_row
 
@@ -75,8 +78,9 @@ class UpdatedTemplateBuilder
           sheet.col_style start+index, @column_styles[val]
         end
       end
-      sheet.merge_cells("#{convert_index_to_letter(start)}1:#{convert_index_to_letter(start+fields.length-1)}1")
-      start += fields.length
+      # fields contain header category text
+      sheet.merge_cells("#{convert_index_to_letter(start)}1:#{convert_index_to_letter(start+fields.length-2)}1")
+      start += fields.length-1
     end
 
     # set column widths
