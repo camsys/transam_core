@@ -30,13 +30,14 @@
   :state_save_id_table => "usersid",
   :state_save_expire => "1y",
   :maintain_selected => 'true',
-  :single_select => 'false'}}
+  :single_select => 'false',
+  :query_params => "query_params" }}
 
   %thead
     %tr
       %th.left{:data => {:field => "object_key", :visible => 'false'}} Object Key
       %th.left{:data => {:field => "external_id", :visible => 'false'}} External Id
-      %th.left{:data => {:field => "organization_short_name", :sortable => 'true', :formatter => 'link_to_org'}} Organization
+      %th.left{:data => {:field => "organization_short_name", :sortable => 'false', :formatter => 'link_to_org'}} Organization
       %th.left.nowrap{:data => {:field => "title", :sortable => 'true'}} Title
       %th.left.nowrap{:data => {:field => "first_name", :sortable => 'true'}} First
       %th.left.nowrap{:data => {:field => "last_name", :sortable => 'true'}} Last
@@ -45,8 +46,8 @@
       %th.left{:data => {:field => "timezone", :visible => 'false', :sortable => 'true'}} Timezone
       %th.center{:data => {:field => "notify_via_email", :visible => 'false', :sortable => 'true', :formatter => 'raw_boolean_formatter'}} Send Emails
       %th.right{:data => {:field => "num_table_rows", :visible => 'false', :sortable => 'true', :formatter => 'integer_formatter'}} Table Rows
-      %th.left{:data => {:field => "role_name", :sortable => 'true'}} Role
-      %th.left{:data => {:field => "privilege_names", :sortable => 'true'}} Privileges
+      %th.left{:data => {:field => "role_name", :sortable => 'false'}} Role
+      %th.left{:data => {:field => "privilege_names", :sortable => 'false'}} Privileges
       - if current_user.has_role? :admin
         %th.right{:data => {:field => "sign_in_count", :visible => 'false', :sortable => 'true', :formatter => 'integer_formatter'}} Num Logins
         %th.right{:data => {:field => "last_sign_in_at", :visible => 'false', :sortable => 'true'}} Last Login
@@ -78,3 +79,14 @@
   function link_to_org(value, data) {
     return "<a href='/org/" + data.organization_short_name + "/'>" + value + "</a>"
   };
+
+  var role = "#{@role}";
+  var show_active_only = "#{@show_active_only}";
+  var search_text = "#{@search_text}";
+
+  function query_params(params) {
+    params.role = role;
+    params.show_active_only = show_active_only;
+    params.search_text = search_text;
+    return params;
+  }
