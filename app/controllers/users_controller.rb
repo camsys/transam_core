@@ -88,13 +88,23 @@ class UsersController < OrganizationAwareController
 
     # Get the Users but check to see if a role was selected
     if @role.blank?
-      @users = User.unscoped.where(conditions.join(' AND '), *values)
+      @users = User.unscoped.includes(:organization, :roles).where(conditions.join(' AND '), *values)
     else
-      @users = User.unscoped.with_role(@role).where(conditions.join(' AND '), *values)
+      @users = User.unscoped.includes(:organization, :roles).with_role(@role).where(conditions.join(' AND '), *values)
     end
 
     if params[:sort] && params[:order]
-      @users = @users.order(params[:sort] => params[:order])
+      case params[:sort]
+      when 'organization_short_name'
+        @users = @users.joins(:organization).merge(Organization.order(short_name: params[:order]))
+      # figure out sorting by role + privilege some other way
+      # when 'role_name'
+      #   @users = @users.joins(:roles).merge(Role.unscoped.order(name: params[:order]))
+      # when 'privilege_names'
+      #   @users = @users.joins(:roles).merge(Role.order(privilege: params[:order]))
+      else
+        @users = @users.order(params[:sort] => params[:order])
+      end
     else
       @users = @users.order(:organization_id, :last_name)
     end
