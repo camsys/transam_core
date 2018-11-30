@@ -80,24 +80,6 @@
       $(this).editable('show');
     });
 
-    function show_fields_segment_unit_type_changes(segment_unit_type_id) {
-      if (parseInt(segment_unit_type_id) == parseInt('#{InfrastructureSegmentUnitType.find_by(name: "Marker Posts").try(:id)}')) {
-        $('.segment-unit-type-marker-posts').show();
-        $('.segment-unit-type:not(.segment-unit-type-marker-posts)').hide();
-      } else if (parseInt(segment_unit_type_id) == parseInt('#{InfrastructureSegmentUnitType.find_by(name: "Chaining").try(:id)}')) {
-        $('.segment-unit-type-chaining').show();
-        $('.segment-unit-type:not(.segment-unit-type-chaining)').hide();
-      } else {
-        $('.segment-unit-type-lat-long').show();
-        $('.segment-unit-type:not(.segment-unit-type-lat-long)').hide();
-      }
-    }
-    show_fields_segment_unit_type_changes($("input[name='infrastructure_segment_unit_type_id']:checked").val());
-
-    $("input[name='infrastructure_segment_unit_type_id']").on("click", function(value) {
-      show_fields_segment_unit_type_changes($(this).val());
-    });
-
     // show Other text entry only if it's a Other type; otherwise, hide and empty its value
     // type_el: HTML element of the Type dropdown
     // type_id: Type dropdown value
