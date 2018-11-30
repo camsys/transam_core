@@ -60,7 +60,7 @@ class UsersController < OrganizationAwareController
           query_str << ' OR '
         end
 
-        query_str << "UPPER(#{field})"
+        query_str << "UPPER(users.#{field})"
         query_str << ' LIKE ? '
         # add the value in for this sub clause
         values << search_value
