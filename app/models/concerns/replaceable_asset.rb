@@ -46,8 +46,11 @@ module ReplaceableAsset
     # Returns a list of assets that have been disposed
     scope :disposed,    -> { where.not(disposition_date: nil) }
 
+    scope :in_transfer, -> { where(TransamAsset.arel_table[:asset_tag].eq(TransamAsset.arel_table[:object_key])) }
+    scope :not_in_transfer, -> { where(TransamAsset.arel_table[:asset_tag].not_eq(TransamAsset.arel_table[:object_key])) }
+
     # Returns a list of assets that are still operational
-    scope :operational, -> { where(TransamAsset.arel_table[:asset_tag].not_eq(TransamAsset.arel_table[:object_key])).where(disposition_date: nil) }
+    scope :operational, -> { not_in_transfer.where(disposition_date: nil) }
 
     # Returns a list of asset that in early replacement
     scope :early_replacement, -> { where('policy_replacement_year is not NULL and scheduled_replacement_year is not NULL and scheduled_replacement_year < policy_replacement_year') }
