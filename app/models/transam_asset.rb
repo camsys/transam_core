@@ -70,8 +70,6 @@ class TransamAsset < TransamAssetRecord
   validates :purchased_new, inclusion: { in: [ true, false ] }
   validates :purchase_date, presence: true #temporarily force in case used in other places but eventually will not be required
   validates :in_service_date, presence: true
-  validates :manufacturer_id, inclusion: {in: Manufacturer.where(code: 'ZZZ').pluck(:id)}, if: Proc.new{|a| a.manufacturer_id.present? && a.other_manufacturer.present?}
-  validates :manufacturer_model_id, inclusion: {in: ManufacturerModel.where(name: 'Other').pluck(:id)}, if: Proc.new{|a| a.manufacturer_model_id.present? && a.other_manufacturer_model.present?}
 
   validate        :object_key_is_not_asset_tag
 
@@ -137,9 +135,18 @@ class TransamAsset < TransamAssetRecord
   # based on the asset_base_class_name
   def self.new_asset(asset_seed_class_name, params={})
 
-    asset_class_name = asset_seed_class_name.try(:class_name, opts: params) || asset_seed_class_name.class_name
+    begin
+      asset_class_name = asset_seed_class_name.class_name(opts: params)
+    rescue ArgumentError => e
+      asset_class_name = asset_seed_class_name.class_name
+    end
+
     asset = asset_class_name.constantize.new
-    asset.send("#{asset_seed_class_name.class.to_s.foreign_key}=",asset_seed_class_name.id)
+
+    if asset.respond_to? "#{asset_seed_class_name.class.to_s.foreign_key}="
+      asset.send("#{asset_seed_class_name.class.to_s.foreign_key}=",asset_seed_class_name.id)
+    end
+
     return asset
 
   end
@@ -173,8 +180,14 @@ class TransamAsset < TransamAssetRecord
         asset = asset.very_specific
 
         seed_assoc = asset.class.asset_seed_class_name.underscore
-        if asset.class.to_s != asset.send(seed_assoc).class_name(assets: asset)
-          asset = asset.send(seed_assoc).class_name(assets: asset).constantize.find_by(object_key: asset.object_key)
+        begin
+          if asset.class.to_s != asset.send(seed_assoc).class_name(assets: asset)
+            asset = asset.send(seed_assoc).class_name(assets: asset).constantize.find_by(object_key: asset.object_key)
+          end
+        rescue ArgumentError => e
+          if asset.class.to_s != asset.send(seed_assoc).class_name
+            asset = asset.send(seed_assoc).class_name.constantize.find_by(object_key: asset.object_key)
+          end
         end
       end
 
@@ -331,7 +344,7 @@ class TransamAsset < TransamAssetRecord
   end
 
   def service_status_type
-    if disposed?
+    if try(:disposed?)
       ServiceStatusType.find_by(name: 'Disposed')
     else
       ServiceStatusType.find_by(id: service_status_updates.last.try(:service_status_type_id))
