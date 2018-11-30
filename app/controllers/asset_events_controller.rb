@@ -25,6 +25,11 @@ class AssetEventsController < AssetAwareController
 
     unless asset_event_type.nil?
       asset_event_klass = asset_event_type.class_name.constantize
+
+      unless params[:order].blank?
+        results = asset_event_klass.unscoped.order(params[:order])
+      end
+
       if asset_event_klass.count > 0
         asset_klass = asset_event_klass.first.send(Rails.application.config.asset_base_class_name.underscore).class
 
@@ -48,9 +53,6 @@ class AssetEventsController < AssetAwareController
         end
 
         results = asset_event_klass.includes(join_relations).where(transam_asset: asset_event_klass.first.send(Rails.application.config.asset_base_class_name.underscore).class.where(organization_id: @organization_list))
-
-      else
-        results = asset_event_klass.all
       end
 
       unless params[:scope].blank?
@@ -59,9 +61,7 @@ class AssetEventsController < AssetAwareController
         end
       end
 
-      unless params[:order].blank?
-        results = results.order(params[:order])
-      end
+
 
 
       respond_to do |format|
