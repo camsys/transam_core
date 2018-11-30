@@ -374,7 +374,7 @@ class AssetsController < AssetAwareController
   end
 
   def new_asset
-    authorize! :new, Asset
+    authorize! :new, Rails.application.config.asset_base_class_name.constantize
     
     add_breadcrumb "Add Asset", new_asset_inventory_index_path
 
@@ -382,8 +382,10 @@ class AssetsController < AssetAwareController
 
   def new
 
-    asset_class = Rails.application.config.asset_seed_class_name.constantize.find_by(id: params[:asset_base_class_id])
-    if asset_class.nil?
+    asset_class_name = params[:asset_seed_class_name] || 'AssetType'
+
+    asset_class_instance = asset_class_name.constantize.find_by(id: params[:asset_base_class_id])
+    if asset_class_instance.nil?
       notify_user(:alert, "Asset class '#{params[:asset_base_class_id]}' not found. Can't create new asset!")
       redirect_to(root_url)
       return
@@ -394,7 +396,7 @@ class AssetsController < AssetAwareController
     #add_breadcrumb "New", new_inventory_path(asset_subtype)
 
     # Use the asset class to create an asset of the correct type
-    @asset = Rails.application.config.asset_base_class_name.constantize.new_asset(asset_class, params)
+    @asset = Rails.application.config.asset_base_class_name.constantize.new_asset(asset_class_instance, params)
 
     # See if the user selected an org to associate the asset with
     if params[:organization_id].present?
@@ -415,8 +417,9 @@ class AssetsController < AssetAwareController
 
   def create
 
-    asset_class = Rails.application.config.asset_seed_class_name.constantize.find_by(id: params[:asset][Rails.application.config.asset_seed_class_name.foreign_key.to_sym])
-    if asset_class.nil?
+    asset_class_name = params[:asset_seed_class_name] || 'AssetType'
+    asset_class_instance = asset_class_name.constantize.find_by(id: params[:asset][Rails.application.config.asset_seed_class_name.foreign_key.to_sym])
+    if asset_class_instance.nil?
       notify_user(:alert, "Asset class '#{params[:asset_base_class_id]}' not found. Can't create new asset!")
       redirect_to(root_url)
       return
@@ -552,11 +555,6 @@ class AssetsController < AssetAwareController
       @asset_subtype = 0
     else
       @asset_subtype = params[:asset_subtype].to_i
-    end
-
-    # Check to see if we got an fta asset class id to sub select on.
-    unless params[:fta_asset_class_id].nil?
-      @fta_asset_class_id = params[:fta_asset_class_id]
     end
 
     # Check to see if we got an organization to sub select on.

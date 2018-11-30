@@ -1,1 +1,65 @@
-= render 'new_form'
+.row
+  .col-lg-8.col-md-8.col-sm-10.col-xs-12.col-lg-offset-2.col-md-offset-2.col-sm-offset-1
+    %fieldset
+      %legend New Asset
+      .col-sm-6.col-xs-12
+        = form_tag new_inventory_path, :id => 'asset_subtype_form', :method => "get", :class => 'form-vertical', :role => 'form' do
+
+          = hidden_field_tag :asset_seed_class_name, 'AssetType'
+
+          - if @organization_list.count > 1
+            - if params[:parent_id]
+              = hidden_field_tag :organization_id, Rails.application.config.asset_base_class_name.constantize.find_by(id: params[:parent_id]).organization_id
+              = hidden_field_tag :parent_id, params[:parent_id]
+            - else
+              .form-group
+                %label.control-label.string.required
+                  * Organization
+
+                = select_tag(:organization_id, options_from_collection_for_select(Organization.where(id: @organization_list), :id, :coded_name), :class => 'form-control string required', :prompt => 'Select organization...')
+
+          .form-group
+            %label.control-label.string.required
+              * Asset Type
+            = select_tag(:asset_base_class_id, grouped_options_for_select(@asset_types.each_with_object({}) { |type, hash|  hash[type.to_s] = AssetSubtype.active.where(asset_type_id: type.id).pluck(:name, :id)}), :class => 'form-control string required', :prompt => 'Select asset type...', :id => 'asset_subtype_filter')
+
+          = submit_tag 'Create New Asset', :class => "btn btn-primary", :id => "submit_button"
+
+      .col-sm-6.col-xs-12#subtype_details
+        = render 'subtype_details'
+
+:javascript
+
+  var ajax_url = '#{details_inventory_index_path}';
+
+  $(document).ready(function() {
+    // Disable the submit button
+    $('#submit_button').attr("disabled", "disabled");
+
+    // Add an event listener on the org selector
+    $('#organization_id').change(function() {
+      var org = $('#organization_id').val();
+      var val = $('#asset_subtype_filter').val();
+      if (org && val) {
+        $('#submit_button').removeAttr("disabled");
+      } else {
+        $('#submit_button').attr("disabled", "disabled");
+      }
+    });
+
+    // Add an event listener on the subtype selector
+    $('#asset_subtype_filter').change(function() {
+      var org = $('#organization_id').val();
+      var val = $('#asset_subtype_filter').val();
+      if (val) {
+        if ($('#organization_id').length == 0 || org) {
+          $('#submit_button').removeAttr("disabled");
+        }
+        var url = ajax_url + '?asset_subtype=' + val;
+        transam.ajax_render_action(url, 'get');
+      } else {
+        $('#submit_button').attr("disabled", "disabled");
+        $('#subtype_details').html("");
+      }
+    });
+  });

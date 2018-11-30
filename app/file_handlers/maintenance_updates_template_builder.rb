@@ -14,7 +14,9 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
   # Add a row for each of the asset for the org
   def add_rows(sheet)
     if @assets.nil?
-      assets =  @asset_class_name.constantize.operational.where(organization_id: @organization.id).where(Rails.application.config.asset_seed_class_name.foreign_key => @search_parameter.id)
+      asset_seed_foreign_key = @asset_class_name.constantize.asset_seed_class_name.foreign_key
+
+      assets =  @asset_class_name.constantize.operational.where(organization_id: @organization.id).where(asset_seed_foreign_key => @search_parameter.id)
     else
       assets = @assets
     end

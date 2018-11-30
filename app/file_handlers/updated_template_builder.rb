@@ -273,8 +273,8 @@ class UpdatedTemplateBuilder
     end
 
     if @asset_seed_class_id
-      @search_parameter = Rails.application.config.asset_seed_class_name.constantize.find_by(id: @asset_seed_class_id)
-      @asset_class_name = @search_parameter.class_name unless @asset_class_name.present?
+      @asset_class_name = @search_parameter.class_name
+      @search_parameter = @search_parameter.class_name.constantize.asset_seed_class_name.constantize.find_by(id: @asset_seed_class_id)
     end
   end
 
