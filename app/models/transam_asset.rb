@@ -172,7 +172,7 @@ class TransamAsset < TransamAssetRecord
       if asset.very_specific
         asset = asset.very_specific
 
-        seed_assoc = Rails.application.config.asset_seed_class_name.underscore
+        seed_assoc = asset.class.asset_seed_class_name.underscore
         if asset.class.to_s != asset.send(seed_assoc).class_name(assets: asset)
           asset = asset.send(seed_assoc).class_name(assets: asset).constantize.find_by(object_key: asset.object_key)
         end
