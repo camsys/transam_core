@@ -73,12 +73,12 @@ class UpdatedTemplateBuilder
     #merge header category row and add column header styles
     start = 0
     @header_category_row.each do |key, fields|
-      fields.each_with_index do |val, index|
+      # fields contain header category text
+      fields[1..-1].each_with_index do |val, index|
         if !@column_styles[val].nil?
           sheet.col_style start+index, @column_styles[val]
         end
       end
-      # fields contain header category text
       sheet.merge_cells("#{convert_index_to_letter(start)}1:#{convert_index_to_letter(start+fields.length-2)}1")
       start += fields.length-1
     end
