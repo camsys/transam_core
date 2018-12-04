@@ -4,15 +4,9 @@
       .col-lg-10.col-md-9.col-sm-8.col.col-xs-12
         %ol.breadcrumb
           = render_breadcrumbs :builder => ::BootstrapBreadcrumbsBuilder, :separator => "&raquo;"
-          %div{style: 'font-size:18px; float:right;'}
-            - if File.exists?("#{Rails.root}/public/user_guide/#{params[:controller]}__#{params[:action]}.html")
+          - if Rails.application.config.try(:help_directory).present?
+            %div{style: 'font-size:18px; float:right;'}
               = link_to "#{html_help_path}##{params[:controller]}__#{params[:action]}", :target => "_blank" do
-                %i.fa.fa-question.fa-fw
-            - elsif File.exists?("#{Rails.root}/public/user_guide/#{params[:controller]}.html")
-              = link_to "#{html_help_path}##{params[:controller]}", :target => "_blank" do
-                %i.fa.fa-question.fa-fw
-            - else
-              = link_to "#{html_help_path}", :target => "_blank" do
                 %i.fa.fa-question.fa-fw
       .col-lg-2.col-md-3.col-sm-4.col.col-xs-12
         #row_pager
@@ -20,13 +14,7 @@
   - else
     %ol.breadcrumb
       = render_breadcrumbs :builder => ::BootstrapBreadcrumbsBuilder, :separator => "&raquo;"
-      %div{style: 'font-size:18px; float:right;'}
-        - if File.exists?("#{Rails.root}/public/user_guide/#{params[:controller]}__#{params[:action]}.html")
+      - if Rails.application.config.try(:help_directory).present?
+        %div{style: 'font-size:18px; float:right;'}
           = link_to "#{html_help_path}##{params[:controller]}__#{params[:action]}", :target => "_blank" do
-            %i.fa.fa-question.fa-fw
-        - elsif File.exists?("#{Rails.root}/public/user_guide/#{params[:controller]}.html")
-          = link_to "#{html_help_path}##{params[:controller]}", :target => "_blank" do
-            %i.fa.fa-question.fa-fw
-        - else
-          = link_to "#{html_help_path}", :target => "_blank" do
             %i.fa.fa-question.fa-fw
