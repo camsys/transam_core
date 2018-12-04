@@ -12,9 +12,6 @@ class TransamAsset < TransamAssetRecord
   belongs_to  :manufacturer
   belongs_to  :manufacturer_model
   belongs_to  :vendor
-  belongs_to  :operator, :class_name => 'Organization'
-  belongs_to  :title_ownership_organization, :class_name => 'Organization'
-  belongs_to  :lienholder, :class_name => 'Organization'
 
   # an upload can be added by bulk updates - new inventory
   belongs_to :upload
@@ -100,13 +97,6 @@ class TransamAsset < TransamAssetRecord
       :in_service_date,
       :vendor_id,
       :other_vendor,
-      :operator_id,
-      :other_operator,
-      :title_number,
-      :title_ownership_organization_id,
-      :other_title_ownership_organization,
-      :lienholder_id,
-      :other_lienholder,
       :parent_id,
       :quantity,
       :quantity_unit,
