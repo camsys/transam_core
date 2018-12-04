@@ -57,7 +57,7 @@ module TransamHelper
   end
 
   def html_help_pdf_path
-    '/user_guide/CPT_User_Guide.pdf'
+    Rails.application.config.help_directory + 'TransAMUserGuide.pdf'
   end
 
   # Returns the correct FontAwesomne icon for a file type based on the
