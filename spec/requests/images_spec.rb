@@ -20,7 +20,7 @@ RSpec.describe Api::V1::ImagesController, type: :request do
         post "/api/v1/assets/#{test_asset.object_key}/images.json", headers: valid_headers, params: params
 
         expect(response).to have_http_status(:success)
-        expect(json["data"]["object_key"]).not_to be_empty
+        expect(json["data"]["image"]["object_key"]).not_to be_empty
       end
 
       it "fail" do 
@@ -38,7 +38,7 @@ RSpec.describe Api::V1::ImagesController, type: :request do
       get "/api/v1/assets/#{test_asset.object_key}/images.json", headers: valid_headers
 
       expect(response).to have_http_status(:success)
-      expect(json["data"].size).to eq(test_asset.images.size)
+      expect(json["data"]["images"].size).to eq(test_asset.images.size)
     end
 
   end
@@ -58,7 +58,7 @@ RSpec.describe Api::V1::ImagesController, type: :request do
       patch "/api/v1/assets/#{test_asset.object_key}/images/#{test_asset.images.first.object_key}.json", headers: valid_headers, params: new_params
 
       expect(response).to have_http_status(:success)
-      expect(json["data"]["description"]).to eq(new_description)
+      expect(json["data"]["image"]["description"]).to eq(new_description)
     end
 
   end
