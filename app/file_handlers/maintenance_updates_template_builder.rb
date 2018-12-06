@@ -34,16 +34,16 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
       if asset.respond_to? :maintenance_updates and asset.maintenance_updates.present?
         event = asset.maintenance_updates.last
         row_data << event.maintenance_type.name
-        row_data << event.current_mileage
         row_data << event.event_date
+        row_data << event.current_mileage if include_mileage_columns?
       else
         row_data << nil # current_maintenance type
-        row_data << nil # current mileage
         row_data << nil # reprot date
+        row_data << nil if include_mileage_columns?
       end
       row_data << nil # current_maintenance type
-      row_data << nil # current mileage
       row_data << nil # report date
+      row_data << nil if include_mileage_columns? # current mileage
       row_data << nil # notes
 
       sheet.add_row row_data
@@ -75,8 +75,13 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
 
     # Merge Cells
     sheet.merge_cells("A1:G1")
-    sheet.merge_cells("H1:J1")
-    sheet.merge_cells("K1:N1")
+    if include_mileage_columns?
+      sheet.merge_cells("H1:J1")
+      sheet.merge_cells("K1:N1")
+    else
+      sheet.merge_cells("H1:I1")
+      sheet.merge_cells("J1:L1")
+    end
 
 
     # This is used to get the column name of a lookup table based on its length
@@ -84,7 +89,7 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
     earliest_date = SystemConfig.instance.epoch
 
     # Maintenance Type
-    sheet.add_data_validation("K3:K1000", {
+    sheet.add_data_validation((include_mileage_columns?) ? "K3:K1000": "J1:J1000", {
       :type => :list,
       :formula1 => "lists!$A$1:$#{alphabet[@maintenance_types.size]}$1",
       :allow_blank => true,
@@ -96,31 +101,34 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
       :promptTitle => 'Maintenance type',
       :prompt => 'Only values in the list are allowed'})
 
-    # Milage -Integer > 0
-    sheet.add_data_validation("L3:L1000", {
-      :type => :whole,
-      :operator => :greaterThan,
-      :allow_blank => true,
-      :showErrorMessage => true,
-      :errorTitle => 'Wrong input',
-      :error => 'Milage must be > 0',
-      :errorStyle => :stop,
-      :showInputMessage => true,
-      :promptTitle => 'Current mileage',
-      :prompt => 'Only values greater than 0'})
-
     # Maintenance Date
-    sheet.add_data_validation("M3:M1000", {
-      :type => :time,
-      :operator => :greaterThan,
-      :formula1 => earliest_date.strftime("%-m/%d/%Y"),
-      :allow_blank => true,
-      :errorTitle => 'Wrong input',
-      :error => "Date must be after #{earliest_date.strftime("%-m/%d/%Y")}",
-      :errorStyle => :stop,
-      :showInputMessage => true,
-      :promptTitle => 'Maintenance Date',
-      :prompt => "Date must be after #{earliest_date.strftime("%-m/%d/%Y")}"})
+    sheet.add_data_validation((include_mileage_columns?) ? "L3:L1000": "K1:K1000", {
+        :type => :time,
+        :operator => :greaterThan,
+        :formula1 => earliest_date.strftime("%-m/%d/%Y"),
+        :allow_blank => true,
+        :errorTitle => 'Wrong input',
+        :error => "Date must be after #{earliest_date.strftime("%-m/%d/%Y")}",
+        :errorStyle => :stop,
+        :showInputMessage => true,
+        :promptTitle => 'Maintenance Date',
+        :prompt => "Date must be after #{earliest_date.strftime("%-m/%d/%Y")}"})
+
+    if include_mileage_columns?
+      # Milage -Integer > 0
+      sheet.add_data_validation("M3:M1000", {
+        :type => :whole,
+        :operator => :greaterThan,
+        :allow_blank => true,
+        :showErrorMessage => true,
+        :errorTitle => 'Wrong input',
+        :error => 'Milage must be > 0',
+        :errorStyle => :stop,
+        :showInputMessage => true,
+        :promptTitle => 'Current mileage',
+        :prompt => 'Only values greater than 0'})
+    end
+
 
   end
 
@@ -153,16 +161,27 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
 
     detail_row << 'Serial Number'
 
-    detail_row.concat([
-        # Maintenance Report Columns
-        'Last Maintenance',
-        'Last Mileage',
-        'Last Maintenance Date',
-        'Maintenance Performed',
-        'Mileage',
-        'Maintenance Date',
-        'Notes'
-    ])
+    if include_mileage_columns?
+      detail_row.concat([
+          # Maintenance Report Columns
+          'Last Maintenance',
+          'Last Maintenance Date',
+          'Last Mileage',
+          'Maintenance Performed',
+          'Maintenance Date',
+          'Mileage',
+          'Notes'
+      ])
+    else
+      detail_row.concat([
+          # Maintenance Report Columns
+          'Last Maintenance',
+          'Last Maintenance Date',
+          'Maintenance Performed',
+          'Maintenance Date',
+          'Notes'
+      ])
+    end
 
     [title_row, detail_row]
   end
@@ -179,15 +198,27 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
         {:name => 'asset_id_col', :column => 7}
     ]
 
-    styles.concat([
-      {:name => 'maintenance_type_locked',  :column => 8},
-      {:name => 'mileage_locked',           :column => 9},
-      {:name => 'maintenance_date_locked',  :column => 10},
-      {:name => 'maintenance_type',         :column => 11},
-      {:name => 'mileage',                  :column => 12},
-      {:name => 'maintenance_date',         :column => 13},
-      {:name => 'maintenance_notes',        :column => 14}
-    ])
+    if include_mileage_columns?
+      styles.concat([
+        {:name => 'maintenance_type_locked',  :column => 8},
+        {:name => 'maintenance_date_locked',  :column => 9},
+        {:name => 'mileage_locked',           :column => 10},
+
+        {:name => 'maintenance_type',         :column => 11},
+        {:name => 'maintenance_date',         :column => 12},
+        {:name => 'mileage',                  :column => 13},
+        {:name => 'maintenance_notes',        :column => 14}
+      ])
+    else
+      styles.concat([
+          {:name => 'maintenance_type_locked',  :column => 8},
+          {:name => 'maintenance_date_locked',  :column => 9},
+
+          {:name => 'maintenance_type',         :column => 10},
+          {:name => 'maintenance_date',         :column => 11},
+          {:name => 'maintenance_notes',        :column => 12}
+      ])
+    end
 
     styles
   end
@@ -204,15 +235,25 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
     ]
     types << :string
 
-    types.concat([
-      :string,
-      :integer,
-      :date,
-      :string,
-      :integer,
-      :date,
-      :string
-    ])
+    if include_mileage_columns?
+      types.concat([
+        :string,
+        :date,
+        :integer,
+        :string,
+        :date,
+        :integer,
+        :string
+      ])
+    else
+      types.concat([
+         :string,
+         :date,
+         :string,
+         :date,
+         :string
+      ])
+    end
     types
   end
   # Merge the base class styles with BPT specific styles
