@@ -10,6 +10,8 @@ Rails.application.routes.draw do
       delete 'sign_out' => 'sessions#destroy'
 
       resources :users, only: [:index] do 
+        resources :images
+        
         collection do 
           get :profile
         end
