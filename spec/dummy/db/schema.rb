@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_12_191549) do
+ActiveRecord::Schema.define(version: 2018_12_04_185502) do
 
   create_table "activities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "object_key", limit: 12
@@ -70,7 +70,9 @@ ActiveRecord::Schema.define(version: 2018_09_12_191549) do
   create_table "asset_events", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "object_key", limit: 12, null: false
     t.integer "asset_id"
+    t.string "transam_asset_type"
     t.integer "transam_asset_id"
+    t.bigint "base_transam_asset_id"
     t.integer "asset_event_type_id", null: false
     t.integer "upload_id"
     t.date "event_date", null: false
@@ -112,6 +114,7 @@ ActiveRecord::Schema.define(version: 2018_09_12_191549) do
     t.integer "total_cost"
     t.index ["asset_event_type_id"], name: "asset_events_idx3"
     t.index ["asset_id"], name: "asset_events_idx2"
+    t.index ["base_transam_asset_id"], name: "index_asset_events_on_base_transam_asset_id"
     t.index ["created_by_id"], name: "asset_events_creator_idx"
     t.index ["event_date"], name: "asset_events_idx4"
     t.index ["object_key"], name: "asset_events_idx1"
@@ -913,13 +916,6 @@ ActiveRecord::Schema.define(version: 2018_09_12_191549) do
     t.date "in_service_date"
     t.bigint "vendor_id"
     t.string "other_vendor"
-    t.bigint "operator_id"
-    t.string "other_operator"
-    t.string "title_number"
-    t.bigint "title_ownership_organization_id"
-    t.string "other_title_ownership_organization"
-    t.bigint "lienholder_id"
-    t.string "other_lienholder"
     t.integer "parent_id"
     t.integer "location_id"
     t.integer "policy_replacement_year"
@@ -932,12 +928,9 @@ ActiveRecord::Schema.define(version: 2018_09_12_191549) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["asset_subtype_id"], name: "index_transam_assets_on_asset_subtype_id"
-    t.index ["lienholder_id"], name: "index_transam_assets_on_lienholder_id"
     t.index ["manufacturer_id"], name: "index_transam_assets_on_manufacturer_id"
     t.index ["manufacturer_model_id"], name: "index_transam_assets_on_manufacturer_model_id"
-    t.index ["operator_id"], name: "index_transam_assets_on_operator_id"
     t.index ["organization_id"], name: "index_transam_assets_on_organization_id"
-    t.index ["title_ownership_organization_id"], name: "index_transam_assets_on_title_ownership_organization_id"
     t.index ["transam_assetible_type", "transam_assetible_id"], name: "transam_assetible_idx"
     t.index ["upload_id"], name: "index_transam_assets_on_upload_id"
     t.index ["vendor_id"], name: "index_transam_assets_on_vendor_id"
@@ -1036,6 +1029,8 @@ ActiveRecord::Schema.define(version: 2018_09_12_191549) do
     t.boolean "active", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "authentication_token", limit: 30
+    t.index ["authentication_token"], name: "index_users_on_authentication_token", unique: true
     t.index ["email"], name: "users_idx3"
     t.index ["object_key"], name: "users_idx1"
     t.index ["organization_id"], name: "users_idx2"
