@@ -6,7 +6,7 @@ class Api::V1::AssetsController < Api::ApiController
     unless @asset
       @status = :fail
       @data = {id: "Asset #{params[:id]} not found."}
-      render status: :not_found, , json: json_response(:fail, data: @data)
+      render status: :not_found, json: json_response(:fail, data: @data)
     end
   end
 
