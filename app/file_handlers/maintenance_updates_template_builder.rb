@@ -195,28 +195,27 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
         {:name => 'asset_id_col', :column => 4},
         {:name => 'asset_id_col', :column => 5},
         {:name => 'asset_id_col', :column => 6},
-        {:name => 'asset_id_col', :column => 7}
     ]
 
     if include_mileage_columns?
       styles.concat([
-        {:name => 'maintenance_type_locked',  :column => 8},
-        {:name => 'maintenance_date_locked',  :column => 9},
-        {:name => 'mileage_locked',           :column => 10},
+        {:name => 'maintenance_type_locked',  :column => 7},
+        {:name => 'maintenance_date_locked',  :column => 8},
+        {:name => 'mileage_locked',           :column => 9},
 
-        {:name => 'maintenance_type',         :column => 11},
-        {:name => 'maintenance_date',         :column => 12},
-        {:name => 'mileage',                  :column => 13},
-        {:name => 'maintenance_notes',        :column => 14}
+        {:name => 'maintenance_type',         :column => 10},
+        {:name => 'maintenance_date',         :column => 11},
+        {:name => 'mileage',                  :column => 12},
+        {:name => 'maintenance_notes',        :column => 13}
       ])
     else
       styles.concat([
-          {:name => 'maintenance_type_locked',  :column => 8},
-          {:name => 'maintenance_date_locked',  :column => 9},
+          {:name => 'maintenance_type_locked',  :column => 7},
+          {:name => 'maintenance_date_locked',  :column => 8},
 
-          {:name => 'maintenance_type',         :column => 10},
-          {:name => 'maintenance_date',         :column => 11},
-          {:name => 'maintenance_notes',        :column => 12}
+          {:name => 'maintenance_type',         :column => 9},
+          {:name => 'maintenance_date',         :column => 10},
+          {:name => 'maintenance_notes',        :column => 11}
       ])
     end
 
