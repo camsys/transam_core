@@ -92,7 +92,7 @@ class DispositionUpdatesFileHandler < AbstractFileHandler
           end
 
           # Make sure this row has data otherwise skip it
-          idx = -4
+          idx = -3
           if reader.empty?(cells.length+idx,cells.length-1)
             @num_rows_skipped += 1
             add_processing_message(2, 'info', "No data for row. Skipping.")

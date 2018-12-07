@@ -92,7 +92,7 @@ class MaintenanceUpdatesFileHandler < AbstractFileHandler
           end
 
           # Make sure this row has data otherwise skip it
-          idx = -4
+          idx = -3 # always assume last 3 cells, sometimes 4 with mileage but 3 always includes
           if reader.empty?(cells.length+idx,cells.length-1)
             @num_rows_skipped += 1
             add_processing_message(2, 'info', "No data for row. Skipping.")
