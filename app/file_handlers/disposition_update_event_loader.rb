@@ -7,8 +7,8 @@
 #------------------------------------------------------------------------------
 class DispositionUpdateEventLoader < EventLoader
 
-  EVENT_DATE_COL        = 0
-  DISPOSITION_TYPE_COL  = 1
+  EVENT_DATE_COL        = 1
+  DISPOSITION_TYPE_COL  = 0
   SALES_PROCEEDS_COL    = 2
   MILEAGE_COL           = 3
 
