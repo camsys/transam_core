@@ -35,3 +35,4 @@ shadowed_views.log
 *.erb~
 *.jbuilder~
 .byebug_history
+*.sql~

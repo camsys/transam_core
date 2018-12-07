@@ -291,3 +291,12 @@ asset_subsystems.each do |s|
   subsystem = AssetSubsystem.create(s)
   subsystem.asset_type = asset_type
 end
+
+
+### Load any special SQL scripts here
+puts "======= Loading TransAM Core SQL Scripts  ======="
+
+unless defined?(TransamTransitAsset)
+  puts "  Loading asset_event_views"
+  ActiveRecord::Base.connection.execute(IO.read(File.join(File.dirname(__FILE__), 'most_recent_asset_event_views.sql')))
+end
