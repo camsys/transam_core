@@ -120,6 +120,10 @@ class TransamAsset < TransamAssetRecord
       :title_number
   ]
 
+  callable_by_submodel def self.asset_seed_class_name
+     'AssetType'
+  end
+
 
   # Factory method to return a strongly typed subclass of a new asset
   # based on the asset_base_class_name
