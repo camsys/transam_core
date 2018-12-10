@@ -296,7 +296,11 @@ end
 ### Load any special SQL scripts here
 puts "======= Loading TransAM Core SQL Scripts  ======="
 
-unless defined?(TransamTransitAsset)
+unless SystemConfig.transam_module_loaded? :transit
   puts "  Loading asset_event_views"
-  ActiveRecord::Base.connection.execute(IO.read(File.join(File.dirname(__FILE__), 'most_recent_asset_event_views.sql')))
+  File.read(File.join(File.dirname(__FILE__), 'most_recent_asset_event_views.sql'))
+    .split(';').map(&:strip).each do |statement|
+
+    ActiveRecord::Base.connection.execute(statement)
+  end
 end

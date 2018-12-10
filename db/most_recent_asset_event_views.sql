@@ -5,7 +5,6 @@ CREATE OR REPLACE VIEW recent_asset_events_views AS
       LEFT JOIN asset_event_types AS aet ON aet.id = ae.asset_event_type_id
       LEFT JOIN transam_assets AS ta  ON ta.id = ae.transam_asset_id
       GROUP BY aet.id, ae.transam_asset_id;
-
 DROP VIEW if exists all_assets_most_recent_asset_event_view;
 CREATE OR REPLACE VIEW all_assets_most_recent_asset_event_view AS
       SELECT
@@ -14,6 +13,3 @@ CREATE OR REPLACE VIEW all_assets_most_recent_asset_event_view AS
       LEFT JOIN asset_event_types AS aet ON aet.id = ae.asset_event_type_id
       LEFT JOIN transam_assets AS ta  ON ta.id = ae.transam_asset_id
       GROUP BY ae.transam_asset_id;
-
-      
-
