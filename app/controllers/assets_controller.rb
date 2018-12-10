@@ -152,7 +152,7 @@ class AssetsController < AssetAwareController
     add_breadcrumb terminal_crumb if terminal_crumb
     
     # check that an order param was provided otherwise use asset_tag as the default
-    params[:sort] ||= 'asset_tag'
+    params[:sort] ||= 'transam_assets.asset_tag'
 
     # fix sorting on organizations to be alphabetical not by index
     params[:sort] = 'organizations.short_name' if params[:sort] == 'organization_id'
@@ -766,7 +766,9 @@ class AssetsController < AssetAwareController
     if @asset_class_name == 'TransamAsset'
       klass = klass.includes({asset_subtype: :asset_type},:organization, :manufacturer)
     else
-      klass = klass.includes(transam_asset: [{asset_subtype: :asset_type},:organization, :manufacturer])
+      join_relations = klass.actable_hierarchy
+      join_relations[join_relations.key(:transam_asset)] = {transam_asset: [{asset_subtype: :asset_type},:organization, :manufacturer]}
+      klass = klass.includes(join_relations)
     end
     klass.where(clauses)
   end
