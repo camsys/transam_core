@@ -114,9 +114,7 @@ class TemplateBuilder
 
   # Override this to get the header rows
   def header_rows
-    [
-      ['COL_1', 'COL_2', 'COL_3']
-    ]
+    []
   end
 
   # Override this at rows to the sheet
