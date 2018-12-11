@@ -2,7 +2,8 @@ require 'rails_helper'
 
 RSpec.describe Api::V1::ImagesController, type: :request do
   let(:test_user) { create(:normal_user) }
-  let(:test_asset) { create(:buslike_asset_basic_org) }
+  let(:test_org) { create(:organization_basic) }
+  let(:test_asset) { create(:buslike_asset_basic_org, organization: test_org) }
   let(:test_file) { Rack::Test::UploadedFile.new('spec/files/sample.png', 'application/png', true) }
 
   let(:valid_headers) { {"X-User-Email" => test_user.email, "X-User-Token" => test_user.authentication_token} }
