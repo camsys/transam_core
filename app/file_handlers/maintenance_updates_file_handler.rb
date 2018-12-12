@@ -83,14 +83,6 @@ class MaintenanceUpdatesFileHandler < AbstractFileHandler
             add_processing_message(1, 'success', "Processing row[#{row}]  Asset ID: '#{asset_tag}' (#{object_key})")
           end
 
-          #### Validations on Asset ####
-          # Check to see if this asset tag and subtype are the same
-          unless asset.asset_tag == asset_tag
-            add_processing_message(2, 'warning', "Mismatch on asset tag. Found tag '#{asset_tag}' expected '#{asset.asset_tag}'. Skipping row.")
-            @num_rows_failed += 1
-            next
-          end
-
           # Make sure this row has data otherwise skip it
           idx = -3 # always assume last 3 cells, sometimes 4 with mileage but 3 always includes
           if reader.empty?(cells.length+idx,cells.length-1)

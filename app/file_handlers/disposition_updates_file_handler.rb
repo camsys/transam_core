@@ -83,14 +83,6 @@ class DispositionUpdatesFileHandler < AbstractFileHandler
             add_processing_message(1, 'success', "Processing row[#{row}]  Asset ID: '#{asset_tag}' (#{object_key})")
           end
 
-          #### Validations on Asset ####b
-          # Check to see if this asset tag and subtype are the same
-          unless asset.asset_tag == asset_tag
-            add_processing_message(2, 'warning', "Mismatch on asset tag. Found tag '#{asset_tag}' expected '#{asset.asset_tag}'. Skipping row.")
-            @num_rows_failed += 1
-            next
-          end
-
           # Make sure this row has data otherwise skip it
           idx = -3
           if reader.empty?(cells.length+idx,cells.length-1)
