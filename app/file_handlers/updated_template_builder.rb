@@ -77,9 +77,8 @@ class UpdatedTemplateBuilder
       fields[1..-1].each_with_index do |val, index|
         if !@column_styles[val].nil?
           sheet.col_style start+index, @column_styles[val]
-          if (style_name_parts = @style_cache.key(@column_styles[val]).split("_"))[0] == "required"
-            sheet.rows[1].cells[start+index].style = @style_cache["required_header_#{style_name_parts[1]}"]
-          end
+          style_name_parts = @style_cache.key(@column_styles[val]).split("_")
+          sheet.rows[1].cells[start+index].style = @style_cache["#{style_name_parts[0]}_header_#{style_name_parts[1]}"]
         end
       end
       sheet.merge_cells("#{convert_index_to_letter(start)}1:#{convert_index_to_letter(start+fields.length-2)}1")
