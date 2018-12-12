@@ -1,6 +1,5 @@
 # Base class name is to determine base asset class. Seed class is used to determine seed that gets typed (or very specific) asset class.
 Rails.application.config.asset_base_class_name = 'Asset'
-Rails.application.config.asset_seed_class_name = 'AssetType'
 
 Rails.application.config.active_job.queue_adapter = :delayed_job
 
