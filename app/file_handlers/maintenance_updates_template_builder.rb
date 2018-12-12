@@ -76,11 +76,9 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
     # Merge Cells
     sheet.merge_cells("A1:G1")
     if include_mileage_columns?
-      sheet.merge_cells("H1:J1")
-      sheet.merge_cells("K1:N1")
+      sheet.merge_cells("H1:N1")
     else
-      sheet.merge_cells("H1:I1")
-      sheet.merge_cells("J1:L1")
+      sheet.merge_cells("H1:L1")
     end
 
 
@@ -89,7 +87,7 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
     earliest_date = SystemConfig.instance.epoch
 
     # Maintenance Type
-    sheet.add_data_validation((include_mileage_columns?) ? "K3:K1000": "J1:J1000", {
+    sheet.add_data_validation((include_mileage_columns?) ? "K3:K1000": "J3:J1000", {
       :type => :list,
       :formula1 => "lists!$A$1:$#{alphabet[@maintenance_types.size]}$1",
       :allow_blank => true,
@@ -135,9 +133,8 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
   # header rows
   def header_rows
     title_row = [
-        'Asset','','','','','','','',
+        'Asset','','','','','','',
     ]
-    title_row << ''
 
     title_row.concat([
         'Maintenance Report',
@@ -145,10 +142,14 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
         '',
         '',
         '',
-        '',
-        ''
     ])
 
+    if include_mileage_columns?
+      title_row.concat([
+          '',
+          ''
+      ])
+    end
 
     detail_row = [
         'Object Key',
@@ -210,12 +211,12 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
       ])
     else
       styles.concat([
-          {:name => 'maintenance_type_locked',  :column => 7},
-          {:name => 'maintenance_date_locked',  :column => 8},
+        {:name => 'maintenance_type_locked',  :column => 7},
+        {:name => 'maintenance_date_locked',  :column => 8},
 
-          {:name => 'maintenance_type',         :column => 9},
-          {:name => 'maintenance_date',         :column => 10},
-          {:name => 'maintenance_notes',        :column => 11}
+        {:name => 'maintenance_type',         :column => 9},
+        {:name => 'maintenance_date',         :column => 10},
+        {:name => 'maintenance_notes',        :column => 11}
       ])
     end
 
@@ -261,15 +262,15 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
     a << super
 
     # Header Styles
-    a << {:name => 'asset_id_col', :bg_color => "EBF1DE", :fg_color => '000000', :b => false, :alignment => { :horizontal => :center }}
+    a << {:name => 'asset_id_col', :bg_color => "EBF1DE", :fg_color => '000000', :b => false, :alignment => { :horizontal => :center, :wrap_text => true }}
 
-    a << {:name => 'maintenance_type_locked', :bg_color => "b0d6f1", :alignment => { :horizontal => :center } , :locked => true }
-    a << {:name => 'mileage_locked', :num_fmt => 3, :bg_color => "b0d6f1", :alignment => { :horizontal => :center } , :locked => true }
-    a << {:name => 'maintenance_date_locked', :format_code => 'MM/DD/YYYY', :bg_color => "b0d6f1", :alignment => { :horizontal => :center } , :locked => true }
-    a << {:name => 'maintenance_type', :bg_color => "b0d6f1", :alignment => { :horizontal => :center } , :locked => false }
-    a << {:name => 'mileage', :num_fmt => 3, :bg_color => "b0d6f1", :alignment => { :horizontal => :center } , :locked => false }
-    a << {:name => 'maintenance_date', :format_code => 'MM/DD/YYYY', :bg_color => "b0d6f1", :alignment => { :horizontal => :center } , :locked => false }
-    a << {:name => 'maintenance_notes', :bg_color => "b0d6f1", :alignment => { :horizontal => :left } , :locked => false}
+    a << {:name => 'maintenance_type_locked', :bg_color => "b0d6f1", :alignment => { :horizontal => :center, :wrap_text => true } , :locked => true }
+    a << {:name => 'mileage_locked', :num_fmt => 3, :bg_color => "b0d6f1", :alignment => { :horizontal => :center, :wrap_text => true } , :locked => true }
+    a << {:name => 'maintenance_date_locked', :format_code => 'MM/DD/YYYY', :bg_color => "b0d6f1", :alignment => { :horizontal => :center, :wrap_text => true } , :locked => true }
+    a << {:name => 'maintenance_type', :bg_color => "b0d6f1", :alignment => { :horizontal => :center, :wrap_text => true } , :locked => false }
+    a << {:name => 'mileage', :num_fmt => 3, :bg_color => "b0d6f1", :alignment => { :horizontal => :center, :wrap_text => true } , :locked => false }
+    a << {:name => 'maintenance_date', :format_code => 'MM/DD/YYYY', :bg_color => "b0d6f1", :alignment => { :horizontal => :center, :wrap_text => true } , :locked => false }
+    a << {:name => 'maintenance_notes', :bg_color => "b0d6f1", :alignment => { :horizontal => :left, :wrap_text => true } , :locked => false}
 
     a.flatten
   end
