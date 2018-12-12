@@ -86,13 +86,6 @@ class InventoryUpdatesFileHandler < AbstractFileHandler
             next
           end
 
-          # Check to see if this asset tag and subtype are the same
-          unless asset.asset_tag == asset_tag
-            add_processing_message(2, 'warning', "Mismatch on asset tag. Found tag '#{asset_tag}' expected '#{asset.asset_tag}'. Skipping row.")
-            @num_rows_failed += 1
-            next
-          end
-
           # Make sure this row has data otherwise skip it
           if reader.empty?(8,8) and reader.empty?(12,12) and reader.empty?(16,16)
             @num_rows_skipped += 1
