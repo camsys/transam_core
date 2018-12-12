@@ -20,3 +20,5 @@ gem 'sass-rails'
 gem 'rails-controller-testing' # assigns has been extracted to this gem
 gem 'awesome_print'
 gem 'responders' # get jbuilder working on Travis. It wasn't automatically rendering the json views.
+
+gem 'active_record-acts_as', git: 'https://github.com/camsys/active_record-acts_as', branch: 'master' # use our fork
