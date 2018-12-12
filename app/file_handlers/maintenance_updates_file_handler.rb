@@ -94,6 +94,10 @@ class MaintenanceUpdatesFileHandler < AbstractFileHandler
           # If all the validations have passed, type the asset
           asset = Rails.application.config.asset_base_class_name.constantize.get_typed_asset(asset)
 
+          if asset.class.to_s.include? 'Vehicle'
+            idx = -4
+          end
+
           #---------------------------------------------------------------------
           # Maintenance Update
           #---------------------------------------------------------------------
