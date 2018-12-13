@@ -1,0 +1,2 @@
+class QueryField < ApplicationRecord
+end
