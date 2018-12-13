@@ -91,6 +91,8 @@ class UpdatedTemplateBuilder
     # Perform any additional processing
     post_process(sheet)
 
+    create_list_of_fields(wb)
+
     # Serialize the spreadsheet to the stream and return it
     p.to_stream()
 
@@ -133,6 +135,10 @@ class UpdatedTemplateBuilder
       end
     end
 
+  end
+
+  def create_list_of_fields(workbook)
+    # Implement in subclass.
   end
 
   protected
