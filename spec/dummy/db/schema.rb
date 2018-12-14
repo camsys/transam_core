@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_04_185502) do
+ActiveRecord::Schema.define(version: 2018_12_14_230013) do
 
   create_table "activities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "object_key", limit: 12
@@ -727,6 +727,40 @@ ActiveRecord::Schema.define(version: 2018_12_04_185502) do
     t.boolean "active", null: false
   end
 
+  create_table "query_asset_classes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "table_name"
+    t.string "transam_assets_join"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "query_field_asset_classes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "query_field_id"
+    t.bigint "query_asset_class_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["query_asset_class_id"], name: "index_query_field_asset_classes_on_query_asset_class_id"
+    t.index ["query_field_id"], name: "index_query_field_asset_classes_on_query_field_id"
+  end
+
+  create_table "query_fields", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "name"
+    t.string "label"
+    t.string "category"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "query_filters", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "query_field_id"
+    t.string "value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "saved_query_id_id"
+    t.index ["query_field_id"], name: "index_query_filters_on_query_field_id"
+    t.index ["saved_query_id_id"], name: "index_query_filters_on_saved_query_id_id"
+  end
+
   create_table "query_params", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name"
     t.string "description"
@@ -793,6 +827,26 @@ ActiveRecord::Schema.define(version: 2018_12_04_185502) do
     t.string "class_name"
     t.boolean "rule_set_aware"
     t.boolean "active"
+  end
+
+  create_table "saved_queries", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "object_key"
+    t.string "name"
+    t.string "description"
+    t.integer "created_by_user_id"
+    t.integer "updated_by_user_id"
+    t.integer "shared_from_org_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "saved_query_fields", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "saved_query_id"
+    t.bigint "query_field_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["query_field_id"], name: "index_saved_query_fields_on_query_field_id"
+    t.index ["saved_query_id"], name: "index_saved_query_fields_on_saved_query_id"
   end
 
   create_table "saved_searches", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -1127,4 +1181,9 @@ ActiveRecord::Schema.define(version: 2018_12_04_185502) do
     t.index ["object_key"], name: "workflow_events_idx1"
   end
 
+  add_foreign_key "query_field_asset_classes", "query_asset_classes"
+  add_foreign_key "query_field_asset_classes", "query_fields"
+  add_foreign_key "query_filters", "query_fields"
+  add_foreign_key "saved_query_fields", "query_fields"
+  add_foreign_key "saved_query_fields", "saved_queries"
 end
