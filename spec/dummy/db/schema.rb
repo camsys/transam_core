@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_14_230013) do
+ActiveRecord::Schema.define(version: 2018_12_16_182754) do
 
   create_table "activities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "object_key", limit: 12
@@ -729,7 +729,13 @@ ActiveRecord::Schema.define(version: 2018_12_14_230013) do
 
   create_table "query_asset_classes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "table_name"
-    t.string "transam_assets_join"
+    t.text "transam_assets_join"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "query_categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -746,9 +752,10 @@ ActiveRecord::Schema.define(version: 2018_12_14_230013) do
   create_table "query_fields", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name"
     t.string "label"
-    t.string "category"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "query_category_id"
+    t.index ["query_category_id"], name: "index_query_fields_on_query_category_id"
   end
 
   create_table "query_filters", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -756,9 +763,9 @@ ActiveRecord::Schema.define(version: 2018_12_14_230013) do
     t.string "value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "saved_query_id_id"
+    t.bigint "saved_query_id"
     t.index ["query_field_id"], name: "index_query_filters_on_query_field_id"
-    t.index ["saved_query_id_id"], name: "index_query_filters_on_saved_query_id_id"
+    t.index ["saved_query_id"], name: "index_query_filters_on_saved_query_id"
   end
 
   create_table "query_params", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
