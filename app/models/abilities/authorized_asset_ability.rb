@@ -18,7 +18,7 @@ module Abilities
       can :update,  Asset, :organization_id => organization_ids
       # Prevent updating or removing assets that have been previously disposed
       cannot [:update, :destroy], Asset do |a|
-        a.disposed?
+        a.try(:disposed?)
       end
 
 
@@ -29,7 +29,7 @@ module Abilities
       can :update,  TransamAssetRecord, :organization_id => organization_ids
       # Prevent updating or removing assets that have been previously disposed
       cannot [:update, :destroy], TransamAssetRecord do |a|
-        a.disposed?
+        a.try(:disposed?)
       end
 
     end
