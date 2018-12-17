@@ -304,30 +304,7 @@ unless SystemConfig.transam_module_loaded? :transit
     ActiveRecord::Base.connection.execute(statement)
   end
 end
-### Load asset query configurations
-puts "======= Loading query categories ======="
-puts "  Processing query configs "
 
-# Query Category
-QueryCategory.create(name: 'Identification & Classification')
-QueryCategory.create(name: 'Characteristics')
-QueryCategory.create(name: 'Geometry')
-QueryCategory.create(name: 'System')
-QueryCategory.create(name: 'Funding')
-QueryCategory.create(name: 'Procurement & Purchase')
-QueryCategory.create(name: 'Operations')
-QueryCategory.create(name: 'Registration & Title')
-QueryCategory.create(name: 'Life Cycle (Vehicle Use Metrics)')
-QueryCategory.create(name: 'Life Cycle (Usage Codes)')
-QueryCategory.create(name: 'Life Cycle (Service Status)')
-QueryCategory.create(name: 'Life Cycle (Performance Restriction)')
-QueryCategory.create(name: 'Life Cycle (Replacement Status)')
-QueryCategory.create(name: 'Life Cycle (Rebuild/Rehabilitation)')
-QueryCategory.create(name: 'Life Cycle (Operations Metrics)')
-QueryCategory.create(name: 'Life Cycle (Odometer Reading)')
-QueryCategory.create(name: 'Life Cycle (Maintenance)')
-QueryCategory.create(name: 'Life Cycle (Location / Storage)')
-QueryCategory.create(name: 'Life Cycle (Condition)')
-QueryCategory.create(name: 'Life Cycle (Depreciation)')
-QueryCategory.create(name: 'Life Cycle (Disposition & Transfer)')
+require_relative File.join("seeds", 'asset_query_seeds.rb')
+
 

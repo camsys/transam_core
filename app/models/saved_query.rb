@@ -149,9 +149,10 @@ class SavedQuery < ActiveRecord::Base
       Arel.sql("query_filters.id"), 
       Arel.sql("query_asset_classes.table_name as query_table_name"),
       Arel.sql("query_fields.name as query_field_name"), 
+      Arel.sql("query_filters.op as query_filter_op"), 
       Arel.sql("query_filters.value")).each do |config|
       filter_id = config[0]
-      filter_sql = "#{config[1]}.#{config[2]} #{config[3]}"
+      filter_sql = "#{config[1]}.#{config[2]} #{config[3]} (#{config[4]})"
       
       if last_filter_id && filter_id != last_filter_id
         where_sqls << where_sqls_for_one_filter.join(" OR ")
