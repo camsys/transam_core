@@ -30,6 +30,7 @@ class UpdatedTemplateBuilder
 
     setup_lookup_sheet(wb)
 
+    @pick_list_cache = {}
     add_columns(sheet)
 
     # Add headers
@@ -91,6 +92,10 @@ class UpdatedTemplateBuilder
     # Perform any additional processing
     post_process(sheet)
 
+    # Create List of Fields and Pick Lists tab is applicable
+    create_list_of_fields(wb)
+    create_pick_lists(wb)
+
     # Serialize the spreadsheet to the stream and return it
     p.to_stream()
 
@@ -126,6 +131,11 @@ class UpdatedTemplateBuilder
     # add data validation
     @data_validations[name] = data_validation
 
+    # add column names to pick lists
+    if data_validation.key?(:formula1) && data_validation[:formula1].include?("lists!")
+      @pick_list_cache[name] = []
+    end
+
     # set any other variables
     unless other_args.empty?
       (0..other_args.length/2-1).each do |arg_idx|
@@ -133,6 +143,14 @@ class UpdatedTemplateBuilder
       end
     end
 
+  end
+
+  def create_list_of_fields(workbook)
+    # Implement in subclass.
+  end
+
+  def create_pick_lists(workbook)
+    # Implement in subclass.
   end
 
   protected
