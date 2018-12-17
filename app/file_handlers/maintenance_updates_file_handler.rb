@@ -103,7 +103,7 @@ class MaintenanceUpdatesFileHandler < AbstractFileHandler
           #---------------------------------------------------------------------
           add_processing_message(2, 'success', 'Processing Maintenance Report')
           loader = MaintenanceUpdatesEventLoader.new
-          loader.process(asset, cells[idx..idx+3])
+          loader.process(asset, cells[idx..-1])
           if loader.errors?
             row_errored = true
             loader.errors.each { |e| add_processing_message(3, 'warning', e)}
