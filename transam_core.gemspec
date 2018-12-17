@@ -73,7 +73,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'rails-data-migrations'
 
   # API
-  s.add_dependency 'zero-rails_openapi'
+  #s.add_dependency 'zero-rails_openapi'
   s.add_dependency 'jbuilder'
   s.add_dependency 'simple_token_authentication', '~> 1.0'
   
