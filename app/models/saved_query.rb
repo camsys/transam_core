@@ -167,7 +167,7 @@ class SavedQuery < ActiveRecord::Base
     end
     # combine where_sqls
     if where_sqls.any?
-      base_rel = base_rel.where(where_sqls.map{ |s| "(" + s + "')" }.join(" AND "))
+      base_rel = base_rel.where(where_sqls.map{ |s| "(" + s + ")" }.join(" AND "))
     end
 
     # selects
