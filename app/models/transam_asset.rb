@@ -113,6 +113,8 @@ class TransamAsset < TransamAssetRecord
   # Returns a list of assets that are still operational
   scope :operational, -> { where(TransamAsset.arel_table[:asset_tag].not_eq(TransamAsset.arel_table[:object_key])).where(disposition_date: nil) }
 
+  scope :operational_in_range, -> (start_date, end_date) { where(TransamAsset.arel_table[:in_service_date].not_eq(nil).and(TransamAsset.arel_table[:in_service_date].lteq(end_date)).and(TransamAsset.arel_table[:disposition_date].eq(nil).or(TransamAsset.arel_table[:disposition_date].gteq(start_date)))) }
+
   # Returns a list of asset that in early replacement
   scope :early_replacement, -> { where('policy_replacement_year is not NULL and scheduled_replacement_year is not NULL and scheduled_replacement_year < policy_replacement_year') }
 
