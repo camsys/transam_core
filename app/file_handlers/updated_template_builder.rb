@@ -105,7 +105,7 @@ class UpdatedTemplateBuilder
   def get_lookup_cells(lookup_table_name)
     row = @lookups[lookup_table_name][:row]
     column = convert_index_to_letter(@lookups[lookup_table_name][:count]-1)
-
+    index_pick_list((row - 1), @lookups[lookup_table_name][:count]-1)
     return "$A$#{row}:$#{column}$#{row}"
   end
 
@@ -131,9 +131,12 @@ class UpdatedTemplateBuilder
     # add data validation
     @data_validations[name] = data_validation
 
-    # add column names to pick lists
+    # add column names and data to pick lists
     if data_validation.key?(:formula1) && data_validation[:formula1].include?("lists!")
-      @pick_list_cache[name] = []
+      @pick_list_cache[name] ||= []
+      sheet.workbook.worksheets[2].rows[@pick_list_cache[:index]].cells.each do |cell|
+        @pick_list_cache[name] << cell.value
+      end
     end
 
     # set any other variables
@@ -153,6 +156,9 @@ class UpdatedTemplateBuilder
     # Implement in subclass.
   end
 
+  def index_pick_list(row_index, count)
+    # Implement in subclass
+  end
   protected
 
   # Configure any other implementation specific options for the workbook
