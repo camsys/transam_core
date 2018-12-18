@@ -1,7 +1,7 @@
 .row.form-group
   %h4.col-sm-12 Category
   .col-sm-8
-    = select_tag(:query_category, options_for_select(QueryCategory.all), :class => "form-control")
+    = select_tag(:query_category, options_from_collection_for_select(QueryCategory.all.order(:name), :id, :name), :class => "form-control")
   .col-sm-4
     %button.btn.btn-warning.reset-button
       Reset

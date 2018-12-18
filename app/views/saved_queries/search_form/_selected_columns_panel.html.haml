@@ -1,6 +1,14 @@
-.panel.panel-primary
+.panel.panel-primary.selected-columns-panel
   .panel-heading
     %h3.panel-title
       %i.fa.fa-list
       Selected
   .panel-body
+    %ul.list-group
+
+:javascript
+  $(function() {
+    $( ".selected-columns-panel ul" ).sortable({
+      appendTo: document.body
+    });
+  });
