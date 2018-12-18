@@ -74,8 +74,11 @@ class User < ActiveRecord::Base
   # AssetEvents that have been tagged by the user
   has_many    :asset_events,  :foreign_key => :created_by_id
 
-  #
+  # Deprecated saved search
   has_many    :saved_searches
+
+  # New saved query
+  has_many    :saved_queries,  :foreign_key => :created_by_user_id
 
   #-----------------------------------------------------------------------------
   # Transients
