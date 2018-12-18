@@ -1,0 +1,9 @@
+<% if Jquery::Ui::Rails::JQUERY_UI_VERSION >= '1.12' %>
+  <% require_asset "jquery-ui/widgets/draggable" %>
+  <% require_asset "jquery-ui/widgets/droppable" %>
+  <% require_asset "jquery-ui/widgets/sortable" %>
+<% else %>
+  <% require_asset "jquery-ui/sortable" %>
+  <% require_asset "jquery-ui/draggable" %>
+  <% require_asset "jquery-ui/droppable" %>
+<% end %>
