@@ -36,7 +36,7 @@ User.find_or_create_by(
   :phone => "617-123-4567",
   :timezone => "Eastern Time (US & Canada)",
   :email => "admin@email.com",
-  :num_table_rows => 10,
+  :num_table_rows => 10
   )
 
 ActiveRecord::Base.connection.execute("ALTER TABLE `transam_core_testing`.`assets` ADD COLUMN `geometry` GEOMETRY NULL AFTER `vendor_id`;")

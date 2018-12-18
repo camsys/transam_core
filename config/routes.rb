@@ -190,6 +190,12 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :saved_queries do
+    member do
+      post 'query'
+    end
+  end
+
   resources :reports,       :only => [:index, :show] do
     member do
       get 'load'  # load a report using ajax
