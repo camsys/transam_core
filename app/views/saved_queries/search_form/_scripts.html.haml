@@ -1,0 +1,25 @@
+:javascript
+  function collapse_panel(panel) {
+    panel.find('.panel-body').slideUp();
+    panel.find('.panel-expand-collapse').addClass('panel-collapsed');
+    panel.find('.panel-expand-collapse i').removeClass('fa-chevron-up').addClass('fa-chevron-down'); 
+  }
+
+  function expand_panel(panel) {
+    panel.find('.panel-body').slideDown();
+    panel.find('.panel-expand-collapse').removeClass('panel-collapsed');
+    panel.find('.panel-expand-collapse i').removeClass('fa-chevron-down').addClass('fa-chevron-up');
+  }
+
+  $(function() {
+    $(document).on('click', '.panel-heading span.panel-expand-collapse', function(e){
+      var $this = $(this);
+      var panel = $this.parents('.panel');
+      var is_collapsed = false;
+      if(!$this.hasClass('panel-collapsed')) {
+        collapse_panel(panel);      
+      } else {
+        expand_panel(panel);
+      }
+    });
+  });

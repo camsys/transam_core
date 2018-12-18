@@ -1,0 +1,15 @@
+:css
+  .panel-expand-collapse {
+    cursor: pointer;
+  }
+
+.row.col-sm-12
+  = render 'saved_queries/search_form/columns_filters_panel'
+.row.col-sm-12
+  = render 'saved_queries/search_form/filter_selections_panel'
+.row.col-sm-12
+  = render 'saved_queries/search_form/results_panel'
+.row.col-sm-12
+  = render 'saved_queries/search_form/actions_toolbar'
+
+= render 'saved_queries/search_form/scripts'

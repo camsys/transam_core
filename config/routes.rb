@@ -191,7 +191,7 @@ Rails.application.routes.draw do
   end
 
   resources :saved_queries do
-    member do
+    collection do
       post 'query'
     end
   end

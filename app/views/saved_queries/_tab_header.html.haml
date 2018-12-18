@@ -1,0 +1,5 @@
+%ul.nav.nav-pills.nav-justified{style: 'margin-bottom: 20px;'}
+  %li{role: 'presentation', class: (is_new_query ? "active" : "")}
+    = link_to "Query Interface", new_saved_query_url
+  %li{role: 'presentation', class: (!is_new_query ? "active" : "")}
+    = link_to "Saved Queries", saved_queries_url

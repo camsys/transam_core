@@ -1,0 +1,11 @@
+.panel.panel-default
+  .panel-heading
+    .pull-right
+      = button_tag :class => 'btn btn-xs btn-primary execute-query', :title => "Trigger data query", :type => 'button' do
+        %i.fa.fa-calculator
+        Calculate
+    %h3.panel-title
+      Results
+  .panel-body
+    %label
+      = "Records Returned: #{@results ? @results.size : 'N/A'}"

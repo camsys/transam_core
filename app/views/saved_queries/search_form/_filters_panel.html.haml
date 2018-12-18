@@ -1,0 +1,12 @@
+.panel.panel-primary.filters-panel
+  .panel-heading
+    %h3.panel-title
+      %i.fa.fa-filter
+      Filters
+  .panel-body
+    .col-sm-12
+      = render 'saved_queries/search_form/category_reset'
+    .col-sm-6
+      = render 'saved_queries/search_form/available_filters_panel'
+    .col-sm-6
+      = render 'saved_queries/search_form/selected_filters_panel'

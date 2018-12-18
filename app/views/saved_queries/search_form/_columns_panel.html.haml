@@ -1,0 +1,12 @@
+.panel.panel-primary.columns-panel
+  .panel-heading
+    %h3.panel-title
+      %i.fa.fa-list
+      Columns
+  .panel-body
+    .col-sm-12
+      = render 'saved_queries/search_form/category_reset'
+    .col-sm-6
+      = render 'saved_queries/search_form/available_columns_panel'
+    .col-sm-6
+      = render 'saved_queries/search_form/selected_columns_panel'

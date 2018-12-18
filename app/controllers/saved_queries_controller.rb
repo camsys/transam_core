@@ -10,8 +10,10 @@ class SavedQueriesController < OrganizationAwareController
   # GET /saved_queries
   # GET /saved_queries.json
   def index
+    add_breadcrumb "Query", saved_queries_url
+    add_breadcrumb "Saved Queries"
 
-    @queries = current_user.all_queries
+    @queries = current_user.saved_queries
 
     respond_to do |format|
       format.html
@@ -33,6 +35,9 @@ class SavedQueriesController < OrganizationAwareController
 
   # GET /saved_queries/new
   def new
+    add_breadcrumb "Query", saved_queries_url
+    add_breadcrumb "New Query"
+
     @query = SavedQuery.new
   end
 
