@@ -196,6 +196,13 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :query_fields, only: [:index]
+  resources :query_filters, only: [:show] do 
+    collection do 
+      get 'render_new'
+    end
+  end
+
   resources :reports,       :only => [:index, :show] do
     member do
       get 'load'  # load a report using ajax

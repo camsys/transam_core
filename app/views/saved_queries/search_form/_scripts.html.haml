@@ -1,4 +1,6 @@
 :javascript
+  var _saved_query = new SavedQuery();
+
   function collapse_panel(panel) {
     panel.find('.panel-body').slideUp();
     panel.find('.panel-expand-collapse').addClass('panel-collapsed');
@@ -22,4 +24,6 @@
         expand_panel(panel);
       }
     });
+
+    // TODO: local storage to restore last query
   });

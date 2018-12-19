@@ -4,11 +4,19 @@
       %i.fa.fa-list
       Selected
   .panel-body
-    %ul.list-group
+    %ul.list-group.column-list
 
 :javascript
   $(function() {
     $( ".selected-columns-panel ul" ).sortable({
-      appendTo: document.body
+      appendTo: document.body,
+      stop: function( event, ui ) {
+        var category_id = $('.selected-columns-panel').data('category-id');
+        var selectedFieldIds = [];
+        $( ".selected-columns-panel ul.column-list li" ).each(function(){
+          selectedFieldIds.push($(this).data('id'));
+        })
+        _saved_query.setSelectedOutputFieldIdsByCategory(category_id, selectedFieldIds);
+      }
     });
   });

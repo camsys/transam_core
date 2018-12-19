@@ -6,4 +6,5 @@ class QueryField < ApplicationRecord
   belongs_to :query_category
 
   scope :visible, -> { where(depends_on: nil) }
+  scope :by_category_id, -> (category_id) { where(query_category_id: category_id) }
 end

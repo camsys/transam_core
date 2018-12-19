@@ -1,0 +1,18 @@
+.filter-details-panel.col-sm-4.col-md-3{data: {field_id: field.id, category_id: field.query_category_id}}
+  .panel.panel-primary
+    .panel-heading
+      %h3.panel-title
+        %i.fa.fa-filter
+        = field.label
+        .pull-right
+          %i.fa.fa-close.remove-filter-details{title: 'Remove filter'}
+    .panel-body
+      .row.col-sm-12
+        - if lookup_context.template_exists?(field.name, "query_filters/filter_forms", true)
+          = render "query_filters/filter_forms/#{field.name}"
+        - else
+          - if field.filter_type.blank?
+            = render 'query_filters/filter_forms/default'
+          - else
+            = render "query_filters/filter_forms/#{field.filter_type}"
+      

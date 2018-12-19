@@ -1,3 +1,8 @@
+:css
+  .select-filter, .remove-filter {
+    cursor: pointer;
+  }
+
 .panel.panel-primary.filters-panel
   .panel-heading
     %h3.panel-title
@@ -10,3 +15,130 @@
       = render 'saved_queries/search_form/available_filters_panel'
     .col-sm-6
       = render 'saved_queries/search_form/selected_filters_panel'
+
+:javascript
+  $(function() {
+    function renderFilters(category_id, new_list) {
+      // remove previous
+      $('.available-filters-panel .filter-list li').remove();
+
+      var selectedFieldIds = _saved_query.getSelectedFilterFieldIdsByCategory(category_id);
+      // add new
+      new_list.forEach(function(li) {
+        var li_html = "";
+        var common_html = li.label 
+            + "<span class='pull-right'><i title='select filter' class='fa fa-arrow-right select-filter'></span>"
+            + "</li>";
+        if(selectedFieldIds.indexOf(li.id) >= 0) {
+          // hide selected item
+          li_html = "<li data-id=" + li.id + " data-name='" + li.name + "' class='list-group-item' style='display: none;'>" 
+            + common_html;
+
+          // show in selected section
+          renderSelectedFilter(li.id, li.name, li.label)
+        } else {
+          li_html = "<li data-id=" + li.id + " data-name='" + li.name + "' class='list-group-item'>" 
+            + common_html;
+        }
+
+        $('.available-filters-panel .filter-list').append(li_html);
+      });
+    }
+
+    function loadFiltersByCategory(category_id) {
+      $('.available-filters-panel').data('category-id', category_id);
+      $('.selected-filters-panel').data('category-id', category_id);
+
+      $.ajax({
+        url: "#{query_fields_path}?query_category_id=" + category_id
+      }).done(function(data) {
+        renderFilters(category_id, data);
+      });
+    }
+
+    function renderSelectedFilter(field_id, field_name, field_label) {
+
+      var li_html = "<li data-id=" + field_id + " data-name='" + field_name + "' class='list-group-item'>" 
+        + field_label 
+        + "<span class='pull-right'><i title='remove filter' class='fa fa-close remove-filter'></span>"
+        + "</li>";
+
+      $('.selected-filters-panel .filter-list').append(li_html);
+    }
+
+    function loadFilterDetails(field_id) {
+      $.ajax({
+        url: "#{render_new_query_filters_path}?query_field_id=" + field_id
+      });
+    }
+
+    function selectFilter(category_id, field_id, field_name, field_label) {
+      var selectedFieldIds = _saved_query.getSelectedFilterFieldIdsByCategory(category_id);
+      selectedFieldIds.push(field_id);
+      _saved_query.setSelectedFilterFieldIdsByCategory(category_id, selectedFieldIds);
+
+      renderSelectedFilter(field_id, field_name, field_label);
+
+      loadFilterDetails(field_id);
+    }
+
+    function removeFilter(category_id, field_id) {
+      var selectedFieldIds = _saved_query.getSelectedFilterFieldIdsByCategory(category_id);
+      var idx = selectedFieldIds.indexOf(field_id);
+      selectedFieldIds.splice(idx, 1);
+      _saved_query.setSelectedFilterFieldIdsByCategory(category_id, selectedFieldIds);
+
+      $('.selected-filters-panel .filter-list li[data-id=' + field_id + ']').remove();
+      $('.filter-details-panel[data-field-id=' + field_id + ']').remove();
+      $('.available-filters-panel .filter-list li[data-id=' + field_id + ']').show();
+    }
+
+    // load query fields by category
+    $('.filters-panel .category-dropdown').change(function() {
+      loadFiltersByCategory(parseInt($(this).val()));
+
+      // clear selected_filters section
+      $('.selected-filters-panel .filter-list li').remove();
+    });
+    loadFiltersByCategory(parseInt($('.filters-panel .category-dropdown').val()));
+
+    // reset button
+    $('.filters-panel .reset-button').click(function() {
+      _saved_query.resetFilterFilters();
+      $('.selected-filters-panel .filter-list li').remove();
+      $('.available-filters-panel .filter-list li').show();
+    });
+
+    // select filter button
+    $('.available-filters-panel').on('click', '.select-filter', function() {
+      var li = $(this).parents('li');
+      li.hide();
+      var field_id = li.data('id');
+      var field_name  = li.data('name');
+      var field_label  = li.text();
+
+      var category_id = $('.available-filters-panel').data('category-id');
+      
+      selectFilter(category_id, field_id, field_name, field_label);
+    });
+
+    // remove selected filter button
+    $('.selected-filters-panel').on('click', '.remove-filter', function() {
+      var li = $(this).parents('li');
+      var field_id = li.data('id');
+      var category_id = $('.selected-filters-panel').data('category-id');
+
+      removeFilter(category_id, field_id);
+    });
+
+    // remove filter details panel
+    $('.filter-selections-panel').on('click', '.remove-filter-details', function() {
+      var panel = $(this).parents('.filter-details-panel');
+      var field_id = panel.data('field-id');
+      var category_id = panel.data('category-id');
+
+      removeFilter(category_id, field_id);
+    });
+
+
+  });
