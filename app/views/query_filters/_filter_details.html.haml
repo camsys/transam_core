@@ -1,4 +1,7 @@
 :css 
+  .filter-details-panel{
+    height: 250px;
+  }
   .filter-details-panel .panel-body {
     max-height: 200px;
     overflow: auto;
@@ -21,4 +24,5 @@
             = render 'query_filters/filter_forms/default'
           - else
             = render "query_filters/filter_forms/#{@query_field.filter_type}"
+
       
