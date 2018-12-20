@@ -1,0 +1,16 @@
+:css 
+  .filter-details-panel .panel-body {
+    max-height: 200px;
+    overflow: auto;
+  }
+  
+.filter-details-panel.col-sm-4.col-md-3
+  .panel.panel-primary
+    .panel-heading
+      %h3.panel-title
+        %i.fa.fa-filter
+        Organization
+    .panel-body
+      .row.col-sm-12
+        = render "query_filters/filter_forms/transam_assets_organization_id"
+      

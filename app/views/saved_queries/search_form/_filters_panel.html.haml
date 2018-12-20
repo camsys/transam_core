@@ -25,6 +25,11 @@
       var selectedFieldIds = _saved_query.getSelectedFilterFieldIdsByCategory(category_id);
       // add new
       new_list.forEach(function(li) {
+        // skip organization_id as it's handled using site filter
+        if(li.name == 'organization_id') {
+          return;
+        }
+
         var li_html = "";
         var common_html = li.label 
             + "<span class='pull-right'><i title='select filter' class='fa fa-arrow-right select-filter'></span>"

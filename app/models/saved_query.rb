@@ -13,6 +13,7 @@ class SavedQuery < ActiveRecord::Base
 
   # Include the object key mixin
   include TransamObjectKey
+  attr_accessor :organization_list
 
   #-----------------------------------------------------------------------------
   # Callbacks
@@ -139,12 +140,13 @@ class SavedQuery < ActiveRecord::Base
   # Compose query relation
   def relation
     # base query relation for asset
-    base_rel = TransamAsset
+    base_rel = TransamAsset.where("transam_assets.organization_id": organization_list || [])
 
     join_tables = {}
     where_sqls = []
     query_filters.each do |filter|
-      next unless filter.query_field
+      # exclude organization_id as its handled above
+      next unless filter.query_field || filter.query_field.name == 'organization_id'
 
       where_sqls_for_one_filter = []
       filter.query_field.query_asset_classes.each do |asset_class|

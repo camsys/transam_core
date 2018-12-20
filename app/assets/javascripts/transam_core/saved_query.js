@@ -19,7 +19,10 @@ function SavedQuery() {
   this.getQueryFilterArray = function() {
     var filters = [];
     for(var field_id in _query_filters) {
-      filters = filters.concat(_query_filters[field_id]); 
+      var filter_details = _query_filters[field_id];
+      if(filter_details) {
+        filters = filters.concat(filter_details); 
+      }
     }
 
     return filters;
@@ -39,6 +42,18 @@ function SavedQuery() {
 
   this.setSelectedFilterFieldIdsByCategory = function(category_id, field_ids) {
     _selected_filter_field_ids[category_id] = field_ids;
+  }
+
+  this.getFilterDetails = function(field_id) {
+    return _query_filters[field_id];
+  }
+
+  this.setFilterDetails = function(field_id, filter_details) {
+    _query_filters[field_id] = filter_details;
+  }
+
+  this.removeFilterDetails = function(field_id) {
+    _query_filters[field_id] = null;
   }
 
   this.resetOutputColumns = function() {
