@@ -56,7 +56,9 @@ class SavedQuery < ActiveRecord::Base
   FORM_PARAMS = [
     :name,
     :description,
-    :organization_ids => []
+    :organization_ids => [],
+    :query_field_ids => [],
+    :query_filters => [:query_field_id, :value, :op]
   ]
 
   # List of fields which can be searched using a simple text-based search
@@ -91,6 +93,14 @@ class SavedQuery < ActiveRecord::Base
 
   def shared?
     !organizations.empty?
+  end
+
+  def parse_query_fields(query_field_ids, query_filters_data)
+    self.query_fields = QueryField.where(id: query_field_ids)
+
+    query_filters_data.each do |filter_data|
+      self.query_filters << QueryFilter.new(filter_data)
+    end
   end
 
   # Caches the rows
@@ -131,42 +141,30 @@ class SavedQuery < ActiveRecord::Base
     # base query relation for asset
     base_rel = TransamAsset
 
-    # base query relation for configuration data
-    config_rel = query_filters.joins(query_field: :query_asset_classes)
+    join_tables = {}
+    where_sqls = []
+    query_filters.each do |filter|
+      next unless filter.query_field
+
+      where_sqls_for_one_filter = []
+      filter.query_field.query_asset_classes.each do |asset_class|
+        asset_table_name = asset_class.table_name
+        unless join_tables.keys.include?(asset_table_name) || asset_class.transam_assets_join.blank?
+          join_tables[asset_table_name] = asset_class.transam_assets_join
+        end
+
+        where_sqls_for_one_filter << "#{asset_table_name}.#{filter.query_field.name} #{filter.op} (#{filter.value})"
+      end
+
+      where_sqls << where_sqls_for_one_filter.join(" OR ")
+    end
 
     # joins
-    join_tables = config_rel.pluck("query_asset_classes.transam_assets_join").uniq.reject { |c| c.blank? }
-    join_tables.each do |join_sql|
+    join_tables.each do |table_name, join_sql|
       base_rel = base_rel.joins(join_sql)
     end
 
     # wheres
-    where_sqls = []
-    # compose where sql for each query field
-    where_sqls_for_one_filter = []
-    last_filter_id = nil
-    config_rel.order("query_filters.id").pluck(
-      Arel.sql("query_filters.id"), 
-      Arel.sql("query_asset_classes.table_name as query_table_name"),
-      Arel.sql("query_fields.name as query_field_name"), 
-      Arel.sql("query_filters.op as query_filter_op"), 
-      Arel.sql("query_filters.value")).each do |config|
-      filter_id = config[0]
-      filter_sql = "#{config[1]}.#{config[2]} #{config[3]} (#{config[4]})"
-      
-      if last_filter_id && filter_id != last_filter_id
-        where_sqls << where_sqls_for_one_filter.join(" OR ")
-        where_sqls_for_one_filter = []
-      else
-        where_sqls_for_one_filter << filter_sql
-      end
-      last_filter_id = filter_id
-    end 
-
-    if where_sqls_for_one_filter.any?
-        where_sqls << where_sqls_for_one_filter.join(" OR ")
-    end
-    # combine where_sqls
     if where_sqls.any?
       base_rel = base_rel.where(where_sqls.map{ |s| "(" + s + ")" }.join(" AND "))
     end
@@ -184,6 +182,7 @@ class SavedQuery < ActiveRecord::Base
       base_rel = base_rel.select(select_sqls.join(", "))
     end
 
+    # return base query relation
     base_rel
   end
 

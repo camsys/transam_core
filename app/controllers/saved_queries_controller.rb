@@ -96,6 +96,10 @@ class SavedQueriesController < OrganizationAwareController
 
   # POST /saved_queries/1/query
   def query
+    @query = SavedQuery.new
+    @query.parse_query_fields saved_query_params[:query_field_ids], saved_query_params[:query_filters]
+
+    render json: { count: @query.data.size }
   end
 
 

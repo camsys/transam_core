@@ -8,4 +8,29 @@
       Results
   .panel-body
     %label
-      = "Records Returned: #{@results ? @results.size : 'N/A'}"
+      = "Records Returned: "
+      %span.result-count-label
+        ="#{@results ? @results.size : 'N/A'}"
+
+:javascript
+  $(function() {
+    $('.execute-query').click(function(e) {
+      e.preventDefault();
+
+      $.ajax({
+        url: "#{query_saved_queries_path}",
+        method: 'POST',
+        dataType: 'json',
+        contentType: 'application/json',
+        data: JSON.stringify({
+          saved_query: _saved_query.data()
+        }),
+        success: function(data) {
+          $('.result-count-label').html(data.count);
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+          alert("We are sorry but something went wrong. " + xhr.status + " " + thrownError);
+        }
+      });
+    });
+  });
