@@ -39,6 +39,7 @@ class SavedQueriesController < OrganizationAwareController
     add_breadcrumb "New Query"
 
     @query = SavedQuery.new
+    @query.organization_list = @organization_list
   end
 
   # GET /saved_queries/1/edit
@@ -51,6 +52,7 @@ class SavedQueriesController < OrganizationAwareController
   def create
 
     @query = SavedQuery.new(saved_query_params)
+    @query.organization_list = @organization_list
     @query.created_by_user = current_user
 
     respond_to do |format|
@@ -96,6 +98,12 @@ class SavedQueriesController < OrganizationAwareController
 
   # POST /saved_queries/1/query
   def query
+    @query = SavedQuery.new
+    @query.organization_list = @organization_list
+    @query.parse_query_fields saved_query_params[:query_field_ids], saved_query_params[:query_filters]
+
+    data_count = @query.data.size
+    render json: { count: data_count }
   end
 
 
@@ -103,6 +111,7 @@ class SavedQueriesController < OrganizationAwareController
     # Use callbacks to share common setup or constraints between actions.
     def set_saved_query
       @query = SavedQuery.find_by(:object_key => params[:id])
+      @query.organization_list = @organization_list
       if @query.nil?
         redirect_to '/404'
         return

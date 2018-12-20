@@ -25,6 +25,11 @@
       var selectedFieldIds = _saved_query.getSelectedFilterFieldIdsByCategory(category_id);
       // add new
       new_list.forEach(function(li) {
+        // skip organization_id as it's handled using site filter
+        if(li.name == 'organization_id') {
+          return;
+        }
+
         var li_html = "";
         var common_html = li.label 
             + "<span class='pull-right'><i title='select filter' class='fa fa-arrow-right select-filter'></span>"
@@ -104,7 +109,11 @@
 
     // reset button
     $('.filters-panel .reset-button').click(function() {
-      _saved_query.resetFilterFilters();
+      var category_id = $('.selected-filters-panel').data('category-id');
+      _saved_query.getSelectedFilterFieldIdsByCategory(category_id).forEach(function(field_id) {
+        $('.filter-details-panel[data-field-id=' + field_id + ']').remove();
+      });
+      _saved_query.resetFilters();
       $('.selected-filters-panel .filter-list li').remove();
       $('.available-filters-panel .filter-list li').show();
     });
