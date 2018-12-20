@@ -40,7 +40,8 @@ Gem::Specification.new do |s|
   s.add_dependency 'state_machines-activemodel'
   s.add_dependency 'state_machines-activerecord'
 
-  s.add_dependency 'roo'
+  s.add_dependency 'roo-xls'
+  s.add_dependency  'rubyXL', '3.1.0'
   s.add_dependency 'carrierwave'
   s.add_dependency "fog"
   s.add_dependency "fog-core"
@@ -48,6 +49,10 @@ Gem::Specification.new do |s|
   s.add_dependency 'countries'
   # for background processing jobs
   s.add_dependency 'delayed_job_active_record'
+
+  #pagination
+  s.add_dependency 'kaminari'
+  s.add_dependency 'api-pagination'
 
   s.add_dependency 'bootstrap-sass', '~> 3.2.0' # Lock to 3.2 for now as glyphicons fail in 3.3
   s.add_dependency 'haml-rails'
@@ -67,14 +72,21 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'rails-data-migrations'
 
+  # API
+  #s.add_dependency 'zero-rails_openapi'
+  s.add_dependency 'jbuilder'
+  s.add_dependency 'simple_token_authentication', '~> 1.0'
+  
+  # Development
   s.add_development_dependency 'mail', '2.5.5'
   s.add_development_dependency "rspec-rails"
   s.add_development_dependency "factory_bot_rails"
   s.add_development_dependency "database_cleaner"
+  s.add_development_dependency "faker"
   s.add_development_dependency "mysql2"
   s.add_development_dependency "cucumber-rails"
   s.add_development_dependency "shoulda-matchers"
   s.add_development_dependency "codacy-coverage"
   s.add_development_dependency "simplecov"
-
+  s.add_development_dependency "rb-readline"
 end

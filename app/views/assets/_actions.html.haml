@@ -1,5 +1,5 @@
-- can_dispose_asset = can? :create, @asset.disposition_updates.build
-- can_request_early_disposition = can? :create, @asset.early_disposition_requests.build
+- can_dispose_asset = (@asset.respond_to? :disposition_updates) && (can? :create, @asset.disposition_updates.build)
+- can_request_early_disposition = (@asset.respond_to? :early_disposition_requests) && (can? :create, @asset.early_disposition_requests.build)
 - if can? :update, @asset or can_dispose_asset or can_request_early_disposition or can? :destroy, @asset
 
   - event_type = EarlyDispositionRequestUpdateEvent.asset_event_type

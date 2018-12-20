@@ -3,9 +3,11 @@ class AssetEventsController < AssetAwareController
   add_breadcrumb "Home", :root_path
 
   # set the @asset_event variable before any actions are invoked
-  before_action :get_asset_event,       :only => [:show, :edit, :update, :destroy, :fire_workflow_event]
+  before_action :get_asset_event,       :only => [:show, :edit, :update, :destroy, :fire_workflow_event, :popup]
   before_action :check_for_cancel,      :only => [:create, :update]
   before_action :reformat_date_field,   :only => [:create, :update]
+
+  skip_before_action :get_asset,        :only => [:get_summary, :popup]
 
   # always use generic untyped assets for this controller
   RENDER_TYPED_ASSETS = true
@@ -16,6 +18,65 @@ class AssetEventsController < AssetAwareController
   # always render untyped assets for this controller
   def render_typed_assets
     RENDER_TYPED_ASSETS
+  end
+
+  def get_summary
+    asset_event_type = AssetEventType.find_by(id: params[:asset_event_type_id])
+
+    unless asset_event_type.nil?
+      asset_event_klass = asset_event_type.class_name.constantize
+
+      if params[:order].blank?
+        results = asset_event_klass.all
+      else
+        results = asset_event_klass.unscoped.order(params[:order])
+      end
+
+      if asset_event_klass.count > 0
+        asset_klass = asset_event_klass.first.send(Rails.application.config.asset_base_class_name.underscore).class
+
+        asset_joins = [Rails.application.config.asset_base_class_name.underscore]
+
+        while asset_klass.try(:acting_as_name)
+          asset_joins << asset_klass.acting_as_name
+          asset_klass = asset_klass.acting_as_name.classify.constantize
+        end
+
+
+        idx = asset_joins.length-2
+        join_relations = Hash.new
+        join_relations[asset_joins[idx]] = asset_joins[idx+1]
+        idx -= 1
+        while idx >= 0
+          tmp = Hash.new
+          tmp[asset_joins[idx]] = join_relations
+          join_relations = tmp
+          idx -= 1
+        end
+
+        results = results.includes(join_relations).where(transam_asset: asset_event_klass.first.send(Rails.application.config.asset_base_class_name.underscore).class.where(organization_id: @organization_list))
+      end
+
+      unless params[:scope].blank?
+        if asset_event_klass.respond_to? params[:scope]
+          results = results.send(params[:scope])
+        end
+      end
+
+
+
+
+      respond_to do |format|
+        format.js {
+          render partial: "dashboards/#{asset_event_type.class_name.underscore}_widget_table", locals: {results: results }
+        }
+      end
+
+    end
+  end
+
+  def popup
+
   end
 
   def index
@@ -176,9 +237,9 @@ class AssetEventsController < AssetAwareController
     unless asset_event_type.blank?
       assoc_name = asset_event_type.class_name.gsub('Event', '').underscore.pluralize
       assoc_name = 'early_disposition_requests' if assoc_name == 'early_disposition_request_updates'
-      id = @asset.send(assoc_name).proxy_association.owner.id
+      owner = @asset.send(assoc_name).proxy_association.owner
       asset_params = Hash.new
-      asset_params[Rails.application.config.asset_base_class_name.foreign_key] = id
+      asset_params[Rails.application.config.asset_base_class_name.underscore] = owner
       @asset_event = asset_event_type.class_name.constantize.new(form_params.merge(asset_params))
       @asset_event.creator = current_user
     end

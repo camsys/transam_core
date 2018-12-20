@@ -23,7 +23,7 @@ FactoryBot.define do
     url { 'http://www.example.com' }
     phone { '9999999999' }
     association :organization_type, :factory => :organization_type
-    sequence(:name) { |n| "Org#{n+100}" } #TODO change this to OrgOriginal
+    sequence(:name) { |n| "Org Basic#{n+100}" } #TODO change this to OrgOriginal
     short_name {name}
     license_holder { true }
   end

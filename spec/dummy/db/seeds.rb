@@ -1,5 +1,14 @@
 TransamCore::Engine.load_seed
 
+# core has mixins for tying policy to TransamAsset or tracking as replacable. this is usually added by engine but we add it to the dummy db seed so we can run tests
+system_config_extensions = [
+    {class_name: 'TransamAsset', extension_name: 'PolicyAware'},
+    {class_name: 'TransamAsset', extension_name: 'ReplaceableAsset'}
+]
+system_config_extensions.each do |extension|
+  SystemConfigExtension.find_or_create_by(extension)
+end
+
 puts "  Processing system_config"
 SystemConfig.find_or_create_by(:customer_id => 1,
   :start_of_fiscal_year => '07-01',
@@ -27,7 +36,7 @@ User.find_or_create_by(
   :phone => "617-123-4567",
   :timezone => "Eastern Time (US & Canada)",
   :email => "admin@email.com",
-  :num_table_rows => 10,
+  :num_table_rows => 10
   )
 
 ActiveRecord::Base.connection.execute("ALTER TABLE `transam_core_testing`.`assets` ADD COLUMN `geometry` GEOMETRY NULL AFTER `vendor_id`;")

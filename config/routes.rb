@@ -2,6 +2,31 @@ Rails.application.routes.draw do
 
   devise_for :users, :controllers => { :sessions => "sessions", :unlocks => "unlocks", :passwords => "passwords" }
 
+  # JSON API #
+  namespace :api do
+    get 'touch_session' => "api#touch_session"
+    namespace :v1 do
+      post 'sign_in' => 'sessions#create'
+      delete 'sign_out' => 'sessions#destroy'
+
+      resources :users, only: [:index] do 
+        resources :images
+        
+        collection do 
+          get :profile
+        end
+      end
+
+      resources :assets, only: [:show, :index] do
+        resources :images
+        resources :documents
+      end
+
+      resources :organizations, only: [:show] do 
+      end
+    end
+  end
+  
   # server static pages
   get "/pages/*id" => 'pages#show', :as => :page, :format => false
 
@@ -86,6 +111,13 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :asset_events, :only => [] do
+    collection do
+      get 'get_summary'
+      get 'popup'
+    end
+  end
+
   resources :transam_assets, :controller => 'assets', :only => [] do
     resources :tasks,       :only => [:create, :update, :edit, :new, :destroy]
     resources :comments,    :only => [:create, :update, :edit, :new, :destroy]
@@ -155,6 +187,19 @@ Rails.application.routes.draw do
   resources :saved_searches do
     member do
       get 'reorder'
+    end
+  end
+
+  resources :saved_queries do
+    collection do
+      post 'query'
+    end
+  end
+
+  resources :query_fields, only: [:index]
+  resources :query_filters, only: [:show] do 
+    collection do 
+      get 'render_new'
     end
   end
 

@@ -1,8 +1,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require bootstrap
-//= require jquery-ui/draggable
-//= require jquery-ui/droppable
+//= require transam_core/jquery-ui
 //= require jquery.form
 //= require gritter
 //= require bootstrap-editable

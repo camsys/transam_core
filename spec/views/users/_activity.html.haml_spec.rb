@@ -9,9 +9,9 @@ describe "users/_activity.html.haml", :type => :view do
     assign(:user, test_user)
     render
 
-    expect(rendered).to have_content(test_user.created_at.strftime("%I:%M %p %m/%d/%Y"))
-    expect(rendered).to have_content(test_user.updated_at.strftime("%I:%M %p %m/%d/%Y"))
-    expect(rendered).to have_content(test_user.last_sign_in_at.strftime("%I:%M %p %m/%d/%Y"))
+    expect(rendered).to have_content(test_user.created_at.strftime("%m/%d/%Y %I:%M %p"))
+    expect(rendered).to have_content(test_user.updated_at.strftime("%m/%d/%Y %I:%M %p"))
+    expect(rendered).to have_content(test_user.last_sign_in_at.strftime("%m/%d/%Y %I:%M %p"))
     expect(rendered).to have_content('127.0.0.1')
   end
 end

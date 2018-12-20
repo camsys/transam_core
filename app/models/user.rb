@@ -4,7 +4,8 @@
 # Base class for all users. This class represents a generic user.
 #-------------------------------------------------------------------------------
 class User < ActiveRecord::Base
-
+  acts_as_token_authenticatable
+  
   # Enable user roles for this use
   rolify
 
@@ -15,6 +16,8 @@ class User < ActiveRecord::Base
   # Include the object key mixin
   include TransamObjectKey
 
+  include TransamTokenAuthentication
+  
   #-----------------------------------------------------------------------------
   # Callbacks
   #-----------------------------------------------------------------------------
@@ -71,8 +74,11 @@ class User < ActiveRecord::Base
   # AssetEvents that have been tagged by the user
   has_many    :asset_events,  :foreign_key => :created_by_id
 
-  #
+  # Deprecated saved search
   has_many    :saved_searches
+
+  # New saved query
+  has_many    :saved_queries,  :foreign_key => :created_by_user_id
 
   #-----------------------------------------------------------------------------
   # Transients
@@ -118,6 +124,7 @@ class User < ActiveRecord::Base
     :last_name,
     :email,
     :phone,
+    :title,
   ]
 
   # List of allowable form param hash keys
@@ -156,30 +163,6 @@ class User < ActiveRecord::Base
 
   def self.allowable_params
     FORM_PARAMS
-  end
-
-  # set default widgets and the column they are in. these can be customized at the app level
-  def self.dashboard_widgets
-    return Rails.application.config.dashboard_widgets if Rails.application.config.try(:dashboard_widgets)
-
-    widgets = []
-    SystemConfig.transam_module_names.each do |mod|
-      view_component = "#{mod}_widget"
-      widgets << [view_component, 2]
-    end
-    widgets += [
-        ['assets_widget', 1],
-        #['activities_widget', 1],
-        ['queues', 1],
-        ['users_widget', 1],
-        ['notices_widget', 3],
-        ['search_widget', 3],
-        ['message_queues', 3],
-        ['task_queues', 3]
-    ]
-
-    return widgets
-
   end
 
   #-----------------------------------------------------------------------------
@@ -367,7 +350,7 @@ class User < ActiveRecord::Base
 
   # Set resonable defaults for a new user
   def set_defaults
-    self.timezone ||= 'Eastern Time (US & Canada)'
+    self.timezone ||= Rails.application.config.time_zone
     self.state ||= SystemConfig.instance.default_state_code
     self.num_table_rows ||= 10
     self.notify_via_email ||= false

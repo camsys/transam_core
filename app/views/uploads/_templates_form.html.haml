@@ -11,82 +11,31 @@
       - else
         = f.input :organization_id, :required => true, :collection => Organization.where(id: Policy.where('parent_id IS NOT NULL AND organization_id IN (?)', @organization_list).pluck(:organization_id)), :label_method => 'coded_name'
     .col-sm-6
-      = f.input :search_parameter_value, :required => true, :collection => Rails.application.config.asset_seed_class_name.constantize.active, :label => Rails.application.config.asset_seed_class_name.titleize, :prompt => "Select #{Rails.application.config.asset_seed_class_name.titleize.downcase}..."
+      = f.input :asset_seed_class_id, :required => true, :collection => AssetType.active, :label => 'Asset Type', :prompt => "Select asset type..."
     .col-sm-6
       = f.button :submit, 'Create template', :class => 'btn btn-primary'
 
 :javascript
-  var org_id = 0;
-  var file_content_type_id = 0;
-  var asset_types = JSON.parse('#{@asset_types.to_json.html_safe}');
+  var new_inventory_id = parseInt('#{FileContentType.find_by(name: "New Inventory").id}');
 
-  //console.log(asset_types);
-
-  update_asset_types($('#template_proxy_organization_id').val(), $('#template_proxy_file_content_type_id').val());
-
-  // Detect changes in the org selected
-  $('#template_proxy_organization_id').on('change', function(event) {
-    var id = $(this).val();
-
-    if (id != org_id) {
-      // store the selected org
-      org_id = id;
-
-      update_asset_types(org_id, $('#template_proxy_file_content_type_id').val());
+  $('#template_form').validate({
+    submitHandler: function(form) {
+      form.submit();
     }
   });
 
   // Detect changes if new inventory selected
   $('#template_proxy_file_content_type_id').on('change', function(event) {
-    var id = $(this).val();
-
-    if (id != file_content_type_id) {
-      file_content_type_id = id;
-
-      update_asset_types($('#template_proxy_organization_id').val(), id);
-
-    }
-  });
-
-  // set asset types selection to those that org owns
-  function update_asset_types(org_id, file_content_type_id) {
-
-    var new_inventory_id = parseInt('#{FileContentType.find_by(name: "New Inventory").id}');
-    var equipment_asset_type_id = parseInt('#{AssetType.find_by(class_name: "Equipment").id}');
-
-    var options = '<option value="">Set the asset type...</option>';
-    for (var j = 0; j < asset_types.length; j++){
-      type = asset_types[j];
-      var add_to_options = false;
-
-      if ((parseInt(file_content_type_id) == new_inventory_id) && (type.class_name != 'Equipment')) {
-        add_to_options = true;
-      } else if ((parseInt(file_content_type_id) != new_inventory_id) && ($.inArray( parseInt(org_id), type.orgs ) >= 0)) {
-        add_to_options = true;
-      }
-
-      if ( add_to_options ) {
-        if (parseInt($('#template_proxy_asset_type_id').val()) == parseInt(type.id)) {
-          options += '<option value="' + type.id + '" selected>' + type.name + '</option>';
-        } else {
-          options += '<option value="' + type.id + '">' + type.name + '</option>';
-        }
-      }
-    }
-
-    if (parseInt(file_content_type_id) == new_inventory_id) {
-      options += '<option value="' + equipment_asset_type_id + '">Equipment</option>';
+    if (parseInt($(this).val()) == new_inventory_id) {
       $('label[for="template_proxy_organization_id"] abbr').hide();
       $('#template_proxy_organization_id').removeClass('required');
       $('#template_proxy_organization_id').prop('required',false);
       $('#template_proxy_organization_id option').first().text('Multi Org');
     } else {
-    $('label[for="template_proxy_organization_id"] abbr').show();
+      $('label[for="template_proxy_organization_id"] abbr').show();
       $('#template_proxy_organization_id').addClass('required');
       $('#template_proxy_organization_id option').first().text('');
       $('.template_proxy_organization_id').show();
     }
 
-    //console.log(options);
-    $('#template_proxy_asset_type_id').html(options);
-  }
+  });
