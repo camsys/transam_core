@@ -10,7 +10,11 @@ category_fields = {
     {
       name: 'organization_id',
       label: 'Organization',
-      filter_type: 'multi_select'
+      filter_type: 'multi_select',
+      association: {
+        table_name: 'organizations',
+        display_field_name: 'short_name'
+      }
     },
     {
       name: 'asset_tag',
@@ -25,7 +29,11 @@ category_fields = {
     {
       name: 'asset_subtype_id',
       label: 'Subtype',
-      filter_type: 'multi_select'
+      filter_type: 'multi_select',
+      association: {
+        table_name: 'asset_subtypes',
+        display_field_name: 'name'
+      }
     },
     {
       name: 'description',
@@ -38,7 +46,11 @@ category_fields = {
     {
       name: 'manufacturer_id',
       label: 'Manufacturer',
-      filter_type: 'type_ahead'
+      filter_type: 'type_ahead',
+      association: {
+        table_name: 'manufacturers',
+        display_field_name: 'name'
+      }
     },
     {
       name: 'other_manufacturer',
@@ -49,7 +61,11 @@ category_fields = {
     {
       name: 'manufacturer_model_id',
       label: 'Model',
-      filter_type: 'type_ahead'
+      filter_type: 'type_ahead',
+      association: {
+        table_name: 'manufacturer_models',
+        display_field_name: 'name'
+      }
     },
     {
       name: 'other_manufacturer_model',
@@ -97,7 +113,11 @@ category_fields = {
     {
       name: 'replacement_status_type_id',
       label: 'Replacement Status',
-      filter_type: 'multi_select'
+      filter_type: 'multi_select',
+      association: {
+        table_name: 'replacement_status_types',
+        display_field_name: 'name'
+      }
     }
   ],
 
@@ -126,10 +146,14 @@ category_fields = {
 category_fields.each do |category_name, fields|
   qc = QueryCategory.find_or_create_by(name: category_name)
   fields.each do |field|
+    if field[:association]
+      qac = QueryAssociationClass.find_or_create_by(field[:association])
+    end
     qf = QueryField.find_or_create_by(
       name: field[:name], 
       label: field[:label], 
       query_category: qc, 
+      query_association_class_id: qac.try(:id),
       filter_type: field[:filter_type],
       depends_on: field[:depends_on]
     )
