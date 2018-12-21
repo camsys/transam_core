@@ -96,7 +96,7 @@ class SavedQueriesController < OrganizationAwareController
     end
   end
 
-  # POST /saved_queries/1/query
+  # POST /saved_queries/query
   def query
     @query = SavedQuery.new
     @query.organization_list = @organization_list
@@ -104,6 +104,22 @@ class SavedQueriesController < OrganizationAwareController
     
     data_count = @query.data.size
     render json: { count: data_count }
+  end
+
+  # GET /saved_queries/export
+  #   Use GET request in order to download file, POST won't work
+  #   This also changes param structure, therefore, need to do some customized param parsing
+  def export
+    @query = SavedQuery.new
+    @query.organization_list = @organization_list
+    filter_data_array = saved_query_params[:query_filters].to_h.map{|idx,filter_data| filter_data} # a bit dirty, but needed
+    @query.parse_query_fields saved_query_params[:query_field_ids], filter_data_array
+    respond_to do |format|
+      format.html
+      format.csv do 
+        render_csv("query_results_#{Time.current.strftime('%Y%m%d%H%M')}.csv")
+      end
+    end
   end
 
 
@@ -121,5 +137,62 @@ class SavedQueriesController < OrganizationAwareController
     # Never trust parameters from the scary internet, only allow the white list through.
     def saved_query_params
       params.require(:saved_query).permit(SavedQuery.allowable_params)
+    end
+
+    def render_csv(file_name)
+      set_file_headers file_name
+      set_streaming_headers
+
+      response.status = 200
+
+      #setting the body to an enumerator, rails will iterate this enumerator
+      self.response_body = csv_lines
+    end
+
+
+    def set_file_headers(file_name)
+      headers["Content-Type"] = "text/csv"
+      headers["Content-disposition"] = "attachment; filename=\"#{file_name}\""
+    end
+
+
+    def set_streaming_headers
+      #nginx doc: Setting this to "no" will allow unbuffered responses suitable for Comet and HTTP streaming applications
+      headers['X-Accel-Buffering'] = 'no'
+
+      headers["Cache-Control"] ||= "no-cache"
+      headers.delete("Content-Length")
+    end
+
+    def csv_lines
+      field_names = []
+      headers = []
+      @query.query_fields.each do |field|
+        headers << field.label
+        field_names << field.name
+      end
+
+      # Excel is stupid if the first two characters of a csv file are "ID". Necessary to
+      # escape it. https://support.microsoft.com/kb/215591/EN-US
+      if headers.any? && headers[0].start_with?("ID")
+        headers = Array.new(headers)
+        headers[0] = "'" + headers[0]
+      end
+
+      Enumerator.new do |y|
+        CSV.generate do |csv|
+          if field_names.any?
+            y << headers.to_csv
+
+            # find_each would reduce memory usage, but it relies on valid primary_key
+            @query.data.find_each do |row|
+              y << field_names.map { |field_name|
+                row.send(field_name)
+              }.to_csv
+            end
+        end
+        end
+      end
+
     end
 end
