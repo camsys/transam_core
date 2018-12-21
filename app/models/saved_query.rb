@@ -163,7 +163,17 @@ class SavedQuery < ActiveRecord::Base
           filter_value = "'#{filter.value}'"
         end
 
-        where_sqls_for_one_filter << "#{asset_table_name}.#{filter.query_field.name} #{filter.op} (#{filter_value})"
+        filter_op = filter.op
+        if filter_op == 'in' 
+          if filter_value.blank?
+            filter_op = 'is'
+            filter_value = 'NULL'
+          else
+            filter_value = "(#{filter_value})"
+          end
+        end
+
+        where_sqls_for_one_filter << "#{asset_table_name}.#{filter.query_field.name} #{filter_op} #{filter_value}"
       end
 
       where_sqls << where_sqls_for_one_filter.join(" OR ")
