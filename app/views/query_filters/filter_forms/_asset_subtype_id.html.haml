@@ -1,0 +1,51 @@
+%ul.multi-select-list.asset-subtype-list
+  %li.select-all-items
+    %label.checkbox
+      = check_box_tag 'select-all', 1, true
+      (Select All)
+  - AssetSubtype.active.pluck(:id, :name).each do |type_id, type_name|
+    %li.multi-select-item
+      %label.checkbox
+        = check_box_tag 'asset_subtype[]', type_id, true
+        = type_name
+
+:javascript
+  $(function() {
+    var query_field_id = #{@query_field.id};
+
+    function getSelectedValues() {
+      var vals = [];
+      $('.asset-subtype-list .multi-select-item input[type=checkbox]:checked').each(function() {
+        vals.push($(this).val());
+      });
+
+      return vals;
+    }
+
+    function updateFilterDetails() {
+      var filter_details = {
+        query_field_id: query_field_id,
+        op: 'in',
+        value: getSelectedValues().join(',')
+      };
+
+      _saved_query.setFilterDetails(query_field_id, filter_details);
+    }
+
+    updateFilterDetails();
+
+    // update filter values
+    $('.asset-subtype-list .multi-select-item input[type=checkbox]').change(function() {
+      updateFilterDetails();
+    });
+
+    $('.select-all-items input[type=checkbox]').change(function() {
+      if($(this).is(":checked")) {
+        $(this).parents('.multi-select-list').find('.multi-select-item input[type=checkbox]').prop('checked', true);
+      } else {
+        $(this).parents('.multi-select-list').find('.multi-select-item input[type=checkbox]').prop('checked', false);
+      }
+
+      updateFilterDetails();
+    });
+  });

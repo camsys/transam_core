@@ -193,6 +193,7 @@ Rails.application.routes.draw do
   resources :saved_queries do
     collection do
       post 'query'
+      get 'export'
     end
   end
 

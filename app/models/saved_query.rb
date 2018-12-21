@@ -155,7 +155,25 @@ class SavedQuery < ActiveRecord::Base
           join_tables[asset_table_name] = asset_class.transam_assets_join
         end
 
-        where_sqls_for_one_filter << "#{asset_table_name}.#{filter.query_field.name} #{filter.op} (#{filter.value})"
+        filter_value = filter.value
+        # wrap values
+        if filter.op == 'like'
+          filter_value = "'%#{filter.value}%'"
+        elsif ['date', 'type_ahead'].include?(filter.query_field.filter_type)
+          filter_value = "'#{filter.value}'"
+        end
+
+        filter_op = filter.op
+        if filter_op == 'in' 
+          if filter_value.blank?
+            filter_op = 'is'
+            filter_value = 'NULL'
+          else
+            filter_value = "(#{filter_value})"
+          end
+        end
+
+        where_sqls_for_one_filter << "#{asset_table_name}.#{filter.query_field.name} #{filter_op} #{filter_value}"
       end
 
       where_sqls << where_sqls_for_one_filter.join(" OR ")

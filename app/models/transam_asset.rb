@@ -78,6 +78,10 @@ class TransamAsset < TransamAssetRecord
   # Scopes
   #-----------------------------------------------------------------------------
 
+  # operational is used in a lot of places but is actually related to ReplaceableAsset (for not disposed or not in transfer)
+  # therefore stub this out so always exists so no errors
+  scope :operational, -> { all }
+
 
 
   FORM_PARAMS = [

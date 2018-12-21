@@ -1,0 +1,12 @@
+= button_tag :class => 'btn btn-primary execute-export', :title => "Export data", :type => 'button' do
+  %i.fa.fa-download
+  Export CSV
+
+:javascript
+  $(function() {
+    $('.execute-export').click(function(e) {
+      e.preventDefault();
+      var url = "#{export_saved_queries_path(format: :csv)}?" + $.param({saved_query: _saved_query.data()});
+      window.open(url, '_blank');
+    });
+  });

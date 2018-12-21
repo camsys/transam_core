@@ -92,6 +92,7 @@
       var idx = selectedFieldIds.indexOf(field_id);
       selectedFieldIds.splice(idx, 1);
       _saved_query.setSelectedFilterFieldIdsByCategory(category_id, selectedFieldIds);
+      _saved_query.removeFilterDetails(field_id);
 
       $('.selected-filters-panel .filter-list li[data-id=' + field_id + ']').remove();
       $('.filter-details-panel[data-field-id=' + field_id + ']').remove();
@@ -148,6 +149,5 @@
 
       removeFilter(category_id, field_id);
     });
-
 
   });
