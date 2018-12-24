@@ -166,11 +166,14 @@ class SavedQueriesController < OrganizationAwareController
 
     def csv_lines
       field_names = {}
+      field_types = {}
       headers = []
       @query.query_fields.each do |field|
         headers << field.label
         
         field_name = field.name
+        field_types[field_name] = field.filter_type
+
         as_names = []
         field.query_asset_classes.each do |qac|
           as_names << "#{qac.table_name}_#{field_name}"
@@ -200,9 +203,13 @@ class SavedQueriesController < OrganizationAwareController
                     break
                   end 
                 end
+
+                if field_types[field_name] == 'boolean'
+                  val = (val == 1 ? 'Yes' : 'No')
+                end
                 val
               }
-              
+
               y << row_data.to_csv
             end
 

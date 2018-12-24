@@ -1,0 +1,53 @@
+%ul.boolean-list{data: {query_field_id: @query_field.id}}
+  %li.select-all-boolean-items
+    %label.checkbox
+      = check_box_tag 'select-all', 1, true
+      (Select All)
+  - [[true, 'Yes'], [false, 'No']].each do |val, label|
+    %li.boolean-item
+      %label.checkbox
+        = check_box_tag "#{@query_field.name}[]", val, true
+        = label
+
+:javascript
+  $(function() {
+    var query_field_id = #{@query_field.id};
+    var container_selector = '.boolean-list[data-query-field-id=' + query_field_id + ']';
+
+    function getSelectedValues() {
+      var vals = [];
+      $(container_selector + ' .boolean-item input[type=checkbox]:checked').each(function() {
+        vals.push($(this).val());
+      });
+
+      return vals;
+    }
+
+    function updateFilterDetails() {
+      var filter_details = {
+        query_field_id: query_field_id,
+        op: 'in',
+        value: getSelectedValues().join(',')
+      };
+
+      _saved_query.setFilterDetails(query_field_id, filter_details);
+    }
+
+    updateFilterDetails();
+
+    // update filter values
+    $(container_selector + ' .boolean-item input[type=checkbox]').change(function() {
+      updateFilterDetails();
+    });
+
+    // select all
+    $(container_selector + ' .select-all-boolean-items input[type=checkbox]').change(function() {
+      if($(this).is(":checked")) {
+        $(this).parents('.boolean-list').find('.boolean-item input[type=checkbox]').prop('checked', true);
+      } else {
+        $(this).parents('.boolean-list').find('.boolean-item input[type=checkbox]').prop('checked', false);
+      }
+
+      updateFilterDetails();
+    });
+  });

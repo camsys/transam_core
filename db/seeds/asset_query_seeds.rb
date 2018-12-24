@@ -19,12 +19,12 @@ category_fields = {
     {
       name: 'asset_tag',
       label: 'Asset ID / Segment ID',
-      filter_type: 'type_ahead'
+      filter_type: 'text'
     },
     {
       name: 'external_id',
       label: 'External ID',
-      filter_type: 'type_ahead'
+      filter_type: 'text'
     },
     {
       name: 'asset_subtype_id',
@@ -38,7 +38,7 @@ category_fields = {
     {
       name: 'description',
       label: 'Description / Segment Name',
-      filter_type: 'type_ahead'
+      filter_type: 'text'
     }
   ],
 
@@ -46,7 +46,7 @@ category_fields = {
     {
       name: 'manufacturer_id',
       label: 'Manufacturer',
-      filter_type: 'type_ahead',
+      filter_type: 'text',
       association: {
         table_name: 'manufacturers',
         display_field_name: 'name'
@@ -55,13 +55,13 @@ category_fields = {
     {
       name: 'other_manufacturer',
       label: 'Manufacturer (Other)',
-      filter_type: 'type_ahead',
+      filter_type: 'text',
       depends_on: ['manufacturer_id']
     },
     {
       name: 'manufacturer_model_id',
       label: 'Model',
-      filter_type: 'type_ahead',
+      filter_type: 'text',
       association: {
         table_name: 'manufacturer_models',
         display_field_name: 'name'
@@ -70,7 +70,7 @@ category_fields = {
     {
       name: 'other_manufacturer_model',
       label: 'Model (Other)',
-      filter_type: 'type_ahead',
+      filter_type: 'text',
       depends_on: ['manufacturer_model_id']
     },
     {
@@ -97,7 +97,7 @@ category_fields = {
     {
       name: 'purchased_new',
       label: 'Purchased New',
-      filter_type: 'multi_select'
+      filter_type: 'boolean'
     }
   ],
 
@@ -125,7 +125,7 @@ category_fields = {
     {
       name: 'depreciable',
       label: 'Asset is Depreciable?',
-      filter_type: 'multi_select'
+      filter_type: 'boolean'
     },
     {
       name: 'depreciation_start_date',

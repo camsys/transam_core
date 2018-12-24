@@ -16,7 +16,7 @@
     - association_model.pluck(query_association_class.id_field_name, query_association_class.display_field_name).each do |type_id, type_name|
       %li.multi-select-item
         %label.checkbox
-          = check_box_tag "query_association_class.table_name[]", type_id, true
+          = check_box_tag "#{query_association_class.table_name}[]", type_id, true
           = type_name
 
   :javascript
@@ -50,7 +50,7 @@
         updateFilterDetails();
       });
 
-      $('.select-all-items input[type=checkbox]').change(function() {
+      $(container_selector + ' .select-all-items input[type=checkbox]').change(function() {
         if($(this).is(":checked")) {
           $(this).parents('.multi-select-list').find('.multi-select-item input[type=checkbox]').prop('checked', true);
         } else {
