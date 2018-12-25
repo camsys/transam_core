@@ -202,6 +202,7 @@ Rails.application.routes.draw do
     collection do 
       get 'render_new'
       get 'manufacturers'
+      get 'manufacturer_models'
     end
   end
 
