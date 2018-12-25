@@ -97,7 +97,12 @@ class SavedQuery < ActiveRecord::Base
   end
 
   def parse_query_fields(query_field_ids, query_filters_data)
-    self.query_fields = QueryField.where(id: query_field_ids)
+    visible_query_fields = QueryField.where(id: query_field_ids)
+    # find pair fields
+    paired_fields = QueryField.where(name: visible_query_fields.where.not(pairs_with: nil).pluck(:pairs_with).uniq)
+    self.query_fields = visible_query_fields.or(paired_fields)
+
+    # TODO: sort
 
     query_filters_data.each do |filter_data|
       self.query_filters << QueryFilter.new(filter_data)

@@ -47,6 +47,7 @@ category_fields = {
       name: 'manufacturer_id',
       label: 'Manufacturer',
       filter_type: 'text',
+      pairs_with: 'other_manufacturer',
       association: {
         table_name: 'manufacturers',
         display_field_name: 'name'
@@ -56,12 +57,13 @@ category_fields = {
       name: 'other_manufacturer',
       label: 'Manufacturer (Other)',
       filter_type: 'text',
-      depends_on: ['manufacturer_id']
+      hidden: true
     },
     {
       name: 'manufacturer_model_id',
       label: 'Model',
       filter_type: 'text',
+      pairs_with: 'other_manufacturer_model',
       association: {
         table_name: 'manufacturer_models',
         display_field_name: 'name'
@@ -71,7 +73,7 @@ category_fields = {
       name: 'other_manufacturer_model',
       label: 'Model (Other)',
       filter_type: 'text',
-      depends_on: ['manufacturer_model_id']
+      hidden: true
     },
     {
       name: 'manufacture_year',
@@ -155,7 +157,8 @@ category_fields.each do |category_name, fields|
       query_category: qc, 
       query_association_class_id: qac.try(:id),
       filter_type: field[:filter_type],
-      depends_on: field[:depends_on]
+      hidden: field[:hidden],
+      pairs_with: field[:pairs_with]
     )
     qf.query_asset_classes << asset_table
   end
