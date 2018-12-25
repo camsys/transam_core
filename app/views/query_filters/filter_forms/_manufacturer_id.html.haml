@@ -1,0 +1,72 @@
+:ruby
+  manufacturer_field_id = QueryField.find_by(name: 'manufacturer_id').try(:id)
+  other_manufacturer_field_id = QueryField.find_by(name: 'other_manufacturer').try(:id)
+
+= hidden_field_tag :hidden_field_id, other_manufacturer_field_id
+
+.form-group
+  = text_field_tag :manufacturer_id, '', {:autocomplete => 'off', :class => 'form-control', :placeholder => 'Type name', :data => {:url => manufacturers_query_filters_path}}
+
+:javascript
+  $(function() {
+    var manufacturer_field_id = #{manufacturer_field_id};
+    var other_manufacturer_field_id = #{other_manufacturer_field_id};
+    
+    function updateFilterDetails(item) {
+      var item_id = item.id;
+      var item_name = item.name;
+      var query_field_id = manufacturer_field_id;
+      var filter_value = item_id;
+
+      if(item_id < 0) {
+        query_field_id = other_manufacturer_field_id;
+        filter_value = item_name;
+        _saved_query.removeFilterDetails(manufacturer_field_id);
+      } else {
+        _saved_query.removeFilterDetails(other_manufacturer_field_id);
+      }
+
+      var filter_details = {
+        query_field_id: query_field_id,
+        op: '=',
+        value: filter_value
+      };
+
+      _saved_query.setFilterDetails(query_field_id, filter_details);
+    }
+
+    function removeFilterDetails() {
+        _saved_query.removeFilterDetails(manufacturer_field_id);
+        _saved_query.removeFilterDetails(other_manufacturer_field_id);
+    }
+
+    // typeahead
+    $('#manufacturer_id').on('focus', function() {
+      _typeahead_source_url = $(this).data('url');
+    });
+
+    var last_selected = null;
+    $('#manufacturer_id').typeahead({
+      items: 10,
+      minLength: 1,
+      delay: 1000,
+      changeInputOnSelect: false,
+      changeInputOnMove: false,
+      source: _typeahead_searcher,
+      matcher: _typeahead_matcher,
+      highlighter: _typeahead_highlighter,
+      updater: function (obj) {
+        var item = JSON.parse(obj);
+        last_selected = item.name;
+        // Update the UI
+        updateFilterDetails(item);
+        return item.name;
+      }
+    });
+
+    $('#manufacturer_id').change(function() {
+      if($(this).val() != last_selected) {
+        removeFilterDetails();
+      }
+    });
+  });

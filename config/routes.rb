@@ -201,6 +201,7 @@ Rails.application.routes.draw do
   resources :query_filters, only: [:show] do 
     collection do 
       get 'render_new'
+      get 'manufacturers'
     end
   end
 
