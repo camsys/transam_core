@@ -6,6 +6,7 @@
 #
 #-------------------------------------------------------------------------------
 class SavedQuery < ActiveRecord::Base
+  serialize :ordered_output_field_ids, Array
 
   #-----------------------------------------------------------------------------
   # Behaviors
@@ -97,16 +98,30 @@ class SavedQuery < ActiveRecord::Base
   end
 
   def parse_query_fields(query_field_ids, query_filters_data)
+    query_field_ids = query_field_ids.map(&:to_i)
     visible_query_fields = QueryField.where(id: query_field_ids)
     # find pair fields
     paired_fields = QueryField.where(name: visible_query_fields.where.not(pairs_with: nil).pluck(:pairs_with).uniq)
     self.query_fields = visible_query_fields.or(paired_fields)
 
     # TODO: sort
+    query_field_has_pairs_hash = visible_query_fields.where.not(pairs_with: nil).pluck(:id, :pairs_with).to_h
+    paired_fields_hash = paired_fields.pluck(:name, :id).to_h
+    query_field_has_pairs_hash.each do |field_id, pair_with_field_name|
+      paired_field_id = paired_fields_hash[pair_with_field_name]
+      idx = query_field_ids.index(field_id)
+      query_field_ids.insert idx+1, paired_field_id
+    end
+
+    self.ordered_output_field_ids = query_field_ids
 
     query_filters_data.each do |filter_data|
       self.query_filters << QueryFilter.new(filter_data)
     end
+  end
+
+  def ordered_query_fields
+    query_fields.sort_by{|f| self.ordered_output_field_ids.index(f.id)}
   end
 
   # Caches the rows

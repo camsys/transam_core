@@ -168,7 +168,7 @@ class SavedQueriesController < OrganizationAwareController
       field_names = {}
       field_types = {}
       headers = []
-      @query.query_fields.each do |field|
+      @query.ordered_query_fields.each do |field|
         headers << field.label
         
         field_name = field.name
