@@ -1,0 +1,35 @@
+:css
+  .remove-filter-details {
+    cursor: pointer;
+  }
+
+  .filter-selections-panel .panel-body {
+    max-height: 520px;
+    overflow: auto;
+  }
+  
+.panel.panel-default.column-selections-panel
+  .panel-heading
+    .pull-right
+      %span.panel-expand-collapse{title: 'Collapse/expand'}
+        %i.fa.fa-chevron-up
+    %h3.panel-title
+      Column Selections
+      %span{style: 'font-size: smaller;'}
+        (drag and drop to change order)
+  .panel-body
+    .row.col-sm-12.columns-container
+
+:javascript
+  $(function() {
+    $( ".columns-container" ).sortable({
+      appendTo: document.body,
+      stop: function( event, ui ) {
+        var newIds = [];
+        $('.columns-container span').each(function() {
+          newIds.push($(this).data('id'));
+        });
+        _saved_query.setOrderedOutputFieldIds(newIds);
+      }
+    });
+  });

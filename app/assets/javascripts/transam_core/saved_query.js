@@ -6,6 +6,7 @@ function SavedQuery() {
   var _selected_output_field_ids = {};
   var _selected_filter_field_ids = {};
   var _query_filters = {};
+  var _ordered_output_field_ids = [];
 
   this.getSelectedOutputFieldIds = function() {
     var field_ids = [];
@@ -56,8 +57,33 @@ function SavedQuery() {
     _query_filters[field_id] = null;
   }
 
+  this.addColumn = function(category_id, field_id) {
+    var selectedFieldIds = this.getSelectedOutputFieldIdsByCategory(category_id);
+    selectedFieldIds.push(field_id);
+    this.setSelectedOutputFieldIdsByCategory(category_id, selectedFieldIds);
+    
+    // add to ordered id array
+    _ordered_output_field_ids.push(field_id);
+  }
+
+  this.removeColumn = function(category_id, field_id) {
+    var selectedFieldIds = this.getSelectedOutputFieldIdsByCategory(category_id);
+    var idx = selectedFieldIds.indexOf(field_id);
+    selectedFieldIds.splice(idx, 1);
+    this.setSelectedOutputFieldIdsByCategory(category_id, selectedFieldIds);
+
+    // remove from ordered id array
+    var order_idx = _ordered_output_field_ids.indexOf(field_id);
+    _ordered_output_field_ids.splice(order_idx, 1);
+  }
+
+  this.setOrderedOutputFieldIds = function(new_ids) {
+    _ordered_output_field_ids = new_ids;
+  }
+
   this.resetOutputColumns = function() {
     _selected_output_field_ids = {};
+    _ordered_output_field_ids = [];
   }
 
   this.resetFilters = function() {
@@ -72,7 +98,7 @@ function SavedQuery() {
 
   this.data = function() {
     var _data = {
-      query_field_ids: this.getSelectedOutputFieldIds(),
+      query_field_ids: _ordered_output_field_ids,
       query_filters: this.getQueryFilterArray()
     };
 

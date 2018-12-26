@@ -5,6 +5,7 @@ class QueryField < ApplicationRecord
   belongs_to :query_association_class
   belongs_to :query_category
 
+  scope :auto_show, -> { where(auto_show: true) }
   scope :visible, -> { where(hidden: [nil, false]) }
   scope :by_category_id, -> (category_id) { where(query_category_id: category_id) }
 end
