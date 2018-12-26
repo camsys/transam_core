@@ -30,10 +30,10 @@ class SavedQuery < ActiveRecord::Base
 
   has_and_belongs_to_many   :organizations
 
-  has_many :saved_query_fields
+  has_many :saved_query_fields, dependent: :destroy
   has_many :query_fields, through: :saved_query_fields
   
-  has_many :query_filters
+  has_many :query_filters, dependent: :destroy
 
   #-----------------------------------------------------------------------------
   # Validations
@@ -97,7 +97,12 @@ class SavedQuery < ActiveRecord::Base
   end
 
   def parse_query_fields(query_field_ids, query_filters_data)
-    self.query_fields = QueryField.where(id: query_field_ids)
+    visible_query_fields = QueryField.where(id: query_field_ids)
+    # find pair fields
+    paired_fields = QueryField.where(name: visible_query_fields.where.not(pairs_with: nil).pluck(:pairs_with).uniq)
+    self.query_fields = visible_query_fields.or(paired_fields)
+
+    # TODO: sort
 
     query_filters_data.each do |filter_data|
       self.query_filters << QueryFilter.new(filter_data)
@@ -155,11 +160,14 @@ class SavedQuery < ActiveRecord::Base
           join_tables[asset_table_name] = asset_class.transam_assets_join
         end
 
+        query_field_name = "#{asset_table_name}.#{filter.query_field.name}"
+        query_filter_type = filter.query_field.filter_type
+
         filter_value = filter.value
         # wrap values
         if filter.op == 'like'
           filter_value = "'%#{filter.value}%'"
-        elsif ['date', 'type_ahead'].include?(filter.query_field.filter_type)
+        elsif ['date', 'text'].include?(query_filter_type)
           filter_value = "'#{filter.value}'"
         end
 
@@ -173,11 +181,48 @@ class SavedQuery < ActiveRecord::Base
           end
         end
 
-        where_sqls_for_one_filter << "#{asset_table_name}.#{filter.query_field.name} #{filter_op} #{filter_value}"
+        #if query_filter_type == 'text'
+          #query_field_name = "lower(#{query_field_name})"
+          #filter_value = "lower(#{filter_value})"
+        #end
+
+        where_sqls_for_one_filter << "#{query_field_name} #{filter_op} #{filter_value}"
       end
 
       where_sqls << where_sqls_for_one_filter.join(" OR ")
     end
+
+    select_sqls = []
+    query_fields.each do |field|
+      query_field_name = field.name
+      field_association = field.query_association_class
+      if field_association
+        association_table_name = field_association.table_name
+        association_id_field_name = field_association.id_field_name
+        association_display_field_name = field_association.display_field_name
+      end
+
+      field.query_asset_classes.each do |qac|
+        asset_table_name = qac.table_name
+        table_join = qac.transam_assets_join
+
+        unless join_tables.keys.include?(asset_table_name) || table_join.blank?
+          join_tables[asset_table_name] = table_join
+        end
+
+        unless association_table_name.blank?
+          as_table_name = "#{asset_table_name}_#{association_table_name}"
+          # select value from association table
+          unless join_tables.keys.include?(as_table_name)
+            join_tables[as_table_name] = "left join #{association_table_name} as #{as_table_name} on #{as_table_name}.#{association_id_field_name} = #{asset_table_name}.#{query_field_name}"
+          end
+          select_sqls << "#{as_table_name}.#{association_display_field_name} as #{asset_table_name}_#{query_field_name}"
+        else
+          # select value directly from asset_table
+          select_sqls << "#{asset_table_name}.#{query_field_name} as #{asset_table_name}_#{query_field_name}"
+        end
+      end
+    end 
 
     # joins
     join_tables.each do |table_name, join_sql|
@@ -190,19 +235,12 @@ class SavedQuery < ActiveRecord::Base
     end
 
     # selects
-    select_sqls = []
-    output_configs = query_fields.joins(:query_asset_classes).pluck(
-      Arel.sql("query_fields.name"), 
-      Arel.sql("query_asset_classes.table_name"))
-    output_configs.each do |config|
-      select_sqls << "#{config[1]}.#{config[0]} as #{config[1]}_#{config[0]}"
-    end 
-
     if select_sqls.any?
-      base_rel = base_rel.select(select_sqls.join(", "))
+      base_rel = base_rel.select("transam_assets.id", select_sqls.join(", "))
     end
 
     # return base query relation
+    puts base_rel.to_sql
     base_rel
   end
 

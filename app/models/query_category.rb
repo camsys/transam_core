@@ -1,3 +1,3 @@
 class QueryCategory < ApplicationRecord
-  has_many :query_fields
+  has_many :query_fields, dependent: :destroy
 end

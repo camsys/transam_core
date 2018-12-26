@@ -165,11 +165,20 @@ class SavedQueriesController < OrganizationAwareController
     end
 
     def csv_lines
-      field_names = []
+      field_names = {}
+      field_types = {}
       headers = []
       @query.query_fields.each do |field|
         headers << field.label
-        field_names << field.name
+        
+        field_name = field.name
+        field_types[field_name] = field.filter_type
+
+        as_names = []
+        field.query_asset_classes.each do |qac|
+          as_names << "#{qac.table_name}_#{field_name}"
+        end
+        field_names[field_name] = as_names
       end
 
       # Excel is stupid if the first two characters of a csv file are "ID". Necessary to
@@ -181,16 +190,30 @@ class SavedQueriesController < OrganizationAwareController
 
       Enumerator.new do |y|
         CSV.generate do |csv|
-          if field_names.any?
+          unless field_names.blank?
             y << headers.to_csv
 
             # find_each would reduce memory usage, but it relies on valid primary_key
             @query.data.find_each do |row|
-              y << field_names.map { |field_name|
-                row.send(field_name)
-              }.to_csv
+              row_data = field_names.map { |field_name, as_names|
+                val = nil
+                as_names.each do |as_name|
+                  if row.send(as_name)
+                    val = row.send(as_name)
+                    break
+                  end 
+                end
+
+                if field_types[field_name] == 'boolean'
+                  val = (val == 1 ? 'Yes' : 'No')
+                end
+                val
+              }
+
+              y << row_data.to_csv
             end
-        end
+
+          end
         end
       end
 

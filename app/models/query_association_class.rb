@@ -1,0 +1,2 @@
+class QueryAssociationClass < ApplicationRecord
+end

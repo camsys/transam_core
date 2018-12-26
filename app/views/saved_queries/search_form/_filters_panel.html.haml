@@ -94,6 +94,12 @@
       _saved_query.setSelectedFilterFieldIdsByCategory(category_id, selectedFieldIds);
       _saved_query.removeFilterDetails(field_id);
 
+      // this is to remove any invisible but related query fields
+      var hidden_field = $('.filter-details-panel[data-field-id=' + field_id + '] #hidden_field_id');
+      if(hidden_field.length > 0) {
+        _saved_query.removeFilterDetails(hidden_field.val());
+      }
+
       $('.selected-filters-panel .filter-list li[data-id=' + field_id + ']').remove();
       $('.filter-details-panel[data-field-id=' + field_id + ']').remove();
       $('.available-filters-panel .filter-list li[data-id=' + field_id + ']').show();

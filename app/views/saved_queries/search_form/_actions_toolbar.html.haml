@@ -6,6 +6,11 @@
   $(function() {
     $('.execute-export').click(function(e) {
       e.preventDefault();
+      if(_saved_query.getSelectedOutputFieldIds().length == 0) {
+        bootbox.alert("Please select column(s) to export.");
+        return;
+      }
+      
       var url = "#{export_saved_queries_path(format: :csv)}?" + $.param({saved_query: _saved_query.data()});
       window.open(url, '_blank');
     });
