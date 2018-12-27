@@ -11,6 +11,7 @@ category_fields = {
       name: 'organization_id',
       label: 'Organization',
       filter_type: 'multi_select',
+      auto_show: true,
       association: {
         table_name: 'organizations',
         display_field_name: 'short_name'
@@ -157,6 +158,7 @@ category_fields.each do |category_name, fields|
       query_category: qc, 
       query_association_class_id: qac.try(:id),
       filter_type: field[:filter_type],
+      auto_show: field[:auto_show],
       hidden: field[:hidden],
       pairs_with: field[:pairs_with]
     )
