@@ -10,7 +10,7 @@ class AssetSubtypeReport < AbstractReport
     labels = ['Asset Subtype', 'Count']
 
     subtypes.each do |x|
-      count = assets.where("assets.asset_subtype_id = ?", x.id).count
+      count = assets.where(asset_subtype_id: x.id).count
       a << [x.name, count] unless count == 0
     end
         
@@ -33,10 +33,10 @@ class AssetSubtypeReport < AbstractReport
     if report_filter_type == 0
       subtypes = AssetSubtype.all
     else
-      subtypes = AssetSubtype.where('asset_type_id = ?', report_filter_type)
+      subtypes = AssetSubtype.where(asset_type_id: report_filter_type)
     end
     
-    assets = Asset.where('assets.organization_id IN (?)', organization_id_list)
+    assets = Rails.application.config.asset_base_class_name.constantize.where(organization_id: organization_id_list)
 
     return summarize(assets, subtypes)
 

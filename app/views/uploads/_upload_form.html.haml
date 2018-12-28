@@ -12,7 +12,7 @@
         = f.input :organization_id, :required => true, :collection => Organization.where(id: Policy.where('parent_id IS NOT NULL AND organization_id IN (?)', @organization_list).pluck(:organization_id)), :label_method => 'coded_name'
     .row
       .col-sm-6
-        = f.input :file, :required => true, :label => 'Spreadsheet', :hint => 'Select a spreadsheet that has been downloaded from TransAM, edited, then saved.'
+        = f.input :file, :required => true, :label => 'Spreadsheet', :hint => "Select a spreadsheet that has been downloaded from #{app_title}."
       - if current_user.has_role? :admin
         .col-sm-6.force_update{style: 'display: none;'}
           = f.input :force_update, :collection => [['No', false],['Yes', true]], :include_blank => false

@@ -7,8 +7,8 @@
 class MaintenanceUpdatesEventLoader < EventLoader
 
   MAINTENANCE_TYPE_COL    = 0
-  MILEAGE_COL             = 1
-  EVENT_DATE_COL          = 2
+  MILEAGE_COL             = 2
+  EVENT_DATE_COL          = 1
   NOTES_COL               = 3
 
   def process(asset, cells)
@@ -29,7 +29,11 @@ class MaintenanceUpdatesEventLoader < EventLoader
     # Event Date
     @event.event_date = as_date(cells[EVENT_DATE_COL])
     # Notes
-    notes = as_string(cells[NOTES_COL])
+    if asset.class.to_s.include? 'Vehicle'
+      notes = as_string(cells[NOTES_COL])
+    else
+      notes = as_string(cells[NOTES_COL-1])
+    end
     @event.comments = notes unless notes.blank?
 
   end

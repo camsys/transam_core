@@ -572,6 +572,7 @@ body {
 
 .popover {
   max-width: 800px;
+  min-width: 200px;
   width: auto;
   overflow-y:auto;
   z-index:1000;

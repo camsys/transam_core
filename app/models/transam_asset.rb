@@ -40,34 +40,34 @@ class TransamAsset < TransamAssetRecord
   accepts_nested_attributes_for :serial_numbers
 
   # each asset has zero or more condition updates
-  has_many   :condition_updates, -> {where :asset_event_type_id => ConditionUpdateEvent.asset_event_type.id }, :class_name => "ConditionUpdateEvent", :foreign_key => :transam_asset_id
+  has_many   :condition_updates, -> {where :asset_event_type_id => ConditionUpdateEvent.asset_event_type.id }, :class_name => "ConditionUpdateEvent", :as => :transam_asset
   accepts_nested_attributes_for :condition_updates, :reject_if => Proc.new{|ae| ae['assessed_rating'].blank? }, :allow_destroy => true
 
   # each asset has zero or more scheduled replacement updates
-  has_many   :schedule_replacement_updates, -> {where :asset_event_type_id => ScheduleReplacementUpdateEvent.asset_event_type.id }, :class_name => "ScheduleReplacementUpdateEvent", :foreign_key => :transam_asset_id
+  has_many   :schedule_replacement_updates, -> {where :asset_event_type_id => ScheduleReplacementUpdateEvent.asset_event_type.id }, :class_name => "ScheduleReplacementUpdateEvent", :as => :transam_asset
 
   # each asset has zero or more scheduled rehabilitation updates
-  has_many   :schedule_rehabilitation_updates, -> {where :asset_event_type_id => ScheduleRehabilitationUpdateEvent.asset_event_type.id }, :class_name => "ScheduleRehabilitationUpdateEvent", :foreign_key => :transam_asset_id
+  has_many   :schedule_rehabilitation_updates, -> {where :asset_event_type_id => ScheduleRehabilitationUpdateEvent.asset_event_type.id }, :class_name => "ScheduleRehabilitationUpdateEvent", :as => :transam_asset
 
   # each asset has zero or more recorded rehabilitation events
-  has_many   :rehabilitation_updates, -> {where :asset_event_type_id => RehabilitationUpdateEvent.asset_event_type.id}, :class_name => "RehabilitationUpdateEvent", :foreign_key => :transam_asset_id
+  has_many   :rehabilitation_updates, -> {where :asset_event_type_id => RehabilitationUpdateEvent.asset_event_type.id}, :class_name => "RehabilitationUpdateEvent", :as => :transam_asset
   accepts_nested_attributes_for :rehabilitation_updates, :reject_if => Proc.new{|ae| ae['total_cost'].blank? }, :allow_destroy => true
 
   # each asset has zero or more scheduled disposition updates
-  has_many   :schedule_disposition_updates, -> {where :asset_event_type_id => ScheduleDispositionUpdateEvent.asset_event_type.id }, :class_name => "ScheduleDispositionUpdateEvent", :foreign_key => :transam_asset_id
+  has_many   :schedule_disposition_updates, -> {where :asset_event_type_id => ScheduleDispositionUpdateEvent.asset_event_type.id }, :class_name => "ScheduleDispositionUpdateEvent", :as => :transam_asset
 
   # each asset has zero or more service status updates
-  has_many   :service_status_updates, -> {where :asset_event_type_id => ServiceStatusUpdateEvent.asset_event_type.id }, :class_name => "ServiceStatusUpdateEvent", :foreign_key => :transam_asset_id
+  has_many   :service_status_updates, -> {where :asset_event_type_id => ServiceStatusUpdateEvent.asset_event_type.id }, :class_name => "ServiceStatusUpdateEvent", :as => :transam_asset
   accepts_nested_attributes_for :service_status_updates, :reject_if => Proc.new{|ae| ae['service_status_type_id'].blank? }, :allow_destroy => true
 
   # each asset has zero or more disposition updates
-  has_many   :disposition_updates, -> {where :asset_event_type_id => DispositionUpdateEvent.asset_event_type.id }, :class_name => "DispositionUpdateEvent", :foreign_key => :transam_asset_id
+  has_many   :disposition_updates, -> {where :asset_event_type_id => DispositionUpdateEvent.asset_event_type.id }, :class_name => "DispositionUpdateEvent", :as => :transam_asset
 
   # each asset has zero or more early disposition requests
-  has_many   :early_disposition_requests, -> {where :asset_event_type_id => EarlyDispositionRequestUpdateEvent.asset_event_type.id }, :class_name => "EarlyDispositionRequestUpdateEvent", :foreign_key => :transam_asset_id
+  has_many   :early_disposition_requests, -> {where :asset_event_type_id => EarlyDispositionRequestUpdateEvent.asset_event_type.id }, :class_name => "EarlyDispositionRequestUpdateEvent", :as => :transam_asset
 
   # each asset has zero or more location updates.
-  has_many   :location_updates, -> {where :asset_event_type_id => LocationUpdateEvent.asset_event_type.id }, :class_name => "LocationUpdateEvent", :foreign_key => :transam_asset_id
+  has_many   :location_updates, -> {where :asset_event_type_id => LocationUpdateEvent.asset_event_type.id }, :class_name => "LocationUpdateEvent", :as => :transam_asset
   accepts_nested_attributes_for :location_updates, :reject_if => Proc.new{|ae| ae['parent_key'].blank? }, :allow_destroy => true
 
   # Each asset has zero or more images. Images are deleted when the asset is deleted
@@ -113,6 +113,8 @@ class TransamAsset < TransamAssetRecord
   # Returns a list of assets that are still operational
   scope :operational, -> { where(TransamAsset.arel_table[:asset_tag].not_eq(TransamAsset.arel_table[:object_key])).where(disposition_date: nil) }
 
+  scope :operational_in_range, -> (start_date, end_date) { where(TransamAsset.arel_table[:in_service_date].not_eq(nil).and(TransamAsset.arel_table[:in_service_date].lteq(end_date)).and(TransamAsset.arel_table[:disposition_date].eq(nil).or(TransamAsset.arel_table[:disposition_date].gteq(start_date)))) }
+
   # Returns a list of asset that in early replacement
   scope :early_replacement, -> { where('policy_replacement_year is not NULL and scheduled_replacement_year is not NULL and scheduled_replacement_year < policy_replacement_year') }
 
@@ -137,7 +139,7 @@ class TransamAsset < TransamAssetRecord
       :other_operator,
       :title_number,
       :title_ownership_organization_id,
-      :other_titel_ownership_organization,
+      :other_title_ownership_organization,
       :lienholder_id,
       :other_lienholder,
       :parent_id,
@@ -184,7 +186,7 @@ class TransamAsset < TransamAssetRecord
 
   end
 
-  callable_by_submodel def self.very_specific
+  def self.very_specific
     klass = self.all
     assoc = klass.column_names.select{|col| col.end_with? 'ible_type'}.first
     assoc_arr = Hash.new
@@ -209,11 +211,13 @@ class TransamAsset < TransamAssetRecord
   # mirror method on Asset to get typed version
   def self.get_typed_asset(asset)
     if asset
-      asset = asset.very_specific
+      if asset.very_specific
+        asset = asset.very_specific
 
-      seed_assoc = Rails.application.config.asset_seed_class_name.underscore
-      if asset.class.to_s != asset.send(seed_assoc).class_name(asset: asset)
-        asset = asset.send(seed_assoc).class_name(asset: asset).constantize.find_by(object_key: asset.object_key)
+        seed_assoc = Rails.application.config.asset_seed_class_name.underscore
+        if asset.class.to_s != asset.send(seed_assoc).class_name(assets: asset)
+          asset = asset.send(seed_assoc).class_name(assets: asset).constantize.find_by(object_key: asset.object_key)
+        end
       end
 
       asset
@@ -308,16 +312,14 @@ class TransamAsset < TransamAssetRecord
 
   # Instantiate an asset event of the appropriate type.
   def build_typed_event(asset_event_type_class)
-    # Could also add:  raise ArgumentError 'Asset Must be strongly typed' unless is_typed?
 
-    # DO NOT cast to concrete type.  Want to enforce that client has a concrete asset
     unless self.event_classes.include? asset_event_type_class
       raise ArgumentError, 'Invalid Asset Event Type'
     end
 
-    assoc = asset_event_type_class.reflect_on_association(:transam_asset).class_name
     typed_asset = TransamAsset.get_typed_asset(self)
-    asset_event_type_class.new(transam_asset: (typed_asset.type_of? assoc) ? typed_asset : typed_asset.send(assoc.underscore))
+    assoc = typed_asset.class.reflect_on_all_associations(:has_many).select{|x| x.class_name == asset_event_type_class.to_s}.first.name
+    typed_asset.send(assoc).build
   end
 
   def asset_type_id

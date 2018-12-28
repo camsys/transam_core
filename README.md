@@ -66,6 +66,7 @@ TODO: Write usage instructions here
 #### [transam_transit](https://github.com/camsys/transam_transit)
 [![Build Status](https://travis-ci.org/camsys/transam_transit.svg)](https://travis-ci.org/camsys/transam_transit)
 
-
+#### [transam_highway](https://github.com/camsys/transam_highway)
+[![Build Status](https://travis-ci.org/camsys/transam_highway.svg)](https://travis-ci.org/camsys/transam_highway)
 
              

@@ -18,12 +18,14 @@ class AssetEvent < ActiveRecord::Base
 
   # Callbacks
   after_initialize :set_defaults
+  before_create     :set_base_transam_asset
 
   # Associations
 
   # Every event belongs to an asset
   belongs_to  :asset
-  belongs_to  :transam_asset
+  belongs_to  :transam_asset, polymorphic: true
+  belongs_to  :base_transam_asset, class_name: 'TransamAsset'
   # Every event is of a type
   belongs_to  :asset_event_type
   # Assets can be associated with Uploads
@@ -120,7 +122,7 @@ class AssetEvent < ActiveRecord::Base
   # If one already exists for the same event_date, return the last created
   # If none exists, returns nil
   def previous_event_of_type
-    event = transam_asset.asset_events
+    event = Rails.application.config.asset_base_class_name.constantize.get_typed_asset(self.send(Rails.application.config.asset_base_class_name.underscore)).asset_events
       .where("asset_event_type_id = ?", self.asset_event_type_id) # get events of same type
       .where("event_date < ? OR (event_date = ? AND created_at < ?)", self.event_date, self.event_date, (self.new_record? ? Time.current : self.created_at) ) # Define a window that runs up to this event
       .where('object_key != ?', self.object_key)
@@ -140,6 +142,10 @@ class AssetEvent < ActiveRecord::Base
   # Set resonable defaults for a new asset event
   def set_defaults
     self.event_date ||= Date.today
+  end
+
+  def set_base_transam_asset
+    self.base_transam_asset = transam_asset.try(:transam_asset) || transam_asset
   end
 
   def validate_event_date_with_purchase

@@ -6,69 +6,87 @@
   #table_actions
     = render :partial => "users/index_actions"
 
-%table.table.table-hover{:id => table_dom_id, :data => {:toggle => 'table',
+%table.table.table-hover{:id => table_dom_id,
+  :data => {:toggle => 'table',
+  :url => users_path(:format => :json),
+  :card_view => "false",
   :pagination => 'true',
+  :sort_order => 'asc',
+  :sortable => 'true',
+  :side_pagination => 'server',
   :show_pagination_switch => 'true',
+  :page_number => '1',
   :page_list => "[5, 10, 20, 50, 100, 200]",
   :page_size => current_user.num_table_rows,
   :search => 'false',
-  :toolbar => "#table_actions",
-  :export_types => "['csv', 'txt', 'excel']",
-  :show_export => 'true',
   :show_columns => 'true',
-  :show_toggle => 'true',
+  :toolbar => "#table_actions",
+  :row_style => 'row_style',
+  :click_to_select => 'true',
+  :show_export => 'true',
+  :id_field => 'object_key',
+  :export_types => "['csv', 'txt', 'excel']",
   :state_save => 'true',
   :state_save_id_table => "usersid",
-  :state_save_expire => "1y"}}
+  :state_save_expire => "1y",
+  :maintain_selected => 'true',
+  :single_select => 'false',
+  :query_params => "query_params" }}
+
   %thead
     %tr
-      %th.left{:data => {:visible => 'false'}} Object Key
-      %th.left{:data => {:visible => 'false'}} External Id
-      %th.left{:data => {:sortable => 'true'}} Organization
-      %th.left.nowrap{:data => {:sortable => 'true'}} Title
-      %th.left.nowrap{:data => {:sortable => 'true'}} First
-      %th.left.nowrap{:data => {:sortable => 'true'}} Last
-      %th.left.nowrap{:data => {:sortable => 'true'}} Email
-      %th.left.nowrap{:data => {:sortable => 'true'}} Phone
-      %th.left{:data => {:visible => 'false', :sortable => 'true'}} Timezone
-      %th.center{:data => {:visible => 'false', :sortable => 'true'}} Send Emails
-      %th.right{:data => {:visible => 'false', :sortable => 'true'}} Table Rows
-      %th.left{:data => {:sortable => 'true'}} Role
-      %th.left{:data => {:sortable => 'true'}} Privileges
+      %th.left{:data => {:field => "object_key", :visible => 'false'}} Object Key
+      %th.left{:data => {:field => "external_id", :visible => 'false'}} External Id
+      %th.left{:data => {:field => "organization_short_name", :sortable => 'true', :formatter => 'link_to_org'}} Organization
+      %th.left.nowrap{:data => {:field => "title", :sortable => 'true'}} Title
+      %th.left.nowrap{:data => {:field => "first_name", :sortable => 'true'}} First
+      %th.left.nowrap{:data => {:field => "last_name", :sortable => 'true'}} Last
+      %th.left.nowrap{:data => {:field => "email", :sortable => 'true', :formatter => 'link_to_user'}} Email
+      %th.left.nowrap{:data => {:field => "phone", :sortable => 'true'}} Phone
+      %th.left{:data => {:field => "timezone", :visible => 'false', :sortable => 'true'}} Timezone
+      %th.center{:data => {:field => "notify_via_email", :visible => 'false', :sortable => 'true', :formatter => 'raw_boolean_formatter'}} Send Emails
+      %th.right{:data => {:field => "num_table_rows", :visible => 'false', :sortable => 'true', :formatter => 'integer_formatter'}} Table Rows
+      %th.left{:data => {:field => "role_name", :sortable => 'false'}} Role
+      %th.left{:data => {:field => "privilege_names", :sortable => 'false'}} Privileges
       - if current_user.has_role? :admin
-        %th.right{:data => {:sortable => 'true'}} Num Logins
-        %th.right{:data => {:sortable => 'true'}} Last Login
-        %th.left.nowrap{:data => {:visible => 'false', :sortable => 'true'}} Last Login IP
-        %th.right{:data => {:visible => 'false', :sortable => 'true'}} Num Failed
-        %th.center{:data => {:sortable => 'true'}} Locked
-        %th.center{:data => {:sortable => 'true'}} Active
-        %th.right{:data => {:sortable => 'true'}} Created At
-        %th.right{:data => {:visible => 'false', :sortable => 'true'}} Updated At
+        %th.right{:data => {:field => "sign_in_count", :visible => 'false', :sortable => 'true', :formatter => 'integer_formatter'}} Num Logins
+        %th.right{:data => {:field => "last_sign_in_at", :visible => 'false', :sortable => 'true'}} Last Login
+        %th.left.nowrap{:data => {:field => "last_sign_in_ip", :visible => 'false', :sortable => 'true'}} Last Login IP
+        %th.right{:data => {:field => "failed_attempts", :visible => 'false', :sortable => 'true', :formatter => 'integer_formatter'}} Num Failed
+        %th.center{:data => {:field => "locked_at", :visible => 'false', :sortable => 'true', :formatter => 'raw_boolean_formatter'}} Locked
+        %th.center{:data => {:field => "active", :visible => 'false', :sortable => 'true', :formatter => 'raw_boolean_formatter'}} Active
+        %th.right{:data => {:field => "created_at", :visible => 'false', :sortable => 'true'}} Created At
+        %th.right{:data => {:field => "updated_at", :visible => 'false', :sortable => 'true'}} Updated At
 
-  %tbody
-    - @users.each do |u|
-      %tr{ :id => u.object_key, :class => 'action-path' }
-        %td= u.object_key
-        %td= u.external_id
-        %td= link_to( u.organization.to_s, organization_path(u.organization.short_name))
-        %td= u.title
-        %td= u.first_name
-        %td= u.last_name
-        %td= u.email
-        %td= format_as_phone_number(u.phone)
-        %td= u.timezone
-        %td= format_as_boolean(u.notify_via_email)
-        %td= format_as_integer(u.num_table_rows)
-        %td= u.roles.roles.last.label
-        %td= format_as_list(u.roles.privileges.collect{|x| x.label})
-        - if current_user.has_role? :admin
-          %td= format_as_integer(u.sign_in_count)
-          %td= format_as_date_time(u.last_sign_in_at)
-          %td= u.last_sign_in_ip
-          %td= format_as_integer(u.failed_attempts)
-          %td= format_as_boolean(u.locked_at.present?)
-          %td= format_as_boolean(u.active)
-          %td= format_as_date_time(u.created_at)
-          %td= format_as_date_time(u.updated_at)
 
-= render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :path_pattern => user_path("xxx")}
+= render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :path_pattern => user_path("xxx"), :allow_row_click => 0}
+
+:javascript
+  $(document).ready(function() {
+    $('#' + '#{table_dom_id}').bootstrapTable('resetWidth');
+  });
+
+  $('#' + '#{table_dom_id}').on('post-body.bs.table', function () {
+    $('.transam-popover').popover({
+      trigger: 'hover'
+    });
+
+    $('.transam-tooltip').tooltip();
+  });
+  function link_to_user(value, data) {
+    return "<a href='/users/" + data.object_key + "/'>" + value + "</a>"
+  };
+  function link_to_org(value, data) {
+    return "<a href='/org/" + data.organization_short_name + "/'>" + value + "</a>"
+  };
+
+  var role = "#{@role}";
+  var show_active_only = "#{@show_active_only}";
+  var search_text = "#{@search_text}";
+
+  function query_params(params) {
+    params.role = role;
+    params.show_active_only = show_active_only;
+    params.search_text = search_text;
+    return params;
+  }

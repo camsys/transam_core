@@ -27,9 +27,15 @@ require 'wicked'
 require 'cocoon'
 require 'jquery-ui-rails'
 require 'jquery-form-rails'
-require 'roo'
+require 'roo-xls'
+require 'kaminari'
 
-
+# API
+#require 'open_api'
+require 'jbuilder'
+require 'responders'
+require 'simple_token_authentication'
+require 'api-pagination'
 
 module TransamCore
   class Engine < ::Rails::Engine
