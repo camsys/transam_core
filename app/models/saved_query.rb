@@ -234,7 +234,9 @@ class SavedQuery < ActiveRecord::Base
           select_sqls << "#{as_table_name}.#{association_display_field_name} as #{asset_table_name}_#{query_field_name}"
         else
           # select value directly from asset_table
-          select_sqls << "#{asset_table_name}.#{query_field_name} as #{asset_table_name}_#{query_field_name}"
+
+          output_field_name = field.display_field.blank? ? "#{asset_table_name}.#{query_field_name}" : "#{asset_table_name}.#{field.display_field}"
+          select_sqls << "#{output_field_name} as #{asset_table_name}_#{query_field_name}"
         end
       end
     end 
