@@ -83,7 +83,6 @@ class TransamAsset < TransamAssetRecord
   scope :operational, -> { all }
 
 
-
   FORM_PARAMS = [
       :organization_id,
       :asset_subtype_id,
