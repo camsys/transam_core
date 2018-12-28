@@ -1,11 +1,11 @@
 ### Load asset query configurations
 puts "======= Loading core asset query configurations ======="
 
-# Query Asset Classes
-asset_table = QueryAssetClass.find_or_create_by(table_name: 'transam_assets')
+# transam_assets table
+QueryAssetClass.find_or_create_by(table_name: 'transam_assets')
 
 # Query Category and fields
-category_fields = {
+transam_assets_category_fields = {
   'Identification & Classification': [
     {
       name: 'organization_id',
@@ -146,23 +146,44 @@ category_fields = {
   ]
 }
 
-category_fields.each do |category_name, fields|
-  qc = QueryCategory.find_or_create_by(name: category_name)
-  fields.each do |field|
-    if field[:association]
-      qac = QueryAssociationClass.find_or_create_by(field[:association])
+# serial_numbers table
+QueryAssetClass.find_or_create_by(table_name: 'serial_numbers', transam_assets_join: "left join serial_numbers on serial_numbers.identifiable_type = 'TransamAsset' and serial_numbers.identifiable_id = transam_assets.transam_assetible_id")
+serial_numbers_category_fields = {
+  'Identification & Classification': [
+    {
+      name: 'identification',
+      label: 'Vehicle Identification Number (VIN)',
+      filter_type: 'text'
+    }
+  ]
+}
+
+# seeding
+fields_data = {
+  'transam_assets': transam_assets_category_fields,
+  'serial_numbers': serial_numbers_category_fields
+}
+
+fields_data.each do |table_name, category_fields|
+  query_asset_table = QueryAssetClass.find_by_table_name table_name
+  category_fields.each do |category_name, fields|
+    qc = QueryCategory.find_or_create_by(name: category_name)
+    fields.each do |field|
+      if field[:association]
+        qac = QueryAssociationClass.find_or_create_by(field[:association])
+      end
+      qf = QueryField.find_or_create_by(
+        name: field[:name], 
+        label: field[:label], 
+        query_category: qc, 
+        query_association_class_id: qac.try(:id),
+        filter_type: field[:filter_type],
+        auto_show: field[:auto_show],
+        hidden: field[:hidden],
+        pairs_with: field[:pairs_with]
+      )
+      qf.query_asset_classes << query_asset_table
     end
-    qf = QueryField.find_or_create_by(
-      name: field[:name], 
-      label: field[:label], 
-      query_category: qc, 
-      query_association_class_id: qac.try(:id),
-      filter_type: field[:filter_type],
-      auto_show: field[:auto_show],
-      hidden: field[:hidden],
-      pairs_with: field[:pairs_with]
-    )
-    qf.query_asset_classes << asset_table
   end
 end
 
