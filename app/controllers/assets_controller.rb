@@ -484,7 +484,7 @@ class AssetsController < AssetAwareController
     notify_user(:notice, "Asset was successfully removed.")
 
     respond_to do |format|
-      format.html { redirect_to(inventory_index_url(Rails.application.config.asset_seed_class_name.foreign_key => @asset.send(Rails.application.config.asset_seed_class_name.foreign_key))) }
+      format.html { redirect_to(inventory_index_url(@asset.class.asset_seed_class_name.foreign_key => @asset.send(@asset.class.asset_seed_class_name.foreign_key))) }
       format.json { head :no_content }
     end
 
