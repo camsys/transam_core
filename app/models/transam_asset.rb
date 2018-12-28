@@ -83,6 +83,8 @@ class TransamAsset < TransamAssetRecord
   scope :operational, -> { all }
 
 
+  scope :operational_in_range, -> (start_date, end_date) { where(TransamAsset.arel_table[:in_service_date].not_eq(nil).and(TransamAsset.arel_table[:in_service_date].lteq(end_date)).and(TransamAsset.arel_table[:disposition_date].eq(nil).or(TransamAsset.arel_table[:disposition_date].gteq(start_date)))) }
+
 
   FORM_PARAMS = [
       :organization_id,
