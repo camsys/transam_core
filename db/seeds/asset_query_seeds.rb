@@ -80,6 +80,18 @@ transam_assets_category_fields = {
       name: 'manufacture_year',
       label: 'Year of Construction / Year of Manufacture',
       filter_type: 'numeric'
+    },
+    {
+      name: 'quantity',
+      label: 'Quantity',
+      filter_type: 'numeric',
+      pairs_with: 'quantity_unit'
+    },
+    {
+      name: 'quantity_unit',
+      label: 'Quantity Units',
+      filter_type: 'text',
+      hidden: true
     }
   ],
 
