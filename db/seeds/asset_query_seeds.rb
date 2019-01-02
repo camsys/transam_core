@@ -113,6 +113,22 @@ transam_assets_category_fields = {
       name: 'purchased_new',
       label: 'Purchased New',
       filter_type: 'boolean'
+    },
+    {
+      name: 'vendor_id',
+      label: 'Vendor',
+      filter_type: 'text',
+      pairs_with: 'other_vendor',
+      association: {
+        table_name: 'organizations',
+        display_field_name: 'short_name'
+      }
+    },
+    {
+      name: 'other_vendor',
+      label: 'Vendor (Other)',
+      filter_type: 'text',
+      hidden: true
     }
   ],
 
