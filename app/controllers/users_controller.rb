@@ -40,8 +40,14 @@ class UsersController < OrganizationAwareController
     conditions  = []
     values      = []
 
-    conditions << 'organization_id IN (?)'
-    values << @organization_list
+    if @organization_id.to_i > 0
+      conditions << 'users_organizations.organization_id = ?'
+      values << @organization_id
+    else
+      conditions << 'users_organizations.organization_id IN (?)'
+      values << @organization_list
+    end
+
 
     unless @search_text.blank?
       # get the list of searchable fields from the asset class
@@ -87,11 +93,8 @@ class UsersController < OrganizationAwareController
     end
 
     # Get the Users but check to see if a role was selected
-    if @role.blank?
-      @users = User.unscoped.includes(:organization, :roles).where(conditions.join(' AND '), *values)
-    else
-      @users = User.unscoped.includes(:organization, :roles).with_role(@role).where(conditions.join(' AND '), *values)
-    end
+    @users = User.unscoped.distinct.joins(:organizations).includes(:organization,:roles).where(conditions.join(' AND '), *values)
+    @users = @users.with_role(@role) unless @role.blank?
 
     if params[:sort] && params[:order]
       case params[:sort]
