@@ -203,6 +203,7 @@ Rails.application.routes.draw do
       get 'render_new'
       get 'manufacturers'
       get 'manufacturer_models'
+      get 'vendors'
     end
   end
 

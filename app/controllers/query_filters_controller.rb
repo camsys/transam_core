@@ -43,4 +43,18 @@ class QueryFiltersController < OrganizationAwareController
     
     render json: (manufacturer_models + other_manufacturer_models).sort_by{|d| d[:name]}
   end
+
+  def vendors
+    assets = TransamAsset.where(organization_id: @organization_list)
+
+    vendors = Organization.pluck(:id, :name).uniq.map{|d| {id: d[0], name: d[1]}}
+
+    idx = 0 # indicate other
+    other_vendors = assets.where.not(other_vendor: nil).pluck(:other_vendor).uniq.map{|name| 
+      idx -= 1
+      {id: idx, name: name}
+    }
+    
+    render json: (vendors + other_vendors).sort_by{|d| d[:name]}
+  end
 end
