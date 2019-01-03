@@ -163,20 +163,25 @@ class SavedQuery < ActiveRecord::Base
     base_rel = TransamAsset.where("transam_assets.organization_id": organization_list || [])
 
     join_tables = {}
-    where_sqls = []
+    where_sqls = {}
+    field_pairs = {}
     query_filters.each do |filter|
+      query_field = filter.query_field
       # exclude organization_id as its handled above
-      next unless filter.query_field || filter.query_field.name == 'organization_id'
+      next unless query_field || query_field.name == 'organization_id'
+      unless query_field.pairs_with.blank?
+        field_pairs[query_field.name] = query_field.pairs_with
+      end
 
       where_sqls_for_one_filter = []
-      filter.query_field.query_asset_classes.each do |asset_class|
+      query_field.query_asset_classes.each do |asset_class|
         asset_table_name = asset_class.table_name
         unless join_tables.keys.include?(asset_table_name) || asset_class.transam_assets_join.blank?
           join_tables[asset_table_name] = asset_class.transam_assets_join
         end
 
-        query_field_name = "#{asset_table_name}.#{filter.query_field.name}"
-        query_filter_type = filter.query_field.filter_type
+        query_field_name = "#{asset_table_name}.#{query_field.name}"
+        query_filter_type = query_field.filter_type
 
         filter_value = filter.value
         # wrap values
@@ -204,7 +209,17 @@ class SavedQuery < ActiveRecord::Base
         where_sqls_for_one_filter << "#{query_field_name} #{filter_op} #{filter_value}"
       end
 
-      where_sqls << where_sqls_for_one_filter.join(" OR ")
+      where_sqls[query_field.name] = where_sqls_for_one_filter.join(" OR ")
+    end
+
+    # deal with field_pairs: if both the main field and pairs_with field are filters, then they should be a OR sql relation
+    # e.g., manufacturer_id in (1,2) OR other_manufacturer in ('A', 'B')
+    field_pairs.each do |main_field, pairs_with|
+      main_field_sql = where_sqls[main_field]
+      pairs_with_sql = where_sqls[pairs_with]
+      next if main_field_sql.blank? || pairs_with_sql.blank? 
+      where_sqls[main_field] = "(#{main_field_sql}) OR (#{pairs_with_sql})"
+      where_sqls.delete(pairs_with) # delete pairs_with sql
     end
 
     select_sqls = []
@@ -248,7 +263,7 @@ class SavedQuery < ActiveRecord::Base
 
     # wheres
     if where_sqls.any?
-      base_rel = base_rel.where(where_sqls.map{ |s| "(" + s + ")" }.join(" AND "))
+      base_rel = base_rel.where(where_sqls.map{ |field_name, field_sql| "(" + field_sql + ")" }.join(" AND "))
     end
 
     # selects

@@ -1,0 +1,94 @@
+:ruby
+  # This partial is to serve multi select UI (checkboxes) that populates data from a main lookup table and `other_xxx` field in assets table
+  # e.g., manufacturers lookup table and other_manufacturer field in transam_assets table
+  # inputs:
+  #    main_field_name: e.g., manufacturer_id
+  #    other_field_name: e.g., other_manufacturer
+  #    values: 
+  #        data which combines both the main lookup table items and `other_xxx`s
+  #        each item in format {id: xx, name: xx}, if id < 0, indicates it's an `other_xxx` item
+
+  main_field_id = QueryField.find_by(name: main_field_name).try(:id)
+  other_field_id = QueryField.find_by(name: other_field_name).try(:id)
+
+%ul.multi-select-list{data: {query_field_id: main_field_id}}
+  %li.select-all-items
+    %label.checkbox
+      = check_box_tag 'select-all', 1, true
+      (Select All)
+  - data.each do |item|
+    %li.multi-select-item
+      %label.checkbox
+        = check_box_tag "#{main_field_name}[]", item[:id], true, data: {name: item[:name]}
+        = item[:name]
+
+:javascript
+  $(function() {
+    var main_field_id = #{main_field_id};
+    var other_field_id = #{other_field_id};
+
+    var container_selector = '.multi-select-list[data-query-field-id=' + main_field_id + ']';
+
+    function getSelectedValues() {
+      var main_item_ids = [];
+      var other_item_names = [];
+      $(container_selector + ' .multi-select-item input[type=checkbox]:checked').each(function() {
+        var item_id = $(this).val();
+        if(item_id >= 0) {
+          // all negative values are `Other_xxx`
+          main_item_ids.push(item_id);
+        } else {
+          other_item_names.push($(this).data('name'));
+        }
+      });
+
+      return [main_item_ids, other_item_names];
+    }
+
+    function updateFilterDetails() {
+      var values = getSelectedValues();
+      var main_item_ids = values[0];
+      var other_item_names = values[1];
+
+      if(main_item_ids.length > 0) {
+        var main_filter_details = {
+          query_field_id: main_field_id,
+          op: 'in',
+          value: main_item_ids.join(',')
+        };
+
+        _saved_query.setFilterDetails(main_field_id, main_filter_details);
+      } else {
+        _saved_query.removeFilterDetails(main_field_id);
+      }
+
+      if(other_item_names.length > 0) {
+        var other_filter_details = {
+          query_field_id: other_field_id,
+          op: 'in',
+          value: other_item_names.join(',')
+        };
+
+        _saved_query.setFilterDetails(other_field_id, other_filter_details);
+      } else {
+        _saved_query.removeFilterDetails(other_field_id);
+      }
+    }
+
+    updateFilterDetails();
+
+    // update filter values
+    $(container_selector + ' .multi-select-item input[type=checkbox]').change(function() {
+      updateFilterDetails();
+    });
+
+    $(container_selector + ' .select-all-items input[type=checkbox]').change(function() {
+      if($(this).is(":checked")) {
+        $(this).parents('.multi-select-list').find('.multi-select-item input[type=checkbox]').prop('checked', true);
+      } else {
+        $(this).parents('.multi-select-list').find('.multi-select-item input[type=checkbox]').prop('checked', false);
+      }
+
+      updateFilterDetails();
+    });
+  });
