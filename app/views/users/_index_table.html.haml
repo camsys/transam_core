@@ -83,8 +83,13 @@
   var role = "#{@role}";
   var show_active_only = "#{@show_active_only}";
   var search_text = "#{@search_text}";
+  var organization_id = "#{@org.try(:id)}";
 
   function query_params(params) {
+    if (parseInt(organization_id) > 0) {
+      params.organization_id = organization_id;
+    }
+
     params.role = role;
     params.show_active_only = show_active_only;
     params.search_text = search_text;
