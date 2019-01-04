@@ -11,6 +11,7 @@
   main_field_id = QueryField.find_by(name: main_field_name).try(:id)
   other_field_id = QueryField.find_by(name: other_field_name).try(:id)
 
+= hidden_field_tag :hidden_field_id, other_field_id
 %ul.multi-select-list{data: {query_field_id: main_field_id}}
   %li.select-all-items
     %label.checkbox

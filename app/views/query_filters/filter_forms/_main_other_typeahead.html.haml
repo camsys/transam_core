@@ -18,6 +18,7 @@
   $(function() {
     var main_field_id = #{main_field_id};
     var other_field_id = #{other_field_id};
+    var field_name = "#{main_field_name}";
     
     function updateFilterDetails(item) {
       var item_id = item.id;
@@ -48,12 +49,12 @@
     }
 
     // typeahead
-    $('#' + main_field_id).on('focus', function() {
+    $('#' + field_name).on('focus', function() {
       _typeahead_source_url = $(this).data('url');
     });
 
     var last_selected = null;
-    $('#' + main_field_id).typeahead({
+    $('#' + field_name).typeahead({
       items: 10,
       minLength: 1,
       delay: 1000,
@@ -71,7 +72,7 @@
       }
     });
 
-    $('#' + main_field_id).change(function() {
+    $('#' + field_name).change(function() {
       if($(this).val() != last_selected) {
         removeFilterDetails();
       }

@@ -198,14 +198,14 @@ Rails.application.routes.draw do
   end
 
   resources :query_fields, only: [:index]
-  resources :query_filters, only: [:show] do 
+  resources :query_filters, only: [] do 
     collection do 
-      get 'render_new'
       get 'manufacturers'
       get 'manufacturer_models'
       get 'vendors'
     end
   end
+  get 'render_new', to: 'query_filters#render_new', as: :load_new_query_filter
 
   resources :reports,       :only => [:index, :show] do
     member do
