@@ -5,6 +5,12 @@ class AssetMapSearcher < BaseSearcher
 
   attr_accessor :asset_seed_class_name
 
+  if eval("defined?(AppAssetMapSearcher) && AppAssetMapSearcher.is_a?(Class)") == true
+    "AppAssetMapSearcher".constantize.form_params.each do |form_param|
+      attr_accessor form_param
+    end
+  end
+
   SystemConfig.transam_module_names.each do |mod|
     if eval("defined?(#{mod.titleize}AssetMapSearcher) && #{mod.titleize}AssetMapSearcher.is_a?(Class)") == true
       "#{mod.titleize}AssetMapSearcher".constantize.form_params.each do |form_param|
