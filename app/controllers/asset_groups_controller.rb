@@ -67,7 +67,7 @@ class AssetGroupsController < OrganizationAwareController
       # See if the user is creating the group from a set of cached assets
       if params[:use_cached_assets] == "1"
         # Populate the asset group from the cached results
-        cache_key = AssetSearcher.new.cache_variable_name
+        cache_key = CoreAssetMapSearcher.new.cache_variable_name
         assets = Asset.where(object_key: get_cached_objects(cache_key))
         assets.each do |asset|
           a = Asset.get_typed_asset(asset)

@@ -176,7 +176,7 @@ frequency_types = [
 ]
 
 search_types = [
-  {:active => 1, :name => 'Asset', :class_name => 'AssetSearcher'}
+  {:active => 1, :name => 'Asset', :class_name => 'AssetMapSearcher'}
 ]
 
 activities = [

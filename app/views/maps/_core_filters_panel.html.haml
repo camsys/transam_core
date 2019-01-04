@@ -1,0 +1,119 @@
+:ruby
+  min_condition_rating = ConditionType.min_rating.to_f
+  max_condition_rating = ConditionType.max_rating.to_f
+  min_replacement_year = Date.today.year
+  max_replacement_year = min_replacement_year + 40
+  min_purchase_year = Rails.application.config.epoch.present? ? Rails.application.config.epoch.year : 1900
+  max_purchase_year = Date.today.year
+  asset = Rails.application.config.asset_base_class_name.constantize.new
+
+.row
+  .col-md-12
+    %label
+      %input{type: 'checkbox', id: 'condition_rating_slider_enabled'}
+      = "Condition Rating"
+
+    .col-md-12.slider-container{style: 'padding-left: 20px'}
+      %label.slider-label.col-xs-12
+        = "#{min_condition_rating} - #{max_condition_rating}"
+      %input{id: 'condition_rating_slider', type: 'text', data: {slider_min: min_condition_rating, slider_max: max_condition_rating, slider_value: [min_condition_rating, max_condition_rating], slider_enabled: 'false', slider_step: 0.5, slider_tooltip: 'hide'}}
+
+
+  .row{style: "margin-top: 10px;"}
+    .col-md-12
+      %label
+        %input{type: 'checkbox', id: 'purchase_year_slider_enabled'}
+        = "Purchase Year"
+      .col-md-12.slider-container{style: 'padding-left: 20px'}
+        %label.slider-label.col-xs-12
+          = "#{min_purchase_year} - #{max_purchase_year}"
+        %input{id: 'purchase_year_slider', type: 'text', data: {slider_min: min_purchase_year, slider_max: max_purchase_year, slider_value: [min_purchase_year, max_purchase_year], slider_enabled: 'false', slider_tooltip: 'hide'}}
+  .row{style: "margin-top: 10px;"}
+    .col-md-12
+      %label
+        %input{type: 'checkbox', id: 'scheduled_replacement_year_slider_enabled'}
+        = "Scheduled Replacement Year"
+      .col-md-12.slider-container{style: 'padding-left: 20px'}
+        %label.slider-label.col-xs-12
+          = "#{asset.fiscal_year min_replacement_year} - #{asset.fiscal_year max_replacement_year}"
+        %input{id: 'scheduled_replacement_year_slider', type: 'text', data: {slider_min: min_replacement_year, slider_max: max_replacement_year, slider_value: [min_replacement_year, max_replacement_year], slider_enabled: 'false', slider_tooltip: 'hide'}}
+
+
+
+:javascript
+  $(function() {
+    // initialize slider filters
+    $("#condition_rating_slider").slider({ focus: true });
+    $('#condition_rating_slider_enabled').on('change', function() {
+      if($(this).is(':checked')) {
+        $("#condition_rating_slider").slider('enable');
+      } else {
+        $("#condition_rating_slider").slider('disable');
+      }
+    });
+    $("#condition_rating_slider").on('change', function(e) {
+      var newValue = e.value.newValue;
+      var new_label = newValue[0].toFixed(1) + " - " + newValue[1].toFixed(1);
+      $(this).parents('.slider-container').find('.slider-label').text(new_label);
+    });
+
+    $("#purchase_year_slider").slider({ focus: true });
+    $('#purchase_year_slider_enabled').on('change', function() {
+      if($(this).is(':checked')) {
+        $("#purchase_year_slider").slider('enable');
+      } else {
+        $("#purchase_year_slider").slider('disable');
+      }
+    });
+    $("#purchase_year_slider").on('change', function(e) {
+      var newValue = e.value.newValue;
+      var new_label = newValue[0] + " - " + newValue[1];
+      $(this).parents('.slider-container').find('.slider-label').text(new_label);
+    });
+
+    $("#scheduled_replacement_year_slider").slider({ focus: true });
+    $('#scheduled_replacement_year_slider_enabled').on('change', function() {
+      if($(this).is(':checked')) {
+        $("#scheduled_replacement_year_slider").slider('enable');
+      } else {
+        $("#scheduled_replacement_year_slider").slider('disable');
+      }
+    });
+
+    function get_fiscal_year(year) {
+      var fy_from = year % 100;
+      var fy_to = fy_from + 1;
+
+      if(fy_from < 10) {
+        fy_from = '0' + fy_from.toString();
+      } 
+
+      if(fy_to < 10) {
+        fy_to = '0' + fy_to.toString();
+      } else if(fy_to == 100) {
+        fy_to = '00';
+      }
+
+      return "FY " + fy_from + "-" + fy_to;
+    }
+
+    $("#scheduled_replacement_year_slider").on('change', function(e) {
+      var newValue = e.value.newValue;
+      var new_label = get_fiscal_year(newValue[0]) + " - " + get_fiscal_year(newValue[1]);
+      $(this).parents('.slider-container').find('.slider-label').text(new_label);
+    });
+
+    $('#reset_filters_btn').click(function() {
+      $("#condition_rating_slider").slider('setValue', [#{min_condition_rating}, #{max_condition_rating}]);
+      $("#condition_rating_slider").slider('disable');
+      $("#purchase_year_slider").slider('setValue', [#{min_purchase_year}, #{max_purchase_year}]);
+      $("#purchase_year_slider").slider('disable');
+      $("#scheduled_replacement_year_slider").slider('setValue', [#{min_replacement_year}, #{max_replacement_year}]);
+      $("#scheduled_replacement_year_slider").slider('disable');
+
+      $('#new_searcher label.error').remove();
+      $('#new_searcher .error').removeClass('error');
+    });
+  });
+
+  

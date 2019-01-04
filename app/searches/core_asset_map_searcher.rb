@@ -1,98 +1,53 @@
 # Inventory searcher.
 # Designed to be populated from a search form using a new/create controller model.
 #
-class AssetSearcher < BaseSearcher
+class CoreAssetMapSearcher
 
   # Include the numeric sanitizers mixin
   include TransamNumericSanitizers
 
   # add any search params to this list.  Grouped based on their logical queries
-  attr_accessor :organization_id,
-                :asset_type_id,
-                :asset_subtype_id,
-                :manufacturer_id,
-                :location_id,
-                :keyword,
-                :estimated_condition_type_id,
-                :reported_condition_type_id,
-                :vendor_id,
-                :service_status_type_id,
-                :manufacturer_model,
-                :equipment_description,
-                :primary_fta_mode_type_id,
-                :secondary_fta_mode_type_id,
-                :asset_scope,
-                # Comparator-based (<=>)
-                :disposition_date,
-                :disposition_date_comparator,
-                :manufacture_year,
-                :manufacture_year_comparator,
-                :purchase_cost,
-                :purchase_cost_comparator,
-                :replacement_year,
-                :replacement_year_comparator,
-                :scheduled_replacement_year,
-                :scheduled_replacement_year_comparator,
-                :policy_replacement_year,
-                :policy_replacement_year_comparator,
-                :purchase_date,
-                :purchase_date_comparator,
-                :manufacture_date,
-                :manufacture_date_comparator,
-                :in_service_date,
-                :in_service_date_comparator,
-                :equipment_quantity,
-                :equipment_quantity_comparator,
-                :rebuild_year,
-                :rebuild_year_comparator,
-                # Checkboxes
-                :in_backlog,
-                :purchased_new,
-                :early_replacement,
-                :disposed_early
-
-
-
-  # Return the name of the form to display
-  def form_view
-    'asset_search_form'
-  end
-  # Return the name of the results table to display
-  def results_view
-    'asset_search_results_table'
-  end
-
-  def initialize(attributes = {})
-
-    super(attributes)
-
-    klass_id = remove_blanks(asset_type_id)
-
-    if klass_id.count == 1
-      @klass = Object.const_get AssetType.find_by(id: klass_id).class_name
-    else
-      @klass = Object.const_get Rails.application.config.asset_base_class_name
-    end
-  end
-
-  def to_s
-    queries(false).to_sql
-  end
-
-  def asset_type_class_name
-    @klass.to_s
-  end
-
-  def cache_variable_name
-    AssetsController::INDEX_KEY_LIST_VAR
-  end
-
-  def cache_params_variable_name
-    "asset_query_search_params_var"
-  end
-
-  def default_sort
-    'asset_tag'
+  def self.form_params
+    [ :organization_id,
+      :asset_type_id,
+      :asset_subtype_id,
+      :manufacturer_id,
+      :location_id,
+      :keyword,
+      :estimated_condition_type_id,
+      :reported_condition_type_id,
+      :vendor_id,
+      :service_status_type_id,
+      :manufacturer_model,
+      :equipment_description,
+      :asset_scope,
+      # Comparator-based (<=>)
+      :disposition_date,
+      :disposition_date_comparator,
+      :manufacture_year,
+      :manufacture_year_comparator,
+      :purchase_cost,
+      :purchase_cost_comparator,
+      :replacement_year,
+      :replacement_year_comparator,
+      :scheduled_replacement_year,
+      :scheduled_replacement_year_comparator,
+      :policy_replacement_year,
+      :policy_replacement_year_comparator,
+      :purchase_date,
+      :purchase_date_comparator,
+      :manufacture_date,
+      :manufacture_date_comparator,
+      :in_service_date,
+      :in_service_date_comparator,
+      :equipment_quantity,
+      :equipment_quantity_comparator,
+      # Checkboxes
+      :in_backlog,
+      :purchased_new,
+      :early_replacement,
+      :disposed_early
+    ]
   end
 
   private
@@ -331,19 +286,6 @@ class AssetSearcher < BaseSearcher
         @klass.where("quantity = ?", equipment_quantity)
       when "1" # Greater Than X
         @klass.where("quantity > ?", equipment_quantity)
-      end
-    end
-  end
-
-  def rebuild_year_conditions
-    unless rebuild_year.blank?
-      case rebuild_year_comparator
-      when "-1" # Less than X
-        @klass.where("rebuild_year < ?", rebuild_year)
-      when "0" # Equal to X
-        @klass.where("rebuild_year = ?", rebuild_year)
-      when "1" # Greater Than X
-        @klass.where("rebuild_year > ?", rebuild_year)
       end
     end
   end

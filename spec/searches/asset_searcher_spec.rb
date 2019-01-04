@@ -1,6 +1,6 @@
 # require 'rails_helper'
 #
-# RSpec.describe AssetSearcher, :type => :model do
+# RSpec.describe CoreAssetMapSearcher, :type => :model do
 #
 #   before(:all) do
 #     @test_org = create(:organization_basic)
@@ -12,7 +12,7 @@
 #   let(:asset) { create(:equipment_asset_basic_org, :organization => @test_org, :asset_type => @type_rule.asset_type, :asset_subtype => @subtype_rule.asset_subtype) }
 #   let(:lesser) { create(:equipment_asset_basic_org, :organization => @test_org, :asset_type => @type_rule.asset_type, :asset_subtype => @subtype_rule.asset_subtype) }
 #   let(:all_assets) { Asset.where('organization_id = ?', @test_org.id) }
-#   let(:searcher) { AssetSearcher.new(:organization_id => @test_org.id) }
+#   let(:searcher) { CoreAssetMapSearcher.new(:organization_id => @test_org.id) }
 #
 #   #------------------------------------------------------------------------------
 #   #
@@ -73,10 +73,10 @@
 #     expect(searcher.respond_to?(:purchase_cost)).to be true
 #     expect(searcher.data.count).to eq(all_assets.where('purchase_cost = ?', asset.purchase_cost).count)
 #
-#     searcher = AssetSearcher.new(:purchase_cost => asset.purchase_cost, :purchase_cost_comparator => '-1', :organization_id => asset.organization_id )
+#     searcher = CoreAssetMapSearcher.new(:purchase_cost => asset.purchase_cost, :purchase_cost_comparator => '-1', :organization_id => asset.organization_id )
 #     expect(searcher.data.count).to eq(all_assets.where('purchase_cost < ? AND assets.organization_id IN (?)', asset.purchase_cost, asset.organization_id).count)
 #
-#     searcher = AssetSearcher.new(:purchase_cost => asset.purchase_cost, :purchase_cost_comparator => '1', :organization_id => asset.organization_id )
+#     searcher = CoreAssetMapSearcher.new(:purchase_cost => asset.purchase_cost, :purchase_cost_comparator => '1', :organization_id => asset.organization_id )
 #     expect(searcher.data.count).to eq(all_assets.where('purchase_cost > ?', asset.purchase_cost).count)
 #   end
 #
@@ -93,7 +93,7 @@
 #     searcher.scheduled_replacement_year_comparator = '-1'
 #     expect(searcher.data.count).to eq(all_assets.where('scheduled_replacement_year < ?', asset.scheduled_replacement_year).count)
 #
-#     searcher = AssetSearcher.new(:scheduled_replacement_year => asset.scheduled_replacement_year, :scheduled_replacement_year_comparator => '1', :organization_id => asset.organization_id )
+#     searcher = CoreAssetMapSearcher.new(:scheduled_replacement_year => asset.scheduled_replacement_year, :scheduled_replacement_year_comparator => '1', :organization_id => asset.organization_id )
 #     expect(searcher.data.count).to eq(all_assets.where('scheduled_replacement_year > ?', asset.scheduled_replacement_year).count)
 #   end
 #
@@ -101,14 +101,14 @@
 #     asset.update!(:policy_replacement_year => 2020)
 #     lesser.update!(:policy_replacement_year => 2010)
 #
-#     searcher = AssetSearcher.new(:policy_replacement_year => asset.policy_replacement_year, :policy_replacement_year_comparator => '0', :organization_id => asset.organization_id )
+#     searcher = CoreAssetMapSearcher.new(:policy_replacement_year => asset.policy_replacement_year, :policy_replacement_year_comparator => '0', :organization_id => asset.organization_id )
 #     expect(searcher.respond_to?(:policy_replacement_year)).to be true
 #     expect(searcher.data).to eq(all_assets.where('policy_replacement_year = ?', asset.policy_replacement_year).to_a)
 #
-#     searcher = AssetSearcher.new(:policy_replacement_year => asset.policy_replacement_year, :policy_replacement_year_comparator => '-1', :organization_id => asset.organization_id )
+#     searcher = CoreAssetMapSearcher.new(:policy_replacement_year => asset.policy_replacement_year, :policy_replacement_year_comparator => '-1', :organization_id => asset.organization_id )
 #     expect(searcher.data.count).to eq(all_assets.where('policy_replacement_year < ?', asset.policy_replacement_year).count)
 #
-#     searcher = AssetSearcher.new(:policy_replacement_year => asset.policy_replacement_year, :policy_replacement_year_comparator => '1', :organization_id => asset.organization_id )
+#     searcher = CoreAssetMapSearcher.new(:policy_replacement_year => asset.policy_replacement_year, :policy_replacement_year_comparator => '1', :organization_id => asset.organization_id )
 #     expect(searcher.data).to eq(all_assets.where('policy_replacement_year > ?', asset.policy_replacement_year).to_a)
 #   end
 #
@@ -116,14 +116,14 @@
 #     asset.update!(:purchase_date => Date.today)
 #     lesser.update!(:purchase_date => Date.new(2000,1,1))
 #
-#     searcher = AssetSearcher.new(:purchase_date => asset.purchase_date, :purchase_date_comparator => '0', :organization_id => asset.organization_id )
+#     searcher = CoreAssetMapSearcher.new(:purchase_date => asset.purchase_date, :purchase_date_comparator => '0', :organization_id => asset.organization_id )
 #     expect(searcher.respond_to?(:purchase_date)).to be true
 #     expect(searcher.data.count).to eq(all_assets.where('purchase_date = ? AND assets.organization_id IN (?)', asset.purchase_date, asset.organization_id).count)
 #
-#     searcher = AssetSearcher.new(:purchase_date => asset.purchase_date, :purchase_date_comparator => '-1', :organization_id => asset.organization_id )
+#     searcher = CoreAssetMapSearcher.new(:purchase_date => asset.purchase_date, :purchase_date_comparator => '-1', :organization_id => asset.organization_id )
 #     expect(searcher.data.count).to eq(all_assets.where('purchase_date < ? AND assets.organization_id IN (?)', asset.purchase_date, asset.organization_id).count)
 #
-#     searcher = AssetSearcher.new(:purchase_date => asset.purchase_date, :purchase_date_comparator => '1', :organization_id => asset.organization_id )
+#     searcher = CoreAssetMapSearcher.new(:purchase_date => asset.purchase_date, :purchase_date_comparator => '1', :organization_id => asset.organization_id )
 #     expect(searcher.data.count).to eq(all_assets.where('purchase_date > ? AND assets.organization_id IN (?)', asset.purchase_date, asset.organization_id).count)
 #   end
 #
@@ -131,14 +131,14 @@
 #     asset.update!(:manufacture_year => 2010)
 #     lesser.update!(:manufacture_year => 2000)
 #
-#     searcher = AssetSearcher.new(:manufacture_year => asset.manufacture_year, :manufacture_year_comparator => '0', :organization_id => asset.organization_id )
+#     searcher = CoreAssetMapSearcher.new(:manufacture_year => asset.manufacture_year, :manufacture_year_comparator => '0', :organization_id => asset.organization_id )
 #     expect(searcher.respond_to?(:manufacture_year)).to be true
 #     expect(searcher.data.count).to eq(all_assets.where('manufacture_year = ? AND assets.organization_id IN (?)', asset.manufacture_year, asset.organization_id).count)
 #
-#     searcher = AssetSearcher.new(:manufacture_year => asset.manufacture_year, :manufacture_year_comparator => '-1', :organization_id => asset.organization_id )
+#     searcher = CoreAssetMapSearcher.new(:manufacture_year => asset.manufacture_year, :manufacture_year_comparator => '-1', :organization_id => asset.organization_id )
 #     expect(searcher.data.count).to eq(all_assets.where('manufacture_year < ? AND assets.organization_id IN (?)', asset.manufacture_year, asset.organization_id).count)
 #
-#     searcher = AssetSearcher.new(:manufacture_year => asset.manufacture_year, :manufacture_year_comparator => '1', :organization_id => asset.organization_id )
+#     searcher = CoreAssetMapSearcher.new(:manufacture_year => asset.manufacture_year, :manufacture_year_comparator => '1', :organization_id => asset.organization_id )
 #     expect(searcher.data.count).to eq(all_assets.where('manufacture_year > ? AND assets.organization_id IN (?)', asset.manufacture_year, asset.organization_id).count)
 #   end
 #
@@ -146,14 +146,14 @@
 #     asset.update!(:in_service_date => Date.today)
 #     lesser.update!(:in_service_date => Date.new(2000,1,1))
 #
-#     searcher = AssetSearcher.new(:in_service_date => asset.in_service_date, :in_service_date_comparator => '0', :organization_id => asset.organization_id )
+#     searcher = CoreAssetMapSearcher.new(:in_service_date => asset.in_service_date, :in_service_date_comparator => '0', :organization_id => asset.organization_id )
 #     expect(searcher.respond_to?(:in_service_date)).to be true
 #     expect(searcher.data.count).to eq(all_assets.where('in_service_date = ? AND assets.organization_id IN (?)', asset.in_service_date, asset.organization_id).count)
 #
-#     searcher = AssetSearcher.new(:in_service_date => asset.in_service_date, :in_service_date_comparator => '-1', :organization_id => asset.organization_id )
+#     searcher = CoreAssetMapSearcher.new(:in_service_date => asset.in_service_date, :in_service_date_comparator => '-1', :organization_id => asset.organization_id )
 #     expect(searcher.data.count).to eq(all_assets.where('in_service_date < ? AND assets.organization_id IN (?)', asset.in_service_date, asset.organization_id).count)
 #
-#     searcher = AssetSearcher.new(:in_service_date => asset.in_service_date, :in_service_date_comparator => '1', :organization_id => asset.organization_id )
+#     searcher = CoreAssetMapSearcher.new(:in_service_date => asset.in_service_date, :in_service_date_comparator => '1', :organization_id => asset.organization_id )
 #     expect(searcher.data.count).to eq(all_assets.where('in_service_date > ? AND assets.organization_id IN (?)', asset.in_service_date, asset.organization_id).count)
 #   end
 #
@@ -166,7 +166,7 @@
 #   it 'should be able to search by in backlog status' do
 #     asset.update!(:in_backlog => true)
 #
-#     searcher = AssetSearcher.new(:in_backlog => "1", :organization_id => asset.organization_id )
+#     searcher = CoreAssetMapSearcher.new(:in_backlog => "1", :organization_id => asset.organization_id )
 #     expect(searcher.respond_to?(:in_backlog)).to be true
 #
 #     expect(searcher.data.count).to eq(all_assets.where(in_backlog: true).count)
@@ -175,7 +175,7 @@
 #   it 'should be able to search by in purchased new' do
 #     asset.update!(:purchased_new => true)
 #
-#     searcher = AssetSearcher.new(:purchased_new => '1', :organization_id => asset.organization_id )
+#     searcher = CoreAssetMapSearcher.new(:purchased_new => '1', :organization_id => asset.organization_id )
 #     expect(searcher.respond_to?(:purchased_new)).to be true
 #
 #     expect(searcher.data.count).to eq(all_assets.where('purchased_new = ?', asset.purchased_new).count)
@@ -189,7 +189,7 @@
 #   it 'should be able to search by manufacturer model' do
 #     asset.update!(:manufacturer_model => 'test')
 #
-#     searcher = AssetSearcher.new(:manufacturer_model => asset.manufacturer_model, :organization_id => asset.organization_id )
+#     searcher = CoreAssetMapSearcher.new(:manufacturer_model => asset.manufacturer_model, :organization_id => asset.organization_id )
 #     expect(searcher.respond_to?(:manufacturer_model)).to be true
 #
 #     wildcard_search = "%#{asset.manufacturer_model}%"
