@@ -8,12 +8,15 @@
   - else
     - values = association_model.all
 
+  - if local_assigns.has_key? :where_sql
+    - values = values.where(where_sql)
+
   %ul.multi-select-list{data: {query_field_id: @query_field.id}}
     %li.select-all-items
       %label.checkbox
         = check_box_tag 'select-all', 1, true
         (Select All)
-    - association_model.pluck(query_association_class.id_field_name, query_association_class.display_field_name).each do |type_id, type_name|
+    - values.pluck(query_association_class.id_field_name, query_association_class.display_field_name).each do |type_id, type_name|
       %li.multi-select-item
         %label.checkbox
           = check_box_tag "#{query_association_class.table_name}[]", type_id, true
