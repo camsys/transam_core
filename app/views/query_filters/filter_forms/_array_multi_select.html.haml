@@ -1,0 +1,52 @@
+%ul.multi-select-list{data: {query_field_id: @query_field.id}}
+  %li.select-all-items
+    %label.checkbox
+      = check_box_tag 'select-all', 1, true
+      (Select All)
+  - array_values.each do |config|
+    %li.multi-select-item
+      %label.checkbox
+        = check_box_tag "infrastructure_directions[]", config[0], true
+        = config[1]
+
+:javascript
+  $(function() {
+    var query_field_id = #{@query_field.id};
+    var container_selector = '.multi-select-list[data-query-field-id=' + query_field_id + ']';
+
+    function getSelectedValues() {
+      var vals = [];
+      $(container_selector + ' .multi-select-item input[type=checkbox]:checked').each(function() {
+        vals.push("'" + $(this).val() + "'"); // assume these are strings
+      });
+
+      return vals;
+    }
+
+    function updateFilterDetails() {
+      var filter_details = {
+        query_field_id: query_field_id,
+        op: 'in',
+        value: getSelectedValues().join(',')
+      };
+
+      _saved_query.setFilterDetails(query_field_id, filter_details);
+    }
+
+    updateFilterDetails();
+
+    // update filter values
+    $(container_selector + ' .multi-select-item input[type=checkbox]').change(function() {
+      updateFilterDetails();
+    });
+
+    $(container_selector + ' .select-all-items input[type=checkbox]').change(function() {
+      if($(this).is(":checked")) {
+        $(this).parents('.multi-select-list').find('.multi-select-item input[type=checkbox]').prop('checked', true);
+      } else {
+        $(this).parents('.multi-select-list').find('.multi-select-item input[type=checkbox]').prop('checked', false);
+      }
+
+      updateFilterDetails();
+    });
+  });

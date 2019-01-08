@@ -174,22 +174,9 @@ transam_assets_category_fields = {
   ]
 }
 
-# serial_numbers table
-QueryAssetClass.find_or_create_by(table_name: 'serial_numbers', transam_assets_join: "left join serial_numbers on serial_numbers.identifiable_type = 'TransamAsset' and serial_numbers.identifiable_id = transam_assets.transam_assetible_id")
-serial_numbers_category_fields = {
-  'Identification & Classification': [
-    {
-      name: 'identification',
-      label: 'Vehicle Identification Number (VIN)',
-      filter_type: 'text'
-    }
-  ]
-}
-
 # seeding
 fields_data = {
-  'transam_assets': transam_assets_category_fields,
-  'serial_numbers': serial_numbers_category_fields
+  'transam_assets': transam_assets_category_fields
 }
 
 fields_data.each do |table_name, category_fields|
