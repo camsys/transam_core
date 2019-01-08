@@ -33,16 +33,7 @@ RSpec.describe Image, :type => :model do
   end
 
   it '#allowable_params' do
-    expect(Image.allowable_params).to eq([
-      :imagable_id,
-      :imagable_type,
-      :image,
-      :description,
-      :original_filename,
-      :content_type,
-      :file_size,
-      :created_by_id
-    ])
+    expect(Image.allowable_params).to eq([:base_imagable_type, :base_imagable_id, :global_base_imagable, :imagable_id, :imagable_type, :global...on, :name, :description, :exportable, :original_filename, :content_type, :file_size, :created_by_id])
   end
 
   it '.to_s' do
