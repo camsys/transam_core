@@ -304,3 +304,6 @@ unless SystemConfig.transam_module_loaded? :transit
     ActiveRecord::Base.connection.execute(statement)
   end
 end
+
+# asset query seeds
+require_relative File.join("seeds", 'asset_query_seeds')
