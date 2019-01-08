@@ -1,9 +1,36 @@
-.row
-  .col-md-8.col-md-offset-2.col-sm-10.col-sm-offset-1.col-xs-12
-    = simple_form_for([@imagable, Image.new],
-        :html => {:multipart => true, :class => 'form-vertical' },
-        :wrapper => :vertical_form,
-        :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}) do |f|
-      = f.input :image
-      = f.input :description, :as => :text, :input_html => { :rows => 3 }, :placeholder => 'Enter a brief description of the image...'
-      = f.submit "Add image", :class => 'btn btn-primary'
+= render(:partial => 'shared/form_errors', :locals => {:obj => @image}) unless @image.errors.empty?
+
+- if @form_view.blank?
+  .row
+    .col-md-8.col-md-offset-2.col-sm-10.col-sm-offset-1.col-xs-12
+      = simple_form_for([@imagable, Image.new],
+            :url => inventory_images_path(@imagable, Image.new),
+            :html => {:multipart => true, :class => 'form-vertical photo_form' },
+            :wrapper => :vertical_form,
+            :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}) do |f|
+
+        = f.input :name
+        = f.input :image, :required => true, :input_html => { :extension => "png,jpg,jpeg,gif" }
+        = f.input :description, :as => :text, :placeholder => 'Enter a brief description of the photo...', :required => true, :input_html => { :minlength => 10, :maxlength => 254 }
+        = f.input :exportable
+        = f.submit "Save Photo", :class => 'btn btn-primary', :id => 'image_submit'
+- else
+  = render partial: @form_view
+
+:javascript
+  // Hide the processing div and show the form
+  $('#processing-photo').hide();
+  $('#photos').show();
+
+  $.extend(jQuery.validator.messages, {
+      extension: "Please attach a file with a valid extension {0}."
+  });
+
+  // jquery validations
+  $('.photo_form').validate({
+    submitHandler: function(form) {
+      $('#processing-photo').show();
+      $('#photos').hide();
+      form.submit();
+    }
+  });

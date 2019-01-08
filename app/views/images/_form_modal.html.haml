@@ -1,0 +1,9 @@
+.modal-dialog.modal-lg
+  .modal-content
+    .modal-header
+      %button.close{:data => {:dismiss => "modal"}}
+        x
+      %h3.modal-title
+        = @image.new_record? ? 'New Image' : 'Update Image'
+    .modal-body
+      = render 'form'

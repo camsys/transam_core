@@ -1,42 +1,15 @@
+:ruby
+  table_dom_id = SecureRandom.hex
+
 #processing-photo
   = render :partial => 'shared/running_process', :locals => {:message => "Uploading photo. This process might take a while."}
 #photos
   .row
     .col-md-12
-      - if @asset.images.empty?
-        %p There are no photos for this asset.
-      - else
-        = render :partial => 'shared/images', :locals => {:images => @asset.images}
+      = render :partial => 'shared/images', :locals => {:imagable => @asset.transam_asset}
+
 
   - if can? :create, @asset.images.build
-    .row
-      .col-md-12
-        %fieldset
-          %legend Add Photo
-          = simple_form_for([@asset, Image.new],
-              :url => inventory_images_path(@asset, Image.new),
-              :html => {:multipart => true, :class => 'form-vertical photo_form' },
-              :wrapper => :vertical_form,
-              :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}) do |f|
-            = f.input :image, :required => true, :input_html => { :extension => "png,jpg,jpeg,gif" }
-            = f.input :description, :as => :text, :placeholder => 'Enter a brief description of the photo...', :required => true, :input_html => { :minlength => 10, :maxlength => 254 }
-            = f.submit "Add Photo", :class => 'btn btn-primary', :id => 'image_submit'
-
-:javascript
-
-    // Hide the processing div and show the form
-    $('#processing-photo').hide();
-    $('#photos').show();
-
-    $.extend(jQuery.validator.messages, {
-        extension: "Please attach a file with a valid extension {0}."
-    });
-
-    // jquery validations
-    $('.photo_form').validate({
-      submitHandler: function(form) {
-        $('#processing-photo').show();
-        $('#photos').hide();
-        form.submit();
-      }
-    });
+    = link_to new_inventory_image_path(@asset, form_view: 'assets/photo_form'), :remote => true, :class => "btn btn-primary btn-lg" do
+      %i.fa.fa-plus
+      New Photo

@@ -1,17 +1,56 @@
-%ul.media-list
-  - images.each do |p|
-    %li.media
-      .media-left
-        = link_to image_tag(p.image.url(:thumb)), p.image.url,  :class => "img-responsive gallery-image", :data => {:lightbox => "gallery"}
-      .media-body
-        = format_as_text(p.description)
-        %p.title.text-muted.small= "#{p.creator.name}<br/>#{format_as_date_time(p.created_at)}".html_safe
-      .media-right
-        .btn-group-vertical.btn-group-xs{:role => "group"}
-          = link_to download_image_path(p), :class => "btn btn-primary" do
-            %i.fa.fa-download
-            Download
-          - if can? :destroy, p
-            = link_to p, :method => :delete, :class => "btn btn-warning", :data => { :confirm => 'Are you sure you want to remove this image?' } do
-              %i.fa.fa-trash
-              Delete
+.table-responsive
+  %table.table.table-hover{:id => table_dom_id,
+          :data => {:toggle => 'table',
+          :url => images_path(global_base_imagable: imagable.to_global_id, format: :json),
+          :card_view => "false",
+          :pagination => 'true',
+          :sort_order => 'asc',
+          :sortable => 'true',
+          :side_pagination => 'server',
+          :show_pagination_switch => 'true',
+          :page_number => '1',
+          :page_list => "[5, 10, 20, 50, 100, 200]",
+          :page_size => current_user.num_table_rows,
+          :search => 'false',
+          :show_columns => 'true',
+          :toolbar => "#table_actions",
+          :row_style => 'row_style',
+          :click_to_select => 'true',
+          :show_export => 'true',
+          :id_field => 'object_key',
+          :export_types => "['csv', 'txt', 'excel']",
+          :state_save => 'true',
+          :state_save_id_table => "inventory_images_id",
+          :state_save_expire => "1y",
+          :maintain_selected => 'true',
+          :single_select => 'false'}}
+    %thead
+      %tr
+        %th.center{:data => {:field => :link_image, :sortable => 'false'}} Photo
+        - unless imagable.images.distinct.where.not(classification: [nil, '']).pluck(:classification).empty? # if some images are categorized
+          %th.center{:data => {:field => :classification, :sortable => 'true'}} Type
+        %th.center{:data => {:field => :name, :sortable => 'true'}} Name
+        %th.center{:data => {:field => :description, :sortable => 'true'}} Description
+        %th.center{:data => {:field => :original_filename, :sortable => 'true'}} File Name
+        %th.center{:data => {:field => :exportable, :formatter => :raw_boolean_formatter, :sortable => 'true'}} Exportable
+        %th.center{:data => {:field => :creator, :sortable => 'true'}} Creator
+        %th.center{:data => {:field => :created_at, :sortable => 'true'}} Created On
+        %th.center{:data => {:field => :object_key, :sortable => 'true', :formatter => :image_actions_formatter}} Actions
+
+= render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :allow_row_click => 0}
+
+:javascript
+
+    $(document).ready(function() {
+      $('#' + '#{table_dom_id}').bootstrapTable('resetWidth');
+    });
+
+    function image_actions_formatter(value, data) {
+
+      if ('#{can? :create, @asset.images.build}' == 'true'){
+        return '<div class="btn-group-vertical btn-group-xs" role="group"><a class="btn btn-primary" href="/images/'+ value + '/download"><i class="fa fa-download"></i>Download</a><a class="btn btn-warning" data-confirm="Are you sure you want to remove this image?" rel="nofollow" data-method="delete" href="/images/'+ value + '"><i class="fa fa-trash"></i>Delete</a></div>';
+      } else {
+        return '<div class="btn-group-vertical btn-group-xs" role="group"><a class="btn btn-primary" href="/images/'+ value + '/download"><i class="fa fa-download"></i>Download</a></div>';
+      }
+
+    }

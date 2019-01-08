@@ -32,6 +32,7 @@ class Image < ActiveRecord::Base
   before_save       :update_file_attributes
 
   # Associations
+  belongs_to :base_imagable, :polymorphic => true
   belongs_to :imagable,  :polymorphic => true
 
   # Each comment was created by a user
@@ -47,10 +48,17 @@ class Image < ActiveRecord::Base
 
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
+    :base_imagable_type,
+    :base_imagable_id,
+    :global_base_imagable,
     :imagable_id,
     :imagable_type,
+    :global_imagable,
     :image,
+    :classification,
+    :name,
     :description,
+    :exportable,
     :original_filename,
     :content_type,
     :file_size,
@@ -87,7 +95,7 @@ class Image < ActiveRecord::Base
   end
 
   def name
-    original_filename
+    read_attribute(:name).present? ? read_attribute(:name) : original_filename
   end
 
   def searchable_fields
@@ -104,6 +112,21 @@ class Image < ActiveRecord::Base
     end
   end
 
+  # https://neanderslob.com/2015/11/03/polymorphic-associations-the-smart-way-using-global-ids/
+  # following this article we set fta_type based on the fta asset class ie the model
+  def global_base_imagable
+    self.base_imagable.to_global_id if self.base_imagable.present?
+  end
+  def global_base_imagable=(imagable)
+    self.base_imagable=GlobalID::Locator.locate imagable
+  end
+  def global_imagable
+    self.imagable.to_global_id if self.imagable.present?
+  end
+  def global_imagable=(imagable)
+    self.imagable=GlobalID::Locator.locate imagable
+  end
+
   #-----------------------------------------------------------------------------
   #
   # Protected Methods
@@ -113,7 +136,7 @@ class Image < ActiveRecord::Base
 
   # Set resonable defaults for a new asset event
   def set_defaults
-
+    self.exportable = self.exportable.nil? ? false : self.exportable
   end
 
   #-----------------------------------------------------------------------------

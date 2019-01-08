@@ -8,8 +8,32 @@ class ImagesController < NestedResourceController
   # GET /images.json
   def index
 
-    @imagable = find_resource
-    @images = @imagable.images
+    if params[:global_base_imagable]
+      @imagable = GlobalID::Locator.locate params[:global_base_imagable]
+      @images = Image.where(base_imagable: @imagable)
+    else
+      @imagable = find_resource
+      @images = @imagable.images
+    end
+
+    @images = @images.order(params[:sort] => params[:order])if params[:sort].present? && params[:order].present?
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.json {
+        render :json => {
+            :total => @images.count,
+            :rows => @images.limit(params[:limit]).offset(params[:offset]).collect{ |u|
+              u.as_json.merge!({
+                link_image: view_context.link_to(view_context.image_tag(u.image.url(:thumb)), u.image.url,  :class => "img-responsive gallery-image", :data => {:lightbox => "gallery"}),
+                imagable_to_s: u.imagable.to_s,
+                creator: u.creator.to_s
+               })
+            }
+        }
+      }
+
+    end
 
   end
 
@@ -17,6 +41,10 @@ class ImagesController < NestedResourceController
   def new
     @image = Image.new
     @imagable = find_resource
+
+    puts @imagable.inspect
+
+    @form_view = params[:form_view]
 
   end
 
@@ -44,8 +72,15 @@ class ImagesController < NestedResourceController
   # POST /images
   # POST /images.json
   def create
-    @imagable = find_resource
-    @image = @imagable.images.build(form_params)
+
+    @image = Image.new(form_params)
+    if @image.imagable.nil?
+      @imagable = find_resource
+      @image.imagable = @imagable
+    end
+
+    @image.base_imagable = @image.imagable if @image.base_imagable.nil?
+
     @image.creator = current_user
     
     respond_to do |format|

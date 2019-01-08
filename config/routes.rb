@@ -164,7 +164,7 @@ Rails.application.routes.draw do
       get 'download'
     end
   end
-  resources :images,      :only => [:create, :update, :edit, :new, :destroy] do
+  resources :images do
     member do
       get 'download'
     end
