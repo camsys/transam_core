@@ -4,6 +4,10 @@
       %button.close{:data => {:dismiss => "modal"}}
         x
       %h3.modal-title
-        = @image.new_record? ? 'New Image' : 'Update Image'
+        = @image.new_record? ? 'Add Photo' : 'Update Photo'
     .modal-body
       = render 'form'
+    .modal-footer
+      .row
+        = f.button :submit, "Save", :class => 'btn btn-primary'
+        %button.btn.btn-default{:data => {:dismiss => "modal"}} Cancel
