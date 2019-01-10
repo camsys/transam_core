@@ -197,6 +197,7 @@ system_config_extensions = [
     {class_name: Rails.application.config.asset_base_class_name, extension_name: 'TransamKeywordSearchable', active: true},
     {class_name: 'User', extension_name: 'TransamKeywordSearchable', active: true},
     {class_name: 'Vendor', extension_name: 'TransamKeywordSearchable', active: true},
+    {class_name: 'AssetMapSearcher', extension_name: 'CoreAssetMapSearchable', active: true}
 ]
 
 
