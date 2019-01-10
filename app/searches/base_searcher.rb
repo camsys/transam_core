@@ -81,7 +81,6 @@ class BaseSearcher
     else
       conditions = (private_methods.grep(/_conditions$/) - [:organization_conditions])
     end
-
     conditions.map { |m| send(m) }.compact
   end
 

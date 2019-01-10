@@ -1,7 +1,7 @@
-# Inventory searcher.
+# Core asset map searcher.
 # Designed to be populated from a search form using a new/create controller model.
 #
-class CoreAssetMapSearcher
+class CoreAssetMapSearcher < AssetMapSearcher
 
   # Include the numeric sanitizers mixin
   include TransamNumericSanitizers
