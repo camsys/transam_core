@@ -6,7 +6,7 @@ module CoreAssetMapSearchable
 
   included do
 
-    attr_accessor :organization_id, :asset_subtype_id
+    attr_accessor :organization_id, :asset_subtype_id, :asset_tag
 
   end
 
@@ -37,6 +37,10 @@ module CoreAssetMapSearchable
   def asset_subtype_id_conditions
     clean_asset_subtype_id = remove_blanks(asset_subtype_id)
     @klass.where(asset_subtype_id: clean_asset_subtype_id) unless clean_asset_subtype_id.empty?
+  end
+
+  def asset_tag_conditions
+    @klass.where(asset_tag: asset_tag) unless asset_tag.blank?    
   end
 
 end
