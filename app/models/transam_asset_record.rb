@@ -77,6 +77,12 @@ class TransamAssetRecord < ActiveRecord::Base
 
     transferred_asset.save(:validate => false)
 
+    if self.serial_numbers.count > 0
+      self.serial_numbers.each do |serial_num|
+        transferred_asset.serial_numbers << serial_num.dup
+      end
+    end
+
     # create last condition, status
     transferred_asset.condition_updates << self.condition_updates.last.dup if self.condition_updates.count > 0
     transferred_asset.service_status_updates << self.service_status_updates.last.dup if self.service_status_updates.count > 0
