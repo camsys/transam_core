@@ -1,6 +1,4 @@
--# this is essentially the same script in shared/xeditable_scripts
--# leaving duplicate for now since this was written first and want to limit regression issues
--# only thing different is the JS to update subheader if fields subheader calls are updated
+-# need to pass an obj which is the model instance you are updating
 
 :javascript
 
@@ -22,14 +20,6 @@
       validate: function(value) {
         if($(this).hasClass('required')) {
           if($.trim(value) == '') return 'This field is required';
-        }
-      },
-      success: function(response, newValue) {
-        // if related to subheader, then refresh
-        if($('.subheader_' + $(this).attr('id')).length > 0) {
-          $.ajax({
-            url: "#{asset_path(@asset)}/get_subheader"
-          });
         }
       },
       error: function() {
@@ -55,7 +45,7 @@
 
     $('.editable-field.currency-number').editable(currency_xeditable_options);
 
-    disabled = "#{cannot?(:update, @asset) ? 'disable' : ''}";
+    disabled = "#{cannot?(:update, obj) ? 'disable' : ''}";
     if (disabled.length > 0) {
       $('.editable-field').editable(disabled);
     }
