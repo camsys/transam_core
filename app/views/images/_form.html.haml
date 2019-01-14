@@ -9,11 +9,11 @@
             :wrapper => :vertical_form,
             :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}) do |f|
 
-        = f.input :name
+        -#= f.input :name
         = f.input :image, :required => true, :input_html => { :extension => "png,jpg,jpeg,gif" }
-        = f.input :description, :as => :text, :placeholder => 'Enter a brief description of the photo...', :required => true, :input_html => { :minlength => 10, :maxlength => 254 }
-        = f.input :exportable
-        = f.submit "Save Photo", :class => 'btn btn-primary', :id => 'image_submit'
+        = f.input :description, :as => :string, :placeholder => 'Enter a brief description of the photo...', :required => true, :input_html => { :minlength => 10, :maxlength => 100 }
+        = f.input :exportable, :as => :radio_buttons, label: 'Use Photo', checked: true
+        = f.submit "Save", :class => 'btn btn-primary', :id => 'image_submit'
 - else
   = render partial: @form_view
 

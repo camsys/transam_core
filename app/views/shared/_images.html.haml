@@ -10,7 +10,7 @@
           :sort_order => 'asc',
           :sortable => 'true',
           :side_pagination => 'server',
-          :show_pagination_switch => 'true',
+          :show_pagination_switch => 'false',
           :page_number => '1',
           :page_list => "[5, 10, 20, 50, 100, 200]",
           :page_size => current_user.num_table_rows,
@@ -32,7 +32,7 @@
         %th.center{:data => {:field => :link_image, :sortable => 'false'}} Photo
         - unless imagable.images.distinct.where.not(classification: [nil, '']).pluck(:classification).empty? # if some images are categorized
           %th.center{:data => {:field => :classification, :sortable => 'true'}} Type
-        %th.center{:data => {:field => :name, :sortable => 'true'}} Name
+        %th.center{:data => {:field => :original_filename, :sortable => 'true'}} Name
         %th.center{:data => {:field => :description, :sortable => 'true'}} Description
         %th.center{:data => {:field => :original_filename, :sortable => 'true'}} File Name
         %th.center{:data => {:field => :exportable, :formatter => :raw_boolean_formatter, :sortable => 'true'}} Exportable
