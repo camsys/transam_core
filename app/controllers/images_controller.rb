@@ -15,8 +15,11 @@ class ImagesController < NestedResourceController
       @imagable = find_resource
       @images = @imagable.images
     end
-
-    @images = @images.order(params[:sort] => params[:order])if params[:sort].present? && params[:order].present?
+    if params[:sort].present? && params[:order].present?
+      @images = @images.order(params[:sort] => params[:order])
+    else
+      @images = @images.order(created_at: :desc)
+    end
 
     respond_to do |format|
       format.html # index.html.erb
@@ -25,7 +28,7 @@ class ImagesController < NestedResourceController
             :total => @images.count,
             :rows => @images.limit(params[:limit]).offset(params[:offset]).collect{ |u|
               u.as_json.merge!({
-                link_image: view_context.link_to(view_context.image_tag(u.image.url(:thumb)), u.image.url,  :class => "img-responsive gallery-image", :data => {:lightbox => "gallery"}),
+                link_image: view_context.link_to(view_context.image_tag(u.image.url(:thumb)), u.image.url,  :class => "img-responsive gallery-image", :data => {:lightbox => "gallery"}, :title => u.original_filename),
                 imagable_to_s: u.imagable.to_s,
                 creator: u.creator.to_s
                })
