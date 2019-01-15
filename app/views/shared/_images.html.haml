@@ -29,16 +29,16 @@
           :single_select => 'false'}}
     %thead
       %tr
-        %th.center{:data => {:field => :link_image, :sortable => 'false'}} Photo
+        %th.left{:data => {:field => :link_image, :sortable => 'true', :valign => 'middle'}} Photo
         - unless imagable.images.distinct.where.not(classification: [nil, '']).pluck(:classification).empty? # if some images are categorized
-          %th.center{:data => {:field => :classification, :sortable => 'true'}} Type
-        %th.center{:data => {:field => :original_filename, :sortable => 'true'}} Name
-        %th.center{:data => {:field => :description, :sortable => 'true'}} Description
-        %th.center{:data => {:field => :original_filename, :sortable => 'true'}} File Name
-        %th.center{:data => {:field => :exportable, :formatter => :raw_boolean_formatter, :sortable => 'true'}} Exportable
-        %th.center{:data => {:field => :creator, :sortable => 'true'}} Creator
-        %th.center{:data => {:field => :created_at, :sortable => 'true'}} Created On
-        %th.center{:data => {:field => :object_key, :sortable => 'true', :formatter => :image_actions_formatter}} Actions
+          %th.left{:data => {:field => :classification, :sortable => 'true', :valign => 'middle'}} Type
+        %th.left{:data => {:field => :description, :sortable => 'true', :valign => 'middle'}} Description
+        %th.left{:data => {:field => :classification, :sortable => 'true', :formatter => :imagable_formatter, :valign => 'middle'}} Element
+        %th.left{:data => {:field => :classification, :sortable => 'true', :formatter => :imagable_formatter, :valign => 'middle'}} Defect
+        %th.left{:data => {:field => :creator, :sortable => 'true', :valign => 'middle'}} Creator
+        %th.left{:data => {:field => :created_at, :sortable => 'true', :formatter => :date_time_formatter, :valign => 'middle'}} Created On
+        %th.left{:data => {:field => :exportable, :formatter => :raw_boolean_string_formatter, :sortable => 'true', :valign => 'middle'}} Use Photo
+        %th.center{:data => {:field => :object_key, :sortable => 'true', :formatter => :image_actions_formatter, :valign => 'middle'}} Actions
 
 = render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :allow_row_click => 0}
 
@@ -48,12 +48,34 @@
       $('#' + '#{table_dom_id}').bootstrapTable('resetWidth');
     });
 
+    function imagable_formatter(value, data){
+      if ((value == 'Element') || (value == 'Defect')) {
+        return data.imagable_to_s;
+      }
+    };
+
     function image_actions_formatter(value, data) {
 
       if ('#{can? :create, @asset.images.build}' == 'true'){
-        return '<div class="btn-group-vertical btn-group-xs" role="group"><a class="btn btn-primary" href="/images/'+ value + '/download"><i class="fa fa-download"></i>Download</a><a class="btn btn-warning" data-confirm="Are you sure you want to remove this image?" rel="nofollow" data-method="delete" href="/images/'+ value + '"><i class="fa fa-trash"></i>Delete</a></div>';
+        return '<div class="btn-group-vertical btn-group-xs" role="group"><a class="btn btn-primary" href="/images/'+ value + '/download" style="margin-bottom:10px"><i class="fa fa-download" style="padding-right:5px"></i>Download</a><a class="btn btn-warning" data-confirm="Are you sure you want to remove this image?" rel="nofollow" data-method="delete" href="/images/'+ value + '"><i class="fa fa-trash" style="padding-right:5px"></i>Delete</a></div>';
       } else {
-        return '<div class="btn-group-vertical btn-group-xs" role="group"><a class="btn btn-primary" href="/images/'+ value + '/download"><i class="fa fa-download"></i>Download</a></div>';
+        return '<div class="btn-group-vertical btn-group-xs" role="group"><a class="btn btn-primary" href="/images/'+ value + '/download"><i class="fa fa-download" style="padding-right:5px"></i>Download</a></div>';
       }
 
+    };
+
+    function date_time_formatter(value) {
+    if (value) {
+      return moment(value).format('MM/DD/YYYY hh:mm:ss A');
+    } else {
+      return value;
     }
+  };
+
+  function raw_boolean_string_formatter(value) {
+    if (value) {
+      return 'Yes';
+    } else {
+      return 'No';
+    }
+  }
