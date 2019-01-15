@@ -12,7 +12,7 @@
         -#= f.input :name
         = f.input :image, :required => true, :input_html => { :extension => "png,jpg,jpeg,gif" }
         = f.input :description, :as => :string, :placeholder => 'Enter a brief description of the photo...', :required => true, :input_html => { :minlength => 10, :maxlength => 100 }
-        = f.input :exportable, :as => :radio_buttons, label: 'Use Photo', checked: true
+        = f.input :exportable, :as => :radio_buttons, label: 'Exportable', checked: true
         = f.submit "Save", :class => 'btn btn-primary', :id => 'image_submit'
 - else
   = render partial: @form_view
