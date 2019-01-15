@@ -3,7 +3,7 @@ class ImageUploader < TransamAbstractUploader
   include CarrierWave::RMagick
 
   version :thumb do
-    process :resize_to_fill => [150, 150]
+    process :resize_to_fill => [145, 100]
   end
 
   def store_dir
