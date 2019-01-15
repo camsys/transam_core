@@ -7,6 +7,3 @@
         = @image.new_record? ? 'Add Photo' : 'Update Photo'
     .modal-body
       = render 'form'
-    .modal-footer
-      .row
-        %button.btn.btn-default{:data => {:dismiss => "modal"}} Cancel
