@@ -7,6 +7,6 @@
 
 
   - if can? :create, @asset.images.build
-    = link_to new_inventory_image_path(@asset, form_view: 'assets/photo_form'), :remote => true, :class => "btn btn-primary btn-lg" do
+    = link_to new_inventory_image_path(@asset), :remote => true, :class => "btn btn-primary btn-lg" do
       %i.fa.fa-plus
       New Photo
