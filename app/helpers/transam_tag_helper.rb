@@ -110,7 +110,7 @@ module TransamTagHelper
   %label.control-label{class: '#{classes}'}
     #{label || field.to_s.titleize}
   .display-value
-    %a.editable-field{href:'#', id: '#{field}', class: '#{classes}', data: {emptytext: ' - ', name: 'asset[#{field}]', value: '#{escape_javascript(asset.send(field).to_s)}', type: '#{type}', placeholder: '#{required ? 'Required' : ''}', url: '#{asset_path}'#{extras}}}
+    %a.editable-field{href:'#', id: '#{field}', class: '#{classes}', data: {emptytext: ' - ', name: '#{asset.class.base_class.name.underscore}[#{field}]', value: '#{escape_javascript(asset.send(field).to_s)}', type: '#{type}', placeholder: '#{required ? 'Required' : ''}', url: '#{asset_path}'#{extras}}}
     #{suffix}
                               ")
     return engine.render.html_safe
@@ -131,7 +131,7 @@ module TransamTagHelper
       # The source will wind up being parsed twice by X-editable, so embedded apostrophes
       # have to be doubly escaped.
       source = include_blank ? "{value: '', text: ''}," : ''
-      source += collection.map{|pair| "{value: '#{pair[0]}', text: '#{pair[1].gsub("'"){"\\\\'"}}'}"}.join(',')
+      source += collection.map{|pair| "{value: '#{pair[0]}', text: '#{pair[1].to_s.gsub("'"){"\\\\'"}}'}"}.join(',')
     end
 
     asset_path = eval("#{asset.class.base_class.name.underscore}_path(id: '#{asset.object_key}')")
@@ -141,7 +141,7 @@ module TransamTagHelper
   %label.control-label
     #{label || field.to_s.titleize}
   .display-value
-    %a.editable-field{href:'#', id: '#{field}', data: {emptytext: ' - ', name: 'asset[#{field_name}]', value: '#{value}', type: '#{type}', url: '#{asset_path}', source: \"#{url || "[#{source}]"}\", sourceCache: '#{url.nil?}'}}
+    %a.editable-field{href:'#', id: '#{field}', data: {emptytext: ' - ', name: '#{asset.class.base_class.name.underscore}[#{field_name}]', value: '#{value}', type: '#{type}', url: '#{asset_path}', source: \"#{url || "[#{source}]"}\", sourceCache: '#{url.nil?}'}}
 ")
     return engine.render.html_safe
   end
@@ -194,7 +194,7 @@ module TransamTagHelper
       # The source will wind up being parsed twice by X-editable, so embedded apostrophes
       # have to be doubly escaped.
       source = include_blank ? "{value: '', text: ''}," : ''
-      source += collection.map{|pair| "{value: '#{pair[0]}', text: '#{pair[1].gsub("'"){"\\\\'"}}'}"}.join(',')
+      source += collection.map{|pair| "{value: '#{pair[0]}', text: '#{pair[1].to_s.gsub("'"){"\\\\'"}}'}"}.join(',')
     end    
     engine = Haml::Engine.new("
 ##{field}_group.form-group
