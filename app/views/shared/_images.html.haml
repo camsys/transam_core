@@ -33,11 +33,9 @@
         - unless imagable.images.distinct.where.not(classification: [nil, '']).pluck(:classification).empty? # if some images are categorized
           %th.left{:data => {:field => :classification, :sortable => 'true', :valign => 'middle'}} Type
         %th.left{:data => {:field => :description, :sortable => 'true', :valign => 'middle'}} Description
-        %th.left{:data => {:field => :classification, :sortable => 'true', :formatter => :imagable_formatter, :valign => 'middle'}} Element
-        %th.left{:data => {:field => :classification, :sortable => 'true', :formatter => :imagable_formatter, :valign => 'middle'}} Defect
         %th.left{:data => {:field => :creator, :sortable => 'true', :valign => 'middle'}} Creator
         %th.left{:data => {:field => :created_at, :sortable => 'true', :formatter => :date_time_formatter, :valign => 'middle'}} Created On
-        %th.left{:data => {:field => :exportable, :formatter => :raw_boolean_string_formatter, :sortable => 'true', :valign => 'middle'}} Use Photo
+        %th.left{:data => {:field => :exportable, :formatter => :raw_boolean_string_formatter, :sortable => 'true', :valign => 'middle'}} Exportable
         %th.center{:data => {:field => :object_key, :sortable => 'true', :formatter => :image_actions_formatter, :valign => 'middle'}} Actions
 
 = render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :allow_row_click => 0}
