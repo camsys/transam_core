@@ -116,10 +116,7 @@
 
     // reset button
     $('.filters-panel .reset-button').click(function() {
-      var category_id = $('.selected-filters-panel').data('category-id');
-      _saved_query.getSelectedFilterFieldIdsByCategory(category_id).forEach(function(field_id) {
-        $('.filter-details-panel[data-field-id=' + field_id + ']').remove();
-      });
+      $('.filter-details-panel[data-non-removable!=1]').remove();
       _saved_query.resetFilters();
       $('.selected-filters-panel .filter-list li').remove();
       $('.available-filters-panel .filter-list li').show();

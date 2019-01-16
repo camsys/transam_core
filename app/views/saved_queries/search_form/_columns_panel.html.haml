@@ -125,6 +125,7 @@
 
     // reset button
     $('.columns-panel .reset-button').click(function() {
+      $('.columns-container span').remove();
       _saved_query.resetOutputColumns();
       $('.selected-columns-panel .column-list li').remove();
       $('.available-columns-panel .column-list li').show();

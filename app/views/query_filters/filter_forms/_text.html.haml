@@ -13,7 +13,7 @@
     function updateFilterValue() {
       var filter_value = $('.filter-details-panel[data-field-id=' + query_field_id + '] input').val();
       var filter_op = $('.filter-details-panel[data-field-id=' + query_field_id + '] select[name=op]').val();
-      if(filter_value && filter_value != 0) {
+      if(filter_value && filter_value !== 0) {
         var filter_details = {
           query_field_id: query_field_id,
           op: filter_op,
