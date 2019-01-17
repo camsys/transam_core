@@ -1,6 +1,6 @@
 class SavedQueriesController < OrganizationAwareController
 
-  before_action :set_saved_query, only: [:show, :edit, :update, :destroy]
+  before_action :set_saved_query, only: [:show, :edit, :update, :destroy, :export]
 
   add_breadcrumb "Home", :root_path
 
@@ -25,6 +25,8 @@ class SavedQueriesController < OrganizationAwareController
   # GET /saved_queries/1
   # GET /saved_queries/1.json
   def show
+    add_breadcrumb "Query", saved_queries_url
+    add_breadcrumb @query.name
 
     respond_to do |format|
       format.html 
@@ -42,6 +44,14 @@ class SavedQueriesController < OrganizationAwareController
     @query.organization_list = @organization_list
   end
 
+  def save_as
+    if params[:id].blank?
+      @query = SavedQuery.new
+    else
+      @query = SavedQuery.find_by_object_key(params[:id])
+    end
+  end
+
   # GET /saved_queries/1/edit
   def edit
 
@@ -50,15 +60,15 @@ class SavedQueriesController < OrganizationAwareController
   # POST /saved_queries
   # POST /saved_queries.json
   def create
-
     @query = SavedQuery.new(saved_query_params)
     @query.organization_list = @organization_list
     @query.created_by_user = current_user
-
+    @query.parse_query_fields saved_query_params[:query_field_ids], params[:saved_query][:query_filters].map{|r| JSON.parse(r)}
+    
     respond_to do |format|
       if @query.save
         notify_user :notice, 'query was successfully saved.'
-        format.html { redirect_back(fallback_location: root_path) }
+        format.html { redirect_to saved_query_path(@query) }
         format.json { render :show, status: :created, location: @query }
       else
         notify_user :alert, "Cannot save this query because: " + @query.errors.full_messages.join(';')
@@ -71,11 +81,14 @@ class SavedQueriesController < OrganizationAwareController
   # PATCH/PUT /saved_queries/1
   # PATCH/PUT /saved_queries/1.json
   def update
+    @query.assign_attributes saved_query_params
     @query.updated_by_user = current_user
+    @query.organization_list = @organization_list
+    @query.parse_query_fields saved_query_params[:query_field_ids], params[:saved_query][:query_filters].map{|r| JSON.parse(r)}
     respond_to do |format|
-      if @query.update(saved_query_params)
+      if @query.save
         notify_user :notice, 'Query was successfully updated.'
-        format.html { redirect_back(fallback_location: root_path) }
+        format.html { redirect_to saved_query_path(@query) }
         format.json { render :show, status: :ok, location: @query }
       else
         notify_user :alert, "Cannot update this query because: " + @query.errors.full_messages.join(';')
@@ -106,14 +119,24 @@ class SavedQueriesController < OrganizationAwareController
     render json: { count: data_count }
   end
 
-  # GET /saved_queries/export
+  # GET /saved_queries/export_unsaved
   #   Use GET request in order to download file, POST won't work
   #   This also changes param structure, therefore, need to do some customized param parsing
-  def export
+  def export_unsaved
     @query = SavedQuery.new
     @query.organization_list = @organization_list
     filter_data_array = saved_query_params[:query_filters].to_h.map{|idx,filter_data| filter_data} # a bit dirty, but needed
     @query.parse_query_fields saved_query_params[:query_field_ids], filter_data_array
+    respond_to do |format|
+      format.html
+      format.csv do 
+        render_csv("query_results_#{Time.current.strftime('%Y%m%d%H%M')}.csv")
+      end
+    end
+  end
+
+  def export
+    @query.organization_list = @organization_list
     respond_to do |format|
       format.html
       format.csv do 

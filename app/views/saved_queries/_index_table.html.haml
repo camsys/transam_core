@@ -2,6 +2,11 @@
   table_dom_id = SecureRandom.hex
   show_actions ||= 0
 
+:css
+  .sql-text {
+    word-break: break-all;
+  }
+
 %table.table.table-hover{:id => table_dom_id, :data => {:toggle => 'table',
   :pagination => 'true',
   :show_pagination_switch => 'false',
@@ -33,23 +38,41 @@
     - @queries.each do |s|
       %tr{:id => s.object_key}
         %td.left= s.object_key
-        %td.left= s.name
-        %td.left= s.description.html_safe
+        %td.center= s.name
+        %td.lecenterft= s.description.html_safe
+        %td.center
+          - if s.organizations.count > 1
+            Multiple
+          - else
+            = s.organizations.first.try(:to_s)
         %td.center
         %td.center
+          %a{href: '#', data: {toggle: 'popover', content: "<div class='col-sm-12 sql-text'>#{s.to_sql.html_safe}</div>"}, title: 'SQL Query'}
+            Show SQL
+        %td.center= format_as_date_time(s.created_at)
+        %td.center= s.created_by_user
+        %td.center= format_as_date_time(s.updated_at)
+        %td.center= s.updated_by_user
         %td.center
-        %td.right= format_as_date_time(s.created_at)
-        %td.right= s.created_by_user
-        %td.right= format_as_date_time(s.updated_at)
-        %td.right= s.updated_by_user
-        %td.center
-        - if can? :edit, s
-          %td.center
-            = link_to edit_saved_query_path(s), :title => "Update this query.", :remote => true do
-              %i.fa.fa-fw.fa-edit.text-primary.fa-1-5x
-        - if can? :destroy, s
-          %td.center
-            = link_to saved_query_path(s), :title => "Remove this query", :method => :delete, :data => {:confirm => "Are you sure you want to remove this query? The action can't be undone."} do
-              %i.fa.fa-fw.fa-trash-o.action-icon.text-danger.fa-1-5x
+          = link_to saved_query_path(s), :title => "Update this query." do
+            %i.fa.fa-fw.fa-edit.text-primary.fa-1-5x
+          = link_to saved_query_path(s), :title => "Remove this query", :method => :delete, :data => {:confirm => "Are you sure you want to remove this query? The action can't be undone."} do
+            %i.fa.fa-fw.fa-trash-o.action-icon.text-danger.fa-1-5x
+          = link_to export_saved_query_path(s, format: :csv), :title => "Export CSV" do
+            %i.fa.fa-fw.fa-download.fa-1-5x
 
 = render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :path_pattern => "#"}
+
+:javascript
+
+  $(function(){
+    $('#' + '#{table_dom_id}').on('post-body.bs.table', function () {
+      $('[data-toggle="popover"]').popover({
+        html: 'true',
+        animation: true,
+        container: 'body'
+      });
+    });
+  });
+
+

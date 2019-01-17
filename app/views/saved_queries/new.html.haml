@@ -1,7 +1,10 @@
 = render 'header'
 %legend.asset-subheader
-  New Query
+  .col-sm-12
+    New Query
 .row.col-sm-6.col-md-4
   = render 'tab_header', is_new_query: true  
 .row.col-sm-12
   = render 'search_form'
+
+.modal.fade#form-modal{:tabindex => -1, :role => 'dialog', :aria => {:hidden => true}}

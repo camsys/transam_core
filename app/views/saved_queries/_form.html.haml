@@ -1,0 +1,133 @@
+:css
+  .org-share-buttons {
+    height: 200px;
+    line-height: 200px;
+    width: 40px;
+    padding: 0px;
+  }
+
+  .save-query-toolbar {
+    margin-top: 10px;
+  }
+
+:ruby
+  url = @query.new_record? ? saved_queries_path : saved_query_path(@query)
+
+= render(:partial => 'shared/form_errors', :locals => {:obj => @query}) unless @query.errors.empty?
+
+.row
+  .col-sm-12
+    = simple_form_for(@query,
+          :url => url,
+          :html => {:class => 'form-vertical saved_query_form' },
+          :wrapper => :vertical_form) do |f|
+      .row
+        .col-sm-12
+          = f.input :name, :label => 'Name', :required => true, :input_html => {:maxlength => 64}
+
+      .row
+        .col-sm-12
+          = f.input :description, :as => :text, :required => true, :wrapper_html => {:class => 'text-limiter-wrapper'}, :input_html => {:class => 'text-limiter', :rows => 6, :maxlength => 254}
+          %p.text-muted.text-limiter-counter
+            %span#counter
+            characters remaining.
+
+      %legend
+        Share With
+      .row
+        .col-sm-5
+          = render 'saved_queries/available_orgs_to_share'
+        .col-sm-1.org-share-buttons
+          .btn-group-vertical.text-center
+            %button.btn.add-selected-orgs{type: 'button', title: 'Add selected'}
+              %i.fa.fa-chevron-right
+            %button.btn.remove-selected-orgs{type: 'button', title: 'Remove selected'}
+              %i.fa.fa-chevron-left
+            %button.btn.add-all-orgs{type: 'button', title: 'Add all'}
+              %i.fa.fa-2x.fa-angle-double-right
+            %button.btn.remove-all-orgs{type: 'button', title: 'Remove all'}
+              %i.fa.fa-2x.fa-angle-double-left
+        .col-sm-5
+          = render 'saved_queries/selected_orgs_to_share'
+
+      .row
+        .col-sm-12.save-query-toolbar
+          = f.submit "Save", :class => 'btn btn-primary', :id => 'saved_query_submit'
+          %button.btn.btn-default{:data => {:dismiss => "modal"}} Cancel
+
+:javascript
+  $(document).ready(function() {
+    $('.text-limiter').simplyCountable({
+      maxCount: $('.text-limiter').attr('maxlength'),
+      strictMax: false,
+      safeClass: 'text-muted',
+      overClass: 'text-danger'
+    });
+
+    $('.add-selected-orgs').click(function() {
+      ($('.available-organization-list').val() || []).forEach(function(org_id) {
+        var org_option = $('.available-organization-list option[value=' + org_id + ']');
+        var org_name = org_option.text();
+        org_option.hide();
+        $('.selected-organization-list').append("<option value=" + org_id +">" + org_name +  "</option>");
+      });
+      $('.available-organization-list').val(null);
+    });
+
+    $('.remove-selected-orgs').click(function() {
+      ($('.selected-organization-list').val() || []).forEach(function(org_id) {
+        var org_option = $('.selected-organization-list option[value=' + org_id + ']');
+        org_option.remove();
+        
+        $('.available-organization-list option[value=' + org_id + ']').show();
+      });
+      $('.selected-organization-list').val(null);
+    });
+
+    $('.add-all-orgs').click(function() {
+      $('.selected-organization-list option').remove();
+      $('.available-organization-list option').each(function() {
+        $('.selected-organization-list').append("<option value=" + $(this).val() +">" + $(this).text() +  "</option>");
+      });
+
+      $('.available-organization-list option').hide();
+      $('.available-organization-list').val(null);
+    });
+
+    $('.remove-all-orgs').click(function() {
+      $('.selected-organization-list option').remove();
+      $('.available-organization-list option').show();
+    });
+
+    function check_submit_button_status() {
+      if ($('.saved_query_form').valid()) {
+        $('#saved_query_submit').removeAttr("disabled");   
+      } else {
+        $('#saved_query_submit').attr("disabled", "disabled");
+      }
+    }
+    $('.saved_query_form').on("blur", "input, textarea", () => {
+      check_submit_button_status();
+    });
+
+    // jquery validations
+    $('.saved_query_form').validate({
+      submitHandler: function(form) {
+        var query_form_data = _saved_query.data();
+        var org_ids = []; 
+        $('.selected-organization-list option').each(function(){
+          $('.saved_query_form').append('<input type="hidden" name="saved_query[organization_ids][]" value=' + $(this).val() + ' />');
+          });
+
+        (query_form_data.query_field_ids || []).forEach(function(field_id) {
+          $('.saved_query_form').append('<input type="hidden" name="saved_query[query_field_ids][]" value=' + field_id + ' />');
+        });
+
+        (query_form_data.query_filters || []).forEach(function(filter_data) {
+          $('.saved_query_form').append('<input type="hidden" name="saved_query[query_filters][]" value=' + JSON.stringify(filter_data) + ' />');
+        });
+
+        form.submit();
+      }
+    });
+  });

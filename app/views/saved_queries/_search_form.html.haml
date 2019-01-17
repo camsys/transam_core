@@ -3,6 +3,37 @@
     cursor: pointer;
   }
 
+:ruby
+  query_fields = {}
+  query_field_labels = {}
+  @query.query_fields.each do |field|
+    c_id = field.query_category_id
+    f_id = field.id
+    if query_fields[c_id].blank?
+      query_fields[c_id] = [f_id] 
+    else
+      query_fields[c_id] << f_id
+    end
+
+    query_field_labels[f_id] = [c_id, field.label]
+  end
+
+  query_filters = {}
+  query_filter_field_ids = {}
+  @query.query_filters.each do |filter|
+    field = filter.query_field
+    c_id = field.query_category_id
+    f_id = field.id
+    if query_filters[c_id].blank?
+      query_filters[c_id] = [f_id] 
+    else
+      query_filters[c_id] << f_id
+    end
+
+    query_filter_field_ids[filter.id] = f_id
+  end
+
+
 .row.col-sm-12
   = render 'saved_queries/search_form/columns_filters_panel'
 .row.col-sm-12
@@ -15,3 +46,30 @@
   = render 'saved_queries/search_form/actions_toolbar'
 
 = render 'saved_queries/search_form/scripts'
+
+:javascript
+  var _saved_query_field_labels = #{query_field_labels.to_json.html_safe};
+  var _saved_query_ordered_field_ids = #{@query.ordered_output_field_ids || []};
+  _saved_query.setOrderedOutputFieldIds(_saved_query_ordered_field_ids);
+  _saved_query_ordered_field_ids.forEach(function(f_id){
+    var category_label_array = _saved_query_field_labels[f_id];
+    addColumnToSelectionsPanel(category_label_array[0], f_id, category_label_array[1]);
+  });
+
+  // added columns
+  var _saved_query_fields = #{query_fields.to_json.html_safe};
+  for(var c_id in _saved_query_fields) {
+    _saved_query.setSelectedOutputFieldIdsByCategory(c_id, _saved_query_fields[c_id]);
+  }
+
+  // added filters
+  var _saved_query_filters = #{query_filters.to_json.html_safe};
+  for(var c_id in _saved_query_filters) {
+    _saved_query.setSelectedFilterFieldIdsByCategory(c_id, _saved_query_filters[c_id]);
+  }
+
+  // load filter details
+  var _saved_query_filter_field_ids = #{query_filter_field_ids.to_json.html_safe};
+  for(var filter_id in _saved_query_filter_field_ids) {
+    loadFilterDetails(_saved_query_filter_field_ids[filter_id], filter_id);
+  }

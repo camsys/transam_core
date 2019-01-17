@@ -22,6 +22,16 @@
       = render 'saved_queries/search_form/selected_columns_panel'
 
 :javascript
+  function addColumnToSelectionsPanel(category_id, field_id, field_label) {
+      // column selections panel
+      var column_label_html = "<span data-category-id=" + category_id + " data-id=" + field_id + " class='label label-info'>" 
+        + field_label 
+        + "<i title='remove column' class='fa fa-close remove-selected-column'></i>"
+        + "</span>";
+
+      $('.columns-container').append(column_label_html);
+    }
+    
   $(function() {
     function renderColumns(category_id, new_list) {
       // remove previous
@@ -59,17 +69,6 @@
       }).done(function(data) {
         renderColumns(category_id, data);
       });
-    }
-
-    function addColumnToSelectionsPanel(category_id, field_id, field_label) {
-      // column selections panel
-      var column_label_html = "<span data-category-id=" + category_id + " data-id=" + field_id + " class='label label-info'>" 
-        + field_label 
-        + "<i title='remove column' class='fa fa-close remove-selected-column'></i>"
-        + "</span>";
-
-      $('.columns-container').append(column_label_html);
-      
     }
 
     function renderSelectedColumn(category_id, field_id, field_name, field_label, is_new) {
@@ -112,7 +111,10 @@
         addColumnToSelectionsPanel(column[0], column[1], column[2]);
       });
     }
-    selectAutoshowColumns();
+
+    if(#{@query.ordered_output_field_ids.empty?}) {
+      selectAutoshowColumns();
+    }
 
     // load query fields by category
     $('.columns-panel .category-dropdown').change(function() {

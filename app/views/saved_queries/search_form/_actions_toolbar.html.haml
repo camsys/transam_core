@@ -1,6 +1,14 @@
+:css
+  .save-as-saved-query {
+    margin-left: 10px;
+  }
 = button_tag :class => 'btn btn-primary execute-export', :title => "Export data", :type => 'button' do
   %i.fa.fa-download
   Export CSV
+
+= link_to save_as_saved_queries_path(id: @query.object_key), :remote => true, :class => "btn btn-primary save-as-saved-query" do
+  %i.fa.fa-plus
+  Add to Saved Queries
 
 :javascript
   $(function() {
@@ -11,7 +19,7 @@
         return;
       }
       
-      var url = "#{export_saved_queries_path(format: :csv)}?" + $.param({saved_query: _saved_query.data()});
+      var url = "#{export_unsaved_saved_queries_path(format: :csv)}?" + $.param({saved_query: _saved_query.data()});
       window.open(url, '_blank');
     });
   });

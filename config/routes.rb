@@ -193,6 +193,11 @@ Rails.application.routes.draw do
   resources :saved_queries do
     collection do
       post 'query'
+      get 'export_unsaved'
+      get 'save_as'
+    end
+
+    member do 
       get 'export'
     end
   end
