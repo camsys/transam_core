@@ -42,13 +42,16 @@
         %td.lecenterft= s.description.html_safe
         %td.center
           - if s.organizations.count > 1
-            Multiple
+            %span.hidden
+              Multiple
+            %a.transam-popover{href: '#', data: {toggle: 'popover', content: s.organizations.pluck(:short_name).join('<br>').html_safe}, title: 'Shared To'}
+              Multiple
           - else
             = s.organizations.first.try(:to_s)
         %td.center
         %td.center
-          %a{href: '#', data: {toggle: 'popover', content: "<div class='col-sm-12 sql-text'>#{s.to_sql.html_safe}</div>"}, title: 'SQL Query'}
-            Show SQL
+          %a.sql-popover{href: '#', data: {toggle: 'popover', content: "<div class='col-sm-12 sql-text'><textarea class='form-group form-control' rows='10' cols='50' readonly>#{s.to_sql.html_safe}</textarea><button type='button' class='btn btn-primary copy-sql'>Copy SQL</button></div>"}, title: 'SQL Query'}
+            Click to Show SQL
         %td.center= format_as_date_time(s.created_at)
         %td.center= s.created_by_user
         %td.center= format_as_date_time(s.updated_at)
@@ -67,10 +70,27 @@
 
   $(function(){
     $('#' + '#{table_dom_id}').on('post-body.bs.table', function () {
-      $('[data-toggle="popover"]').popover({
+      $('.sql-popover').popover({
         html: 'true',
         animation: true,
         container: 'body'
+      });
+
+      $('.sql-popover').on('click', function (e) {
+        $('.sql-popover').not(this).popover('hide');
+      });
+
+      $(document).on('click', '.copy-sql', function() {
+        $(this).parents('.sql-text').find('textarea').select();
+        document.execCommand('copy');
+        $(this).text('SQL Copied');
+      });
+
+      $('body').on('click', function (e) {
+        if ($(e.target).data('toggle') !== 'popover'
+        && $(e.target).parents('.popover.in').length === 0) { 
+          $('.sql-popover').popover('hide');
+        }
       });
     });
   });

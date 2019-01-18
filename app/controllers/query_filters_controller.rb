@@ -4,6 +4,11 @@ class QueryFiltersController < OrganizationAwareController
 
   def render_new
     @query_field = QueryField.find_by_id(params[:query_field_id])
+    @query_filter = QueryFilter.find_by_id(params[:query_filter_id])
+    if @query_filter && @query_field.pairs_with
+      # check if pairs_with field filter exist
+      @pairs_with_filter = @query_filter.saved_query.query_filters.joins(:query_field).where(query_fields: {name: @query_field.pairs_with}).first
+    end
   end
 
   # typeahead json response for manufacturer filter

@@ -7,8 +7,12 @@
   Export CSV
 
 = link_to save_as_saved_queries_path(id: @query.object_key), :remote => true, :class => "btn btn-primary save-as-saved-query" do
-  %i.fa.fa-plus
-  Add to Saved Queries
+  - if @query.new_record?
+    %i.fa.fa-plus
+    Add to Saved Queries
+  - else
+    %i.fa.fa-save
+    Update Saved Query
 
 :javascript
   $(function() {

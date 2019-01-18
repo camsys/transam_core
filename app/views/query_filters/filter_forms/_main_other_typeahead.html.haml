@@ -43,9 +43,11 @@
       _saved_query.setFilterDetails(query_field_id, filter_details);
     }
 
+    updateFilterDetails();
+
     function removeFilterDetails() {
-        _saved_query.removeFilterDetails(main_field_id);
-        _saved_query.removeFilterDetails(other_field_id);
+      _saved_query.removeFilterDetails(main_field_id);
+      _saved_query.removeFilterDetails(other_field_id);
     }
 
     // typeahead

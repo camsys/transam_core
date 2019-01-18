@@ -2,24 +2,27 @@
 - unless query_association_class
   = render 'query_filters/filter_forms/default'
 - else
-  - association_model = query_association_class.table_name.classify.constantize rescue nil
-  - if association_model.respond_to? :active
-    - values = association_model.active
-  - else
-    - values = association_model.all
+  :ruby
+    association_model = query_association_class.table_name.classify.constantize rescue nil
+    if association_model.respond_to? :active
+      model_values = association_model.active
+    else
+      model_values = association_model.all
+    end
 
-  - if local_assigns.has_key? :where_sql
-    - values = values.where(where_sql)
+    model_values = model_values.where(where_sql) if local_assigns.has_key? :where_sql
+
+    filter_values = @query_filter ? (@query_filter.value.try(:split, ',') || []).map(&:to_i) : model_values.pluck(query_association_class.id_field_name)
 
   %ul.multi-select-list{data: {query_field_id: @query_field.id}}
     %li.select-all-items
       %label.checkbox
-        = check_box_tag 'select-all', 1, true
+        = check_box_tag 'select-all', 1, filter_values.size >= model_values.size
         (Select All)
-    - values.pluck(query_association_class.id_field_name, query_association_class.display_field_name).each do |type_id, type_name|
+    - model_values.pluck(query_association_class.id_field_name, query_association_class.display_field_name).each do |type_id, type_name|
       %li.multi-select-item
         %label.checkbox
-          = check_box_tag "#{query_association_class.table_name}[]", type_id, true
+          = check_box_tag "#{query_association_class.table_name}[]", type_id, filter_values.include?(type_id)
           = type_name
 
   :javascript

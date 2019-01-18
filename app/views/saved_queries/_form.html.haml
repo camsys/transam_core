@@ -110,23 +110,30 @@
       check_submit_button_status();
     });
 
+    function get_form_url_with_params() {
+      var form_data = _saved_query.data();
+      
+      var org_ids = []; 
+      $('.selected-organization-list option').each(function(){
+        org_ids.push($(this).val());
+      });
+
+      form_data.name = $('#saved_query_name').val();
+      form_data.description = $('#saved_query_description').val();
+      form_data.organization_ids = org_ids;
+
+      var url = "#{url}?" + $.param({saved_query: form_data});
+
+      return url;
+    }
+
     // jquery validations
     $('.saved_query_form').validate({
       submitHandler: function(form) {
-        var query_form_data = _saved_query.data();
-        var org_ids = []; 
-        $('.selected-organization-list option').each(function(){
-          $('.saved_query_form').append('<input type="hidden" name="saved_query[organization_ids][]" value=' + $(this).val() + ' />');
-          });
+        // update form URL
+        $(form).attr('action', get_form_url_with_params());
 
-        (query_form_data.query_field_ids || []).forEach(function(field_id) {
-          $('.saved_query_form').append('<input type="hidden" name="saved_query[query_field_ids][]" value=' + field_id + ' />');
-        });
-
-        (query_form_data.query_filters || []).forEach(function(filter_data) {
-          $('.saved_query_form').append('<input type="hidden" name="saved_query[query_filters][]" value=' + JSON.stringify(filter_data) + ' />');
-        });
-
+        // submit
         form.submit();
       }
     });

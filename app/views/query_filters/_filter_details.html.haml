@@ -8,7 +8,7 @@
     height: 100%;
   }
 
-.filter-details-panel.col-sm-4.col-md-3{data: {field_id: @query_field.id, category_id: @query_field.query_category_id}}
+.filter-details-panel.col-sm-4.col-md-3{data: {filter_id: @query_filter.try(:id), pairs_with_filter_id: @pairs_with_filter.try(:id),field_id: @query_field.id, category_id: @query_field.query_category_id}}
   .panel.panel-primary
     .panel-heading
       %h3.panel-title

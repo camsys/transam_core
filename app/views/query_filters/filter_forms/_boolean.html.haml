@@ -1,12 +1,14 @@
+:ruby
+  values = @query_filter ? (@query_filter.value.try(:split, ',') || []) : ['true', 'false']
 %ul.boolean-list{data: {query_field_id: @query_field.id}}
   %li.select-all-boolean-items
     %label.checkbox
-      = check_box_tag 'select-all', 1, true
+      = check_box_tag 'select-all', 1, values == ['true','false']
       (Select All)
   - [[true, 'Yes'], [false, 'No']].each do |val, label|
     %li.boolean-item
       %label.checkbox
-        = check_box_tag "#{@query_field.name}[]", val, true
+        = check_box_tag "#{@query_field.name}[]", val, values.include?(val.to_s)
         = label
 
 :javascript

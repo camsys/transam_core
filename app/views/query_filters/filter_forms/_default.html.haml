@@ -1,11 +1,12 @@
 .form-group
-  = text_field_tag @query_field.name, '', {class: 'form-control'}
+  = text_field_tag @query_field.name, @query_filter.try(:value), {class: 'form-control'}
 
 :javascript
   $(function() {
     var query_field_id = #{@query_field.id};
-    $('.filter-details-panel[data-field-id=' + query_field_id + '] input').change(function() {
-      var filter_value = $(this).val();
+
+    function updateFilterDetails() {
+      var filter_value = $('.filter-details-panel[data-field-id=' + query_field_id + '] input').val();
       if(filter_value && filter_value !== 0) {
         var filter_details = {
           query_field_id: query_field_id,
@@ -16,5 +17,11 @@
       } else {
         _saved_query.removeFilterDetails(query_field_id);
       }
+    }
+
+    updateFilterDetails();
+
+    $('.filter-details-panel[data-field-id=' + query_field_id + '] input').change(function() {
+      updateFilterDetails();
     });
   });

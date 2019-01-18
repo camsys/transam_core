@@ -60,10 +60,10 @@ class SavedQueriesController < OrganizationAwareController
   # POST /saved_queries
   # POST /saved_queries.json
   def create
-    @query = SavedQuery.new(saved_query_params)
+    @query = SavedQuery.new(saved_query_params.except(:query_field_ids, :query_filters))
     @query.organization_list = @organization_list
     @query.created_by_user = current_user
-    @query.parse_query_fields saved_query_params[:query_field_ids], params[:saved_query][:query_filters].map{|r| JSON.parse(r)}
+    @query.parse_query_fields saved_query_params[:query_field_ids], saved_query_params[:query_filters].to_unsafe_h.map{|r,v| v}
     
     respond_to do |format|
       if @query.save
@@ -81,12 +81,13 @@ class SavedQueriesController < OrganizationAwareController
   # PATCH/PUT /saved_queries/1
   # PATCH/PUT /saved_queries/1.json
   def update
-    @query.assign_attributes saved_query_params
+    @query.assign_attributes saved_query_params.except(:query_field_ids, :query_filters)
     @query.updated_by_user = current_user
     @query.organization_list = @organization_list
-    @query.parse_query_fields saved_query_params[:query_field_ids], params[:saved_query][:query_filters].map{|r| JSON.parse(r)}
+    @query.parse_query_fields saved_query_params[:query_field_ids], saved_query_params[:query_filters].to_unsafe_h.map{|r,v| v}
     respond_to do |format|
       if @query.save
+
         notify_user :notice, 'Query was successfully updated.'
         format.html { redirect_to saved_query_path(@query) }
         format.json { render :show, status: :ok, location: @query }
@@ -125,8 +126,10 @@ class SavedQueriesController < OrganizationAwareController
   def export_unsaved
     @query = SavedQuery.new
     @query.organization_list = @organization_list
-    filter_data_array = saved_query_params[:query_filters].to_h.map{|idx,filter_data| filter_data} # a bit dirty, but needed
-    @query.parse_query_fields saved_query_params[:query_field_ids], filter_data_array
+
+    # a bit dirty, but needed
+    filter_data = saved_query_params[:query_filters].to_h.map{|idx,filter_data| filter_data} unless saved_query_params[:query_filters].blank?
+    @query.parse_query_fields saved_query_params[:query_field_ids], filter_data
     respond_to do |format|
       format.html
       format.csv do 

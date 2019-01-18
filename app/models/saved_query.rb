@@ -115,9 +115,12 @@ class SavedQuery < ActiveRecord::Base
 
     self.ordered_output_field_ids = query_field_ids
 
-    query_filters_data.each do |filter_data|
-      self.query_filters << QueryFilter.new(filter_data)
+    filters = []
+    (query_filters_data || []).each do |filter_data|
+      filters << QueryFilter.new(filter_data)
     end
+
+    self.query_filters = filters
   end
 
   def ordered_query_fields

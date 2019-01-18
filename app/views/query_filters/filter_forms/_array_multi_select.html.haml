@@ -1,12 +1,14 @@
+:ruby 
+  values = @query_filter ? @query_filter.value.try(:split, ',') : array_values.map{|r| r[0].to_s}
 %ul.multi-select-list{data: {query_field_id: @query_field.id}}
   %li.select-all-items
     %label.checkbox
-      = check_box_tag 'select-all', 1, true
+      = check_box_tag 'select-all', 1, values.size >= array_values.size
       (Select All)
   - array_values.each do |config|
     %li.multi-select-item
       %label.checkbox
-        = check_box_tag "infrastructure_directions[]", config[0], true
+        = check_box_tag "infrastructure_directions[]", config[0], values.include?(config[0])
         = config[1]
 
 :javascript
