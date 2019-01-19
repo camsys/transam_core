@@ -8,11 +8,22 @@
 
   main_field_id = QueryField.find_by(name: main_field_name).try(:id)
   other_field_id = QueryField.find_by(name: other_field_name).try(:id)
+  if @pairs_with_filter
+    filter_value_id = -1
+    filter_value = @pairs_with_filter.value
+  elsif @query_filter
+    lookup_table = lookup_table_class.safe_constantize
+    if lookup_table
+      lookup_item = lookup_table.find_by_id(@query_filter.value)
+      filter_value_id = lookup_item.try(:id)
+      filter_value =lookup_item.try(lookup_table_name_field)
+    end
+  end
 
 = hidden_field_tag :hidden_field_id, other_field_id
 
 .form-group
-  = text_field_tag main_field_name, '', {:autocomplete => 'off', :class => 'form-control', :placeholder => 'Type ...', :data => {:url => data_url}}
+  = text_field_tag main_field_name, filter_value, {:autocomplete => 'off', :class => 'form-control', :placeholder => 'Type ...', :data => {:url => data_url}}
 
 :javascript
   $(function() {
@@ -43,7 +54,12 @@
       _saved_query.setFilterDetails(query_field_id, filter_details);
     }
 
-    updateFilterDetails();
+    if(#{filter_value_id.present?}) {
+      updateFilterDetails({
+        id: #{filter_value_id},
+        name: #{filter_value}
+      });
+    }
 
     function removeFilterDetails() {
       _saved_query.removeFilterDetails(main_field_id);

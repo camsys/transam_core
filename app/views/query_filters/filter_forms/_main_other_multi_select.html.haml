@@ -10,17 +10,20 @@
 
   main_field_id = QueryField.find_by(name: main_field_name).try(:id)
   other_field_id = QueryField.find_by(name: other_field_name).try(:id)
+  main_filter_values = @query_filter ? (@query_filter.value.try(:split, ',') || []) : data.map{|r| r[0].to_s if r[0] >= 0}.compact
+  other_filter_values = @pairs_with_filter ? (@pairs_with_filter.value.try(:split, ',') || []) : data.map{|r| r[1].to_s if r[0] < 0}.compact
 
 = hidden_field_tag :hidden_field_id, other_field_id
 %ul.multi-select-list{data: {query_field_id: main_field_id}}
   %li.select-all-items
     %label.checkbox
-      = check_box_tag 'select-all', 1, true
+      = check_box_tag 'select-all', 1, (main_filter_values.size + other_filter_values.size) >= data.size
       (Select All)
   - data.each do |item|
     %li.multi-select-item
       %label.checkbox
-        = check_box_tag "#{main_field_name}[]", item[:id], true, data: {name: item[:name]}
+        - is_selected = item[:id] >=0 ? main_filter_values.include?(item[:id].to_s) : other_filter_values.include?(item[:name].to_s)
+        = check_box_tag "#{main_field_name}[]", item[:id], is_selected, data: {name: item[:name]}
         = item[:name]
 
 :javascript

@@ -10,7 +10,7 @@
   $(function() {
     var query_field_id = #{@query_field.id};
 
-    function updateFilterValue() {
+    function updateFilterDetails() {
       var filter_value = $('.filter-details-panel[data-field-id=' + query_field_id + '] input').val();
       var filter_op = $('.filter-details-panel[data-field-id=' + query_field_id + '] select[name=op]').val();
       if(filter_value && filter_value !== 0) {
@@ -26,8 +26,8 @@
     }
 
     $('.filter-details-panel[data-field-id=' + query_field_id + '] select[name=op], .filter-details-panel[data-field-id=' + query_field_id + '] input').change(function() {
-      updateFilterValue();
+      updateFilterDetails();
     });
 
-    updateFilterValue();
+    updateFilterDetails();
   });
