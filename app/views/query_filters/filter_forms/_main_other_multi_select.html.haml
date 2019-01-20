@@ -10,8 +10,13 @@
 
   main_field_id = QueryField.find_by(name: main_field_name).try(:id)
   other_field_id = QueryField.find_by(name: other_field_name).try(:id)
-  main_filter_values = @query_filter ? (@query_filter.value.try(:split, ',') || []) : data.map{|r| r[0].to_s if r[0] >= 0}.compact
-  other_filter_values = @pairs_with_filter ? (@pairs_with_filter.value.try(:split, ',') || []) : data.map{|r| r[1].to_s if r[0] < 0}.compact
+  if @query_filter || @pairs_with_filter
+    main_filter_values = @query_filter ? (@query_filter.value.try(:split, ',') || []) : []
+    other_filter_values = @pairs_with_filter ? (@pairs_with_filter.value.try(:split, ',') || []).map{|r| r.gsub("'", '')} : []
+  else
+    main_filter_values = data.map{|r| r[:id].to_s if r[:id] >= 0}.compact
+    other_filter_values = data.map{|r| r[:name].to_s if r[:id] < 0}.compact
+  end
 
 = hidden_field_tag :hidden_field_id, other_field_id
 %ul.multi-select-list{data: {query_field_id: main_field_id}}
@@ -42,7 +47,7 @@
           // all negative values are `Other_xxx`
           main_item_ids.push(item_id);
         } else {
-          other_item_names.push($(this).data('name'));
+          other_item_names.push("'" + $(this).data('name') + "'");
         }
       });
 

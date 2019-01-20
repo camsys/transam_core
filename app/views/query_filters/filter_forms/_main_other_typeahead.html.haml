@@ -56,8 +56,8 @@
 
     if(#{filter_value_id.present?}) {
       updateFilterDetails({
-        id: #{filter_value_id},
-        name: #{filter_value}
+        id: #{filter_value_id || -1},
+        name: "#{filter_value}"
       });
     }
 

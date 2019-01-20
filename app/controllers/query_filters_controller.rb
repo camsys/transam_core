@@ -3,11 +3,24 @@ class QueryFiltersController < OrganizationAwareController
   # authorize_resource
 
   def render_new
-    @query_field = QueryField.find_by_id(params[:query_field_id])
     @query_filter = QueryFilter.find_by_id(params[:query_filter_id])
-    if @query_filter && @query_field.pairs_with
-      # check if pairs_with field filter exist
-      @pairs_with_filter = @query_filter.saved_query.query_filters.joins(:query_field).where(query_fields: {name: @query_field.pairs_with}).first
+    if @query_filter
+      @query_field = @query_filter.query_field
+      # first check if this is a hidden filter
+      # if so, then need to get the main field
+      main_field = QueryField.where(pairs_with: @query_field.name).first
+      if main_field
+        @query_field = main_field
+        @pairs_with_filter = @query_filter
+        @query_filter = nil
+      else
+        if @query_field.pairs_with
+          # check if pairs_with field filter exist
+          @pairs_with_filter = @query_filter.saved_query.query_filters.joins(:query_field).where(query_fields: {name: @query_field.pairs_with}).first
+        end
+      end
+    else
+      @query_field = QueryField.find_by_id(params[:query_field_id])
     end
   end
 
