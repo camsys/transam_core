@@ -16,4 +16,3 @@
     %td.right= format_as_decimal((assets.inject(0) { |sum, x| sum += x.age }/assets.count.to_f),1)
     %td.right= a['assets_count']
     %td.right= format_as_currency(a['sum_purchase_cost'])
-    %td.right= format_as_currency(a['sum_book_value'])
