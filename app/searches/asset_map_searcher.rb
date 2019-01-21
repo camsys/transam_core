@@ -17,9 +17,12 @@ class AssetMapSearcher < BaseSearcher
   end
 
   def initialize(attributes = {})
-
     super(attributes)
 
+    set_seed_class
+  end
+
+  def set_seed_class
     if asset_seed_class_name.present?
       @klass = Object.const_get asset_seed_class_name
     else
