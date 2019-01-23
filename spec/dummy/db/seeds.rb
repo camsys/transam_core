@@ -2,8 +2,8 @@ TransamCore::Engine.load_seed
 
 # core has mixins for tying policy to TransamAsset or tracking as replacable. this is usually added by engine but we add it to the dummy db seed so we can run tests
 system_config_extensions = [
-    {class_name: 'TransamAsset', extension_name: 'PolicyAware'},
-    {class_name: 'TransamAsset', extension_name: 'ReplaceableAsset'}
+    {class_name: 'TransamAsset', extension_name: 'PolicyAware', active: true},
+    {class_name: 'TransamAsset', extension_name: 'ReplaceableAsset', active: true}
 ]
 system_config_extensions.each do |extension|
   SystemConfigExtension.find_or_create_by(extension)
