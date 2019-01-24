@@ -6,11 +6,12 @@
   %i.fa.fa-download
   Export CSV
 
-= link_to save_as_saved_queries_path(id: @query.object_key), :remote => true, :class => "btn btn-primary save-as-saved-query" do
-  - if @query.new_record?
+- if can?(:create, @query) && @query.new_record?
+  = link_to save_as_saved_queries_path, :remote => true, :class => "btn btn-primary save-as-saved-query" do
     %i.fa.fa-plus
     Add to Saved Queries
-  - else
+- elsif can?(:update, @query)
+  = link_to save_as_saved_queries_path(id: @query.object_key), :remote => true, :class => "btn btn-primary save-as-saved-query" do
     %i.fa.fa-save
     Update Saved Query
 

@@ -1,11 +1,11 @@
 class SavedQueriesController < OrganizationAwareController
 
-  before_action :set_saved_query, only: [:show, :edit, :update, :destroy, :export]
+  before_action :set_saved_query, only: [:show, :update, :destroy, :export, :clone, :remove_from_orgs, :show_remove_form]
 
   add_breadcrumb "Home", :root_path
 
-  # TODO: Lock down the controller
-  # authorize_resource
+  # Lock down the controller
+  authorize_resource
 
   # GET /saved_queries
   # GET /saved_queries.json
@@ -13,7 +13,11 @@ class SavedQueriesController < OrganizationAwareController
     add_breadcrumb "Query", saved_queries_url
     add_breadcrumb "Saved Queries"
 
-    @queries = current_user.saved_queries
+    # list own queries, plus shared from other orgs
+    own_querie_ids = current_user.saved_queries.pluck(:id)
+    shared_querie_ids = SavedQuery.joins(:organizations).where("organizations.id": current_user.organization_ids).pluck("saved_queries.id").uniq
+
+    @queries = SavedQuery.where(id: (own_querie_ids + shared_querie_ids).uniq).uniq
 
     respond_to do |format|
       format.html
@@ -41,20 +45,53 @@ class SavedQueriesController < OrganizationAwareController
     add_breadcrumb "New Query"
 
     @query = SavedQuery.new
+    @query.created_by_user = current_user
     @query.organization_list = @organization_list
   end
 
   def save_as
     if params[:id].blank?
       @query = SavedQuery.new
+      @query.created_by_user = current_user
     else
       @query = SavedQuery.find_by_object_key(params[:id])
     end
   end
 
-  # GET /saved_queries/1/edit
-  def edit
+  # GET /saved_queries/1/clone
+  def clone
+    cloned_query = @query.clone!
+    cloned_query.organization_list = @organization_list
+    cloned_query.created_by_user = current_user
 
+    respond_to do |format|
+      if cloned_query.save
+        notify_user :notice, 'Query was successfully cloned.'
+        format.html { redirect_to saved_query_path(cloned_query) }
+        format.json { render :show, status: :created, location: cloned_query }
+      else
+        notify_user :alert, "Cannot clone this query because: " + cloned_query.errors.full_messages.join(';')
+        format.html { redirect_back(fallback_location: root_path) }
+        format.json { render json: cloned_query.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # This is to remove a shared query from other org
+  def remove_from_orgs
+    if params[:saved_query] && !params[:saved_query][:organization_ids].blank?
+      # exclude query main org (where it's created)
+      to_remove_org_ids = params[:saved_query][:organization_ids].select{|r| !r.blank? && r != @query.created_by_user.try(:organization_id).to_s}
+
+      @query.organizations.delete(*to_remove_org_ids) if to_remove_org_ids.any?
+    end
+
+    redirect_to saved_queries_path
+  end
+
+  def show_remove_form
+    @to_remove_org_ids = (@query.organization_ids || []) & (current_user.organization_ids || []) - [@query.created_by_user.try(:organization_id)]
+    @to_remove_orgs = Organization.where(id: @to_remove_org_ids)
   end
 
   # POST /saved_queries
@@ -63,11 +100,12 @@ class SavedQueriesController < OrganizationAwareController
     @query = SavedQuery.new(saved_query_params.except(:query_field_ids, :query_filters))
     @query.organization_list = @organization_list
     @query.created_by_user = current_user
-    @query.parse_query_fields saved_query_params[:query_field_ids], saved_query_params[:query_filters].to_unsafe_h.map{|r,v| v}
+    filter_data = saved_query_params[:query_filters] ? saved_query_params[:query_filters].to_unsafe_h.map{|r,v| v} : []
+    @query.parse_query_fields saved_query_params[:query_field_ids], filter_data
     
     respond_to do |format|
       if @query.save
-        notify_user :notice, 'query was successfully saved.'
+        notify_user :notice, 'Query was successfully saved.'
         format.html { redirect_to saved_query_path(@query) }
         format.json { render :show, status: :created, location: @query }
       else
@@ -84,7 +122,8 @@ class SavedQueriesController < OrganizationAwareController
     @query.assign_attributes saved_query_params.except(:query_field_ids, :query_filters)
     @query.updated_by_user = current_user
     @query.organization_list = @organization_list
-    @query.parse_query_fields saved_query_params[:query_field_ids], saved_query_params[:query_filters].to_unsafe_h.map{|r,v| v}
+    filter_data = saved_query_params[:query_filters] ? saved_query_params[:query_filters].to_unsafe_h.map{|r,v| v} : []
+    @query.parse_query_fields saved_query_params[:query_field_ids], filter_data
     respond_to do |format|
       if @query.save
 

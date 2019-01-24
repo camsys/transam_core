@@ -36,19 +36,23 @@
 
   %tbody
     - @queries.each do |s|
+      - is_own_query = current_user && current_user.id == s.created_by_user_id
       %tr{:id => s.object_key}
         %td.left= s.object_key
         %td.center= s.name
         %td.lecenterft= s.description.html_safe
         %td.center
-          - if s.organizations.count > 1
-            %span.hidden
-              Multiple
-            %a.transam-popover{href: '#', data: {toggle: 'popover', content: s.organizations.pluck(:short_name).join('<br>').html_safe}, title: 'Shared To'}
-              Multiple
-          - else
-            = s.organizations.first.try(:to_s)
+          - if can?(:share, s) && s.shared?
+            - if s.organizations.count > 1
+              %span.hidden
+                Multiple
+              %a.transam-popover{href: '#', data: {toggle: 'popover', content: s.organizations.pluck(:short_name).join('<br>').html_safe}, title: 'Shared To'}
+                Multiple
+            - else
+              = s.organizations.first.try(:to_s)
         %td.center
+          - unless is_own_query
+            = s.created_by_user.try(:organization)
         %td.center
           %a.sql-popover{href: '#', data: {toggle: 'popover', content: "<div class='col-sm-12 sql-text'><textarea class='form-group form-control' rows='10' cols='50' readonly>#{s.to_sql.html_safe}</textarea><button type='button' class='btn btn-primary copy-sql'>Copy SQL</button></div>"}, title: 'SQL Query'}
             Click to Show SQL
@@ -56,15 +60,29 @@
         %td.center= s.created_by_user
         %td.center= format_as_date_time(s.updated_at)
         %td.center= s.updated_by_user
-        %td.center
-          = link_to saved_query_path(s), :title => "Update this query." do
-            %i.fa.fa-fw.fa-edit.text-primary.fa-1-5x
-          = link_to saved_query_path(s), :title => "Remove this query", :method => :delete, :data => {:confirm => "Are you sure you want to remove this query? The action can't be undone."} do
-            %i.fa.fa-fw.fa-trash-o.action-icon.text-danger.fa-1-5x
+        %td.right
+          - if can?(:update, s)
+            = link_to saved_query_path(s), :title => "Update this query." do
+              %i.fa.fa-fw.fa-edit.text-primary.fa-1-5x
+          - if can?(:delete, s)
+            = link_to saved_query_path(s), :title => "Delete this query", :method => :delete, :data => {:confirm => "Are you sure you want to delete this query? The action can't be undone."} do
+              %i.fa.fa-fw.fa-trash-o.action-icon.text-danger.fa-1-5x
+          - elsif can?(:remove, s)
+            - shared_org_ids = (s.organization_ids || []) & (current_user.organization_ids || [])
+            - if shared_org_ids.size > 1
+              = link_to show_remove_form_saved_query_path(s), :title => "Remove this query from your organization", :remote => true do
+                %i.fa.fa-fw.fa-trash-o.action-icon.text-danger.fa-1-5x
+            - elsif shared_org_ids.size == 1
+              = link_to remove_from_orgs_saved_query_path(s, saved_query:{organization_ids: shared_org_ids}), :title => "Remove this query from your organization", :method => :post, :data => {:confirm => "Are you sure you want to remove this query from your organization? The action can't be undone."} do
+                %i.fa.fa-fw.fa-trash-o.action-icon.text-danger.fa-1-5x
+          = link_to clone_saved_query_path(s), :title => "Clone this query", :method => :post do
+            %i.fa.fa-fw.fa-copy.fa-1-5x
           = link_to export_saved_query_path(s, format: :csv), :title => "Export CSV" do
             %i.fa.fa-fw.fa-download.fa-1-5x
 
 = render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :path_pattern => "#"}
+
+.modal.fade#form-modal{:tabindex => -1, :role => 'dialog', :aria => {:hidden => true}}
 
 :javascript
 
@@ -94,5 +112,3 @@
       });
     });
   });
-
-

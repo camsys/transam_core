@@ -199,6 +199,9 @@ Rails.application.routes.draw do
 
     member do 
       get 'export'
+      post 'clone'
+      get 'show_remove_form'
+      post 'remove_from_orgs'
     end
   end
 

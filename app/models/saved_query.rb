@@ -27,7 +27,7 @@ class SavedQuery < ActiveRecord::Base
   # Each saved search belongs to a user
   belongs_to        :created_by_user, :class_name => "User",  :foreign_key => :created_by_user_id
   belongs_to        :updated_by_user, :class_name => "User",  :foreign_key => :updated_by_user_id
-  belongs_to        :shared_from_org, :class_name => "Organization",  :foreign_key => :shared_from_org_id
+  #belongs_to        :shared_from_org, :class_name => "Organization",  :foreign_key => :shared_from_org_id
 
   has_and_belongs_to_many   :organizations
 
@@ -134,6 +134,27 @@ class SavedQuery < ActiveRecord::Base
 
   def to_sql
     relation.to_sql
+  end
+
+  def clone!
+    cloned_query = SavedQuery.new
+
+    # base attrs
+    cloned_query.name = self.name + " (Copy)"
+    cloned_query.description = self.description
+    cloned_query.ordered_output_field_ids = self.ordered_output_field_ids
+
+    # copy query fields
+    self.saved_query_fields.each do |f|
+      cloned_query.saved_query_fields << f.dup
+    end
+
+    # copy query filters
+    self.query_filters.each do |qf|
+      cloned_query.query_filters << qf.dup
+    end
+
+    cloned_query
   end
 
   #-----------------------------------------------------------------------------

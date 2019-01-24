@@ -5,6 +5,4 @@
 %label
   Available
 %select.available-organization-list{multiple: 'true', size: '10'}
-  - current_user.viewable_organizations.where.not(id: @query.organizations.pluck(:id)).pluck(:id,:name).each do |org|
-    %option{value: org[0]}
-      = org[1]
+  = render 'saved_queries/shared_from_org_list'

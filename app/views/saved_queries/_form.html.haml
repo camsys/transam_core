@@ -31,24 +31,24 @@
           %p.text-muted.text-limiter-counter
             %span#counter
             characters remaining.
-
-      %legend
-        Share With
-      .row
-        .col-sm-5
-          = render 'saved_queries/available_orgs_to_share'
-        .col-sm-1.org-share-buttons
-          .btn-group-vertical.text-center
-            %button.btn.add-selected-orgs{type: 'button', title: 'Add selected'}
-              %i.fa.fa-chevron-right
-            %button.btn.remove-selected-orgs{type: 'button', title: 'Remove selected'}
-              %i.fa.fa-chevron-left
-            %button.btn.add-all-orgs{type: 'button', title: 'Add all'}
-              %i.fa.fa-2x.fa-angle-double-right
-            %button.btn.remove-all-orgs{type: 'button', title: 'Remove all'}
-              %i.fa.fa-2x.fa-angle-double-left
-        .col-sm-5
-          = render 'saved_queries/selected_orgs_to_share'
+      - if can?(:share, @query)
+        %legend
+          Share With
+        .row
+          .col-sm-5
+            = render 'saved_queries/available_orgs_to_share'
+          .col-sm-1.org-share-buttons
+            .btn-group-vertical.text-center
+              %button.btn.add-selected-orgs{type: 'button', title: 'Add selected'}
+                %i.fa.fa-chevron-right
+              %button.btn.remove-selected-orgs{type: 'button', title: 'Remove selected'}
+                %i.fa.fa-chevron-left
+              %button.btn.add-all-orgs{type: 'button', title: 'Add all'}
+                %i.fa.fa-2x.fa-angle-double-right
+              %button.btn.remove-all-orgs{type: 'button', title: 'Remove all'}
+                %i.fa.fa-2x.fa-angle-double-left
+          .col-sm-5
+            = render 'saved_queries/selected_orgs_to_share'
 
       .row
         .col-sm-12.save-query-toolbar
