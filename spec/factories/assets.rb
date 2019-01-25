@@ -24,6 +24,16 @@ FactoryBot.define do
     reported_condition_rating { 2.0 }
   end
 
+  factory :transam_asset do
+    asset_tag
+    purchase_cost { 2000.0 }
+    purchase_date { 1.year.ago }
+    in_service_date { 1.year.ago }
+    purchased_new { false }
+    association :asset_subtype
+    association :organization, :factory => :organization_basic
+  end
+
   factory :buslike_asset_basic_org, :class => :asset do # An untyped asset which looks like a bus
     basic_asset_attributes
     association :asset_type
