@@ -33,8 +33,11 @@ Gem::Specification.new do |s|
   s.add_dependency 'unitwise'
   s.add_dependency 'chronic'
   s.add_dependency "breadcrumbs_on_rails"
-  #s.add_dependency 'paper_trail', '8.1.2'
   s.add_dependency "gritter"
+
+  s.add_dependency 'paper_trail'
+  #s.add_dependency 'paper_trail-association_tracking'
+  s.add_dependency 'paper_trail-globalid'
 
   s.add_dependency 'state_machines'
   s.add_dependency 'state_machines-activemodel'

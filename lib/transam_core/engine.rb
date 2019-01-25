@@ -30,6 +30,9 @@ require 'jquery-form-rails'
 require 'roo-xls'
 require 'kaminari'
 
+require 'paper_trail'
+require 'paper_trail-globalid'
+
 # API
 #require 'open_api'
 require 'jbuilder'
