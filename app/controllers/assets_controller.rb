@@ -152,11 +152,11 @@ class AssetsController < AssetAwareController
     add_breadcrumb terminal_crumb if terminal_crumb
     
     # check that an order param was provided otherwise use asset_tag as the default
-    # params[:sort] ||= 'transam_assets.asset_tag'
-    #
-    # # fix sorting on organizations to be alphabetical not by index
-    # params[:sort] = 'organizations.short_name' if params[:sort] == 'organization_id'
-    #
+    params[:sort] ||= 'transam_assets.asset_tag'
+
+    # fix sorting on organizations to be alphabetical not by index
+    params[:sort] = 'organizations.short_name' if params[:sort] == 'organization_id'
+
     respond_to do |format|
       format.html
       format.js
