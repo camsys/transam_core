@@ -7,8 +7,12 @@
     width: 94%;
   }
 
+  .subheader-label {
+    border-bottom: 1px solid #e5e5e5;
+  }
+
 .subheader-label
-  %h2 #{@asset.asset_type.name.singularize} Profile
+  %h2 #{@asset.fta_asset_category.name.singularize} Profile
 
 = render 'subheader'
 .row
