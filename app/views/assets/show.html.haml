@@ -12,7 +12,7 @@
   }
 
 .subheader-label
-  %h2 #{@asset.fta_asset_category.name.singularize} Profile
+  %h2 #{@asset.respond_to? :fta_asset_category ? @asset.fta_asset_category.name.singularize : @asset.asset_type.name.singularize} Profile
 
 = render 'subheader'
 .row
