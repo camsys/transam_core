@@ -196,9 +196,10 @@ activities = [
 system_config_extensions = [
     {class_name: Rails.application.config.asset_base_class_name, extension_name: 'TransamKeywordSearchable', active: true},
     {class_name: 'User', extension_name: 'TransamKeywordSearchable', active: true},
-    {class_name: 'Vendor', extension_name: 'TransamKeywordSearchable', active: true},
-    {class_name: 'AssetMapSearcher', extension_name: 'CoreAssetMapSearchable', active: true}
+    {class_name: 'Vendor', extension_name: 'TransamKeywordSearchable', active: true}
 ]
+
+system_config_extensions << {class_name: 'AssetMapSearcher', extension_name: 'CoreAssetMapSearchable', active: true} if SystemConfig.transam_module_loaded? :spatial
 
 
 lookup_tables = %w{asset_event_types condition_types disposition_types rule_sets cost_calculation_types license_types manufacturer_models priority_types
