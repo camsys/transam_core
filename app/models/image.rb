@@ -36,7 +36,7 @@ class Image < ActiveRecord::Base
   belongs_to :imagable,  :polymorphic => true
 
   # Each comment was created by a user
-  belongs_to :creator, :class_name => "User", :foreign_key => "created_by_id"
+  belongs_to :creator, -> { unscope(where: :active) }, :class_name => "User", :foreign_key => "created_by_id"
 
   validates :description,         :presence => true,
     unless: Proc.new { |i| i.imagable.is_a? User } # User profile photos do not need a description

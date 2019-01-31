@@ -13,7 +13,7 @@ class UserOrganizationFilter < ActiveRecord::Base
   belongs_to :resource, :polymorphic => true
 
   # Each filter is created by someone usually the owner but sometimes the system user (could be extended to sharing filters)
-  belongs_to :creator, :class_name => "User", :foreign_key => :created_by_user_id
+  belongs_to :creator, -> { unscope(where: :active) }, :class_name => "User", :foreign_key => :created_by_user_id
 
   # Each filter can have a list of organizations that are included
   has_and_belongs_to_many :organizations, :join_table => 'user_organization_filters_organizations'

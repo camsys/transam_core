@@ -35,7 +35,7 @@ class Document < ActiveRecord::Base
   belongs_to :documentable,  :polymorphic => true
 
   # Each comment was created by a user
-  belongs_to :creator, :class_name => "User", :foreign_key => "created_by_id"
+  belongs_to :creator, -> { unscope(where: :active) }, :class_name => "User", :foreign_key => "created_by_id"
 
   default_scope { order('created_at DESC') }
 

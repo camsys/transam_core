@@ -118,8 +118,8 @@ class Asset < ActiveRecord::Base
   has_and_belongs_to_many :asset_groups
 
   # Each asset was created and updated by a user
-  belongs_to :creator, :class_name => "User", :foreign_key => :created_by_id
-  belongs_to :updator, :class_name => "User", :foreign_key => :updated_by_id
+  belongs_to :creator, -> { unscope(where: :active) }, :class_name => "User", :foreign_key => :created_by_id
+  belongs_to :updator, -> { unscope(where: :active) }, :class_name => "User", :foreign_key => :updated_by_id
 
   # Has been tagged by the user
   has_many    :asset_tags
