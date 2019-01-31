@@ -8,7 +8,7 @@
 # This task is designed to run once per day, every day
 #
 #------------------------------------------------------------------------------
-class TaskReminderJob < Job
+class TaskReminderJob < ActivityJob
 
   include Rails.application.routes.url_helpers
 
