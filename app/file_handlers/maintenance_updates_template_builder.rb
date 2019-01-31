@@ -289,7 +289,9 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
 
   def include_mileage_columns?
 
-    if @asset_class_name.include? "Vehicle"
+    if @asset_class_name && (@asset_class_name.include? "Vehicle")
+      true
+    elsif @assets && (@assets.very_specific.class.to_s.include? 'Vehicle')
       true
     else
       false
