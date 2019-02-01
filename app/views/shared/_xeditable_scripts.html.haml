@@ -1,5 +1,7 @@
 -# need to pass an obj which is the model instance you are updating
 
+- allowed_to_edit ||= can?(:update, obj)
+
 :javascript
 
   $(function() {
@@ -45,7 +47,7 @@
 
     $('.editable-field.currency-number').editable(currency_xeditable_options);
 
-    disabled = "#{cannot?(:update, obj) ? 'disable' : ''}";
+    disabled = "#{allowed_to_edit ? '' : 'disable'}";
     if (disabled.length > 0) {
       $('.editable-field').editable(disabled);
     }
