@@ -80,7 +80,9 @@ module TransamTagHelper
     return engine.render.html_safe
   end
 
-  def editable_field_tag(asset, field, label=nil, required: true, type: 'text', min: nil, max: nil, suffix: '')
+  def editable_field_tag(model_obj, field, label=nil, required: true, type: 'text', min: nil, max: nil, suffix: '')
+    asset = model_obj.is_a?(Array) ? model_obj.last : model_obj
+
     if type == 'boolean'
       return editable_association_tag(asset, field, label,
                                             [[1, 'Yes'],[0, 'No']],
@@ -103,7 +105,7 @@ module TransamTagHelper
     # Escape for HAML
     label = label.gsub('%','\%') if label
 
-    asset_path = eval("#{asset.class.base_class.name.underscore}_path(id: '#{asset.object_key}')")
+    asset_path = polymorphic_path(model_obj)
 
     engine = Haml::Engine.new("
 ##{field}_group.form-group
@@ -116,7 +118,10 @@ module TransamTagHelper
     return engine.render.html_safe
   end
 
-  def editable_association_tag(asset, field, label=nil, collection=nil, current_method: nil, include_blank: false, current_value: nil, type: 'select', url: nil, suffix: '_id')
+  def editable_association_tag(model_obj, field, label=nil, collection=nil, current_method: nil, include_blank: false, current_value: nil, type: 'select', url: nil, suffix: '_id')
+
+    asset = model_obj.is_a?(Array) ? model_obj.last : model_obj
+
     # value = current_value || (collection || url ? asset.send(current_method || field).to_s : asset.send(current_method || "#{field.to_s}_id").to_s)
     field_name = current_method || "#{field.to_s.singularize}#{suffix}"
     value = current_value || asset.send(current_method || field_name).to_s
@@ -134,7 +139,7 @@ module TransamTagHelper
       source += collection.map{|pair| "{value: '#{pair[0]}', text: '#{pair[1].to_s.gsub("'"){"\\\\'"}}'}"}.join(',')
     end
 
-    asset_path = eval("#{asset.class.base_class.name.underscore}_path(id: '#{asset.object_key}')")
+    asset_path = polymorphic_path(model_obj)
 
     engine = Haml::Engine.new("
 ##{field}_group.form-group
