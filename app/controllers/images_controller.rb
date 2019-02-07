@@ -16,7 +16,11 @@ class ImagesController < NestedResourceController
       @images = @imagable.images
     end
     if params[:sort].present? && params[:order].present?
-      @images = @images.order(params[:sort] => params[:order])
+      if params[:sort] == 'creator'
+        @images = @images.unscoped.joins(:creator).order("CONCAT(users.first_name, ' ', users.last_name) #{params[:order]}")
+      else
+        @images = @images.unscoped.order(params[:sort] => params[:order])
+      end
     else
       @images = @images.order(created_at: :desc)
     end
