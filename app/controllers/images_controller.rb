@@ -8,21 +8,22 @@ class ImagesController < NestedResourceController
   # GET /images.json
   def index
 
-    if params[:global_base_imagable]
-      @imagable = GlobalID::Locator.locate params[:global_base_imagable]
-      @images = Image.where(base_imagable: @imagable)
-    else
-      @imagable = find_resource
-      @images = @imagable.images
-    end
     if params[:sort].present? && params[:order].present?
       if params[:sort] == 'creator'
-        @images = @images.unscoped.joins(:creator).order("CONCAT(users.first_name, ' ', users.last_name) #{params[:order]}")
+        @images = Image.unscoped.joins(:creator).order("CONCAT(users.first_name, ' ', users.last_name) #{params[:order]}")
       else
-        @images = @images.unscoped.order(params[:sort] => params[:order])
+        @images = Image.unscoped.order(params[:sort] => params[:order])
       end
     else
-      @images = @images.order(created_at: :desc)
+      @images = Image.all
+    end
+
+    if params[:global_base_imagable]
+      @imagable = GlobalID::Locator.locate params[:global_base_imagable]
+      @images = @images.where(base_imagable: @imagable)
+    else
+      @imagable = find_resource
+      @images = @images.where(imagable: @imagable)
     end
 
     respond_to do |format|
