@@ -22,8 +22,9 @@
       %thead
         %tr
           %th{:data => {:sortable => 'true'}} Event
-          %th{:data => {:sortable => 'true', :formatter => 'date_formatter'}} Date
           %th Update
+          %th{:data => {:sortable => 'true', :formatter => 'date_time_formatter'}} Date & Time
+          %th{:data => {:sortable => 'true'}} Event By
           %th Notes
       %tbody
         -# EarlyDispositionRequestUpdateEvent is a special case as it is state-ful and each state represent one history
@@ -34,9 +35,11 @@
               %td
                 = evt.asset_event_type.description
               %td
+                = evt.get_update
+              %td
                 = evt.created_at
               %td
-                = evt.get_update
+                = evt.creator
               %td
                 = (evt.comments.blank? ? " " : evt.comments).html_safe
             - unless evt.is_new?
@@ -44,9 +47,11 @@
                 %td
                   = evt.asset_event_type.description
                 %td
+                  = evt.get_latest_update
+                %td
                   = evt.updated_at
                 %td
-                  = evt.get_latest_update
+                = evt.creator
                 %td
                   = (evt.comments.blank? ? " " : evt.comments).html_safe
           - else
@@ -54,9 +59,11 @@
               %td
                 = evt.asset_event_type.description
               %td
-                = evt.event_date
-              %td
                 = evt.get_update
+              %td
+                = evt.updated_at
+              %td
+                = evt.creator
               %td
                 = (evt.comments.blank? ? " " : evt.comments).html_safe
 

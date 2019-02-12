@@ -280,7 +280,7 @@ class TransamAsset < TransamAssetRecord
 
   # returns the list of events associated with this asset ordered by date, newest first
   def history
-    asset_events(true).order('event_date DESC, created_at DESC')
+    asset_events(true).order(updated_at: :desc)
   end
 
 
