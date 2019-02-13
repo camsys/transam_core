@@ -3,7 +3,7 @@ class PutMetricDataService
   def initialize
     @cw = Fog::AWS::CloudWatch.new({:aws_secret_access_key => ENV['AWS_SECRET_KEY'],
                                     :aws_access_key_id => ENV['AWS_ACCESS_KEY']
-                                   })
+                                   }) unless ENV['AWS_SECRET_KEY'].blank? && ENV['AWS_ACCESS_KEY'].blank?
     @env = ENV['RAILS_ENV']
     @namespace = "#{Rails.application.class.parent}:#{@env}"
 
@@ -11,7 +11,7 @@ class PutMetricDataService
 
   def put_metric(name, unit, value, dimensions=[])
     #puts [{'MetricName' => name, 'Unit' => unit, 'Value' => value, 'Dimensions' => dimensions}.select { |k, v| v!=[] }]
-    put_metrics_prepared([{'MetricName' => name, 'Unit' => unit, 'Value' => value, 'Dimensions' => dimensions}.select { |k, v| v!=[] }])
+    put_metrics_prepared([{'MetricName' => name, 'Unit' => unit, 'Value' => value, 'Dimensions' => dimensions}.select { |k, v| v!=[] }]) if @cw
   end
 
   def put_metrics_prepared metrics
