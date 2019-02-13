@@ -32,8 +32,4 @@ class SessionCacheCleanupJob < ActivityJob
 
   end
 
-  def initialize
-    super
-  end
-
 end
