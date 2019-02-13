@@ -292,7 +292,13 @@ class TransamAsset < TransamAssetRecord
     end
 
     typed_asset = TransamAsset.get_typed_asset(self)
-    assoc = typed_asset.class.reflect_on_all_associations(:has_many).select{|x| x.class_name == asset_event_type_class.to_s}.first.name
+    if typed_asset.class.superclass.name == "TransamAssetRecord"
+      klass = typed_asset.class
+    else
+      klass = typed_asset.class.superclass
+    end
+
+    assoc = klass.reflect_on_all_associations(:has_many).select{|x| x.class_name == asset_event_type_class.to_s}.first.name
     typed_asset.send(assoc).build
   end
 
