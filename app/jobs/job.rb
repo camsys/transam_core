@@ -10,7 +10,6 @@
 class Job
 
   def initialize(*args)
-    @pmd_service = PutMetricDataService.new
   end
 
   # Called by the delayed_jobs scheduler to execute a job
@@ -25,7 +24,7 @@ class Job
       # perform any post processing`
       clean_up
     rescue Exception => e
-      @pmd_service.put_metric('DelayedJobErrorResponse', 'Count', 1)
+      PutMetricDataService.new.put_metric('DelayedJobErrorResponse', 'Count', 1)
 
       Rails.logger.warn e.message
       Rails.logger.warn e.backtrace
