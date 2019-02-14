@@ -70,6 +70,7 @@
         = link_to new_asset_inventory_index_path do
           %i.fa.fa-plus.fa-fw
           Add Asset
+    - if (can? :create, Rails.application.config.asset_base_class_name.constantize) || (can? :create, AssetEvent)
       %li.divider
       %li.text-left.dropdown-submenu
         = link_to uploads_path do

@@ -4,7 +4,7 @@
     :html => {:id => 'template_form', :class => 'form-vertical' },
     :wrapper => :vertical_form,                                                                                                                                                           :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes, :radio_buttons => :vertical_radio_and_checkboxes, :file => :vertical_file_input, :boolean => :vertical_boolean}) do |f|
     .col-sm-6
-      = f.input :file_content_type_id, :required => true, :collection => FileContentType.active, :label => "Template Type", :prompt => 'Set the spreadsheet contents...'
+      = f.input :file_content_type_id, :required => true, :collection => FileContentType.active.select{|f| can? :read, f}, :label => "Template Type", :prompt => 'Set the spreadsheet contents...'
     .col-sm-6
       - if @organization_list.count == 1
         = f.input :organization_id, :as => :hidden, :input_html => { :value => @organization_list.first }
