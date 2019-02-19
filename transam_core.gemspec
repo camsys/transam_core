@@ -59,7 +59,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'bootstrap-sass', '~> 3.2.0' # Lock to 3.2 for now as glyphicons fail in 3.3
   s.add_dependency 'haml-rails'
-  s.add_dependency 'rmagick'
+  s.add_dependency 'rmagick', '2.16.0' # Hold off on upgrading to 3.0.0 because of ImageMagick
 
   s.add_dependency 'simple_form'
   s.add_dependency 'country_select'
