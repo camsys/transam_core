@@ -6,7 +6,7 @@ class QueryFieldsController < TransamController
 
   def index
 
-    @query_fields = QueryField.visible.order(:name)
+    @query_fields = QueryField.visible.order(:label)
     unless params[:query_category_id].blank?
       @query_fields = @query_fields.by_category_id(params[:query_category_id])
     end
