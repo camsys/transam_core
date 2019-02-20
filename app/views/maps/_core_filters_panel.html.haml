@@ -12,13 +12,10 @@
     %label
       %input{type: 'checkbox', id: 'condition_rating_slider_enabled'}
       = "Condition Rating"
-
     .col-md-12.slider-container{style: 'padding-left: 20px'}
       %label.slider-label.col-xs-12
         = "#{min_condition_rating} - #{max_condition_rating}"
       %input{id: 'condition_rating_slider', name: 'searcher[condition_rating_slider]', type: 'text', data: {slider_min: min_condition_rating, slider_max: max_condition_rating, slider_value: [min_condition_rating, max_condition_rating], slider_enabled: 'false', slider_step: 0.5, slider_tooltip: 'hide'}}
-
-
   .row{style: "margin-top: 10px;"}
     .col-md-12
       %label
@@ -38,12 +35,28 @@
           = "#{asset.fiscal_year min_replacement_year} - #{asset.fiscal_year max_replacement_year}"
         %input{id: 'scheduled_replacement_year_slider', name: 'searcher[scheduled_replacement_year_slider]', type: 'text', data: {slider_min: min_replacement_year, slider_max: max_replacement_year, slider_value: [min_replacement_year, max_replacement_year], slider_enabled: 'false', slider_tooltip: 'hide'}}
 
-
-
 :javascript
+  function cache_core_filters() {
+    var filters = {};
 
+    ['condition_rating', 'purchase_year', 'scheduled_replacement_year'].forEach(function(field) {
+      if($('#' + field + '_slider_enabled').is(':checked')) {
+        filters[field] = $("#" + field+ "_slider").slider('getValue');
+      }
+    });
 
+    return filters;
+  }
 
+  function load_cached_core_filters(filters) {
+    ['condition_rating', 'purchase_year', 'scheduled_replacement_year'].forEach(function(field) {
+      var filter_val = filters[field];
+      if(filter_val && filter_val.length == 2) {
+        $('#' + field + '_slider_enabled').prop('checked', true).trigger('change');
+        $("#" + field + "_slider").slider('setValue', filter_val, true, true);
+      }
+    });
+  }
 
   $(function() {
     // initialize slider filters

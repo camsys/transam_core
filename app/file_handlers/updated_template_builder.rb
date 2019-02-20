@@ -15,6 +15,7 @@ class UpdatedTemplateBuilder
   attr_accessor :organization_list
   attr_accessor :asset_class_name
   attr_accessor :asset_seed_class_id
+  attr_accessor :is_component
 
   def build
 
