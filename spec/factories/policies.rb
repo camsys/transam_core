@@ -28,24 +28,28 @@ FactoryBot.define do
     association :organization, :factory => :organization_basic
 
     transient do
-      has_fuel_type false
+      has_fuel_type { false }
     end
 
     transient do
-      type 0
+      type { 0 }
     end
 
     transient do
-      subtype 0
+      subtype { 0 }
     end
 
     trait :fuel_type do
-      has_fuel_type true
+      has_fuel_type { true }
     end
 
     after(:create) do |policy, evaluator|
       create(:policy_transam_asset_type_rule, policy: policy, asset_type_id: evaluator.type)
-      create(:policy_transam_asset_subtype_rule, (:fuel_type if evaluator.has_fuel_type), policy: policy, asset_subtype_id: evaluator.subtype)
+      if evaluator.has_fuel_type
+        create(:policy_transam_asset_subtype_rule, :fuel_type, policy: policy, asset_subtype_id: evaluator.subtype)
+      else
+        create(:policy_transam_asset_subtype_rule, policy: policy, asset_subtype_id: evaluator.subtype)
+      end
     end
   end
 
