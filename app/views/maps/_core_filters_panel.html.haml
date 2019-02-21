@@ -61,6 +61,7 @@
   $(function() {
     // initialize slider filters
     $("#condition_rating_slider").slider({ focus: true });
+    $("#condition_rating_slider").val(''); // set value to not existent so can get assets without condition updates
     $('#condition_rating_slider_enabled').on('change', function() {
       if($(this).is(':checked')) {
         $("#condition_rating_slider").slider('enable');
@@ -68,6 +69,7 @@
         $("#condition_rating_slider").slider('disable');
         $("#condition_rating_slider").slider('setValue', [#{min_condition_rating}, #{max_condition_rating}]);
         set_label($("#condition_rating_slider"));
+        $('#condition_rating_slider').val('');
       }
     });
     $("#condition_rating_slider").on('change', function(e) {
@@ -129,6 +131,7 @@
     $('#reset_filters_btn').click(function() {
       $("#condition_rating_slider").slider('setValue', [#{min_condition_rating}, #{max_condition_rating}]);
       $("#condition_rating_slider").slider('disable');
+      $("#condition_rating_slider").val('');
       $("#purchase_year_slider").slider('setValue', [#{min_purchase_year}, #{max_purchase_year}]);
       $("#purchase_year_slider").slider('disable');
       $("#scheduled_replacement_year_slider").slider('setValue', [#{min_replacement_year}, #{max_replacement_year}]);
