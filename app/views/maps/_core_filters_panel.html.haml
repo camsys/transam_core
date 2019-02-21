@@ -1,8 +1,8 @@
 :ruby
   min_condition_rating = ConditionType.min_rating.to_f
   max_condition_rating = ConditionType.max_rating.to_f
-  min_replacement_year = Date.today.year
-  max_replacement_year = min_replacement_year + 40
+  min_replacement_year = current_fiscal_year_year - 5
+  max_replacement_year = min_replacement_year + 50
   min_purchase_year = Rails.application.config.epoch.present? ? Rails.application.config.epoch.year : 1900
   max_purchase_year = Date.today.year
   asset = Rails.application.config.asset_base_class_name.constantize.new
@@ -33,7 +33,7 @@
       .col-md-12.slider-container{style: 'padding-left: 20px'}
         %label.slider-label.col-xs-12
           = "#{asset.fiscal_year min_replacement_year} - #{asset.fiscal_year max_replacement_year}"
-        %input{id: 'scheduled_replacement_year_slider', name: 'searcher[scheduled_replacement_year_slider]', type: 'text', data: {slider_min: min_replacement_year, slider_max: max_replacement_year, slider_value: [min_replacement_year, max_replacement_year], slider_enabled: 'false', slider_tooltip: 'hide'}}
+        %input{id: 'scheduled_replacement_year_slider', name: 'searcher[scheduled_replacement_year_slider]', type: 'text', data: {slider_min: min_replacement_year, slider_max: max_replacement_year, slider_value: [min_replacement_year+5, max_replacement_year], slider_enabled: 'false', slider_tooltip: 'hide'}}
 
 :javascript
   function cache_core_filters() {
@@ -91,6 +91,7 @@
     });
 
     $("#scheduled_replacement_year_slider").slider({ focus: true });
+    $("#scheduled_replacement_year_slider").val('');
     $('#scheduled_replacement_year_slider_enabled').on('change', function() {
       if($(this).is(':checked')) {
         $("#scheduled_replacement_year_slider").slider('enable');
