@@ -8,6 +8,8 @@ module Abilities
         r.name != "admin"
       end
 
+      # can manage SavedQuery
+      can :manage, SavedQuery
     end
   end
 end

@@ -22,7 +22,7 @@ RSpec.describe Message, :type => :model do
 
     it 'is 1 for a message with a single response' do
       msg.save
-      msg.responses.create(attributes_for(:message))
+      msg.responses.build(attributes_for(:message))
       expect(msg.response_count).to eq(1)
     end
 

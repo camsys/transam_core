@@ -4,7 +4,9 @@ module Abilities
 
     def initialize(user, organization_ids=[])
 
-      can [:create, :update, :delete], SavedQuery do |query|
+      can [:create, :show, :export, :query, :export_unsaved, :clone, :save_as], SavedQuery
+
+      can [:update, :destroy], SavedQuery do |query|
         user.id == query.created_by_user_id
       end
 
