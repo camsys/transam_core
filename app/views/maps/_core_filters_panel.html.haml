@@ -97,7 +97,7 @@
         $("#scheduled_replacement_year_slider").slider('enable');
       } else {
         $("#scheduled_replacement_year_slider").slider('disable');
-        $("#scheduled_replacement_year_slider").slider('setValue', [#{min_replacement_year}, #{max_replacement_year}]);
+        $("#scheduled_replacement_year_slider").slider('setValue', [#{min_replacement_year+5}, #{max_replacement_year}]);
         set_label($("#scheduled_replacement_year_slider"));
       }
     });
