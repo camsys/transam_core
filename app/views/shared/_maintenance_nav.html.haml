@@ -1,0 +1,18 @@
+:ruby
+  report_conditions = []
+  report_values = []
+
+  current_user.roles_name.each do |role|
+    report_conditions << "roles LIKE ?"
+    report_values << "%#{role}%"
+  end
+
+%li{:class => "dropdown #{get_nav_link_class('maintenance')}"}
+  = link_to "#", :class => "dropdown-toggle", :data => {"toggle" => "dropdown"}, :title => 'Maintenance Management' do
+    %i.fa.fa-wrench.fa-2x
+    %b.caret
+  %ul.dropdown-menu.multi-level{:role => "menu"}
+    %li.text-left
+      = link_to performance_restrictions_path  do
+        %i.fa.fa-tachometer.fa-fw
+        Performance Restrictions
