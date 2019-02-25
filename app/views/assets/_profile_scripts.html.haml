@@ -2,12 +2,83 @@
 -# leaving duplicate for now since this was written first and want to limit regression issues
 -# only thing different is the JS to update subheader if fields subheader calls are updated
 
+:css
+  .editable-click, a.editable-click, a.editable-click:hover {
+    color: #17406E;
+    border-bottom: none;
+  }
+
+  .editable-click.editable-disabled, a.editable-click.editable-disabled, a.editable-click.editable-disabled:hover {
+    color: #17406E;
+  }
+
 :javascript
 
   $(function() {
     $.fn.editable.defaults.mode = 'inline';
     $.fn.editable.defaults.clear = false;
     $.fn.editable.defaults.savenochange = true;
+    $.fn.editable.defaults.showbuttons = false;
+    $.fn.editable.defaults.send = 'never';
+    $.fn.editable.defaults.onblur = 'ignore';
+    $.fn.editable.defaults.disabled = true;
+
+    $('.edit-asset-button').on('click', function(e) {
+      e.stopPropagation();
+      tab_id = $(this).parents('.tab-pane').attr('id');
+      $('#'+tab_id+'.tab-pane .editable-field').editable('enable');
+      $('#'+tab_id+'.tab-pane .editable-field').editable('show', false);
+      $('#'+tab_id+'.tab-pane .edit-asset-button').hide();
+      $('#'+tab_id+'.tab-pane .edit-buttons').show();
+    });
+
+    $('.cancel-asset-button').on('click', function(e) {
+      e.stopPropagation();
+      tab_id = $(this).parents('.tab-pane').attr('id');
+
+      $('#'+tab_id+'.tab-pane .editable-field').editable('hide');
+      $('#'+tab_id+'.tab-pane .editable-field').editable('disable');
+
+      $('#'+tab_id+'.tab-pane .edit-asset-button').show();
+      $('#'+tab_id+'.tab-pane .edit-buttons').hide();
+    });
+
+    $('.save-asset-button').click(function() {
+      tab_id = $(this).parents('.tab-pane').attr('id');
+
+       $('.editable-field').editable('submit', {
+           ajaxOptions: {
+               type: 'PUT',
+               dataType: 'json' //assuming json response
+           },
+           success: function(data, config) {
+               if(data && data.errors){
+                   //server-side validation error, response like {"errors": {"username": "username already exist"} }
+                   config.error.call(this, data.errors);
+               } else {
+                $('#'+tab_id+'.tab-pane .editable-field').editable('hide');
+                $('#'+tab_id+'.tab-pane .editable-field').editable('disable');
+                $('#'+tab_id+'.tab-pane .edit-asset-button').show();
+                $('#'+tab_id+'.tab-pane .edit-buttons').hide();
+               }
+           },
+           error: function(errors) {
+               var msg = '';
+               if(errors && errors.responseText) { //ajax error, errors = xhr object
+                   msg = errors.responseText;
+               } else { //validation error (client-side or server-side)
+                   $.each(errors, function(k, v) { msg += k+": "+v+"<br>"; });
+               }
+               $('#msg').removeClass('alert-success').addClass('alert-error').html(msg).show();
+           }
+       });
+    });
+
+    $('.editable-field').on('hidden', function(e, reason) {
+        if(reason === 'save') {
+           $(this).editable('show', false);
+        }
+    })
 
     $('.editable-field.combodate').editable({
         template: 'MMM D YYYY',    
@@ -54,13 +125,6 @@
     $('.editable-field:not(.currency-number)').editable(generic_xeditable_options);
 
     $('.editable-field.currency-number').editable(currency_xeditable_options);
-
-    disabled = "#{cannot?(:update, @asset) ? 'disable' : ''}";
-    if (disabled.length > 0) {
-      $('.editable-field').editable(disabled);
-    }
-
-    $('.not-editable-field').editable('disable');
 
     // select all text when editable input shows up so to speed up input
     $('.editable-field').on('shown', function(e, editable) {
