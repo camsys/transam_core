@@ -23,27 +23,27 @@
     $.fn.editable.defaults.onblur = 'ignore';
     $.fn.editable.defaults.disabled = true;
 
-    $('.edit-asset-button').on('click', function(e) {
+    $('.edit-xeditable-button').on('click', function(e) {
       e.stopPropagation();
       tab_id = $(this).parents('.tab-pane').attr('id');
       $('#'+tab_id+'.tab-pane .editable-field').editable('enable');
       $('#'+tab_id+'.tab-pane .editable-field').editable('show', false);
-      $('#'+tab_id+'.tab-pane .edit-asset-button').hide();
-      $('#'+tab_id+'.tab-pane .edit-buttons').show();
+      $('#'+tab_id+'.tab-pane .edit-xeditable-button').hide();
+      $('#'+tab_id+'.tab-pane .edit-xeditable-buttons').show();
     });
 
-    $('.cancel-asset-button').on('click', function(e) {
+    $('.cancel-xeditable-button').on('click', function(e) {
       e.stopPropagation();
       tab_id = $(this).parents('.tab-pane').attr('id');
 
       $('#'+tab_id+'.tab-pane .editable-field').editable('hide');
       $('#'+tab_id+'.tab-pane .editable-field').editable('disable');
 
-      $('#'+tab_id+'.tab-pane .edit-asset-button').show();
-      $('#'+tab_id+'.tab-pane .edit-buttons').hide();
+      $('#'+tab_id+'.tab-pane .edit-xeditable-button').show();
+      $('#'+tab_id+'.tab-pane .edit-xeditable-buttons').hide();
     });
 
-    $('.save-asset-button').click(function() {
+    $('.save-xeditable-button').click(function() {
       tab_id = $(this).parents('.tab-pane').attr('id');
 
        $('.editable-field').editable('submit', {
@@ -58,8 +58,8 @@
                } else {
                 $('#'+tab_id+'.tab-pane .editable-field').editable('hide');
                 $('#'+tab_id+'.tab-pane .editable-field').editable('disable');
-                $('#'+tab_id+'.tab-pane .edit-asset-button').show();
-                $('#'+tab_id+'.tab-pane .edit-buttons').hide();
+                $('#'+tab_id+'.tab-pane .edit-xeditable-button').show();
+                $('#'+tab_id+'.tab-pane .edit-xeditable-buttons').hide();
                }
            },
            error: function(errors) {

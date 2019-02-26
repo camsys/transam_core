@@ -1,13 +1,70 @@
--# need to pass an obj which is the model instance you are updating
-
-- allowed_to_edit ||= can?(:update, obj)
-
 :javascript
 
   $(function() {
     $.fn.editable.defaults.mode = 'inline';
     $.fn.editable.defaults.clear = false;
     $.fn.editable.defaults.savenochange = true;
+    $.fn.editable.defaults.showbuttons = false;
+    $.fn.editable.defaults.send = 'never';
+    $.fn.editable.defaults.onblur = 'ignore';
+    $.fn.editable.defaults.disabled = true;
+
+    $('.edit-xeditable-button').on('click', function(e) {
+      e.stopPropagation();
+      tab_id = $(this).parents('.tab-pane').attr('id');
+      $('#'+tab_id+'.tab-pane .editable-field').editable('enable');
+      $('#'+tab_id+'.tab-pane .editable-field').editable('show', false);
+      $('#'+tab_id+'.tab-pane .edit-xeditable-button').hide();
+      $('#'+tab_id+'.tab-pane .edit-xeditable-buttons').show();
+    });
+
+    $('.cancel-xeditable-button').on('click', function(e) {
+      e.stopPropagation();
+      tab_id = $(this).parents('.tab-pane').attr('id');
+
+      $('#'+tab_id+'.tab-pane .editable-field').editable('hide');
+      $('#'+tab_id+'.tab-pane .editable-field').editable('disable');
+
+      $('#'+tab_id+'.tab-pane .edit-xeditable-button').show();
+      $('#'+tab_id+'.tab-pane .edit-xeditable-buttons').hide();
+    });
+
+    $('.save-xeditable-button').click(function() {
+      tab_id = $(this).parents('.tab-pane').attr('id');
+
+       $('.editable-field').editable('submit', {
+           ajaxOptions: {
+               type: 'PUT',
+               dataType: 'json' //assuming json response
+           },
+           success: function(data, config) {
+               if(data && data.errors){
+                   //server-side validation error, response like {"errors": {"username": "username already exist"} }
+                   config.error.call(this, data.errors);
+               } else {
+                $('#'+tab_id+'.tab-pane .editable-field').editable('hide');
+                $('#'+tab_id+'.tab-pane .editable-field').editable('disable');
+                $('#'+tab_id+'.tab-pane .edit-xeditable-button').show();
+                $('#'+tab_id+'.tab-pane .edit-xeditable-buttons').hide();
+               }
+           },
+           error: function(errors) {
+               var msg = '';
+               if(errors && errors.responseText) { //ajax error, errors = xhr object
+                   msg = errors.responseText;
+               } else { //validation error (client-side or server-side)
+                   $.each(errors, function(k, v) { msg += k+": "+v+"<br>"; });
+               }
+               $('#msg').removeClass('alert-success').addClass('alert-error').html(msg).show();
+           }
+       });
+    });
+
+    $('.editable-field').on('hidden', function(e, reason) {
+        if(reason === 'save') {
+           $(this).editable('show', false);
+        }
+    })
 
     $('.editable-field.combodate').editable({
         template: 'MMM D YYYY',    
@@ -46,13 +103,6 @@
     $('.editable-field:not(.currency-number)').editable(generic_xeditable_options);
 
     $('.editable-field.currency-number').editable(currency_xeditable_options);
-
-    disabled = "#{allowed_to_edit ? '' : 'disable'}";
-    if (disabled.length > 0) {
-      $('.editable-field').editable(disabled);
-    }
-
-    $('.not-editable-field').editable('disable');
 
     // select all text when editable input shows up so to speed up input
     $('.editable-field').on('shown', function(e, editable) {
