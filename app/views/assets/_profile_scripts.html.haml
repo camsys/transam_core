@@ -191,3 +191,14 @@
       show_hide_other_text_entry(this, type_id);
     });
   });
+
+  // https://github.com/vitalets/x-editable/issues/851
+  (function() {
+      var original = $.fn.editableutils.setCursorPosition;
+      $.fn.editableutils.setCursorPosition = function() {
+          try {
+              original.apply(this, Array.prototype.slice.call(arguments));
+          } catch (e) { /* noop */ }
+      };
+  })();
+
