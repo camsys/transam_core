@@ -247,7 +247,16 @@ class SavedQuery < ActiveRecord::Base
     end
 
     select_sqls = []
+    column_filters = {}
     query_fields.each do |field|
+      unless field.column_filter.blank? || field.column_filter_value.blank?
+        if column_filters[field.column_filter]
+          column_filters[field.column_filter] << field.column_filter_value unless column_filters[field.column_filter].include?(field.column_filter_value)
+        else
+          column_filters[field.column_filter] = [field.column_filter_value]
+        end
+      end
+
       query_field_name = field.name
       field_association = field.query_association_class
       if field_association
@@ -288,6 +297,11 @@ class SavedQuery < ActiveRecord::Base
     # wheres
     if where_sqls.any?
       base_rel = base_rel.where(where_sqls.map{ |field_name, field_sql| "(" + field_sql + ")" }.join(" AND "))
+    end
+
+    # apply column filters
+    if column_filters.any?
+      base_rel = base_rel.where(column_filters.map{ |column_filter, column_filter_values| "#{column_filter} in (" + column_filter_values.map{|v| "'#{v}'"}.join(',') + ")" }.join(" OR "))
     end
 
     # selects
