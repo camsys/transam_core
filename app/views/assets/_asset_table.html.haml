@@ -23,9 +23,9 @@
   :resizable => 'true',
   :smart_display => 'true',
   :search => 'false',
-  :state_save => 'true',
-  :state_save_id_table => "assetsid",
-  :state_save_expire => "1y"}}
+  :cookie => 'true',
+  :cookie_id_table => "assetsid",
+  :cookie_expire => "1y"}}
   %thead
     %tr
       - SystemConfig.transam_module_names.each do |mod|
