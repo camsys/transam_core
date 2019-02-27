@@ -9,28 +9,35 @@
     $.fn.editable.defaults.onblur = 'ignore';
     $.fn.editable.defaults.disabled = true;
 
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+
+      if ($('.edit-xeditable-button').is(":visible")) {
+        $('.editable-field').editable('hide');
+        $('.editable-field').editable('disable');
+      }
+    });
+
     $('.edit-xeditable-button').on('click', function(e) {
       e.stopPropagation();
-      tab_id = $(this).parents('.tab-pane').attr('id');
-      $('#'+tab_id+'.tab-pane .editable-field').editable('enable');
-      $('#'+tab_id+'.tab-pane .editable-field').editable('show', false);
-      $('#'+tab_id+'.tab-pane .edit-xeditable-button').hide();
-      $('#'+tab_id+'.tab-pane .edit-xeditable-buttons').show();
+
+      console.log('apple pie');
+      $('.editable-field').editable('enable');
+      $('.editable-field').editable('show', false);
+      $('.edit-xeditable-button').hide();
+      $('.edit-xeditable-buttons').show();
     });
 
     $('.cancel-xeditable-button').on('click', function(e) {
       e.stopPropagation();
-      tab_id = $(this).parents('.tab-pane').attr('id');
 
-      $('#'+tab_id+'.tab-pane .editable-field').editable('hide');
-      $('#'+tab_id+'.tab-pane .editable-field').editable('disable');
+      $('.editable-field').editable('hide');
+      $('.editable-field').editable('disable');
 
-      $('#'+tab_id+'.tab-pane .edit-xeditable-button').show();
-      $('#'+tab_id+'.tab-pane .edit-xeditable-buttons').hide();
+      $('.edit-xeditable-button').show();
+      $('.edit-xeditable-buttons').hide();
     });
 
     $('.save-xeditable-button').click(function() {
-      tab_id = $(this).parents('.tab-pane').attr('id');
 
        $('.editable-field').editable('submit', {
            ajaxOptions: {
@@ -42,10 +49,10 @@
                    //server-side validation error, response like {"errors": {"username": "username already exist"} }
                    config.error.call(this, data.errors);
                } else {
-                $('#'+tab_id+'.tab-pane .editable-field').editable('hide');
-                $('#'+tab_id+'.tab-pane .editable-field').editable('disable');
-                $('#'+tab_id+'.tab-pane .edit-xeditable-button').show();
-                $('#'+tab_id+'.tab-pane .edit-xeditable-buttons').hide();
+                $('.editable-field').editable('hide');
+                $('.editable-field').editable('disable');
+                $('.edit-xeditable-button').show();
+                $('.edit-xeditable-buttons').hide();
                }
            },
            error: function(errors) {
