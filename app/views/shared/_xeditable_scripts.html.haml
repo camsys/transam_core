@@ -6,23 +6,28 @@
     $.fn.editable.defaults.savenochange = true;
     $.fn.editable.defaults.showbuttons = false;
     $.fn.editable.defaults.send = 'never';
-    $.fn.editable.defaults.onblur = 'ignore';
+    $.fn.editable.defaults.onblur = 'submit';
     $.fn.editable.defaults.disabled = true;
 
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+      tab_id = $('.tab-pane.active').attr('id');
+      if ($('.edit-xeditable-button').is(":hidden")) {
 
-      if ($('.edit-xeditable-button').is(":visible")) {
-        $('.editable-field').editable('hide');
-        $('.editable-field').editable('disable');
+        $('#'+tab_id+'.tab-pane .editable-field').editable('enable');
+        $('#'+tab_id+'.tab-pane .editable-field').editable('show', false);
+      } else {
+        $('#'+tab_id+'.tab-pane .editable-field').editable('hide');
+        $('#'+tab_id+'.tab-pane .editable-field').editable('disable');
+
       }
     });
 
     $('.edit-xeditable-button').on('click', function(e) {
       e.stopPropagation();
+      tab_id = $('.tab-pane.active').attr('id');
+      $('#'+tab_id+'.tab-pane .editable-field').editable('enable');
+      $('#'+tab_id+'.tab-pane .editable-field').editable('show', false);
 
-      console.log('apple pie');
-      $('.editable-field').editable('enable');
-      $('.editable-field').editable('show', false);
       $('.edit-xeditable-button').hide();
       $('.edit-xeditable-buttons').show();
     });
@@ -30,8 +35,10 @@
     $('.cancel-xeditable-button').on('click', function(e) {
       e.stopPropagation();
 
-      $('.editable-field').editable('hide');
-      $('.editable-field').editable('disable');
+      tab_id = $('.tab-pane.active').attr('id');
+
+      $('#'+tab_id+'.tab-pane .editable-field').editable('hide');
+      $('#'+tab_id+'.tab-pane .editable-field').editable('disable');
 
       $('.edit-xeditable-button').show();
       $('.edit-xeditable-buttons').hide();
@@ -49,8 +56,11 @@
                    //server-side validation error, response like {"errors": {"username": "username already exist"} }
                    config.error.call(this, data.errors);
                } else {
-                $('.editable-field').editable('hide');
-                $('.editable-field').editable('disable');
+                tab_id = $('.tab-pane.active').attr('id');
+
+                $('#'+tab_id+'.tab-pane .editable-field').editable('hide');
+                $('#'+tab_id+'.tab-pane .editable-field').editable('disable');
+
                 $('.edit-xeditable-button').show();
                 $('.edit-xeditable-buttons').hide();
                }
