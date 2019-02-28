@@ -34,7 +34,7 @@ class CustomSqlReport < AbstractReport
       a = results.rows.dup
     end
 
-    return {:labels => labels, :data => a}
+    return {labels: labels, data: a, table_labels: labels, table_data: a, chart_labels: labels, chart_data: a}
 
   end
   
