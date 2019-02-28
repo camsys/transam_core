@@ -41,6 +41,7 @@
       .panel-heading
         %h3.panel-title
           Profile
+          = render partial: 'shared/xeditable_edit_actions', locals: {obj: @asset}
       .panel-body
         = render 'profile'
 

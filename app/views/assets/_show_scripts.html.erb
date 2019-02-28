@@ -5,7 +5,6 @@
   var tag_url = '<%= tag_inventory_path(@asset) + ".js" %>';
 
   $(document).ready(function() {
-    console.log('core_ready');
 
     // Make the tabs responsive if the viewport gets smaller than the displayed tabs
     $('.responsive-tabs').tabdrop({
@@ -20,7 +19,7 @@
       if ($(this).attr('data-panel') == 'profile') {
         transam.set_ui_key_value(user_profile_tab_key, this_tab);
       } else {
-	transam.set_ui_key_value(user_detail_tab_key, this_tab);
+	      transam.set_ui_key_value(user_detail_tab_key, this_tab);
       }
     });
 
@@ -52,9 +51,21 @@
   });
 
   $(function() {
-    // open first tab in each section
-    $('#asset-details a[data-toggle="tab"]:first').tab('show');
-    $('#profile a[data-toggle="tab"]:first').tab('show');
+      var last_detail_tab = transam.get_ui_key_value(user_detail_tab_key);
+      if ((last_detail_tab) && ("<%= params[:use_last_tab] %>" == '1')) {
+          $('#asset-details a[href="'+last_detail_tab+'"]').tab('show');
+      } else {
+          // Default to the first tab if no tab is stored
+          $('#asset-details a[data-toggle="tab"]:first').tab('show');
+      }
+
+      var last_profile_tab = transam.get_ui_key_value(user_profile_tab_key);
+      if ((last_profile_tab) && ("<%= params[:use_last_tab] %>" == '1')) {
+          $('#profile a[href="'+last_profile_tab+'"]').tab('show');
+      } else {
+          // Default to the first tab if no tab is stored
+          $('#profile a[data-toggle="tab"]:first').tab('show');
+      }
   });
 
 </script>

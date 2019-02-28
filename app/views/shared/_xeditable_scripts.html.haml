@@ -1,36 +1,58 @@
 :javascript
 
+  var lastFocus;
+
   $(function() {
     $.fn.editable.defaults.mode = 'inline';
     $.fn.editable.defaults.clear = false;
     $.fn.editable.defaults.savenochange = true;
     $.fn.editable.defaults.showbuttons = false;
     $.fn.editable.defaults.send = 'never';
-    $.fn.editable.defaults.onblur = 'ignore';
+    $.fn.editable.defaults.onblur = 'submit';
     $.fn.editable.defaults.disabled = true;
+
+    $('body').on('focus', 'input.form-control', function () {
+        lastFocus = $(this);
+    });
+
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+      tab_id = $('.tab-pane.active').attr('id');
+      if ($('.edit-xeditable-button').is(":hidden")) {
+
+        $('#'+tab_id+'.tab-pane .editable-field').editable('enable');
+        $('#'+tab_id+'.tab-pane .editable-field').editable('show', false);
+      } else {
+        $('#'+tab_id+'.tab-pane .editable-field').editable('hide');
+        $('#'+tab_id+'.tab-pane .editable-field').editable('disable');
+
+      }
+    });
 
     $('.edit-xeditable-button').on('click', function(e) {
       e.stopPropagation();
-      tab_id = $(this).parents('.tab-pane').attr('id');
+      tab_id = $('.tab-pane.active').attr('id');
       $('#'+tab_id+'.tab-pane .editable-field').editable('enable');
       $('#'+tab_id+'.tab-pane .editable-field').editable('show', false);
-      $('#'+tab_id+'.tab-pane .edit-xeditable-button').hide();
-      $('#'+tab_id+'.tab-pane .edit-xeditable-buttons').show();
+
+      $('.edit-xeditable-button').hide();
+      $('.edit-xeditable-buttons').show();
     });
 
     $('.cancel-xeditable-button').on('click', function(e) {
       e.stopPropagation();
-      tab_id = $(this).parents('.tab-pane').attr('id');
+
+      tab_id = $('.tab-pane.active').attr('id');
 
       $('#'+tab_id+'.tab-pane .editable-field').editable('hide');
       $('#'+tab_id+'.tab-pane .editable-field').editable('disable');
 
-      $('#'+tab_id+'.tab-pane .edit-xeditable-button').show();
-      $('#'+tab_id+'.tab-pane .edit-xeditable-buttons').hide();
+      $('.edit-xeditable-button').show();
+      $('.edit-xeditable-buttons').hide();
     });
 
     $('.save-xeditable-button').click(function() {
-      tab_id = $(this).parents('.tab-pane').attr('id');
+
+      lastFocus.parents('span').prev().editable('setValue', lastFocus.val());
 
        $('.editable-field').editable('submit', {
            ajaxOptions: {
@@ -42,10 +64,16 @@
                    //server-side validation error, response like {"errors": {"username": "username already exist"} }
                    config.error.call(this, data.errors);
                } else {
+
+                $(this).removeClass('editable-unsaved');
+
+                tab_id = $('.tab-pane.active').attr('id');
+
                 $('#'+tab_id+'.tab-pane .editable-field').editable('hide');
                 $('#'+tab_id+'.tab-pane .editable-field').editable('disable');
-                $('#'+tab_id+'.tab-pane .edit-xeditable-button').show();
-                $('#'+tab_id+'.tab-pane .edit-xeditable-buttons').hide();
+
+                $('.edit-xeditable-button').show();
+                $('.edit-xeditable-buttons').hide();
                }
            },
            error: function(errors) {
