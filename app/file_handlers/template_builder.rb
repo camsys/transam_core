@@ -12,6 +12,8 @@ class TemplateBuilder
   attr_accessor :asset_class_name
   attr_accessor :assets
   attr_accessor :organization_list
+  attr_accessor :is_component
+  attr_accessor :fta_asset_class_id
 
   def build
 
