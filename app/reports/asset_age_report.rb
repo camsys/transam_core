@@ -15,20 +15,20 @@ class AssetAgeReport < AbstractReport
     
     a = []
     asset_counts = []
-    labels = ['Age (Years)']
+    table_labels = ['Years']
 
     if report_filter_type > 0
       asset_type = AssetType.find_by_id(report_filter_type)
-      labels << asset_type.name
+      table_labels << asset_type.name
     else
       AssetType.all.each do |at|
         count = Rails.application.config.asset_base_class_name.constantize.where(organization_id: organization_id_list, asset_subtype_id: at.id).count
         asset_counts << count
-        labels << at.name unless count == 0
+        table_labels << at.name unless count == 0
       end
     end
             
-    (1..MAX_REPORTING_YEARS).each do |year|
+    (0..MAX_REPORTING_YEARS).each do |year|
       counts = []
       counts << "#{year}"
       manufacture_year = year.year.ago.year
@@ -56,7 +56,7 @@ class AssetAgeReport < AbstractReport
     end
     a << counts
         
-    return {:labels => labels, :data => a}
+    return {table_labels: table_labels, table_data: a, chart_labels: table_labels, chart_data: a}
 
   end
   
