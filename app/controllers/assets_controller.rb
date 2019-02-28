@@ -191,8 +191,9 @@ class AssetsController < AssetAwareController
       sorting_string = "#{params[:sort]} #{params[:order]}"
     end
 
+    cache_list(@assets.order(sorting_string), INDEX_KEY_LIST_VAR)
 
-      @assets.order(sorting_string).limit(params[:limit]).offset(params[:offset]).as_json(user: current_user, include_early_disposition: @early_disposition)
+    @assets.order(sorting_string).limit(params[:limit]).offset(params[:offset]).as_json(user: current_user, include_early_disposition: @early_disposition)
 
   end
 
@@ -275,6 +276,11 @@ class AssetsController < AssetAwareController
     # Set the asset class view var. This can be used to determine which view components
     # are rendered, for example, which tabs and action items the user sees
     @asset_class_name = @asset.class.name.underscore
+
+    # get the @prev_record_path and @next_record_path view vars
+    get_next_and_prev_object_keys(@asset, INDEX_KEY_LIST_VAR)
+    @prev_record_path = @prev_record_key.nil? ? "#" : inventory_path(@prev_record_key, use_last_tab: 1)
+    @next_record_path = @next_record_key.nil? ? "#" : inventory_path(@next_record_key, use_last_tab: 1)
 
     respond_to do |format|
       format.html # show.html.erb
