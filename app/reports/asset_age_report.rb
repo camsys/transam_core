@@ -45,7 +45,7 @@ class AssetAgeReport < AbstractReport
     # get the bucket for MAX_YEARS+ years old
     year = MAX_REPORTING_YEARS
     counts = []
-    counts << "+#{year}"
+    counts << "> #{year}"
     manufacture_year = MAX_REPORTING_YEARS.year.ago.year
     if report_filter_type > 0
       counts << Rails.application.config.asset_base_class_name.constantize.where(organization_id: organization_id_list, asset_subtype_id: report_filter_type, manufacture_year: manufacture_year).count
