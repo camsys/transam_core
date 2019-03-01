@@ -33,7 +33,9 @@ class UpdatedTemplateBuilder
     setup_lookup_sheet(wb)
 
     @pick_list_cache = {}
+    @col_widths = []
     add_columns(sheet)
+    @frozen_cols = sheet.sheet_view.pane.x_split
 
     # Add headers
     category_row = []
@@ -92,15 +94,15 @@ class UpdatedTemplateBuilder
       start += fields.length-1
     end
 
-    # set column widths
-    sheet.column_widths *column_widths
-
     # Perform any additional processing
     post_process(sheet)
 
     # Create List of Fields and Pick Lists tab is applicable
     create_list_of_fields(wb)
     create_pick_lists(wb)
+
+    # set column widths
+    sheet.column_widths *column_widths
 
     # Serialize the spreadsheet to the stream and return it
     p.to_stream()
@@ -143,6 +145,9 @@ class UpdatedTemplateBuilder
       sheet.workbook.worksheets[2].rows[@pick_list_cache[:index]].cells.each do |cell|
         @pick_list_cache[name] << cell.value
       end
+      @col_widths << nil
+    else
+      @col_widths << 20
     end
 
     # set any other variables
