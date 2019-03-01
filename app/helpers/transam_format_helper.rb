@@ -124,9 +124,10 @@ module TransamFormatHelper
 
   # if the value is a number it is formatted as a decimal or integer
   # otherwise we assume it is a string and is returned
-  def format_as_general(val, precision = 2)
+  def format_as_general(val, precision = nil)
     begin
       Float(val)
+      precision ||= (val % 1 == 0) ? 0 : 2
       number_with_precision(val, :precision => precision, :delimiter => ",")
     rescue
       val
