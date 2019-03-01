@@ -272,6 +272,12 @@ class SavedQueriesController < OrganizationAwareController
                 if field_types[field_name] == 'boolean'
                   val = (val == 1 ? 'Yes' : 'No')
                 end
+
+                # special case
+                if field_name == 'replacement_status_type_id' && val.blank?
+                  val = 'By Policy'
+                end
+
                 val
               }
 
