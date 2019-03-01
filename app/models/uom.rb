@@ -21,7 +21,7 @@ class Uom
   # Pre-defined area measurements
   SQUARE_FOOT         = "square foot"
   SQUARE_YARD         = "square yard"
-  SQUARE_METER        = "square meter"
+  SQUARE_METER        = "(meter)2"
   SQUARE_MILE         = "square mile"
   ACRE                = "acre"
 
