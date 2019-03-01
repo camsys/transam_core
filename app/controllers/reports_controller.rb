@@ -70,7 +70,9 @@ class ReportsController < OrganizationAwareController
   # a different respond_to block.
   def handle_show &block
     @report_filter_type = params[:report_filter_type]
+    @class_filter_type = params[:class_filter_type]
     @asset_types = []
+    @class_types  = []
     AssetType.active.each do |at|
       count = Rails.application.config.asset_base_class_name.constantize.where(organization_id: @organization_list, asset_subtype_id: at.id).count
       if count > 0
@@ -87,7 +89,7 @@ class ReportsController < OrganizationAwareController
       params[:sql] = @report.custom_sql unless @report.custom_sql.blank?
       # get the report data
       @data = @report_instance.get_data(@organization_list, params)
-
+      @class_types = @report_instance.try(:get_classes)
       # String return value indicates an error message.
       if @data.is_a? String
         notify_user(:alert, @data)
