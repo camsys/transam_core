@@ -190,9 +190,7 @@ module TransamTagHelper
     value = current_value || asset.send(current_method || field_name).to_s
     unless collection || url
       klass = asset.association(field).reflection.class_name.constantize
-      collection = klass.column_names.include?('name') ?
-            klass.active.pluck(:id, :name) :
-            klass.active.collect{|a| [a.id, a.to_s]}
+      collection = klass.active.collect{|a| [a.id, a.to_s]}
                                                  
     end
     unless url
