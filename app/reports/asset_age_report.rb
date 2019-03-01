@@ -56,7 +56,7 @@ class AssetAgeReport < AbstractReport
     end
     a << counts
         
-    return {table_labels: table_labels, table_data: a, chart_labels: table_labels, chart_data: a}
+    return {data: a, labels: table_labels, table_labels: table_labels, table_data: a, chart_labels: table_labels, chart_data: a, formats: [:integer, :integer, :integer, :integer, :integer, :integer, :integer, :integer, :integer, :integer, :integer, :integer]}
 
   end
   
