@@ -41,9 +41,20 @@ $(document).ready(function() {
     // Enable any date pickers etc
     transam.enable_date_pickers();
 
-    // Force uppercase text for OFT inputs
+    // Force uppercase text 
+    function convert_uppercase(input) {
+      // store current positions in variables
+      var start = input.selectionStart,
+          end = input.selectionEnd;
+
+      input.value = input.value.toUpperCase();
+
+      // restore from variables...
+      input.setSelectionRange(start, end);
+    }
+
     $('[data-convert="uppercase"]').keyup(function(evt) {
-        this.value = this.value.toUpperCase();
+        convert_uppercase(this);
     });
 
     // fiscal year fields

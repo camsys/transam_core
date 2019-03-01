@@ -40,7 +40,7 @@ module CoreAssetMapSearchable
   end
 
   def asset_tag_conditions
-    @klass.where(asset_tag: asset_tag) unless asset_tag.blank?
+    @klass.where("asset_tag LIKE ?", "%#{asset_tag}%") unless asset_tag.blank?
   end
 
   def condition_rating_conditions
