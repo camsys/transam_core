@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_12_191549) do
+ActiveRecord::Schema.define(version: 2018_12_17_202351) do
 
   create_table "activities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "object_key", limit: 12
@@ -70,7 +70,9 @@ ActiveRecord::Schema.define(version: 2018_09_12_191549) do
   create_table "asset_events", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "object_key", limit: 12, null: false
     t.integer "asset_id"
+    t.string "transam_asset_type"
     t.integer "transam_asset_id"
+    t.bigint "base_transam_asset_id"
     t.integer "asset_event_type_id", null: false
     t.integer "upload_id"
     t.date "event_date", null: false
@@ -112,6 +114,7 @@ ActiveRecord::Schema.define(version: 2018_09_12_191549) do
     t.integer "total_cost"
     t.index ["asset_event_type_id"], name: "asset_events_idx3"
     t.index ["asset_id"], name: "asset_events_idx2"
+    t.index ["base_transam_asset_id"], name: "index_asset_events_on_base_transam_asset_id"
     t.index ["created_by_id"], name: "asset_events_creator_idx"
     t.index ["event_date"], name: "asset_events_idx4"
     t.index ["object_key"], name: "asset_events_idx1"
@@ -724,6 +727,50 @@ ActiveRecord::Schema.define(version: 2018_09_12_191549) do
     t.boolean "active", null: false
   end
 
+  create_table "query_asset_classes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "table_name"
+    t.text "transam_assets_join"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "query_categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "query_field_asset_classes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "query_field_id"
+    t.bigint "query_asset_class_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["query_asset_class_id"], name: "index_query_field_asset_classes_on_query_asset_class_id"
+    t.index ["query_field_id"], name: "index_query_field_asset_classes_on_query_field_id"
+  end
+
+  create_table "query_fields", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "name"
+    t.string "label"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "query_category_id"
+    t.string "depends_on"
+    t.string "filter_type"
+    t.index ["query_category_id"], name: "index_query_fields_on_query_category_id"
+  end
+
+  create_table "query_filters", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "query_field_id"
+    t.string "value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "saved_query_id"
+    t.string "op"
+    t.index ["query_field_id"], name: "index_query_filters_on_query_field_id"
+    t.index ["saved_query_id"], name: "index_query_filters_on_saved_query_id"
+  end
+
   create_table "query_params", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name"
     t.string "description"
@@ -790,6 +837,26 @@ ActiveRecord::Schema.define(version: 2018_09_12_191549) do
     t.string "class_name"
     t.boolean "rule_set_aware"
     t.boolean "active"
+  end
+
+  create_table "saved_queries", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "object_key"
+    t.string "name"
+    t.string "description"
+    t.integer "created_by_user_id"
+    t.integer "updated_by_user_id"
+    t.integer "shared_from_org_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "saved_query_fields", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "saved_query_id"
+    t.bigint "query_field_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["query_field_id"], name: "index_saved_query_fields_on_query_field_id"
+    t.index ["saved_query_id"], name: "index_saved_query_fields_on_saved_query_id"
   end
 
   create_table "saved_searches", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -913,13 +980,6 @@ ActiveRecord::Schema.define(version: 2018_09_12_191549) do
     t.date "in_service_date"
     t.bigint "vendor_id"
     t.string "other_vendor"
-    t.bigint "operator_id"
-    t.string "other_operator"
-    t.string "title_number"
-    t.bigint "title_ownership_organization_id"
-    t.string "other_title_ownership_organization"
-    t.bigint "lienholder_id"
-    t.string "other_lienholder"
     t.integer "parent_id"
     t.integer "location_id"
     t.integer "policy_replacement_year"
@@ -932,12 +992,9 @@ ActiveRecord::Schema.define(version: 2018_09_12_191549) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["asset_subtype_id"], name: "index_transam_assets_on_asset_subtype_id"
-    t.index ["lienholder_id"], name: "index_transam_assets_on_lienholder_id"
     t.index ["manufacturer_id"], name: "index_transam_assets_on_manufacturer_id"
     t.index ["manufacturer_model_id"], name: "index_transam_assets_on_manufacturer_model_id"
-    t.index ["operator_id"], name: "index_transam_assets_on_operator_id"
     t.index ["organization_id"], name: "index_transam_assets_on_organization_id"
-    t.index ["title_ownership_organization_id"], name: "index_transam_assets_on_title_ownership_organization_id"
     t.index ["transam_assetible_type", "transam_assetible_id"], name: "transam_assetible_idx"
     t.index ["upload_id"], name: "index_transam_assets_on_upload_id"
     t.index ["vendor_id"], name: "index_transam_assets_on_vendor_id"
@@ -1036,6 +1093,8 @@ ActiveRecord::Schema.define(version: 2018_09_12_191549) do
     t.boolean "active", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "authentication_token", limit: 30
+    t.index ["authentication_token"], name: "index_users_on_authentication_token", unique: true
     t.index ["email"], name: "users_idx3"
     t.index ["object_key"], name: "users_idx1"
     t.index ["organization_id"], name: "users_idx2"
@@ -1132,4 +1191,9 @@ ActiveRecord::Schema.define(version: 2018_09_12_191549) do
     t.index ["object_key"], name: "workflow_events_idx1"
   end
 
+  add_foreign_key "query_field_asset_classes", "query_asset_classes"
+  add_foreign_key "query_field_asset_classes", "query_fields"
+  add_foreign_key "query_filters", "query_fields"
+  add_foreign_key "saved_query_fields", "query_fields"
+  add_foreign_key "saved_query_fields", "saved_queries"
 end

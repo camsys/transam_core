@@ -1,0 +1,3 @@
+%ul
+  - Organization.where(id: @organization_list).pluck(:short_name).each do |org_name|
+    %li= org_name

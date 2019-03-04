@@ -33,8 +33,11 @@ Gem::Specification.new do |s|
   s.add_dependency 'unitwise'
   s.add_dependency 'chronic'
   s.add_dependency "breadcrumbs_on_rails"
-  #s.add_dependency 'paper_trail', '8.1.2'
   s.add_dependency "gritter"
+
+  s.add_dependency 'paper_trail'
+  #s.add_dependency 'paper_trail-association_tracking'
+  s.add_dependency 'paper_trail-globalid'
 
   s.add_dependency 'state_machines'
   s.add_dependency 'state_machines-activemodel'
@@ -54,9 +57,9 @@ Gem::Specification.new do |s|
   s.add_dependency 'kaminari'
   s.add_dependency 'api-pagination'
 
-  s.add_dependency 'bootstrap-sass', '~> 3.2.0' # Lock to 3.2 for now as glyphicons fail in 3.3
+  s.add_dependency 'bootstrap-sass'
   s.add_dependency 'haml-rails'
-  s.add_dependency 'rmagick'
+  s.add_dependency 'rmagick', '2.16.0' # Hold off on upgrading to 3.0.0 because of ImageMagick
 
   s.add_dependency 'simple_form'
   s.add_dependency 'country_select'

@@ -2,7 +2,7 @@ module Abilities
   class AdminCoreAbility
     include CanCan::Ability
 
-    def initialize(user)
+    def initialize(user, organization_ids=[])
 
       cannot [:update], Activity do |a|
         (a.system_activity == true)

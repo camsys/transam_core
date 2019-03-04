@@ -51,10 +51,10 @@ class AssetsController < AssetAwareController
       notify_user(:alert, "Can't find the asset group selected.")
     else
       if @asset.asset_groups.exists? asset_group.id
-        notify_user(:alert, "Asset #{@asset.name} is already a member of '#{asset_group}'.")
+        notify_user(:alert, "Asset #{@asset} is already a member of '#{asset_group}'.")
       else
         @asset.asset_groups << asset_group
-        notify_user(:notice, "Asset #{@asset.name} was added to '#{asset_group}'.")
+        notify_user(:notice, "Asset #{@asset} was added to '#{asset_group}'.")
       end
     end
 
@@ -70,9 +70,9 @@ class AssetsController < AssetAwareController
     else
       if @asset.asset_groups.exists? asset_group.id
         @asset.asset_groups.delete asset_group
-        notify_user(:notice, "Asset #{@asset.name} was removed from '#{asset_group}'.")
+        notify_user(:notice, "Asset #{@asset} was removed from '#{asset_group}'.")
       else
-        notify_user(:alert, "Asset #{@asset.name} is not a member of '#{asset_group}'.")
+        notify_user(:alert, "Asset #{@asset} is not a member of '#{asset_group}'.")
       end
     end
 
@@ -92,11 +92,11 @@ class AssetsController < AssetAwareController
     asset_type_id = params[:asset_type_id]
 
     if asset_type_id.blank?
-      results = ActiveRecord::Base.connection.exec_query(Rails.application.config.asset_base_class_name.constantize.operational.select('organization_id, asset_subtypes.asset_type_id, organizations.short_name AS org_short_name, asset_types.name AS subtype_name, COUNT(*) AS assets_count, SUM(purchase_cost) AS sum_purchase_cost, SUM(book_value) AS sum_book_value').joins(:organization, asset_subtype: :asset_type).where(organization_id: @organization_list).group(:organization_id, :asset_type_id).to_sql)
+      results = ActiveRecord::Base.connection.exec_query(Rails.application.config.asset_base_class_name.constantize.operational.select('organization_id, asset_subtypes.asset_type_id, organizations.short_name AS org_short_name, asset_types.name AS subtype_name, COUNT(*) AS assets_count, SUM(purchase_cost) AS sum_purchase_cost').joins(:organization, asset_subtype: :asset_type).where(organization_id: @organization_list).group(:organization_id, :asset_type_id).to_sql)
       level = 'type'
     else
       asset_subtype_ids = AssetType.includes(:asset_subtypes).find_by(id: asset_type_id).asset_subtypes.ids
-      results = ActiveRecord::Base.connection.exec_query(Rails.application.config.asset_base_class_name.constantize.operational.select('organization_id, asset_subtype_id, organizations.short_name AS org_short_name, asset_subtypes.name AS subtype_name, COUNT(*) AS assets_count, SUM(purchase_cost) AS sum_purchase_cost, SUM(book_value) AS sum_book_value').joins(:organization, :asset_subtype).where(organization_id: (params[:org] || @organization_list), asset_subtype_id: asset_subtype_ids).group(:organization_id, :asset_subtype_id).to_sql)
+      results = ActiveRecord::Base.connection.exec_query(Rails.application.config.asset_base_class_name.constantize.operational.select('organization_id, asset_subtype_id, organizations.short_name AS org_short_name, asset_subtypes.name AS subtype_name, COUNT(*) AS assets_count, SUM(purchase_cost) AS sum_purchase_cost').joins(:organization, :asset_subtype).where(organization_id: (params[:org] || @organization_list), asset_subtype_id: asset_subtype_ids).group(:organization_id, :asset_subtype_id).to_sql)
       level = 'subtype'
     end
 
@@ -152,11 +152,11 @@ class AssetsController < AssetAwareController
     add_breadcrumb terminal_crumb if terminal_crumb
     
     # check that an order param was provided otherwise use asset_tag as the default
-    params[:sort] ||= 'asset_tag'
+    params[:sort] ||= 'transam_assets.asset_tag'
 
     # fix sorting on organizations to be alphabetical not by index
     params[:sort] = 'organizations.short_name' if params[:sort] == 'organization_id'
-    
+
     respond_to do |format|
       format.html
       format.js
@@ -180,10 +180,10 @@ class AssetsController < AssetAwareController
   def index_rows_as_json
     multi_sort = params[:multiSort]
 
-    if(mulit_sort.nil?)
+    unless (multi_sort.nil?)
       sorting_string = ""
 
-      mulit_sort.each { |x|
+      multi_sort.each { |x|
         sorting_string = sorting_string + "#{x[0]}: :#{x[1]}"
       }
 
@@ -191,8 +191,9 @@ class AssetsController < AssetAwareController
       sorting_string = "#{params[:sort]} #{params[:order]}"
     end
 
+    cache_list(@assets.order(sorting_string), INDEX_KEY_LIST_VAR)
 
-      @assets.order(sorting_string).limit(params[:limit]).offset(params[:offset]).as_json(user: current_user, include_early_disposition: @early_disposition)
+    @assets.order(sorting_string).limit(params[:limit]).offset(params[:offset]).as_json(user: current_user, include_early_disposition: @early_disposition)
 
   end
 
@@ -275,6 +276,11 @@ class AssetsController < AssetAwareController
     # Set the asset class view var. This can be used to determine which view components
     # are rendered, for example, which tabs and action items the user sees
     @asset_class_name = @asset.class.name.underscore
+
+    # get the @prev_record_path and @next_record_path view vars
+    get_next_and_prev_object_keys(@asset, INDEX_KEY_LIST_VAR)
+    @prev_record_path = @prev_record_key.nil? ? "#" : inventory_path(@prev_record_key, use_last_tab: 1)
+    @next_record_path = @next_record_key.nil? ? "#" : inventory_path(@next_record_key, use_last_tab: 1)
 
     respond_to do |format|
       format.html # show.html.erb
@@ -374,7 +380,7 @@ class AssetsController < AssetAwareController
   end
 
   def new_asset
-    authorize! :new, Asset
+    authorize! :new, Rails.application.config.asset_base_class_name.constantize
     
     add_breadcrumb "Add Asset", new_asset_inventory_index_path
 
@@ -382,8 +388,10 @@ class AssetsController < AssetAwareController
 
   def new
 
-    asset_class = Rails.application.config.asset_seed_class_name.constantize.find_by(id: params[:asset_base_class_id])
-    if asset_class.nil?
+    asset_class_name = params[:asset_seed_class_name] || 'AssetType'
+
+    @asset_class_instance = asset_class_name.constantize.find_by(id: params[:asset_base_class_id])
+    if @asset_class_instance.nil?
       notify_user(:alert, "Asset class '#{params[:asset_base_class_id]}' not found. Can't create new asset!")
       redirect_to(root_url)
       return
@@ -394,7 +402,7 @@ class AssetsController < AssetAwareController
     #add_breadcrumb "New", new_inventory_path(asset_subtype)
 
     # Use the asset class to create an asset of the correct type
-    @asset = Rails.application.config.asset_base_class_name.constantize.new_asset(asset_class, params)
+    @asset = Rails.application.config.asset_base_class_name.constantize.new_asset(@asset_class_instance, params)
 
     # See if the user selected an org to associate the asset with
     if params[:organization_id].present?
@@ -415,15 +423,22 @@ class AssetsController < AssetAwareController
 
   def create
 
-    asset_class = Rails.application.config.asset_seed_class_name.constantize.find_by(id: params[:asset][Rails.application.config.asset_seed_class_name.foreign_key.to_sym])
-    if asset_class.nil?
-      notify_user(:alert, "Asset class '#{params[:asset_base_class_id]}' not found. Can't create new asset!")
+    asset_class_name = params[:asset_seed_class_name] || 'AssetType'
+    if asset_class_name == 'AssetType' && params[:asset][:asset_type_id].blank?
+      asset_subtype = AssetSubtype.find_by(id: params[:asset][:asset_subtype_id])
+      asset_class_instance = asset_class_name.constantize.find_by(id: asset_subtype.try(:asset_type_id))
+    else
+      asset_class_instance = asset_class_name.constantize.find_by(id: params[:asset][asset_class_name.foreign_key.to_sym])
+    end
+
+    if asset_class_instance.nil?
+      notify_user(:alert, "Asset class '#{params[:asset][asset_class_name.foreign_key.to_sym]}' not found. Can't create new asset!")
       redirect_to(root_url)
       return
     end
 
     # Use the asset class to create an asset of the correct type
-    @asset = Rails.application.config.asset_base_class_name.constantize.new_asset(asset_class, params)
+    @asset = Rails.application.config.asset_base_class_name.constantize.new_asset(asset_class_instance, params)
     @asset.attributes = new_form_params(@asset)
 
 
@@ -475,7 +490,7 @@ class AssetsController < AssetAwareController
     notify_user(:notice, "Asset was successfully removed.")
 
     respond_to do |format|
-      format.html { redirect_to(inventory_index_url(Rails.application.config.asset_seed_class_name.foreign_key => @asset.send(Rails.application.config.asset_seed_class_name.foreign_key))) }
+      format.html { redirect_to(inventory_index_url(@asset.class.asset_seed_class_name.foreign_key => @asset.send(@asset.class.asset_seed_class_name.foreign_key))) }
       format.json { head :no_content }
     end
 
@@ -554,11 +569,6 @@ class AssetsController < AssetAwareController
       @asset_subtype = params[:asset_subtype].to_i
     end
 
-    # Check to see if we got an fta asset class id to sub select on.
-    unless params[:fta_asset_class_id].nil?
-      @fta_asset_class_id = params[:fta_asset_class_id]
-    end
-
     # Check to see if we got an organization to sub select on.
     if params[:org_id].nil?
       @org_id = 0
@@ -623,8 +633,8 @@ class AssetsController < AssetAwareController
       @transferred_assets = true
     end
 
-    # If the asset type and subtypes are not set we default to the asset base class
-    if @id_filter_list.present? or (@asset_type == 0 and @asset_subtype == 0)
+    # If the asset type is not set we default to the asset base class
+    if @id_filter_list.present? or (@asset_type == 0)
       # THIS WILL NO LONGER WORK
       # asset base class name should really be seed to pull typed asset class
       # base class here is just Asset or the new TransamAsset
@@ -670,34 +680,29 @@ class AssetsController < AssetAwareController
     @asset_class = klass.name
 
     # here we build the query one clause at a time based on the input params
-    clauses = []
-    values = []
+    clauses = {}
     unless @org_id == 0
-      clauses << ['organization_id = ?']
-      values << @org_id
+      clauses[:organization_id] = @org_id
     else
-      clauses << ['organization_id IN (?)']
-      values << @organization_list
+      clauses[:organization_id] = @organization_list
     end
 
     unless @manufacturer_id == 0
-      clauses << ['manufacturer_id = ?']
-      values << @manufacturer_id
+      clauses[:manufacturer_id] = @manufacturer_id
     end
 
-    unless @service_status == 0
-      clauses << ['service_status_type_id = ?']
-      values << @service_status
+    if @asset_class_name.constantize.new.respond_to? :disposition_date
+      if @disposition_year.blank?
+        clauses[:disposition_date] = nil
+      else
+        clauses['YEAR(disposition_date)'] = @disposition_year
+      end
     end
 
-    if @disposition_year.blank?
-      clauses << ['assets.disposition_date IS NULL']
-    else
-      clauses << ['YEAR(assets.disposition_date) = ?']
-      values << @disposition_year
-    end
 
     unless @search_text.blank?
+      search_clauses = []
+      search_values = []
       # get the list of searchable fields from the asset class
       searchable_fields = klass.new.searchable_fields
       # create an OR query for each field
@@ -717,41 +722,37 @@ class AssetsController < AssetAwareController
         query_str << field
         query_str << ' LIKE ? '
         # add the value in for this sub clause
-        values << search_value
+        search_values << search_value
       end
       query_str << ')' unless searchable_fields.empty?
 
-      clauses << [query_str.join]
+      search_clauses << [query_str.join]
+
+      klass = klass.where(search_clauses.join(' AND '), *search_values)
     end
 
     unless @id_filter_list.blank?
-      clauses << ['object_key in (?)']
-      values << @id_filter_list
+      clauses[:object_key] = @id_filter_list
     end
 
     unless @asset_subtype == 0
-      clauses << ['asset_subtype_id = ?']
-      values << [@asset_subtype]
+      clauses[:asset_subtype_id] = [@asset_subtype]
     end
 
     unless @asset_type == 0
-      clauses << ['assets.asset_type_id = ?']
-      values << [@asset_type]
+      clauses[:asset_types] = {id: @asset_type}
     end
 
-    if @transferred_assets
-      clauses << ['assets.service_status_type_id IS NULL']
-      clauses << ['assets.asset_tag = assets.object_key']
-    else
-      clauses << ['assets.asset_tag != assets.object_key']
+    if klass.respond_to? :in_transfer
+      klass = @transferred_assets ? klass.in_transfer : klass.not_in_transfer
     end
 
     unless @spatial_filter.blank?
       gis_service = GisService.new
       search_box = gis_service.search_box_from_bbox(@spatial_filter)
       wkt = "#{search_box.as_wkt}"
-      clauses << ['MBRContains(GeomFromText("' + wkt + '"), geometry) = ?']
-      values << [1]
+
+      klass = klass.where('MBRContains(GeomFromText("' + wkt + '"), geometry) = ?', 1)
     end
 
     # See if we got an asset group. If we did then we can
@@ -768,8 +769,14 @@ class AssetsController < AssetAwareController
     end
 
     # send the query
-    klass.where(clauses.join(' AND '), *values)
-      .includes(:asset_type, :organization, :asset_subtype, :service_status_type, :manufacturer)
+    if @asset_class_name == 'TransamAsset'
+      klass = klass.includes({asset_subtype: :asset_type},:organization, :manufacturer)
+    else
+      join_relations = klass.actable_hierarchy
+      join_relations[join_relations.key(:transam_asset)] = {transam_asset: [{asset_subtype: :asset_type},:organization, :manufacturer]}
+      klass = klass.includes(join_relations)
+    end
+    klass.where(clauses)
   end
 
   # stores the just-created list of asset ids in the session

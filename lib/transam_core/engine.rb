@@ -30,6 +30,9 @@ require 'jquery-form-rails'
 require 'roo-xls'
 require 'kaminari'
 
+require 'paper_trail'
+require 'paper_trail-globalid'
+
 # API
 #require 'open_api'
 require 'jbuilder'
@@ -64,7 +67,7 @@ module TransamCore
 
     config.generators do |g|
       g.test_framework      :rspec,        :fixture => false
-      g.fixture_replacement :factory_girl, :dir => 'spec/factories'
+      g.fixture_replacement :factory_bot, :dir => 'spec/factories'
       g.assets false
       g.helper false
     end

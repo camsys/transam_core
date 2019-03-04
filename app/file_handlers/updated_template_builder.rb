@@ -15,6 +15,8 @@ class UpdatedTemplateBuilder
   attr_accessor :organization_list
   attr_accessor :asset_class_name
   attr_accessor :asset_seed_class_id
+  attr_accessor :is_component
+  attr_accessor :fta_asset_class_id
 
   def build
 
@@ -31,7 +33,9 @@ class UpdatedTemplateBuilder
     setup_lookup_sheet(wb)
 
     @pick_list_cache = {}
+    @col_widths = []
     add_columns(sheet)
+    @frozen_cols = sheet.sheet_view.pane.x_split
 
     # Add headers
     category_row = []
@@ -79,15 +83,16 @@ class UpdatedTemplateBuilder
         if !@column_styles[val].nil?
           sheet.col_style start+index, @column_styles[val]
           style_name_parts = @style_cache.key(@column_styles[val]).split("_")
-          sheet.rows[1].cells[start+index].style = @style_cache["#{style_name_parts[0]}_header_#{style_name_parts[1]}"]
+          if style_name_parts.include?('last')
+            sheet.rows[1].cells[start+index].style = @style_cache["#{style_name_parts[0]}_#{style_name_parts[1]}_header_#{style_name_parts[2]}"]
+          else
+            sheet.rows[1].cells[start+index].style = @style_cache["#{style_name_parts[0]}_header_#{style_name_parts[1]}"]
+          end
         end
       end
       sheet.merge_cells("#{convert_index_to_letter(start)}1:#{convert_index_to_letter(start+fields.length-2)}1")
       start += fields.length-1
     end
-
-    # set column widths
-    sheet.column_widths *column_widths
 
     # Perform any additional processing
     post_process(sheet)
@@ -95,6 +100,9 @@ class UpdatedTemplateBuilder
     # Create List of Fields and Pick Lists tab is applicable
     create_list_of_fields(wb)
     create_pick_lists(wb)
+
+    # set column widths
+    sheet.column_widths *column_widths
 
     # Serialize the spreadsheet to the stream and return it
     p.to_stream()
@@ -137,6 +145,9 @@ class UpdatedTemplateBuilder
       sheet.workbook.worksheets[2].rows[@pick_list_cache[:index]].cells.each do |cell|
         @pick_list_cache[name] << cell.value
       end
+      @col_widths << nil
+    else
+      @col_widths << 20
     end
 
     # set any other variables
@@ -278,10 +289,8 @@ class UpdatedTemplateBuilder
       self.send "#{k}=", v
     end
 
-    if @asset_seed_class_id
-      @search_parameter = Rails.application.config.asset_seed_class_name.constantize.find_by(id: @asset_seed_class_id)
-      @asset_class_name = @search_parameter.class_name unless @asset_class_name.present?
-    end
+    @search_parameter = (@asset_class_name || Rails.application.config.asset_base_class_name).constantize.asset_seed_class_name.constantize.find_by(id: @asset_seed_class_id)
+    @asset_class_name = @search_parameter.class_name unless @asset_class_name.present?
   end
 
 end

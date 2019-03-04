@@ -1,0 +1,12 @@
+.panel.panel-default
+  .panel-heading
+    .pull-right
+      %span.panel-expand-collapse{title: 'Collapse/expand'}
+        %i.fa.fa-chevron-up
+    %h3.panel-title
+      Columns & Filters
+  .panel-body
+    .col-sm-6
+      = render 'saved_queries/search_form/columns_panel'
+    .col-sm-6
+      = render 'saved_queries/search_form/filters_panel'

@@ -10,12 +10,16 @@ Rails.application.routes.draw do
       delete 'sign_out' => 'sessions#destroy'
 
       resources :users, only: [:index] do 
+        resources :images
+        
         collection do 
           get :profile
         end
       end
 
-      resources :assets, only: [:show, :index] do 
+      resources :assets, only: [:show, :index] do
+        resources :images
+        resources :documents
       end
 
       resources :organizations, only: [:show] do 
@@ -160,7 +164,7 @@ Rails.application.routes.draw do
       get 'download'
     end
   end
-  resources :images,      :only => [:create, :update, :edit, :new, :destroy] do
+  resources :images do
     member do
       get 'download'
     end
@@ -185,6 +189,31 @@ Rails.application.routes.draw do
       get 'reorder'
     end
   end
+
+  resources :saved_queries do
+    collection do
+      post 'query'
+      get 'export_unsaved'
+      get 'save_as'
+    end
+
+    member do 
+      get 'export'
+      post 'clone'
+      get 'show_remove_form'
+      post 'remove_from_orgs'
+    end
+  end
+
+  resources :query_fields, only: [:index]
+  resources :query_filters, only: [] do 
+    collection do 
+      get 'manufacturers'
+      get 'manufacturer_models'
+      get 'vendors'
+    end
+  end
+  get 'render_new', to: 'query_filters#render_new', as: :load_new_query_filter
 
   resources :reports,       :only => [:index, :show] do
     member do

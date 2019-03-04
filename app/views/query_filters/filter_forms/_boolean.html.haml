@@ -1,0 +1,40 @@
+:ruby
+  values = @query_filter ? (@query_filter.value.try(:split, ',') || []) : ['true']
+%ul.boolean-list{data: {query_field_id: @query_field.id}}
+  - [[true, 'Yes'], [false, 'No']].each do |val, label|
+    %li.boolean-item
+      %label.checkbox
+        = check_box_tag "#{@query_field.name}[]", val, values.include?(val.to_s)
+        = label
+
+:javascript
+  $(function() {
+    var query_field_id = #{@query_field.id};
+    var container_selector = '.boolean-list[data-query-field-id=' + query_field_id + ']';
+
+    function getSelectedValues() {
+      var vals = [];
+      $(container_selector + ' .boolean-item input[type=checkbox]:checked').each(function() {
+        vals.push($(this).val());
+      });
+
+      return vals;
+    }
+
+    function updateFilterDetails() {
+      var filter_details = {
+        query_field_id: query_field_id,
+        op: 'in',
+        value: getSelectedValues().join(',')
+      };
+
+      _saved_query.setFilterDetails(query_field_id, filter_details);
+    }
+
+    updateFilterDetails();
+
+    // update filter values
+    $(container_selector + ' .boolean-item input[type=checkbox]').change(function() {
+      updateFilterDetails();
+    });
+  });

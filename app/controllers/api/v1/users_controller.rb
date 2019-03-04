@@ -6,7 +6,7 @@ class Api::V1::UsersController < Api::ApiController
     unless @user
       @status = :fail
       @data = {email: "User #{params[:email]} not found."}
-      render status: :not_found
+      render status: :not_found, json: json_response(:fail, data: @data)
     end
   end
 
@@ -19,7 +19,7 @@ class Api::V1::UsersController < Api::ApiController
     else
       @status = :fail
       @data = {organization: "Organization #{params[:organization_id]} not found."}
-      render status: :not_found
+      render status: :not_found, json: json_response(:fail, data: @data)
     end
   end
 end

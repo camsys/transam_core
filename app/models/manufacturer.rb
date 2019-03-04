@@ -1,6 +1,7 @@
 class Manufacturer < ActiveRecord::Base
 
   has_many :assets
+  has_many :transam_assets
 
   # default scope
   default_scope { order('code') }

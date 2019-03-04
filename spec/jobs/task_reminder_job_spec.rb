@@ -15,33 +15,33 @@ RSpec.describe TaskReminderJob, :type => :job do
 
   it 'sends' do
     test_task.save!
-    TaskReminderJob.new(1, PriorityType.first).run
+    TaskReminderJob.new(:context => create(:activity)).run
 
     expect(Message.where(:to_user => test_user).count).to eq(1)
   end
 
   it 'no reminder' do
     test_task.update!(:send_reminder => false)
-    TaskReminderJob.new(1,PriorityType.first).run
+    TaskReminderJob.new(:context => create(:activity)).run
 
     expect(Message.count).to eq(0)
   end
 
   it 'wrong states' do
     test_task.update!(:state => 'completed')
-    TaskReminderJob.new(1,PriorityType.first).run
+    TaskReminderJob.new(:context => create(:activity)).run
 
     expect(Message.count).to eq(0)
   end
 
   it 'wrong due date' do
     test_task.update!(:complete_by => Time.now+5.days)
-    TaskReminderJob.new(1,PriorityType.first).run
+    TaskReminderJob.new(:context => create(:activity)).run
 
     expect(Message.count).to eq(0)
   end
   it 'wrong days from now' do
-    TaskReminderJob.new(10,PriorityType.first).run
+    TaskReminderJob.new(:context => create(:activity)).run
 
     expect(Message.count).to eq(0)
   end
@@ -49,6 +49,6 @@ RSpec.describe TaskReminderJob, :type => :job do
   it '.prepare' do
     allow(Time).to receive(:now).and_return(Time.utc(2000,"jan",1,20,15,1))
     expect(Rails.logger).to receive(:info).with("Executing TaskReminderJob at #{Time.now.to_s} for tasks due.")
-    TaskReminderJob.new(1, PriorityType.first).prepare
+    TaskReminderJob.new(:context => create(:activity)).prepare
   end
 end

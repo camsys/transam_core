@@ -1,0 +1,20 @@
+:css
+  .remove-filter-details {
+    cursor: pointer;
+  }
+
+  .filter-selections-panel .panel-body {
+    max-height: 520px;
+    overflow: auto;
+  }
+  
+.panel.panel-default.filter-selections-panel
+  .panel-heading
+    .pull-right
+      %span.panel-expand-collapse{title: 'Collapse/expand'}
+        %i.fa.fa-chevron-up
+    %h3.panel-title
+      Filter Selections
+  .panel-body
+    .row.col-sm-12.filters-container
+      = render 'query_filters/organization_id_filter_details'

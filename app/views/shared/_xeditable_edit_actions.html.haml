@@ -1,0 +1,13 @@
+-# need to pass an obj which is the model instance you are updating
+
+- allowed_to_edit ||= can?(:update, obj)
+
+- if allowed_to_edit
+  .pull-right{style: 'padding-bottom: 5px; margin-top: -6px;'}
+    %button.btn.btn-primary.edit-xeditable-button
+      Edit
+    .edit-xeditable-buttons{style: 'display: none;'}
+      %button.btn.btn-primary.save-xeditable-button
+        Save
+      %button.btn.btn-primary.cancel-xeditable-button
+        Cancel

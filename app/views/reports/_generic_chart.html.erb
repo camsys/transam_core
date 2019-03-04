@@ -7,17 +7,23 @@
 <% end %>
 
 <% unless request.format.pdf? %>
-  <div class="col-md-6">
-    <div id="accordion">
-      <div class="well well-small collapse in" id="chart-div">
-        <div id='<%= "chart_#{@report.id}" %>'></div>
+  <div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+      <div id="accordion">
+        <div class="well well-small collapse in" id="chart-div">
+          <div id='<%= "chart_#{@report.id}" %>'></div>
+        </div>
       </div>
     </div>
   </div>
 <% end %>
 
-<div class="col-md-6">
-	<%= render 'generic_report_table.html' %>
+<div class="row">
+  <div class="col-md-1"></div>
+  <div class="col-md-10">
+  	<%= render 'generic_report_table.html' %>
+  </div>
 </div>
 
 <script type="text/javascript">
@@ -33,13 +39,12 @@
 		var chart_type = '<%= @report.chart_type %>';
  		var report_chart_options = <%= raw(@report.chart_options) %>;
 		var chart_options = $.extend({}, report_chart_options, {height: 300});
-
 		var chart_data = new google.visualization.DataTable();
-		chart_data.addColumn('string', '<%= @data[:labels].first %>');
-		<% @data[:labels].last(@data[:labels].length - 1).each do |col| %>
+		chart_data.addColumn('string', '<%= @data[:chart_labels].first %>');
+		<% @data[:chart_labels].last(@data[:chart_labels].length - 1).each do |col| %>
 		chart_data.addColumn('number', '<%= col %>');
 		<% end %>
-		<% @data[:data].each do |row| %>
+		<% @data[:chart_data].each do |row| %>
 		chart_data.addRow(<%= raw row.to_json.html_safe %>);
 		<% end %>
 

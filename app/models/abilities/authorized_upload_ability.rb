@@ -20,6 +20,8 @@ module Abilities
         ((asset_ids.include? u.id) || (organization_ids.include? u.organization_id)) && ([1,3,4,5].include? u.file_status_type_id)
       end
 
+      can :read, FileContentType
+
     end
   end
 end

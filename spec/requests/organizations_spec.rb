@@ -23,7 +23,7 @@ RSpec.describe Api::V1::OrganizationsController, type: :request do
         expect(json['status']).to eq('success')
 
         # test output
-        expect(json['data']['id']).to eq(org_id)
+        expect(json['data']['organization']['id']).to eq(org_id)
       end
       it 'returns status code 200' do
         expect(response).to have_http_status(200)
@@ -39,7 +39,7 @@ RSpec.describe Api::V1::OrganizationsController, type: :request do
 
       it 'returns a not found message' do
         expect(json['status']).to eq('fail')
-      expect(json['data']['id']).to match(/not found/)
+        expect(json['data']['id']).to match(/not found/)
       end
     end
   end

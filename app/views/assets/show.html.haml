@@ -7,6 +7,10 @@
     width: 94%;
   }
 
+  .subheader-label {
+    border-bottom: 1px solid #e5e5e5;
+  }
+
 .subheader-label
   %h2 #{@asset.asset_type.name.singularize} Profile
 
@@ -37,7 +41,10 @@
       .panel-heading
         %h3.panel-title
           Profile
+          = render partial: 'shared/xeditable_edit_actions', locals: {obj: @asset}
       .panel-body
         = render 'profile'
+
+.modal.fade#form-modal{:tabindex => -1, :role => 'dialog', :aria => {:hidden => true}}
 
 =render 'show_scripts'

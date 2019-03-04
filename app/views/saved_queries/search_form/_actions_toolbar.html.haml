@@ -1,0 +1,30 @@
+:css
+  .save-as-saved-query {
+    margin-left: 10px;
+  }
+= button_tag :class => 'btn btn-primary execute-export', :title => "Export data", :type => 'button' do
+  %i.fa.fa-download
+  Export CSV
+
+- if can?(:create, @query) && @query.new_record?
+  = link_to save_as_saved_queries_path, :remote => true, :class => "btn btn-primary save-as-saved-query" do
+    %i.fa.fa-plus
+    Add to Saved Queries
+- elsif can?(:update, @query)
+  = link_to save_as_saved_queries_path(id: @query.object_key), :remote => true, :class => "btn btn-primary save-as-saved-query" do
+    %i.fa.fa-save
+    Update Saved Query
+
+:javascript
+  $(function() {
+    $('.execute-export').click(function(e) {
+      e.preventDefault();
+      if(_saved_query.getSelectedOutputFieldIds().length == 0) {
+        bootbox.alert("Please select column(s) to export.");
+        return;
+      }
+      
+      var url = "#{export_unsaved_saved_queries_path(format: :csv)}?" + $.param({saved_query: _saved_query.data()});
+      window.open(url, '_blank');
+    });
+  });

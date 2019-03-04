@@ -1,0 +1,8 @@
+:css
+  .available-organization-list {
+    width: 100%;
+  }
+%label
+  Available
+%select.available-organization-list{multiple: 'true', size: '10'}
+  = render 'saved_queries/shared_from_org_list'

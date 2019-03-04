@@ -7,7 +7,7 @@ class Api::V1::OrganizationsController < Api::ApiController
     unless @organization
       @status = :fail
       @data = {id: "Organization #{params[:id]} not found."}
-      render status: :not_found
+      render status: :not_found, json: json_response(:fail, data: @data)
     end
   end
 

@@ -75,8 +75,6 @@ class TransamAssetRecord < ActiveRecord::Base
     transferred_asset.generate_object_key(:object_key)
     transferred_asset.asset_tag = transferred_asset.object_key
 
-    transferred_asset.save(:validate => false)
-
     if self.serial_numbers.count > 0
       self.serial_numbers.each do |serial_num|
         transferred_asset.serial_numbers << serial_num.dup
@@ -86,6 +84,8 @@ class TransamAssetRecord < ActiveRecord::Base
     # create last condition, status
     transferred_asset.condition_updates << self.condition_updates.last.dup if self.condition_updates.count > 0
     transferred_asset.service_status_updates << self.service_status_updates.last.dup if self.service_status_updates.count > 0
+
+    transferred_asset.save(:validate => false)
 
     return transferred_asset
   end

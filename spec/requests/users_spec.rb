@@ -24,9 +24,10 @@ RSpec.describe Api::V1::UsersController, type: :request do
         expect(json['status']).to eq('success')
 
         # test output
-        expect(json['data']['email']).to eq(email)
-        expect(json['data'].keys).to match(["id", "name", "email", "organization"])
-        expect(json['data']['organization'].keys).to match(["id", "name", "short_name"])
+        expect(json['data']['user']).not_to be_empty
+        expect(json['data']['user']['email']).to eq(email)
+        expect(json['data']['user'].keys).to match(["id", "name", "email", "organization"])
+        expect(json['data']['user']['organization'].keys).to match(["id", "name", "short_name"])
       end
       it 'returns status code 200' do
         expect(response).to have_http_status(200)

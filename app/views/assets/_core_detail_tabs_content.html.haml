@@ -1,13 +1,13 @@
 .tab-pane.fade#hist
   .tab-content
     = render 'history'
-- if @asset.occupants.operational.present?
+- if @asset.occupants.try(:operational).present?
   .tab-pane.fade#occ
     .tab-content
       = render :partial => 'asset_compact_datatable', :locals => {:assets => @asset.occupants.operational}
-.tab-pane.fade#depd
-  .tab-content
-    = render 'dependents'
+-#.tab-pane.fade#depd
+-#  .tab-content
+-#    = render 'dependents'
 .tab-pane.fade#task
   .tab-content
     = render 'tasks'

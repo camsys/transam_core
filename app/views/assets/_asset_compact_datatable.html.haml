@@ -11,27 +11,30 @@
   :search => 'false'}}
   %thead
     %tr
-      %th.left{:data => {:sortable => 'true', :order => 'desc'}} Agency
+      %th.left{:data => {:sortable => 'true', :order => 'desc'}} Asset ID
+      %th.left{:data => {:sortable => 'true', :order => 'desc'}} External ID
+      %th.left{:data => {:sortable => 'true', :order => 'desc'}} Organization
+      %th.left{:data => {:sortable => 'true', :order => 'desc'}} Year
       %th.left{:data => {:sortable => 'true', :order => 'desc'}} Type
-      %th.left{:data => {:sortable => 'true', :order => 'desc'}} Asset Tag
-      %th.left{:data => {:sortable => 'true', :order => 'desc'}} Description
-
-      %th.right{:data => {:sortable => 'true', :order => 'desc'}} In Service
-      %th.right{:data => {:sortable => 'true', :order => 'desc'}} Age
-      %th.center{:data => {:sortable => 'true', :order => 'desc'}} Condition
-      %th.center{:data => {:sortable => 'true', :order => 'desc'}} Status
+      %th.left{:data => {:sortable => 'true', :order => 'desc'}} Subtype
+      %th.right{:data => {:sortable => 'true', :order => 'desc'}} Cost (Purchase)
+      %th.left{:data => {:sortable => 'true', :order => 'desc'}} Condition
+      %th.left{:data => {:sortable => 'true', :order => 'desc'}} Status
+      %th.left{:data => {:sortable => 'true', :order => 'desc'}} In Service Date
 
   %tbody
     - assets.each do |a|
-      %tr{:id => a.object_key, :class => 'action-path'}
-        %td.left= a.organization
+      - a = TransamAsset.get_typed_asset(a)
+      %tr{:id => a.object_key}
+        %td.left= link_to a.asset_tag, inventory_path(a), target: :blank
+        %td.left= a.external_id
+        %td.left= a.organization.short_name
+        %td.left= a.manufacture_year
+        %td.left= a.asset_type
         %td.left= a.asset_subtype
-        %td.left= a.asset_tag
-        %td.left= a.description
-
-        %td.right= format_as_date(a.in_service_date)
-        %td.right= format_as_integer(a.age)
-        %td.center= format_as_decimal(a.reported_condition_rating, 1)
-        %td.center= a.service_status_type.code unless a.service_status_type.nil?
+        %td.right= a.purchase_cost
+        %td.left= format_as_decimal(a.reported_condition_rating, 1)
+        %td.left= a.service_status_type.name unless a.service_status_type.nil?
+        %td.left= format_as_date(a.in_service_date)
 
 = render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :path_pattern => inventory_path("xxx")}

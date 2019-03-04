@@ -1,0 +1,216 @@
+:css
+  .editable-field {
+    pointer-events: none;
+  }
+
+:javascript
+
+  var lastFocus;
+
+  $(function() {
+    $.fn.editable.defaults.mode = 'inline';
+    $.fn.editable.defaults.clear = false;
+    $.fn.editable.defaults.savenochange = true;
+    $.fn.editable.defaults.showbuttons = false;
+    $.fn.editable.defaults.send = 'never';
+    $.fn.editable.defaults.onblur = 'submit';
+    $.fn.editable.defaults.disabled = true;
+
+    $('body').on('focus', 'input.form-control', function () {
+        lastFocus = $(this);
+    });
+
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+      tab_id = $('.tab-pane.active').attr('id');
+      if ($('.edit-xeditable-button').is(":hidden")) {
+
+        $('#'+tab_id+'.tab-pane .editable-field').editable('enable');
+        $('#'+tab_id+'.tab-pane .editable-field').editable('show', false);
+        $('#'+tab_id+'.tab-pane .editable-input').find('input, select').first().focus();
+      } else {
+        $('#'+tab_id+'.tab-pane .editable-field').editable('hide');
+        $('#'+tab_id+'.tab-pane .editable-field').editable('disable');
+
+      }
+    });
+
+    $('.edit-xeditable-button').on('click', function(e) {
+      e.stopPropagation();
+      tab_id = $('.tab-pane.active').attr('id');
+      $('#'+tab_id+'.tab-pane .editable-field').editable('enable');
+      $('#'+tab_id+'.tab-pane .editable-field').editable('show', false);
+      $('#'+tab_id+'.tab-pane .editable-input').find('input, select').first().focus();
+
+      $('.edit-xeditable-button').hide();
+      $('.edit-xeditable-buttons').show();
+    });
+
+    $('.cancel-xeditable-button').on('click', function(e) {
+      e.stopPropagation();
+
+      tab_id = $('.tab-pane.active').attr('id');
+
+      $('#'+tab_id+'.tab-pane .editable-field').editable('hide');
+      $('#'+tab_id+'.tab-pane .editable-field').editable('disable');
+
+      $('.edit-xeditable-button').show();
+      $('.edit-xeditable-buttons').hide();
+    });
+
+    $('.save-xeditable-button').click(function() {
+
+      lastFocus.parents('span').prev().editable('setValue', lastFocus.val());
+
+       $('.editable-field').editable('submit', {
+           ajaxOptions: {
+               type: 'PUT',
+               dataType: 'json' //assuming json response
+           },
+           success: function(data, config) {
+               if(data && data.errors){
+                   //server-side validation error, response like {"errors": {"username": "username already exist"} }
+                   config.error.call(this, data.errors);
+               } else {
+
+                $(this).removeClass('editable-unsaved');
+
+                tab_id = $('.tab-pane.active').attr('id');
+
+                $('#'+tab_id+'.tab-pane .editable-field').editable('hide');
+                $('#'+tab_id+'.tab-pane .editable-field').editable('disable');
+
+                $('.edit-xeditable-button').show();
+                $('.edit-xeditable-buttons').hide();
+               }
+           },
+           error: function(errors) {
+               var msg = '';
+               if(errors && errors.responseText) { //ajax error, errors = xhr object
+                   msg = errors.responseText;
+               } else { //validation error (client-side or server-side)
+                   $.each(errors, function(k, v) { msg += k+": "+v+"<br>"; });
+               }
+               $('#msg').removeClass('alert-success').addClass('alert-error').html(msg).show();
+           }
+       });
+    });
+
+    $('.editable-field').on('hidden', function(e, reason) {
+        if(reason === 'save') {
+           $(this).editable('show', false);
+        }
+    })
+
+    $('.editable-field.combodate').editable({
+        template: 'MMM D YYYY',    
+        viewformat: 'MM/DD/YYYY',
+        combodate: {
+          maxYear: (new Date()).getFullYear(),
+          minYear: 1900
+        }
+    });
+
+    var generic_xeditable_options = {
+      validate: function(value) {
+        if($(this).hasClass('required')) {
+          if($.trim(value) == '') return 'This field is required';
+        }
+      },
+      error: function() {
+        return "invalid input or service unavailable";
+      }
+    };
+
+    var currency_xeditable_options = {
+      display: function(value) {
+        if($.trim(value) == '') {
+          $(this).text('');
+        } else {
+          var currency_val = Number((parseFloat(value)).toFixed(1)).toLocaleString();
+          $(this).text('$ ' + currency_val);
+        }
+      }
+    };
+    for(var attr in generic_xeditable_options) {  
+      currency_xeditable_options[attr] = generic_xeditable_options[attr];
+    } 
+
+    $('.editable-field:not(.currency-number)').editable(generic_xeditable_options);
+
+    $('.editable-field.currency-number').editable(currency_xeditable_options);
+
+    // select all text when editable input shows up so to speed up input
+    $('.editable-field').on('shown', function(e, editable) {
+      setTimeout( function() {
+        editable.input.$input.select();
+      }, 10 );
+    });
+
+    // click an editable cell to bring up editable-input
+    $('.editable-field:not(.editable-disabled)').closest('td').click(function() {
+      if (editableActive) return;
+      
+      var that = this;
+      setTimeout(function() {
+        $(that).find('.editable-field').editable('show');
+        }, 10);
+    });
+
+    // if the cell is editable enabled, show up editable input when it gets focus
+    $('.editable-field:not(.editable-disabled)').focus(function() {
+      $(this).editable('show');
+    });
+
+    // show Other text entry only if it's a Other type; otherwise, hide and empty its value
+    // type_el: HTML element of the Type dropdown
+    // type_id: Type dropdown value
+    function show_hide_other_text_entry(type_el, type_id) {
+      var other_text_container = $(type_el).parents('.other-fields-container').find('.other-value-container');
+      if(other_text_container) {
+        var other_ids = $(type_el).parents('.other-type-container').data('other-type-ids');
+        if(!other_ids || other_ids.indexOf(type_id) < 0) {
+          other_text_container.find('.editable-field').editable('setValue', '');
+          other_text_container.hide();
+        } else {
+          other_text_container.show();
+        }
+      }
+
+      var dual_text_container = $(type_el).parents('.other-fields-container').find('.dual-value-container');
+      if(dual_text_container) {
+        var dual_ids = $(type_el).parents('.other-type-container').data('dual-type-ids');
+        if(!dual_ids || dual_ids.indexOf(type_id) < 0) {
+          dual_text_container.find('.editable-field').editable('setValue', '');
+          dual_text_container.hide();
+        } else {
+          dual_text_container.show();
+        }
+      }
+    }
+
+    $('.other-type-container .editable-field').on('save', function(e, params) {
+      var type_id = params.newValue;
+      if(type_id) {
+        type_id = parseInt(type_id);
+      }
+      show_hide_other_text_entry(this, type_id);
+    });
+
+    $('.other-type-container .editable-field').each(function() {
+      var type_id = $(this).editable('getValue')[$(this).data('name')];
+      if(type_id) {
+        type_id = parseInt(type_id);
+      }
+      show_hide_other_text_entry(this, type_id);
+    });
+  });
+
+  // https://github.com/vitalets/x-editable/issues/851
+  (function() {
+      var original = $.fn.editableutils.setCursorPosition;
+      $.fn.editableutils.setCursorPosition = function() {
+          try {
+              original.apply(this, Array.prototype.slice.call(arguments));
+          } catch (e) { /* noop */ }
+      };
+  })();

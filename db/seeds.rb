@@ -153,7 +153,8 @@ roles = [
   {:privilege => false, :name => 'manager', :weight => 7, :show_in_user_mgmt => true},
   {:privilege => true, :name => 'admin', :show_in_user_mgmt => true},
   {:privilege => true, :name => 'super_manager', :weight => 10, role_parent: 'manager', :show_in_user_mgmt => true},
-  {:privilege => true, :name => 'technical_contact', :show_in_user_mgmt => true}
+  {:privilege => true, :name => 'technical_contact', :show_in_user_mgmt => true},
+  {name: 'maintenance_contractor', role_parent: Role.find_by(name: 'guest'), show_in_user_mgmt: true, privilege: true, label: 'Maintenance - Contractor'}
 
 ]
 
@@ -176,7 +177,7 @@ frequency_types = [
 ]
 
 search_types = [
-  {:active => 1, :name => 'Asset', :class_name => 'AssetSearcher'}
+  {:active => 1, :name => 'Asset', :class_name => 'AssetMapSearcher'}
 ]
 
 activities = [
@@ -194,10 +195,12 @@ activities = [
 ]
 
 system_config_extensions = [
-    {class_name: 'Asset', extension_name: 'TransamKeywordSearchable', active: true},
-    {class_name: 'User', extension_name: 'TransamKeywordSearchable', active: true},
-    {class_name: 'Vendor', extension_name: 'TransamKeywordSearchable', active: true},
+    {engine_name: 'core', class_name: Rails.application.config.asset_base_class_name, extension_name: 'TransamKeywordSearchable', active: true},
+    {engine_name: 'core', class_name: 'User', extension_name: 'TransamKeywordSearchable', active: true},
+    {engine_name: 'core', class_name: 'Vendor', extension_name: 'TransamKeywordSearchable', active: true}
 ]
+
+system_config_extensions << {engine_name: 'core', class_name: 'AssetMapSearcher', extension_name: 'CoreAssetMapSearchable', active: true} if SystemConfig.transam_module_loaded? :spatial
 
 
 lookup_tables = %w{asset_event_types condition_types disposition_types rule_sets cost_calculation_types license_types manufacturer_models priority_types
@@ -291,3 +294,19 @@ asset_subsystems.each do |s|
   subsystem = AssetSubsystem.create(s)
   subsystem.asset_type = asset_type
 end
+
+
+### Load any special SQL scripts here
+puts "======= Loading TransAM Core SQL Scripts  ======="
+
+unless SystemConfig.transam_module_loaded? :transit
+  puts "  Loading asset_event_views"
+  File.read(File.join(File.dirname(__FILE__), 'most_recent_asset_event_views.sql'))
+    .split(';').map(&:strip).each do |statement|
+
+    ActiveRecord::Base.connection.execute(statement)
+  end
+end
+
+# asset query seeds
+require_relative File.join("seeds", 'asset_query_seeds')

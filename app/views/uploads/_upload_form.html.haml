@@ -4,7 +4,7 @@
 
     .row
       .col-sm-6
-        = f.association :file_content_type, :collection => FileContentType.active, :required => true, :label => 'Spreadsheet Content', :prompt => 'Set the spreadsheet contents...'
+        = f.association :file_content_type, :collection => FileContentType.active.select{|f| can? :read, f}, :required => true, :label => 'Spreadsheet Content', :prompt => 'Set the spreadsheet contents...'
     .col-sm-6
       - if @organization_list.count == 1
         = f.input :organization_id, :as => :hidden, :input_html => { :value => @organization_list.first }

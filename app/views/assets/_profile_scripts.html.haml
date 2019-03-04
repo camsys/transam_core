@@ -1,9 +1,117 @@
+-# this is essentially the same script in shared/xeditable_scripts
+-# leaving duplicate for now since this was written first and want to limit regression issues
+-# only thing different is the JS to update subheader if fields subheader calls are updated
+
+:css
+  .editable-click, a.editable-click, a.editable-click:hover {
+    color: #17406E;
+    border-bottom: none;
+  }
+
+  .editable-click.editable-disabled, a.editable-click.editable-disabled, a.editable-click.editable-disabled:hover {
+    color: #17406E;
+  }
+
+  .editable-field {
+    pointer-events: none;
+  }
+  
 :javascript
+
+  var lastFocus;
 
   $(function() {
     $.fn.editable.defaults.mode = 'inline';
     $.fn.editable.defaults.clear = false;
     $.fn.editable.defaults.savenochange = true;
+    $.fn.editable.defaults.showbuttons = false;
+    $.fn.editable.defaults.send = 'never';
+    $.fn.editable.defaults.onblur = 'submit';
+    $.fn.editable.defaults.disabled = true;
+
+    $('body').on('focus', 'input.form-control', function () {
+        lastFocus = $(this);
+    });
+
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+      tab_id = $('#profile .tab-pane.active').attr('id');
+      if ($('.edit-xeditable-button').is(":hidden")) {
+
+        $('#'+tab_id+'.tab-pane .editable-field').editable('enable');
+        $('#'+tab_id+'.tab-pane .editable-field').editable('show', false);
+        $('#'+tab_id+'.tab-pane .editable-input').find('input, select').first().focus();
+      } else {
+        $('#'+tab_id+'.tab-pane .editable-field').editable('hide');
+        $('#'+tab_id+'.tab-pane .editable-field').editable('disable');
+
+      }
+    });
+
+    $('.edit-xeditable-button').on('click', function(e) {
+      e.stopPropagation();
+
+      tab_id = $('#profile .tab-pane.active').attr('id');
+      $('#'+tab_id+'.tab-pane .editable-field').editable('enable');
+      $('#'+tab_id+'.tab-pane .editable-field').editable('show', false);
+      $('#'+tab_id+'.tab-pane .editable-input').find('input, select').first().focus();
+
+      $('.edit-xeditable-button').hide();
+      $('.edit-xeditable-buttons').show();
+    });
+
+    $('.cancel-xeditable-button').on('click', function(e) {
+      e.stopPropagation();
+      tab_id = $('#profile .tab-pane.active').attr('id');
+
+      $('#'+tab_id+'.tab-pane .editable-field').editable('hide');
+      $('#'+tab_id+'.tab-pane .editable-field').editable('disable');
+
+      $('.edit-xeditable-button').show();
+      $('.edit-xeditable-buttons').hide();
+    });
+
+    $('.save-xeditable-button').click(function() {
+
+       lastFocus.parents('span').prev().editable('setValue', lastFocus.val());
+
+       $('.editable-field').editable('submit', {
+           ajaxOptions: {
+               type: 'PUT',
+               dataType: 'json' //assuming json response
+           },
+           success: function(data, config) {
+               if(data && data.errors){
+                   //server-side validation error, response like {"errors": {"username": "username already exist"} }
+                   config.error.call(this, data.errors);
+               } else {
+
+                $(this).removeClass('editable-unsaved');
+
+                tab_id = $('#profile .tab-pane.active').attr('id');
+
+                $('#'+tab_id+'.tab-pane .editable-field').editable('hide');
+                $('#'+tab_id+'.tab-pane .editable-field').editable('disable');
+                $('.edit-xeditable-button').show();
+                $('.edit-xeditable-buttons').hide();
+               }
+           },
+           error: function(errors) {
+               var msg = '';
+               if(errors && errors.responseText) { //ajax error, errors = xhr object
+                   msg = errors.responseText;
+               } else { //validation error (client-side or server-side)
+                   $.each(errors, function(k, v) { msg += k+": "+v+"<br>"; });
+               }
+               $('#msg').removeClass('alert-success').addClass('alert-error').html(msg).show();
+           }
+       });
+    });
+
+    $('.editable-field').on('hidden', function(e, reason) {
+        if(reason === 'save') {
+           $(this).editable('show', false);
+        }
+    })
 
     $('.editable-field.combodate').editable({
         template: 'MMM D YYYY',    
@@ -51,13 +159,6 @@
 
     $('.editable-field.currency-number').editable(currency_xeditable_options);
 
-    disabled = "#{cannot?(:update, @asset) ? 'disable' : ''}";
-    if (disabled.length > 0) {
-      $('.editable-field').editable(disabled);
-    }
-
-    $('.not-editable-field').editable('disable');
-
     // select all text when editable input shows up so to speed up input
     $('.editable-field').on('shown', function(e, editable) {
       setTimeout( function() {
@@ -78,24 +179,6 @@
     // if the cell is editable enabled, show up editable input when it gets focus
     $('.editable-field:not(.editable-disabled)').focus(function() {
       $(this).editable('show');
-    });
-
-    function show_fields_segment_unit_type_changes(segment_unit_type_id) {
-      if (parseInt(segment_unit_type_id) == parseInt('#{InfrastructureSegmentUnitType.find_by(name: "Marker Posts").try(:id)}')) {
-        $('.segment-unit-type-marker-posts').show();
-        $('.segment-unit-type:not(.segment-unit-type-marker-posts)').hide();
-      } else if (parseInt(segment_unit_type_id) == parseInt('#{InfrastructureSegmentUnitType.find_by(name: "Chaining").try(:id)}')) {
-        $('.segment-unit-type-chaining').show();
-        $('.segment-unit-type:not(.segment-unit-type-chaining)').hide();
-      } else {
-        $('.segment-unit-type-lat-long').show();
-        $('.segment-unit-type:not(.segment-unit-type-lat-long)').hide();
-      }
-    }
-    show_fields_segment_unit_type_changes($("input[name='infrastructure_segment_unit_type_id']:checked").val());
-
-    $("input[name='infrastructure_segment_unit_type_id']").on("click", function(value) {
-      show_fields_segment_unit_type_changes($(this).val());
     });
 
     // show Other text entry only if it's a Other type; otherwise, hide and empty its value
@@ -141,3 +224,14 @@
       show_hide_other_text_entry(this, type_id);
     });
   });
+
+  // https://github.com/vitalets/x-editable/issues/851
+  (function() {
+      var original = $.fn.editableutils.setCursorPosition;
+      $.fn.editableutils.setCursorPosition = function() {
+          try {
+              original.apply(this, Array.prototype.slice.call(arguments));
+          } catch (e) { /* noop */ }
+      };
+  })();
+

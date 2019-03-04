@@ -42,7 +42,7 @@ class Api::V1::SessionsController < Api::ApiController
     else # If there are any errors, send back a failure response.
       @status = :fail
       @data = {errors: @errors}
-      render status: @fail_status
+      render status: @fail_status, json: json_response(:fail, data: @data)
     end
   end
 
@@ -58,7 +58,7 @@ class Api::V1::SessionsController < Api::ApiController
         message: "Could not sign out user",
         auth_headers: auth_headers
       }
-      render status: :bad_request
+      render status: :bad_request, json: json_response(:fail, message: data)
     end
   end
 end

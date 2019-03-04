@@ -124,9 +124,10 @@ module TransamFormatHelper
 
   # if the value is a number it is formatted as a decimal or integer
   # otherwise we assume it is a string and is returned
-  def format_as_general(val, precision = 2)
+  def format_as_general(val, precision = nil)
     begin
       Float(val)
+      precision ||= (val % 1 == 0) ? 0 : 2
       number_with_precision(val, :precision => precision, :delimiter => ",")
     rescue
       val
@@ -243,11 +244,17 @@ module TransamFormatHelper
   end
 
   # formats a date, where use_slashes indicates eg 10/24/2014 instead of 24 Oct 2014
-  def format_as_date(date, use_slashes=true)
-    if use_slashes
-      date.strftime("%m/%d/%Y") unless (date.nil? || date.year == 1)
-    else
-      date.strftime("%b %d %Y") unless (date.nil? || date.year == 1)
+  def format_as_date(date, use_slashes=true, blank: '')
+    unless date&.year == 1
+      if date.nil?
+        blank
+      else
+        if use_slashes
+          date.strftime("%m/%d/%Y")
+        else
+          date.strftime("%b %d %Y")
+        end
+      end
     end
   end
 

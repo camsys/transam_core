@@ -1,0 +1,59 @@
+:ruby
+  url = remove_from_orgs_saved_query_path(@query)
+.modal-dialog.modal-md
+  .modal-content
+    .modal-header
+      %button.close{:data => {:dismiss => "modal"}}
+        x
+      %h3.modal-title
+        Select organizations to remove from:
+    .modal-body
+      .row
+        .col-sm-12
+          = simple_form_for(@query,
+                :url => url,
+                :method => :post,
+                :html => {:class => 'form-vertical remove_saved_query_form' },
+                :wrapper => :vertical_form,
+                :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes}) do |f|
+            .row
+              .col-sm-12
+                = f.input :organization_ids, :collection => @to_remove_orgs, :requried => true, :as => :check_boxes, input_html: { checked: '' }, label: 'Organizations'
+
+            .row
+              .col-sm-12
+                = f.submit "Save", :class => 'btn btn-primary', :id => 'remove_saved_query_submit'
+                %button.btn.btn-default{:data => {:dismiss => "modal"}} Cancel
+
+:javascript
+  $(document).ready(function() {
+    function get_selected_org_ids() {
+      var org_ids = [];
+      $('input[name="saved_query[organization_ids][]"]:checked').each(function(){
+        org_ids.push($(this).val());
+      });
+
+      return org_ids;
+    } 
+
+    function check_submit_button_status() {
+      if (get_selected_org_ids().length > 0) {
+        $('#remove_saved_query_submit').removeAttr("disabled");   
+      } else {
+        $('#remove_saved_query_submit').attr("disabled", "disabled");
+      }
+    }
+    check_submit_button_status();
+
+    $('.remove_saved_query_form').on("blur, change", "input", () => {
+      check_submit_button_status();
+    });
+
+    // jquery validations
+    $('.remove_saved_query_submit').validate({
+      submitHandler: function(form) {
+        // submit
+        form.submit();
+      }
+    });
+  });

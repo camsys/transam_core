@@ -1,11 +1,11 @@
 = nav_tab_count_tag("#hist", "History", @asset.asset_events.count)
-- if @asset.occupants.operational.present?
+- if @asset.occupants.try(:operational).present?
   = nav_tab_count_tag("#occ", "Occupants", @asset.occupants.operational.count)
-= nav_tab_count_tag("#depd", "Relational Tree", @asset.dependents.count)
+-#= nav_tab_count_tag("#depd", "Relational Tree", @asset.dependents.count)
 = nav_tab_count_tag("#task", "Tasks", @asset.tasks.count)
 = nav_tab_count_tag("#comm", "Comments", @asset.comments.count)
 = nav_tab_count_tag("#docs", "Documents", @asset.documents.count)
-= nav_tab_count_tag("#imag", "Photos", @asset.images.count)
+= nav_tab_count_tag("#imag", "Photos", Image.where(base_imagable: @asset.transam_asset).count)
 %li
   %a{:href => "#chrt", :data =>{:toggle => 'tab'}}
     Charts

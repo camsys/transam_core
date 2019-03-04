@@ -190,8 +190,11 @@ class UploadsController < OrganizationAwareController
       org = nil
     end
 
+    is_component = params[:is_component]
+    fta_asset_class_id = params[:fta_asset_class_id]
+
     # Find out which builder is used to construct the template and create an instance
-    builder = file_content_type.builder_name.constantize.new(:organization => org, :asset_class_name => template_proxy.try(:asset_class_name), :asset_seed_class_id => template_proxy.try(:asset_seed_class_id), :organization_list => @organization_list)
+    builder = file_content_type.builder_name.constantize.new(:organization => org, :asset_class_name => template_proxy.try(:asset_class_name), :asset_seed_class_id => template_proxy.try(:asset_seed_class_id), :organization_list => @organization_list, :is_component => is_component, :fta_asset_class_id => fta_asset_class_id)
 
     # Generate the spreadsheet. This returns a StringIO that has been rewound
     if params[:targets].present?

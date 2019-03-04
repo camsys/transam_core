@@ -1,0 +1,10 @@
+:css
+  .selected-organization-list {
+    width: 100%;
+  }
+%label
+  Selected
+%select.selected-organization-list{multiple: 'true', size: '10'}
+  - @query.organizations.pluck(:id,:name).each do |org|
+    %option{value: org[0]}
+      = org[1]

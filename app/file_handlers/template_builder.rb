@@ -12,6 +12,8 @@ class TemplateBuilder
   attr_accessor :asset_class_name
   attr_accessor :assets
   attr_accessor :organization_list
+  attr_accessor :is_component
+  attr_accessor :fta_asset_class_id
 
   def build
 
@@ -135,7 +137,8 @@ class TemplateBuilder
     end
 
     if @asset_seed_class_id
-      @search_parameter = Rails.application.config.asset_seed_class_name.constantize.find_by(id: @asset_seed_class_id)
+
+      @search_parameter = (@asset_class_name || Rails.application.config.asset_base_class_name).constantize.asset_seed_class_name.constantize.find_by(id: @asset_seed_class_id)
       @asset_class_name = @search_parameter.class_name unless @asset_class_name.present?
     end
   end

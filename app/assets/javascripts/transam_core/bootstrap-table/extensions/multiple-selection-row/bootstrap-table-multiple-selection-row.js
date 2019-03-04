@@ -8,9 +8,10 @@
 
     'use strict';
 
-    document.onselectstart = function() {
-        return false;
-    };
+    // Commenting out so that text can actually be selected
+    // document.onselectstart = function() {
+    //     return false;
+    // };
 
     var getTableObjectFromCurrentTarget = function (currentTarget) {
         currentTarget = $(currentTarget);

@@ -19,8 +19,8 @@
         = f.input :external_id, :label => "External ID"
     .col-md-6
       = dialog_tag('Contact', {:icon => 'fa fa-book', :class => "header-part"}) do
-        = f.input :phone, :required => true, :as => :tel
-        = f.input :fax, :as => :tel
+        = f.input :phone, :required => true, :as => :tel, :hint => 'Format 123-456-7890'
+        = f.input :fax, :as => :tel, :hint => 'Format 123-456-7890'
         = f.input :url, :required => true, :as => :url
         = f.input :address1, :required => true, :label => "Address 1"
         = f.input :address2, :label => "Address 2"
@@ -42,7 +42,20 @@
 
   // jquery validations
   $('.org_form').validate({
+    rules: {
+      'organization[zip]': {
+        zipcodeUS: true
+      },
+      'organization[phone]' : {
+        phoneUS: true
+      },
+      'organization[fax]' : {
+        phoneUS: true
+      }
+    },
     submitHandler: function(form) {
       form.submit();
     }
   });
+
+

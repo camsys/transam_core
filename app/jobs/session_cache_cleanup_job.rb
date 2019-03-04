@@ -5,7 +5,7 @@
 # Checks cached session data that has expired and removes it from the cache
 #
 #------------------------------------------------------------------------------
-class SessionCacheCleanupJob < Job
+class SessionCacheCleanupJob < ActivityJob
 
   def run
 
@@ -30,10 +30,6 @@ class SessionCacheCleanupJob < Job
 
   def check
 
-  end
-
-  def initialize
-    super
   end
 
 end

@@ -7,7 +7,7 @@ class Issue < ActiveRecord::Base
   after_initialize  :set_defaults
             
   # Each issue was created by a user
-  belongs_to :creator, :class_name => "User", :foreign_key => "created_by_id"
+  belongs_to :creator, -> { unscope(where: :active) }, :class_name => "User", :foreign_key => "created_by_id"
 
   # Each issue has a type [Bug Suggestion, etc.]
   belongs_to :issue_type
