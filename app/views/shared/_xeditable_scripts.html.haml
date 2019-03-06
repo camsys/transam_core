@@ -3,6 +3,14 @@
     pointer-events: none;
   }
 
+  .editableform div, .editable-input input{
+    width: 100% !important;
+  }
+
+  .editable-buttons {
+    display: none;
+  }
+
 :javascript
 
   var lastFocus;
@@ -11,7 +19,7 @@
     $.fn.editable.defaults.mode = 'inline';
     $.fn.editable.defaults.clear = false;
     $.fn.editable.defaults.savenochange = true;
-    $.fn.editable.defaults.showbuttons = false;
+    //$.fn.editable.defaults.showbuttons = false;
     $.fn.editable.defaults.send = 'never';
     $.fn.editable.defaults.onblur = 'submit';
     $.fn.editable.defaults.disabled = true;
