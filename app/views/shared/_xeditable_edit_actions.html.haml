@@ -1,6 +1,6 @@
 -# need to pass an obj which is the model instance you are updating
 
-- allowed_to_edit ||= can?(:update, obj)
+- allowed_to_edit = can?(:update, obj) if allowed_to_edit.nil?
 
 - if allowed_to_edit
   .pull-right{style: 'padding-bottom: 5px; margin-top: -6px;'}
