@@ -16,48 +16,53 @@
     pointer-events: none;
   }
 
-  .editableform div, .editable-input input{
+  .editableform div, .editable-input input, .editable-input select{
     width: 100% !important;
+  }
+
+  .editable-buttons {
+    display: none;
   }
   
 :javascript
-
-  var lastFocus;
 
   $(function() {
     $.fn.editable.defaults.mode = 'inline';
     $.fn.editable.defaults.clear = false;
     $.fn.editable.defaults.savenochange = true;
-    $.fn.editable.defaults.showbuttons = false;
+    //$.fn.editable.defaults.showbuttons = false;
     $.fn.editable.defaults.send = 'never';
-    $.fn.editable.defaults.onblur = 'submit';
+    $.fn.editable.defaults.onblur = 'ignore';
     $.fn.editable.defaults.disabled = true;
+    $.fn.editable.defaults.unsavedclass = null;
+    $.fn.editable.defaults.highlight = false;
 
-    $('body').on('focus', 'input.form-control', function () {
-        lastFocus = $(this);
-    });
+    function enable_tab_editing(tab_id) {
+      $('#'+tab_id+'.tab-pane .editable-field').editable('enable');
+      $('#'+tab_id+'.tab-pane .editable-field').editable('show', false);
+      $('#'+tab_id+'.tab-pane .editable-input').find('input, select').first().focus();
+    }
+
+    function disable_tab_editing(tab_id) {
+      $('#'+tab_id+'.tab-pane .editable-field').editable('hide');
+      $('#'+tab_id+'.tab-pane .editable-field').editable('disable');
+    }
 
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-      tab_id = $('#profile .tab-pane.active').attr('id');
+      var tab_id = $('#profile .tab-pane.active').attr('id');
       if ($('.edit-xeditable-button').is(":hidden")) {
-
-        $('#'+tab_id+'.tab-pane .editable-field').editable('enable');
-        $('#'+tab_id+'.tab-pane .editable-field').editable('show', false);
-        $('#'+tab_id+'.tab-pane .editable-input').find('input, select').first().focus();
+        //disable_tab_editing(tab_id);
+        enable_tab_editing(tab_id);
       } else {
-        $('#'+tab_id+'.tab-pane .editable-field').editable('hide');
-        $('#'+tab_id+'.tab-pane .editable-field').editable('disable');
-
+        disable_tab_editing(tab_id);
       }
     });
 
     $('.edit-xeditable-button').on('click', function(e) {
       e.stopPropagation();
 
-      tab_id = $('#profile .tab-pane.active').attr('id');
-      $('#'+tab_id+'.tab-pane .editable-field').editable('enable');
-      $('#'+tab_id+'.tab-pane .editable-field').editable('show', false);
-      $('#'+tab_id+'.tab-pane .editable-input').find('input, select').first().focus();
+      var tab_id = $('#profile .tab-pane.active').attr('id');
+      enable_tab_editing(tab_id);
 
       $('.edit-xeditable-button').hide();
       $('.edit-xeditable-buttons').show();
@@ -65,19 +70,16 @@
 
     $('.cancel-xeditable-button').on('click', function(e) {
       e.stopPropagation();
-      tab_id = $('#profile .tab-pane.active').attr('id');
 
-      $('#'+tab_id+'.tab-pane .editable-field').editable('hide');
-      $('#'+tab_id+'.tab-pane .editable-field').editable('disable');
+      var tab_id = $('#profile .tab-pane.active').attr('id');
+      disable_tab_editing(tab_id);
 
       $('.edit-xeditable-button').show();
       $('.edit-xeditable-buttons').hide();
     });
 
     $('.save-xeditable-button').click(function() {
-
-       lastFocus.parents('span').prev().editable('setValue', lastFocus.val());
-
+       $('form.editableform').submit(); // save values locally, then submit to server
        $('.editable-field').editable('submit', {
            ajaxOptions: {
                type: 'PUT',
@@ -88,13 +90,13 @@
                    //server-side validation error, response like {"errors": {"username": "username already exist"} }
                    config.error.call(this, data.errors);
                } else {
+                // update subheader
+                $.ajax({
+                  url: "#{asset_path(@asset)}/get_subheader"
+                });
 
-                $(this).removeClass('editable-unsaved');
-
-                tab_id = $('#profile .tab-pane.active').attr('id');
-
-                $('#'+tab_id+'.tab-pane .editable-field').editable('hide');
-                $('#'+tab_id+'.tab-pane .editable-field').editable('disable');
+                var tab_id = $('#profile .tab-pane.active').attr('id');
+                disable_tab_editing(tab_id);
                 $('.edit-xeditable-button').show();
                 $('.edit-xeditable-buttons').hide();
                }
@@ -111,12 +113,6 @@
        });
     });
 
-    $('.editable-field').on('hidden', function(e, reason) {
-        if(reason === 'save') {
-           $(this).editable('show', false);
-        }
-    })
-
     $('.editable-field.combodate').editable({
         template: 'MMM D YYYY',    
         viewformat: 'MM/DD/YYYY',
@@ -130,14 +126,6 @@
       validate: function(value) {
         if($(this).hasClass('required')) {
           if($.trim(value) == '') return 'This field is required';
-        }
-      },
-      success: function(response, newValue) {
-        // if related to subheader, then refresh
-        if($('.subheader_' + $(this).attr('id')).length > 0) {
-          $.ajax({
-            url: "#{asset_path(@asset)}/get_subheader"
-          });
         }
       },
       error: function() {
