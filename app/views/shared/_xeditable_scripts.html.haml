@@ -3,7 +3,7 @@
     pointer-events: none;
   }
 
-  .editableform div, .editable-input input{
+  .editableform div, .editable-input input, .editable-input textarea {
     width: 100% !important;
   }
 
@@ -35,6 +35,12 @@
       $('#'+tab_id+'.tab-pane .editable-field').editable('disable');
     }
 
+    function open_tab(tab_id) {
+      $('.editableform-loading').hide();
+      $('.editableform').show();
+      $('a[href="#' + tab_id +'"]').tab('show');
+    }
+
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
       tab_id = $('.tab-pane.active').attr('id');
       if ($('.edit-xeditable-button').is(":hidden")) {
@@ -57,7 +63,7 @@
     $('.cancel-xeditable-button').on('click', function(e) {
       e.stopPropagation();
 
-      tab_id = $('.tab-pane.active').attr('id');
+      var tab_id = $('.tab-pane.active').attr('id');
 
       disable_tab_editing(tab_id);
 
@@ -68,6 +74,7 @@
     $('.save-xeditable-button').click(function() {
 
       $('form.editableform').submit(); // save values locally, then submit to server
+      if($('.has-error .form-control').length == 0) {
        $('.editable-field').editable('submit', {
            ajaxOptions: {
                type: 'PUT',
@@ -96,6 +103,10 @@
                $('#msg').removeClass('alert-success').addClass('alert-error').html(msg).show();
            }
        });
+      } else {
+        var tab_id = $('.has-error .form-control').parents('.tab-pane').attr('id');
+        open_tab(tab_id);
+      }
     });
 
     $('.editable-field.combodate').editable({

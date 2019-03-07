@@ -86,7 +86,7 @@ module TransamTagHelper
     if type == 'boolean'
       return editable_association_tag(asset, field, label,
                                             [[1, 'Yes'],[0, 'No']],
-                                            current_value: asset.send(field) ? 1 : 0, suffix: suffix)
+                                            include_blank: !required, current_value: asset.send(field) ? 1 : 0, suffix: suffix)
     end
     extras = ''
     extras += ", min: #{min}" if min
@@ -151,11 +151,11 @@ module TransamTagHelper
     return engine.render.html_safe
   end
 
-  def editable_asset_field_tag(asset, field, label=nil, required: true, type: 'text', min: nil, max: nil, suffix: '')
+  def editable_asset_field_tag(asset, field, label=nil, required: true, type: 'text', min: nil, max: nil, suffix: '', inputclass: '')
     if type == 'boolean'
       return editable_asset_association_tag(asset, field, label,
                                             [[1, 'Yes'],[0, 'No']],
-                                            current_value: @asset.send(field) ? 1 : 0, suffix: suffix)
+                                            include_blank: !required, current_value: @asset.send(field) ? 1 : 0, suffix: suffix)
     end
     extras = ''
     extras += ", min: #{min}" if min
@@ -178,13 +178,13 @@ module TransamTagHelper
   %label.control-label{class: '#{classes}'}
     #{label || field.to_s.titleize}
   .display-value
-    %a.editable-field{href:'#', id: '#{field}', class: '#{classes}', data: {emptytext: ' - ', name: 'asset[#{field}]', value: '#{escape_javascript(asset.send(field).to_s)}', type: '#{type}', placeholder: '#{required ? 'Required' : ''}', url: '#{asset_path(asset)}'#{extras}}}
+    %a.editable-field{href:'#', id: '#{field}', class: '#{classes}', data: {inputclass: '#{inputclass}', emptytext: ' - ', name: 'asset[#{field}]', value: '#{escape_javascript(asset.send(field).to_s)}', type: '#{type}', placeholder: '#{required ? 'Required' : ''}', url: '#{asset_path(asset)}'#{extras}}}
     #{suffix}
 ")
     return engine.render.html_safe
   end
     
-  def editable_asset_association_tag(asset, field, label=nil, collection=nil, current_method: nil, include_blank: false, current_value: nil, type: 'select', url: nil, suffix: '_id')
+  def editable_asset_association_tag(asset, field, label=nil, collection=nil, current_method: nil, include_blank: false, current_value: nil, type: 'select', url: nil, suffix: '_id', inputclass: '')
     # value = current_value || (collection || url ? asset.send(current_method || field).to_s : asset.send(current_method || "#{field.to_s}_id").to_s)
     field_name = current_method || "#{field.to_s.singularize}#{suffix}"
     value = current_value || asset.send(current_method || field_name).to_s
@@ -204,7 +204,7 @@ module TransamTagHelper
   %label.control-label
     #{label || field.to_s.titleize}
   .display-value
-    %a.editable-field{href:'#', id: '#{field}', data: {emptytext: ' - ', name: 'asset[#{field_name}]', value: '#{value}', type: '#{type}', url: '#{asset_path(asset)}', source: \"#{url || "[#{source}]"}\", sourceCache: '#{url.nil?}'}}
+    %a.editable-field{href:'#', id: '#{field}', data: {inputclass: '#{inputclass}', emptytext: ' - ', name: 'asset[#{field_name}]', value: '#{value}', type: '#{type}', url: '#{asset_path(asset)}', source: \"#{url || "[#{source}]"}\", sourceCache: '#{url.nil?}'}}
 ")
     return engine.render.html_safe
   end
