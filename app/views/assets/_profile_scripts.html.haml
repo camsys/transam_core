@@ -211,8 +211,8 @@
       }
     }
 
-    $('.other-type-container .editable-field').on('save', function(e, params) {
-      var type_id = params.newValue;
+    $('body').on('change', '.other-type-container select', function() {
+      var type_id = $(this).val();
       if(type_id) {
         type_id = parseInt(type_id);
       }
