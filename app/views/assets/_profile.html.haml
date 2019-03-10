@@ -6,7 +6,7 @@
     - if lookup_context.template_exists?(view_component, 'assets', true)
       = render :partial => "assets/#{view_component}"
 
-.tab-content
+.tab-content.editable-fields-container
   - # Load module specific tab content if they exist
   - SystemConfig.transam_module_names.each do |mod|
     - view_component = "#{mod}_profile_tabs_content"

@@ -1,16 +1,28 @@
+-# IMPORTANT: add .editable-fields-container to the top level .tab-content container,
+-#            in order to let the script locate active tab and enable/disable xeditable fields
+
 :css
+  .editable-click, a.editable-click, a.editable-click:hover {
+    color: #17406E;
+    border-bottom: none;
+  }
+
+  .editable-click.editable-disabled, a.editable-click.editable-disabled, a.editable-click.editable-disabled:hover {
+    color: #17406E;
+  }
+
   .editable-field {
     pointer-events: none;
   }
 
-  .editableform div, .editable-input input:not([type='checkbox']), .editable-input textarea {
+  .editableform div, .editable-input input:not([type='checkbox']), .editable-input textarea, .editable-input select.full-width{
     width: 100% !important;
   }
 
   .editable-buttons {
     display: none;
   }
-
+  
 :javascript
 
   $(function() {
@@ -27,10 +39,12 @@
     function enable_tab_editing(tab_id) {
       $('#'+tab_id+'.tab-pane .editable-field').editable('enable');
       $('#'+tab_id+'.tab-pane .editable-field').editable('show', false);
+      $('#'+tab_id+' input[type=radio]').removeAttr('disabled');
       $('#'+tab_id+'.tab-pane .editable-input').find('input, select').first().focus();
     }
 
     function disable_tab_editing(tab_id) {
+      $('#'+tab_id+' input[type=radio]').attr('disabled', 'true');
       $('#'+tab_id+'.tab-pane .editable-field').editable('hide');
       $('#'+tab_id+'.tab-pane .editable-field').editable('disable');
     }
@@ -41,10 +55,13 @@
       $('a[href="#' + tab_id +'"]').tab('show');
     }
 
-    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-      tab_id = $('.tab-pane.active').attr('id');
-      if ($('.edit-xeditable-button').is(":hidden")) {
+    function get_active_tab_id() {
+      return $('.editable-fields-container > .tab-pane.active').attr('id');
+    }
 
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+      var tab_id = get_active_tab_id();
+      if ($('.edit-xeditable-button').is(":hidden")) {
         enable_tab_editing(tab_id);
       } else {
         disable_tab_editing(tab_id);
@@ -53,7 +70,8 @@
 
     $('.edit-xeditable-button').on('click', function(e) {
       e.stopPropagation();
-      tab_id = $('.tab-pane.active').attr('id');
+
+      var tab_id = get_active_tab_id();
       enable_tab_editing(tab_id);
 
       $('.edit-xeditable-button').hide();
@@ -63,8 +81,7 @@
     $('.cancel-xeditable-button').on('click', function(e) {
       e.stopPropagation();
 
-      var tab_id = $('.tab-pane.active').attr('id');
-
+      var tab_id = get_active_tab_id();
       disable_tab_editing(tab_id);
 
       $('.edit-xeditable-button').show();
@@ -72,41 +89,43 @@
     });
 
     $('.save-xeditable-button').click(function() {
+       $('form.editableform').submit(); // save values locally, then submit to server
+       if($('.has-error .form-control').length == 0) {
+         $('.editable-field').editable('submit', {
+             ajaxOptions: {
+                 type: 'PUT',
+                 dataType: 'json' //assuming json response
+             },
+             success: function(data, config) {
+                if(data && data.errors){
+                     //server-side validation error, response like {"errors": {"username": "username already exist"} }
+                     config.error.call(this, data.errors);
+                } else {
+                  if(typeof(profile_save_callback) !== 'undefined') {
+                    profile_save_callback();
+                  } 
 
-      $('form.editableform').submit(); // save values locally, then submit to server
-      if($('.has-error .form-control').length == 0) {
-       $('.editable-field').editable('submit', {
-           ajaxOptions: {
-               type: 'PUT',
-               dataType: 'json' //assuming json response
-           },
-           success: function(data, config) {
-               if(data && data.errors){
-                   //server-side validation error, response like {"errors": {"username": "username already exist"} }
-                   config.error.call(this, data.errors);
-               } else {
+                  var tab_id = get_active_tab_id();
+                  disable_tab_editing(tab_id);
 
-                var tab_id = $('.tab-pane.active').attr('id');
-                disable_tab_editing(tab_id);
-
-                $('.edit-xeditable-button').show();
-                $('.edit-xeditable-buttons').hide();
-               }
-           },
-           error: function(errors) {
-               var msg = '';
-               if(errors && errors.responseText) { //ajax error, errors = xhr object
-                   msg = errors.responseText;
-               } else { //validation error (client-side or server-side)
-                   $.each(errors, function(k, v) { msg += k+": "+v+"<br>"; });
-               }
-               $('#msg').removeClass('alert-success').addClass('alert-error').html(msg).show();
-           }
-       });
-      } else {
+                  $('.edit-xeditable-button').show();
+                  $('.edit-xeditable-buttons').hide();
+                }
+             },
+             error: function(errors) {
+                 var msg = '';
+                 if(errors && errors.responseText) { //ajax error, errors = xhr object
+                     msg = errors.responseText;
+                 } else { //validation error (client-side or server-side)
+                     $.each(errors, function(k, v) { msg += k+": "+v+"<br>"; });
+                 }
+                 $('#msg').removeClass('alert-success').addClass('alert-error').html(msg).show();
+             }
+         });
+       } else {
         var tab_id = $('.has-error .form-control').parents('.tab-pane').attr('id');
         open_tab(tab_id);
-      }
+       }
     });
 
     $('.editable-field.combodate').editable({
@@ -222,3 +241,4 @@
           } catch (e) { /* noop */ }
       };
   })();
+
