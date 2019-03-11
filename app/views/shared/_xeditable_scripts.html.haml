@@ -29,12 +29,15 @@
     $.fn.editable.defaults.mode = 'inline';
     $.fn.editable.defaults.clear = false;
     $.fn.editable.defaults.savenochange = true;
-    //$.fn.editable.defaults.showbuttons = false;
     $.fn.editable.defaults.send = 'never';
     $.fn.editable.defaults.onblur = 'ignore';
     $.fn.editable.defaults.disabled = true;
     $.fn.editable.defaults.unsavedclass = null;
     $.fn.editable.defaults.highlight = false;
+
+    // variable to store radio options user selected
+    // used to reset them when cancel editing
+    var selected_radio_inputs;
 
     function enable_tab_editing(tab_id) {
       $('#'+tab_id+'.tab-pane .editable-field').editable('enable');
@@ -71,6 +74,9 @@
     $('.edit-xeditable-button').on('click', function(e) {
       e.stopPropagation();
 
+      //set selected radios
+      selected_radio_inputs = $(this).closest('.panel').find('input[type=radio]:checked');
+
       var tab_id = get_active_tab_id();
       enable_tab_editing(tab_id);
 
@@ -80,6 +86,11 @@
 
     $('.cancel-xeditable-button').on('click', function(e) {
       e.stopPropagation();
+
+      // reset radios
+      if(selected_radio_inputs) {
+        selected_radio_inputs.click();
+      }
 
       var tab_id = get_active_tab_id();
       disable_tab_editing(tab_id);
