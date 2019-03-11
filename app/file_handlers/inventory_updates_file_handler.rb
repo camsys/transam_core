@@ -159,7 +159,7 @@ class InventoryUpdatesFileHandler < AbstractFileHandler
           #---------------------------------------------------------------------
           if has_new_event
             @num_rows_added += 1
-            Delayed::Job.enqueue AssetUpdateJob.new(asset.object_key), :priority => 10, :run_at => 30.seconds.from_now
+            #Delayed::Job.enqueue AssetUpdateJob.new(asset.object_key), :priority => 10, :run_at => 30.seconds.from_now
           end
         end
       end
