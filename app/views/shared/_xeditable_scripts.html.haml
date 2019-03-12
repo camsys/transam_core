@@ -44,6 +44,10 @@
       $('#'+tab_id+'.tab-pane .editable-field').editable('show', false);
       $('#'+tab_id+' input[type=radio]').removeAttr('disabled');
       $('#'+tab_id+'.tab-pane .editable-input').find('input, select').first().focus();
+
+      $('.other-type-container select').each(function() {
+        $(this).closest('.other-type-container').attr('data-original-value', $(this).val());
+      });
     }
 
     function disable_tab_editing(tab_id) {
@@ -91,6 +95,14 @@
       if(selected_radio_inputs) {
         selected_radio_inputs.click();
       }
+
+      // reset dropdown show/hide 
+      $('.other-type-container').each(function() {
+        var original_val = $(this).attr('data-original-value');
+        if(original_val != undefined) {
+          $(this).find('select').val(original_val).change();
+        }
+      });
 
       var tab_id = get_active_tab_id();
       disable_tab_editing(tab_id);
@@ -206,22 +218,28 @@
       var other_text_container = $(type_el).parents('.other-fields-container').find('.other-value-container');
       if(other_text_container) {
         var other_ids = $(type_el).parents('.other-type-container').data('other-type-ids');
+        var other_edit_field = other_text_container.find('.editable-field');
         if(!other_ids || other_ids.indexOf(type_id) < 0) {
-          other_text_container.find('.editable-field').editable('setValue', '');
+          other_edit_field.editable('setValue', '');
           other_text_container.hide();
         } else {
           other_text_container.show();
+          other_edit_field.editable('hide');
+          other_edit_field.editable('show', false);
         }
       }
 
       var dual_text_container = $(type_el).parents('.other-fields-container').find('.dual-value-container');
       if(dual_text_container) {
         var dual_ids = $(type_el).parents('.other-type-container').data('dual-type-ids');
+        var duel_edit_field = dual_text_container.find('.editable-field');
         if(!dual_ids || dual_ids.indexOf(type_id) < 0) {
-          dual_text_container.find('.editable-field').editable('setValue', '');
+          duel_edit_field.editable('setValue', '');
           dual_text_container.hide();
         } else {
           dual_text_container.show();
+          duel_edit_field.editable('hide');
+          duel_edit_field.editable('show', false);
         }
       }
     }
