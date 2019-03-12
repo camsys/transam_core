@@ -155,7 +155,7 @@ module TransamTagHelper
     if type == 'boolean'
       return editable_asset_association_tag(asset, field, label,
                                             [[1, 'Yes'],[0, 'No']],
-                                            include_blank: !required, current_value: @asset.send(field) ? 1 : 0, suffix: suffix)
+                                            include_blank: !required, current_value: @asset.send(field) ? 1 : 0, suffix: suffix, inputclass: inputclass)
     end
     extras = ''
     extras += ", min: #{min}" if min
