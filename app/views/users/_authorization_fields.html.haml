@@ -8,14 +8,16 @@
   %legend User Organizations
   .row
     .col-lg-6.col-md-6.col-sm-6.col-xs-12
-      = f.association :organization, :collection => Organization.where(id: @organization_list), :label_method => 'coded_name', :selected => (@user.organization_id || params[:organization_id]), :include_blank => true
+      = f.association :organization, :collection => Organization.where(id: @organization_list), :label => 'Primary Organization', :label_method => 'coded_name', :selected => (@user.organization_id || params[:organization_id]), :include_blank => true
     .col-lg-6.col-md-6.col-sm-6.col-xs-12
 
       = f.input :organization_ids, :as => :hidden
       .form-group.required
         %label.required.control-label
           %abbr{title: 'required'} *
-          = " Organizations"
+          = " Primary & Secondary Organizations"
+        %a.transam-popover{data: {placement: 'left', toggle: 'popover', html: 'true', content: 'The selections made here provide the user with the ability to edit data for any selected organization.'}, tabindex: '0'}
+          %i.fa.fa-info-circle
         #org_select.input-large
 
 %fieldset
