@@ -36,6 +36,7 @@
 
   %tbody
     - @queries.each do |s|
+      - s.organization_list = @organization_list
       - is_own_query = current_user && current_user.id == s.created_by_user_id
       %tr{:id => s.object_key}
         %td.left= s.object_key
