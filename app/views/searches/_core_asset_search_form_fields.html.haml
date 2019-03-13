@@ -53,7 +53,7 @@
           %legend.panel-legend Funding, Value
           = f.input :fta_funding_type_id, :label => "FTA Funding Type", :collection => FtaFundingType.active, :label_method => :to_s, input_html: { multiple: true }
           = f.input :sourceable_id, :label => 'Funding Program', :collection => FundingSource.all, input_html: { multiple: true } # grant purchases through funding sources
-          = f.input :purchase_cost, :label => "Purchase Cost", :wrapper => :vertical_prepend do
+          = f.input :purchase_cost, :label => "Cost (Purchase)", :wrapper => :vertical_prepend do
             .input-group-btn
               %button.btn.btn-default.dropdown-toggle{"data-toggle" => "dropdown", :type => "button"}
               %ul.dropdown-menu{:role => "menu"}
@@ -64,7 +64,7 @@
                 %li
                   %a{:data => {:compare => "1"}} Greater Than
               = f.input_field :purchase_cost_comparator, :as => :hidden, :value => '0'
-            = f.input_field :purchase_cost, :class => "form-control", :as => :integer, :label => "Original Purchase Cost", input_html: { :min => '0'}
+            = f.input_field :purchase_cost, :class => "form-control", :as => :integer, :label => "Original Cost (Purchase)", input_html: { :min => '0'}
           = f.input :book_value, :label => "Book Value", :wrapper => :vertical_prepend do
             .input-group-btn
               %button.btn.btn-default.dropdown-toggle{"data-toggle" => "dropdown", :type => "button"}
