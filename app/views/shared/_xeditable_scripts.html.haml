@@ -142,7 +142,9 @@
                  } else { //validation error (client-side or server-side)
                      $.each(errors, function(k, v) { msg += k+": "+v+"<br>"; });
                  }
-                 $('#msg').removeClass('alert-success').addClass('alert-error').html(msg).show();
+                 //$('#msg').removeClass('alert-success').addClass('alert-error').html(msg).show();
+                 console.log(msg);
+                 transam.show_flash_message('We are sorry but something went wrong. Please try again.', 'alert-danger');
              }
          });
        } else {
