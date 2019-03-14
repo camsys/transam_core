@@ -112,6 +112,7 @@
     });
 
     $('.save-xeditable-button').click(function() {
+      $('#processing_spinner').show();
        $('form.editableform').submit(); // save values locally, then submit to server
        if($('.has-error .form-control').length == 0) {
          $('.editable-field').editable('submit', {
@@ -131,6 +132,7 @@
                   var tab_id = get_active_tab_id();
                   disable_tab_editing(tab_id);
 
+                  $('#processing_spinner').hide();
                   $('.edit-xeditable-button').show();
                   $('.edit-xeditable-buttons').hide();
                 }
@@ -144,6 +146,7 @@
                  }
                  //$('#msg').removeClass('alert-success').addClass('alert-error').html(msg).show();
                  console.log(msg);
+                 $('#processing_spinner').hide();
                  alert('We are sorry but something went wrong. Please try again.');
              }
          });
