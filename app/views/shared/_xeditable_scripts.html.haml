@@ -49,9 +49,11 @@
         $(this).closest('.other-type-container').attr('data-original-value', $(this).val());
       });
 
-      // always focus first field
+      // de-focus form: 1. make it select the first one; 2. lost is focus
+      // the purpose of selecting first one is to avoid focus jumping to others
       setTimeout(function(){
         $('#'+tab_id+'.tab-pane .editable-input').find('input, select').first().focus();
+        $(':focus').blur(); 
       }, 10);
     }
 
