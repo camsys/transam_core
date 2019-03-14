@@ -18,6 +18,16 @@ module TransamGuid
     validates :guid, :presence => true, :uniqueness => true
   end
 
+  #-----------------------------------------------------------------------------
+  #
+  # Class Methods
+  #
+  #-----------------------------------------------------------------------------
+
+  module ClassMethods
+
+  end
+
   # Only generate an GUID if one is not set. This allows objects to be
   # replaced but maintain the same GUID
   def generate_guid(column)
