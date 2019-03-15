@@ -40,6 +40,7 @@
       %th.left.nowrap{:data => {:field => "last_name", :sortable => 'true', :formatter => 'link_to_user', :switchable => 'false'}} Last
       %th.left.nowrap{:data => {:field => "first_name", :sortable => 'true'}} First
       %th.left{:data => {:field => "organization", :sortable => 'true', :formatter => 'link_to_org'}} Primary Organization
+      %th.left{:data => {:field => "all_orgs", :visible => 'false', :sortable => 'false'}} All Organizations
       %th.left.nowrap{:data => {:field => "email", :sortable => 'true'}} Email
       %th.left.nowrap{:data => {:field => "phone", :sortable => 'true'}} Phone
       %th.left.nowrap{:data => {:field => "phone_ext", :sortable => 'true'}} Ext.
@@ -47,6 +48,7 @@
       %th.left{:data => {:field => "role_name", :sortable => 'false'}} Role
       %th.left{:data => {:field => "privilege_names", :sortable => 'false'}} Privileges
       %th.left{:data => {:field => "active", :sortable => 'true', :formatter => 'active_formatter'}} Status
+      %th.left{:data => {:field => "active", :visible => 'false', :sortable => 'true', :formatter => 'system_access_formatter'}} System Access
       %th.left{:data => {:field => "timezone", :visible => 'false', :sortable => 'true'}} Timezone
       %th.center{:data => {:field => "notify_via_email", :visible => 'false', :sortable => 'true', :formatter => 'raw_boolean_formatter'}} Send Emails
       %th.right{:data => {:field => "num_table_rows", :visible => 'false', :sortable => 'true', :formatter => 'integer_formatter'}} Table Rows
@@ -85,6 +87,13 @@
       return "Active";
     } else {
       return "Inactive";
+    }
+  }
+  function system_access_formatter(value) {
+    if (value) {
+      return "Yes";
+    } else {
+      return "No";
     }
   }
 
