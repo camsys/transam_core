@@ -43,11 +43,18 @@
       $('#'+tab_id+'.tab-pane .editable-field').editable('enable');
       $('#'+tab_id+'.tab-pane .editable-field').editable('show', false);
       $('#'+tab_id+' input[type=radio]').removeAttr('disabled');
-      $('#'+tab_id+'.tab-pane .editable-input').find('input, select').first().focus();
+      //$('#'+tab_id+'.tab-pane .editable-input').find('input, select').first().focus();
 
       $('.other-type-container select').each(function() {
         $(this).closest('.other-type-container').attr('data-original-value', $(this).val());
       });
+
+      // de-focus form: 1. make it select the first one; 2. lost is focus
+      // the purpose of selecting first one is to avoid focus jumping to others
+      setTimeout(function(){
+        $('#'+tab_id+'.tab-pane .editable-input').find('input, select').first().focus();
+        $(':focus').blur(); 
+      }, 10);
     }
 
     function disable_tab_editing(tab_id) {
@@ -107,55 +114,53 @@
       var tab_id = get_active_tab_id();
       disable_tab_editing(tab_id);
 
-
-      $('#processing_spinner').hide();
       $('.edit-xeditable-button').show();
       $('.edit-xeditable-buttons').hide();
     });
 
     $('.save-xeditable-button').click(function() {
-      $('#processing_spinner').show();
-       $('form.editableform').submit(); // save values locally, then submit to server
-       if($('.has-error .form-control').length == 0) {
-         $('.editable-field').editable('submit', {
-             ajaxOptions: {
-                 type: 'PUT',
-                 dataType: 'json' //assuming json response
-             },
-             success: function(data, config) {
-                if(data && data.errors){
-                     //server-side validation error, response like {"errors": {"username": "username already exist"} }
-                     config.error.call(this, data.errors);
-                } else {
-                  if(typeof(profile_save_callback) !== 'undefined') {
-                    profile_save_callback();
-                  } 
+     $('form.editableform').submit(); // save values locally, then submit to server
+     if($('.has-error .form-control').length == 0) {
+       $('#processing_spinner').show();
+       $('.editable-field').editable('submit', {
+           ajaxOptions: {
+               type: 'PUT',
+               dataType: 'json' //assuming json response
+           },
+           success: function(data, config) {
+              $('#processing_spinner').hide();
+              if(data && data.errors){
+                //server-side validation error, response like {"errors": {"username": "username already exist"} }
+                config.error.call(this, data.errors);
+              } else {
+                if(typeof(profile_save_callback) !== 'undefined') {
+                  profile_save_callback();
+                } 
 
-                  var tab_id = get_active_tab_id();
-                  disable_tab_editing(tab_id);
+                var tab_id = get_active_tab_id();
+                disable_tab_editing(tab_id);
 
-                  $('#processing_spinner').hide();
-                  $('.edit-xeditable-button').show();
-                  $('.edit-xeditable-buttons').hide();
-                }
-             },
-             error: function(errors) {
-                 var msg = '';
-                 if(errors && errors.responseText) { //ajax error, errors = xhr object
-                     msg = errors.responseText;
-                 } else { //validation error (client-side or server-side)
-                     $.each(errors, function(k, v) { msg += k+": "+v+"<br>"; });
-                 }
-                 //$('#msg').removeClass('alert-success').addClass('alert-error').html(msg).show();
+                $('.edit-xeditable-button').show();
+                $('.edit-xeditable-buttons').hide();
+              }
+           },
+           error: function(errors) {
+             $('#processing_spinner').hide();
+             var msg = '';
+             if(errors && errors.responseText) { //ajax error, errors = xhr object
+                 msg = errors.responseText;
                  console.log(msg);
-                 $('#processing_spinner').hide();
                  alert('We are sorry but something went wrong. Please try again.');
+             } else { //validation error (client-side or server-side)
+                 $.each(errors, function(k, v) { msg += k+": "+v+"<br>"; });
+                 alert(msg);
              }
-         });
-       } else {
-        var tab_id = $('.has-error .form-control').parents('.tab-pane').attr('id');
-        open_tab(tab_id);
-       }
+           }
+       });
+     } else {
+      var tab_id = $('.has-error .form-control').parents('.tab-pane').attr('id');
+      open_tab(tab_id);
+     }
     });
 
     $('.editable-field.combodate').editable({
@@ -193,30 +198,7 @@
     } 
 
     $('.editable-field:not(.currency-number)').editable(generic_xeditable_options);
-
     $('.editable-field.currency-number').editable(currency_xeditable_options);
-
-    // select all text when editable input shows up so to speed up input
-    $('.editable-field').on('shown', function(e, editable) {
-      setTimeout( function() {
-        editable.input.$input.select();
-      }, 10 );
-    });
-
-    // click an editable cell to bring up editable-input
-    $('.editable-field:not(.editable-disabled)').closest('td').click(function() {
-      if (editableActive) return;
-      
-      var that = this;
-      setTimeout(function() {
-        $(that).find('.editable-field').editable('show');
-        }, 10);
-    });
-
-    // if the cell is editable enabled, show up editable input when it gets focus
-    $('.editable-field:not(.editable-disabled)').focus(function() {
-      $(this).editable('show');
-    });
 
     // show Other text entry only if it's a Other type; otherwise, hide and empty its value
     // type_el: HTML element of the Type dropdown
