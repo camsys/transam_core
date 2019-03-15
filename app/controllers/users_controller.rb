@@ -134,7 +134,8 @@ class UsersController < OrganizationAwareController
                  organization_short_name: u.organization.short_name,
                  organization_name: u.organization.name,
                  role_name: u.roles.roles.last.label,
-                 privilege_names: u.roles.privileges.collect{|x| x.label}.join(', ')
+                 privilege_names: u.roles.privileges.collect{|x| x.label}.join(', '),
+                 all_orgs: u.organizations.map{ |o| o.to_s }.join(', ')
             })
           }
         }
