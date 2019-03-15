@@ -96,26 +96,8 @@
     });
 
     $('.cancel-xeditable-button').on('click', function(e) {
-      e.stopPropagation();
-
-      // reset radios
-      if(selected_radio_inputs) {
-        selected_radio_inputs.click();
-      }
-
-      // reset dropdown show/hide 
-      $('.other-type-container').each(function() {
-        var original_val = $(this).attr('data-original-value');
-        if(original_val != undefined) {
-          $(this).find('select').val(original_val).change();
-        }
-      });
-
-      var tab_id = get_active_tab_id();
-      disable_tab_editing(tab_id);
-
-      $('.edit-xeditable-button').show();
-      $('.edit-xeditable-buttons').hide();
+      // reload page to avoid left-over field changes
+      window.location.reload();
     });
 
     $('.save-xeditable-button').click(function() {
@@ -133,15 +115,8 @@
                 //server-side validation error, response like {"errors": {"username": "username already exist"} }
                 config.error.call(this, data.errors);
               } else {
-                if(typeof(profile_save_callback) !== 'undefined') {
-                  profile_save_callback();
-                } 
-
-                var tab_id = get_active_tab_id();
-                disable_tab_editing(tab_id);
-
-                $('.edit-xeditable-button').show();
-                $('.edit-xeditable-buttons').hide();
+                // refresh page to show new profile
+                window.location.reload();
               }
            },
            error: function(errors) {
