@@ -34,7 +34,7 @@
     %th.right{:data => {:visible => 'true', :sortable => 'true'}} Num Rows Failed
     %th.right{:data => {:visible => 'false', :sortable => 'true'}} Processing Started
     %th.right{:data => {:visible => 'false', :sortable => 'true'}} Processing Completed
-    %th.right{:data => {:sortable => 'true'}} Processing Time
+    %th.right{:data => {:sortable => 'true'}} Processing Time (s)
     %th.right{:data => {:sortable => 'true'}} Uploaded At
   %tbody
     - @uploads.each do |f|
@@ -54,7 +54,7 @@
 
         %td.right= format_as_date_time(f.processing_started_at)
         %td.right= format_as_date_time(f.processing_completed_at)
-        %td.right= "#{format_as_integer(f.processing_time.to_i)}s"
+        %td.right= format_as_integer(f.processing_time.to_i)
         %td.right= format_as_date_time(f.created_at)
 
 = render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :path_pattern => upload_path("xxx")}

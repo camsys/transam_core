@@ -33,7 +33,7 @@ class UpdatedTemplateBuilder
     setup_lookup_sheet(wb)
 
     @pick_list_cache = {}
-    @col_widths = []
+    @col_widths = {}
     add_columns(sheet)
     @frozen_cols = sheet.sheet_view.pane.x_split
 
@@ -140,14 +140,17 @@ class UpdatedTemplateBuilder
     @data_validations[name] = data_validation
 
     # add column names and data to pick lists
+    @col_widths[name_category] ||= []
     if data_validation.key?(:formula1) && data_validation[:formula1].include?("lists!")
       @pick_list_cache[name] ||= []
       sheet.workbook.worksheets[2].rows[@pick_list_cache[:index]].cells.each do |cell|
         @pick_list_cache[name] << cell.value
       end
-      @col_widths << nil
+      @col_widths[name_category] << nil
+    elsif name.length > 18
+      @col_widths[name_category] << name.length + 2
     else
-      @col_widths << 20
+      @col_widths[name_category] << 20
     end
 
     # set any other variables

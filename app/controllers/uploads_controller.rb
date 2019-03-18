@@ -13,27 +13,22 @@ class UploadsController < OrganizationAwareController
 
   def index
 
-    # Start to set up the query
-    conditions  = []
-    values      = []
 
-    # Add the organization clause
-    conditions << 'organization_id IN (?)'
-    values << @organization_list
-
-    # See if we got an organization type id
+    # See if we got an file status type id
     @file_status_type_id = params[:file_status_type_id]
-    unless @file_status_type_id.blank?
+    if @file_status_type_id.blank?
+      @uploads = Upload.all
+    else
       @file_status_type_id = @file_status_type_id.to_i
-      conditions << 'file_status_type_id = ?'
-      values << @file_status_type_id
+      @uploads = Upload.where(file_status_type_id: @file_status_type_id)
 
       type = FileStatusType.find(@file_status_type_id)
       add_breadcrumb type.name unless type.nil?
     end
 
+    # get assets from multi org or just uploaded by user (to get multi not yet processed)
     asset_ids = Rails.application.config.asset_base_class_name.constantize.where.not(upload_id: nil).where(organization_id: @organization_list).pluck(:upload_id)
-    @uploads = Upload.where('('+conditions.join(' AND ')+') OR id IN (?) OR user_id = ?', *values, asset_ids, current_user.id).order(:created_at)
+    @uploads = @uploads.where('organization_id IN (?) OR id IN (?) OR user_id = ?', @organization_list, asset_ids, current_user.id).order(:created_at)
 
     # cache the set of asset ids in case we need them later
     cache_list(@uploads, INDEX_KEY_LIST_VAR)

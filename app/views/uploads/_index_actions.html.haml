@@ -12,9 +12,9 @@
       Filter Status
       %span.caret
     %ul.dropdown-menu{:role => 'menu'}
-      %li
+      %li{class: @file_status_type_id.blank? ? 'active' : ''}
         = link_to "All statuses", uploads_path
       %li.divider
       - FileStatusType.all.each do |type|
-        %li
+        %li{class: @file_status_type_id == type.id ? 'active' : ''}
           = link_to type.name, uploads_path(:file_status_type_id => type.id)

@@ -6,6 +6,12 @@
   </div>
 <% end %>
 
+<% if @data[:table_subheader] %>
+  <legend>
+    <%= @data[:table_subheader].html_safe %>
+  </legend>
+<% end %>
+
 <% unless request.format.pdf? %>
   <div class="row">
     <div class="col-md-1"></div>
@@ -58,5 +64,7 @@
 	window.onresize = function() {
 		<%= "chart_func_#{@report.id}" %>();
 	};
+
+  transam.enable_info_popups('.transam-popover');
 
 </script>
