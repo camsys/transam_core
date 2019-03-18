@@ -2,30 +2,9 @@
   table_dom_id = SecureRandom.hex
   show_actions ||= 0
 
-:css
-  .bs-bars.pull-left {
-    float: none !important;
-    display: inline-block;
-    width: 91%;
-  }
-
-  .navbar-form.navbar-right {
-    margin-top: 0px;
-  }
-
-  #new_user {
-    vertical-align: top;
-  }
-
 #users_table_actions.row
   - if show_actions == 1
     = render :partial => "users/index_actions"
-
-  - if can? :create, User
-    .navbar-form.navbar-right
-      = link_to new_user_path, :class => 'btn btn-primary', :id => 'new_user' do
-        %i.fa.fa-fw.fa-user-plus
-        = " Add a user"
 
 %table.table.table-hover{:id => table_dom_id,
   :data => {:toggle => 'table',

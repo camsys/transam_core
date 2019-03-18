@@ -1,3 +1,18 @@
+:css
+  .bs-bars.pull-left {
+    float: none !important;
+    display: inline-block;
+    width: 91%;
+  }
+
+  .navbar-form.navbar-right {
+    margin-top: 0px;
+  }
+
+  #new_user {
+    vertical-align: top;
+  }
+
 = form_tag users_path, :id => 'search_form', :method => 'get', :class => 'navbar-form navbar-left panel-action', style: 'padding-top: 7px', :role => 'search' do
   = select_tag(:role, options_for_select(Role.all.collect{|x| [x.label, x.name]}, :selected => @role), :class => "form-control", :include_blank => "Any role/privilege...")
   = text_field_tag :search_text, nil, :value => @search_text, :autocomplete => 'off', :class => 'form-control', :placeholder => 'Initials/First/Last/Email/Title...', :id => 'search_text', :data => {:convert => 'uppercase'}, :style => 'width:250px;'
@@ -11,3 +26,9 @@
   = button_tag :type => 'submit', :id => 'form-submit', :class => 'btn btn-info', :style => 'margin-left: 2px;' do
     %i.fa.fa-search.fa-1-5x
     = " Search"
+
+- if can? :create, User
+  .navbar-form.navbar-right
+    = link_to new_user_path, :class => 'btn btn-primary', :id => 'new_user' do
+      %i.fa.fa-fw.fa-user-plus
+      = " Add a user"
