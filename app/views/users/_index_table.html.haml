@@ -2,6 +2,9 @@
   table_dom_id = SecureRandom.hex
   show_actions ||= 0
 
+%h2 Users
+%legend #{@show_active_only.capitalize} Users
+
 #users_table_actions.row
   - if show_actions == 1
     = render :partial => "users/index_actions"

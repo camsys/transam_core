@@ -13,19 +13,21 @@
     vertical-align: top;
   }
 
-= form_tag users_path, :id => 'search_form', :method => 'get', :class => 'navbar-form navbar-left panel-action', style: 'padding-top: 7px', :role => 'search' do
-  = select_tag(:role, options_for_select(Role.all.collect{|x| [x.label, x.name]}, :selected => @role), :class => "form-control", :include_blank => "Any role/privilege...")
-  = text_field_tag :search_text, nil, :value => @search_text, :autocomplete => 'off', :class => 'form-control', :placeholder => 'Initials/First/Last/Email/Title...', :id => 'search_text', :data => {:convert => 'uppercase'}, :style => 'width:250px;'
+  #search_form select, #search_form input {
+    margin-right: 10px;
+  }
 
-  .form-group
-    %label.checkbox
-      = hidden_field_tag :show_active_only, ''
-      = check_box_tag(:show_active_only, '1', @show_active_only == '1', {:class => "form-control", :style => 'height: 18px;'})
-      Show Active Users Only
+= form_tag users_path, :id => 'search_form', :method => 'get', :class => 'navbar-form navbar-left panel-action', style: 'padding-top: 7px', :role => 'search' do
+  %label Role & Privilege
+  = select_tag(:role, grouped_options_for_select([['User Roles', Role.where(privilege: 0).or(Role.where(name: 'super_manager')).collect{|x| [x.label, x.name]}], ['User Privileges', Role.where(privilege: 1).where.not(name: 'super_manager').collect{|x| [x.label, x.name]}]], :selected => @role), :class => "form-control", :include_blank => "All Roles & Privileges")
+  %label Search
+  = text_field_tag :search_text, nil, :value => @search_text, :autocomplete => 'off', :class => 'form-control', :placeholder => 'Initials / First / Last / Email / Title...', :id => 'search_text', :style => 'width:250px;'
+  %label Status
+  = select_tag(:show_active_only, options_for_select([['All Users', 'all'], ['Active', 'active'], ['Inactive', 'inactive']], :selected => @show_active_only), :class => "form-control")
 
   = button_tag :type => 'submit', :id => 'form-submit', :class => 'btn btn-info', :style => 'margin-left: 2px;' do
-    %i.fa.fa-search.fa-1-5x
-    = " Search"
+    %i.fa.fa-filter
+    = " Filter"
 
 - if can? :create, User
   .navbar-form.navbar-right
