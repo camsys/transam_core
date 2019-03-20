@@ -5,7 +5,7 @@
   row.add_cell(val)
 end
 row.add_cell(format_as_integer(a.age), style: integer_cell)
-[format_as_decimal(a.reported_condition_rating, 1),
+[format_as_decimal(a.reported_condition_rating, 2),
  (a.service_status_type.code unless a.service_status_type.nil?),
  format_as_fiscal_year(a.scheduled_rehabilitation_year),
  format_as_fiscal_year(a.scheduled_replacement_year)].each do |val|
