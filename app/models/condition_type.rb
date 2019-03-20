@@ -14,13 +14,13 @@ class ConditionType < ActiveRecord::Base
   def self.from_rating(estimated_rating)
     if estimated_rating.nil?
       rating = 0
-    elsif estimated_rating >= 4.8
+    elsif estimated_rating >= 4.75
       rating = 5
-    elsif estimated_rating >= 4.0
+    elsif estimated_rating >= 3.95
       rating = 4
-    elsif estimated_rating >= 3.0
+    elsif estimated_rating >= 2.95
       rating = 3
-    elsif estimated_rating >= 2.0
+    elsif estimated_rating >= 1.95
       rating = 2
     elsif estimated_rating >= 1.0
       rating = 1
