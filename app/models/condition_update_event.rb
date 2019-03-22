@@ -19,8 +19,8 @@ class ConditionUpdateEvent < AssetEvent
   validates :assessed_rating,
       :presence     => true,
       :numericality => {
-      :greater_than_or_equal_to => ConditionType.minimum(:rating) || 0,
-      :less_than_or_equal_to    => ConditionType.maximum(:rating) || 5
+      :greater_than_or_equal_to => ConditionType.minimum(:rating_ceiling) || 0,
+      :less_than_or_equal_to    => ConditionType.maximum(:rating_ceiling) || 5
       },
       :allow_nil    => true
   # validates :comments, :length => {:maximum => ???} # There is no limit in the Database/Schema
@@ -88,7 +88,7 @@ class ConditionUpdateEvent < AssetEvent
   # Should be overridden by any form fields during save
   def set_defaults
     super
-    self.assessed_rating ||= transam_asset ? (transam_asset.condition_updates.last.try(:reported_condition_rating)) : ConditionType.maximum(:rating)
+    self.assessed_rating ||= transam_asset ? (transam_asset.condition_updates.last.try(:reported_condition_rating)) : ConditionType.maximum(:rating_ceiling)
     self.asset_event_type ||= AssetEventType.find_by_class_name(self.name)
   end
 

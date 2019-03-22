@@ -4,30 +4,20 @@ class ConditionType < ActiveRecord::Base
   scope :active, -> { where(:active => true) }
 
   def self.max_rating
-    order("rating DESC").first.rating
+    order("rating_ceiling DESC").first.rating_ceiling
   end
   def self.min_rating
-    where('name <> ?', 'Unknown').order("rating ASC").first.rating
+    order("rating_ceiling ASC").first.rating_ceiling + 0.01
   end
 
   # Uses FTA's condition assessment ratings
   def self.from_rating(estimated_rating)
-    if estimated_rating.nil?
+    if estimated_rating.nil? || estimated_rating < 0.0 || estimated_rating > 5.0
       rating = 0
-    elsif estimated_rating >= 4.8
-      rating = 5
-    elsif estimated_rating >= 4.0
-      rating = 4
-    elsif estimated_rating >= 3.0
-      rating = 3
-    elsif estimated_rating >= 2.0
-      rating = 2
-    elsif estimated_rating >= 1.0
-      rating = 1
     else
-      rating = 0 #unknown
+      rating = estimated_rating
     end
-    ConditionType.find_by_rating(rating)
+    ConditionType.where("rating_ceiling >= ?", rating).first
   end
 
   def to_s

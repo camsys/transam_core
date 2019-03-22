@@ -27,7 +27,7 @@
           = s.input :condition_type_id, :as => :hidden
           .col-sm-6.text-right
             %label.control-label
-              = "#{s.object.condition_type.name} (#{s.object.condition_type.rating})"
+              = "#{s.object.condition_type.name} (#{s.object.condition_type.rating_ceiling})"
           .col-sm-6
             = s.input :pcnt, :wrapper => :vertical_prepend, :label => false do
               = s.input_field :pcnt, :class => 'form-control pcnt-field', :min => 0, :max => 100, :label => false

@@ -18,7 +18,7 @@ RSpec.describe ConditionUpdateEvent, :type => :model do
     end
     describe 'assessed rating must be in range' do
       it 'cant be above max' do
-        test_event.assessed_rating = ConditionType.maximum(:rating)+1.0
+        test_event.assessed_rating = ConditionType.maximum(:rating_ceiling)+1.0
         expect(test_event.valid?).to be false
       end
     end

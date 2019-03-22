@@ -5,7 +5,7 @@
 %dl.dl-horizontal
   - ConditionType.all.reverse.each do |x|
     - if x.name != "Unknown"
-      %dt{:style => 'width:60px;margin-bottom:10px;'}= "#{x.rating}"
+      %dt{:style => 'width:60px;margin-bottom:10px;'}= "#{x.rating_ceiling}"
       %dd{:style => 'margin-left:80px;;margin-bottom:5px;'}= "#{x.name} - #{x.description}"
 
 %p
