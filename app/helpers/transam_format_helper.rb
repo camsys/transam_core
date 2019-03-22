@@ -304,15 +304,20 @@ module TransamFormatHelper
   end
   
   # formats a label/value combination, providing optional popover support
-  def format_field(label, value, popover_text=nil, popover_iconcls=nil, popover_label=nil)
+  def format_field(label, value, popover_text=nil, popover_iconcls=nil, popover_label=nil, popover_location='value')
 
     html = "<div class='row control-group'>"
     html << "<div class='col-xs-5 display-label'>"
     html << label
+    if popover_location=='label' && popover_text.present?
+      popover_iconcls = 'fa fa-info-circle info-icon' unless popover_iconcls
+      popover_label = label unless popover_label
+      html << "<i class='#{popover_iconcls} info-icon' data-toggle='popover' data-trigger='hover' title='#{popover_label}' data-placement='right' data-content='#{popover_text}'></i>"
+    end
     html << "</div>"
     html << "<div class='col-xs-7 display-value'>"
     html << value.to_s unless value.nil?
-    unless popover_text.nil?
+    if popover_location=='value' && popover_text.present?
       popover_iconcls = 'fa fa-info-circle info-icon' unless popover_iconcls
       popover_label = label unless popover_label
       html << "<i class='#{popover_iconcls} info-icon' data-toggle='popover' data-trigger='hover' title='#{popover_label}' data-placement='right' data-content='#{popover_text}'></i>"

@@ -82,14 +82,17 @@ class UsersController < OrganizationAwareController
     end
 
     if params[:show_active_only].nil?
-      @show_active_only = '1'
+      @show_active_only = 'active'
     else
       @show_active_only = params[:show_active_only]
     end
 
-    if @show_active_only == '1'
+    if @show_active_only == 'active'
       conditions << 'users.active = ?'
       values << true
+    elsif @show_active_only == 'inactive'
+      conditions << 'users.active = ?'
+      values << false
     end
 
     # Get the Users but check to see if a role was selected
@@ -132,8 +135,10 @@ class UsersController < OrganizationAwareController
           :rows => @users.limit(params[:limit]).offset(params[:offset]).collect{ |u|
             u.as_json.merge!({
                  organization_short_name: u.organization.short_name,
+                 organization_name: u.organization.name,
                  role_name: u.roles.roles.last.label,
-                 privilege_names: u.roles.privileges.collect{|x| x.label}.join(', ')
+                 privilege_names: u.roles.privileges.collect{|x| x.label}.join(', '),
+                 all_orgs: u.organizations.map{ |o| o.to_s }.join(', ')
             })
           }
         }
