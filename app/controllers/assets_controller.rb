@@ -327,7 +327,7 @@ class AssetsController < AssetAwareController
         end
         notify_user(:notice, "Asset #{@asset.to_s} was successfully updated.")
 
-        format.html { redirect_to inventory_url(@asset) }
+        format.html { redirect_to inventory_url(@asset, use_last_tab: 1) }
         format.js { notify_user(:notice, "#{@asset} successfully updated.") }
         format.json { head :no_content }
       else
