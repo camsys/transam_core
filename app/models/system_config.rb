@@ -13,6 +13,8 @@
 #------------------------------------------------------------------------------
 class SystemConfig < ActiveRecord::Base
 
+  has_paper_trail on: [:update], only: [:fy_year]
+
   #------------------------------------------------------------------------------
   # Validations
   #------------------------------------------------------------------------------
@@ -42,6 +44,20 @@ class SystemConfig < ActiveRecord::Base
   def self.instance
     # there will be only one row, and its ID must be '1'
     find_by(id: 1)
+  end
+
+  def self.allowable_params
+    [:fy_year]
+  end
+
+  def self.formatted_version(version)
+    {
+      datetime: version.created_at,
+      event: "System Rollover", # currently only versioning FY rollovers
+      event_type: version.changeset['fy_year'][1].blank? ? 'Automatic' : 'Manual',
+      comments: version.changeset['fy_year'][1].blank? ? "" : "Fiscal Year set to #{version.changeset['fy_year'][1]}.",
+      user: version.actor
+    }
   end
 
 
