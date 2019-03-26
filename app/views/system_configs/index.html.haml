@@ -1,0 +1,19 @@
+%h1 Listing system_configs
+
+%table
+  %thead
+    %tr
+      %th
+      %th
+      %th
+
+  %tbody
+    - @system_configs.each do |system_config|
+      %tr
+        %td= link_to 'Show', system_config
+        %td= link_to 'Edit', edit_system_config_path(system_config)
+        %td= link_to 'Destroy', system_config, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New System config', new_system_config_path
