@@ -19,8 +19,8 @@ class ConditionUpdateEvent < AssetEvent
   validates :assessed_rating,
       :presence     => true,
       :numericality => {
-      :greater_than_or_equal_to => ConditionType.minimum(:rating_ceiling) || 0,
-      :less_than_or_equal_to    => ConditionType.maximum(:rating_ceiling) || 5
+      :greater_than_or_equal_to => ConditionType.min_rating || 0,
+      :less_than_or_equal_to    => ConditionType.max_rating || 5
       },
       :allow_nil    => true
   # validates :comments, :length => {:maximum => ???} # There is no limit in the Database/Schema
