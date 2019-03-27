@@ -1,0 +1,79 @@
+:css
+  h2 {
+    border-bottom: 1px solid #e5e5e5;
+  }
+.row
+  .col-md-10.col-md-offset-1
+
+    %h2 System Rollover
+    %fieldset
+      %legend= @system_config.fy_year.present? ? 'Manual' : 'Automatic'
+
+    .alert.alert-info
+      %p
+        %b Rollover Method
+      %p
+        %b Automatic:
+        The system will automatically rollover to the next fiscal year at 12:00:01 AM, on the first day of the first month of the fiscal year.
+      %p
+        %b Manual:
+        The system will NOT automatically rollover to the next fiscal year until the Admin user selects the
+        %i Rollover
+        button, or the following fiscal year begins, whichever happens first.
+      %p
+        %b What Happens:
+        %ul
+          %li Planning year 1 projects (current year +1), become current year projects.
+          %li Planning year 1 projects (ALIs) drop off project planner, new year added.
+          %li Funding (Buckets) / My Funds: Prior year buckets are no longer usable
+          %li Status section resets for new year (prior year changes and archive actions must be completed prior to rollover).
+          %li All year-based field selections will add one additional year and remove the earliest year from selectable options.
+          %li Canned reports willdisplay one additional year of data and remove the earliest year available.
+
+    = simple_form_for(@system_config,
+      :html => {:class => 'form-vertical'},
+      :wrapper => :vertical_form,
+      :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes,
+        :radio_buttons => :vertical_radio_and_checkboxes,
+        :file => :vertical_file_input,
+        :boolean => :vertical_boolean}) do |f|
+
+
+      .row
+        .col-sm-2
+          .form-group
+            %label.control-label Fiscal Year
+            - month_int = @system_config.start_of_fiscal_year.split('-').first.to_i
+            .display-value= "#{Date::MONTHNAMES[month_int]} - #{month_int == 1 ? 'December' : Date::MONTHNAMES[month_int-1]}"
+        .col-sm-2
+          .form-group.required.radio-buttons-inline
+            %label.required.control-label
+              %abbr{title: 'required'} *
+              = " Rollover Method"
+            %span.radio
+              %label
+                = radio_button_tag :rollover_method, 'automatic', @system_config.fy_year.blank?
+                Automatic
+            %span.radio
+              %label
+                = radio_button_tag :rollover_method, 'manual', @system_config.fy_year.present?
+                Manual
+
+          = f.input :fy_year, as: :hidden
+        .col-sm-2
+          = f.button :submit, 'Rollover', :class => 'btn btn-primary'
+
+
+    %fieldset{style: 'margin-top: 20px;'}
+      %legend History
+      = render partial: 'shared/papertrail_history', locals: {history: @system_config.versions.order(created_at: :desc).map{|x| SystemConfig.formatted_version(x)}}
+
+:javascript
+
+  $("input[name='rollover_method']").on("click", function() {
+    if ($(this).val() == 'automatic') {
+      $('#system_config_fy_year').val('');
+    } else {
+      $('#system_config_fy_year').val('#{fiscal_year_year_on_date(false)}');
+    }
+  });

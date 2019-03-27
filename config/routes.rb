@@ -41,6 +41,12 @@ Rails.application.routes.draw do
   #-----------------------------------------------------------------------------
   get 'system_health_check', to: 'errors#system_health'
 
+  resources :system_configs, only: [:show, :edit, :update] do
+    member do
+      get 'fiscal_year_rollover'
+    end
+  end
+
   # Routes for the issues controller
   resources :issues,    :only => [:create, :update, :edit, :new] do
     member do
