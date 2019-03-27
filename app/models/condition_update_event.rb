@@ -76,9 +76,9 @@ class ConditionUpdateEvent < AssetEvent
   # This must be overriden otherwise a stack error will occur
   def get_update
     if condition_type.nil?
-      "Condition recorded as #{sprintf("%#.1f", assessed_rating)}"
+      "Condition recorded as #{sprintf("%#.2f", assessed_rating)}"
     else
-      "Condition recorded as #{sprintf("%#.1f", assessed_rating)} (#{condition_type})"
+      "Condition recorded as #{sprintf("%#.2f", assessed_rating)} (#{condition_type})"
     end
   end
 
