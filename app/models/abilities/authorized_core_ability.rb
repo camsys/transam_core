@@ -8,7 +8,7 @@ module Abilities
         organization_ids = user.organization_ids
       end
 
-      ['ActivityLog', 'Asset', 'AssetEvent', 'AssetGroup', 'Issue', 'Message', 'SavedSearch', 'SystemConfig', 'Task', 'Upload', 'User', 'UserOrganizationFilter', 'Vendor', 'SavedQuery'].each do |c|
+      ['ActivityLog', 'Asset', 'AssetEvent', 'AssetGroup', 'Issue', 'Message', 'SavedSearch', 'SystemConfig', 'Task', 'TransamWorkflow', 'Upload', 'User', 'UserOrganizationFilter', 'Vendor', 'SavedQuery'].each do |c|
         ability = "Abilities::Authorized#{c}Ability".constantize.new(user, organization_ids)
 
         self.merge ability if ability.present?
