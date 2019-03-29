@@ -120,8 +120,8 @@ module TransamWorkflow
 
         self.class.transam_workflow_transitions.each do |attrs|
           if attrs[:event_name].present? && attrs[:from_state].present? && attrs[:to_state].present?
-            transition_attrs = {attrs[:from_state].to_sym => attrs[:to_state].to_sym, on: attrs[:event_name]}
-            transition_attrs[:if] = attrs[:guard].to_sym if attrs[:guard].present?
+            transition_attrs = {attrs[:from_state] => attrs[:to_state], on: attrs[:event_name]}
+            transition_attrs[:if] = attrs[:guard] if attrs[:guard].present?
             transition(transition_attrs)
 
             before_transition on: attrs[:event_name], do: attrs[:before] unless attrs[:before].blank?
