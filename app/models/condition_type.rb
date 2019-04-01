@@ -17,7 +17,7 @@ class ConditionType < ActiveRecord::Base
     else
       rating = estimated_rating
     end
-    ConditionType.where("rating_ceiling >= ?", rating).first
+    ConditionType.order("rating_ceiling_ASC").where("rating_ceiling >= ?", rating).first
   end
 
   def to_s
