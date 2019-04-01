@@ -5,7 +5,7 @@ RSpec.describe ConditionType, :type => :model do
     expect(ConditionType.max_rating.to_i).to eq(5)
   end
   it '#min_rating' do
-    expect(ConditionType.min_rating.to_i).to eq(0)
+    expect(ConditionType.min_rating.to_i).to eq(1)
   end
   it '#from_rating' do
     expect(ConditionType.from_rating(1.5)).to eq(ConditionType.find_by(:rating_ceiling => 1.94))
