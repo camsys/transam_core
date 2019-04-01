@@ -27,7 +27,6 @@
       %th.left{:data => {:sortable => 'true'}} Acronym
       %th.left{:data => {:sortable => 'true'}} Name
       %th.left{:data => {:sortable => 'true'}} Organization Type
-      %th.left{:data => {:visible => 'false', :sortable => 'true'}} Organization Structure
       %th.left{:data => {:visible => 'false', :sortable => 'true'}} Country
       %th.left{:data => {:sortable => 'true'}} Address 1
       %th.left{:data => {:visible => 'false', :sortable => 'true'}} Address 2
@@ -47,7 +46,6 @@
         %td= link_to o.short_name, organization_path(o), {:style => 'text-decoration: underline'}
         %td= o.name
         %td= o.organization_type
-        %td= FtaAgencyType.find(o.fta_agency_type_id).to_s
         %td= o.country
         %td= o.address1
         %td= o.address2
