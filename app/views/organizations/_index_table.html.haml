@@ -28,13 +28,13 @@
       %th.left{:data => {:sortable => 'true'}} Name
       %th.left{:data => {:sortable => 'true'}} Organization Type
       %th.left{:data => {:visible => 'false', :sortable => 'true'}} Organization Structure
+      %th.left{:data => {:visible => 'false', :sortable => 'true'}} Country
       %th.left{:data => {:sortable => 'true'}} Address 1
       %th.left{:data => {:visible => 'false', :sortable => 'true'}} Address 2
       %th.left{:data => {:visible => 'false', :sortable => 'true'}} County
       %th.left{:data => {:sortable => 'true'}} City
       %th.left{:data => {:sortable => 'true'}} State
       %th.left{:data => {:sortable => 'true'}} Zip
-      %th.left{:data => {:visible => 'false', :sortable => 'true'}} Country
       %th.left.nowrap{:data => {:sortable => 'true'}} Phone
       %th.left{:data => {:sortable => 'true'}} Ext.
       %th.left{:data => {:sortable => 'true'}} Website
@@ -48,13 +48,13 @@
         %td= o.name
         %td= o.organization_type
         %td= FtaAgencyType.find(o.fta_agency_type_id).to_s
+        %td= o.country
         %td= o.address1
         %td= o.address2
         %td= o.county
         %td= o.city
         %td= o.state
         %td= o.zip
-        %td= ""
         %td= format_as_phone_number(o.phone)
         %td= o.phone_ext
         %td= format_as_url(o.url)
