@@ -27,12 +27,12 @@ asset_event_types = [
 ]
 
 condition_types = [
-  {:active => 1, :name => 'Unknown',        :rating => 0.0, :description => 'Asset condition is unknown.'},
-  {:active => 1, :name => 'Poor',           :rating => 1.0, :description => 'Asset is past its useful life and is in immediate need of repair or replacement. May have critically damaged components.'},
-  {:active => 1, :name => 'Marginal',       :rating => 2.0, :description => 'Asset is reaching or is just past the end of its useful life. Increasing number of defective or deteriorated components and experiencing increased maintenance needs.'},
-  {:active => 1, :name => 'Adequate',       :rating => 3.0, :description => 'Asset has reached its mid-life. Some moderately defective or deteriorated components.'},
-  {:active => 1, :name => 'Good',           :rating => 4.0, :description => 'Asset showing minimal signs of wear. Some defective or deteriorated components.'},
-  {:active => 1, :name => 'New/Excellent',  :rating => 5.0, :description => 'New asset. No visible defects.'}
+  {:active => 1, :name => 'Unknown',        :rating_ceiling => 0.99, :description => 'Asset condition is unknown.'},
+  {:active => 1, :name => 'Poor',           :rating_ceiling => 1.94, :description => 'Asset is past its useful life and is in immediate need of repair or replacement. May have critically damaged components.'},
+  {:active => 1, :name => 'Marginal',       :rating_ceiling => 2.94, :description => 'Asset is reaching or is just past the end of its useful life. Increasing number of defective or deteriorated components and experiencing increased maintenance needs.'},
+  {:active => 1, :name => 'Adequate',       :rating_ceiling => 3.94, :description => 'Asset has reached its mid-life. Some moderately defective or deteriorated components.'},
+  {:active => 1, :name => 'Good',           :rating_ceiling => 4.74, :description => 'Asset showing minimal signs of wear. Some defective or deteriorated components.'},
+  {:active => 1, :name => 'Excellent',      :rating_ceiling => 5.00, :description => 'New asset. No visible defects.'}
 ]
 
 disposition_types = [
