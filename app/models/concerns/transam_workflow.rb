@@ -14,7 +14,20 @@ module TransamWorkflow
   #
   #------------------------------------------------------------------------------
 
+  # Returns a collection of classes that implement TransamWorkflow
+  def self.implementors
+    ObjectSpace.each_object(Class).select { |klass| klass < TransamWorkflow }
+  end
+
+
   module ClassMethods
+
+    def transam_workflow_transitions
+      []
+      # array of hashes in this format
+      # {event_name: event_name, from_state: from, to_state: to, guard: method_name, can: method_name, icon: font-awesome-icon-name, label: title, before: method_name, after: method_name}
+    end
+
     # Return the list of allowable event names for this class
     def event_names()
       a = []
@@ -88,6 +101,35 @@ module TransamWorkflow
   # filtered to limit viewable events
   def history()
     workflow_events
+  end
+
+
+  # ======================= state_machine setup =======================
+
+  # Make sure the machine gets initialized so the initial state gets set properly
+  def initialize(*)
+    super
+    machine
+  end
+
+  # Create a state machine for this instance dynamically based on the
+  # transitions defined from the source above
+  def machine
+    unless self.class.transam_workflow_transitions.empty?
+      @machine ||= Machine.new(self, initial: self.class.transam_workflow_transitions.first[:from_state]) do
+
+        self.class.transam_workflow_transitions.each do |attrs|
+          if attrs[:event_name].present? && attrs[:from_state].present? && attrs[:to_state].present?
+            transition_attrs = {attrs[:from_state] => attrs[:to_state], on: attrs[:event_name]}
+            transition_attrs[:if] = attrs[:guard] if attrs[:guard].present?
+            transition(transition_attrs)
+
+            before_transition on: attrs[:event_name], do: attrs[:before] unless attrs[:before].blank?
+            after_transition on: attrs[:event_name], do: attrs[:after] unless attrs[:after].blank?
+          end
+        end
+      end
+    end
   end
 
 end
