@@ -25,3 +25,5 @@ end
 
 Rails.application.config.rails_admin_core_lookup_tables = ['AssetEventType', 'AssetType', 'AssetSubtype', 'ConditionType', 'DispositionType', 'DistrictType', 'FrequencyType', 'FundingTemplateType','IssueType', 'LicenseType', 'LocationReferenceType', 'MaintenanceType', 'ManufacturerModel', 'NoticeType','PriorityType', 'ReportType', 'ServiceStatusType', 'WebBrowserType']
 Rails.application.config.rails_admin_core_models = ['Asset', 'AssetGroup', 'Comment', 'Document', 'FundingTemplate', 'Image', 'Manufacturer', 'Organization','Report', 'Role', 'User', 'Vendor']
+
+Rails.application.config.assets.precompile += %w( transam_transit_banner.jpg )
