@@ -67,6 +67,12 @@
 
             %li.divider
             %li.text-left
+              = link_to fiscal_year_rollover_system_config_path(SystemConfig.instance) do
+                %i.fa.fa-arrow-circle-o-right.fa-fw
+                System Rollover
+
+            %li.divider
+            %li.text-left
               = link_to rails_admin_path do
                 %i.fa.fa-cogs.fa-fw
                 Admin Interface

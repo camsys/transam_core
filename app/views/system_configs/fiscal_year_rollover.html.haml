@@ -59,10 +59,10 @@
                 = radio_button_tag :rollover_method, 'manual', @system_config.fy_year.present?
                 Manual
 
-          = f.input :fy_year, as: :hidden
+          = f.input :fy_year, as: :hidden, input_html: {value: @system_config.fy_year.present? ? @system_config.fy_year + 1 : @system_config.fy_year} #ou set to next year if manual in case you rollover. cant save so FY won't update
         .col-sm-2
-          = f.button :submit, 'Rollover', :class => 'btn btn-primary'
-
+          = f.button :submit, 'Save', :class => 'btn btn-primary', :id => 'submit_btn', :disabled => true
+          = f.button :submit, 'Rollover', :class => 'btn btn-primary', :id => 'rollover_btn', :disabled => @system_config.fy_year.blank?, data: {confirm: 'The system will rollover at this point, are you sure you wish to proceed? This process cannot be reversed.'}
 
     %fieldset{style: 'margin-top: 20px;'}
       %legend History
@@ -70,10 +70,24 @@
 
 :javascript
 
+  var initially_manual = '#{@system_config.fy_year > 0}';
+
   $("input[name='rollover_method']").on("click", function() {
-    if ($(this).val() == 'automatic') {
-      $('#system_config_fy_year').val('');
+    if ($(this).val() == 'manual') {
+      if (initially_manual) {
+        $('#submit_btn').attr("disabled", "disabled");
+      } else {
+        $('#system_config_fy_year').val('#{fiscal_year_year_on_date(Date.today)}');
+        $('#submit_btn').removeAttr("disabled");
+      }
+      $('#rollover_btn').removeAttr("disabled");
     } else {
-      $('#system_config_fy_year').val('#{fiscal_year_year_on_date(false)}');
+      if (initially_manual) {
+        $('#system_config_fy_year').val('');
+        $('#submit_btn').removeAttr("disabled");
+      } else {
+        $('#submit_btn').attr("disabled", "disabled");
+      }
+      $('#rollover_btn').attr("disabled", "disabled");
     }
   });
