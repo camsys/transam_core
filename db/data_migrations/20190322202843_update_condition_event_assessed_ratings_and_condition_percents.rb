@@ -1,6 +1,6 @@
 class UpdateConditionEventAssessedRatingsAndConditionPercents < ActiveRecord::DataMigration
   def up
-    ConditionUpdateEvent.joins(:base_transam_asset).where("transam_assets.purchased_new = 1 AND asset_events.event_date < transam_assets.purchase_date")
+    ConditionUpdateEvent.joins(:base_transam_asset).where(transam_assets: {purchased_new: true}).where("asset_events.event_date < transam_assets.purchase_date")
       .each do |e|
         e.update_columns(event_date: e.transam_asset.purchase_date)
       end
