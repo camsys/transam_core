@@ -25,13 +25,35 @@
 				padding: 0;
 			}
 			.login-banner {
+				width: 100%;
+				/*height: 50vw; */
 				position: relative;
-				width: 100%;
-				height: 50vw;
 			}
-			.login-banner img {
+			.banner-cols {
+				display: table;
 				width: 100%;
-				height: auto;
+				height: 100%;
+			}
+			.banner-col {
+				display: table-cell;
+				width: 50%;
+				height: 100%;
+				position: relative;
+				overflow: hidden;
+				padding: 1em;
+			}
+			.banner-col:nth-child(4n-3), .banner-col:nth-child(4n-2) {
+				display: none;
+			}
+			.banner-col img {
+				height: 100%;
+				width: auto;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				-webkit-transform: translateY(-50%) translateX(-50%);
+				-ms-transform: translateY(-50%) translateX(-50%);
+				transform: translateY(-50%) translateX(-50%);
 			}
 			h1.app-title {
 				position: absolute;
@@ -47,16 +69,6 @@
 				width: 50vw;
 				text-shadow: 0 0 8px rgba(0,0,0,.5)
 			}
-			.login-area {
-				position: absolute;
-				right: 0;
-				top: 0;
-				width: 50vw;
-				height: 100%;
-				background-color: #fff;
-				background-color: rgba(255,255,255,.5);
-				padding: 1rem;
-			}
 			.login-panel {
 				position: static;
 				width: 100%;
@@ -64,17 +76,14 @@
 				margin: 0;
 			}
 			@media screen and (min-width: 800px) {
-				
-				.login-area {
-					width: 25vw;
-					display: -webkit-box;
-					display: -ms-flexbox;
-					display: flex;
-					-webkit-box-align: stretch;
-					-ms-flex-align: stretch;
-					align-items: stretch;
+				.login-banner {
+					overflow: hidden;
 				}
-				.login-banner img {
+				.banner-col, .banner-col:nth-child(4n-3), .banner-col:nth-child(4n-2) {
+					display: table-cell;
+					width: 25%
+				}
+				.baner-col img {
 					position: absolute;
 					left: 0;
 					top: 50%;
@@ -83,10 +92,6 @@
 					transform: translateY(-50%);
 					width: 100%;
 					height: auto;
-				}
-				.login-banner {
-					height: 280px;
-					overflow: hidden;
 				}
 				h1.app-title {
 					width: 75vw;
@@ -113,13 +118,18 @@
 		<div id="view" class="container-fluid">
 			<div class="login-banner">
 				<h1 class="app-title"><%= app_title%></h1>
-
-        <%= image_tag "transam_transit_banner.jpg", :class => 'img-responsive login-banner' %>
-
-        <div class="login-area">
-					<%= yield %>
+				<div class="banner-cols">
+					<div class="banner-col"><%= image_tag "transam_banner_1.jpg"%></div>
+					<div class="banner-col"><%= image_tag "transam_banner_2.jpg"%></div>
+					<div class="banner-col"><%= image_tag "transam_banner_3.jpg"%></div>
+					<div class="banner-col">
+						<%= image_tag "transam_banner_4.jpg"%>
+						<div class="login-area">
+							<%= yield %>
+						</div>
+					</div>
 				</div>
-			</div>
+	        </div>
 
 			<div class="container">
 				<%= render 'shared/marketing' %>
@@ -128,7 +138,7 @@
 
 		<footer class="footer">
 			<%= render 'shared/footer' %>
-		</div>
+		</footer>
 	</body>
 </html>
 
