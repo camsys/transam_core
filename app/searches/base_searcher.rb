@@ -84,4 +84,9 @@ class BaseSearcher
     conditions.map { |m| send(m) }.compact
   end
 
+  def remove_blanks(input)
+    output = (input.is_a?(Array) ? input : [input])
+    output.select { |e| !e.blank? }
+  end
+
 end
