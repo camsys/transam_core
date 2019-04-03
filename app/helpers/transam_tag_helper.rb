@@ -163,14 +163,19 @@ module TransamTagHelper
     classes = ' '
     classes += 'required ' if required
     # classes += 'datepicker ' if type == 'date'
-    if type == 'date'
+    value = escape_javascript(asset.send(field).to_s)
+    case type
+    when 'date'
       type = 'combodate'
       classes += 'combodate'
       # extras += ", format: 'MM/DD/YYYY', viewformat: 'MM/DD/YYYY'"
-    elsif type == 'currency'
+    when 'currency'
       type = 'number'
       classes += 'currency-number'
+    when 'textarea'
+      value = asset.send(field).to_s.gsub(/\r\n|\r|\n/, "<br />")
     end
+    
     # Escape for HAML
     label = label.gsub('%','\%') if label
     engine = Haml::Engine.new("
@@ -178,7 +183,8 @@ module TransamTagHelper
   %label.control-label{class: '#{classes}'}
     #{label || field.to_s.titleize}
   .display-value
-    %a.editable-field{href:'#', id: '#{field}', class: '#{classes}', data: {inputclass: '#{inputclass}', emptytext: ' - ', name: 'asset[#{field}]', value: '#{escape_javascript(asset.send(field).to_s)}', type: '#{type}', placeholder: '#{required ? 'Required' : ''}', url: '#{asset_path(asset)}'#{extras}}}
+    %a.editable-field{href:'#', id: '#{field}', class: '#{classes}', data: {inputclass: '#{inputclass}', emptytext: ' - ', name: 'asset[#{field}]', type: '#{type}', placeholder: '#{required ? 'Required' : ''}', url: '#{asset_path(asset)}'#{extras}}}
+      #{value}
     #{suffix}
 ")
     return engine.render.html_safe
