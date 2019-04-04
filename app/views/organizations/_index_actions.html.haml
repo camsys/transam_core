@@ -7,32 +7,29 @@
 
   .navbar-form.navbar-right {
     margin-top: 0px;
+    margin-bottom: 0px;
   }
 
-  #add_org {
-    vertical-align: top;
+  #filter_form select {
+    margin-right: 10px;
   }
 
-.btn-group{:role => 'group', :style => 'margin-left: 0!important;'}
-  %button.btn.btn-default.dropdown-toggle{:data => {:toggle => 'dropdown'}, :aria => {:exapanded => 'false'}}
-    Organization Type
-    %span.caret
-  %ul.dropdown-menu{:role => 'menu'}
-    %li
-      = link_to "All types", organizations_path
-    %li.divider
-    - OrganizationType.all.each do |org_type|
-      %li
-        = link_to org_type.name, organizations_path(:organization_type_id => org_type.id)
+= form_tag organizations_path, :id => 'filter_form', :method => 'get', :class => 'navbar-form navbar-left panel-action', :style => 'margin-left: 0!important; padding-top: 7px' do
+  %label Organization Type
+  = select_tag(:organization_type_id, options_for_select(OrganizationType.all.map{|t| [t.name, t.id]}, :selected => @organization_type_id), :include_blank => 'All Organization Types', :class => "form-control")
+  %label Status
+  = select_tag(:show_active_only, options_for_select([['All Organizations', 'all'], ['Active', 'active'], ['Inactive', 'inactive']], :selected => @show_active_only), :class => "form-control")
+
+  = button_tag :type => 'submit', :id => 'form-submit', :class => 'btn btn-info', :style => 'margin-left: 2px; ' do
+    %i.fa.fa-filter
+    = " Filter"
 
 .navbar-form.navbar-right
-  %button.btn.btn-primary.dropdown-toggle{:data => {:toggle => 'dropdown'}, :aria => {:exapanded => 'false'}, :id => "add_org"}
-    Add an Organization
-    %span.caret
-  %ul.dropdown-menu{:role => 'menu'}
+  %button.btn.btn-primary.dropdown-toggle{:data => {:toggle => 'dropdown'}, :aria => {:exapanded => 'false'}, :id => "add_button", :style => 'vertical-align: top;'}
+    %i.fa.fa-plus.fa-fw
+    = "Add an Organization"
+  %ul.dropdown-menu{:role => 'menu', :id => 'add_dropdown', :style => 'margin-right: -5px;'}
     - OrganizationType.all.each do |org_type|
       - if org_type.class_name.constantize.createable? && (can? :create, Organization)
         %li
-          = link_to new_organization_path(:organization_type_id => org_type.id) do
-            %i.fa.fa-plus.fa-fw
-            = " New #{org_type}"
+          = link_to org_type, new_organization_path(:organization_type_id => org_type.id)
