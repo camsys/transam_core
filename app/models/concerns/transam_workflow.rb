@@ -31,7 +31,8 @@ module TransamWorkflow
     # Return the list of allowable event names for this class
     def event_names()
       a = []
-      state_machine.events.each do |e|
+
+      (transam_workflow_transitions.empty? ? state_machine : self.new.machine.class.state_machine).events.each do |e|
         a << e.name.to_s
       end
       a
@@ -39,7 +40,7 @@ module TransamWorkflow
     # Returns the list of allowable states for this class
     def state_names()
       a = []
-      state_machine.states.each do |s|
+      (transam_workflow_transitions.empty? ? state_machine : self.new.machine.class.state_machine).states.each do |s|
         a << s.name.to_s
       end
       a
@@ -48,7 +49,7 @@ module TransamWorkflow
     # Returns the list of states that can transition to a target state
     def state_predecessors state
       a = []
-      self.new.state_paths(:to => state.to_s).each do |state|
+      (transam_workflow_transitions.empty? ? self.new : self.new.machine).state_paths(:to => state.to_s).each do |state|
         a << state.last.from_name.to_s
       end
       a.uniq
@@ -91,7 +92,7 @@ module TransamWorkflow
   # Get the allowable events for this state as strings
   def allowable_events()
     a = []
-    self.state_events.each do |evt|
+    (self.try(:state_events) || self.machine.try(:state_events)).each do |evt|
       a << evt.to_s
     end
     a
@@ -115,13 +116,21 @@ module TransamWorkflow
   # Create a state machine for this instance dynamically based on the
   # transitions defined from the source above
   def machine
-    unless self.class.transam_workflow_transitions.empty?
-      @machine ||= Machine.new(self, initial: self.class.transam_workflow_transitions.first[:from_state]) do
+    workflow_instance = self
+    unless workflow_instance.class.transam_workflow_transitions.empty?
+      @machine ||= Machine.new(workflow_instance, initial: workflow_instance.class.transam_workflow_transitions.first[:from_state], action: :save) do
 
-        self.class.transam_workflow_transitions.each do |attrs|
+        workflow_instance.class.transam_workflow_transitions.each do |attrs|
           if attrs[:event_name].present? && attrs[:from_state].present? && attrs[:to_state].present?
             transition_attrs = {attrs[:from_state] => attrs[:to_state], on: attrs[:event_name]}
-            transition_attrs[:if] = attrs[:guard] if attrs[:guard].present?
+            # if attrs[:guard].present?
+            #   if attrs[:guard].is_a?(Hash)
+            #     transition_attrs[:if] = Proc.new { attrs[:guard].map{|k,v| workflow_instance.state.to_s == k.to_s && workflow_instance.send(v)}.any? }
+            #   else
+            #     transition_attrs[:if] = Proc.new { attrs[:guard].to_sym }
+            #   end
+            # end
+
             transition(transition_attrs)
 
             before_transition on: attrs[:event_name], do: attrs[:before] unless attrs[:before].blank?
