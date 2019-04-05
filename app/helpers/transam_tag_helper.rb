@@ -184,7 +184,7 @@ module TransamTagHelper
     #{label || field.to_s.titleize}
   .display-value
     %a.editable-field{href:'#', id: '#{field}', class: '#{classes}', data: {inputclass: '#{inputclass}', emptytext: ' - ', name: 'asset[#{field}]', type: '#{type}', placeholder: '#{required ? 'Required' : ''}', url: '#{asset_path(asset)}'#{extras}}}
-      #{value}
+      \\#{value}
     #{suffix}
 ")
     return engine.render.html_safe
