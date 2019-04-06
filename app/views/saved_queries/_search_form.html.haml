@@ -33,6 +33,7 @@
     query_filter_field_ids[filter.id] = f_id
   end
 
+  hidden_field_ids = QueryField.where(name: @query.query_fields.where.not(pairs_with: nil).pluck(:pairs_with)).pluck(:id)
 
 .row.col-sm-12
   = render 'saved_queries/search_form/columns_filters_panel'
@@ -49,11 +50,14 @@
 
 :javascript
   var _saved_query_field_labels = #{query_field_labels.to_json.html_safe};
+  var _hidden_field_ids = #{hidden_field_ids || []};
   var _saved_query_ordered_field_ids = #{@query.ordered_output_field_ids || []};
   _saved_query.setOrderedOutputFieldIds(_saved_query_ordered_field_ids);
   _saved_query_ordered_field_ids.forEach(function(f_id){
-    var category_label_array = _saved_query_field_labels[f_id];
-    addColumnToSelectionsPanel(category_label_array[0], f_id, category_label_array[1]);
+    if(_hidden_field_ids.indexOf(f_id) < 0) {
+      var category_label_array = _saved_query_field_labels[f_id];
+      addColumnToSelectionsPanel(category_label_array[0], f_id, category_label_array[1]);
+    }
   });
 
   // added columns
