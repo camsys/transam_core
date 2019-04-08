@@ -48,7 +48,9 @@ class TransamWorkflowController < ApplicationController
           if event_proxy.include_updates.to_i > 0
             model_obj.update!(workflow_model_params(event_proxy.class_name))
           end
-          model_obj.machine.fire_state_event(event_proxy.event_name)
+          if model_obj.machine.fire_state_event(event_proxy.event_name)
+            WorkflowEvent.create(creator: current_user, accountable: model_obj, event_type: event_proxy.event_name)
+          end
         end
       end
     end

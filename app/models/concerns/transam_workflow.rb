@@ -91,9 +91,16 @@ module TransamWorkflow
 
   # Get the allowable events for this state as strings
   def allowable_events()
-    a = []
-    (self.try(:state_events) || self.machine.try(:state_events)).each do |evt|
-      a << evt.to_s
+
+    if self.class.transam_workflow_transitions.empty?
+      a = self.state_events.map{|x| x.to_s}
+    else
+      a = []
+      self.machine.class.state_machine.events.select{|x| self.machine.state_events.include? x.name}.each do |evt|
+        if evt.branches.first.if_condition && send(evt.branches.first.if_condition.call)
+          a << evt.name
+        end
+      end
     end
     a
   end
@@ -123,13 +130,13 @@ module TransamWorkflow
         workflow_instance.class.transam_workflow_transitions.each do |attrs|
           if attrs[:event_name].present? && attrs[:from_state].present? && attrs[:to_state].present?
             transition_attrs = {attrs[:from_state] => attrs[:to_state], on: attrs[:event_name]}
-            # if attrs[:guard].present?
-            #   if attrs[:guard].is_a?(Hash)
-            #     transition_attrs[:if] = Proc.new { attrs[:guard].map{|k,v| workflow_instance.state.to_s == k.to_s && workflow_instance.send(v)}.any? }
-            #   else
-            #     transition_attrs[:if] = Proc.new { attrs[:guard].to_sym }
-            #   end
-            # end
+            if attrs[:guard].present?
+              if attrs[:guard].is_a?(Hash)
+                transition_attrs[:if] = Proc.new { attrs[:guard].map{|k,v| workflow_instance.state.to_s == k.to_s && workflow_instance.send(v)}.any? }
+              else
+                transition_attrs[:if] = Proc.new { attrs[:guard].to_sym }
+              end
+            end
 
             transition(transition_attrs)
 
