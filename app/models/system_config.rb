@@ -83,7 +83,7 @@ class SystemConfig < ActiveRecord::Base
     elsif formatter == 'end_year'
       "#{year+1}"
     else
-      yr = year - fy_century(year)
+      yr = year - (year < 2000 ? 1900 : 2000)
       first = "%.2d" % yr
       if yr == 99 # when yr == 99, yr + 1 would be 100, which causes: "FY 99-100"
         next_yr = 00
