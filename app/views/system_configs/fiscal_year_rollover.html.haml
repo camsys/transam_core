@@ -70,7 +70,7 @@
 
 :javascript
 
-  var initially_manual = '#{@system_config.fy_year > 0}';
+  var initially_manual = '#{@system_config.fy_year.to_i > 0}';
 
   $("input[name='rollover_method']").on("click", function() {
     if ($(this).val() == 'manual') {
