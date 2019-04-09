@@ -49,7 +49,7 @@
                   = link_to user_user_organization_filter_use_path(current_user, filter), :class => 'filter-link' do
                     %i.fa.fa-filter.fa-fw
                     = filter.name
-            - if my_personal_filters.count > 0
+            - if my_personal_filters.length > 0
               %li.divider
               - my_personal_filters.each do |filter|
                 %li
