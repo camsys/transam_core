@@ -8,8 +8,10 @@
   "use strict";
 
   var initResizable = function(that) {
-    if (that.options.resizable && !that.options.cardView && !isInit(that)) {
-      that.$el.resizableColumns();
+    if(that != null && that.$el != null && that.$el.colResizable) {
+        if (that.options.resizable && !that.options.cardView && !isInit(that)) {
+            that.$el.resizableColumns();
+        }
     }
   };
 
