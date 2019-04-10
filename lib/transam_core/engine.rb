@@ -33,6 +33,8 @@ require 'kaminari'
 require 'paper_trail'
 require 'paper_trail-globalid'
 
+require 'deep_cloneable'
+
 # API
 #require 'open_api'
 require 'jbuilder'
