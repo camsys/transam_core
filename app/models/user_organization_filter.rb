@@ -27,7 +27,7 @@ class UserOrganizationFilter < ActiveRecord::Base
   # Allow selection of active instances
   scope :active, -> { where(:active => true) }
   # sorting rule: 1. first sort ASC based on sort_order; 2. for those without sort_order, sort by name ASC
-  scope :sorted, -> { order('sort_order IS NULL, sort_order ASC', :name) }
+  scope :sorted, -> { order(Arel.sql('sort_order IS NULL, sort_order ASC'), :name) }
 
   # Named Scopes
   scope :system_filters, -> { where(created_by_user_id: 1, active: 1) }
