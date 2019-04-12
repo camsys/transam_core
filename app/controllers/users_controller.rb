@@ -136,7 +136,7 @@ class UsersController < OrganizationAwareController
             u.as_json.merge!({
                  organization_short_name: u.organization.short_name,
                  organization_name: u.organization.name,
-                 role_name: @role.blank? ? u.roles.roles.last.label : u.roles.roles.find_by(name: @role).label,
+                 role_name: !@role.blank? && !Role.find_by(name: @role).privilege ? u.roles.roles.find_by(name: @role).label : u.roles.roles.last.label,
                  privilege_names: u.roles.privileges.collect{|x| x.label}.join(', '),
                  all_orgs: u.organizations.map{ |o| o.to_s }.join(', ')
             })
