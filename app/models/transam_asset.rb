@@ -31,6 +31,8 @@ class TransamAsset < TransamAssetRecord
   has_many :serial_numbers, as: :identifiable, inverse_of: :identifiable, dependent: :destroy
   accepts_nested_attributes_for :serial_numbers
 
+  has_many :asset_events,   :foreign_key => :base_transam_asset_id, :dependent => :destroy
+
   # each asset has zero or more condition updates
   has_many   :condition_updates, -> {where :asset_event_type_id => ConditionUpdateEvent.asset_event_type.id }, :class_name => "ConditionUpdateEvent", :as => :transam_asset
   accepts_nested_attributes_for :condition_updates, :reject_if => Proc.new{|ae| ae['assessed_rating'].blank? }, :allow_destroy => true
