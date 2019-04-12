@@ -263,26 +263,26 @@ class TransamAsset < TransamAssetRecord
     a.uniq
   end
 
-  def asset_events(unscoped=false)
-    typed_asset = TransamAsset.get_typed_asset(self)
-
-    events = []
-    event_classes.each do |e|
-      assoc_name = e.name.gsub('Event', '').underscore.pluralize
-      assoc_name = 'early_disposition_requests' if assoc_name == 'early_disposition_request_updates'
-      events << typed_asset.send(assoc_name).ids
-    end
-    if unscoped
-      AssetEvent.unscoped.where(id: events.flatten)
-    else
-      AssetEvent.where(id: events.flatten)
-    end
-
-  end
+  # def asset_events(unscoped=false)
+  #   typed_asset = TransamAsset.get_typed_asset(self)
+  #
+  #   events = []
+  #   event_classes.each do |e|
+  #     assoc_name = e.name.gsub('Event', '').underscore.pluralize
+  #     assoc_name = 'early_disposition_requests' if assoc_name == 'early_disposition_request_updates'
+  #     events << typed_asset.send(assoc_name).ids
+  #   end
+  #   if unscoped
+  #     AssetEvent.unscoped.where(id: events.flatten)
+  #   else
+  #     AssetEvent.where(id: events.flatten)
+  #   end
+  #
+  # end
 
   # returns the list of events associated with this asset ordered by date, newest first
   def history
-    asset_events(true).order(updated_at: :desc)
+    asset_events.order(updated_at: :desc)
   end
 
 
