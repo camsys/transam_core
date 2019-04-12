@@ -187,9 +187,9 @@
         var useAjax = true;
         if (this.options.queryParamsType === 'limit') {
             params = {
-                searchText: params.searchText,
-                sortName: params.sortName,
-                sortOrder: params.sortOrder
+                search: params.searchText,
+                sort: params.sortName,
+                order: params.sortOrder
             }
             if (this.options.pagination && this.options.sidePagination === 'server') {
                 params.limit = this.options.pageSize === this.options.formatAllRows() ? this.options.totalRows : this.options.pageSize;
