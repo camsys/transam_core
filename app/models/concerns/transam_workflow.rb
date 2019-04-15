@@ -111,6 +111,47 @@ module TransamWorkflow
     workflow_events
   end
 
+  # Returns the correct icon for a workflow event
+  def get_workflow_event_icon(event_name)
+
+    custom_icon = self.class.transam_workflow_transitions.detect{|t| t[:event_name].to_s == event_name.to_s}.try(:[], :icon)
+    if custom_icon
+      custom_icon
+    elsif event_name == 'retract'
+      'fa-eject'
+    elsif event_name == 'transmit' || event_name == 'submit'
+      'fa-share'
+    elsif event_name == 'accept' || event_name == 'authorize'
+      'fa-check-square-o'
+    elsif event_name == 'start' || event_name == 'publish'
+      'fa-play'
+    elsif event_name == 'complete' || event_name == 'close'
+      'fa-check-square'
+    elsif event_name == 'cancel'
+      'fa-stop'
+    elsif event_name == 'not_authorize'
+      'fa-ban'
+    elsif event_name == 're_start'
+      'fa-play'
+    elsif event_name == 'halt'
+      'fa-pause'
+    elsif event_name == 'retract' || event_name == 'reopen'
+      'fa-reply'
+    elsif event_name == 'return' || event_name == 'reject' || event_name == 'unapprove'
+      'fa-chevron-circle-left'
+    elsif event_name == 'approve'
+      'fa-plus-square'
+    elsif event_name == 'approve_via_transfer'
+      'fa-chevron-circle-right'
+    else
+      ''
+    end
+  end
+
+  def get_workflow_event_label(event_name)
+    self.class.transam_workflow_transitions.detect{|t| t[:event_name].to_s == event_name.to_s}.try(:[], :label) || event_name.titleize
+  end
+
 
   # ======================= state_machine setup =======================
 
@@ -125,7 +166,7 @@ module TransamWorkflow
   def machine
     workflow_instance = self
     unless workflow_instance.class.transam_workflow_transitions.empty?
-      @machine ||= Machine.new(workflow_instance, initial: workflow_instance.class.transam_workflow_transitions.first[:from_state], action: :save) do
+      @machine ||= Machine.new(workflow_instance, initial: (workflow_instance.read_attribute(:state) || workflow_instance.class.transam_workflow_transitions.first[:from_state]), action: :save) do
 
         workflow_instance.class.transam_workflow_transitions.each do |attrs|
           if attrs[:event_name].present? && attrs[:from_state].present? && attrs[:to_state].present?
