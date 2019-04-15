@@ -45,7 +45,7 @@ class TransamWorkflowController < ApplicationController
       # Process each order sequentially
       event_proxy.model_objs.each do |model_obj|
         if model_obj.class.event_names.include? event_proxy.event_name
-          if event_proxy.include_updates.to_i > 0
+          if event_proxy.include_updates.to_i > 0 && model_obj.machine.send("can_#{event_proxy.event_name}?")
             model_obj.update!(workflow_model_params(event_proxy.class_name))
           end
           if model_obj.machine.fire_state_event(event_proxy.event_name)
