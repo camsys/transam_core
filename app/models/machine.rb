@@ -13,6 +13,13 @@ class Machine
       define_method(attribute) { object.send(attribute) }
       define_method("#{attribute}=") {|value| object.send("#{attribute}=", value) }
       define_method(action) { object.send(action) } if action
+
+      object.class.transam_workflow_transitions.map{|attrs| attrs[:before] if attrs[:before].present?}.compact.each do |before_transition|
+        define_method(before_transition) { object.send(before_transition) }
+      end
+      object.class.transam_workflow_transitions.map{|attrs| attrs[:after] if attrs[:after].present?}.compact.each do |after_transition|
+        define_method(after_transition) { object.send(after_transition) }
+      end
     end
 
     machine_class.new
