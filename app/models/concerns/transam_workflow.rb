@@ -97,7 +97,9 @@ module TransamWorkflow
     else
       a = []
       self.machine.class.state_machine.events.select{|x| self.machine.state_events.include? x.name}.each do |evt|
-        if evt.branches.first.if_condition && send(evt.branches.first.if_condition.call)
+        if evt.branches.first.if_condition.nil?
+          a << evt.name
+        elsif evt.branches.first.if_condition && send(evt.branches.first.if_condition.call)
           a << evt.name
         end
       end
