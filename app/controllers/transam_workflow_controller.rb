@@ -2,7 +2,8 @@ class TransamWorkflowController < ApplicationController
 
 
   def fire_workflow_event
-    event_proxy = TransamWorkflowModelProxy.new(include_updates: 0, event_name: params[:event_name], global_ids: params[:global_id])
+    model_obj = params[:class_name].constantize.find_by(object_key: params[:object_key])
+    event_proxy = TransamWorkflowModelProxy.new(include_updates: 0, event_name: params[:event_name], global_ids: [model_obj.to_global_id])
 
     process_workflow_event(event_proxy)
 
