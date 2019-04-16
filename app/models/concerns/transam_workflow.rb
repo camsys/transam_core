@@ -32,7 +32,7 @@ module TransamWorkflow
     def event_names()
       a = []
 
-      (transam_workflow_transitions.empty? ? state_machine : self.new.machine.class.state_machine).events.each do |e|
+      (transam_workflow_transitions.empty? ? state_machine : self.new.machine.definition).events.each do |e|
         a << e.name.to_s
       end
       a
@@ -40,44 +40,49 @@ module TransamWorkflow
     # Returns the list of allowable states for this class
     def state_names()
       a = []
-      (transam_workflow_transitions.empty? ? state_machine : self.new.machine.class.state_machine).states.each do |s|
+      (transam_workflow_transitions.empty? ? state_machine : self.new.machine.definition).states.each do |s|
         a << s.name.to_s
       end
       a
     end
 
+    def event_transitions
+      a = []
+      (transam_workflow_transitions.empty? ? state_machine : self.new.machine.definition).events.each do |evt|
+        evt.branches.each do |branch|
+          branch.state_requirements.each do |state_req|
+
+            a << {state_req[:from].values[0] => state_req[:to].values[0]}
+          end
+        end
+      end
+
+      a.uniq
+    end
+
     # Returns the list of states that can transition to a target state
     def state_predecessors state
       a = []
-      (transam_workflow_transitions.empty? ? self.new : self.new.machine).state_paths(:to => state.to_s).each do |state|
-        a << state.last.from_name.to_s
+      event_transitions.each do |transition|
+        a << transition.keys.first if transition.values.first.to_s == state.to_s
       end
+
       a.uniq
     end
 
     # Returns the list of states that can precurse an event
     def event_predecessors event
       a = []
-      # state machine provides a set of can_xxxxx? properties to test if an event
-      # can be fired for an object instance in a specific state. Here xxxxx is
-      # the event name. Because we don't have the ability to know what events
-      # are present or required to be checked we need to use reflection to
-      # query the state machine
 
-      # Set up the event we want to test
-      target_method = "can_#{event.to_s}?".to_sym
-      # Iterate over every state to see if the event can be fired
-      obj = self.new
-      state_names.each do |s|
-        # Set the state to test
-        obj.state = s
-        # Test it
-        method_object = obj.method(target_method)
-        if method_object.call
-          # positive response to keep this state
-          a << s
+      evt = (transam_workflow_transitions.empty? ? state_machine : self.new.machine.definition).events.find{|x|x.name == event.to_s}
+
+      evt.branches.each do |branch|
+        branch.state_requirements.each do |state_req|
+
+          a << state_req[:from].values[0]
         end
       end
+
       a.uniq
     end
 
@@ -89,22 +94,14 @@ module TransamWorkflow
   #
   #------------------------------------------------------------------------------
 
-  # Get the allowable events for this state as strings
+  # Get the allowable events for this state as strings (for use in views)
   def allowable_events()
+    (self.class.transam_workflow_transitions.empty? ? self : self.machine).state_events.map{|x| x.to_s}
+  end
 
-    if self.class.transam_workflow_transitions.empty?
-      a = self.state_events.map{|x| x.to_s}
-    else
-      a = []
-      self.machine.class.state_machine.events.select{|x| self.machine.state_events.include? x.name}.each do |evt|
-        if evt.branches.first.if_condition.nil?
-          a << evt.name
-        elsif evt.branches.first.if_condition && send(evt.branches.first.if_condition.call)
-          a << evt.name
-        end
-      end
-    end
-    a
+  def allowable_event_objects
+    machine_obj = (self.class.transam_workflow_transitions.empty? ? self : self.machine)
+    machine_obj.class.state_machine.events.select{|x| machine_obj.state_events.include? x.name}
   end
 
   # Simple override of the workflow events. Always use this method as it can be
@@ -150,10 +147,6 @@ module TransamWorkflow
     end
   end
 
-  def get_workflow_event_label(event_name)
-    self.class.transam_workflow_transitions.detect{|t| t[:event_name].to_s == event_name.to_s}.try(:[], :label) || event_name.titleize
-  end
-
 
   # ======================= state_machine setup =======================
 
@@ -172,19 +165,24 @@ module TransamWorkflow
 
         workflow_instance.class.transam_workflow_transitions.each do |attrs|
           if attrs[:event_name].present? && attrs[:from_state].present? && attrs[:to_state].present?
-            transition_attrs = {attrs[:from_state] => attrs[:to_state], on: attrs[:event_name]}
+            transition_attrs = {attrs[:from_state] => attrs[:to_state]}
+            event_attrs = attrs[:human_name] ? {human_name: attrs[:human_name]} : {}
             if attrs[:guard].present?
               if attrs[:guard].is_a?(Hash)
                 transition_attrs[:if] = Proc.new { attrs[:guard].map{|k,v| workflow_instance.state.to_s == k.to_s && workflow_instance.send(v)}.any? }
               else
-                transition_attrs[:if] = Proc.new { attrs[:guard].to_sym }
+                transition_attrs[:if] = Proc.new { workflow_instance.send(attrs[:guard]) }
               end
             end
 
-            transition(transition_attrs)
+            event(attrs[:event_name], event_attrs) { branches << transition(transition_attrs) }
 
-            before_transition on: attrs[:event_name], do: attrs[:before] unless attrs[:before].blank?
-            after_transition on: attrs[:event_name], do: attrs[:after] unless attrs[:after].blank?
+            before_transition do |this_machine, this_transition|
+              this_machine.machine_before_transition(this_transition)
+            end
+            after_transition do |this_machine, this_transition|
+              this_machine.machine_after_transition(this_transition)
+            end
           end
         end
       end
