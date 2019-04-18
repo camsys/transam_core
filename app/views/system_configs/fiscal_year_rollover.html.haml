@@ -62,7 +62,7 @@
           = f.input :fy_year, as: :hidden, input_html: {value: @system_config.fy_year.present? ? @system_config.fy_year + 1 : @system_config.fy_year} #ou set to next year if manual in case you rollover. cant save so FY won't update
         .col-sm-2
           = f.button :submit, 'Save', :class => 'btn btn-primary', :id => 'submit_btn', :disabled => true
-          = f.button :submit, 'Rollover', :class => 'btn btn-primary', :id => 'rollover_btn', :disabled => @system_config.fy_year.blank?
+          = f.button :submit, 'Rollover', :class => 'btn btn-primary', :id => 'rollover_btn', :disabled => @system_config.fy_year.blank?, data: { confirm: 'The system will rollover at this point, are you sure you wish to proceed? This process cannot be reversed.' }
 
     %fieldset{style: 'margin-top: 20px;'}
       %legend History
