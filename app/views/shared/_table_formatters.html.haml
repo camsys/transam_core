@@ -123,7 +123,7 @@
     if (value) {
       return value;
     } else if (data) {
-      return data.asset_subtype_id
+      return data.asset_subtype
     } else {
       return "";
     }
@@ -180,7 +180,7 @@
       } else {
         str = "Replacement";
       }
-      return str + " for " + data.asset_subtype_id + " " + data.fuel_type + " " + value + " replaced in " + data.scheduled_replacement_year;
+      return str + " for " + data.asset_subtype + " " + data.fuel_type + " " + value + " replaced in " + data.scheduled_replacement_year;
     } else {
       return "";
     }
