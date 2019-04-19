@@ -168,6 +168,7 @@ module TransamTagHelper
     when 'date'
       type = 'combodate'
       classes += 'combodate'
+      value = format_as_date(Date.parse(value)) unless value.blank?
       # extras += ", format: 'MM/DD/YYYY', viewformat: 'MM/DD/YYYY'"
     when 'currency'
       type = 'number'
