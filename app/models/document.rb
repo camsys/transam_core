@@ -122,7 +122,7 @@ class Document < ActiveRecord::Base
 
   def update_file_attributes
 
-    if document.present? && saved_change_to_attribute?(:document)
+    if document.present? && document_changed?
       self.content_type = document.file.content_type
       self.file_size = document.file.size
     end
