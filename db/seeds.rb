@@ -154,8 +154,7 @@ roles = [
   {:privilege => false, :name => 'manager', :weight => 7, :show_in_user_mgmt => true},
   {:privilege => true, :name => 'admin', :show_in_user_mgmt => true},
   {:privilege => true, :name => 'super_manager', :weight => 10, role_parent: 'manager', :show_in_user_mgmt => true},
-  {:privilege => true, :name => 'technical_contact', :show_in_user_mgmt => true},
-  {name: 'maintenance_contractor', role_parent: Role.find_by(name: 'guest'), show_in_user_mgmt: true, privilege: true, label: 'Maintenance - Contractor'}
+  {:privilege => true, :name => 'technical_contact', :show_in_user_mgmt => true}
 
 ]
 
