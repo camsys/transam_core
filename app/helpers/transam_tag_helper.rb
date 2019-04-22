@@ -80,7 +80,7 @@ module TransamTagHelper
     return engine.render.html_safe
   end
 
-  def editable_field_tag(model_obj, field, label=nil, required: true, type: 'text', min: nil, max: nil, suffix: '')
+  def editable_field_tag(model_obj, field, label=nil, model_name: nil, required: true, type: 'text', min: nil, max: nil, suffix: '')
     asset = model_obj.is_a?(Array) ? model_obj.last : model_obj
 
     if type == 'boolean'
@@ -105,20 +105,24 @@ module TransamTagHelper
     # Escape for HAML
     label = label.gsub('%','\%') if label
 
-    asset_path = polymorphic_path(model_obj)
+    if model_name.nil? || model_obj.class.to_s == model_name
+      asset_path = polymorphic_path(model_obj)
+    else
+      asset_path = polymorphic_path(model_obj.send(model_name.underscore))
+    end
 
     engine = Haml::Engine.new("
 ##{field}_group.form-group
   %label.control-label{class: '#{classes}'}
     #{label || field.to_s.titleize}
   .display-value
-    %a.editable-field{href:'#', id: '#{field}', class: '#{classes}', data: {emptytext: ' - ', name: '#{asset.class.base_class.name.underscore}[#{field}]', value: '#{escape_javascript(asset.send(field).to_s)}', type: '#{type}', placeholder: '#{required ? 'Required' : ''}', url: '#{asset_path}'#{extras}}}
+    %a.editable-field{href:'#', id: '#{field}', class: '#{classes}', data: {emptytext: ' - ', name: '#{(model_name || asset.class.base_class.name).underscore}[#{field}]', value: '#{escape_javascript(asset.send(field).to_s)}', type: '#{type}', placeholder: '#{required ? 'Required' : ''}', url: '#{asset_path}'#{extras}}}
     #{suffix}
                               ")
     return engine.render.html_safe
   end
 
-  def editable_association_tag(model_obj, field, label=nil, collection=nil, current_method: nil, include_blank: false, current_value: nil, type: 'select', url: nil, suffix: '_id')
+  def editable_association_tag(model_obj, field, label=nil, collection=nil, model_name: nil, current_method: nil, include_blank: false, current_value: nil, type: 'select', url: nil, suffix: '_id')
 
     asset = model_obj.is_a?(Array) ? model_obj.last : model_obj
 
@@ -139,14 +143,18 @@ module TransamTagHelper
       source += collection.map{|pair| "{value: '#{pair[0]}', text: '#{pair[1].to_s.gsub("'"){"\\\\'"}}'}"}.join(',')
     end
 
-    asset_path = polymorphic_path(model_obj)
+    if model_name.nil? || model_obj.class.to_s == model_name
+      asset_path = polymorphic_path(model_obj)
+    else
+      asset_path = polymorphic_path(model_obj.send(model_name.underscore))
+    end
 
     engine = Haml::Engine.new("
 ##{field}_group.form-group
   %label.control-label
     #{label || field.to_s.titleize}
   .display-value
-    %a.editable-field{href:'#', id: '#{field}', data: {emptytext: ' - ', name: '#{asset.class.base_class.name.underscore}[#{field_name}]', value: '#{value}', type: '#{type}', url: '#{asset_path}', source: \"#{url || "[#{source}]"}\", sourceCache: '#{url.nil?}'}}
+    %a.editable-field{href:'#', id: '#{field}', data: {emptytext: ' - ', name: '#{(model_name || asset.class.base_class.name).underscore}[#{field_name}]', value: '#{value}', type: '#{type}', url: '#{asset_path}', source: \"#{url || "[#{source}]"}\", sourceCache: '#{url.nil?}'}}
 ")
     return engine.render.html_safe
   end
