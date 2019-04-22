@@ -2,12 +2,12 @@
 
 FactoryBot.define do
 
-  sequence :asset_tag do |n|
+  sequence :transam_asset_tag do |n|
     "ABS_TAG#{n}"
   end
 
-  trait :basic_asset_attributes do
-    asset_tag
+  trait :basic_transam_asset_attributes do
+    transam_asset_tag
     purchase_cost { 2000.0 }
     purchase_date { 1.year.ago }
     in_service_date { 1.year.ago }
@@ -16,11 +16,11 @@ FactoryBot.define do
     association :organization
   end
 
-  factory :buslike_asset, :class => :transam_asset do
+  factory :buslike_transam_asset, :class => :transam_asset do
     basic_asset_attributes
   end
 
-  factory :equipment_asset, :class => :equipment do # An untyped asset which looks like a bus
+  factory :equipment_transam_asset, :class => :equipment do # An untyped asset which looks like a bus
     basic_asset_attributes
     association :asset_subtype, :factory => :equipment_subtype
     description { 'equipment test' }
