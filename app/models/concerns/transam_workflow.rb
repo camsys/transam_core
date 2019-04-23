@@ -51,8 +51,9 @@ module TransamWorkflow
       (transam_workflow_transitions.empty? ? state_machine : self.new.machine.definition).events.each do |evt|
         evt.branches.each do |branch|
           branch.state_requirements.each do |state_req|
-
-            a << {state_req[:from].values[0] => state_req[:to].values[0]}
+            state_req[:from].values.each do |from|
+              a << {from => state_req[:to].values[0]}
+            end
           end
         end
       end
@@ -77,13 +78,10 @@ module TransamWorkflow
       evt = (transam_workflow_transitions.empty? ? state_machine : self.new.machine.definition).events.find{|x|x.name == event.to_s}
 
       evt.branches.each do |branch|
-        branch.state_requirements.each do |state_req|
-
-          a << state_req[:from].values[0]
-        end
+        a << branch.state_requirements.map{ |state_req| state_req[:from].values}
       end
 
-      a.uniq
+      a.flatten.uniq
     end
 
   end
