@@ -75,8 +75,20 @@ end
 
 class StubPolicy < Policy
 
+  def find_or_create_asset_type_rule a
+
+  end
+
   def find_or_create_asset_subtype_rule a, b=nil
 
+  end
+
+  def replacement_cost
+    100000
+  end
+
+  def replacement_cost_calculation_type
+    CostCalculationType.first
   end
 
 end

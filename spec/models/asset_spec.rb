@@ -57,6 +57,17 @@ RSpec.describe Asset, :type => :model do
   # Instance Methods
   #
   #------------------------------------------------------------------------------
+
+  it 'asset events dependent destroy' do
+    org = create(:organization)
+    transam_asset = create(:transam_asset, organization: org, policy_replacement_year: 2000)
+    condition_event = create(:condition_update_event, base_transam_asset: transam_asset, transam_asset: transam_asset)
+
+    expect(ConditionUpdateEvent.count).to eq(1)
+    transam_asset.destroy
+    expect(ConditionUpdateEvent.count).to eq(0)
+  end
+
   describe "#age" do
     it 'returns 0 for assets in service in the future' do
       # Built next year -- should always return 0
