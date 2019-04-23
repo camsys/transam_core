@@ -59,6 +59,8 @@ RSpec.describe Asset, :type => :model do
   #------------------------------------------------------------------------------
 
   it 'asset events dependent destroy' do
+    ConditionUpdateEvent.destroy_all
+
     org = create(:organization)
     transam_asset = create(:transam_asset, organization: org, policy_replacement_year: 2000)
     condition_event = create(:condition_update_event, base_transam_asset: transam_asset, transam_asset: transam_asset)
