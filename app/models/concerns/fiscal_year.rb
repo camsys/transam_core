@@ -41,7 +41,7 @@ module FiscalYear
   def current_fiscal_year_year(use_system_config=true)
 
     fy_year = SystemConfig.instance.fy_year if use_system_config
-    fy_year = fiscal_year_year_on_date(Date.today) if fy_year.blank? || fy_year - fiscal_year_year_on_date(Date.today) > 1 # dont let a manual rollover go over 2 years
+    fy_year = fiscal_year_year_on_date(Date.today) if fy_year.blank? || fiscal_year_year_on_date(Date.today) - fy_year > 1 # dont let a manual rollover go over 2 years
 
     fy_year
 
