@@ -80,13 +80,17 @@ module TransamTagHelper
     return engine.render.html_safe
   end
 
-  def editable_field_tag(model_obj, field, label=nil, model_name: nil, required: true, type: 'text', min: nil, max: nil, suffix: '')
+  #
+  # generic method for updating fields of any model through xeditable
+  # IF YOU UPDATE THIS METHOD, update the asset field tag version as well
+  #
+  def editable_field_tag(model_obj, field, label=nil, model_name: nil, required: true, type: 'text', min: nil, max: nil, suffix: '', inputclass: '')
     asset = model_obj.is_a?(Array) ? model_obj.last : model_obj
 
     if type == 'boolean'
       return editable_association_tag(asset, field, label,
                                             [[1, 'Yes'],[0, 'No']],
-                                            include_blank: !required, current_value: asset.send(field) ? 1 : 0, suffix: suffix)
+                                            include_blank: !required, current_value: asset.send(field) ? 1 : 0, suffix: suffix, inputclass: '')
     end
     extras = ''
     extras += ", min: #{min}" if min
@@ -94,14 +98,20 @@ module TransamTagHelper
     classes = ' '
     classes += 'required ' if required
     # classes += 'datepicker ' if type == 'date'
-    if type == 'date'
-      type = 'combodate'
-      classes += 'combodate'
+    value = escape_javascript(asset.send(field).to_s)
+    case type
+      when 'date'
+        type = 'combodate'
+        classes += 'combodate'
+        value = format_as_date(Date.parse(value)) unless value.blank?
       # extras += ", format: 'MM/DD/YYYY', viewformat: 'MM/DD/YYYY'"
-    elsif type == 'currency'
-      type = 'number'
-      classes += 'currency-number'
+      when 'currency'
+        type = 'number'
+        classes += 'currency-number'
+      when 'textarea'
+        value = asset.send(field).to_s.gsub(/\r\n|\r|\n/, "<br />")
     end
+
     # Escape for HAML
     label = label.gsub('%','\%') if label
 
@@ -116,12 +126,17 @@ module TransamTagHelper
   %label.control-label{class: '#{classes}'}
     #{label || field.to_s.titleize}
   .display-value
-    %a.editable-field{href:'#', id: '#{field}', class: '#{classes}', data: {emptytext: ' - ', name: '#{(model_name || asset.class.base_class.name).underscore}[#{field}]', value: '#{escape_javascript(asset.send(field).to_s)}', type: '#{type}', placeholder: '#{required ? 'Required' : ''}', url: '#{asset_path}'#{extras}}}
-    #{suffix}
+    %a.editable-field{href:'#', id: '#{field}', class: '#{classes}', data: {inputclass: '#{inputclass}', emptytext: ' - ', name: '#{(model_name || asset.class.base_class.name).underscore}[#{field}]', type: '#{type}', placeholder: '#{required ? 'Required' : ''}', url: '#{asset_path}'#{extras}}}
+      \\#{value}
+                              #{suffix}
                               ")
     return engine.render.html_safe
   end
 
+  #
+  # generic method for updating associations of any model through xeditable
+  # IF YOU UPDATE THIS METHOD, update the asset association tag version as well
+  #
   def editable_association_tag(model_obj, field, label=nil, collection=nil, model_name: nil, current_method: nil, include_blank: false, current_value: nil, type: 'select', url: nil, suffix: '_id')
 
     asset = model_obj.is_a?(Array) ? model_obj.last : model_obj
@@ -131,9 +146,7 @@ module TransamTagHelper
     value = current_value || asset.send(current_method || field_name).to_s
     unless collection || url
       klass = asset.association(field).reflection.class_name.constantize
-      collection = klass.column_names.include?('name') ?
-                       klass.active.pluck(:id, :name) :
-                       klass.active.collect{|a| [a.id, a.to_s]}
+      collection = klass.active.collect{|a| [a.id, a.to_s]}
 
     end
     unless url
@@ -159,6 +172,10 @@ module TransamTagHelper
     return engine.render.html_safe
   end
 
+  #
+  # updating asset fields through xeditable
+  # IF YOU UPDATE THIS METHOD, update the generic field tag version as well
+  #
   def editable_asset_field_tag(asset, field, label=nil, required: true, type: 'text', min: nil, max: nil, suffix: '', inputclass: '')
     if type == 'boolean'
       return editable_asset_association_tag(asset, field, label,
@@ -198,7 +215,11 @@ module TransamTagHelper
 ")
     return engine.render.html_safe
   end
-    
+
+  #
+  # updating asset associations through xeditable
+  # IF YOU UPDATE THIS METHOD, update the generic association tag version as well
+  #
   def editable_asset_association_tag(asset, field, label=nil, collection=nil, current_method: nil, include_blank: false, current_value: nil, type: 'select', url: nil, suffix: '_id', inputclass: '')
     # value = current_value || (collection || url ? asset.send(current_method || field).to_s : asset.send(current_method || "#{field.to_s}_id").to_s)
     field_name = current_method || "#{field.to_s.singularize}#{suffix}"
