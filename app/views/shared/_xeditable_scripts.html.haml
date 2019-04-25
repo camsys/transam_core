@@ -40,10 +40,10 @@
     var selected_radio_inputs;
 
     function enable_tab_editing(tab_id) {
-      $('#'+tab_id+'.tab-pane .editable-field').editable('enable');
-      $('#'+tab_id+'.tab-pane .editable-field').editable('show', false);
+      $('#'+tab_id+' .editable-field').editable('enable');
+      $('#'+tab_id+' .editable-field').editable('show', false);
       $('#'+tab_id+' input[type=radio]').removeAttr('disabled');
-      //$('#'+tab_id+'.tab-pane .editable-input').find('input, select').first().focus();
+      //$('#'+tab_id+' .editable-input').find('input, select').first().focus();
 
       $('.other-type-container select').each(function() {
         $(this).closest('.other-type-container').attr('data-original-value', $(this).val());
@@ -52,15 +52,15 @@
       // de-focus form: 1. make it select the first one; 2. lost is focus
       // the purpose of selecting first one is to avoid focus jumping to others
       setTimeout(function(){
-        $('#'+tab_id+'.tab-pane .editable-input').find('input, select').first().focus();
+        $('#'+tab_id+' .editable-input').find('input, select').first().focus();
         $(':focus').blur(); 
       }, 10);
     }
 
     function disable_tab_editing(tab_id) {
       $('#'+tab_id+' input[type=radio]').attr('disabled', 'true');
-      $('#'+tab_id+'.tab-pane .editable-field').editable('hide');
-      $('#'+tab_id+'.tab-pane .editable-field').editable('disable');
+      $('#'+tab_id+' .editable-field').editable('hide');
+      $('#'+tab_id+' .editable-field').editable('disable');
     }
 
     function open_tab(tab_id) {
