@@ -20,18 +20,86 @@ RSpec.describe FiscalYear do
   it '.fiscal_year_epoch' do
     expect(test_fy_class.fiscal_year_epoch).to eq(test_fy_class.fiscal_year_on_date(SystemConfig.instance.epoch))
   end
-  it '.current_fiscal_year_year' do
-     expected_yr = Date.today.month < 7 ? Date.today.year - 1 : Date.today.year
-     expect(test_fy_class.current_fiscal_year_year).to eq(expected_yr)
+  describe '.current_fiscal_year_year' do
+    expected_yr = Date.today.month < 7 ? Date.today.year - 1 : Date.today.year
+    it 'nil config (automatic rollover)' do
+      expect(test_fy_class.current_fiscal_year_year).to eq(expected_yr)
+    end
+    it 'config fy_year (manual rollover)' do
+      SystemConfig.instance.update(fy_year: expected_yr)
+      expect(test_fy_class.current_fiscal_year_year).to eq(expected_yr)
+    end
+    it 'rollover fy_year' do
+      SystemConfig.instance.update(fy_year: expected_yr + 1)
+      expect(test_fy_class.current_fiscal_year_year).to eq(expected_yr + 1)
+    end
+    it 'config too far behind (manual rollover)' do
+      SystemConfig.instance.update(fy_year: expected_yr - 2)
+      expect(test_fy_class.current_fiscal_year_year).to eq(expected_yr)
+    end
+    it 'reset config (automatic rollover)' do
+      SystemConfig.instance.update(fy_year: nil)
+      expect(test_fy_class.current_fiscal_year_year).to eq(expected_yr)
+    end
   end
-  it '.current_planning_year_year' do
-     expected_yr = Date.today.month < 7 ? Date.today.year : Date.today.year + 1
-     expect(test_fy_class.current_planning_year_year).to eq(expected_yr)
+  describe '.current_planning_year_year' do
+    expected_yr = Date.today.month < 7 ? Date.today.year : Date.today.year + 1
+    it 'nil config (automatic)' do
+      expect(test_fy_class.current_planning_year_year).to eq(expected_yr)
+    end
+    it 'config fy_year (manual)' do
+      SystemConfig.instance.update(fy_year: Date.today.month < 7 ? Date.today.year - 1 : Date.today.year)
+      expect(test_fy_class.current_planning_year_year).to eq(expected_yr)
+    end
+    it 'rollover fy_year' do
+      SystemConfig.instance.update(fy_year: SystemConfig.instance.fy_year + 1)
+      expect(test_fy_class.current_planning_year_year).to eq(expected_yr + 1)
+    end
+    it 'config too far behind (manual)' do
+      SystemConfig.instance.update(fy_year: SystemConfig.instance.fy_year - 3)
+      expect(test_fy_class.current_planning_year_year).to eq(expected_yr)
+    end
+    it 'reset config (automatic)' do
+      SystemConfig.instance.update(fy_year: nil)
+      expect(test_fy_class.current_planning_year_year).to eq(expected_yr)
+    end
   end
-  it '.last_fiscal_year_year' do
+  describe '.last_fiscal_year_year' do
     expected_yr = Date.today.month < 7 ? Date.today.year - 1 : Date.today.year
     expected_yr += SystemConfig.instance.num_forecasting_years
-    expect(test_fy_class.last_fiscal_year_year).to eq(expected_yr)
+    initial_forecasting_yrs = SystemConfig.instance.num_forecasting_years
+    before(:each) do
+      SystemConfig.instance.update(num_forecasting_years: initial_forecasting_yrs)
+    end
+    it 'nil fy_year (automatic)' do
+      expect(test_fy_class.last_fiscal_year_year).to eq(expected_yr)
+      SystemConfig.instance.update(num_forecasting_years: initial_forecasting_yrs + 1)
+      expect(test_fy_class.last_fiscal_year_year).to eq(expected_yr + 1)
+    end
+    it 'config fy_year (manual)' do
+      SystemConfig.instance.update(fy_year: Date.today.month < 7 ? Date.today.year - 1 : Date.today.year)
+      expect(test_fy_class.last_fiscal_year_year).to eq(expected_yr)
+      SystemConfig.instance.update(num_forecasting_years: initial_forecasting_yrs + 1)
+      expect(test_fy_class.last_fiscal_year_year).to eq(expected_yr + 1)
+    end
+    it 'rollover fy_year' do
+      SystemConfig.instance.update(fy_year: SystemConfig.instance.fy_year + 1)
+      expect(test_fy_class.last_fiscal_year_year).to eq(expected_yr + 1)
+      SystemConfig.instance.update(num_forecasting_years: initial_forecasting_yrs + 1)
+      expect(test_fy_class.last_fiscal_year_year).to eq(expected_yr + 2)
+    end
+    it 'config too far behind (manual)' do
+      SystemConfig.instance.update(fy_year: SystemConfig.instance.fy_year - 3)
+      expect(test_fy_class.last_fiscal_year_year).to eq(expected_yr)
+      SystemConfig.instance.update(num_forecasting_years: initial_forecasting_yrs + 1)
+      expect(test_fy_class.last_fiscal_year_year).to eq(expected_yr + 1)
+    end
+    it 'reset config (automatic)' do
+      SystemConfig.instance.update(fy_year: nil)
+      expect(test_fy_class.last_fiscal_year_year).to eq(expected_yr)
+      SystemConfig.instance.update(num_forecasting_years: initial_forecasting_yrs + 1)
+      expect(test_fy_class.last_fiscal_year_year).to eq(expected_yr + 1)
+    end
   end
   it '.fiscal_year_year_on_date' do
     expect(test_fy_class.fiscal_year_year_on_date(Date.new(2015,5,1))).to eq(2014)
