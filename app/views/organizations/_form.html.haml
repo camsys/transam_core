@@ -32,6 +32,7 @@
             = f.input :state, :required => true, :as => :select, :collection => ISO3166::Country['US'].states.keys
           .col-sm-3
             = f.input :zip, :required => true
+        = f.input :county, :label => "County"
         - if User.new.respond_to? :email_in_org_domain_list
           = f.input :allowed_email_domains, :required => true, :label => 'Allowed Email Domains', :placeholder => 'To enter more than one domain, separate with |. Domains are the url that follows @ (ex: camsys.com).'
 

@@ -1,8 +1,12 @@
 :ruby
   table_dom_id = SecureRandom.hex
   show_actions ||= 0
+:css
+  #primary_header {
+    border-bottom: 1px solid #e5e5e5;
+  }
 
-%h2 Users
+%h2{:id => 'primary_header'} Users
 %legend #{@show_active_only.to_s.capitalize} Users
 
 #users_table_actions.row
