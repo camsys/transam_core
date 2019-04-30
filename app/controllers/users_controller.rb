@@ -311,12 +311,9 @@ class UsersController < OrganizationAwareController
           @user.organizations = Organization.where(id: org_list)
         end
 
-        # update filters
-        # set all filters to personal not shared one
-        # then run method that checks your main org and org list to get all shared filters
-        unless FILTERS_IGNORED
-          @user.update_user_organization_filters
-        end
+        new_user_service = get_new_user_service
+        # Perform an post-creation tasks such as sending emails, etc.
+        new_user_service.post_process @user, true
 
         #-----------------------------------------------------------------------
         # Assign the role and privileges but only on a profile form, not a
@@ -404,6 +401,16 @@ class UsersController < OrganizationAwareController
   # Protected Methods
   #------------------------------------------------------------------------------
   protected
+
+  def set_viewable_organizations
+    if current_user.has_role? :admin
+      @viewable_organizations = Organization.ids
+    else
+      @viewable_organizations = current_user.viewable_organization_ids
+    end
+
+    get_organization_selections
+  end
 
 
   #------------------------------------------------------------------------------
