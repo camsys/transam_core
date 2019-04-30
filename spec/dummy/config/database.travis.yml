@@ -6,6 +6,8 @@
 
 mysql: &mysql
   adapter: mysql2
+  variables:
+        sql_mode: traditional
   username: root
   password:
   database: transam_core_testing
