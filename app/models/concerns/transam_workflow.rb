@@ -173,6 +173,9 @@ module TransamWorkflow
               end
             end
 
+            state(attrs[:from_state], {human_name: attrs[:from_state_human_name]}) if attrs[:from_state_human_name].present?
+            state(attrs[:to_state], {human_name: attrs[:to_state_human_name]}) if attrs[:to_state_human_name].present?
+
             event(attrs[:event_name], event_attrs) { branches << transition(transition_attrs) }
 
             before_transition do |this_machine, this_transition|
