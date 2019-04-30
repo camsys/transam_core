@@ -18,7 +18,7 @@ class KeywordIndexUpdateJob < Job
         # If we got the class then call the update method
         klass_instance.write_to_index
       else
-        raise RuntimeError, "Can't find #{class_name} with object_key #{object_key}"
+        Rails.logger.info "Can't find #{class_name} with object_key #{object_key}"
       end
     else
       raise RuntimeError, "Can't instantiate class #{class_name}"
