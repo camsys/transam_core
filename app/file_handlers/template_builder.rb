@@ -48,13 +48,13 @@ class TemplateBuilder
     # Add the column styles
     column_styles.each do |col_style|
       Rails.logger.debug col_style.inspect
-      sheet.col_style col_style[:column], style_cache[col_style[:name]]
+      sheet.col_style col_style[:column], style_cache[col_style[:name]], (col_style[:options] || {})
     end
 
     # Add the row styles
     row_styles.each do |row_style|
       Rails.logger.debug row_style.inspect
-      sheet.row_style row_style[:row], style_cache[row_style[:name]]
+      sheet.row_style row_style[:row], style_cache[row_style[:name]], (row_style[:options] || {})
     end
 
     # set column widths
