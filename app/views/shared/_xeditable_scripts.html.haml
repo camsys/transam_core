@@ -115,8 +115,21 @@
                 //server-side validation error, response like {"errors": {"username": "username already exist"} }
                 config.error.call(this, data.errors);
               } else {
+                var current_url = window.location.href;
+                if(current_url.includes('?')) {
+                  if(current_url.includes('use_last_tab')) {
+                    if(current_url.includes('use_last_tab=0')) {
+                      current_url = current_url.replace("use_last_tab=0", "use_last_tab=1");
+                    }
+                  } else {
+                    current_url += "&use_last_tab=1";
+                  }
+                } else {
+                  current_url +=  "?use_last_tab=1";
+                }
+
                 // refresh page to show new profile
-                window.location.reload();
+                window.location.replace(current_url);
               }
            },
            error: function(errors) {
