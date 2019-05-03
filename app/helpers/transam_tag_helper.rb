@@ -220,7 +220,7 @@ module TransamTagHelper
   # updating asset associations through xeditable
   # IF YOU UPDATE THIS METHOD, update the generic association tag version as well
   #
-  def editable_asset_association_tag(asset, field, label=nil, collection=nil, current_method: nil, include_blank: false, current_value: nil, type: 'select', url: nil, suffix: '_id', inputclass: '')
+  def editable_asset_association_tag(asset, field, label=nil, collection=nil, current_method: nil, include_blank: false, current_value: nil, type: 'select', url: nil, suffix: '_id', inputclass: '', include_other: false)
     # value = current_value || (collection || url ? asset.send(current_method || field).to_s : asset.send(current_method || "#{field.to_s}_id").to_s)
     field_name = current_method || "#{field.to_s.singularize}#{suffix}"
     value = current_value || asset.send(current_method || field_name).to_s
@@ -234,6 +234,7 @@ module TransamTagHelper
       # have to be doubly escaped.
       source = include_blank ? "{value: '', text: ''}," : ''
       source += collection.map{|pair| "{value: '#{pair[0]}', text: '#{pair[1].to_s.gsub("'"){"\\\\'"}}'}"}.join(',')
+      source += ",{value: '-1', text: 'Other'}" if include_other
     end    
     engine = Haml::Engine.new("
 ##{field}_group.form-group
