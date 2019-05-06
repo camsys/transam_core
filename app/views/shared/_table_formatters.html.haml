@@ -77,9 +77,10 @@
 
   function tasks_formatter(value) {
     if (value > 0) {
-      return '<i class="fa fa-flag"></i>';
+      return '<i class="fa fa-flag"></i><div style = "visibility: hidden;">Yes</div>';
+    } else {
+      return '<div style = "visibility: hidden;">No</div>';
     }
-    return "";
   };
 
   function documents_formatter(value) {
