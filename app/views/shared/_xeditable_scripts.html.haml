@@ -25,6 +25,40 @@
   
 :javascript
 
+  // show Other text entry only if it's a Other type; otherwise, hide and empty its value
+  // type_el: HTML element of the Type dropdown
+  // type_id: Type dropdown value
+  function show_hide_other_text_entry(type_el, type_id) {
+    var other_text_container = $(type_el).parents('.other-fields-container').find('.other-value-container');
+    console.log(other_text_container);
+    if(other_text_container) {
+      var other_ids = $(type_el).parents('.other-type-container').data('other-type-ids');
+      var other_edit_field = other_text_container.find('.editable-field');
+      if(!other_ids || other_ids.indexOf(type_id) < 0) {
+        other_edit_field.editable('setValue', '');
+        other_text_container.hide();
+      } else {
+        other_text_container.show();
+        other_edit_field.editable('hide');
+        other_edit_field.editable('show', false);
+      }
+    }
+
+    var dual_text_container = $(type_el).parents('.other-fields-container').find('.dual-value-container');
+    if(dual_text_container) {
+      var dual_ids = $(type_el).parents('.other-type-container').data('dual-type-ids');
+      var duel_edit_field = dual_text_container.find('.editable-field');
+      if(!dual_ids || dual_ids.indexOf(type_id) < 0) {
+        duel_edit_field.editable('setValue', '');
+        dual_text_container.hide();
+      } else {
+        dual_text_container.show();
+        duel_edit_field.editable('hide');
+        duel_edit_field.editable('show', false);
+      }
+    }
+  }
+
   $(function() {
     $.fn.editable.defaults.mode = 'inline';
     $.fn.editable.defaults.clear = false;
@@ -188,39 +222,6 @@
     $('.editable-field:not(.currency-number)').editable(generic_xeditable_options);
     $('.editable-field.currency-number').editable(currency_xeditable_options);
 
-    // show Other text entry only if it's a Other type; otherwise, hide and empty its value
-    // type_el: HTML element of the Type dropdown
-    // type_id: Type dropdown value
-    function show_hide_other_text_entry(type_el, type_id) {
-      var other_text_container = $(type_el).parents('.other-fields-container').find('.other-value-container');
-      if(other_text_container) {
-        var other_ids = $(type_el).parents('.other-type-container').data('other-type-ids');
-        var other_edit_field = other_text_container.find('.editable-field');
-        if(!other_ids || other_ids.indexOf(type_id) < 0) {
-          other_edit_field.editable('setValue', '');
-          other_text_container.hide();
-        } else {
-          other_text_container.show();
-          other_edit_field.editable('hide');
-          other_edit_field.editable('show', false);
-        }
-      }
-
-      var dual_text_container = $(type_el).parents('.other-fields-container').find('.dual-value-container');
-      if(dual_text_container) {
-        var dual_ids = $(type_el).parents('.other-type-container').data('dual-type-ids');
-        var duel_edit_field = dual_text_container.find('.editable-field');
-        if(!dual_ids || dual_ids.indexOf(type_id) < 0) {
-          duel_edit_field.editable('setValue', '');
-          dual_text_container.hide();
-        } else {
-          dual_text_container.show();
-          duel_edit_field.editable('hide');
-          duel_edit_field.editable('show', false);
-        }
-      }
-    }
-
     $('body').on('change', '.other-type-container select', function() {
       var type_id = $(this).val();
       if(type_id) {
@@ -230,6 +231,7 @@
     });
 
     $('.other-type-container .editable-field').each(function() {
+      console.log($(this).data('name'))
       var type_id = $(this).editable('getValue')[$(this).data('name')];
       if(type_id) {
         type_id = parseInt(type_id);

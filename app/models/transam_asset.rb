@@ -1,5 +1,7 @@
 class TransamAsset < TransamAssetRecord
 
+  DEFAULT_OTHER_ID = -1
+  
   include TransamObjectKey
   include FiscalYear
 
@@ -416,7 +418,7 @@ class TransamAsset < TransamAssetRecord
     end
 
     if self.changes.include?("vendor_id") && self.other_vendor.present?
-      self.other_vendor = nil if self.vendor_id
+      self.other_vendor = nil unless self.vendor_id == DEFAULT_OTHER_ID
     end
 
     if self.changes.include?("operator_id") && self.other_operator.present?

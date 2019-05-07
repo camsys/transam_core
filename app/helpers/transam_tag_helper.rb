@@ -234,7 +234,10 @@ module TransamTagHelper
       # have to be doubly escaped.
       source = include_blank ? "{value: '', text: ''}," : ''
       source += collection.map{|pair| "{value: '#{pair[0]}', text: '#{pair[1].to_s.gsub("'"){"\\\\'"}}'}"}.join(',')
-      source += ",{value: '-1', text: 'Other'}" if include_other
+      if include_other
+        source += "," unless source[-1] == ","
+        source += "{value: '#{TransamAsset::DEFAULT_OTHER_ID}', text: 'Other'}" if include_other
+      end
     end    
     engine = Haml::Engine.new("
 ##{field}_group.form-group
