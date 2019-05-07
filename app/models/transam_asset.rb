@@ -422,15 +422,15 @@ class TransamAsset < TransamAssetRecord
     end
 
     if self.changes.include?("operator_id") && self.other_operator.present?
-      self.other_operator = nil if self.operator_id
+      self.other_operator = nil unless self.operator_id == DEFAULT_OTHER_ID
     end
 
     if self.changes.include?("title_ownership_organization_id") && self.other_title_ownership_organization.present?
-      self.other_titel_ownership_organization = nil if self.title_ownership_organization_id
+      self.other_titel_ownership_organization = nil unless self.title_ownership_organization_id == DEFAULT_OTHER_ID
     end
 
     if self.changes.include?("lienholder_id") && self.other_lienholder.present?
-      self.other_lienholder = nil if self.lienholder_id
+      self.other_lienholder = nil unless self.lienholder_id == DEFAULT_OTHER_ID
     end
   end
 end
