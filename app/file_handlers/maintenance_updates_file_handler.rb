@@ -118,7 +118,7 @@ class MaintenanceUpdatesFileHandler < AbstractFileHandler
             event.upload = upload
             event.save
             add_processing_message(3, 'success', 'Maintenance history updated.')
-            Delayed::Job.enqueue AssetMaintenanceUpdateJob.new(asset.object_key), :priority => 10
+            #Delayed::Job.enqueue AssetMaintenanceUpdateJob.new(asset.object_key), :priority => 10
           else
             Rails.logger.info "Maintenance record did not pass validation."
             event.errors.full_messages.each { |e| add_processing_message(3, 'warning', e)}
