@@ -104,17 +104,19 @@ module FiscalYear
   end
 
   # Returns the calendar year formatted as a FY string
-  def fiscal_year(year)
+  def fiscal_year(year, klass = nil)
 
     # some controllers might have a special formatter instead of the default one to use the FY string
     # eventually default might be a SystemConfig.instance attribute as well but for now hard-coded
 
-    if defined? params
-      klass = params[:controller].classify
-    elsif self.class.to_s.include? 'Controller'
-      klass = self.class.to_s[0..-('Controller'.length+1)]
-    else
-      klass = self.class.to_s
+    unless klass
+      if defined? params
+        klass = params[:controller].classify
+      elsif self.class.to_s.include? 'Controller'
+        klass = self.class.to_s[0..-('Controller'.length+1)]
+      else
+        klass = self.class.to_s
+      end
     end
 
     formatter = SystemConfig.instance.special_fiscal_year_formatters[klass]
