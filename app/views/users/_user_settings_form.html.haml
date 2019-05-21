@@ -6,7 +6,7 @@
   = simple_form_for(@user, :html => {:class => 'form-vertical' }, :wrapper => :vertical_form, :wrapper_mappings => {:boolean => :vertical_boolean}) do |f|
     = dialog_tag('System Settings', {:icon => 'fa fa-cog', :class => "form_part"}) do
       = f.input :notify_via_email, :label => "Send messages to my email inbox"
-      = f.input :num_table_rows, :collection => [5, 10, 20, 50, 100, 200], :include_blank => false, :label => "Number of table rows to display"
+      = f.input :num_table_rows, :collection => [5, 10, 20, 50, 100, 200, 10000], :include_blank => false, :label => "Number of table rows to display"
       = f.input :weather_code_id, :collection => WeatherCode.active, :include_blank => false, :label => "Local weather city"
 
       = f.button :submit, :class => "btn btn-primary"
