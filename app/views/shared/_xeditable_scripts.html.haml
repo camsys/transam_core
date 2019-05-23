@@ -69,6 +69,10 @@
     $.fn.editable.defaults.unsavedclass = null;
     $.fn.editable.defaults.highlight = false;
 
+    // disable subform by default
+    $('.asset-subform').find('input, select').attr('disabled', 'disabled');
+    $('.asset-subform .asset-subform-action').hide();
+
     // variable to store radio options user selected
     // used to reset them when cancel editing
     var selected_radio_inputs;
@@ -83,6 +87,10 @@
         $(this).closest('.other-type-container').attr('data-original-value', $(this).val());
       });
 
+      // enable subforms
+      $('#'+tab_id+' .asset-subform').find('input, select').removeAttr('disabled');
+      $('#'+tab_id+' .asset-subform .asset-subform-action').show();
+
       // de-focus form: 1. make it select the first one; 2. lost is focus
       // the purpose of selecting first one is to avoid focus jumping to others
       setTimeout(function(){
@@ -96,6 +104,7 @@
       $('#'+tab_id+' .editable-field').editable('hide');
       $('#'+tab_id+' .editable-field').editable('disable');
     }
+
 
     function open_tab(tab_id) {
       $('.editableform-loading').hide();
@@ -115,6 +124,8 @@
         disable_tab_editing(tab_id);
       }
     });
+
+
 
     $('.edit-xeditable-button').on('click', function(e) {
       e.stopPropagation();
@@ -136,13 +147,26 @@
 
     $('.save-xeditable-button').click(function() {
      $('form.editableform').submit(); // save values locally, then submit to server
+     $('.asset-subform form').valid(); // validate subforms (e.g., Funding Programs)
      if($('.has-error .form-control').length == 0) {
        $('#processing_spinner').show();
+
+       // get params from subforms
+       var extra_data = {};
+       $('.asset-subform form').each(function(subform) {
+        $(this).serializeArray().forEach(function(param_value) {
+          if(param_value) {
+            extra_data[param_value.name] = param_value.value;
+          }
+        });
+       });
+
        $('.editable-field').editable('submit', {
            ajaxOptions: {
                type: 'PUT',
                dataType: 'json' //assuming json response
            },
+           data: extra_data,
            success: function(data, config) {
               $('#processing_spinner').hide();
               if(data && data.errors){
