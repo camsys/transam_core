@@ -67,15 +67,15 @@
 
             %li.divider
             %li.text-left
-              = link_to fiscal_year_rollover_system_config_path(SystemConfig.instance) do
-                %i.fa.fa-arrow-circle-o-right.fa-fw
-                System Rollover
+              = link_to client_admin_path do
+                %i.fa.fa-cog.fa-fw
+                Client Admin Interface
 
             %li.divider
             %li.text-left
               = link_to rails_admin_path do
                 %i.fa.fa-cogs.fa-fw
-                Admin Interface
+                System Admin Interface
       .col-sm-6
         %ul.multi-column-dropdown
           - SystemConfig.transam_module_names.each do |mod|
