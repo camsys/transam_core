@@ -72,6 +72,7 @@
     // disable subform by default
     $('.asset-subform').find('input, select').attr('disabled', 'disabled');
     $('.asset-subform .asset-subform-action').hide();
+    $('.asset-subform .asset-subform-display').show();
 
     // variable to store radio options user selected
     // used to reset them when cancel editing
@@ -90,6 +91,7 @@
       // enable subforms
       $('#'+tab_id+' .asset-subform').find('input, select').removeAttr('disabled');
       $('#'+tab_id+' .asset-subform .asset-subform-action').show();
+      $('#'+tab_id+' .asset-subform .asset-subform-display').hide();
 
       // de-focus form: 1. make it select the first one; 2. lost is focus
       // the purpose of selecting first one is to avoid focus jumping to others
@@ -124,8 +126,6 @@
         disable_tab_editing(tab_id);
       }
     });
-
-
 
     $('.edit-xeditable-button').on('click', function(e) {
       e.stopPropagation();
