@@ -399,12 +399,12 @@ class AssetEventsController < AssetAwareController
 
   def add_new_show_create_breadcrumbs
     add_asset_breadcrumbs
-    add_breadcrumb "#{@asset_event.asset_event_type.name} Update"
+    add_breadcrumb "#{asset_event_type_name} Update"
   end
 
   def add_edit_update_breadcrumbs
     add_asset_breadcrumbs
-    add_breadcrumb @asset_event.asset_event_type.name, edit_inventory_asset_event_path(@asset, @asset_event)
+    add_breadcrumb asset_event_type_name, edit_inventory_asset_event_path(@asset, @asset_event)
     add_breadcrumb "Update"
   end
 
@@ -434,6 +434,16 @@ class AssetEventsController < AssetAwareController
     unless params[:cancel].blank?
       redirect_to(inventory_url(@asset))
     end
+  end
+
+  def asset_event_type_name
+    aet_name = @asset_event.asset_event_type.name
+    # Note: this is an ugly tweak, 
+    # the name is stored in database which is supposed to be configurable
+    # however this name 'Rebuild/rehabilitation' is explicitly referenced in quite a few database view scripts
+    # If we update it in the db, we'll have to update and re-run db views
+    aet_name = "Rebuild/Rehabilitation" if aet_name == 'Rebuild/rehabilitation'
+    aet_name
   end
 
 end
