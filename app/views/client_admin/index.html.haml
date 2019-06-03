@@ -9,5 +9,9 @@
     %legend
       %span System Management
   %h4 Administration
-  = link_to fiscal_year_rollover_system_config_path(SystemConfig.instance) do
-    System Rollover
+  %p
+    = link_to fiscal_year_rollover_system_config_path(SystemConfig.instance) do
+      System Rollover
+  %p
+    = link_to message_templates_url do
+      Messages

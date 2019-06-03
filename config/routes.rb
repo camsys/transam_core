@@ -251,6 +251,12 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :message_templates do 
+    collection do 
+      get 'message_history'
+    end
+  end
+
   resources :users do
     collection do
       get  'sessions'
