@@ -10,7 +10,7 @@ class SystemConfigsController < OrganizationAwareController
   end
 
   def fiscal_year_rollover
-    add_breadcrumb 'Client Admin Interface', @system_config
+    add_breadcrumb 'Client Admin Interface', :client_admin_path
     add_breadcrumb 'System Rollover', fiscal_year_rollover_system_config_path(@system_config)
   end
 
