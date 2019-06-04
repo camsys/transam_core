@@ -28,7 +28,7 @@
     } else {
       return format("###,##0.", value);
     }
-  };
+  }
 
   function currency_formatter(value) {
     if (value == null) {
@@ -36,7 +36,7 @@
     } else {
       return '$' + integer_formatter(value);
     }
-  };
+  }
 
   function percentage_formatter(value) {
     if (value == null) {
@@ -44,7 +44,7 @@
     } else {
       return format("##0.00", value) + "%";
     }
-  };
+  }
 
   function date_formatter(value) {
     if (value) {
@@ -52,7 +52,15 @@
     } else {
       return value;
     }
-  };
+  }
+
+  function date_time_formatter(value) {
+    if (value) {
+      return moment(value).format('MM/DD/YYYY hh:mm:ss A');
+    } else {
+      return value;
+    }
+  }
 
   function convertUTCDateToLocalDate(date) {
       var newDate = new Date(date.getTime()+date.getTimezoneOffset()*60*1000);
@@ -63,7 +71,7 @@
       newDate.setHours(hours - offset);
 
       return newDate;
-  };
+  }
 
   //Bellow are new formatters to this _table_formatters class before they were duplicated across 2 or more tables.
 

@@ -72,6 +72,33 @@ class MessageTemplatesController < OrganizationAwareController
   end
 
   def message_history
+    @messages = Message.left_outer_joins(:message_template).joins(:user).all
+
+    unless params[:search].blank?
+      search_string = ['message_templates.name', 'message_templates.description', "users.first_name", "users.last_name", 'messages.subject', 'email_status'].map{|r| "#{r} LIKE '%#{params[:search]}%'"}.join(' OR ')
+      @messages = @messages.where(Arel.sql(search_string))
+    end
+
+    params[:sort] ||= 'created_at'
+
+    sorting_string = "#{params[:sort]} #{params[:order]}"
+
+    respond_to do |format|
+      format.html
+      format.js
+      format.json {
+        render :json => {
+          :total => @messages.count,
+          :rows =>  @messages.reorder(sorting_string).limit(params[:limit]).offset(params[:offset]).as_json
+          }
+        }
+      format.xls do
+        response.headers['Content-Disposition'] = "attachment; filename=message_history.xls"
+      end
+      format.xlsx do
+        response.headers['Content-Disposition'] = "attachment; filename=message_history.xlsx"
+      end
+    end
   end
 
 

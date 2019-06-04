@@ -1,1 +1,70 @@
-%legend Message History
+%legend{style: 'border-bottom: none; margin-bottom: 0px;'} Message History
+
+.table-responsive
+  #table_actions.btn-toolbar
+  %table.table.table-condensed.table-hover{:id => 'message_history_server_table',
+    :data => {:toggle => 'table',
+    :url => message_history_message_templates_path(:format => :json),
+    :card_view => "false",
+    :pagination => 'true',
+    :sort_order => 'asc',
+    :sortable => 'true',
+    :side_pagination => 'server',
+    :show_pagination_switch => 'false',
+    :page_number => '1',
+    :page_list => "[5, 10, 20, 50, 100, 200, 10000]",
+    :page_size => current_user.num_table_rows,
+    :search => 'true',
+    :show_columns => 'true',
+    :toolbar => "#table_actions",
+    :show_export => 'true',
+    :id_field => 'object_key',
+    :export_types => "['csv', 'txt', 'excel']",
+    :cookie => 'true',
+    :cookie_id_table => "message_history_table",
+    :cookie_expire => "1y"}}
+    %thead
+      %tr
+        %th.left{:data => {:field => "object_key", :visible => 'false'}} Object Key
+        %th.left{:data => {:field => "name", :sortable => 'true'}} ID
+        %th.left{:data => {:field => "subject", sortable: 'true'}} Subject
+        %th.left{:data => {:field => "description", sortable: 'true'}} Description
+        %th.left{:data => {:field => "active", :formatter => "boolean_formatter", sortable: 'true'}} Active
+        %th.left{:data => {:field => "email_enabled", :formatter => "boolean_formatter", sortable: 'true'}} Email (External)
+        %th.left{:data => {:field => "created_at", :formatter => "date_time_formatter", sortable: 'true'}} Date & Time
+        %th.left{:data => {:field => "user", sortable: 'true'}} User
+        %th.left{:data => {:field => "email_status", sortable: 'true'}} Status
+
+= render 'shared/table_formatters'
+
+:javascript
+  $(window).resize(function() {
+    $('#message_history_server_table').bootstrapTable('resetView');
+  });
+
+  // stub correct sorting field name
+  var message_sorting_mappings = {
+    name: "message_templates.name",
+    description: "message_templates.description",
+    email_enabled: "message_templates.email_enabled",
+    user: "users.first_name",
+    subject: "messages.subject"
+  };
+
+  $('#message_history_server_table').bootstrapTable({
+    onLoadError: function(status, res) {
+      alert('An error occurred loading messages. Please refresh the page and try again.');
+    },
+    queryParams: function(params) {
+      params.sort = params.sort || params.sortName;
+      params.order = params.order || params.sortOrder;
+      var sort_field = params.sort;
+      var map_field = message_sorting_mappings[sort_field];
+      if(map_field) {
+        params.sort = map_field;
+      }
+
+      return params;
+    }
+  });
+
