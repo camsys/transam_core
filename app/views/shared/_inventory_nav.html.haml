@@ -23,12 +23,14 @@
         %i.fa.fa-tags.fa-fw
         Groups
       %ul.dropdown-menu
-        - AssetGroup.where(organization_id: @organization_list).each do |grp|
+        - asset_groups = AssetGroup.where(organization_id: @organization_list)
+        - asset_groups.each do |grp|
           %li.text-left
             = link_to asset_group_path(grp) do
               %i.fa.fa-tag.fa-fw
               = grp.name
-        %li.divider
+        - if asset_groups.count > 0
+          %li.divider
         %li.text-left
           = link_to asset_groups_path do
             %i.fa.fa-tags.fa-fw
