@@ -27,6 +27,8 @@ class ImagesController < NestedResourceController
       @images = Image.none
     end
 
+    @images = @images.left_outer_joins(:image_classification)
+
     respond_to do |format|
       format.html # index.html.erb
       format.json {
@@ -60,9 +62,7 @@ class ImagesController < NestedResourceController
 
   # GET /images/1/edit
   def edit
-
     @imagable = @image.imagable
-
   end
 
   def download
