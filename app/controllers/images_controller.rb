@@ -7,23 +7,24 @@ class ImagesController < NestedResourceController
   # GET /images
   # GET /images.json
   def index
-
-    if params[:sort].present? && params[:order].present?
-      if params[:sort] == 'creator'
-        @images = Image.unscoped.joins(:creator).order("CONCAT(users.first_name, ' ', users.last_name) #{params[:order]}")
-      else
-        @images = Image.unscoped.order(params[:sort] => params[:order])
-      end
-    else
-      @images = Image.all
-    end
-
     if params[:global_base_imagable]
       @imagable = GlobalID::Locator.locate params[:global_base_imagable]
-      @images = @images.where(base_imagable: @imagable)
     else
       @imagable = find_resource
-      @images = @images.where(imagable: @imagable)
+    end
+
+    if @imagable
+      @images = @imagable.images
+
+      if params[:sort].present? && params[:order].present?
+        if params[:sort] == 'creator'
+          @images = @images.joins(:creator).reorder("CONCAT(users.first_name, ' ', users.last_name) #{params[:order]}")
+        else
+          @images = @images.reorder(params[:sort] => params[:order])
+        end
+      end
+    else
+      @images = Image.none
     end
 
     respond_to do |format|
@@ -33,6 +34,7 @@ class ImagesController < NestedResourceController
             :total => @images.count,
             :rows => @images.limit(params[:limit]).offset(params[:offset]).collect{ |u|
               u.as_json.merge!({
+                classification: u.image_classification&.to_s,
                 link_image: view_context.link_to(view_context.image_tag(u.image.url(:thumb)), u.image.url,  :class => "img-responsive gallery-image", :data => {:lightbox => "gallery"}, :title => u.original_filename),
                 imagable_to_s: u.imagable.to_s,
                 creator: u.creator.to_s

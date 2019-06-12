@@ -29,17 +29,17 @@ class Image < ActiveRecord::Base
 
   # Callbacks
   after_initialize  :set_defaults
-  before_save       :update_file_attributes
+  before_save       :update_bearing, :update_file_attributes
 
   # Associations
   belongs_to :base_imagable, :polymorphic => true
   belongs_to :imagable,  :polymorphic => true
+  belongs_to :image_classification
 
   # Each comment was created by a user
   belongs_to :creator, -> { unscope(where: :active) }, :class_name => "User", :foreign_key => "created_by_id"
 
-  validates :description,         :presence => true,
-    unless: Proc.new { |i| i.imagable.is_a? User } # User profile photos do not need a description
+  #validates :description,         :presence => true, unless: Proc.new { |i| i.imagable.is_a? User } # User profile photos do not need a description
   validates :original_filename,   :presence => true
   validates :image,               :presence => true, :file_size => { :maximum => MAX_UPLOAD_FILE_SIZE.megabytes.to_i }
   validates :created_by_id,       :presence => true
@@ -55,14 +55,15 @@ class Image < ActiveRecord::Base
     :imagable_type,
     :global_imagable,
     :image,
-    :classification,
+    :image_classification_id,
     :name,
     :description,
     :exportable,
     :original_filename,
     :content_type,
     :file_size,
-    :created_by_id
+    :created_by_id,
+    :compass_point
   ]
 
   # List of fields which can be searched using a simple text-based search
@@ -72,6 +73,9 @@ class Image < ActiveRecord::Base
     :description,
     :content_type
   ]
+
+  # List of compass points to calculate bearing
+  COMPASS_POINTS = %w[N NE E SE S SW W NW]
 
 
   #-----------------------------------------------------------------------------
@@ -146,12 +150,31 @@ class Image < ActiveRecord::Base
   #-----------------------------------------------------------------------------
   private
 
-  def update_file_attributes
+  def update_bearing
+    if self.compass_point_changed?
+      self.bearing = convert_compass_point_to_bearing
+    end
+    if self.bearing_changed?
+      self.compass_point = convert_bearing_to_compass_point
+    end
+  end
 
+  def update_file_attributes
     if image.present? && image
       self.content_type = image.file.content_type
       self.file_size = image.file.size
     end
   end
 
+  def convert_bearing_to_compass_point 
+    if bearing && (bearing * 10 % 225) == 0
+      COMPASS_POINTS[bearing / 22.5]
+    end
+  end
+
+  def convert_compass_point_to_bearing
+    if COMPASS_POINTS.include?(self.compass_point)
+      COMPASS_POINTS.index(self.compass_point) * 22.5
+    end
+  end
 end

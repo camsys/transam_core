@@ -30,7 +30,7 @@
     %thead
       %tr
         %th.left{:data => {:field => :link_image, :sortable => 'false', :valign => 'middle'}} Photo
-        - unless imagable.images.distinct.where.not(classification: [nil, '']).pluck(:classification).empty? # if some images are categorized
+        - unless imagable.images.distinct.where.not(image_classification_id: nil).pluck(:image_classification_id).empty? # if some images are categorized
           %th.left{:data => {:field => :classification, :sortable => 'true', :valign => 'middle'}} Type
         %th.left{:data => {:field => :description, :sortable => 'true', :valign => 'middle'}} Description
         %th.left{:data => {:field => :creator, :sortable => 'true', :valign => 'middle'}} Creator
@@ -42,33 +42,55 @@
 
 :javascript
 
-    $(document).ready(function() {
-      $('#' + '#{table_dom_id}').bootstrapTable('resetWidth');
+  $(document).ready(function() {
+    $('#' + '#{table_dom_id}').bootstrapTable('resetWidth');
+
+    // stub correct sorting field name
+    var image_sorting_mappings = {
+      classification: "image_classifications.name"
+    };
+
+    $('#' + '#{table_dom_id}').bootstrapTable({
+      onLoadError: function(status, res) {
+        alert('An error occurred loading images. Please try again.');
+      },
+      queryParams: function(params) {
+        params.sort = params.sort || params.sortName;
+        params.order = params.order || params.sortOrder;
+        var sort_field = params.sort;
+        var map_field = image_sorting_mappings[sort_field];
+        if(map_field) {
+          params.sort = map_field;
+        }
+
+        return params;
+      }
     });
+  });
 
-    function imagable_formatter(value, data){
-      if ((value == 'Element') || (value == 'Defect')) {
-        return data.imagable_to_s;
-      }
-    };
+  function imagable_formatter(value, data){
+    if ((value == 'Element') || (value == 'Defect')) {
+      return data.imagable_to_s;
+    }
+  };
 
-    function image_actions_formatter(value, data) {
+  function image_actions_formatter(value, data) {
 
-      if ('#{can? :create, @asset.images.build}' == 'true'){
-        return '<div><a class="btn btn-primary" href="/images/'+ value + '/download" style="margin-bottom:10px"><i class="fa fa-download" style="padding-right:5px"></i>Download</a></div><div><a class="btn btn-warning" data-confirm="Are you sure you want to remove this image?" rel="nofollow" data-method="delete" href="/images/'+ value + '"><i class="fa fa-trash" style="padding-right:5px"></i>Delete</a></div>';
-      } else {
-        return '<a class="btn btn-primary" href="/images/'+ value + '/download"><i class="fa fa-download" style="padding-right:5px"></i>Download</a>';
-      }
+    if ('#{can? :create, @asset.images.build}' == 'true'){
+      return '<div><a class="btn btn-primary" href="/images/'+ value + '/download" style="margin-bottom:10px"><i class="fa fa-download" style="padding-right:5px"></i>Download</a></div><div><a class="btn btn-warning" data-confirm="Are you sure you want to remove this image?" rel="nofollow" data-method="delete" href="/images/'+ value + '"><i class="fa fa-trash" style="padding-right:5px"></i>Delete</a></div>';
+    } else {
+      return '<a class="btn btn-primary" href="/images/'+ value + '/download"><i class="fa fa-download" style="padding-right:5px"></i>Download</a>';
+    }
 
-    };
+  };
 
-    function date_time_formatter(value) {
+  function date_time_formatter(value) {
     if (value) {
       return moment(value).format('MM/DD/YYYY hh:mm:ss A');
     } else {
       return value;
     }
-  };
+  }
 
   function raw_boolean_string_formatter(value) {
     if (value) {
