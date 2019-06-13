@@ -20,19 +20,19 @@ asset_event_types = [
   {:active => 0, :name => 'Schedule disposition',       :display_icon_name => "fa fa-times-circle",       :description => 'Scheduled disposition',       :class_name => 'ScheduleDispositionUpdateEvent',      :job_name => 'AssetScheduleDispositionUpdateJob'},
   {:active => 1, :name => 'Service status',  :display_icon_name => "fa fa-bell",  :description => 'Service Status Update',  :class_name => 'ServiceStatusUpdateEvent',  :job_name => 'AssetServiceStatusUpdateJob'},
   {:active => 1, :name => 'Location',       :display_icon_name => "fa fa-map-marker",       :description => 'Location Update',       :class_name => 'LocationUpdateEvent',      :job_name => 'AssetLocationUpdateJob'},
-  {:active => 1, :name => 'Rehabilitation',       :display_icon_name => "fa fa-wrench",       :description => 'Rehabilitation Update',       :class_name => 'RehabilitationUpdateEvent',      :job_name => 'AssetRehabilitationUpdateJob'},
+  {:active => 1, :name => 'Rebuild/rehabilitation',       :display_icon_name => "fa fa-wrench",       :description => 'Rehabilitation Update',       :class_name => 'RehabilitationUpdateEvent',      :job_name => 'AssetRehabilitationUpdateJob'},
   {:active => 1, :name => 'Record final disposition',     :display_icon_name => "fa fa-ban",      :description => 'Disposition Update',     :class_name => 'DispositionUpdateEvent',    :job_name => 'AssetDispositionUpdateJob'},
   {:active => 1, :name => 'Request early disposition',     :display_icon_name => "fa fa-ban",      :description => 'Early Disposition Request',     :class_name => 'EarlyDispositionRequestUpdateEvent',    :job_name => ''},
   {:active => 1, :name => "Maintenance history",          :display_icon_name => "fa fa-wrench",            :description => "Maintenance/Service Update",    :class_name => "MaintenanceUpdateEvent", :job_name => "AssetMaintenanceUpdateJob"}
 ]
 
 condition_types = [
-  {:active => 1, :name => 'Unknown',        :rating => 0.0, :description => 'Asset condition is unknown.'},
-  {:active => 1, :name => 'Poor',           :rating => 1.0, :description => 'Asset is past its useful life and is in immediate need of repair or replacement. May have critically damaged components.'},
-  {:active => 1, :name => 'Marginal',       :rating => 2.0, :description => 'Asset is reaching or is just past the end of its useful life. Increasing number of defective or deteriorated components and experiencing increased maintenance needs.'},
-  {:active => 1, :name => 'Adequate',       :rating => 3.0, :description => 'Asset has reached its mid-life. Some moderately defective or deteriorated components.'},
-  {:active => 1, :name => 'Good',           :rating => 4.0, :description => 'Asset showing minimal signs of wear. Some defective or deteriorated components.'},
-  {:active => 1, :name => 'New/Excellent',  :rating => 5.0, :description => 'New asset. No visible defects.'}
+  {:active => 1, :name => 'Unknown',        :rating_ceiling => 0.99, :description => 'Asset condition is unknown.'},
+  {:active => 1, :name => 'Poor',           :rating_ceiling => 1.94, :description => 'Asset is past its useful life and is in immediate need of repair or replacement. May have critically damaged components.'},
+  {:active => 1, :name => 'Marginal',       :rating_ceiling => 2.94, :description => 'Asset is reaching or is just past the end of its useful life. Increasing number of defective or deteriorated components and experiencing increased maintenance needs.'},
+  {:active => 1, :name => 'Adequate',       :rating_ceiling => 3.94, :description => 'Asset has reached its mid-life. Some moderately defective or deteriorated components.'},
+  {:active => 1, :name => 'Good',           :rating_ceiling => 4.74, :description => 'Asset showing minimal signs of wear. Some defective or deteriorated components.'},
+  {:active => 1, :name => 'Excellent',      :rating_ceiling => 5.00, :description => 'New asset. No visible defects.'}
 ]
 
 disposition_types = [
@@ -48,7 +48,8 @@ service_status_types = [
   {:active => 1, :name => 'In Service',       :code => 'I', :description => 'Asset is in service.'},
   {:active => 1, :name => 'Out of Service',   :code => 'O', :description => 'Asset is temporarily out of service.'},
   {:active => 1, :name => 'Spare',            :code => 'S', :description => 'Asset has been reprovisioned as a spare.'},
-  {:active => 0, :name => 'Disposed',         :code => 'D', :description => 'Asset has been permanently disposed.'}
+  {:active => 0, :name => 'Disposed',         :code => 'D', :description => 'Asset has been permanently disposed.'},
+  {:active => 0, :name => 'Unknown',          :code => 'U', :description => 'Asset service status is unknown.'}
 ]
 
 rule_sets = [
@@ -153,8 +154,7 @@ roles = [
   {:privilege => false, :name => 'manager', :weight => 7, :show_in_user_mgmt => true},
   {:privilege => true, :name => 'admin', :show_in_user_mgmt => true},
   {:privilege => true, :name => 'super_manager', :weight => 10, role_parent: 'manager', :show_in_user_mgmt => true},
-  {:privilege => true, :name => 'technical_contact', :show_in_user_mgmt => true},
-  {name: 'maintenance_contractor', role_parent: Role.find_by(name: 'guest'), show_in_user_mgmt: true, privilege: true, label: 'Maintenance - Contractor'}
+  {:privilege => true, :name => 'technical_contact', :show_in_user_mgmt => true}
 
 ]
 
@@ -252,7 +252,7 @@ reports = [
     :name => 'User Login Report',
     :class_name => "UserLoginReport",
     :view_name => "user_login_report_table",
-    :show_in_nav => 0,
+    :show_in_nav => 1,
     :show_in_dashboard => 0,
     :roles => 'admin',
     :description => 'Displays a summary of user logins by organization.'

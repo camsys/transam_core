@@ -2,6 +2,13 @@ Rails.application.routes.draw do
 
   devise_for :users, :controllers => { :sessions => "sessions", :unlocks => "unlocks", :passwords => "passwords" }
 
+  resources :transam_workflow, only: [] do
+    collection do
+      get :fire_workflow_event
+      post :fire_workflow_events
+    end
+  end
+
   # JSON API #
   namespace :api do
     get 'touch_session' => "api#touch_session"
@@ -40,6 +47,12 @@ Rails.application.routes.draw do
   # checker for the system overall
   #-----------------------------------------------------------------------------
   get 'system_health_check', to: 'errors#system_health'
+
+  resources :system_configs, only: [:show, :edit, :update] do
+    member do
+      get 'fiscal_year_rollover'
+    end
+  end
 
   # Routes for the issues controller
   resources :issues,    :only => [:create, :update, :edit, :new] do

@@ -14,7 +14,7 @@
       = f.input :customer_id, :as => :hidden, :input_html => {:value => Customer.first.id}
     .col-md-6
       = dialog_tag('Corporate', {:icon => 'fa fa-book', :class => "header-part"}) do
-        = f.input :name, :required => true
+        = f.input :name, :required => true, :disabled => (SystemConfig.instance.special_locked_fields.try(:include?,'organizations.short_name') && !(current_user.has_role? :admin))
         = f.input :short_name, :required => true, :label => "Short Name", :disabled => (SystemConfig.instance.special_locked_fields.try(:include?,'organizations.short_name') && !(current_user.has_role? :admin))
         = f.input :external_id, :label => "External ID"
     .col-md-6
@@ -22,6 +22,7 @@
         = f.input :phone, :required => true, :as => :tel, :hint => 'Format 123-456-7890'
         = f.input :fax, :as => :tel, :hint => 'Format 123-456-7890'
         = f.input :url, :required => true, :as => :url
+        = f.input :country, :required => true, :label => "Country", collection: [[ 'United States of America', 'US']]
         = f.input :address1, :required => true, :label => "Address 1"
         = f.input :address2, :label => "Address 2"
         .row
@@ -31,6 +32,7 @@
             = f.input :state, :required => true, :as => :select, :collection => ISO3166::Country['US'].states.keys
           .col-sm-3
             = f.input :zip, :required => true
+        = f.input :county, :label => "County"
         - if User.new.respond_to? :email_in_org_domain_list
           = f.input :allowed_email_domains, :required => true, :label => 'Allowed Email Domains', :placeholder => 'To enter more than one domain, separate with |. Domains are the url that follows @ (ex: camsys.com).'
 

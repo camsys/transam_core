@@ -4,9 +4,6 @@
  * @version: v1.0.1
  */
 
-$.getScript("https://cdnjs.cloudflare.com/ajax/libs/jqgrid/4.6.0/plugins/jquery.tablednd.js", function() {
-});
-
 (function ($) {
 
     'use strict';

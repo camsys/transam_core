@@ -20,6 +20,12 @@ $.rails.allowAction = (element) ->
     # We want it to sound confirmy
     .html("Yes")
 
+  if element.get(0).type.toLowerCase() == "submit"
+    random_id = Math.random().toString(36).substring(7)
+    $form = element.closest('form')
+    $form.attr('id', random_id)
+    $link.attr('onClick', "document.getElementById('#{random_id}').submit();")
+
   # Create the modal box with the message
   modal_html = """
                <div class="modal" id="confirm_dialog_modal">

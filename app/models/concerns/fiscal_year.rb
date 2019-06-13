@@ -38,8 +38,13 @@ module FiscalYear
   # Returns the current fiscal year as a calendar year (integer). Each fiscal year is represented as the year in which
   # the fiscal year started, so FY 13-14 would return 2013 as a numeric
   #
-  def current_fiscal_year_year
-    fiscal_year_year_on_date(Date.today)
+  def current_fiscal_year_year(use_system_config=true)
+
+    fy_year = SystemConfig.instance.fy_year if use_system_config
+    fy_year = fiscal_year_year_on_date(Date.today) if fy_year.blank? || fiscal_year_year_on_date(Date.today) - fy_year > 1 # dont let a manual rollover go over 2 years
+
+    fy_year
+
   end
   #
   # Returns the current planning year which is always the next fiscal year
@@ -63,8 +68,7 @@ module FiscalYear
 
     # If the start of the fiscal year in the calendar year is before date, we are in the fiscal year that starts in this
     # calendar years, otherwise the date is in the fiscal year that started the previous calendar year
-    ((date < start_of_fiscal_year(date_year)) ||
-     Rails.application.config.try(:delay_fiscal_year_rollover)) ? date_year - 1 : date_year
+    (date < start_of_fiscal_year(date_year)) ? date_year - 1 : date_year
 
   end
 
@@ -100,17 +104,19 @@ module FiscalYear
   end
 
   # Returns the calendar year formatted as a FY string
-  def fiscal_year(year)
+  def fiscal_year(year, klass = nil)
 
     # some controllers might have a special formatter instead of the default one to use the FY string
     # eventually default might be a SystemConfig.instance attribute as well but for now hard-coded
 
-    if defined? params
-      klass = params[:controller].classify
-    elsif self.class.to_s.include? 'Controller'
-      klass = self.class.to_s[0..-('Controller'.length+1)]
-    else
-      klass = self.class.to_s
+    unless klass
+      if defined? params
+        klass = params[:controller].classify
+      elsif self.class.to_s.include? 'Controller'
+        klass = self.class.to_s[0..-('Controller'.length+1)]
+      else
+        klass = self.class.to_s
+      end
     end
 
     formatter = SystemConfig.instance.special_fiscal_year_formatters[klass]

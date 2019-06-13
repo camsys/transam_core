@@ -38,7 +38,7 @@ module TransamKeywordSearchable
       if kwsi.present?
         kwsi.destroy
       else
-        raise RuntimeError, "Can't find #{self.name} with object_key #{object_key}"
+        Rails.logger.info "Can't find #{self.name} with object_key #{object_key}"
       end
     end
 

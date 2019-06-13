@@ -11,18 +11,21 @@ class KeywordIndexUpdateJob < Job
   attr_accessor :class_name
 
   def run
-    klass = class_name.constantize
+    begin
+      klass = class_name.constantize
+    rescue
+      raise RuntimeError, "Can't instantiate class #{class_name}"
+    end
     if klass
       klass_instance = klass.find_by(:object_key => object_key)
       if klass_instance
         # If we got the class then call the update method
         klass_instance.write_to_index
       else
-        raise RuntimeError, "Can't find #{class_name} with object_key #{object_key}"
+        Rails.logger.info "Can't find #{class_name} with object_key #{object_key}"
       end
-    else
-      raise RuntimeError, "Can't instantiate class #{class_name}"
     end
+
   end
 
   def prepare

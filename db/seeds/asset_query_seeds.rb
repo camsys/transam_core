@@ -168,7 +168,7 @@ transam_assets_category_fields = {
   'Life Cycle (Disposition & Transfer)': [
     {
       name: 'disposition_date',
-      label: 'Date of Disposition Request',
+      label: 'Date of Disposition',
       filter_type: 'date'
     }
   ]

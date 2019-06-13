@@ -40,7 +40,7 @@ class AssetEvent < ActiveRecord::Base
   validate  :validate_event_date_with_purchase
 
   # default scope
-  default_scope { order("event_date, created_at") }
+  default_scope { order("asset_events.event_date, asset_events.created_at") }
   # named scopes
 
   # List of hash parameters allowed by the controller

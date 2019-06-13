@@ -79,7 +79,9 @@ Gem::Specification.new do |s|
   #s.add_dependency 'zero-rails_openapi'
   s.add_dependency 'jbuilder'
   s.add_dependency 'simple_token_authentication', '~> 1.0'
-  
+
+  s.add_dependency 'deep_cloneable'
+
   # Development
   s.add_development_dependency 'mail', '2.5.5'
   s.add_development_dependency "rspec-rails"

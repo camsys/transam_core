@@ -40,6 +40,20 @@ class OrganizationsController < OrganizationAwareController
       add_breadcrumb OrganizationType.find(@organization_type_id).name.pluralize(2), organizations_path(:organization_type_id => @organization_type_id)
     end
 
+    if params[:show_active_only].nil?
+      @show_active_only = 'active'
+    else
+      @show_active_only = params[:show_active_only]
+    end
+
+    if @show_active_only == 'active'
+      conditions << 'organizations.active = ?'
+      values << true
+    elsif @show_active_only == 'inactive'
+      conditions << 'organizations.active = ?'
+      values << false
+    end
+
     conditions << 'id IN (?)'
     values << @organization_list
 

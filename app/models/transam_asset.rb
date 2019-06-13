@@ -1,5 +1,7 @@
 class TransamAsset < TransamAssetRecord
 
+  DEFAULT_OTHER_ID = -1
+  
   include TransamObjectKey
   include FiscalYear
 
@@ -30,6 +32,8 @@ class TransamAsset < TransamAssetRecord
 
   has_many :serial_numbers, as: :identifiable, inverse_of: :identifiable, dependent: :destroy
   accepts_nested_attributes_for :serial_numbers
+
+  has_many :asset_events,   :foreign_key => :base_transam_asset_id, :dependent => :destroy
 
   # each asset has zero or more condition updates
   has_many   :condition_updates, -> {where :asset_event_type_id => ConditionUpdateEvent.asset_event_type.id }, :class_name => "ConditionUpdateEvent", :as => :transam_asset
@@ -261,26 +265,26 @@ class TransamAsset < TransamAssetRecord
     a.uniq
   end
 
-  def asset_events(unscoped=false)
-    typed_asset = TransamAsset.get_typed_asset(self)
-
-    events = []
-    event_classes.each do |e|
-      assoc_name = e.name.gsub('Event', '').underscore.pluralize
-      assoc_name = 'early_disposition_requests' if assoc_name == 'early_disposition_request_updates'
-      events << typed_asset.send(assoc_name).ids
-    end
-    if unscoped
-      AssetEvent.unscoped.where(id: events.flatten)
-    else
-      AssetEvent.where(id: events.flatten)
-    end
-
-  end
+  # def asset_events(unscoped=false)
+  #   typed_asset = TransamAsset.get_typed_asset(self)
+  #
+  #   events = []
+  #   event_classes.each do |e|
+  #     assoc_name = e.name.gsub('Event', '').underscore.pluralize
+  #     assoc_name = 'early_disposition_requests' if assoc_name == 'early_disposition_request_updates'
+  #     events << typed_asset.send(assoc_name).ids
+  #   end
+  #   if unscoped
+  #     AssetEvent.unscoped.where(id: events.flatten)
+  #   else
+  #     AssetEvent.where(id: events.flatten)
+  #   end
+  #
+  # end
 
   # returns the list of events associated with this asset ordered by date, newest first
   def history
-    asset_events(true).order(updated_at: :desc)
+    asset_events.reorder(event_date: :desc, updated_at: :desc)
   end
 
 
@@ -414,19 +418,19 @@ class TransamAsset < TransamAssetRecord
     end
 
     if self.changes.include?("vendor_id") && self.other_vendor.present?
-      self.other_vendor = nil if self.vendor_id
+      self.other_vendor = nil unless self.vendor_id == DEFAULT_OTHER_ID
     end
 
     if self.changes.include?("operator_id") && self.other_operator.present?
-      self.other_operator = nil if self.operator_id
+      self.other_operator = nil unless self.operator_id == DEFAULT_OTHER_ID
     end
 
     if self.changes.include?("title_ownership_organization_id") && self.other_title_ownership_organization.present?
-      self.other_titel_ownership_organization = nil if self.title_ownership_organization_id
+      self.other_titel_ownership_organization = nil unless self.title_ownership_organization_id == DEFAULT_OTHER_ID
     end
 
     if self.changes.include?("lienholder_id") && self.other_lienholder.present?
-      self.other_lienholder = nil if self.lienholder_id
+      self.other_lienholder = nil unless self.lienholder_id == DEFAULT_OTHER_ID
     end
   end
 end

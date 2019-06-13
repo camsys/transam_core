@@ -80,13 +80,17 @@ module TransamTagHelper
     return engine.render.html_safe
   end
 
-  def editable_field_tag(model_obj, field, label=nil, required: true, type: 'text', min: nil, max: nil, suffix: '')
+  #
+  # generic method for updating fields of any model through xeditable
+  # IF YOU UPDATE THIS METHOD, update the asset field tag version as well
+  #
+  def editable_field_tag(model_obj, field, label=nil, model_name: nil, required: true, type: 'text', min: nil, max: nil, suffix: '', inputclass: '')
     asset = model_obj.is_a?(Array) ? model_obj.last : model_obj
 
     if type == 'boolean'
       return editable_association_tag(asset, field, label,
                                             [[1, 'Yes'],[0, 'No']],
-                                            include_blank: !required, current_value: asset.send(field) ? 1 : 0, suffix: suffix)
+                                            include_blank: !required, current_value: asset.send(field) ? 1 : 0, suffix: suffix, inputclass: '')
     end
     extras = ''
     extras += ", min: #{min}" if min
@@ -94,31 +98,46 @@ module TransamTagHelper
     classes = ' '
     classes += 'required ' if required
     # classes += 'datepicker ' if type == 'date'
-    if type == 'date'
-      type = 'combodate'
-      classes += 'combodate'
+    value = escape_javascript(asset.send(field).to_s)
+    case type
+      when 'date'
+        type = 'combodate'
+        classes += 'combodate'
+        value = format_as_date(Date.parse(value)) unless value.blank?
       # extras += ", format: 'MM/DD/YYYY', viewformat: 'MM/DD/YYYY'"
-    elsif type == 'currency'
-      type = 'number'
-      classes += 'currency-number'
+      when 'currency'
+        type = 'number'
+        classes += 'currency-number'
+      when 'textarea'
+        value = asset.send(field).to_s.gsub(/\r\n|\r|\n/, "<br />")
     end
+
     # Escape for HAML
     label = label.gsub('%','\%') if label
 
-    asset_path = polymorphic_path(model_obj)
+    if model_name.nil? || model_obj.class.to_s == model_name
+      asset_path = polymorphic_path(model_obj)
+    else
+      asset_path = polymorphic_path(model_obj.send(model_name.underscore))
+    end
 
     engine = Haml::Engine.new("
 ##{field}_group.form-group
   %label.control-label{class: '#{classes}'}
     #{label || field.to_s.titleize}
   .display-value
-    %a.editable-field{href:'#', id: '#{field}', class: '#{classes}', data: {emptytext: ' - ', name: '#{asset.class.base_class.name.underscore}[#{field}]', value: '#{escape_javascript(asset.send(field).to_s)}', type: '#{type}', placeholder: '#{required ? 'Required' : ''}', url: '#{asset_path}'#{extras}}}
-    #{suffix}
+    %a.editable-field{href:'#', id: '#{field}', class: '#{classes}', data: {inputclass: '#{inputclass}', emptytext: ' - ', name: '#{(model_name || asset.class.base_class.name).underscore}[#{field}]', type: '#{type}', placeholder: '#{required ? 'Required' : ''}', url: '#{asset_path}'#{extras}}}
+      \\#{value}
+                              #{suffix}
                               ")
     return engine.render.html_safe
   end
 
-  def editable_association_tag(model_obj, field, label=nil, collection=nil, current_method: nil, include_blank: false, current_value: nil, type: 'select', url: nil, suffix: '_id')
+  #
+  # generic method for updating associations of any model through xeditable
+  # IF YOU UPDATE THIS METHOD, update the asset association tag version as well
+  #
+  def editable_association_tag(model_obj, field, label=nil, collection=nil, model_name: nil, current_method: nil, include_blank: false, current_value: nil, type: 'select', url: nil, suffix: '_id')
 
     asset = model_obj.is_a?(Array) ? model_obj.last : model_obj
 
@@ -127,9 +146,7 @@ module TransamTagHelper
     value = current_value || asset.send(current_method || field_name).to_s
     unless collection || url
       klass = asset.association(field).reflection.class_name.constantize
-      collection = klass.column_names.include?('name') ?
-                       klass.active.pluck(:id, :name) :
-                       klass.active.collect{|a| [a.id, a.to_s]}
+      collection = klass.active.collect{|a| [a.id, a.to_s]}
 
     end
     unless url
@@ -139,18 +156,26 @@ module TransamTagHelper
       source += collection.map{|pair| "{value: '#{pair[0]}', text: '#{pair[1].to_s.gsub("'"){"\\\\'"}}'}"}.join(',')
     end
 
-    asset_path = polymorphic_path(model_obj)
+    if model_name.nil? || model_obj.class.to_s == model_name
+      asset_path = polymorphic_path(model_obj)
+    else
+      asset_path = polymorphic_path(model_obj.send(model_name.underscore))
+    end
 
     engine = Haml::Engine.new("
 ##{field}_group.form-group
   %label.control-label
     #{label || field.to_s.titleize}
   .display-value
-    %a.editable-field{href:'#', id: '#{field}', data: {emptytext: ' - ', name: '#{asset.class.base_class.name.underscore}[#{field_name}]', value: '#{value}', type: '#{type}', url: '#{asset_path}', source: \"#{url || "[#{source}]"}\", sourceCache: '#{url.nil?}'}}
+    %a.editable-field{href:'#', id: '#{field}', data: {emptytext: ' - ', name: '#{(model_name || asset.class.base_class.name).underscore}[#{field_name}]', value: '#{value}', type: '#{type}', url: '#{asset_path}', source: \"#{url || "[#{source}]"}\", sourceCache: '#{url.nil?}'}}
 ")
     return engine.render.html_safe
   end
 
+  #
+  # updating asset fields through xeditable
+  # IF YOU UPDATE THIS METHOD, update the generic field tag version as well
+  #
   def editable_asset_field_tag(asset, field, label=nil, required: true, type: 'text', min: nil, max: nil, suffix: '', inputclass: '')
     if type == 'boolean'
       return editable_asset_association_tag(asset, field, label,
@@ -163,14 +188,20 @@ module TransamTagHelper
     classes = ' '
     classes += 'required ' if required
     # classes += 'datepicker ' if type == 'date'
-    if type == 'date'
+    value = escape_javascript(asset.send(field).to_s)
+    case type
+    when 'date'
       type = 'combodate'
       classes += 'combodate'
+      value = format_as_date(Date.parse(value)) unless value.blank?
       # extras += ", format: 'MM/DD/YYYY', viewformat: 'MM/DD/YYYY'"
-    elsif type == 'currency'
+    when 'currency'
       type = 'number'
       classes += 'currency-number'
+    when 'textarea'
+      value = asset.send(field).to_s.gsub(/\r\n|\r|\n/, "<br />")
     end
+    
     # Escape for HAML
     label = label.gsub('%','\%') if label
     engine = Haml::Engine.new("
@@ -178,13 +209,18 @@ module TransamTagHelper
   %label.control-label{class: '#{classes}'}
     #{label || field.to_s.titleize}
   .display-value
-    %a.editable-field{href:'#', id: '#{field}', class: '#{classes}', data: {inputclass: '#{inputclass}', emptytext: ' - ', name: 'asset[#{field}]', value: '#{escape_javascript(asset.send(field).to_s)}', type: '#{type}', placeholder: '#{required ? 'Required' : ''}', url: '#{asset_path(asset)}'#{extras}}}
+    %a.editable-field{href:'#', id: '#{field}', class: '#{classes}', data: {inputclass: '#{inputclass}', emptytext: ' - ', name: 'asset[#{field}]', type: '#{type}', placeholder: '#{required ? 'Required' : ''}', url: '#{asset_path(asset)}'#{extras}}}
+      \\#{value}
     #{suffix}
 ")
     return engine.render.html_safe
   end
-    
-  def editable_asset_association_tag(asset, field, label=nil, collection=nil, current_method: nil, include_blank: false, current_value: nil, type: 'select', url: nil, suffix: '_id', inputclass: '')
+
+  #
+  # updating asset associations through xeditable
+  # IF YOU UPDATE THIS METHOD, update the generic association tag version as well
+  #
+  def editable_asset_association_tag(asset, field, label=nil, collection=nil, current_method: nil, include_blank: false, current_value: nil, type: 'select', url: nil, suffix: '_id', inputclass: '', include_other: false)
     # value = current_value || (collection || url ? asset.send(current_method || field).to_s : asset.send(current_method || "#{field.to_s}_id").to_s)
     field_name = current_method || "#{field.to_s.singularize}#{suffix}"
     value = current_value || asset.send(current_method || field_name).to_s
@@ -198,6 +234,10 @@ module TransamTagHelper
       # have to be doubly escaped.
       source = include_blank ? "{value: '', text: ''}," : ''
       source += collection.map{|pair| "{value: '#{pair[0]}', text: '#{pair[1].to_s.gsub("'"){"\\\\'"}}'}"}.join(',')
+      if include_other
+        source += "," unless source[-1] == ","
+        source += "{value: '#{TransamAsset::DEFAULT_OTHER_ID}', text: 'Other'}" if include_other
+      end
     end    
     engine = Haml::Engine.new("
 ##{field}_group.form-group

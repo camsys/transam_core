@@ -13,6 +13,8 @@
 #------------------------------------------------------------------------------
 class SystemConfig < ActiveRecord::Base
 
+  has_paper_trail on: [:update], only: [:fy_year]
+
   #------------------------------------------------------------------------------
   # Validations
   #------------------------------------------------------------------------------
@@ -42,6 +44,55 @@ class SystemConfig < ActiveRecord::Base
   def self.instance
     # there will be only one row, and its ID must be '1'
     find_by(id: 1)
+  end
+
+  def self.allowable_params
+    [:fy_year]
+  end
+
+  def self.formatted_version(version)
+    {
+      datetime: version.created_at,
+      event: "System Rollover", # currently only versioning FY rollovers
+      event_type: "Update: Rollover method changed to #{version.changeset['fy_year'][1].blank? ? 'automatic' : 'manual'}",
+      comments: version.changeset['fy_year'][1].blank? ? "" : "Fiscal Year set to #{fiscal_year(version.changeset['fy_year'][1])}.",
+      user: version.actor
+    }
+  end
+
+  # can't use FiscalYear mixin because database name matches mixin method name so copy custom one here
+  # Returns the calendar year formatted as a FY string
+  def self.fiscal_year(year)
+
+    # some controllers might have a special formatter instead of the default one to use the FY string
+    # eventually default might be a SystemConfig.instance attribute as well but for now hard-coded
+
+    if defined? params
+      klass = params[:controller].classify
+    elsif self.class.to_s.include? 'Controller'
+      klass = self.class.to_s[0..-('Controller'.length+1)]
+    else
+      klass = self.class.to_s
+    end
+
+    formatter = SystemConfig.instance.special_fiscal_year_formatters[klass]
+    formatter = SystemConfig.instance.default_fiscal_year_formatter if formatter.nil?
+
+    if formatter == 'start_year'
+      "#{year}"
+    elsif formatter == 'end_year'
+      "#{year+1}"
+    else
+      yr = year - (year < 2000 ? 1900 : 2000)
+      first = "%.2d" % yr
+      if yr == 99 # when yr == 99, yr + 1 would be 100, which causes: "FY 99-100"
+        next_yr = 00
+      else
+        next_yr = (yr + 1)
+      end
+      last = "%.2d" % next_yr
+      "FY #{first}-#{last}"
+    end
   end
 
 

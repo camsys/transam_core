@@ -77,9 +77,10 @@
 
   function tasks_formatter(value) {
     if (value > 0) {
-      return '<i class="fa fa-flag"></i>';
+      return '<i class="fa fa-flag"></i><div style = "visibility: hidden;">Yes</div>';
+    } else {
+      return '<div style = "visibility: hidden;">No</div>';
     }
-    return "";
   };
 
   function documents_formatter(value) {
@@ -245,5 +246,14 @@
       return 'By Policy'
   };
 
+  function asset_view_funding_type(value, data) {
+    return data.fta_funding_type_name + ' (' + data.fta_funding_type_code + ')'
+  };
 
+  function asset_view_ownership_type(value, data) {
+    return data.fta_ownership_type_name + ' (' + data.fta_ownership_type_code + ')'
+  };
 
+  function asset_view_service_type(value, data) {
+    return data.primary_fta_service_type_code + ' - ' + data.primary_fta_service_type_name
+  };

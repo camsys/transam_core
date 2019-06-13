@@ -1,0 +1,92 @@
+:css
+  h2 {
+    border-bottom: 1px solid #e5e5e5;
+  }
+.row
+  .col-md-10.col-md-offset-1
+
+    %h2 System Rollover
+    %fieldset
+      %legend= @system_config.fy_year.present? ? 'Manual' : 'Automatic'
+
+    .alert.alert-info
+      %p
+        %b Rollover Method
+      %p
+        %b Automatic:
+        The system will automatically rollover to the next fiscal year at 12:00:01 AM, on the first day of the first month of the fiscal year.
+      %p
+        %b Manual:
+        The system will NOT automatically rollover to the next fiscal year until the Admin user selects the
+        %i Rollover
+        button, or the following fiscal year begins, whichever happens first.
+      %p
+        %b What Happens:
+        %ul
+          %li Planning year 1 projects (current year +1), become current year projects.
+          %li Planning year 1 projects (ALIs) drop off project planner, new year added.
+          %li Status section resets for new year (prior year changes and archive actions must be completed prior to rollover).
+          %li All year-based field selections will add one additional year and remove the earliest year from selectable options.
+          %li Canned reports willdisplay one additional year of data and remove the earliest year available.
+
+    = simple_form_for(@system_config,
+      :html => {:class => 'form-vertical'},
+      :wrapper => :vertical_form,
+      :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes,
+        :radio_buttons => :vertical_radio_and_checkboxes,
+        :file => :vertical_file_input,
+        :boolean => :vertical_boolean}) do |f|
+
+
+      .row
+        .col-sm-2
+          .form-group
+            %label.control-label Fiscal Year
+            - month_int = @system_config.start_of_fiscal_year.split('-').first.to_i
+            .display-value= "#{Date::MONTHNAMES[month_int]} - #{month_int == 1 ? 'December' : Date::MONTHNAMES[month_int-1]}"
+        .col-sm-2
+          .form-group.required.radio-buttons-inline
+            %label.required.control-label
+              %abbr{title: 'required'} *
+              = " Rollover Method"
+            %span.radio
+              %label
+                = radio_button_tag :rollover_method, 'automatic', @system_config.fy_year.blank?
+                Automatic
+            %span.radio
+              %label
+                = radio_button_tag :rollover_method, 'manual', @system_config.fy_year.present?
+                Manual
+
+          = f.input :fy_year, as: :hidden, input_html: {value: @system_config.fy_year.present? ? @system_config.fy_year + 1 : @system_config.fy_year} #ou set to next year if manual in case you rollover. cant save so FY won't update
+        .col-sm-2
+          = f.button :submit, 'Save', :class => 'btn btn-primary', :id => 'submit_btn', :disabled => true
+          = f.button :submit, 'Rollover', :class => 'btn btn-primary', :id => 'rollover_btn', :disabled => @system_config.fy_year.blank?, data: { confirm: 'The system will rollover at this point, are you sure you wish to proceed? This process cannot be reversed.' }
+
+    %fieldset{style: 'margin-top: 20px;'}
+      %legend History
+      = render partial: 'shared/papertrail_history', locals: {history: @system_config.versions.reorder(created_at: :desc, id: :asc).map{|x| SystemConfig.formatted_version(x)}}
+
+:javascript
+
+  var initially_manual = '#{@system_config.fy_year.to_i > 0}';
+
+  $("input[name='rollover_method']").on("click", function() {
+    if ($(this).val() == 'manual') {
+      if (initially_manual == 'true') {
+        $('#submit_btn').attr("disabled", "disabled");
+      } else {
+        $('#system_config_fy_year').val('#{fiscal_year_year_on_date(Date.today)}');
+        $('#submit_btn').removeAttr("disabled");
+      }
+      $('#rollover_btn').removeAttr("disabled");
+    } else {
+      if (initially_manual == 'true') {
+        $('#system_config_fy_year').val('');
+        $('#submit_btn').removeAttr("disabled");
+      } else {
+        $('#submit_btn').attr("disabled", "disabled");
+      }
+      $('#rollover_btn').attr("disabled", "disabled");
+    }
+  });

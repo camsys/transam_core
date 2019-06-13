@@ -1,0 +1,43 @@
+:ruby
+  table_dom_id = SecureRandom.hex
+
+.table-responsive
+  %table.table.table-hover{:id => table_dom_id,
+          :data => {:toggle => 'table',
+          :card_view => "false",
+          :pagination => 'true',
+          :sort_order => 'asc',
+          :sortable => 'true',
+          :show_pagination_switch => 'false',
+          :page_number => '1',
+          :page_list => "[5, 10, 20, 50, 100, 200, 10000]",
+          :page_size => current_user.num_table_rows,
+          :search => 'false',
+          :show_columns => 'true',
+          :toolbar => "#table_actions",
+          :row_style => 'row_style',
+          :click_to_select => 'true',
+          :show_export => 'true',
+          :id_field => 'id',
+          :export_types => "['csv', 'txt', 'excel']",
+          :cookie => 'true',
+          :cookie_id_table => "papertrail_history_id",
+          :cookie_expire => "1y",
+          :maintain_selected => 'true',
+          :single_select => 'false'}}
+    %thead
+      %tr
+        %th.center{:data => {:sortable => 'true'}} Event
+        %th.center{:data => {:sortable => 'true'}} Event Type
+        %th.center{:data => {:sortable => 'true'}} Comments
+        %th.center{:data => {:sortable => 'true'}} Event By
+        %th.center{:data => {:sortable => 'true'}} Date & Time
+
+    %tbody
+      - history.each do |evt|
+        %tr
+          %td.left= evt[:event]
+          %td.left= evt[:event_type]
+          %td.left= evt[:comments]
+          %td.left= evt[:user]
+          %td.left= format_as_date_time(evt[:datetime])

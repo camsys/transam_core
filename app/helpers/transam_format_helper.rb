@@ -98,8 +98,8 @@ module TransamFormatHelper
   end
 
   # formats a year value as a fiscal year string 'FY XX-YY'
-  def format_as_fiscal_year(val)
-    fiscal_year(val) unless val.nil?
+  def format_as_fiscal_year(val, klass = nil)
+    fiscal_year(val, klass) unless val.nil?
   end
 
   # formats a URL as a link
@@ -108,7 +108,7 @@ module TransamFormatHelper
   end
 
   # if no precision is set this truncates any decimals and returns the number as currency
-  def format_as_currency(val, precision = 0)
+  def format_as_currency(val, precision = 0, negative_format: "%u%n")
     val ||= 0
     if precision == 0
       if val < 0
@@ -116,9 +116,9 @@ module TransamFormatHelper
       else
         val = val + 0.5
       end
-      number_to_currency(val.to_i, :precision => 0)
+      number_to_currency(val.to_i, :precision => 0, negative_format: negative_format)
     else
-      number_to_currency(val, :precision => precision)
+      number_to_currency(val, :precision => precision, negative_format: negative_format)
     end
   end
 
@@ -304,15 +304,20 @@ module TransamFormatHelper
   end
   
   # formats a label/value combination, providing optional popover support
-  def format_field(label, value, popover_text=nil, popover_iconcls=nil, popover_label=nil)
+  def format_field(label, value, popover_text=nil, popover_iconcls=nil, popover_label=nil, popover_location='value')
 
     html = "<div class='row control-group'>"
     html << "<div class='col-xs-5 display-label'>"
     html << label
+    if popover_location=='label' && popover_text.present?
+      popover_iconcls = 'fa fa-info-circle info-icon' unless popover_iconcls
+      popover_label = label unless popover_label
+      html << "<i class='#{popover_iconcls} info-icon' data-toggle='popover' data-trigger='hover' title='#{popover_label}' data-placement='right' data-content='#{popover_text}'></i>"
+    end
     html << "</div>"
     html << "<div class='col-xs-7 display-value'>"
     html << value.to_s unless value.nil?
-    unless popover_text.nil?
+    if popover_location=='value' && popover_text.present?
       popover_iconcls = 'fa fa-info-circle info-icon' unless popover_iconcls
       popover_label = label unless popover_label
       html << "<i class='#{popover_iconcls} info-icon' data-toggle='popover' data-trigger='hover' title='#{popover_label}' data-placement='right' data-content='#{popover_text}'></i>"

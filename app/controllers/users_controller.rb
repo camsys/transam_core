@@ -82,14 +82,17 @@ class UsersController < OrganizationAwareController
     end
 
     if params[:show_active_only].nil?
-      @show_active_only = '1'
+      @show_active_only = 'active'
     else
       @show_active_only = params[:show_active_only]
     end
 
-    if @show_active_only == '1'
+    if @show_active_only == 'active'
       conditions << 'users.active = ?'
       values << true
+    elsif @show_active_only == 'inactive'
+      conditions << 'users.active = ?'
+      values << false
     end
 
     # Get the Users but check to see if a role was selected
@@ -132,8 +135,10 @@ class UsersController < OrganizationAwareController
           :rows => @users.limit(params[:limit]).offset(params[:offset]).collect{ |u|
             u.as_json.merge!({
                  organization_short_name: u.organization.short_name,
-                 role_name: u.roles.roles.last.label,
-                 privilege_names: u.roles.privileges.collect{|x| x.label}.join(', ')
+                 organization_name: u.organization.name,
+                 role_name: !@role.blank? && !Role.find_by(name: @role).privilege ? u.roles.roles.find_by(name: @role).label : u.roles.roles.last.label,
+                 privilege_names: u.roles.privileges.collect{|x| x.label}.join(', '),
+                 all_orgs: u.organizations.map{ |o| o.to_s }.join(', ')
             })
           }
         }
@@ -306,12 +311,9 @@ class UsersController < OrganizationAwareController
           @user.organizations = Organization.where(id: org_list)
         end
 
-        # update filters
-        # set all filters to personal not shared one
-        # then run method that checks your main org and org list to get all shared filters
-        unless FILTERS_IGNORED
-          @user.update_user_organization_filters
-        end
+        new_user_service = get_new_user_service
+        # Perform an post-creation tasks such as sending emails, etc.
+        new_user_service.post_process @user, true
 
         #-----------------------------------------------------------------------
         # Assign the role and privileges but only on a profile form, not a
@@ -399,6 +401,16 @@ class UsersController < OrganizationAwareController
   # Protected Methods
   #------------------------------------------------------------------------------
   protected
+
+  def set_viewable_organizations
+    if current_user.has_role? :admin
+      @viewable_organizations = Organization.ids
+    else
+      @viewable_organizations = current_user.viewable_organization_ids
+    end
+
+    get_organization_selections
+  end
 
 
   #------------------------------------------------------------------------------

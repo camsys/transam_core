@@ -15,9 +15,9 @@ class BacklogReport < AbstractReport
         
     # get the list of assets for this agency
     if report_filter_type > 0
-      assets = Asset.where('organization_id IN (?) AND assets.asset_type_id = ? AND assets.in_backlog = ?', organization_id_list, report_filter_type, true).order('asset_type_id, asset_subtype_id')
+      assets = Rails.application.config.asset_base_class_name.constantize.joins(asset_subtype: :asset_type).where(organization_id: organization_id_list, asset_types: {id: report_filter_type}, in_backlog: true).order('asset_types.id, asset_subtype_id')
     else
-      assets = Asset.where("organization_id IN (?) AND assets.in_backlog = ?", organization_id_list, true).order('asset_type_id, asset_subtype_id')
+      assets = Rails.application.config.asset_base_class_name.constantize.where(organization_id: organization_id_list, in_backlog: true).order('asset_types.id, asset_subtype_id')
     end
 
     a = {}

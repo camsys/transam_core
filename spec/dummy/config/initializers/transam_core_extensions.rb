@@ -6,9 +6,6 @@ Rails.application.config.active_job.queue_adapter = :delayed_job
 # fiscal years
 # some controllers might have a special formatter instead of the default one to use the FY string
 Rails.application.config.special_fiscal_year_formatters = {"TamPolicy" => 'end_year'}
-# This is where an application can delay the fiscal year rollover
-# up to the end of the calendar year
-Rails.application.config.delay_fiscal_year_rollover = false
 
 Rails.application.config.dashboard_widgets = [
     ['assets_widget', 1],

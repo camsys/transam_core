@@ -22,13 +22,13 @@ class NewUserService
   end
 
   # Steps to take if the user was valid
-  def post_process(user)
+  def post_process(user, assume_user_exists=false)
 
-    user.update_user_organization_filters
+    user.update_user_organization_filters unless Rails.application.config.try(:user_organization_filters_ignored).present?
 
     user.viewable_organizations = user.user_organization_filter.try(:get_organizations) || []
     user.save!
 
-    UserMailer.send_email_on_user_creation(user).deliver
+    UserMailer.send_email_on_user_creation(user).deliver unless assume_user_exists
   end
 end
