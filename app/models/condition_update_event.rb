@@ -8,10 +8,8 @@ class ConditionUpdateEvent < AssetEvent
   after_initialize :set_defaults
 
   # check policy
-  after_save do
-    base_transam_asset.send(:check_policy_rule)
-    base_transam_asset.send(:update_asset_state)
-  end
+  after_save :check_policy
+  after_destroy :check_policy
 
   # Associations
   has_many :condition_type_percents, :foreign_key => "asset_event_id", :inverse_of  => :condition_update_event, :dependent => :destroy
@@ -98,4 +96,11 @@ class ConditionUpdateEvent < AssetEvent
     self.asset_event_type ||= AssetEventType.find_by_class_name(self.name)
   end
 
+
+  def check_policy
+    if base_transam_asset
+      base_transam_asset.send(:check_policy_rule)
+      base_transam_asset.send(:update_asset_state)
+    end
+  end
 end
