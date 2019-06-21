@@ -63,6 +63,7 @@ class ImagesController < NestedResourceController
   # GET /images/1/edit
   def edit
     @imagable = @image.imagable
+    @form_view = params[:form_view]
   end
 
   def download
@@ -82,6 +83,7 @@ class ImagesController < NestedResourceController
   # POST /images
   # POST /images.json
   def create
+    @form_view = params[:form_view]
 
     @image = Image.new(form_params)
     if @image.imagable.nil?
@@ -108,13 +110,14 @@ class ImagesController < NestedResourceController
   # PATCH/PUT /images/1
   # PATCH/PUT /images/1.json
   def update
+    @form_view = params[:form_view]
 
     @imagable = @image.imagable
 
     respond_to do |format|
       if @image.update(form_params)
         notify_user(:notice, 'Image was successfully updated.')
-        format.html { redirect_to get_resource_url(@imagable) }
+        format.html { redirect_back(fallback_location: root_path) }
         format.json { head :no_content }
       else
         format.html { render action: 'edit' }
