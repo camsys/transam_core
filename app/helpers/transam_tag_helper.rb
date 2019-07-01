@@ -84,7 +84,7 @@ module TransamTagHelper
   # generic method for updating fields of any model through xeditable
   # IF YOU UPDATE THIS METHOD, update the asset field tag version as well
   #
-  def editable_field_tag(model_obj, field, label=nil, model_name: nil, required: true, type: 'text', min: nil, max: nil, suffix: '', inputclass: '')
+  def editable_field_tag(model_obj, field, label=nil, model_name: nil, required: true, type: 'text', min: nil, max: nil, suffix: '', inputclass: '', url: '')
     asset = model_obj.is_a?(Array) ? model_obj.last : model_obj
 
     if type == 'boolean'
@@ -115,7 +115,9 @@ module TransamTagHelper
     # Escape for HAML
     label = label.gsub('%','\%') if label
 
-    if model_name.nil? || model_obj.class.to_s == model_name
+    if url
+      asset_path = url
+    elsif model_name.nil? || model_obj.class.to_s == model_name
       asset_path = polymorphic_path(model_obj)
     else
       asset_path = polymorphic_path(model_obj.send(model_name.underscore))
