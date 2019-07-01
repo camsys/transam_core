@@ -23,10 +23,10 @@
       %thead
         %tr
           %th{:data => {:sortable => 'true'}} Event
-          %th Update
-          %th{:data => {:sortable => 'true', :formatter => 'date_time_formatter'}} Date & Time
+          %th Event Activity
+          %th Comments
+          %th{:data => {:sortable => 'true', :formatter => 'date_time_formatter'}} Event Date & Time
           %th{:data => {:sortable => 'true'}} Event By
-          %th Notes
       %tbody
         -# EarlyDispositionRequestUpdateEvent is a special case as it is state-ful and each state represent one history
         - @asset.history.each do |evt|
@@ -36,37 +36,37 @@
               %td
                 = evt.asset_event_type.description
               %td
-                = evt.get_update
+                = "#{evt.get_update} on #{format_as_date(evt.event_date)}"
+              %td
+                = (evt.comments.blank? ? " " : evt.comments).html_safe
               %td
                 = evt.created_at
               %td
                 = evt.creator
-              %td
-                = (evt.comments.blank? ? " " : evt.comments).html_safe
             - unless evt.is_new?
               %tr{:data => {:action_path => "#{inventory_asset_event_path(evt.transam_asset.object_key, evt.object_key)}"}}
                 %td
                   = evt.asset_event_type.description
                 %td
-                  = evt.get_latest_update
-                %td
-                  = evt.updated_at
-                %td
-                = evt.creator
+                  = "#{evt.get_latest_update} on #{format_as_date(evt.event_date)}"
                 %td
                   = (evt.comments.blank? ? " " : evt.comments).html_safe
+                %td
+                  = "#{evt.updated_at} on #{format_as_date(evt.event_date)}"
+                %td
+                = evt.creator
           - else
             %tr{:data => {:action_path => "#{inventory_asset_event_path(evt.transam_asset.object_key, evt.object_key)}"}}
               %td
                 = evt.asset_event_type.description
               %td
-                = evt.get_update
+                = "#{evt.get_update} on #{format_as_date(evt.event_date)}"
+              %td
+                = (evt.comments.blank? ? " " : evt.comments).html_safe
               %td
                 = evt.updated_at
               %td
                 = evt.creator
-              %td
-                = (evt.comments.blank? ? " " : evt.comments).html_safe
 
 :javascript
   $(window).resize(function() {

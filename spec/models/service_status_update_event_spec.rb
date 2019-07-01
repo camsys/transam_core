@@ -23,7 +23,7 @@ RSpec.describe ServiceStatusUpdateEvent, :type => :model do
   end
 
   it '.get_update' do
-    expect(test_event.get_update).to eq("Service status changed to #{test_event.service_status_type.to_s}.")
+    expect(test_event.get_update).to eq("Service status changed to #{test_event.service_status_type.to_s}")
   end
 
   it '.set_defaults' do
