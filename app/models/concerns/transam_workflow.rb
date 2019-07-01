@@ -179,10 +179,10 @@ module TransamWorkflow
             event(attrs[:event_name], event_attrs) { branches << transition(transition_attrs) }
 
             before_transition do |this_machine, this_transition|
-              this_machine.machine_before_transition(this_transition)
+              this_machine.machine_before_transition(attrs[:event_name]) if attrs[:before]
             end
             after_transition do |this_machine, this_transition|
-              this_machine.machine_after_transition(this_transition)
+              this_machine.machine_after_transition(attrs[:event_name]) if attrs[:after]
             end
           end
         end

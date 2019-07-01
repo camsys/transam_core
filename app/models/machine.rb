@@ -15,11 +15,11 @@ class Machine
       define_method(action) { object.send(action) } if action
 
       define_method(:machine_before_transition) do |callback|
-        transam_transition = object.class.transam_workflow_transitions.find{|t| t[:event_name].to_s == callback.event.to_s}
+        transam_transition = object.class.transam_workflow_transitions.find{|t| t[:event_name] == callback}
         object.send(transam_transition[:before]) if transam_transition[:before]
       end
       define_method(:machine_after_transition) do |callback|
-        transam_transition = object.class.transam_workflow_transitions.find{|t| t[:event_name].to_s == callback.event.to_s}
+        transam_transition = object.class.transam_workflow_transitions.find{|t| t[:event_name] == callback}
         object.send(transam_transition[:after]) if transam_transition[:after]
       end
     end
