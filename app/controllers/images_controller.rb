@@ -9,12 +9,13 @@ class ImagesController < NestedResourceController
   def index
     if params[:global_base_imagable]
       @imagable = GlobalID::Locator.locate params[:global_base_imagable]
+      @images = Image.where(base_imagable: @imagable)
     else
       @imagable = find_resource
+      @images = @imagable.images
     end
 
     if @imagable
-      @images = @imagable.images
 
       if params[:sort].present? && params[:order].present?
         if params[:sort] == 'creator'
