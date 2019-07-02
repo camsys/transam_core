@@ -7,6 +7,10 @@ class ConditionUpdateEvent < AssetEvent
   # Callbacks
   after_initialize :set_defaults
 
+  # check policy
+  after_save :check_policy
+  after_destroy :check_policy
+
   # Associations
   has_many :condition_type_percents, :foreign_key => "asset_event_id", :inverse_of  => :condition_update_event, :dependent => :destroy
   accepts_nested_attributes_for :condition_type_percents, :allow_destroy => true, :reject_if   => lambda{ |attrs| attrs[:condition_type].blank? }
@@ -92,4 +96,11 @@ class ConditionUpdateEvent < AssetEvent
     self.asset_event_type ||= AssetEventType.find_by_class_name(self.name)
   end
 
+
+  def check_policy
+    if base_transam_asset
+      base_transam_asset.send(:check_policy_rule)
+      base_transam_asset.send(:update_asset_state)
+    end
+  end
 end
