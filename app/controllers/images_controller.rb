@@ -2,7 +2,7 @@ class ImagesController < NestedResourceController
   before_action :set_image, :only => [:edit, :update, :destroy, :download]
 
   # Lock down the controller
-  authorize_resource only: [:new, :create, :edit, :update, :destroy]
+  authorize_resource only: [:index, :new, :create, :edit, :update, :destroy]
 
   # GET /images
   # GET /images.json
@@ -11,7 +11,7 @@ class ImagesController < NestedResourceController
       @imagable = GlobalID::Locator.locate(GlobalID.parse(params[:global_base_imagable]))
       @images = Image.where(base_imagable: @imagable)
     elsif params[:global_any_imagable] # parameter to return images of self as parent and children
-      @imagable = GlobalID::Locator.locate(GlobalID.parse(params[:global_base_imagable]))
+      @imagable = GlobalID::Locator.locate(GlobalID.parse(params[:global_any_imagable]))
       @images = Image.where(base_imagable: @imagable).or(Image.where(imagable: @imagable))
     else
       @imagable = find_resource
@@ -28,6 +28,7 @@ class ImagesController < NestedResourceController
         end
       end
     else
+      Rails.logger.debug "No images"
       @images = Image.none
     end
 
