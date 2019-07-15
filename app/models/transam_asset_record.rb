@@ -102,7 +102,7 @@ class TransamAssetRecord < ActiveRecord::Base
             typed_asset_params + [:dependents_attributes =>dependent_params.flatten]
           end
 
-    SystemConfigExtension.where(class_name: 'TransamAsset').pluck(:extension_name).each do |ext_name|
+    SystemConfigExtension.where(active: true, class_name: 'TransamAsset').pluck(:extension_name).each do |ext_name|
       if ext_name.constantize::ClassMethods.try(:allowable_params)
         arr << ext_name.constantize::ClassMethods.allowable_params
       end
