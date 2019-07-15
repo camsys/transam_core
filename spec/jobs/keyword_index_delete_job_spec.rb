@@ -12,9 +12,11 @@ RSpec.describe KeywordIndexDeleteJob, :type => :job do
     end
     it 'wrong class', :skip do
       expect{KeywordIndexDeleteJob.new('nonexistent', test_asset.object_key).run}.to raise_error(RuntimeError, "Can't instantiate class nonexistent")
+
     end
     it 'wrong object key' do
-      expect{KeywordIndexDeleteJob.new('Equipment', 'abcdefgh').run}.to raise_error(RuntimeError, "Can't find Equipment with object_key abcdefgh")
+      expect(Rails.logger).to receive(:info).with("Can't find Equipment with object_key abcdefgh")
+      KeywordIndexDeleteJob.new('Equipment', 'abcdefgh').run
     end
   end
 

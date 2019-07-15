@@ -47,8 +47,8 @@ class ServiceLifeCalculator < Calculator
 
     last_year_by_age = by_age(asset)
 
-    if last_year_by_age <= current_planning_year_year
-      current_planning_year_year + 1
+    if last_year_by_age <= fiscal_year_year_on_date(Date.today) + 1
+      fiscal_year_year_on_date(Date.today) + 2
     else
       last_year_by_age
     end
