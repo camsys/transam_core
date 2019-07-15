@@ -1,0 +1,20 @@
+:css
+  .subheader-label h2{
+    border-bottom: 1px solid #e5e5e5;
+  }
+
+.col-sm-12
+  .subheader-label
+    %h2 Messages
+    %legend
+      %span All Message History
+  
+.col-sm-6.col-md-4
+  %ul.nav.nav-pills.nav-justified{style: 'margin-bottom: 20px;'}
+    %li{role: 'presentation'}
+      = link_to "Message Templates", message_templates_url
+    %li{role: 'presentation', class: "active"}
+      = link_to "Message History", message_history_message_templates_url
+
+.col-sm-12
+  = render 'message_history_table'

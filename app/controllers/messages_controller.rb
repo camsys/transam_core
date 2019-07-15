@@ -2,7 +2,7 @@ class MessagesController < OrganizationAwareController
 
   add_breadcrumb "Home", :root_path
 
-  before_action :set_message, :only => [:show, :edit, :update, :destroy, :tag, :reply, :destroy]
+  before_action :set_message, :only => [:show, :destroy, :tag, :reply]
   before_action :check_for_cancel, :only => [:create]
 
   # Lock down the controller

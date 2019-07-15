@@ -1,0 +1,17 @@
+:css
+  .subheader-label h2{
+    border-bottom: 1px solid #e5e5e5;
+  }
+
+.col-sm-12
+  .subheader-label
+    %h2 Client Admin Interface
+    %legend
+      %span System Management
+  %h4 Administration
+  %p
+    = link_to fiscal_year_rollover_system_config_path(SystemConfig.instance) do
+      System Rollover
+  %p
+    = link_to message_templates_url do
+      Messages
