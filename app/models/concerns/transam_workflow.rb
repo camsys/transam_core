@@ -46,9 +46,12 @@ module TransamWorkflow
       a
     end
 
-    def event_transitions
+    def event_transitions(event=nil)
       a = []
-      (transam_workflow_transitions.empty? ? state_machine : self.new.machine.definition).events.each do |evt|
+
+      evts = (transam_workflow_transitions.empty? ? state_machine : self.new.machine.definition).events
+      evts = evts.select{|x| x.name.to_s == event.to_s} unless event.nil?
+      evts.each do |evt|
         evt.branches.each do |branch|
           branch.state_requirements.each do |state_req|
             state_req[:from].values.each do |from|
