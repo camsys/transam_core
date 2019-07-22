@@ -73,6 +73,7 @@ class Message < ActiveRecord::Base
 
   # Set resonable defaults for a new message
   def set_defaults
+    self.email_status ||= EMAIL_STATUS_DEFAULT
     self.active = self.active.nil? ? true : self.active
   end
 
