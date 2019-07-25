@@ -31,8 +31,9 @@
     %tr
       %th.left{:data => {:visible => 'false', :sortable => 'true'}} Id
       %th.left{:data => {:visible => 'false', :sortable => 'true'}} External Id
-      %th.left{:data => {:sortable => 'true'}} Acronym
-      %th.left{:data => {:sortable => 'true'}} Name
+      %th.left{:data => {:sortable => 'true'}} Acronym or Short Name
+      %th.left{:data => {:sortable => 'true'}} Common Name (dba)
+      %th.left{:data => {:sortable => 'true'}} Legal Name
       %th.left{:data => {:sortable => 'true'}} Organization Type
       %th.left{:data => {:visible => 'false', :sortable => 'true'}} Country
       %th.left{:data => {:sortable => 'true'}} Address 1
@@ -52,6 +53,7 @@
         %td= o.external_id
         %td= link_to o.short_name, organization_path(o), {:style => 'text-decoration: underline'}
         %td= o.name
+        %td= o.legal_name
         %td= o.organization_type
         %td= o.country
         %td= o.address1

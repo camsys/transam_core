@@ -4,8 +4,9 @@
       %fieldset
         %legend.panel-legend Details
         = format_field("Type", org.organization_type.name )
-        = format_field("Name", org.name )
-        = format_field("Short Name", org.short_name )
+        = format_field("Common Name (dba)", org.name )
+        = format_field("Legal Name", org.legal_name )
+        = format_field("Acronym or Short Name", org.short_name )
         = format_field("External ID", org.external_id ) unless org.phone_ext.blank?
     .col-xs-6
       %fieldset
