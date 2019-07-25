@@ -29,6 +29,7 @@
         %th.center{:data => {:sortable => 'true'}} Subject
         %th.center{:data => {:sortable => 'true'}} Description
         %th.center{:data => {:sortable => 'true'}} Active
+        %th.center{:data => {:sortable => 'true'}} Message
         %th.center{:data => {:sortable => 'true'}} Email (External)
         %th
 
@@ -44,6 +45,7 @@
           %td.left= t.subject
           %td.left.nowrap= format_as_text(t.description)
           %td.center.nowrap= format_as_boolean(t.active)
+          %td.center.nowrap= format_as_boolean(t.message_enabled)
           %td.center.nowrap= format_as_boolean(t.email_enabled)
           %td.center
             - if can? :destroy, t

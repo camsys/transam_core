@@ -6,22 +6,22 @@
 # administrators
 #
 #------------------------------------------------------------------------------
-class LockedAccountInformerJob < Job
+class MessageTemplateInformerJob < Job
     
   attr_accessor :object_key
       
   def run
 
-    locked_user = User.find_by_object_key(object_key)
-    if locked_user
+    templated_changed = MessageTemplate.find_by_object_key(object_key)
+    if templated_changed
       # Get the system user
       sys_user = get_system_user
       
       # Get the admin users
-      admins = User.with_role :admin
+      admins = User.with_role :client_admin
 
-      message_template = MessageTemplate.find_by(name: 'User3')
-      message_body = MessageTemplateMessageGenerator.new.generate(message_template, [locked_user.name, locked_user.locked_at])
+      message_template = MessageTemplate.find_by(name: 'Support2')
+      message_body = MessageTemplateMessageGenerator.new.generate(message_template, [templated_changed.name, templated_changed.subject])
 
       # Send a message to the admins for this user organization
       admins.each do |admin|
@@ -36,13 +36,13 @@ class LockedAccountInformerJob < Job
       end
 
     else
-      raise RuntimeError, "Can't find User with object_key #{object_key}"
+      raise RuntimeError, "Can't find Message Template with object_key #{object_key}"
     end
 
   end
 
   def prepare
-    Rails.logger.info "Executing LockedAccountInformerJob at #{Time.now.to_s} for User #{object_key}"    
+    Rails.logger.info "Executing MessageTemplateInformerJob at #{Time.now.to_s} for Template #{object_key}"
   end
   
   def check    

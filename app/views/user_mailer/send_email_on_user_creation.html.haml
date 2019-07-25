@@ -1,5 +1,1 @@
-%h1 New User Confirmation
-%p
-  A new user account has been created for you in TransAM
-%p= "Your username: #{@user.email}"
-%p= "Please go to #{new_user_password_url} and follow the instructions to reset your password."
+= MessageTemplateMessageGenerator.new.generate(MessageTemplate.find_by(name: 'User1'),[@user.email, new_user_password_url]).html_safe

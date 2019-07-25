@@ -7,6 +7,8 @@ class MessageTemplate < ActiveRecord::Base
   # Callbacks
   #------------------------------------------------------------------------------
   after_initialize  :set_defaults
+  after_create      :notify_template_changes
+  after_save        :template_changed
 
   # Associations
   belongs_to :priority_type
@@ -17,6 +19,8 @@ class MessageTemplate < ActiveRecord::Base
   validates :subject,           :presence => true
   validates :delivery_rules,              :presence => true
   validates :body,              :presence => true
+
+  validate :validate_message_or_email_enabled
 
   scope :active, -> { where(active: true) }
 
@@ -36,11 +40,33 @@ class MessageTemplate < ActiveRecord::Base
     FORM_PARAMS
   end
 
+  protected
+
   # Set resonable defaults
   def set_defaults
-    self.active = true if self.active.nil?
+    self.active = false if self.active.nil?
     self.priority_type_id = PriorityType.default&.id if self.priority_type_id.nil?
-    self.email_enabled = false if self.email_enabled.nil?
+    self.message_enabled = true if self.message_enabled.nil?
+    self.email_enabled = true if self.email_enabled.nil?
+    self.is_system_template = false if self.is_system_template.nil?
+    self.is_implemented = false if self.is_implemented.nil?
+  end
+
+  def validate_message_or_email_enabled
+    message_enabled || email_enabled
+  end
+
+  def notify_template_changes
+
+
+    Delayed::Job.enqueue MessageTemplateInformerJob.new(object_key)
+  end
+
+  def template_changed
+    if delivery_rules_changed? || body_changed?
+      update!(is_implemented: false)
+      notify_template_changes
+    end
   end
 
 end
