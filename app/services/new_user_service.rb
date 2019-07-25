@@ -26,7 +26,7 @@ class NewUserService
 
     user.update_user_organization_filters unless Rails.application.config.try(:user_organization_filters_ignored).present?
 
-    user.viewable_organizations = user.user_organization_filter.try(:get_organizations) || []
+    user.viewable_organizations = user.user_organization_filter.try(:get_organizations) || user.organizations
     user.save!
 
     UserMailer.send_email_on_user_creation(user).deliver unless assume_user_exists
