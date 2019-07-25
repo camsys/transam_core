@@ -15,11 +15,11 @@ class MessageTemplateMessageGenerator
 
     (0..([msg.length, custom_fields.length].max)-1).each do |idx|
       if msg[0].first == '{'
-        generated_msg << custom_fields[idx] unless custom_fields[idx].blank?
-        generated_msg << msg[idx] unless msg[idx].blank?
+        generated_msg << custom_fields[idx].to_s unless custom_fields[idx].blank?
+        generated_msg << msg[idx].to_s unless msg[idx].blank?
       else
-        generated_msg << msg[idx] unless msg[idx].blank?
-        generated_msg << custom_fields[idx] unless custom_fields[idx].blank?
+        generated_msg << msg[idx].to_s unless msg[idx].blank?
+        generated_msg << custom_fields[idx].to_s unless custom_fields[idx].blank?
       end
     end
 
