@@ -154,7 +154,8 @@ roles = [
   {:privilege => false, :name => 'manager', :weight => 7, :show_in_user_mgmt => true},
   {:privilege => true, :name => 'admin', :show_in_user_mgmt => true},
   {:privilege => true, :name => 'super_manager', :weight => 10, role_parent: 'manager', :show_in_user_mgmt => true},
-  {:privilege => true, :name => 'technical_contact', :show_in_user_mgmt => true}
+  {:privilege => true, :name => 'technical_contact', :show_in_user_mgmt => true},
+  {name: 'client_admin', role_parent: Role.find_by(name: 'admin'), weight: 1, privilege: true, show_in_user_mgmt: false}
 
 ]
 
@@ -165,6 +166,15 @@ manufacturers = [
 notice_types = [
   {:active => 1,  :name => 'System Notice',   :description => 'System notices.', :display_icon => 'fa-warning', :display_class => 'text-danger'},
   {:active => 1,  :name => 'Informational Notice',  :description => 'Informational notices.', :display_icon => 'fa-exclamation', :display_class => 'text-info'}
+]
+
+message_templates = [
+    {name: 'Task1', delivery_rules: 'Sent when tasks are due less than or a week from now', subject: 'Incomplete Task Reminder', body: "<p>Task <strong>{subject}</strong> is incomplete and is due to be completed by <strong>{complete_by_date}</strong>.</p><p>You can view this task by clicking {link(here)}</p>", active: true, is_implemented: true},
+    {name: 'Support1', delivery_rules: 'Sent x days/weeks/months (Activity defines) if new issues to admins', subject: "New Issues Report", body: "There are {new_issues.count} new issue(s) in the last {frequency}. You can view all issues {link(here)}.", active: true, is_implemented: true},
+    {name: 'Support2', delivery_rules: 'Sent when a template is added or changed', subject: "Message Template Changes", body: "The following message template {name} with the subject {subject} has changed. Please review for implementation changes.", active: true, is_implemented: true},
+    {name: 'User1', delivery_rules: 'Sent to new user',  subject: "A TransAM account has been created for you", body: "<h1>New User Confirmation</h1><p>A new user account has been created for you in TransAM</p><p>Your username: {email}</p><p>Please go to {new_user_password_url} and follow the instructions to reset your password.</p>", message_enabled: false, is_system_template: true, active: true, is_implemented: true},
+    {name: 'User2', delivery_rules: 'Sent on password reset',  subject:  "Reset password instructions", body: "<p>Hello {name}!</p><p>We have received a request to change your password. You can do this through the link below.</p><p>{link(Change my password)}</p><p>If you didn't request this, please ignore this email.</p><p>Your password won't change until you access the link above and create a new one.</p>", message_enabled: false, is_system_template: true, active: true, is_implemented: true},
+    {name: 'User3', delivery_rules: 'Sent to locked user account',  subject:  'User account locked', body: "{locked_user.name} account was locked at {locked_user.locked_at}", active: true, is_implemented: true}
 ]
 
 frequency_types = [
@@ -206,7 +216,7 @@ system_config_extensions << {engine_name: 'core', class_name: 'AssetMapSearcher'
 lookup_tables = %w{asset_event_types condition_types disposition_types rule_sets cost_calculation_types license_types manufacturer_models priority_types
   file_content_types file_status_types report_types service_status_types
   service_life_calculation_types condition_estimation_types condition_rollup_calculation_types
-  issue_status_types issue_types web_browser_types replacement_reason_types notice_types frequency_types search_types activities manufacturers system_config_extensions
+  issue_status_types issue_types web_browser_types replacement_reason_types message_templates notice_types frequency_types search_types activities manufacturers system_config_extensions
   }
 
 lookup_tables.each do |table_name|
