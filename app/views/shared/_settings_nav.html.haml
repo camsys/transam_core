@@ -64,14 +64,13 @@
               - Rails.logger.debug "Checking for #{view_component}: Results = #{lookup_context.template_exists?(view_component, 'shared', true)}"
               - if lookup_context.template_exists?(view_component, 'shared', true)
                 = render :partial => "shared/#{view_component}"
+            %li.divider
             - if current_user.has_role? :client_admin
-              %li.divider
               %li.text-left
                 = link_to client_admin_path do
                   %i.fa.fa-cog.fa-fw
                   Client Admin Interface
 
-            %li.divider
             %li.text-left
               = link_to rails_admin_path do
                 %i.fa.fa-cogs.fa-fw
