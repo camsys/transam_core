@@ -76,6 +76,10 @@ class MessageTemplatesController < OrganizationAwareController
 
     unless params[:search].blank?
       search_string = ['message_templates.name', 'message_templates.description', "users.first_name", "users.last_name", 'messages.subject', 'email_status'].map{|r| "#{r} LIKE '%#{params[:search]}%'"}.join(' OR ')
+
+      # parse dates for searching
+      search_string << " OR (DATE(messages.created_at) BETWEEN '#{Chronic.parse(params[:search], guess: :begin)}' AND '#{Chronic.parse(params[:search], guess: :end)}')"
+
       @messages = @messages.where(Arel.sql(search_string))
     end
 

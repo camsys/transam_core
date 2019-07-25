@@ -6,7 +6,7 @@
 .table-responsive
   #table_actions.btn-group
     - if can? :create, MessageTemplate
-      = link_to new_message_template_path, :class => 'btn btn-default' do
+      = link_to new_message_template_path, :class => 'btn btn-primary' do
         %i.fa.fa-plus.fa-fw
         = " Add New Message Template";
   %table.table.table-hover{:id => table_dom_id, :data => {:toggle => 'table',
