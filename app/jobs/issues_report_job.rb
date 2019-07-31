@@ -19,10 +19,10 @@ class IssuesReportJob < ActivityJob
     frequency = activity.frequency_type.name
     new_issues = Issue.where(issue_status_type: IssueStatusType.find_by(name: 'Open')).where('created_at >= ?', Date.today - (activity.frequency_quantity).send(frequency))
 
-    message_template = MessageTemplate.find_by(name: 'Support1')
+    message_template = MessageTemplate.find_by(name: 'Support1', active: true)
     message_body = MessageTemplateMessageGenerator.new.generate(message_template, [new_issues.count, frequency, "<a href='#{event_url}'>here</a>"])
 
-    if new_issues.count > 0
+    if new_issues.count > 0 && message_template.present?
       User.with_role(:admin).each do |user|
         msg               = Message.new
         msg.user          = system_user
@@ -31,6 +31,7 @@ class IssuesReportJob < ActivityJob
         msg.subject       = message_template.subject
         msg.body          = message_body
         msg.priority_type = message_template.priority_type
+        msg.message_template = message_template
         msg.save
       end
     end

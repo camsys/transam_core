@@ -65,7 +65,7 @@
               - if lookup_context.template_exists?(view_component, 'shared', true)
                 = render :partial => "shared/#{view_component}"
             %li.divider
-            - if current_user.has_role? :client_admin
+            - if current_user.has_role? :system_admin
               %li.text-left
                 = link_to client_admin_path do
                   %i.fa.fa-cog.fa-fw

@@ -1,6 +1,6 @@
 class MessageTemplateClientAdminData < ActiveRecord::DataMigration
   def up
-    Role.create!(name: 'client_admin', role_parent: Role.find_by(name: 'admin'), weight: 1, privilege: true, show_in_user_mgmt: false)
+    Role.create!(name: 'system_admin', role_parent: Role.find_by(name: 'admin'), weight: 1, privilege: true, show_in_user_mgmt: false)
 
     MessageTemplate.create!(name: 'Task1', delivery_rules: 'Sent when tasks are due less than or a week from now', subject: 'Incomplete Task Reminder', body: "<p>Task <strong>{subject}</strong> is incomplete and is due to be completed by <strong>{complete_by_date}</strong>.</p><p>You can view this task by clicking {link(here)}</p>", active: true, is_implemented: true)
 
