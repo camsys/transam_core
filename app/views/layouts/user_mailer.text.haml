@@ -9,7 +9,7 @@
 :plain
   ===============================================================================
 
-= "Sent on behalf of #{app_title}"
+= "Sent on behalf of #{ENV["APPLICATION_TITLE"] ? ENV["APPLICATION_TITLE"] : 'TransAM Application'}"
 
 :plain
   ===============================================================================

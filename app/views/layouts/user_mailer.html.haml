@@ -7,5 +7,5 @@
     %hr
     = yield
     %hr
-    %p= "This message is sent on behalf of #{app_title}"
+    %p= "This message is sent on behalf of #{ENV["APPLICATION_TITLE"] ? ENV["APPLICATION_TITLE"] : 'TransAM Application'}"
     %p This email is sent from an email address that is not monitored. Please do not reply to this message.
