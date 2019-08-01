@@ -86,6 +86,7 @@ RSpec.describe Organization, :type => :model do
       :external_id,
       :license_holder,
       :name,
+      :legal_name,
       :short_name,
       :country,
       :address1,
