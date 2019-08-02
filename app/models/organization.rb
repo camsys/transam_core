@@ -58,7 +58,6 @@ class Organization < ActiveRecord::Base
   #------------------------------------------------------------------------------
 
   validates :name,                  :presence => true
-  validates :legal_name,            :presence => true
   validates :short_name,            :presence => true, :uniqueness => true
   validates :address1,              :presence => true
   validates :city,                  :presence => true
