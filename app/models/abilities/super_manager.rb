@@ -11,6 +11,8 @@ module Abilities
 
       end
 
+      self.merge(Abilities::Manager).new(user)
+
       # BPT super manager can add comments to funding sources
       can :create, Comment
 

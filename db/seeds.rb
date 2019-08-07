@@ -150,10 +150,10 @@ replacement_reason_types = [
 
 roles = [
   {:privilege => false, :name => 'guest', :weight => 1, :show_in_user_mgmt => true},
-  {:privilege => false, :name => 'user', :weight => 1, :show_in_user_mgmt => true},
-  {:privilege => false, :name => 'manager', :weight => 7, :show_in_user_mgmt => true},
+  {:privilege => false, :name => 'user', :weight => 1, :show_in_user_mgmt => true, label: "Staff"},
+  {:privilege => false, :name => 'manager', :weight => 7, :show_in_user_mgmt => true, label: "Staff"},
   {:privilege => true, :name => 'admin', :show_in_user_mgmt => true},
-  {:privilege => true, :name => 'super_manager', :weight => 10, role_parent: 'manager', :show_in_user_mgmt => true},
+  {:privilege => false, :name => 'super_manager', :weight => 10, :show_in_user_mgmt => true, label: "Grantor Manager"},
   {:privilege => true, :name => 'technical_contact', :show_in_user_mgmt => true},
   {name: 'system_admin', role_parent: Role.find_by(name: 'admin'), weight: 1, privilege: true, show_in_user_mgmt: false}
 
