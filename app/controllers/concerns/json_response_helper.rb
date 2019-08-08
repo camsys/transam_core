@@ -24,7 +24,7 @@ module JsonResponseHelper
       exception.backtrace.each { |line| logger.error line }
       error_response = {
         message: exception.message,
-        data: { type: exception.class.name, message: exception.message }
+        data: { type: exception.class.name, message: exception.message, backtrace: exception.backtrace}
       }
       render status: 500, json: json_response(:error, error_response)
     end
