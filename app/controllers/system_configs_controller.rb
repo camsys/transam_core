@@ -6,16 +6,18 @@ class SystemConfigsController < OrganizationAwareController
 
   # GET /system_configs/1
   def show
+    add_breadcrumb 'System Config', @system_config
   end
 
   def fiscal_year_rollover
+    add_breadcrumb 'Client Admin Interface', :client_admin_path
     add_breadcrumb 'System Rollover', fiscal_year_rollover_system_config_path(@system_config)
   end
 
   # GET /system_configs/1/edit
   def edit
+    add_breadcrumb 'System Config', @system_config
     add_breadcrumb 'Edit', edit_system_config_path(@system_config)
-
   end
 
   # PATCH/PUT /system_configs/1
@@ -31,8 +33,6 @@ class SystemConfigsController < OrganizationAwareController
     # Use callbacks to share common setup or constraints between actions.
     def set_system_config
       @system_config = SystemConfig.instance
-
-      add_breadcrumb 'System Config', @system_config
     end
 
     # Only allow a trusted parameter "white list" through.

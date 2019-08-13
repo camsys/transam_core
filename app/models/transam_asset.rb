@@ -217,7 +217,7 @@ class TransamAsset < TransamAssetRecord
 
     arr << a.class::CLEANSABLE_FIELDS.dup
 
-    SystemConfigExtension.where(class_name: 'TransamAsset').pluck(:extension_name).each do |ext_name|
+    SystemConfigExtension.where(active: true, class_name: 'TransamAsset').pluck(:extension_name).each do |ext_name|
       if ext_name.constantize::ClassMethods.try(:cleansable_fields)
         arr << ext_name.constantize::ClassMethods.cleansable_fields
       end

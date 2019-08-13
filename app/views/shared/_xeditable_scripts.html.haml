@@ -147,7 +147,9 @@
 
     $('.save-xeditable-button').click(function() {
      $('form.editableform').submit(); // save values locally, then submit to server
-     $('.asset-subform form').valid(); // validate subforms (e.g., Funding Programs)
+     if($('.asset-subform form').length > 0) {
+      $('.asset-subform form').valid(); // validate subforms (e.g., Funding Programs)
+     }
      if($('.has-error .form-control').length == 0) {
        $('#processing_spinner').show();
 

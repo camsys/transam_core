@@ -10,13 +10,10 @@ class RuleSetAwareController < OrganizationAwareController
     # use the name of the controller that inherits from the rule set aware controller to determine the variable name of the object we're duping
     data_obj = eval("@#{params[:controller].singularize}")
 
-    puts "==========="
     new_data_obj = data_obj.dup
     new_data_obj.object_key = nil
 
     new_data_obj.save!
-
-    puts "==========="
 
     self.instance_variable_set('@new_'+new_data_obj.class.to_s.underscore, new_data_obj)
   end
@@ -87,7 +84,7 @@ class RuleSetAwareController < OrganizationAwareController
         puts recipients.inspect
 
         # send notifications/email
-        if rule_set.try(:email_enabled?)
+        if rule_set.try(:email_enabled?) || (rule_set.try(:message_template).nil? || rule_set.message_template.active)
           recipients.each do |user|
             msg = Message.new
             msg.user          = current_user

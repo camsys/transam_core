@@ -1,0 +1,56 @@
+= simple_form_for(@message_template,
+  :url => (@message_template.new_record? ? message_templates_path : message_template_path(@message_template)),
+  :html => {:class => 'form-vertical message-template-form'},
+  :wrapper => :vertical_form,
+  :wrapper_mappings => {:check_boxes => :vertical_radio_and_checkboxes,
+  :radio_buttons => :vertical_radio_and_checkboxes,
+  :file => :vertical_file_input,
+  :boolean => :vertical_boolean}) do |f|
+  .row
+    .col-lg-9.col-md-9.col-sm-9.col-xs-9
+      = f.input :name, :required => true, label: 'ID', :disabled => !@message_template.new_record?
+    .col-lg-9.col-md-9.col-sm-9.col-xs-9
+      = f.input :description, :placeholder => "Enter a brief summary..."
+    .col-lg-9.col-md-9.col-sm-9.col-xs-9
+      = f.input :delivery_rules, :required => true, :placeholder => "Enter delivery rules"
+    .col-lg-9.col-md-9.col-sm-9.col-xs-9
+      = f.input :subject, :required => true
+    
+    .col-sm-12
+      = f.input :body, label: 'Message', :required => true, :as => :ckeditor, :input_html => { :ckeditor => {:toolbar => 'mini'}, :class => "form-control"}
+    
+    .col-lg-3.col-md-3.col-sm-6.col-xs-6
+      = f.input :priority_type_id, :collection => PriorityType.active, :include_blank => false, :label => "Priority"
+    - unless @message_template.new_record?
+      .col-sm-12
+        = f.input :active, disabled: !@message_template.is_implemented
+
+    .col-sm-6
+      .form-group.required
+        .col-sm-12{style: 'margin-bottom: -10px;'}
+          %label.required.control-label
+            %abbr{title: 'required'} *
+            = " Sent As"
+        .col-sm-8
+          .col-sm-6
+            = f.input :message_enabled, disabled: true, label: 'Message'
+          .col-sm-6
+            = f.input :email_enabled, disabled: @message_template.is_system_template, label: 'Email (External)'
+
+  = f.button :submit, "Save", :class => "btn btn-primary"
+
+:javascript
+
+  $('.message-template-form').validate({
+    ignore: [], //validate hidden fields
+    submitHandler: function(form) {
+      form.submit();
+    }
+  });
+
+  $('#message_template_body').rules("add", {
+    required: function()
+    {
+      CKEDITOR.instances.message_template_body.updateElement();
+    }
+  });

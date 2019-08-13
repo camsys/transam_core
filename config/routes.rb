@@ -48,6 +48,9 @@ Rails.application.routes.draw do
   #-----------------------------------------------------------------------------
   get 'system_health_check', to: 'errors#system_health'
 
+
+  get "client_admin" => 'client_admin#index'
+
   resources :system_configs, only: [:show, :edit, :update] do
     member do
       get 'fiscal_year_rollover'
@@ -245,6 +248,12 @@ Rails.application.routes.draw do
       get   'undo'
       get   'resubmit'
       get   'download'
+    end
+  end
+
+  resources :message_templates do 
+    collection do 
+      get 'message_history'
     end
   end
 

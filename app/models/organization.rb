@@ -74,6 +74,7 @@ class Organization < ActiveRecord::Base
     :external_id,
     :license_holder,
     :name,
+    :legal_name,
     :short_name,
     :country,
     :address1,

@@ -7,24 +7,32 @@ class ImagesController < NestedResourceController
   # GET /images
   # GET /images.json
   def index
-
-    if params[:sort].present? && params[:order].present?
-      if params[:sort] == 'creator'
-        @images = Image.unscoped.joins(:creator).order("CONCAT(users.first_name, ' ', users.last_name) #{params[:order]}")
-      else
-        @images = Image.unscoped.order(params[:sort] => params[:order])
-      end
-    else
-      @images = Image.all
-    end
-
     if params[:global_base_imagable]
-      @imagable = GlobalID::Locator.locate params[:global_base_imagable]
-      @images = @images.where(base_imagable: @imagable)
+      @imagable = GlobalID::Locator.locate(GlobalID.parse(params[:global_base_imagable]))
+      @images = Image.where(base_imagable: @imagable)
+    elsif params[:global_any_imagable] # parameter to return images of self as parent and children
+      @imagable = GlobalID::Locator.locate(GlobalID.parse(params[:global_any_imagable]))
+      @images = Image.where(base_imagable: @imagable).or(Image.where(imagable: @imagable))
     else
       @imagable = find_resource
-      @images = @images.where(imagable: @imagable)
+      @images = @imagable.images
     end
+
+    if @imagable
+
+      if params[:sort].present? && params[:order].present?
+        if params[:sort] == 'creator'
+          @images = @images.joins(:creator).reorder("CONCAT(users.first_name, ' ', users.last_name) #{params[:order]}")
+        else
+          @images = @images.reorder(params[:sort] => params[:order])
+        end
+      end
+    else
+      Rails.logger.debug "No images"
+      @images = Image.none
+    end
+
+    @images = @images.left_outer_joins(:image_classification)
 
     respond_to do |format|
       format.html # index.html.erb
@@ -33,6 +41,7 @@ class ImagesController < NestedResourceController
             :total => @images.count,
             :rows => @images.limit(params[:limit]).offset(params[:offset]).collect{ |u|
               u.as_json.merge!({
+                classification: u.image_classification&.to_s,
                 link_image: view_context.link_to(view_context.image_tag(u.image.url(:thumb)), u.image.url,  :class => "img-responsive gallery-image", :data => {:lightbox => "gallery"}, :title => u.original_filename),
                 imagable_to_s: u.imagable.to_s,
                 creator: u.creator.to_s
@@ -58,9 +67,8 @@ class ImagesController < NestedResourceController
 
   # GET /images/1/edit
   def edit
-
     @imagable = @image.imagable
-
+    @form_view = params[:form_view]
   end
 
   def download
@@ -80,6 +88,7 @@ class ImagesController < NestedResourceController
   # POST /images
   # POST /images.json
   def create
+    @form_view = params[:form_view]
 
     @image = Image.new(form_params)
     if @image.imagable.nil?
@@ -106,13 +115,14 @@ class ImagesController < NestedResourceController
   # PATCH/PUT /images/1
   # PATCH/PUT /images/1.json
   def update
+    @form_view = params[:form_view]
 
     @imagable = @image.imagable
 
     respond_to do |format|
       if @image.update(form_params)
         notify_user(:notice, 'Image was successfully updated.')
-        format.html { redirect_to get_resource_url(@imagable) }
+        format.html { redirect_back(fallback_location: root_path) }
         format.json { head :no_content }
       else
         format.html { render action: 'edit' }

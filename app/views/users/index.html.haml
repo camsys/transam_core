@@ -1,3 +1,11 @@
+:css
+  #primary_header {
+    border-bottom: 1px solid #e5e5e5;
+  }
+
 .row
   .col-md-12
+    %h2{:id => 'primary_header'} Users
+    %legend #{@show_active_only.to_s.capitalize} Users
+
     = render :partial => 'index_table', :locals => {:show_actions => 1}

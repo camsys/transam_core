@@ -64,18 +64,17 @@
               - Rails.logger.debug "Checking for #{view_component}: Results = #{lookup_context.template_exists?(view_component, 'shared', true)}"
               - if lookup_context.template_exists?(view_component, 'shared', true)
                 = render :partial => "shared/#{view_component}"
-
             %li.divider
-            %li.text-left
-              = link_to fiscal_year_rollover_system_config_path(SystemConfig.instance) do
-                %i.fa.fa-arrow-circle-o-right.fa-fw
-                System Rollover
+            - if current_user.has_role? :system_admin
+              %li.text-left
+                = link_to client_admin_path do
+                  %i.fa.fa-cog.fa-fw
+                  Client Admin Interface
 
-            %li.divider
             %li.text-left
               = link_to rails_admin_path do
                 %i.fa.fa-cogs.fa-fw
-                Admin Interface
+                System Admin Interface
       .col-sm-6
         %ul.multi-column-dropdown
           - SystemConfig.transam_module_names.each do |mod|

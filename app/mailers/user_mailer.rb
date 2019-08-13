@@ -6,11 +6,12 @@ class UserMailer < ActionMailer::Base
   def email_message(mesg)
     @message = mesg
     mail(:to => @message.to_user.email, :subject => @message.subject)
+    @message.update(email_status: Message::EMAIL_STATUS_SENT) if Rails.application.config.action_mailer.perform_deliveries
   end
 
   def send_email_on_user_creation(created_user)
     @user = created_user
-    mail(:to => created_user.email, :subject => "A TransAM account has been created for you")
+    mail(:to => created_user.email, :subject => MessageTemplate.find_by(name: 'User1').subject)
   end
 
 end

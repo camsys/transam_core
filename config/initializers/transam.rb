@@ -16,7 +16,7 @@ Rails.application.config.epoch = Date.new(1900,1,1)      # epoch
 
 begin
   if ActiveRecord::Base.connection.table_exists?(:system_config_extensions)
-    Rails.application.config.transam_keyword_searchable_classes = SystemConfigExtension.where(extension_name: 'TransamKeywordSearchable').pluck(:class_name)
+    Rails.application.config.transam_keyword_searchable_classes = SystemConfigExtension.where(active: true, extension_name: 'TransamKeywordSearchable').pluck(:class_name)
   end
 rescue ActiveRecord::NoDatabaseError
   puts "no database so not loading system config extensions"

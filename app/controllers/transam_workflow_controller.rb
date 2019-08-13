@@ -45,16 +45,20 @@ class TransamWorkflowController < ApplicationController
 
       # Process each order sequentially
       event_proxy.model_objs.each do |model_obj|
-        if model_obj.class.event_names.include? event_proxy.event_name
+        if (can? event_proxy.event_name.to_sym, model_obj) && (model_obj.class.event_names.include? event_proxy.event_name)
+          if event_proxy.include_updates.to_i > 0 && model_obj.class.event_transitions(event_proxy.event_name).map{|x| x.values}.flatten.include?(model_obj.state.to_sym)
+            model_obj.update!(workflow_model_params(event_proxy.class_name))
+          else
+            model_obj.transaction do
 
-          model_obj.transaction do
+              model_obj.update!(workflow_model_params(event_proxy.class_name)) if event_proxy.include_updates.to_i > 0
 
-            model_obj.update!(workflow_model_params(event_proxy.class_name)) if event_proxy.include_updates.to_i > 0
+              if model_obj.machine.fire_state_event(event_proxy.event_name)
+                WorkflowEvent.create(creator: current_user, accountable: model_obj, event_type: event_proxy.event_name)
+              else
+                raise ActiveRecord::Rollback
+              end
 
-            if model_obj.machine.fire_state_event(event_proxy.event_name)
-              WorkflowEvent.create(creator: current_user, accountable: model_obj, event_type: event_proxy.event_name)
-            else
-              raise ActiveRecord::Rollback
             end
           end
         end
