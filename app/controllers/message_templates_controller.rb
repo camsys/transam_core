@@ -72,7 +72,7 @@ class MessageTemplatesController < OrganizationAwareController
   end
 
   def message_history
-    @messages = Message.left_outer_joins(:message_template).joins(:user).all
+    @messages = Message.left_outer_joins(:message_template).joins(:user).order(created_at: :desc).all
 
     unless params[:search].blank?
       search_string = ['message_templates.name', 'message_templates.description', "users.first_name", "users.last_name", 'messages.subject', 'email_status'].map{|r| "#{r} LIKE '%#{params[:search]}%'"}.join(' OR ')

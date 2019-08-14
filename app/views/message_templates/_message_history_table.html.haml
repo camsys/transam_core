@@ -33,6 +33,7 @@
         %th.left{:data => {:field => "email_enabled", :formatter => "boolean_formatter", sortable: 'true'}} Email (External)
         %th.left{:data => {:field => "created_at", :formatter => "date_time_formatter", sortable: 'true'}} Entry Date & Time
         %th.left{:data => {:field => "user", sortable: 'true'}} Event By
+        %th.left{:data => {:field => "to_user", sortable: 'true'}} Sent To
         %th.left{:data => {:field => "email_status", sortable: 'true'}} Status
 
 = render 'shared/table_formatters'
@@ -54,6 +55,7 @@
   $('#message_history_server_table').bootstrapTable({
     onLoadError: function(status, res) {
       alert('An error occurred loading messages. Please refresh the page and try again.');
+
     },
     queryParams: function(params) {
       params.sort = params.sort || params.sortName;

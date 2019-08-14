@@ -84,7 +84,7 @@ class RuleSetAwareController < OrganizationAwareController
         puts recipients.inspect
 
         # send notifications/email
-        if rule_set.try(:email_enabled?)
+        if rule_set.try(:email_enabled?) || (rule_set.try(:message_template).nil? || rule_set.message_template.active)
           recipients.each do |user|
             msg = Message.new
             msg.user          = current_user

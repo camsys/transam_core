@@ -28,24 +28,29 @@ class TaskReminderJob < ActivityJob
       tasks = Task.where('state IN (?) AND send_reminder = ? AND complete_by BETWEEN ? and ?', task_statuses, true, date_due.beginning_of_day, date_due.end_of_day)
       Rails.logger.info "Found #{tasks.count} incomplete tasks that are due in #{days_from_now} day(s)."
 
-      message_template = MessageTemplate.find_by(name: 'Task1')
+      message_template = MessageTemplate.find_by(name: 'Task1', active: true)
 
-      msg_generator_service = MessageTemplateMessageGenerator.new
 
-      tasks.each do |task|
-        custom_fields = [task.subject, task.complete_by.strftime("%m/%d/%Y"),"<a href='#{user_task_path(task.assigned_to_user, task)}'>here</a>"]
-        message_body = msg_generator_service.generate(message_template, custom_fields)
+      if message_template
+        msg_generator_service = MessageTemplateMessageGenerator.new
 
-        # Send a message to the assigned user for each task
-        msg = Message.new
-        msg.organization  = task.organization
-        msg.user          = sys_user
-        msg.to_user       = task.assigned_to_user
-        msg.subject       = message_template.subject
-        msg.body          = message_body
-        msg.priority_type = days_from_now < 2 ? PriorityType.find_by_name('High') : message_template.priority_type
-        msg.save
+        tasks.each do |task|
+          custom_fields = [task.subject, task.complete_by.strftime("%m/%d/%Y"),"<a href='#{user_task_path(task.assigned_to_user, task)}'>here</a>"]
+          message_body = msg_generator_service.generate(message_template, custom_fields)
+
+          # Send a message to the assigned user for each task
+          msg = Message.new
+          msg.organization  = task.organization
+          msg.user          = sys_user
+          msg.to_user       = task.assigned_to_user
+          msg.subject       = message_template.subject
+          msg.body          = message_body
+          msg.priority_type = days_from_now < 2 ? PriorityType.find_by_name('High') : message_template.priority_type
+          msg.message_template = message_template
+          msg.save
+        end
       end
+
     end
 
     # Add a row into the activity table

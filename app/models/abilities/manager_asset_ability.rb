@@ -17,7 +17,7 @@ module Abilities
         (DispositionUpdateEvent.asset_event_type.try(:active) && a.disposable?(true) && user.organization_ids.include?(a.organization_id))
       end
 
-      can :destroy, TransamAssetRecord
+      #can :destroy, TransamAssetRecord
 
 
     end
