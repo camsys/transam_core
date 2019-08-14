@@ -174,7 +174,7 @@ message_templates = [
     {name: 'Support2', delivery_rules: 'Sent when a template is added or changed', subject: "Message Template Changes", body: "The following message template {name} with the subject {subject} has changed. Please review for implementation changes.", active: true, is_implemented: true},
     {name: 'User1', delivery_rules: 'Sent to new user',  subject: "A TransAM account has been created for you", body: "<h1>New User Confirmation</h1><p>A new user account has been created for you in TransAM</p><p>Your username: {email}</p><p>Please go to {new_user_password_url} and follow the instructions to reset your password.</p>", message_enabled: false, is_system_template: true, active: true, is_implemented: true},
     {name: 'User2', delivery_rules: 'Sent on password reset',  subject:  "Reset password instructions", body: "<p>Hello {name}!</p><p>We have received a request to change your password. You can do this through the link below.</p><p>{link(Change my password)}</p><p>If you didn't request this, please ignore this email.</p><p>Your password won't change until you access the link above and create a new one.</p>", message_enabled: false, is_system_template: true, active: true, is_implemented: true},
-    {name: 'User3', delivery_rules: 'Sent to locked user account',  subject:  'User account locked', body: "{locked_user.name} account was locked at {locked_user.locked_at}", active: true, is_implemented: true}
+    {name: 'User3', delivery_rules: 'Sent to admin users',  subject:  'User account locked', body: "{locked_user.name} account was locked at {locked_user.locked_at}", active: true, is_implemented: true}
 ]
 
 frequency_types = [
