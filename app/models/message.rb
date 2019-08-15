@@ -100,6 +100,7 @@ class Message < ActiveRecord::Base
       created_at: created_at,
       email_status: email_status,
       user: user&.to_s,
+      to_user: to_user&.to_s,
       name: message_template&.name,
       description: message_template&.description,
       email_enabled: message_template&.email_enabled

@@ -93,6 +93,7 @@ class RuleSetAwareController < OrganizationAwareController
             msg.subject       = rule_set.try(:message_subject) || "Workflow Change for #{rule_set}"
             msg.body          = rule_set.try(:message_body) || "#{rule_set.titleize} has been #{rule_set.state.humanize}."
             msg.priority_type = PriorityType.default
+            msg.message_template = rule_set.try(:message_template)
             msg.save
           end
         end
