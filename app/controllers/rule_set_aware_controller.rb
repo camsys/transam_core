@@ -84,14 +84,14 @@ class RuleSetAwareController < OrganizationAwareController
         puts recipients.inspect
 
         # send notifications/email
-        if rule_set.try(:email_enabled?) || (rule_set.try(:message_template).nil? || rule_set.message_template.active)
+        if rule_set.try(:email_enabled?) || (rule_set.try(:message_template, true).nil? || rule_set.message_template.active)
           recipients.each do |user|
             msg = Message.new
             msg.user          = current_user
             msg.organization  = current_user.organization
             msg.to_user       = user
             msg.subject       = rule_set.try(:message_subject) || "Workflow Change for #{rule_set}"
-            msg.body          = rule_set.try(:message_body) || "#{rule_set.titleize} has been #{rule_set.state.humanize}."
+            msg.body          = rule_set.try(:message_body) || "#{rule_set.to_s.titleize} has been #{rule_set.state.humanize}."
             msg.priority_type = PriorityType.default
             msg.message_template = rule_set.try(:message_template)
             msg.save
@@ -100,7 +100,7 @@ class RuleSetAwareController < OrganizationAwareController
 
         if rule_set.try(:notification_enabled?)
           event_url = Rails.application.routes.url_helpers.rule_set_tam_policies_path(@rule_set_type)
-          notification = Notification.create(text: rule_set.try(:message_body) || "#{rule_set.titleize} has been #{rule_set.state.humanize}.", link: event_url, notifiable_type: 'Organization', notifiable_id: rule_set.organization_id )
+          notification = Notification.create(text: rule_set.try(:message_body) || "#{rule_set.to_s.titleize} has been #{rule_set.state.humanize}.", link: event_url, notifiable_type: 'Organization', notifiable_id: rule_set.organization_id )
 
           recipients.each do |user|
             UserNotification.create(notification: notification, user: user)
