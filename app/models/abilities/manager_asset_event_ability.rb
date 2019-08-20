@@ -17,7 +17,7 @@ module Abilities
       end
 
       cannot :create, DispositionUpdateEvent do |ae|
-        !ae.send(Rails.application.config.asset_base_class_name.underscore).try(:disposable?,true)
+        !(DispositionUpdateEvent.asset_event_type.try(:active) && user.viewable_organization_ids.include?(ae.transam_asset.organization_id))
       end
 
       cannot :create, EarlyDispositionRequestUpdateEvent do |ae|
