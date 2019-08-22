@@ -42,7 +42,7 @@
               %td
                 = evt.created_at
               %td
-                = evt.creator
+                = evt.updater || evt.creator
             - unless evt.is_new?
               %tr{:data => {:action_path => "#{inventory_asset_event_path(evt.transam_asset.object_key, evt.object_key)}"}}
                 %td
@@ -54,7 +54,7 @@
                 %td
                   = "#{evt.updated_at} on #{format_as_date(evt.event_date)}"
                 %td
-                = evt.creator
+                = evt.updater || evt.creator
           - else
             %tr{:data => {:action_path => "#{inventory_asset_event_path(evt.transam_asset.object_key, evt.object_key)}"}}
               %td
@@ -66,7 +66,7 @@
               %td
                 = evt.updated_at
               %td
-                = evt.creator
+                = evt.updater || evt.creator
 
 :javascript
   $(window).resize(function() {

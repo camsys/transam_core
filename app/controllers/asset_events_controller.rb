@@ -201,6 +201,8 @@ class AssetEventsController < AssetAwareController
       return
     end
 
+    @asset_event.updater = current_user
+
     add_edit_update_breadcrumbs
 
     respond_to do |format|
