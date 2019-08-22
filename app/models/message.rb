@@ -103,6 +103,7 @@ class Message < ActiveRecord::Base
       to_user: to_user&.to_s,
       name: message_template&.name,
       description: message_template&.description,
+      message_enabled: message_template&.message_enabled,
       email_enabled: message_template&.email_enabled
     }
   end
