@@ -34,7 +34,7 @@
         %th.left{:data => {:field => "created_at", :formatter => "date_time_formatter", sortable: 'true'}} Entry Date & Time
         %th.left{:data => {:field => "user", sortable: 'true'}} Event By
         %th.left{:data => {:field => "to_user", sortable: 'true'}} Sent To
-        %th.left{:data => {:field => "email_status", sortable: 'true'}} Status
+        %th.left{:data => {:field => "email_status", sortable: 'true', formatter: 'status_formatter'}} Status
 
 = render 'shared/table_formatters'
 
@@ -42,6 +42,15 @@
   $(window).resize(function() {
     $('#message_history_server_table').bootstrapTable('resetView');
   });
+
+  function status_formatter(value, row) {
+    if (row['email_enabled'] || row['active']) {
+      return '#{Message::EMAIL_STATUS_SENT}';
+    } else {
+      return '#{Message::EMAIL_STATUS_STOPPED}';
+    }
+  }
+
 
   // stub correct sorting field name
   var message_sorting_mappings = {

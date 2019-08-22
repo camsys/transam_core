@@ -80,11 +80,8 @@ class RuleSetAwareController < OrganizationAwareController
 
         recipients = (rule_set.recipients || [])
 
-        puts "+=+=+=+"
-        puts recipients.inspect
-
         # send notifications/email
-        if rule_set.try(:email_enabled?) || (rule_set.try(:message_template, true).nil? || rule_set.message_template.active)
+        if rule_set.try(:email_enabled?)
           recipients.each do |user|
             msg = Message.new
             msg.user          = current_user
@@ -94,6 +91,7 @@ class RuleSetAwareController < OrganizationAwareController
             msg.body          = rule_set.try(:message_body) || "#{rule_set.to_s.titleize} has been #{rule_set.state.humanize}."
             msg.priority_type = PriorityType.default
             msg.message_template = rule_set.try(:message_template)
+            msg.active     =  rule_set.try(:message_template).try(:active)
             msg.save
           end
         end

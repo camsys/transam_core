@@ -20,7 +20,7 @@ class LockedAccountInformerJob < Job
       # Get the admin users
       admins = User.with_role :admin
 
-      message_template = MessageTemplate.find_by(name: 'User3', active: true)
+      message_template = MessageTemplate.find_by(name: 'User3')
 
       if message_template
         message_body = MessageTemplateMessageGenerator.new.generate(message_template, [locked_user.name, locked_user.locked_at])
@@ -34,6 +34,7 @@ class LockedAccountInformerJob < Job
           msg.body          = message_body
           msg.priority_type = message_template.priority_type
           msg.message_template = message_template
+          msg.active     = message_template.active
           msg.save
         end
       end
