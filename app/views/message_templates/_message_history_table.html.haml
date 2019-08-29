@@ -48,7 +48,7 @@
     if (row['email_enabled'] || row['active']) {
       return '#{Message::EMAIL_STATUS_SENT}';
     } else {
-      return '#{Message::EMAIL_STATUS_STOPPED}';
+      return '#{Message::EMAIL_STATUS_DEFAULT}';
     }
   }
 
