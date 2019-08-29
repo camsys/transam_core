@@ -13,7 +13,17 @@ class Api::V1::ImagesController < Api::V1::NestedResourceController
 
   # POST /images.json
   def create
+    # If image param is string, assume base64 encoding of the image data.
+    # Decode and store back in image parameter
+    if params[:image].is_a? String
+      image_data = params[:image]
+      io = CarrierStringIO.new(Base64.decode64(image_data))
+      io.original_filename = params[:original_filename]
+      io.content_type = params[:content_type]
+      params[:image] = io
+    end
     @image = @imagable.images.build(form_params)
+    @image.base_imagable = @image.imagable if @image.base_imagable.nil?
     @image.creator = current_user
     unless @image.save
       @status = :fail

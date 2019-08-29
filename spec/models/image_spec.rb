@@ -45,7 +45,9 @@ RSpec.describe Image, :type => :model do
          :content_type,
          :file_size,
          :created_by_id,
-         :compass_point
+         :compass_point,
+         :latitude,
+         :longitude
      ])
   end
 

@@ -156,7 +156,7 @@ roles = [
   {:privilege => true, :name => 'super_manager', :weight => 10, role_parent: 'manager', :show_in_user_mgmt => true},
   {:privilege => true, :name => 'technical_contact', :show_in_user_mgmt => true},
   {name: 'system_admin', role_parent: Role.find_by(name: 'admin'), weight: 1, privilege: true, show_in_user_mgmt: false},
-  {:privilege => true, :name => 'asset_manager', :role_parent => 'manager', :show_in_user_mgmt => true}
+  {:privilege => true, :name => 'asset_manager', :role_parent => 'manager', :show_in_user_mgmt => true, weight: 8}
 ]
 
 manufacturers = [
