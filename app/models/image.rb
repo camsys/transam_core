@@ -63,7 +63,9 @@ class Image < ActiveRecord::Base
     :content_type,
     :file_size,
     :created_by_id,
-    :compass_point
+    :compass_point,
+    :latitude,
+    :longitude
   ]
 
   # List of fields which can be searched using a simple text-based search
