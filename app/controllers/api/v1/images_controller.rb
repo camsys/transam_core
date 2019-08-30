@@ -50,6 +50,13 @@ class Api::V1::ImagesController < Api::V1::NestedResourceController
     end
   end
 
+  protected
+  
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def form_params
+    params.permit(Image.allowable_params)
+  end
+
   private
 
   def set_imagable
@@ -70,11 +77,6 @@ class Api::V1::ImagesController < Api::V1::NestedResourceController
       @data = {id: "Image #{params[:id]} not found."}
       render status: :not_found, json: json_response(:fail, data: @data)
     end
-  end
-
-  # Never trust parameters from the scary internet, only allow the white list through.
-  def form_params
-    params.permit(Image.allowable_params)
   end
 
 end
