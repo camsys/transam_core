@@ -3,7 +3,7 @@
 FactoryBot.define do
 
   factory :user do
-    phone { 999999999 }
+    phone { 9999999999 }
     password { 'Welcome1' }
     association :organization, :factory => :organization
     active { true }
