@@ -246,7 +246,7 @@ module TransamTagHelper
   %label.control-label
     #{label || field.to_s.titleize}
   .display-value
-    %a.editable-field{href:'#', id: '#{field}', data: {inputclass: '#{inputclass}', emptytext: ' - ', name: 'asset[#{field_name}]', value: '#{value}', type: '#{type}', url: '#{asset_path(asset)}', source: \"#{url || "[#{source}]"}\", sourceCache: '#{url.nil?}'}}
+    %a.editable-field{href:'#', id: '#{field}', data: {inputclass: '#{inputclass}', emptytext: ' - ', name: 'asset[#{field_name}]', value: '#{value}', type: '#{type}', url: '#{asset_path(asset)}', source: \"#{url || "[#{source}]"}\", sourceCache: '#{url.nil?}', displayText: '#{asset.send(field.to_s).to_s}'}}
 ")
     return engine.render.html_safe
   end
