@@ -231,7 +231,11 @@ module TransamTagHelper
       collection = klass.active.collect{|a| [a.id, a.to_s]}
                                                  
     end
-    unless url
+
+    display_text = ""
+    if url
+      display_text = (suffix == '_ids' ? asset.send(field.to_s + "s").map{|x| x.to_s}.join("<br>").html_safe : asset.send(field.to_s).to_s)
+    else
       # The source will wind up being parsed twice by X-editable, so embedded apostrophes
       # have to be doubly escaped.
       source = include_blank ? "{value: '', text: ''}," : ''
@@ -246,7 +250,7 @@ module TransamTagHelper
   %label.control-label
     #{label || field.to_s.titleize}
   .display-value
-    %a.editable-field{href:'#', id: '#{field}', data: {inputclass: '#{inputclass}', emptytext: ' - ', name: 'asset[#{field_name}]', value: '#{value}', type: '#{type}', url: '#{asset_path(asset)}', source: \"#{url || "[#{source}]"}\", sourceCache: '#{url.nil?}', displayText: '#{asset.send(field.to_s).to_s}'}}
+    %a.editable-field{href:'#', id: '#{field}', data: {inputclass: '#{inputclass}', emptytext: ' - ', name: 'asset[#{field_name}]', value: '#{value}', type: '#{type}', url: '#{asset_path(asset)}', source: \"#{url || "[#{source}]"}\", sourceCache: '#{url.nil?}'}} #{display_text}
 ")
     return engine.render.html_safe
   end
