@@ -29,9 +29,9 @@
         %th.left{:data => {:field => "name", :sortable => 'true'}} ID
         %th.left{:data => {:field => "subject", sortable: 'true'}} Subject
         %th.left{:data => {:field => "description", sortable: 'true'}} Description
-        %th.left{:data => {:field => "active", :formatter => "boolean_formatter", sortable: 'true'}} Active
-        %th.left{:data => {:field => "message_enabled", :formatter => "boolean_formatter", sortable: 'true'}} Message
-        %th.left{:data => {:field => "email_enabled", :formatter => "boolean_formatter", sortable: 'true'}} Email (External)
+        %th.left{:data => {:field => "active", :formatter => "raw_boolean_formatter", sortable: 'true'}} Active
+        %th.left{:data => {:field => "message_enabled", :formatter => "raw_boolean_formatter", sortable: 'true'}} Message
+        %th.left{:data => {:field => "email_enabled", :formatter => "raw_boolean_formatter", sortable: 'true'}} Email (External)
         %th.left{:data => {:field => "created_at", :formatter => "date_time_formatter", sortable: 'true'}} Entry Date & Time
         %th.left{:data => {:field => "user", sortable: 'true'}} Event By
         %th.left{:data => {:field => "to_user", sortable: 'true'}} Sent To
@@ -45,6 +45,7 @@
   });
 
   function status_formatter(value, row) {
+    console.log(row);
     if (row['email_enabled'] || row['active']) {
       return '#{Message::EMAIL_STATUS_SENT}';
     } else {
