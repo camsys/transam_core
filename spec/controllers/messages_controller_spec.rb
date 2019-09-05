@@ -38,12 +38,13 @@ RSpec.describe MessagesController, :type => :controller do
     expect(test_msg.users).not_to include(subject.current_user)
   end
 
-  it 'GET show' do
+  it 'GET show', :focus do
     test_msg.update!(:to_user => subject.current_user)
     get :show, params: {:user_id => subject.current_user.object_key, :id => test_msg.object_key}
 
     expect(assigns(:message)).to eq(test_msg)
-    expect(assigns(:response).to_json).to eq(Message.new(:organization => assigns(:organization), :user => subject.current_user, :priority_type => assigns(:message).priority_type, :to_user => create(:normal_user)).to_json)
+    puts Message.new(:organization => assigns(:organization), :user => subject.current_user, :priority_type => assigns(:message).priority_type).to_json
+    expect(assigns(:response).to_json).to eq(Message.new(:organization => assigns(:organization), :user => subject.current_user, :priority_type => assigns(:message).priority_type, :to_user => subject.current_user).to_json)
     expect(assigns(:message).opened_at.strftime('%m/%d/%Y')).to eq(Time.current.strftime('%m/%d/%Y'))
   end
 

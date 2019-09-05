@@ -78,7 +78,7 @@ class Message < ActiveRecord::Base
   end
 
   def email_enabled?
-    to_user.notify_via_email && (!message_template || message_template.email_enabled)
+    to_user.try(:notify_via_email) && (!message_template || message_template.email_enabled)
   end
 
   # If the to_user has elected to receive emails, send them upon message creation
