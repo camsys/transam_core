@@ -232,9 +232,11 @@ module TransamTagHelper
                                                  
     end
 
+    # Tags with url data sources will sometimes display as blank due to an ajax race condition.
+    # Here, we force in display text containing the field's to_string implementation when the data source is from a url.
     display_text = ""
     if url
-      display_text = (suffix == '_ids' ? asset.send(field.to_s + "s").map{|x| x.to_s}.join("<br>").html_safe : asset.send(field.to_s).to_s)
+      display_text = (suffix == '_ids' ? asset.send(field.to_s.pluralize).map{|x| x.to_s}.join("<br>").html_safe : asset.send(field.to_s).to_s)
     else
       # The source will wind up being parsed twice by X-editable, so embedded apostrophes
       # have to be doubly escaped.
