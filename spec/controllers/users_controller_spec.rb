@@ -6,6 +6,8 @@ RSpec.describe UsersController, :type => :controller do
   let(:test_user2) { create(:normal_user) }
 
   before(:each) do
+    create(:admin, first_name: 'system', last_name: 'user')
+
     test_user2.organizations = [test_user2.organization]
     test_user2.viewable_organizations = [test_user2.organization]
     test_user2.save!
