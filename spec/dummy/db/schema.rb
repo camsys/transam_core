@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_17_202351) do
+ActiveRecord::Schema.define(version: 2019_08_22_101327) do
 
   create_table "activities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "object_key", limit: 12
@@ -111,6 +111,7 @@ ActiveRecord::Schema.define(version: 2018_12_17_202351) do
     t.string "document", limit: 128
     t.string "original_filename", limit: 128
     t.integer "created_by_id"
+    t.bigint "updated_by_id"
     t.integer "total_cost"
     t.index ["asset_event_type_id"], name: "asset_events_idx3"
     t.index ["asset_id"], name: "asset_events_idx2"
@@ -118,6 +119,7 @@ ActiveRecord::Schema.define(version: 2018_12_17_202351) do
     t.index ["created_by_id"], name: "asset_events_creator_idx"
     t.index ["event_date"], name: "asset_events_idx4"
     t.index ["object_key"], name: "asset_events_idx1"
+    t.index ["updated_by_id"], name: "index_asset_events_on_updated_by_id"
     t.index ["upload_id"], name: "asset_events_idx5"
   end
 
@@ -295,6 +297,10 @@ ActiveRecord::Schema.define(version: 2018_12_17_202351) do
     t.index ["superseded_by_id"], name: "assets_idx13"
   end
 
+  create_table "cars", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "state"
+  end
+
   create_table "comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "object_key", limit: 12, null: false
     t.integer "commentable_id", null: false
@@ -333,7 +339,7 @@ ActiveRecord::Schema.define(version: 2018_12_17_202351) do
 
   create_table "condition_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name", limit: 64, null: false
-    t.decimal "rating", precision: 9, scale: 2, null: false
+    t.decimal "rating_ceiling", precision: 9, scale: 2, null: false
     t.string "description", limit: 254, null: false
     t.boolean "active", null: false
   end
@@ -381,6 +387,23 @@ ActiveRecord::Schema.define(version: 2018_12_17_202351) do
     t.string "code", limit: 2, null: false
     t.string "description", limit: 254, null: false
     t.boolean "active", null: false
+  end
+
+  create_table "district_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "name", limit: 64, null: false
+    t.string "description", limit: 254, null: false
+    t.boolean "active", null: false
+  end
+
+  create_table "districts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "district_type_id"
+    t.string "name", limit: 64, null: false
+    t.string "code", null: false
+    t.string "description", limit: 254, null: false
+    t.boolean "active", null: false
+    t.index ["code"], name: "index_districts_on_code"
+    t.index ["district_type_id"], name: "index_districts_on_district_type_id"
+    t.index ["name"], name: "index_districts_on_name"
   end
 
   create_table "documents", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -450,19 +473,38 @@ ActiveRecord::Schema.define(version: 2018_12_17_202351) do
     t.boolean "active", null: false
   end
 
+  create_table "image_classifications", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "name"
+    t.string "category"
+    t.boolean "active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "images", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "object_key", limit: 12, null: false
+    t.bigint "base_imagable_id"
+    t.string "base_imagable_type"
     t.integer "imagable_id", null: false
     t.string "imagable_type", limit: 64, null: false
     t.string "image", limit: 128, null: false
+    t.string "name"
     t.string "description", limit: 254, null: false
+    t.boolean "exportable"
     t.string "original_filename", limit: 128, null: false
     t.string "content_type", limit: 128, null: false
     t.integer "file_size", null: false
     t.integer "created_by_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.float "latitude"
+    t.float "longitude"
+    t.float "bearing"
+    t.bigint "image_classification_id"
+    t.string "compass_point"
+    t.index ["base_imagable_type", "base_imagable_id"], name: "index_images_on_base_imagable_type_and_base_imagable_id"
     t.index ["imagable_id", "imagable_type"], name: "images_idx2"
+    t.index ["image_classification_id"], name: "index_images_on_image_classification_id"
     t.index ["object_key"], name: "images_idx1"
   end
 
@@ -543,6 +585,24 @@ ActiveRecord::Schema.define(version: 2018_12_17_202351) do
     t.index ["user_id"], name: "message_tags_idx2"
   end
 
+  create_table "message_templates", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "priority_type_id"
+    t.string "object_key"
+    t.string "name"
+    t.string "subject"
+    t.text "description"
+    t.text "delivery_rules"
+    t.text "body"
+    t.boolean "active"
+    t.boolean "message_enabled"
+    t.boolean "email_enabled"
+    t.boolean "is_system_template"
+    t.boolean "is_implemented"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["priority_type_id"], name: "index_message_templates_on_priority_type_id"
+  end
+
   create_table "messages", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "object_key", limit: 12, null: false
     t.integer "organization_id", null: false
@@ -555,6 +615,9 @@ ActiveRecord::Schema.define(version: 2018_12_17_202351) do
     t.boolean "active"
     t.datetime "opened_at"
     t.datetime "created_at", null: false
+    t.bigint "message_template_id"
+    t.string "email_status"
+    t.index ["message_template_id"], name: "index_messages_on_message_template_id"
     t.index ["object_key"], name: "messages_idx1"
     t.index ["organization_id"], name: "messages_idx2"
     t.index ["thread_message_id"], name: "messages_idx5"
@@ -629,7 +692,7 @@ ActiveRecord::Schema.define(version: 2018_12_17_202351) do
     t.string "zip", limit: 10, null: false
     t.string "phone", limit: 12, null: false
     t.string "phone_ext", limit: 6
-    t.string "fax", limit: 10
+    t.string "fax", limit: 12
     t.string "url", limit: 128, null: false
     t.boolean "indian_tribe"
     t.string "subrecipient_number", limit: 9
@@ -639,10 +702,21 @@ ActiveRecord::Schema.define(version: 2018_12_17_202351) do
     t.decimal "longitude", precision: 11, scale: 6
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "country"
+    t.string "legal_name"
     t.index ["customer_id"], name: "organizations_idx2"
     t.index ["organization_type_id"], name: "organizations_idx1"
     t.index ["short_name"], name: "organizations_idx4"
     t.index ["short_name"], name: "short_name"
+  end
+
+  create_table "organizations_saved_queries", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "saved_query_id", null: false
+    t.bigint "organization_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organization_id"], name: "index_organizations_saved_queries_on_organization_id"
+    t.index ["saved_query_id"], name: "index_organizations_saved_queries_on_saved_query_id"
   end
 
   create_table "organizations_saved_searches", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -734,6 +808,14 @@ ActiveRecord::Schema.define(version: 2018_12_17_202351) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "query_association_classes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "table_name"
+    t.string "display_field_name"
+    t.string "id_field_name", default: "id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "query_categories", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -755,14 +837,21 @@ ActiveRecord::Schema.define(version: 2018_12_17_202351) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "query_category_id"
-    t.string "depends_on"
     t.string "filter_type"
+    t.bigint "query_association_class_id"
+    t.boolean "hidden"
+    t.string "pairs_with"
+    t.boolean "auto_show"
+    t.string "display_field"
+    t.string "column_filter"
+    t.string "column_filter_value"
+    t.index ["query_association_class_id"], name: "index_query_fields_on_query_association_class_id"
     t.index ["query_category_id"], name: "index_query_fields_on_query_category_id"
   end
 
   create_table "query_filters", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "query_field_id"
-    t.string "value"
+    t.text "value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "saved_query_id"
@@ -848,6 +937,7 @@ ActiveRecord::Schema.define(version: 2018_12_17_202351) do
     t.integer "shared_from_org_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "ordered_output_field_ids"
   end
 
   create_table "saved_query_fields", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -903,6 +993,7 @@ ActiveRecord::Schema.define(version: 2018_12_17_202351) do
   create_table "system_config_extensions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "class_name"
     t.string "extension_name"
+    t.string "engine_name"
     t.boolean "active"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -911,6 +1002,7 @@ ActiveRecord::Schema.define(version: 2018_12_17_202351) do
   create_table "system_configs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "customer_id"
     t.string "start_of_fiscal_year", limit: 5
+    t.integer "fy_year"
     t.string "default_fiscal_year_formatter"
     t.string "default_weather_code"
     t.string "map_tile_provider", limit: 64
@@ -1088,6 +1180,7 @@ ActiveRecord::Schema.define(version: 2018_12_17_202351) do
     t.integer "failed_attempts", null: false
     t.string "unlock_token", limit: 128
     t.datetime "locked_at"
+    t.datetime "password_changed_at"
     t.boolean "notify_via_email", null: false
     t.integer "weather_code_id"
     t.boolean "active", null: false

@@ -28,7 +28,7 @@ class TaskReminderJob < ActivityJob
       tasks = Task.where('state IN (?) AND send_reminder = ? AND complete_by BETWEEN ? and ?', task_statuses, true, date_due.beginning_of_day, date_due.end_of_day)
       Rails.logger.info "Found #{tasks.count} incomplete tasks that are due in #{days_from_now} day(s)."
 
-      message_template = MessageTemplate.find_by(name: 'Task1', active: true)
+      message_template = MessageTemplate.find_by(name: 'Task1')
 
 
       if message_template
@@ -47,6 +47,7 @@ class TaskReminderJob < ActivityJob
           msg.body          = message_body
           msg.priority_type = days_from_now < 2 ? PriorityType.find_by_name('High') : message_template.priority_type
           msg.message_template = message_template
+          msg.active     = message_template.active
           msg.save
         end
       end

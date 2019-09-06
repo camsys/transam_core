@@ -32,6 +32,7 @@ class AssetEvent < ActiveRecord::Base
   belongs_to  :upload
   # Every event belongs to a creator
   belongs_to :creator, -> { unscope(where: :active) }, :class_name => "User", :foreign_key => :created_by_id
+  belongs_to :updater, -> { unscope(where: :active) }, :class_name => "User", :foreign_key => :updated_by_id
 
   #validates :transam_asset,            :presence => true
   validates_associated :transam_asset

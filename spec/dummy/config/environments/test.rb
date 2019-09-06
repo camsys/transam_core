@@ -38,4 +38,8 @@ Dummy::Application.configure do
   ENV["SYSTEM_SEND_FROM_ADDRESS"] = "donotreply@camsys-apps.com"
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+  config.after_initialize do
+    Rails.application.routes.default_url_options[:host] = 'localhost:3000'
+  end
 end

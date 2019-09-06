@@ -2,7 +2,7 @@ module Abilities
   class SuperManagerCoreAbility
     include CanCan::Ability
 
-    def initialize(user)
+    def initialize(user, organization_ids=[])
 
       can :assign, Role do |r|
         r.name != "admin"

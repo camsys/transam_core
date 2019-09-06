@@ -216,6 +216,22 @@ class UsersController < OrganizationAwareController
   def reset_password
 
     @user.send_reset_password_instructions
+
+    system_user = User.where(first_name: 'system', last_name: 'user').first
+    message_template = MessageTemplate.find_by(name: 'User2')
+    message_body =  MessageTemplateMessageGenerator.new.generate(message_template,[@user.name, "<a href='#'>Change my password</a>"]).html_safe
+
+    msg               = Message.new
+    msg.user          = system_user
+    msg.organization  = system_user.organization
+    msg.to_user       = @user
+    msg.subject       = message_template.subject
+    msg.body          = message_body
+    msg.priority_type = message_template.priority_type
+    msg.message_template = message_template
+    msg.active     = message_template.active
+    msg.save
+
     notify_user(:notice, "Instructions for resetting their password was sent to #{@user} at #{@user.email}")
 
     redirect_to user_path(@user)

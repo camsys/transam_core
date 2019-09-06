@@ -29,6 +29,26 @@ class NewUserService
     user.viewable_organizations = user.user_organization_filter.try(:get_organizations) || user.organizations
     user.save!
 
-    UserMailer.send_email_on_user_creation(user).deliver unless assume_user_exists
+    unless assume_user_exists
+
+      system_user = User.where(first_name: 'system', last_name: 'user').first
+      message_template = MessageTemplate.find_by(name: 'User1')
+      message_body =  MessageTemplateMessageGenerator.new.generate(message_template,[user.email, Rails.application.routes.url_helpers.new_user_password_url])
+
+
+      msg               = Message.new
+      msg.user          = system_user
+      msg.organization  = system_user.organization
+      msg.to_user       = user
+      msg.subject       = message_template.subject
+      msg.body          = message_body
+      msg.priority_type = message_template.priority_type
+      msg.message_template = message_template
+      msg.active     = message_template.active
+      msg.save
+
+      UserMailer.send_email_on_user_creation(user).deliver
+    end
+
   end
 end

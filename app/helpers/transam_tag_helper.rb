@@ -231,7 +231,13 @@ module TransamTagHelper
       collection = klass.active.collect{|a| [a.id, a.to_s]}
                                                  
     end
-    unless url
+
+    # Tags with url data sources will sometimes display as blank due to an ajax race condition.
+    # Here, we force in display text containing the field's to_string implementation when the data source is from a url.
+    display_text = ""
+    if url
+      display_text = (suffix == '_ids' ? asset.send(field.to_s.pluralize).map{|x| x.to_s}.join("<br>").html_safe : asset.send(field.to_s).to_s)
+    else
       # The source will wind up being parsed twice by X-editable, so embedded apostrophes
       # have to be doubly escaped.
       source = include_blank ? "{value: '', text: ''}," : ''
@@ -246,7 +252,7 @@ module TransamTagHelper
   %label.control-label
     #{label || field.to_s.titleize}
   .display-value
-    %a.editable-field{href:'#', id: '#{field}', data: {inputclass: '#{inputclass}', emptytext: ' - ', name: 'asset[#{field_name}]', value: '#{value}', type: '#{type}', url: '#{asset_path(asset)}', source: \"#{url || "[#{source}]"}\", sourceCache: '#{url.nil?}'}}
+    %a.editable-field{href:'#', id: '#{field}', data: {inputclass: '#{inputclass}', emptytext: ' - ', name: 'asset[#{field_name}]', value: '#{value}', type: '#{type}', url: '#{asset_path(asset)}', source: \"#{url || "[#{source}]"}\", sourceCache: '#{url.nil?}'}} #{display_text}
 ")
     return engine.render.html_safe
   end

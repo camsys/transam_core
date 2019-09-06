@@ -13,9 +13,9 @@ class Api::V1::NestedResourceController < Api::ApiController
     params.permit!.to_h.reverse_each do |name, value|
       if name =~ /(.+)_id$/
         if $1 == 'asset'
-          return Rails.application.config.asset_base_class_name.constantize.find_by_object_key(value)
+          return Rails.application.config.asset_base_class_name.constantize.find_by(object_key: value)
         else
-          return $1.classify.constantize.find_by_object_key(value)
+          return $1.classify.constantize.find_by(object_key: value)
         end
       end
     end

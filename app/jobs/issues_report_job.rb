@@ -10,7 +10,7 @@ class IssuesReportJob < ActivityJob
 
   def run
 
-    message_template = MessageTemplate.find_by(name: 'Support1', active: true)
+    message_template = MessageTemplate.find_by(name: 'Support1')
     if message_template.present?
       system_user = User.where(first_name: 'system', last_name: 'user').first
 
@@ -33,6 +33,7 @@ class IssuesReportJob < ActivityJob
           msg.body          = message_body
           msg.priority_type = message_template.priority_type
           msg.message_template = message_template
+          msg.active     = message_template.active
           msg.save
         end
       end

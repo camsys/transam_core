@@ -12,7 +12,7 @@ class MessageTemplateClientAdminData < ActiveRecord::DataMigration
 
     MessageTemplate.create!(name: 'User2', delivery_rules: 'Sent on password reset',  subject:  "Reset password instructions", body: "<p>Hello {name}!</p><p>We have received a request to change your password. You can do this through the link below.</p><p>{link(Change my password)}</p><p>If you didn't request this, please ignore this email.</p><p>Your password won't change until you access the link above and create a new one.</p>", message_enabled: false, is_system_template: true, active: true, is_implemented: true)
 
-    MessageTemplate.create!(name: 'User3', delivery_rules: 'Sent to locked user account',  subject:  'User account locked', body: "{locked_user.name} account was locked at {locked_user.locked_at}", active: true, is_implemented: true)
+    MessageTemplate.create!(name: 'User3', delivery_rules: 'Sent to admin users',  subject:  'User account locked', body: "{locked_user.name} account was locked at {locked_user.locked_at}", active: true, is_implemented: true)
 
 
 

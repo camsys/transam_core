@@ -16,4 +16,10 @@
     = dialog_tag(@asset_event.asset_event_type.name, {:icon => "#{@asset_event.asset_event_type.display_icon_name}", :class => "header-part"}) do
       = render "#{@asset_event.class.name.underscore}_view"
 
+      %hr
+      = format_field("Created On", format_as_date(@asset_event.created_at))
+      = format_field("Last Updated", format_as_date(@asset_event.updated_at)) unless @asset_event.updated_at.blank?
+      = format_field("Created By", @asset_event.creator)
+      = format_field("Updated By", @asset_event.updater) unless @asset_event.updater.nil?
+
 = render 'scripts'

@@ -23,7 +23,7 @@
       = f.input :priority_type_id, :collection => PriorityType.active, :include_blank => false, :label => "Priority"
     - unless @message_template.new_record?
       .col-sm-12
-        = f.input :active, disabled: !@message_template.is_implemented
+        = f.input :active, disabled: !@message_template.is_implemented || @message_template.is_system_template
 
     .col-sm-6
       .form-group.required
