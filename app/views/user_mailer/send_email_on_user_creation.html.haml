@@ -1,1 +1,1 @@
-= MessageTemplateMessageGenerator.new.generate(MessageTemplate.find_by(name: 'User1'),[@user.email, new_user_password_url]).html_safe
+= MessageTemplateMessageGenerator.new.generate(MessageTemplate.find_by(name: 'User1'),[@user.email, (link_to nil, new_user_password_url)]).html_safe
