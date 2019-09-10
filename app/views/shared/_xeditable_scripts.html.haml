@@ -80,7 +80,7 @@
 
     function enable_tab_editing(tab_id) {
       $('#'+tab_id+' .editable-field').editable('enable');
-      $('#'+tab_id+' .editable-field').editable('show', false);
+      $('#'+tab_id+' .editable-field').filter(':visible').editable('show', false);
       $('#'+tab_id+' input[type=radio]').removeAttr('disabled');
       //$('#'+tab_id+' .editable-input').find('input, select').first().focus();
 
