@@ -67,6 +67,11 @@ class Organization < ActiveRecord::Base
   validates :phone,                 :presence => true
   validates :url,                   :presence => true
 
+  # ---------------------------------------------------------------------
+  # Scopes
+  # --------------------------------------------------------------------
+  default_scope { order(:organization_type_id, :short_name) }
+
   # List of allowable form param hash keys
   FORM_PARAMS = [
     :customer_id,
