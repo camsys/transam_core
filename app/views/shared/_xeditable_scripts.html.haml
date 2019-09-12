@@ -165,9 +165,9 @@
              first_bracket_index = field_name.indexOf('[')
 
              if (first_bracket_index >= 0) {
-                field_name = field_name.substring(0,first_bracket_index) + '[infrastructure_components_attributes][0]' + field_name.substring(first_bracket_index,field_name.length);
+                field_name = field_name.substring(0,first_bracket_index) + '['+$('#'+ tab_id +' .tab-pane.active [data-behavior~=component-picker]').data('target-model') +'_attributes][0]' + field_name.substring(first_bracket_index,field_name.length);
 
-                id_field_name = field_name.substring(0,first_bracket_index) + '[infrastructure_components_attributes][0][id]';
+                id_field_name = field_name.substring(0,first_bracket_index) + '['+$('#'+ tab_id +' .tab-pane.active [data-behavior~=component-picker]').data('target-model') +'_attributes][0][id]';
                 if (extra_data[id_field_name] === undefined) {
                   extra_data[id_field_name] = $('#'+ tab_id +' .tab-pane.active [data-behavior~=component-picker] option:selected').data('id');
                 }
