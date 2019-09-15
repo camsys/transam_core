@@ -156,8 +156,7 @@
        // get params from subforms
        var extra_data = {};
        var tab_id = get_active_tab_id();
-       $('.asset-subform form').each(function(subform) {
-        $(this).serializeArray().forEach(function(param_value, idx) {
+       $('#'+ tab_id +' .tab-pane.active .asset-subform form').serializeArray().forEach(function(param_value, idx) {
           if(param_value) {
             field_name = param_value.name
             if ($('[data-behavior~=component-picker]').length > 0) {
@@ -176,9 +175,7 @@
 
             extra_data[field_name] = param_value.value;
           }
-        });
        });
-
        $('.editable-field').editable('submit', {
            ajaxOptions: {
                type: 'PUT',
