@@ -10,6 +10,8 @@
   });
 
   $('.editable-field').editable({});
+  $("##{@dependent_subform_target} form").validate();
+
   var disabled = "#{cannot?(:update, @asset) ? 'disable' : ''}";
   if (disabled.length > 0) {$('.editable-field').editable(disabled);}
   $('.not-editable-field').editable('disable');
