@@ -163,7 +163,7 @@
           var subforms = $('.asset-subform form');
         }
        subforms.each(function(subform) {
-         $('#'+ tab_id +' .tab-pane.active .asset-subform form').serializeArray().forEach(function(param_value, idx) {
+         $(this).serializeArray().forEach(function(param_value, idx) {
             if(param_value) {
               field_name = param_value.name
               if ($('[data-behavior~=component-picker]').length > 0) {
