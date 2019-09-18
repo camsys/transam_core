@@ -80,7 +80,7 @@
 
     function enable_tab_editing(tab_id) {
       $('#'+tab_id+' .editable-field').editable('enable');
-      $('#'+tab_id+' .editable-field').editable('show', false);
+      $('#'+tab_id+' .editable-field').filter(':visible').editable('show', false);
       $('#'+tab_id+' input[type=radio]').removeAttr('disabled');
       //$('#'+tab_id+' .editable-input').find('input, select').first().focus();
 
@@ -155,14 +155,35 @@
 
        // get params from subforms
        var extra_data = {};
-       $('.asset-subform form').each(function(subform) {
-        $(this).serializeArray().forEach(function(param_value) {
-          if(param_value) {
-            extra_data[param_value.name] = param_value.value;
-          }
-        });
-       });
+       var tab_id = get_active_tab_id();
 
+        if ($('[data-behavior~=component-picker]').length > 0) {
+          var subforms = $('#'+ tab_id +' .tab-pane.active .asset-subform form');
+        } else {
+          var subforms = $('.asset-subform form');
+        }
+       subforms.each(function(subform) {
+         $(this).serializeArray().forEach(function(param_value, idx) {
+            if(param_value) {
+              field_name = param_value.name
+              if ($('[data-behavior~=component-picker]').length > 0) {
+
+               first_bracket_index = field_name.indexOf('[')
+
+               if (first_bracket_index >= 0) {
+                  field_name = field_name.substring(0,first_bracket_index) + '['+$('#'+ tab_id +' .tab-pane.active [data-behavior~=component-picker]').data('target-model') +'_attributes][0]' + field_name.substring(first_bracket_index,field_name.length);
+
+                  id_field_name = field_name.substring(0,first_bracket_index) + '['+$('#'+ tab_id +' .tab-pane.active [data-behavior~=component-picker]').data('target-model') +'_attributes][0][id]';
+                  if (extra_data[id_field_name] === undefined) {
+                    extra_data[id_field_name] = $('#'+ tab_id +' .tab-pane.active [data-behavior~=component-picker] option:selected').data('id');
+                  }
+               }
+              }
+
+              extra_data[field_name] = param_value.value;
+            }
+         });
+       });
        $('.editable-field').editable('submit', {
            ajaxOptions: {
                type: 'PUT',

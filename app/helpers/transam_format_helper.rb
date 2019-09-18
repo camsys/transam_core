@@ -146,7 +146,8 @@ module TransamFormatHelper
 
   # returns a number as a percentage
   def format_as_percentage(val, precision = 0)
-    "#{number_with_precision(val, :precision => precision)}%"
+    num = number_with_precision(val, :precision => precision)
+    "#{num}%" unless num.blank?
   end
 
   # returns a number formatted as a phone number
