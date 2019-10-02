@@ -368,7 +368,7 @@ class AssetsController < AssetAwareController
   def get_dependent_subform
     @dependent_subform_target_model = params[:dependent_subform_target_model]
 
-    @dependent = @dependent_subform_target_model.constantize.find_by(object_key: params[:dependent_object_key])
+    @dependent = @dependent_subform_target_model.classify.constantize.find_by(object_key: params[:dependent_object_key])
 
     @dependent_subform_target = params[:dependent_subform_target]
     @dependent_subform_view = params[:dependent_subform_view]

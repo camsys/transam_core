@@ -10,6 +10,20 @@
   });
 
   $('.editable-field').editable({});
+  $("##{@dependent_subform_target} form").validate();
+
   var disabled = "#{cannot?(:update, @asset) ? 'disable' : ''}";
   if (disabled.length > 0) {$('.editable-field').editable(disabled);}
   $('.not-editable-field').editable('disable');
+
+  if ($('.edit-xeditable-button').is(":hidden")) {
+      // enable subforms
+      $('.asset-subform').find('input, select').removeAttr('disabled');
+      $('.asset-subform .asset-subform-action').show();
+      $('.asset-subform .asset-subform-display').hide();
+  } else {
+      // disable subform by default
+      $('.asset-subform').find('input, select').attr('disabled', 'disabled');
+      $('.asset-subform .asset-subform-action').hide();
+      $('.asset-subform .asset-subform-display').show();
+  }
