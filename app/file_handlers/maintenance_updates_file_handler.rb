@@ -115,6 +115,14 @@ class MaintenanceUpdatesFileHandler < AbstractFileHandler
           # Check for any validation errors
           event = loader.event
           if event.valid?
+
+            # If there are errors then we abort this row
+            if row_errored
+              @num_rows_failed += 1
+              add_processing_message(3, 'error', "Too many errors. Row cannot be saved.")
+              next
+            end
+
             event.upload = upload
             event.save
             add_processing_message(3, 'success', 'Maintenance history updated.')
@@ -122,6 +130,7 @@ class MaintenanceUpdatesFileHandler < AbstractFileHandler
           else
             Rails.logger.info "Maintenance record did not pass validation."
             event.errors.full_messages.each { |e| add_processing_message(3, 'warning', e)}
+            add_processing_message(3, 'error', "Too many errors. Row cannot be saved.")
           end
         end
       end
