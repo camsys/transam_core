@@ -107,6 +107,8 @@ class UserOrganizationFilter < ActiveRecord::Base
       user.update(user_organization_filter_id: user.user_organization_filters.system_filters.sorted.first.try(:id))
     end
 
+    self.users.clear
+
   end
 
 
