@@ -66,7 +66,7 @@ class UserOrganizationFilter < ActiveRecord::Base
   end
 
   def get_organizations
-    self.query_string.present? ? Organization.find_by_sql(self.query_string) : self.organizations
+    self.query_string.present? ? Organization.find_by_sql(self.query_string + ' ORDER BY `organizations`.`organization_type_id` ASC, `organizations`.`short_name` ASC') : self.organizations
   end
 
   def can_update? user
