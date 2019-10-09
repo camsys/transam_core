@@ -1,5 +1,3 @@
-- message_link = link_to 'NAME', user_message_path(current_user, 'xxx'), target: :_blank
-
 %legend{style: 'border-bottom: none; margin-bottom: 0px;'} Message History
 
 .table-responsive
@@ -47,7 +45,7 @@
   });
 
   function message_link_formatter(value, row) {
-    return "<a href='/users/#{current_user.object_key}/messages/" + row['object_key'] + "'>" + value + "</a>"
+    return "<a href='/users/#{current_user.object_key}/messages/" + row['object_key'] + "' target='_blank'>" + value + "</a>"
   }
 
 
