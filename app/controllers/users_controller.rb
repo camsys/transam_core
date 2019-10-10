@@ -126,7 +126,7 @@ class UsersController < OrganizationAwareController
         @users = @users.order(params[:sort] => params[:order])
       end
     else
-      @users = @users.joins(:organization).order('organizations.organization_type_id', 'organizations.short_name', :last_name)
+      @users = @users.unscoped.joins(:organization).order('organizations.organization_type_id', 'organizations.short_name', :last_name)
     end
 
     # Set the breadcrumbs
