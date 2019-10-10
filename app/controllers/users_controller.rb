@@ -115,8 +115,8 @@ class UsersController < OrganizationAwareController
 
     if params[:sort] && params[:order]
       case params[:sort]
-      when 'organization_short_name'
-        @users = @users.joins(:organization).merge(Organization.order(short_name: params[:order]))
+      when 'organization'
+        @users = @users.reorder("organizations.short_name #{params[:order]}")
       # figure out sorting by role + privilege some other way
       # when 'role_name'
       #   @users = @users.joins(:roles).merge(Role.unscoped.order(name: params[:order]))
