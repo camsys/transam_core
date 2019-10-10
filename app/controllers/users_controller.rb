@@ -123,7 +123,7 @@ class UsersController < OrganizationAwareController
       # when 'privilege_names'
       #   @users = @users.joins(:roles).merge(Role.order(privilege: params[:order]))
       else
-        @users = @users.order(params[:sort] => params[:order])
+        @users = @users.reorder(params[:sort] => params[:order])
       end
     end
 
