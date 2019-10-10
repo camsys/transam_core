@@ -43,7 +43,7 @@ class ImagesController < NestedResourceController
               u.as_json.merge!({
                 classification: u.image_classification&.to_s,
                 link_image: view_context.link_to(view_context.image_tag(u.image.url(:thumb)), u.image.url,  :class => "img-responsive gallery-image", :data => {:lightbox => "gallery"}, :title => u.original_filename),
-                imagable_to_s: u.imagable.to_s,
+                imagable: u.imagable.as_json,
                 creator: u.creator.to_s
                })
             }
