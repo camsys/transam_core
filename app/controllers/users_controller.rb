@@ -100,7 +100,7 @@ class UsersController < OrganizationAwareController
     end
 
     # Get the Users but check to see if a role was selected
-    @users = User.unscoped.distinct.joins(:organizations).includes(:organization,:roles).where(conditions.join(' AND '), *values)
+    @users = User.unscoped.distinct.joins(:organization).order('organizations.organization_type_id', 'organizations.short_name', :last_name).joins(:organizations).includes(:organization,:roles).where(conditions.join(' AND '), *values)
     if !@role.blank?
       if @role.kind_of?(Array)
         all_users = @users
@@ -125,8 +125,6 @@ class UsersController < OrganizationAwareController
       else
         @users = @users.order(params[:sort] => params[:order])
       end
-    else
-      @users = @users.unscoped.joins(:organization).order('organizations.organization_type_id', 'organizations.short_name', :last_name)
     end
 
     # Set the breadcrumbs
