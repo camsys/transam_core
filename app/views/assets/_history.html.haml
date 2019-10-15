@@ -43,7 +43,7 @@
                 %td
                   = evt.updated_at
                 %td
-                = evt.updater || evt.creator
+                  = evt.updater
 
             %tr{:data => {:action_path => "#{inventory_asset_event_path(evt.transam_asset.object_key, evt.object_key)}"}}
               %td
@@ -55,7 +55,7 @@
               %td
                 = evt.created_at
               %td
-                = evt.updater || evt.creator
+                = evt.creator
 
           - else
             %tr{:data => {:action_path => "#{inventory_asset_event_path(evt.transam_asset.object_key, evt.object_key)}"}}
