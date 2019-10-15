@@ -7,7 +7,7 @@ describe "assets/_asset_compact_datatable.html.haml", :type => :view do
     test_policy = create(:policy, organization: test_parent_policy.organization, parent: test_parent_policy)
     test_condition_update_event = create(:condition_update_event)
     test_service_status_update_event = create(:service_status_update_event)
-    test_asset = create(:transam_asset, asset_subtype: test_subtype, organization: test_policy.organization, in_service_date: Date.today - 33.years, condition_updates: [test_condition_update_event], service_status_updates: [test_service_status_update_event])
+    test_asset = create(:transam_asset, asset_subtype: test_subtype, organization: test_policy.organization, purchase_date: Date.today-33.years, in_service_date: Date.today - 33.years, condition_updates: [test_condition_update_event], service_status_updates: [test_service_status_update_event])
     render 'assets/asset_compact_datatable', :assets => [test_asset]
 
     expect(rendered).to have_content(test_asset.asset_tag)
