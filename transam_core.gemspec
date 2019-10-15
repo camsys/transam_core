@@ -82,6 +82,8 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'deep_cloneable'
 
+  s.add_dependency 'browser'
+
   # Development
   s.add_development_dependency 'mail', '2.5.5'
   s.add_development_dependency "rspec-rails"
