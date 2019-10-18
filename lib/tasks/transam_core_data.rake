@@ -2,6 +2,32 @@
 
 namespace :transam_core_data do
 
+  desc "Remove object_key duplicates"
+  task :remove_dup_object_keys, [:class_name] => [:environment] do |t, args|
+    klass = args[:class_name].constantize
+    dups = klass.select(:object_key).group(:object_key).having('count(*) > 1').count
+
+    if dups.count > 0
+      to_update_keys = {}
+      dupped_keys = dups.keys
+      klass.where(object_key: dupped_keys).each do |obj|
+        original_key = obj.object_key
+        # no need to update the first order, so have a flag to mark it
+        # all rest of orders with the same key would be updated with a new object_key
+        unless to_update_keys[original_key].present?
+          to_update_keys[original_key] = true
+          next
+        end
+
+        # regenerate object_key
+        obj.object_key = nil
+        obj.generate_object_key(:object_key)
+        obj.save(validate: false)
+        puts "#{klass} #{original_key} now has a new key: #{obj.object_key}"
+      end
+    end
+  end
+
   desc "add super manager role"
   task add_super_manager_role: :environment do
     r = Role.find_or_initialize_by(name: 'super_manager')

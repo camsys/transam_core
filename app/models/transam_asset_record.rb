@@ -4,6 +4,8 @@
 class TransamAssetRecord < ActiveRecord::Base
   self.abstract_class = true
 
+  after_validation :check_for_duplicate_object_keys
+
   class << self
     attr_accessor :child_asset_class
   end
@@ -134,6 +136,28 @@ class TransamAssetRecord < ActiveRecord::Base
 
   def replacement_pinned?
     false # all assets can be locked into place to prevent sched replacement year changes but by default none are locked
+  end
+
+  protected
+
+  def check_for_duplicate_object_keys
+    if self.errors.details[:object_key].map{|x| x[:error]}.include? :taken
+      # send metrics with object_keys that are duplicated
+      PutMetricDataService.new.put_metric('TransamAssetCount', 'Count', 1, [
+          {
+              'Name' => 'Object Key',
+              'Value' => self.object_key
+          }
+      ])
+
+      # send metric to show that there are duplicates - used for alarms
+      PutMetricDataService.new.put_metric('DuplicateObjectKeyCount', 'Count', 1, [
+          {
+              'Name' => 'Class Name',
+              'Value' => 'TransamAsset'
+          }
+      ])
+    end
   end
 
 end
