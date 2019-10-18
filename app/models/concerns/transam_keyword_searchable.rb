@@ -164,7 +164,7 @@ module TransamKeywordSearchable
     searchable_fields.each do |searchable_field|
       Rails.logger.debug "Testing property #{searchable_field}"
 
-      if self.changes.include? searchable_field.to_s
+      if (self.changes.include? searchable_field.to_s) || self.is_a?(Rails.application.config.asset_base_class_name.constantize)
         Rails.logger.debug "#{searchable_field.to_s} has changed"
         self.is_dirty = true
         return
