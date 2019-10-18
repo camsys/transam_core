@@ -20,17 +20,6 @@
             = link_to users_path do
               %i.fa.fa-users.fa-fw
               Users
-
-          %li.divider
-          %li.text-left
-            = link_to html_help_path, :target => "_blank" do
-              %i.fa.fa-question.fa-fw
-              Help
-          -if File.exists?("#{Rails.root}/public#{html_help_pdf_path}")
-            %li.text-left
-              = link_to html_help_pdf_path, :target => "_blank" do
-                %i.fa.fa-file-pdf-o.fa-fw
-                Download Help
           %li.text-left
             = link_to new_issue_path  do
               %i.fa.fa-bug.fa-fw

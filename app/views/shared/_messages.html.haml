@@ -11,4 +11,5 @@
       - "alert-danger"
     %div{:class => "alert #{alert_class} fade in #{bootstrap_class_for(type)}"}
       %a.close{"data-dismiss" => "alert"} ×
-      = content_tag :div, msg, :id => "flash_#{type}"
+      %div{:id => "flash_#{type}"}
+        = msg.html_safe
