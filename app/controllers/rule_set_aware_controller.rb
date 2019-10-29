@@ -46,7 +46,7 @@ class RuleSetAwareController < OrganizationAwareController
       new_data_obj.organization = org
       new_data_obj.parent = data_obj
 
-      new_data_obj.save!
+      new_data_obj.save
     end
 
     # fire workflow event if exists
