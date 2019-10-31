@@ -33,8 +33,8 @@ class UsersController < OrganizationAwareController
 
     @organization_id = params[:organization_id].to_i
     @search_text = params[:search_text]
-    if params[:role] && Role.where(label: params[:role].titleize).count > 1
-      @role = Role.where(label: params[:role].titleize).pluck(:name)
+    if params[:role] && params[:role].include?(",")
+      @role = params[:role].split(",")
     else
       @role = params[:role]
     end

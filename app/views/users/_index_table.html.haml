@@ -97,7 +97,7 @@
     }
   }
 
-  var role = "#{@role.kind_of?(Array) ? Role.find_by(name:@role.first).label.parameterize.underscore : @role}";
+  var role = "#{@role.kind_of?(Array) ? @role.join(",") : @role}";
   var show_active_only = "#{@show_active_only}";
   var search_text = "#{@search_text}";
   var organization_id = "#{@org.try(:id)}";
