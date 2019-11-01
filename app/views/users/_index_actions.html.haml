@@ -19,7 +19,7 @@
 
 = form_tag users_path, :id => 'search_form', :method => 'get', :class => 'navbar-form navbar-left panel-action', style: 'padding-top: 7px', :role => 'search' do
   %label Role & Privilege
-  = select_tag(:role, grouped_options_for_select([['User Roles', Role.where(privilege: 0).or(Role.where(name: 'super_manager')).collect{|x| [x.label, x.name]}], ['User Privileges', Role.where(privilege: 1).where.not(name: 'super_manager').collect{|x| [x.label, x.name]}]], :selected => @role), :class => "form-control", :include_blank => "All Roles & Privileges")
+  = select_tag(:role, grouped_options_for_select([['User Roles', Role.where(privilege: 0).collect{|x| [x.label, x.name]}], ['User Privileges', Role.where(privilege: 1).collect{|x| [x.label, x.name]}]], :selected => @role), :class => "form-control", :include_blank => "All Roles & Privileges")
   %label Search
   = text_field_tag :search_text, nil, :value => @search_text, :autocomplete => 'off', :class => 'form-control', :placeholder => 'Initials / First / Last / Email / Title...', :id => 'search_text', :style => 'width:250px;'
   %label Status
