@@ -18,6 +18,7 @@ class AssetEvent < ActiveRecord::Base
 
   # Callbacks
   after_initialize :set_defaults
+  after_validation :check_for_duplicate_object_keys
   before_create     :set_base_transam_asset
 
   # Associations
@@ -154,6 +155,26 @@ class AssetEvent < ActiveRecord::Base
       errors.add(:event_date, "must exist")
     elsif transam_asset.try(:purchased_new) && event_date < transam_asset.purchase_date
       errors.add(:event_date, "must be on or after purchase date if new purchase")
+    end
+  end
+
+  def check_for_duplicate_object_keys
+    if self.errors.details[:object_key].map{|x| x[:error]}.include? :taken
+      # send metrics with object_keys that are duplicated
+      PutMetricDataService.new.put_metric('AssetEventCount', 'Count', 1, [
+          {
+              'Name' => 'Object Key',
+              'Value' => self.object_key
+          }
+      ])
+
+      # send metric to show that there are duplicates - used for alarms
+      PutMetricDataService.new.put_metric('DuplicateObjectKeyCount', 'Count', 1, [
+          {
+              'Name' => 'Class Name',
+              'Value' => 'AssetEvent'
+          }
+      ])
     end
   end
 end

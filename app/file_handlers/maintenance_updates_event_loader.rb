@@ -24,7 +24,11 @@ class MaintenanceUpdatesEventLoader < EventLoader
 
     # Mileage
     mileage = as_integer(cells[MILEAGE_COL])
-    @event.current_mileage = mileage if mileage.to_i > 0
+    if mileage.to_i > 0
+      @event.current_mileage = mileage
+    elsif mileage != 0
+      @errors << "Mileage may not be a negative number."
+    end
 
     # Event Date
     @event.event_date = as_date(cells[EVENT_DATE_COL])

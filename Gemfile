@@ -20,5 +20,6 @@ gem 'sass-rails'
 gem 'rails-controller-testing' # assigns has been extracted to this gem
 gem 'awesome_print'
 gem 'responders' # get jbuilder working on Travis. It wasn't automatically rendering the json views.
+gem 'sprockets', '3.7.2' # lock sprockets to 3 because bootstrap-editable-rails is not compatible with 4
 
 gem 'active_record-acts_as', git: 'https://github.com/camsys/active_record-acts_as', branch: 'master' # use our fork

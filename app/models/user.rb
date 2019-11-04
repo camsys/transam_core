@@ -283,8 +283,6 @@ class User < ActiveRecord::Base
     self.user_organization_filters = UserOrganizationFilter.joins(:users).where(created_by_user_id: self.id).sorted.group('user_organization_filters.id').having( 'count( user_id ) = 1' )
 
     UserOrganizationFilter.where('resource_type IS NOT NULL').each do |filter|
-      puts self.try(filter.resource_type.downcase.pluralize).include? filter.resource
-      puts self.organizations.inspect
       if self.respond_to? filter.resource_type.downcase.pluralize #check has many associations
         if self.try(filter.resource_type.downcase.pluralize).include? filter.resource
           self.user_organization_filters << filter

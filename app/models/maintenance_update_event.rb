@@ -78,7 +78,7 @@ class MaintenanceUpdateEvent < AssetEvent
   # Ensure that the mileage is between the previous (if any) and the following (if any)
   # Mileage must increase OR STAY THE SAME over time
   def monotonically_increasing_mileage
-    if transam_asset
+    if transam_asset && current_mileage
       previous_mileage_update = transam_asset.asset_events
                   .where.not(current_mileage: nil)
                   .where("event_date < ? OR (event_date = ? AND created_at < ?)", self.event_date, self.event_date, (self.new_record? ? Time.current : self.created_at) ) # Define a window that runs up to this event

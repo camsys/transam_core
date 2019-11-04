@@ -72,6 +72,8 @@ class TransamAsset < TransamAssetRecord
   validates :purchase_date, presence: true #temporarily force in case used in other places but eventually will not be required
   validates :in_service_date, presence: true
 
+  validate :in_service_date_greather_than_purchase_date
+
   validate        :object_key_is_not_asset_tag
 
   #validates :quantity, numericality: { greater_than: 0 }
@@ -397,6 +399,14 @@ class TransamAsset < TransamAssetRecord
 
 
   private
+
+  def in_service_date_greather_than_purchase_date
+    unless self.purchase_date.nil? || self.in_service_date.nil?
+      if self.in_service_date < self.purchase_date
+        @errors.add(:in_service_date, "should be on or after purchase date")
+      end
+    end
+  end
 
   def object_key_is_not_asset_tag
     unless self.asset_tag.nil? || self.object_key.nil?

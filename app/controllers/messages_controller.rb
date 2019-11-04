@@ -64,19 +64,26 @@ class MessagesController < OrganizationAwareController
 
   def show
 
-    add_breadcrumb "My Messages", user_messages_path(current_user)
-    add_breadcrumb @message.subject, user_message_path(current_user, @message)
+    if (can? :manage, MessageTemplate) && @message.to_user != current_user
+      add_breadcrumb "Message History" , message_history_message_templates_path
+      add_breadcrumb @message.subject, user_message_path(@message.to_user, @message)
+    else
+      add_breadcrumb "My Messages", user_messages_path(current_user)
+      add_breadcrumb @message.subject, user_message_path(current_user, @message)
+    end
 
-    @response = Message.new
-    @response.organization = @organization
-    @response.user = current_user
-    @response.priority_type = @message.priority_type
+    if current_user == @message.to_user
+      @response = Message.new
+      @response.organization = @organization
+      @response.user = current_user
+      @response.priority_type = @message.priority_type
 
-    # Mark this message as opened if not opened previously as long as the current_user
-    # is the message recipient
-    if @message.opened_at.nil? and current_user == @message.to_user
-      @message.opened_at = Time.current
-      @message.save
+      # Mark this message as opened if not opened previously as long as the current_user
+      # is the message recipient
+      if @message.opened_at.nil?
+        @message.opened_at = Time.current
+        @message.save
+      end
     end
 
     # get the @prev_record_path and @next_record_path view vars

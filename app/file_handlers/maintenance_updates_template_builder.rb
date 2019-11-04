@@ -119,6 +119,7 @@ class MaintenanceUpdatesTemplateBuilder < TemplateBuilder
       sheet.add_data_validation("M3:M1000", {
         :type => :whole,
         :operator => :greaterThan,
+        :formula1 => '0',
         :allow_blank => true,
         :showErrorMessage => true,
         :errorTitle => 'Wrong input',

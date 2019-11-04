@@ -32,6 +32,19 @@
         - @asset.history.each do |evt|
           - evt = AssetEvent.as_typed_event(evt)
           - if evt.asset_event_type.try(:class_name) == 'EarlyDispositionRequestUpdateEvent'
+            - unless evt.is_new?
+              %tr{:data => {:action_path => "#{inventory_asset_event_path(evt.transam_asset.object_key, evt.object_key)}"}}
+                %td
+                  = evt.asset_event_type.description
+                %td
+                  = "#{evt.get_latest_update} on #{format_as_date(evt.event_date)}"
+                %td
+                  = (evt.comments.blank? ? " " : evt.comments).html_safe
+                %td
+                  = evt.updated_at
+                %td
+                  = evt.updater
+
             %tr{:data => {:action_path => "#{inventory_asset_event_path(evt.transam_asset.object_key, evt.object_key)}"}}
               %td
                 = evt.asset_event_type.description
@@ -42,19 +55,8 @@
               %td
                 = evt.created_at
               %td
-                = evt.updater || evt.creator
-            - unless evt.is_new?
-              %tr{:data => {:action_path => "#{inventory_asset_event_path(evt.transam_asset.object_key, evt.object_key)}"}}
-                %td
-                  = evt.asset_event_type.description
-                %td
-                  = "#{evt.get_latest_update} on #{format_as_date(evt.event_date)}"
-                %td
-                  = (evt.comments.blank? ? " " : evt.comments).html_safe
-                %td
-                  = "#{evt.updated_at} on #{format_as_date(evt.event_date)}"
-                %td
-                = evt.updater || evt.creator
+                = evt.creator
+
           - else
             %tr{:data => {:action_path => "#{inventory_asset_event_path(evt.transam_asset.object_key, evt.object_key)}"}}
               %td

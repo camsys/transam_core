@@ -150,12 +150,6 @@ class AssetsController < AssetAwareController
 
     end
     add_breadcrumb terminal_crumb if terminal_crumb
-    
-    # check that an order param was provided otherwise use asset_tag as the default
-    params[:sort] ||= 'transam_assets.asset_tag'
-
-    # fix sorting on organizations to be alphabetical not by index
-    params[:sort] = 'organizations.short_name' if params[:sort] == 'organization_id'
 
     respond_to do |format|
       format.html
@@ -184,11 +178,11 @@ class AssetsController < AssetAwareController
       sorting_string = ""
 
       multi_sort.each { |x|
-        sorting_string = sorting_string + "#{x[0]}: :#{x[1]}"
+        sorting_string = sorting_string + "#{x[0]}: :#{x[1]}" if x.all?
       }
 
     else
-      sorting_string = "#{params[:sort]} #{params[:order]}"
+      sorting_string = "#{params[:sort]} #{params[:order]}" if [params[:sort], params[:order]].all?
     end
 
     cache_list(@assets.order(sorting_string), INDEX_KEY_LIST_VAR)

@@ -26,7 +26,7 @@ class NewUserService
 
     user.update_user_organization_filters unless Rails.application.config.try(:user_organization_filters_ignored).present?
 
-    user.viewable_organizations = user.user_organization_filter.try(:get_organizations) || user.organizations
+    user.viewable_organizations = user.user_organization_filters.system_filters.sorted.first.try(:get_organizations) || user.organizations
     user.save!
 
     unless assume_user_exists

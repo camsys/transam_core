@@ -66,7 +66,7 @@ class UserOrganizationFilter < ActiveRecord::Base
   end
 
   def get_organizations
-    self.query_string.present? ? Organization.find_by_sql(self.query_string) : self.organizations
+    self.query_string.present? ? Organization.find_by_sql(self.query_string + (self.query_string.include?('ORDER BY') ? '' : ' ORDER BY `organizations`.`organization_type_id` ASC, `organizations`.`short_name` ASC')) : self.organizations
   end
 
   def can_update? user
@@ -106,6 +106,8 @@ class UserOrganizationFilter < ActiveRecord::Base
     User.where(user_organization_filter_id: self.id).each do |user|
       user.update(user_organization_filter_id: user.user_organization_filters.system_filters.sorted.first.try(:id))
     end
+
+    self.users.clear
 
   end
 

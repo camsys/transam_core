@@ -1,16 +1,8 @@
 %ol.breadcrumb
   = render_breadcrumbs :builder => ::BootstrapBreadcrumbsBuilder, :separator => "&raquo;"
-  - if Rails.application.config.try(:help_directory).present?
-    %div{style: 'font-size:18px; float:right;'}
-      - if File.exists?("#{Rails.root}/public/#{Rails.application.config.help_directory}/#{params[:controller]}__#{params[:action]}.html")
-        = link_to "#{html_help_path}##{params[:controller]}__#{params[:action]}", :target => "_blank" do
-          %i.fa.fa-question.fa-fw
-      - elsif File.exists?("#{Rails.root}/public/#{Rails.application.config.help_directory}/#{params[:controller]}.html")
-        = link_to "#{html_help_path}##{params[:controller]}", :target => "_blank" do
-          %i.fa.fa-question.fa-fw
-      - else
-        = link_to "#{html_help_path}", :target => "_blank" do
-          %i.fa.fa-question.fa-fw
+    - if Rails.application.config.try(:release_notes).present?
+    %div{style: 'padding-top:3px; float:right;'}
+      = link_to 'Updates', html_release_notes_pdf_path, download: '', target: '_blank'
   - if Rails.application.config.try(:user_guide).present?
-    %div{style: 'padding: 3px 0; float:right;'}
+    %div{style: 'padding: 3px 10px; float:right;'}
       = link_to 'User Guide', html_help_pdf_path(current_user.has_role? :admin), download: '', target: '_blank'

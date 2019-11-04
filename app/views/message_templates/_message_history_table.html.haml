@@ -26,7 +26,7 @@
     %thead
       %tr
         %th.left{:data => {:field => "object_key", :visible => 'false'}} Object Key
-        %th.left{:data => {:field => "name", :sortable => 'true'}} ID
+        %th.left{:data => {:field => "name", :sortable => 'true', :formatter => 'message_link_formatter'}} ID
         %th.left{:data => {:field => "subject", sortable: 'true'}} Subject
         %th.left{:data => {:field => "description", sortable: 'true'}} Description
         %th.left{:data => {:field => "active", :formatter => "raw_boolean_formatter", sortable: 'true'}} Active
@@ -44,13 +44,8 @@
     $('#message_history_server_table').bootstrapTable('resetView');
   });
 
-  function status_formatter(value, row) {
-    console.log(row);
-    if (row['email_enabled'] || row['active']) {
-      return '#{Message::EMAIL_STATUS_SENT}';
-    } else {
-      return '#{Message::EMAIL_STATUS_DEFAULT}';
-    }
+  function message_link_formatter(value, row) {
+    return "<a href='/users/#{current_user.object_key}/messages/" + row['object_key'] + "' target='_blank'>" + value + "</a>"
   }
 
 

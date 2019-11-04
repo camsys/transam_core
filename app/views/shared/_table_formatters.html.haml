@@ -254,6 +254,16 @@
       return 'By Policy'
   };
 
+  function asset_view_length_unit(value, data) {
+    if (data.service_vehicle_vehicle_length_unit === 'foot') {
+      return 'feet';
+    } else if (data.service_vehicle_vehicle_length_unit === 'inch') {
+      return 'inches';
+    } else {
+      return data.service_vehicle_vehicle_length_unit;
+    }
+  };
+
   function asset_view_funding_type(value, data) {
     return data.fta_funding_type_name + ' (' + data.fta_funding_type_code + ')'
   };
