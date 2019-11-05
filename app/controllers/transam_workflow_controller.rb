@@ -51,6 +51,13 @@ class TransamWorkflowController < ApplicationController
       # Process each order sequentially
       event_proxy.model_objs.each do |model_obj|
         if (can? event_proxy.event_name.to_sym, model_obj) && (model_obj.class.event_names.include? event_proxy.event_name)
+
+          if event_proxy.include_updates.to_i > 0
+            workflow_model_params(event_proxy.class_name).keys.select{|k| k.to_s.include? 'date'}.each do |date_field|
+              params[:transam_workflow_model_proxy][date_field.to_sym] = reformat_date(params[:transam_workflow_model_proxy][date_field.to_sym])
+            end
+          end
+
           if event_proxy.include_updates.to_i > 0 && model_obj.class.event_transitions(event_proxy.event_name).map{|x| x.values}.flatten.include?(model_obj.state.to_sym)
             model_obj.update!(workflow_model_params(event_proxy.class_name))
           else
@@ -69,6 +76,13 @@ class TransamWorkflowController < ApplicationController
         end
       end
     end
+  end
+
+  def reformat_date(date_str)
+    # See if it's already in iso8601 format first
+    return date_str if date_str.match(/\A\d{4}-\d{2}-\d{2}\z/)
+
+    Date.strptime(date_str, '%m/%d/%Y').strftime('%Y-%m-%d')
   end
 
 end
