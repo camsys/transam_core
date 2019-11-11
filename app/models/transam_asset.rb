@@ -125,8 +125,7 @@ class TransamAsset < TransamAssetRecord
       :asset_tag,
       :external_id,
       :description,
-      :manufacturer_model,
-      :title_number
+      :manufacturer_model
   ]
 
   callable_by_submodel def self.asset_seed_class_name
