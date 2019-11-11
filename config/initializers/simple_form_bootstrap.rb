@@ -28,6 +28,24 @@ SimpleForm.setup do |config|
     b.use :error, wrap_with: { tag: 'p', class: 'help-inline' }
   end
 
+  config.wrappers :vertical_append_calendar, tag: 'div', class: "form-group", error_class: 'has-error' do |b|
+    b.use :html5
+    b.use :placeholder
+    b.use :label, class: 'control-label'
+
+    b.wrapper tag: 'div', class: 'input-group' do |input|
+      input.use :input, class: 'form-control datepicker'
+
+      input.wrapper tag: :span, class: 'input-group-addon' do |icon|
+        icon.wrapper :icon, tag: :i, class: 'fa fa-calendar' do
+        end
+      end
+    end
+
+    b.use :hint,  wrap_with: { tag: 'span', class: 'help-block' }
+    b.use :error, wrap_with: { tag: 'p', class: 'help-inline' }
+  end
+
   config.wrappers :vertical_form, tag: 'div', class: 'form-group', error_class: 'has-error' do |b|
     b.use :html5
     b.use :placeholder
