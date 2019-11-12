@@ -44,7 +44,7 @@
     = f.input :total_cost, :wrapper => :vertical_prepend, label: 'Total Cost' do
       %span.input-group-addon
         %i.fa.fa-usd
-      = f.input_field :total_cost, :class => 'form-control', :required => true, :value => 0, :label => false
+      = f.input_field :total_cost, :class => 'form-control', :required => true, :value => (f.object.total_cost || 0), :label => false
   = f.input :extended_useful_life_months
   = f.input :extended_useful_life_miles if @asset.class.to_s.include? 'Vehicle'
 
