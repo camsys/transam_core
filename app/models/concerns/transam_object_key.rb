@@ -15,6 +15,8 @@ module TransamObjectKey
       generate_object_key(:object_key)
     end
 
+    after_validation :check_for_duplicate_object_keys
+
     validates :object_key, :presence => true, :length => { is: 12 }
     validates :object_key, :uniqueness => true, unless: :skip_uniqueness?
   end
@@ -38,5 +40,27 @@ module TransamObjectKey
 
   def skip_uniqueness?
     false
+  end
+
+  def check_for_duplicate_object_keys
+    if self.errors.details[:object_key].map{|x| x[:error]}.include? :taken
+
+      puts "Sending metrics for duplicate object key validation error"
+      # send metrics with object_keys that are duplicated
+      PutMetricDataService.new.put_metric("#{self.class}HasDuplicates", 'Count', 1, [
+          {
+              'Name' => 'Object Key',
+              'Value' => self.object_key
+          }
+      ])
+
+      # send metric to show that there are duplicates - used for alarms
+      PutMetricDataService.new.put_metric('DuplicateObjectKeyCount', 'Count', 1, [
+          {
+              'Name' => 'Class Name',
+              'Value' => self.class.to_s
+          }
+      ])
+    end
   end
 end
