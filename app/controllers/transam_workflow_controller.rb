@@ -45,37 +45,64 @@ class TransamWorkflowController < ApplicationController
   end
 
   def process_workflow_event(event_proxy)
-    if !event_proxy.model_objs.empty? && event_proxy.event_name.present?
-      Rails.logger.debug "fire_workflow_events event_name: #{event_proxy.event_name} for #{event_proxy.model_objs.count} instance(s)."
+    if !event_proxy.model_objs.empty?
+
+      if event_proxy.include_updates.to_i > 0
+        workflow_model_params(event_proxy.class_name).keys.select{|k| k.to_s.include? 'date'}.each do |date_field|
+          params[:transam_workflow_model_proxy][date_field.to_sym] = reformat_date(params[:transam_workflow_model_proxy][date_field.to_sym])
+        end
+      end
 
       # Process each order sequentially
       event_proxy.model_objs.each do |model_obj|
-        if (can? event_proxy.event_name.to_sym, model_obj) && (model_obj.class.event_names.include? event_proxy.event_name)
+        if event_proxy.include_updates.to_i > 0
+          model_obj.transaction do
 
-          if event_proxy.include_updates.to_i > 0
-            workflow_model_params(event_proxy.class_name).keys.select{|k| k.to_s.include? 'date'}.each do |date_field|
-              params[:transam_workflow_model_proxy][date_field.to_sym] = reformat_date(params[:transam_workflow_model_proxy][date_field.to_sym])
-            end
-          end
-
-          if event_proxy.include_updates.to_i > 0 && model_obj.class.event_transitions(event_proxy.event_name).map{|x| x.values}.flatten.include?(model_obj.state.to_sym)
             model_obj.update!(workflow_model_params(event_proxy.class_name))
-          else
-            model_obj.transaction do
 
-              model_obj.update!(workflow_model_params(event_proxy.class_name)) if event_proxy.include_updates.to_i > 0
-
-              if model_obj.machine.fire_state_event(event_proxy.event_name)
-                WorkflowEvent.create(creator: current_user, accountable: model_obj, event_type: event_proxy.event_name)
-              else
-                raise ActiveRecord::Rollback
-              end
-
+            if fire_state_event(model_obj,event_proxy)
+              WorkflowEvent.create(creator: current_user, accountable: model_obj, event_type: event_proxy.event_name)
+            else
+              raise ActiveRecord::Rollback
             end
+
           end
+        else
+          fire_state_event(model_obj,event_proxy)
         end
       end
     end
+  end
+
+  def fire_state_event(model_obj, event_proxy)
+    success = false # set success of firing state event to false by default
+
+    # check four cases
+    # event name given, no state change
+    # event name given, state change
+    # to_state given, no state change
+    # to_state given, state change
+
+    if event_proxy.event_name && (can? event_proxy.event_name.to_sym, model_obj) && (model_obj.class.event_names.include? event_proxy.event_name)
+      if model_obj.class.event_transitions(event_proxy.event_name).map{|x| x.values.map(&:to_sym)}.flatten.include?(model_obj.state.to_sym)
+        success = true
+      else
+        Rails.logger.debug "fire_workflow_events event_name: #{event_proxy.event_name} for #{model_obj}."
+        success = model_obj.machine.fire_state_event(event_proxy.event_name)
+      end
+    elsif event_proxy.to_state
+      if model_obj.state == event_proxy.to_state
+        success = true
+      else
+        event_name = model_obj.allowable_event(event_proxy.to_state)
+        if (can? event_name.to_sym, model_obj) && (model_obj.class.event_names.include? event_name)
+          Rails.logger.debug "fire_workflow_events event_name: #{event_name} for #{model_obj}."
+          success = model_obj.machine.fire_state_event(event_name)
+        end
+      end
+    end
+
+    return success
   end
 
   def reformat_date(date_str)

@@ -12,6 +12,7 @@ class TransamWorkflowModelProxy < Proxy
 
   attr_accessor   :include_updates
   attr_accessor   :event_name
+  attr_accessor   :to_state
   attr_accessor   :global_ids
   attr_accessor   :model_objs
 
@@ -33,6 +34,7 @@ class TransamWorkflowModelProxy < Proxy
     [
         :include_updates,
         :event_name,
+        :to_state,
         :global_ids => []
     ]
   end
