@@ -46,5 +46,14 @@
         $('#submit_button').attr("disabled", "disabled");
       }
     });
+    $('#asset_base_class_id').change(function() {
+      var org = $('#organization_id').val();
+      var val = $('#asset_base_class_id').val();
+      if (org && val) {
+        $('#submit_button').removeAttr("disabled");
+      } else {
+        $('#submit_button').attr("disabled", "disabled");
+      }
+    });
 
   });
