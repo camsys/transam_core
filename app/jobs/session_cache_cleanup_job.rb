@@ -12,7 +12,7 @@ class SessionCacheCleanupJob < ActivityJob
     now = Time.now
     key = "000000:#{TransamController::ACTIVE_SESSION_LIST_CACHE_VAR}"
     session_list = Rails.cache.fetch(key)
-    session_list.keys.each do |s|
+    (session_list.try(:keys) || []).each do |s|
       if session_list[s][:expire_time] < now
         session_list.delete(s)
       end
@@ -26,10 +26,8 @@ class SessionCacheCleanupJob < ActivityJob
 
   def prepare
     Rails.logger.info "Executing SessionCacheCleanupJob at #{Time.now.to_s}"
-  end
 
-  def check
-
+    super
   end
 
 end

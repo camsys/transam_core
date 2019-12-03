@@ -100,6 +100,11 @@ module TransamWorkflow
     (self.class.transam_workflow_transitions.empty? ? self : self.machine).state_events.map{|x| x.to_s}
   end
 
+  def allowable_event(to_state)
+    machine_obj = (self.class.transam_workflow_transitions.empty? ? self : self.machine)
+    machine_obj.state_transitions.find{|x| x.to.to_s == to_state.to_s}&.event&.to_s
+  end
+
   def allowable_event_objects
     machine_obj = (self.class.transam_workflow_transitions.empty? ? self : self.machine)
     machine_obj.class.state_machine.events.select{|x| machine_obj.state_events.include? x.name}

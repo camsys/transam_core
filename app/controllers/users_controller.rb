@@ -73,7 +73,7 @@ class UsersController < OrganizationAwareController
         query_str << "UPPER(users.#{field})"
         query_str << ' LIKE ? '
         # add the value in for this sub clause
-        values << search_value
+        values << search_value.upcase
       end
       query_str << ')' unless searchable_fields.empty?
 
