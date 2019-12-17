@@ -46,7 +46,7 @@ module CoreAssetMapSearchable
   def condition_rating_conditions
     unless condition_rating_slider.blank?
       condition_ratings = condition_rating_slider.split(',')
-      @klass.joins('LEFT JOIN recent_asset_events_views AS recent_rating ON recent_rating.base_transam_asset_id = transam_assets.id AND recent_rating.asset_event_name = "Condition"').joins('LEFT JOIN asset_events AS rating_event ON rating_event.id = recent_rating.asset_event_id').where(rating_event: {assessed_rating: condition_ratings[0].to_i..condition_ratings[1].to_i}) unless condition_ratings.empty?
+      @klass.joins('LEFT JOIN recent_asset_events_views AS recent_rating ON recent_rating.base_transam_asset_id = transam_assets.id AND recent_rating.asset_event_name = "ConditionUpdateEvent"').joins('LEFT JOIN asset_events AS rating_event ON rating_event.id = recent_rating.asset_event_id').where(rating_event: {assessed_rating: condition_ratings[0].to_i..condition_ratings[1].to_i}) unless condition_ratings.empty?
     end
   end
 
