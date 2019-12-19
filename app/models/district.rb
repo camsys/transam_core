@@ -17,6 +17,11 @@ class District < ActiveRecord::Base
     scope (district_type.name.parameterize(separator: '_')+'_districts').to_sym, -> { where(district_type: district_type) }
   end
 
+  # { state => district_array}, e.g. {ME => [York, Cumberland]}
+  def self.district_names_by_state
+    self.pluck(:state, :name).each_with_object({}) { |(f,l),h|  h.update(f=>[l]) {|_,ov,nv| ov+nv }}
+  end
+
   def to_s
     "#{name} (#{district_type})"
   end
