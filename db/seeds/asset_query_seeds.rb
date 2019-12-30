@@ -19,7 +19,7 @@ transam_assets_category_fields = {
     },
     {
       name: 'asset_tag',
-      label: 'Asset ID / Segment ID',
+      label: 'Asset ID',
       filter_type: 'text'
     },
     {
@@ -90,8 +90,7 @@ transam_assets_category_fields = {
     {
       name: 'quantity_unit',
       label: 'Quantity Units',
-      filter_type: 'text',
-      hidden: true
+      filter_type: 'text'
     }
   ],
 
