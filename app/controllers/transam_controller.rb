@@ -211,7 +211,7 @@ class TransamController < ApplicationController
         h[session.id] = {:start_time => Time.now, :views => 0, :user_id => current_user.id}
       end
       h[session.id][:last_view] = Time.now
-      h[session.id][:path] = request.env['ORIGINAL_FULLPATH']
+      h[session.id][:path] = request.env['ORIGINAL_FULLPATH'] unless request.env['devise.skip_trackable']
       h[session.id][:views] = h[session.id][:views].to_i + 1
       h[session.id][:expire_time] = Time.now + current_user.timeout_in
       h[session.id][:ip_addr] = request.remote_ip
