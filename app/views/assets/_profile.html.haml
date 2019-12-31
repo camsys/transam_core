@@ -14,7 +14,7 @@
     - if lookup_context.template_exists?(view_component, 'assets', true)
       = render :partial => "assets/#{view_component}"
 
-= render 'profile_scripts'
+= render 'assets/profile_scripts'
 
 - # Load module specific tab if they exist
 - SystemConfig.transam_module_names.each do |mod|
