@@ -36,7 +36,7 @@ Gem::Specification.new do |s|
   s.add_dependency "gritter"
 
   s.add_dependency 'paper_trail'
-  #s.add_dependency 'paper_trail-association_tracking'
+  s.add_dependency 'paper_trail-association_tracking'
   s.add_dependency 'paper_trail-globalid'
 
   s.add_dependency 'state_machines'
