@@ -90,7 +90,8 @@ transam_assets_category_fields = {
     {
       name: 'quantity_unit',
       label: 'Quantity Units',
-      filter_type: 'text'
+      filter_type: 'text',
+      hidden: true
     }
   ],
 
