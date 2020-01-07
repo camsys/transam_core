@@ -197,6 +197,84 @@ class TransamAsset < TransamAssetRecord
     end
   end
 
+  def self.get_typed_version(version)
+    # if live object passed to get_typed_asset
+    unless version.respond_to? :reify
+      return get_typed_asset(version)
+    end
+
+    # get reified asset of version with one level of asset ERD associations
+    asset = version.reify(belongs_to: true, has_one: true, has_many: true)
+
+    # get typed asset class
+    typed_asset = get_typed_asset(asset)
+
+    # using typed asset class - get ERD of parents all the way to TransamAsset
+    erd_hierarchy = []
+    current_klass = typed_asset.class.acting_as_name
+    while current_klass.present?
+      erd_hierarchy << current_klass
+      current_klass =
+          begin
+            current_klass.to_s.classify.constantize.acting_as_name
+          rescue
+            nil
+          end
+    end
+
+    # add typed asset class to ERD
+    # note this adds the top level. if the typed asset inherits such as
+    # Bridge < BridgeLike and BridgeLike acts_as HighwayStructure
+    # erd_hierarchy will look like [...., HighwayStructure, Bridge] (does not include BridgeLike)
+    erd_hierarchy = [typed_asset.class.to_s.underscore] + erd_hierarchy
+    erd_hierarchy = erd_hierarchy.reverse # rearrange hierarchy from base TransamAsset to most typed
+
+    # find at which level of ERD version was passed
+    asset_idx = erd_hierarchy.index(asset.class.to_s.underscore)
+
+    # instantiate an empty array to hold reifed objects from versions later
+    obj_arr = [nil]*erd_hierarchy.count
+    obj_arr[asset_idx] = asset
+
+    # for all parents of reifed asset get other reifed objects
+    lower_idx = asset_idx-1
+    lower_tmp_asset = asset
+    if asset_idx > 0
+      while lower_idx >= 0
+        obj_arr[lower_idx] = lower_tmp_asset.send(erd_hierarchy[lower_idx])
+        lower_tmp_asset = obj_arr[lower_idx].version&.reify(has_one: true, belongs_to: true, has_many: true) || obj_arr[lower_idx]
+        lower_idx -= 1
+      end
+    end
+
+    # for all children of reifed asset get other reifed objects
+    upper_tmp_asset = asset
+    upper_idx = asset_idx+1
+    if asset_idx < erd_hierarchy.count-1
+      while upper_idx < erd_hierarchy.count
+        # acts_as allows an obj to access all associations for all models you acts as
+        # in order to get just the associations for the specific class we take the asset's class associations minus its parent class' associations
+        # we then can get the name of the association that is actable
+        assocs = upper_tmp_asset.class.reflect_on_all_associations(:belongs_to).map(&:name) - erd_hierarchy[upper_idx-2].classify.constantize.reflect_on_all_associations(:belongs_to).map(&:name)
+        assoc = assocs.find{|x| x.to_s[-4..-1] == 'ible'}
+        obj_arr[upper_idx] = upper_tmp_asset.send(assoc)
+        upper_tmp_asset = obj_arr[upper_idx].version&.reify(has_one: true, belongs_to: true, has_many: true) || obj_arr[upper_idx]
+        upper_idx += 1
+      end
+    end
+
+    # using obj_array that was used to store reifed assets
+    # join together objects
+    (0..obj_arr.count-2).to_a.each do |i|
+      assoc = obj_arr[i].class.reflect_on_all_associations(:belongs_to).map(&:name).find{|x| x.to_s[-4..-1] == 'ible'}
+      obj_arr[i].send("#{assoc}=",obj_arr[i+1])
+    end
+
+    # convert top level to typed asset if not the same class
+    # return typed asset
+    return typed_asset.class.new(obj_arr[-1].attributes)
+  end
+
   def very_specific
     a = self.specific
 

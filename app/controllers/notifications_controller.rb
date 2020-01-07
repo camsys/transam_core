@@ -18,7 +18,6 @@ class NotificationsController < OrganizationAwareController
   end
 
   def count
-    request.env["devise.skip_trackable"] = true
 
     @count = current_user ? current_user.user_notifications.unopened.count : 0
 

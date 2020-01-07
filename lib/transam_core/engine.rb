@@ -32,6 +32,7 @@ require 'roo-xls'
 require 'kaminari'
 
 require 'paper_trail'
+require 'paper_trail-association_tracking'
 require 'paper_trail-globalid'
 
 require 'deep_cloneable'
