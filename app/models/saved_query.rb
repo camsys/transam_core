@@ -230,7 +230,11 @@ class SavedQuery < ActiveRecord::Base
           #filter_value = "lower(#{filter_value})"
         #end
 
-        where_sqls_for_one_filter << "#{query_field_name} #{filter_op} #{filter_value}"
+        where_clause_str  = "#{query_field_name} #{filter_op} #{filter_value}"
+        unless query_field.column_filter.blank? || query_field.column_filter_value.blank?
+          where_clause_str = "(#{query_field_name} #{filter_op} #{filter_value} AND #{query_field.column_filter} = '#{query_field.column_filter_value}')"
+        end
+        where_sqls_for_one_filter << where_clause_str
       end
 
       where_sqls[query_field.name] = where_sqls_for_one_filter.join(" OR ")
@@ -279,12 +283,23 @@ class SavedQuery < ActiveRecord::Base
           unless join_tables.keys.include?(as_table_name)
             join_tables[as_table_name] = "left join #{association_table_name} as #{as_table_name} on #{as_table_name}.#{association_id_field_name} = #{asset_table_name}.#{query_field_name}"
           end
-          select_sqls << "#{as_table_name}.#{association_display_field_name} as #{asset_table_name}_#{query_field_name}"
+
+          unless field.column_filter.blank? || field.column_filter_value.blank?
+            select_sqls << "IF(#{field.column_filter} = '#{field.column_filter_value}',#{as_table_name}.#{association_display_field_name}, '') as #{asset_table_name}_#{query_field_name}"
+          else
+            select_sqls << "#{as_table_name}.#{association_display_field_name} as #{asset_table_name}_#{query_field_name}"
+          end
         else
           # select value directly from asset_table
 
           output_field_name = field.display_field.blank? ? "#{asset_table_name}.#{query_field_name}" : "#{asset_table_name}.#{field.display_field}"
-          select_sqls << "#{output_field_name} as #{asset_table_name}_#{query_field_name}"
+
+          unless field.column_filter.blank? || field.column_filter_value.blank?
+            select_sqls << "IF(#{field.column_filter} = '#{field.column_filter_value}',#{output_field_name}, '') as #{asset_table_name}_#{query_field_name}"
+          else
+            select_sqls << "#{output_field_name} as #{asset_table_name}_#{query_field_name}"
+          end
+
         end
       end
     end 
