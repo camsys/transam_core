@@ -5,7 +5,7 @@ class AddParentTransamAssetsQueryTool < ActiveRecord::DataMigration
        CREATE OR REPLACE VIEW parent_transam_assets_view AS
 SELECT transam_assets.id AS parent_id, transam_assets.asset_tag, transam_assets.description,
 CONCAT(asset_tag, IF(description IS NOT NULL, ' : ', ''), IFNULL(description,'')) AS parent_name
-FROM `transam_assets`
+FROM transam_assets
 WHERE transam_assets.id IN (SELECT DISTINCT parent_id FROM transam_assets WHERE parent_id IS NOT NULL)
     SQL
     ActiveRecord::Base.connection.execute parent_transam_assets_view_sql
