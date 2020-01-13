@@ -202,3 +202,33 @@ fields_data.each do |table_name, category_fields|
   end
 end
 
+parent_transam_assets_view_sql = <<-SQL
+      CREATE OR REPLACE VIEW parent_transam_assets_view AS
+SELECT transam_assets.id AS parent_id, transam_assets.asset_tag, transam_assets.description,
+CONCAT(asset_tag, IF(description IS NOT NULL, ' : ', ''), IFNULL(description,'')) AS parent_name
+FROM `transam_assets`
+WHERE transam_assets.id IN (SELECT DISTINCT parent_id FROM transam_assets WHERE parent_id IS NOT NULL)
+SQL
+ActiveRecord::Base.connection.execute parent_transam_assets_view_sql
+
+# Facility location
+transam_assets_table = QueryAssetClass.find_by(table_name: 'transam_assets')
+parent_association_table = QueryAssociationClass.find_or_create_by(table_name: 'parent_transam_assets_view', display_field_name: 'parent_name', id_field_name: 'parent_id')
+facility_location_id_field = QueryField.find_or_create_by(
+    name: 'location_id',
+    label: 'Location (list of primary facilities)',
+    query_category: QueryCategory.find_or_create_by(name: 'Life Cycle (Location / Storage)'),
+    filter_type: 'text',
+    query_association_class: parent_association_table
+)
+facility_location_id_field.query_asset_classes << [transam_assets_table]
+
+parent_field = QueryField.find_or_create_by(
+    name: 'parent_name',
+    label: 'Parent Asset',
+    query_category: QueryCategory.find_or_create_by(name: 'Identification & Classification'),
+    filter_type: 'multi_select',
+    query_association_class: parent_association_table
+)
+parent_field.query_asset_classes << [transam_assets_table]
+
