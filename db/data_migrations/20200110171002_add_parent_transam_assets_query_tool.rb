@@ -21,7 +21,7 @@ WHERE transam_assets.id IN (SELECT DISTINCT parent_id FROM transam_assets WHERE 
       query_association_class: parents_association_table
     )
 
-    parent_field.query_asset_classes << QueryAssetClass.find_by(name: 'transam_assets')
+    parent_field.query_asset_classes << QueryAssetClass.find_by(table_name: 'transam_assets')
 
 
     bad_assoc = QueryAssociationClass.find_by(table_name: 'facilities', display_field_name: 'facility_name')
