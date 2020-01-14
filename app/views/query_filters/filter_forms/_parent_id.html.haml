@@ -1,0 +1,63 @@
+:ruby
+  if @query_filter
+    parent = ParentTransamAssetsView.find_by(parent_id: @query_filter.value)
+  end
+.form-group
+  = text_field_tag @query_field.name, parent.try(:parent_name), {:autocomplete => 'off', :class => 'form-control', :placeholder => 'Type ...', :data => {:url => parents_query_filters_path}}
+
+:javascript
+  $(function() {
+    var query_field_id = #{@query_field.id};
+    var query_field_name = "#{@query_field.name}";
+    
+    function updateFilterDetails(item) {
+      var filter_details = {
+        query_field_id: query_field_id,
+        op: '=',
+        value: item.id
+      };
+
+      _saved_query.setFilterDetails(query_field_id, filter_details);
+    }
+
+    if(#{parent.present?}) {
+      updateFilterDetails({
+        id: #{@query_filter.try(:value).to_i},
+        name: "#{parent.try(:parent_name)}"
+      });
+    }
+
+    function removeFilterDetails() {
+        _saved_query.removeFilterDetails(query_field_id);
+    }
+
+    // typeahead
+    $('#' + query_field_name).on('focus', function() {
+      _typeahead_source_url = $(this).data('url');
+    });
+
+    var last_selected = null;
+    $('#' + query_field_name).typeahead({
+      items: 10,
+      minLength: 1,
+      delay: 1000,
+      changeInputOnSelect: false,
+      changeInputOnMove: false,
+      source: _typeahead_searcher,
+      matcher: _typeahead_matcher,
+      highlighter: _typeahead_highlighter,
+      updater: function (obj) {
+        var item = JSON.parse(obj);
+        last_selected = item.name;
+        // Update the UI
+        updateFilterDetails(item);
+        return item.name;
+      }
+    });
+
+    $('#' + query_field_name).change(function() {
+      if($(this).val() != last_selected) {
+        removeFilterDetails();
+      }
+    });
+  });

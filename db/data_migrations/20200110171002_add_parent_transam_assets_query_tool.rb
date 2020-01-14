@@ -7,7 +7,7 @@ class AddParentTransamAssetsQueryTool < ActiveRecord::DataMigration
   SELECT transam_assets.id AS parent_id, transam_assets.asset_tag, transam_assets.description,
   CONCAT(asset_tag, IF(description IS NOT NULL, ' : ', ''), IFNULL(description,'')) AS parent_name
   FROM transam_assets
-  WHERE transam_assets.id IN (SELECT DISTINCT parent_id FROM transam_assets WHERE parent_id IS NOT NULL)
+  WHERE transam_assets.id IN (SELECT DISTINCT parent_id FROM transam_assets WHERE parent_id IS NOT NULL) OR transam_assets.id IN (SELECT DISTINCT location_id FROM transam_assets WHERE location_id IS NOT NULL)
       SQL
     elsif ActiveRecord::Base.configurations[Rails.env]['adapter'].include? 'post'
       parent_transam_assets_view_sql = <<-SQL
@@ -15,7 +15,7 @@ class AddParentTransamAssetsQueryTool < ActiveRecord::DataMigration
   SELECT transam_assets.id AS parent_id, transam_assets.asset_tag, transam_assets.description,
   CONCAT(asset_tag, CASE WHEN description IS NOT NULL THEN ' : ' ELSE '' END, description) AS parent_name
   FROM transam_assets
-  WHERE transam_assets.id IN (SELECT DISTINCT parent_id FROM transam_assets WHERE parent_id IS NOT NULL)
+  WHERE transam_assets.id IN (SELECT DISTINCT parent_id FROM transam_assets WHERE parent_id IS NOT NULL) OR transam_assets.id IN (SELECT DISTINCT location_id FROM transam_assets WHERE location_id IS NOT NULL)
       SQL
     end
     ActiveRecord::Base.connection.execute parent_transam_assets_view_sql
@@ -24,10 +24,10 @@ class AddParentTransamAssetsQueryTool < ActiveRecord::DataMigration
     parents_association_table = QueryAssociationClass.find_or_create_by(table_name: 'parent_transam_assets_view', display_field_name: 'parent_name', id_field_name: 'parent_id')
 
     parent_field = QueryField.find_or_create_by(
-      name: 'parent_name',
+      name: 'parent_id',
       label: 'Parent Asset',
       query_category: QueryCategory.find_or_create_by(name: 'Identification & Classification'),
-      filter_type: 'multi_select',
+      filter_type: 'text',
       query_association_class: parents_association_table
     )
 

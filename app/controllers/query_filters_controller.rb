@@ -71,4 +71,12 @@ class QueryFiltersController < OrganizationAwareController
     
     render json: (vendors + other_vendors).sort_by{|d| d[:name]}
   end
+
+  def locations
+    render json: ParentTransamAssetsView.where(parent_id: TransamAsset.distinct.pluck(:location_id)).map{|f| {id: f.parent_id, name: f.parent_name}}
+  end
+
+  def parents
+    render json: ParentTransamAssetsView.where(parent_id: TransamAsset.distinct.pluck(:parent_id)).map{|f| {id: f.parent_id, name: f.parent_name}}
+  end
 end
