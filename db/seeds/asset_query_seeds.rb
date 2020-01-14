@@ -234,10 +234,10 @@ facility_location_id_field = QueryField.find_or_create_by(
 facility_location_id_field.query_asset_classes << [transam_assets_table]
 
 parent_field = QueryField.find_or_create_by(
-    name: 'parent_name',
+    name: 'parent_id',
     label: 'Parent Asset',
     query_category: QueryCategory.find_or_create_by(name: 'Identification & Classification'),
-    filter_type: 'multi_select',
+    filter_type: 'text',
     query_association_class: parent_association_table
 )
 parent_field.query_asset_classes << [transam_assets_table]
