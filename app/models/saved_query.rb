@@ -211,7 +211,7 @@ class SavedQuery < ActiveRecord::Base
         # wrap values
         if filter.op == 'like'
           filter_value = "'%#{filter.value}%'"
-        elsif ['date', 'text'].include?(query_filter_type)
+        elsif ['date', 'text'].include?(query_filter_type) and filter.op != 'in' # if coming from a list expect quotes to already be added
           filter_value = "'#{filter.value}'"
         end
 
