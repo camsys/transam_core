@@ -420,19 +420,19 @@ class AssetsController < AssetAwareController
     asset_class_name = params[:asset_seed_class_name] || 'AssetType'
     if asset_class_name == 'AssetType' && params[:asset][:asset_type_id].blank?
       asset_subtype = AssetSubtype.find_by(id: params[:asset][:asset_subtype_id])
-      asset_class_instance = asset_class_name.constantize.find_by(id: asset_subtype.try(:asset_type_id))
+      @asset_class_instance = asset_class_name.constantize.find_by(id: asset_subtype.try(:asset_type_id))
     else
-      asset_class_instance = asset_class_name.constantize.find_by(id: params[:asset][asset_class_name.foreign_key.to_sym])
+      @asset_class_instance = asset_class_name.constantize.find_by(id: params[:asset][asset_class_name.foreign_key.to_sym])
     end
 
-    if asset_class_instance.nil?
+    if @asset_class_instance.nil?
       notify_user(:alert, "Asset class '#{params[:asset][asset_class_name.foreign_key.to_sym]}' not found. Can't create new asset!")
       redirect_to(root_url)
       return
     end
 
     # Use the asset class to create an asset of the correct type
-    @asset = Rails.application.config.asset_base_class_name.constantize.new_asset(asset_class_instance, params)
+    @asset = Rails.application.config.asset_base_class_name.constantize.new_asset(@asset_class_instance, params)
     @asset.attributes = new_form_params(@asset)
 
 
