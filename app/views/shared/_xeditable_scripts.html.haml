@@ -184,11 +184,16 @@
             }
          });
        });
+
+       var ajax_ops = {
+             type: 'PUT',
+             dataType: 'json' //assuming json response
+        };
+       if ($(this).data('xeditable-url') != undefined) {
+        ajax_ops['url'] = $(this).data('xeditable-url')
+       }
        $('.editable-field').editable('submit', {
-           ajaxOptions: {
-               type: 'PUT',
-               dataType: 'json' //assuming json response
-           },
+           ajaxOptions: ajax_ops,
            data: extra_data,
            success: function(data, config) {
               $('#processing_spinner').hide();
