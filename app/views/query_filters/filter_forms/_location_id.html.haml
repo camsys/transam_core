@@ -1,0 +1,2 @@
+- where_sql = "organization_id IN (#{@organization_list.join(',')})"
+= render 'query_filters/filter_forms/multi_select', where_sql: where_sql
