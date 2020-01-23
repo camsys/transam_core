@@ -229,7 +229,6 @@ Rails.application.routes.draw do
       get 'vendors'
       get 'locations'
       get 'parents'
-      get 'vehicle_rebuild_types'
     end
   end
   get 'render_new', to: 'query_filters#render_new', as: :load_new_query_filter
