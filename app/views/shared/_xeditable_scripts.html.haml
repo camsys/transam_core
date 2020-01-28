@@ -251,6 +251,34 @@
         if($(this).hasClass('required')) {
           if($.trim(value) == '') return 'This field is required';
         }
+        if($(this).attr('data-min') != undefined) {
+          var min = $(this).attr("data-min");
+          if(min.includes('.')) {
+            value = parseFloat(value);
+            min = parseFloat(min);
+          }
+          else {
+            value = parseInt(value);
+            min = parseInt(min);
+          }
+          if(value < min) {
+            return 'Value must be greater than or equal to ' + min + '.';
+          }
+        }
+        if($(this).attr('data-max') != undefined) {
+          var max = $(this).attr("data-max");
+          if(max.includes('.')) {
+            value = parseFloat(value);
+            max = parseFloat(max);
+          }
+          else {
+            value = parseInt(value);
+            max = parseInt(max);
+          }
+          if(value > max) {
+            return 'Value must be less than or equal to ' + max + '.';
+          }
+        }
       },
       error: function() {
         return "invalid input or service unavailable";
