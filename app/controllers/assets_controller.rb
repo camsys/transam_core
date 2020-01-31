@@ -795,7 +795,7 @@ class AssetsController < AssetAwareController
   private
 
   def paper_trail_enabled?
-    SystemConfig.find_by(extension_name: 'PaperTrailAssetAware', active: true).present?
+    SystemConfigExtension.find_by(extension_name: 'PaperTrailAssetAware', active: true).present?
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
