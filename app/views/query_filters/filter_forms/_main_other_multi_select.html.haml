@@ -28,7 +28,7 @@
     %li.multi-select-item
       %label.checkbox
         - is_selected = item[:id] >=0 ? main_filter_values.include?(item[:id].to_s) : other_filter_values.include?(item[:name].to_s)
-        = check_box_tag "#{main_field_name}[]", item[:id], is_selected, data: {name: item[:name]}
+        = check_box_tag "#{main_field_name}[]", item[:id], is_selected, data: {name: item[:data_name] || item[:name]}
         = item[:name]
 
 :javascript

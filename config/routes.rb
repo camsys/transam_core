@@ -227,6 +227,8 @@ Rails.application.routes.draw do
       get 'manufacturers'
       get 'manufacturer_models'
       get 'vendors'
+      get 'locations'
+      get 'parents'
     end
   end
   get 'render_new', to: 'query_filters#render_new', as: :load_new_query_filter

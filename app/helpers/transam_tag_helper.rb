@@ -178,7 +178,7 @@ module TransamTagHelper
   # updating asset fields through xeditable
   # IF YOU UPDATE THIS METHOD, update the generic field tag version as well
   #
-  def editable_asset_field_tag(asset, field, label=nil, required: true, type: 'text', min: nil, max: nil, suffix: '', inputclass: '')
+  def editable_asset_field_tag(asset, field, label=nil, required: true, type: 'text', min: nil, max: nil, suffix: '', inputclass: '', current_value: nil)
     if type == 'boolean'
       return editable_asset_association_tag(asset, field, label,
                                             [[1, 'Yes'],[0, 'No']],
@@ -190,7 +190,7 @@ module TransamTagHelper
     classes = ' '
     classes += 'required ' if required
     # classes += 'datepicker ' if type == 'date'
-    value = escape_javascript(asset.send(field).to_s)
+    value = current_value || escape_javascript(asset.send(field).to_s)
     case type
     when 'date'
       type = 'combodate'
