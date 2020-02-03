@@ -14,9 +14,12 @@
       = f.input :customer_id, :as => :hidden, :input_html => {:value => Customer.first.id}
     .col-md-6
       = dialog_tag('Corporate', {:icon => 'fa fa-book', :class => "header-part"}) do
-        = f.input :name, :label => "Common Name (dba)", :required => true, :disabled => (SystemConfig.instance.special_locked_fields.try(:include?,'organizations.short_name') && !(current_user.has_role? :admin))
-        = f.input :legal_name, :required => true, :label => "Legal Name", :disabled => (SystemConfig.instance.special_locked_fields.try(:include?,'organizations.short_name') && !(current_user.has_role? :admin))
-        = f.input :short_name, :required => true, :label => "Acronym or Short Name", :disabled => (SystemConfig.instance.special_locked_fields.try(:include?,'organizations.short_name') && !(current_user.has_role? :admin))
+        - field_custom = SystemConfigFieldCustomization.find_by(is_locked: true, table_name: 'organizations', field_name: 'name', active: true)
+        = f.input :name, :label => "Common Name (dba)", :required => true, :disabled => (field_custom.present? && eval(field_custom.code_frag))
+        - field_custom = SystemConfigFieldCustomization.find_by(is_locked: true, table_name: 'organizations', field_name: 'legal_name', active: true)
+        = f.input :legal_name, :required => true, :label => "Legal Name", :disabled => (field_custom.present? && eval(field_custom.code_frag))
+        - field_custom = SystemConfigFieldCustomization.find_by(is_locked: true, table_name: 'organizations', field_name: 'short_name', active: true)
+        = f.input :short_name, :required => true, :label => "Acronym or Short Name", :disabled => (field_custom.present? && eval(field_custom.code_frag))
         = f.input :external_id, :label => "External ID"
     .col-md-6
       = dialog_tag('Contact', {:icon => 'fa fa-book', :class => "header-part"}) do
