@@ -1,6 +1,6 @@
 class AddSystemConfigFieldCustomizations < ActiveRecord::DataMigration
   def up
-    SystemConfig.instance.special_locked_fields.split(',').each do |field|
+    ['organizations.short_name', 'organizations.name'].each do |field|
       table_name = field.split('.')[0]
       field_name = field.split('.')[1]
 
