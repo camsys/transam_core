@@ -244,6 +244,7 @@ class AssetEventsController < AssetAwareController
       asset_params[Rails.application.config.asset_base_class_name.underscore] = owner
       @asset_event = asset_event_type.class_name.constantize.new(form_params.merge(asset_params))
       @asset_event.creator = current_user
+      @asset_event.updater = current_user
     end
 
     unless params[:causal_asset_event_id].nil?
