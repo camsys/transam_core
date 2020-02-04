@@ -17,19 +17,21 @@ class Api::V1::AssetsController < Api::ApiController
 
   # Get a list of assets based on a set of filters
   def filter
-
-    # We only care about retrieving the ids of the assets
+    # We only care about retrieving the ids of the assets.
     query_fields = [2]
 
-    # Pull out the filters and convert them to hash objects
-    query_filters = filter_params[:filters]
+    # Pull out the orgs and ensure that they are viewable by the current_user
+    orgs = query_params[:orgs]
+    viewable_orgs = current_user.viewable_organizations.pluck(:id)
+    orgs = orgs.blank? ? viewable_orgs : (viewable_orgs & orgs)
+    
+    # Pull out the filters and convert them to hash Objects
+    query_filters = query_params[:filters]
     query_filters.map!{ |f| f.to_h.symbolize_keys }
 
     # Create a new query and get a list of asset ids that match the filter.
     query = SavedQuery.new
-    # TODO: Get the correct org list.
-    # TODO: Allow filtering by org.
-    query.organization_list = Organization.all.pluck(:id)
+    query.organization_list = orgs
     query.parse_query_fields query_fields, query_filters
 
     # Convert those asset ids into Asset Objects
@@ -66,7 +68,7 @@ class Api::V1::AssetsController < Api::ApiController
     Rails.application.config.asset_base_class_name.constantize
   end
 
-  def filter_params
-    params.permit(filters: [:query_field_id, :op, :value])
+  def query_params
+    params.require(:query).permit(filters: [:query_field_id, :op, :value], orgs: [])
   end
 end
