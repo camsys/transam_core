@@ -25,6 +25,9 @@ Rails.application.routes.draw do
       end
 
       resources :assets, only: [:show, :index] do
+        collection do
+          post :filter
+        end
         resources :images
         resources :documents
       end
