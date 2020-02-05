@@ -32,7 +32,7 @@ Rails.application.routes.draw do
         resources :documents
       end
 
-      resources :organizations, only: [:show] do 
+      resources :organizations, only: [:show, :index] do 
       end
     end
   end
