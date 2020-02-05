@@ -13,7 +13,6 @@ class Api::V1::OrganizationsController < Api::ApiController
 
   def index
     orgs = current_user.viewable_organizations.map{ |o| {id: o.id, name: o.name}}
-    puts orgs
     render status: 200, json: orgs 
   end
 
