@@ -3,7 +3,7 @@ class AddEventByToQueryTool < ActiveRecord::DataMigration
     query_view_sql = <<-SQL
       CREATE OR REPLACE VIEW most_recent_asset_events_updated_by_user_view AS
         SELECT
-          mrae.asset_event_id, mrae.base_transam_asset_id, CONCAT(u.first_name, " ", u.last_name) AS event_by
+          mrae.asset_event_id, mrae.base_transam_asset_id, CONCAT(u.first_name, ' ', u.last_name) AS event_by
         FROM query_tool_most_recent_asset_events_for_type_view AS mrae
         LEFT JOIN asset_events AS ae ON ae.id = mrae.asset_event_id
         LEFT JOIN transam_assets AS ta  ON ta.id = mrae.base_transam_asset_id
