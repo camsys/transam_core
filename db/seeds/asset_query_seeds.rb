@@ -6,9 +6,8 @@ QueryAssetClass.find_or_create_by(table_name: 'transam_assets')
 
 most_recent_view_sql = <<-SQL
       CREATE OR REPLACE VIEW query_tool_most_recent_asset_events_for_type_view AS
-        SELECT
-          aet.id AS asset_event_type_id, aet.name AS asset_event_name, Max(ae.created_at) AS asset_event_created_time,
-          ae.base_transam_asset_id, Max(ae.id) AS asset_event_id
+        SELECT aet.id AS asset_event_type_id, aet.name AS asset_event_name, Max(ae.created_at) AS asset_event_created_time,
+               ae.base_transam_asset_id, Max(ae.id) AS ae.updated_by_id AS event_by
         FROM asset_events AS ae
         LEFT JOIN asset_event_types AS aet ON aet.id = ae.asset_event_type_id
         LEFT JOIN transam_assets AS ta  ON ta.id = ae.base_transam_asset_id
@@ -279,26 +278,19 @@ parent_field = QueryField.find_or_create_by(
 )
 parent_field.query_asset_classes << [transam_assets_table]
 
-# Event by
-updated_by_sql = <<-SQL
-      CREATE OR REPLACE VIEW most_recent_asset_events_updated_by_user_view AS
-        SELECT
-          mrae.asset_event_id, mrae.base_transam_asset_id, CONCAT(u.first_name, " ", u.last_name) AS event_by
-        FROM query_tool_most_recent_asset_events_for_type_view AS mrae
-        LEFT JOIN asset_events AS ae ON ae.id = mrae.asset_event_id
-        LEFT JOIN transam_assets AS ta  ON ta.id = mrae.base_transam_asset_id
-        LEFT JOIN users AS u ON u.id = ae.updated_by_id;
+user_view_sql = <<-SQL
+      CREATE OR REPLACE VIEW formatted_users_view AS
+        SELECT id, CONCAT(first_name, " ", last_name) AS full_name, active
+        FROM users
 SQL
-ActiveRecord::Base.connection.execute updated_by_sql
+ActiveRecord::Base.connection.execute user_view_sql
 
-updated_by_table = QueryAssetClass.find_or_create_by(
-    table_name: 'most_recent_asset_events_updated_by_user_view',
-    transam_assets_join: "left join most_recent_asset_events_updated_by_user_view aeub on aeub.base_transam_asset_id = transam_assets.id"
-)
-event_by_field = QueryField.find_or_create_by(
+qf = QueryField.find_or_create_by(
     name: 'event_by',
     label: 'Event By',
     query_category: QueryCategory.find_or_create_by(name: 'Life Cycle (History Log)'),
-    filter_type: 'text'
-    )
-event_by_field.query_asset_classes << updated_by_table
+    filter_type: 'multi_select',
+    query_association_class: QueryAssociationClass.find_or_create_by(table_name: 'formatted_users_view', display_field_name: 'full_name', id_field_name: 'id')
+)
+
+qf.query_asset_classes = QueryAssetClass.where(table_name: 'most_recent_asset_events')
