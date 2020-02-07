@@ -15,7 +15,7 @@ SELECT aet.id AS asset_event_type_id, aet.name AS asset_event_name, Max(ae.creat
 FROM asset_events AS ae
 LEFT JOIN asset_event_types AS aet ON aet.id = ae.asset_event_type_id
 LEFT JOIN transam_assets AS ta  ON ta.id = ae.base_transam_asset_id
-GROUP BY aet.id, ae.base_transam_asset_id;
+GROUP BY aet.id, ae.base_transam_asset_id, ae.updated_by_id;
 
 CREATE OR REPLACE VIEW formatted_users_view AS
   SELECT id, CONCAT(first_name, " ", last_name) AS full_name, active
