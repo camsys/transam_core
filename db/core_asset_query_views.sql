@@ -18,7 +18,7 @@ LEFT JOIN transam_assets AS ta  ON ta.id = ae.base_transam_asset_id
 GROUP BY aet.id, ae.base_transam_asset_id, ae.updated_by_id;
 
 CREATE OR REPLACE VIEW formatted_users_view AS
-  SELECT id, CONCAT(first_name, " ", last_name) AS full_name, active
+  SELECT id, CONCAT(first_name, ' ', last_name) AS full_name, active
   FROM users
 -- postgis
 -- CREATE OR REPLACE VIEW parent_transam_assets_view AS

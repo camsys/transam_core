@@ -13,7 +13,7 @@ class AddEventByQueryTool < ActiveRecord::DataMigration
 
     user_view_sql = <<-SQL
       CREATE OR REPLACE VIEW formatted_users_view AS
-        SELECT id, CONCAT(first_name, " ", last_name) AS full_name, active
+        SELECT id, CONCAT(first_name, ' ', last_name) AS full_name, active
         FROM users
     SQL
     ActiveRecord::Base.connection.execute user_view_sql
