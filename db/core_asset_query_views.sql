@@ -11,7 +11,7 @@ WHERE transam_assets.id IN (SELECT DISTINCT parent_id FROM transam_assets WHERE 
 DROP VIEW if exists query_tool_most_recent_asset_events_for_type_view;
 CREATE OR REPLACE VIEW query_tool_most_recent_asset_events_for_type_view AS
 SELECT aet.id AS asset_event_type_id, aet.name AS asset_event_name, Max(ae.created_at) AS asset_event_created_time,
-       ae.base_transam_asset_id, Max(ae.id) AS ae.updated_by_id AS event_by
+       ae.base_transam_asset_id, Max(ae.id) AS asset_event_id, ae.updated_by_id AS event_by
 FROM asset_events AS ae
 LEFT JOIN asset_event_types AS aet ON aet.id = ae.asset_event_type_id
 LEFT JOIN transam_assets AS ta  ON ta.id = ae.base_transam_asset_id
