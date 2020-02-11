@@ -5,8 +5,6 @@
     url = update_policy_rule_policy_path(@policy)
   end
 
-  parent_rule = @policy.parent.policy_asset_type_rules.find_by(asset_type: @rule.asset_type) if @policy.parent
-
 = simple_form_for(@rule,
   :url => url,
   :remote => true,
@@ -37,7 +35,8 @@
 
   .row
     .col-xs-4
-      = f.association :service_life_calculation_type, :include_blank => false, :disabled => parent_rule.present?
+      - field_custom = SystemConfigFieldCustomization.find_by(is_locked: true, table_name: 'policy_asset_types_rules', field_name: 'service_life_calculation_type_id', active: true)
+      = f.association :service_life_calculation_type, :include_blank => false, :disabled => (field_custom.present? && eval(field_custom.code_frag))
 
     .col-xs-4
       = f.association :replacement_cost_calculation_type, :include_blank => false
