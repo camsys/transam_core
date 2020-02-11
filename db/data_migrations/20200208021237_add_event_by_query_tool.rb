@@ -18,7 +18,7 @@ class AddEventByQueryTool < ActiveRecord::DataMigration
     SQL
     ActiveRecord::Base.connection.execute user_view_sql
 
-    QueryField.find_by(name: 'event_by').destroy
+    QueryField.find_by(name: 'event_by')&.destroy
     qf = QueryField.find_or_create_by(
         name: 'updated_by_id',
         label: 'Event By',
