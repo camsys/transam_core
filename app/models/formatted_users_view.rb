@@ -1,4 +1,4 @@
-class DualFuelTypeView < ActiveRecord::Base
+class FormattedUsersView < ActiveRecord::Base
   self.table_name = :formatted_users_view
   self.primary_key = :id
 
