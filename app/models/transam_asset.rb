@@ -513,7 +513,7 @@ class TransamAsset < TransamAssetRecord
     end
 
     if self.changes.include?("title_ownership_organization_id") && self.other_title_ownership_organization.present?
-      self.other_titel_ownership_organization = nil unless self.title_ownership_organization_id == DEFAULT_OTHER_ID
+      self.other_title_ownership_organization = nil unless self.title_ownership_organization_id == DEFAULT_OTHER_ID
     end
 
     if self.changes.include?("lienholder_id") && self.other_lienholder.present?
