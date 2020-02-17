@@ -1,7 +1,9 @@
 class AddEventByQueryTool < ActiveRecord::DataMigration
   def up
     query_view_sql = <<-SQL
-      CREATE OR REPLACE VIEW query_tool_most_recent_asset_events_for_type_view AS
+      DROP VIEW if exists most_recent_asset_events_updated_by_user_view;
+      DROP VIEW if exists query_tool_most_recent_asset_events_for_type_view;
+      CREATE VIEW query_tool_most_recent_asset_events_for_type_view AS
         SELECT aet.id AS asset_event_type_id, aet.name AS asset_event_name, Max(ae.created_at) AS asset_event_created_time,
                ae.base_transam_asset_id, Max(ae.id) AS asset_event_id
         FROM asset_events AS ae
@@ -12,7 +14,8 @@ class AddEventByQueryTool < ActiveRecord::DataMigration
     ActiveRecord::Base.connection.execute query_view_sql
 
     user_view_sql = <<-SQL
-      CREATE OR REPLACE VIEW formatted_users_view AS
+      DROP VIEW if exists formatted_users_view;
+      CREATE VIEW formatted_users_view AS
         SELECT id, CONCAT(first_name, ' ', last_name) AS full_name, active
         FROM users
     SQL
