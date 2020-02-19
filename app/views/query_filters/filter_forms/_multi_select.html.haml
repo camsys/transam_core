@@ -10,7 +10,6 @@
       else
         model_values = association_model.all
       end
-
       model_values = model_values.where(where_sql) if local_assigns.has_key?(:where_sql)
     end
 
