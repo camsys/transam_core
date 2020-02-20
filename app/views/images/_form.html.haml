@@ -19,26 +19,8 @@
 
 :javascript
 
-  $.validator.addMethod( "maxsize_mb", function( value, element, param ) {
-      if ( this.optional( element ) ) {
-          return true;
-      }
-
-      param = param * 1000000;
-
-      if ( $( element ).attr( "type" ) === "file" ) {
-          if ( element.files && element.files.length ) {
-              for ( var i = 0; i < element.files.length; i++ ) {
-                  if ( element.files[ i ].size > param ) {
-                      return false;
-                  }
-              }
-          }
-      }
-      return true;
-  }, $.validator.format( "File size must not exceed {0} MB." ) );
-
   $.extend(jQuery.validator.messages, {
+      maxsize: "File size must not exceed #{Image::MAX_UPLOAD_FILE_SIZE} MB.",
       extension: "Please attach a file with a valid extension {0}."
   });
 
@@ -46,7 +28,7 @@
   $('.photo_form').validate({
     rules: {
       'image[image]': {
-        maxsize_mb: parseInt('#{Image::MAX_UPLOAD_FILE_SIZE}')
+        maxsize: parseInt('#{Image::MAX_UPLOAD_FILE_SIZE * 1000000}')
       }
     },
     submitHandler: function(form) {
