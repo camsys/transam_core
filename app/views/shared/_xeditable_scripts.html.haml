@@ -136,8 +136,8 @@
       var tab_id = get_active_tab_id();
       enable_tab_editing(tab_id);
 
-      $('.edit-xeditable-button').hide();
-      $('.edit-xeditable-buttons').show();
+      $(this).hide();
+      $(this).next('.edit-xeditable-buttons').show();
     });
 
     $('.cancel-xeditable-button').on('click', function(e) {
