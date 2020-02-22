@@ -35,7 +35,7 @@
 
   .row
     .col-xs-4
-      - field_custom = SystemConfigFieldCustomization.find_by(is_locked: true, table_name: 'policy_asset_types_rules', field_name: 'service_life_calculation_type_id', active: true)
+      - field_custom = SystemConfigFieldCustomization.find_by(is_locked: true, table_name: 'policy_asset_type_rules', field_name: 'service_life_calculation_type_id', active: true)
       = f.association :service_life_calculation_type, :include_blank => false, :disabled => (field_custom.present? && eval(field_custom.code_frag))
 
     .col-xs-4
