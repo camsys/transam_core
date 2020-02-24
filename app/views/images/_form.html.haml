@@ -20,11 +20,17 @@
 :javascript
 
   $.extend(jQuery.validator.messages, {
+      maxsize: "File size must not exceed #{Image::MAX_UPLOAD_FILE_SIZE} MB.",
       extension: "Please attach a file with a valid extension {0}."
   });
 
   // jquery validations
   $('.photo_form').validate({
+    rules: {
+      'image[image]': {
+        maxsize: parseInt('#{Image::MAX_UPLOAD_FILE_SIZE * 1000000}')
+      }
+    },
     submitHandler: function(form) {
       $('#processing-photo').show();
       $('#photos').hide();

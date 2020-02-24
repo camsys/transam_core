@@ -4,7 +4,7 @@ module PaperTrailAssetAware
 
   included do
 
-    has_paper_trail
+    has_paper_trail except: [:created_at, :updated_at]
 
   end
 

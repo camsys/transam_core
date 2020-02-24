@@ -34,9 +34,6 @@ class UploadProcessorJob < Job
         upload_notification.notifiable_id = upload.organization_id
       end
       UserNotification.create!(user: upload.user, notification: upload_notification)
-
-    else
-      raise RuntimeError, "Can't find upload with object_key #{object_key}"
     end
   end
 
