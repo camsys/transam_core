@@ -34,6 +34,7 @@ Rails.application.routes.draw do
 
       resources :query_fields, only: [:index]
       resources :query_categories, only: [:index]
+      resources :asset_types, only: [:index]
       resources :organizations, only: [:show, :index] do 
       end
     end
