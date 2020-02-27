@@ -8,6 +8,7 @@ class Api::V1::AssetsController < Api::ApiController
       @data = {id: "Asset #{params[:id]} not found."}
       render status: :not_found, json: json_response(:fail, data: @data)
     end
+    render status: 200, json: json_response(:success, data: @asset)
   end
 
   def index 

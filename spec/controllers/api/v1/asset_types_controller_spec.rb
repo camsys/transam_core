@@ -23,5 +23,4 @@ RSpec.describe Api::V1::AssetTypesController, type: :controller do
     
   end
   
-  
 end
