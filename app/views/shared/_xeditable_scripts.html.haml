@@ -22,8 +22,13 @@
   .editable-buttons {
     display: none;
   }
-  
+
+:ruby
+  disabled_fields ||= (obj.present? ? obj.attributes.keys.select{|x| cannot?("update_#{x}", obj)} : [])
+
 :javascript
+
+  var disabled_fields = '#{disabled_fields}';
 
   // show Other text entry only if it's a Other type; otherwise, hide and empty its value
   // type_el: HTML element of the Type dropdown
@@ -83,6 +88,12 @@
       $('#'+tab_id+' .editable-field').filter(':visible').editable('show', false);
       $('#'+tab_id+' input[type=radio]').removeAttr('disabled');
       //$('#'+tab_id+' .editable-input').find('input, select').first().focus();
+
+      $('#'+tab_id+' .editable-field').each(function(field) {
+        if ($.inArray( $(field).attr('id'), disabled_fields ) >= 0) {
+          $('.editable-field').editable('disable');
+        }
+      });
 
       $('.other-type-container select').each(function() {
         $(this).closest('.other-type-container').attr('data-original-value', $(this).val());
