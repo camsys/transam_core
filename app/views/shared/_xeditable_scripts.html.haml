@@ -24,6 +24,7 @@
   }
 
 :ruby
+  obj ||= nil
   disabled_fields ||= (obj.present? ? obj.attributes.keys.select{|x| cannot?("update_#{x}", obj)} : [])
 
 :javascript
