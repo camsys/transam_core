@@ -7,7 +7,7 @@ class RolePrivilegeMapping < ActiveRecord::Base
   #---------------------------------------------------------------------------
 
   validates    :privilege_id,  :presence => true, :allow_nil => false, :uniqueness => { :scope => :role_id}
-  validates    :role_id,          :presence => true, :allow_nil => false, :uniqueness => { :scope => :organization_id}
+  validates    :role_id,          :presence => true, :allow_nil => false, :uniqueness => { :scope => :privilege_id}
 
   #---------------------------------------------------------------------------
   # Class Methods
