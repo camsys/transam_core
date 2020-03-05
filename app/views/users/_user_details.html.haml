@@ -19,4 +19,5 @@
     = format_field("External ID", user.external_id ) unless user.external_id.blank?
   .col-sm-4
     = format_field("Address", format_as_address(user)) unless user.full_address.blank?
-    = format_field("Roles", format_as_list(user.roles.collect{|x| x.label}) )
+    = format_field("Role", user.roles.roles.last.label)
+    = format_field("Privileges", format_as_list(user.roles.privileges.collect{|x| x.label}) )
