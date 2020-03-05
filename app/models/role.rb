@@ -17,6 +17,8 @@ class Role < ActiveRecord::Base
   belongs_to :resource, :polymorphic => true
   belongs_to :role_parent, :class_name => 'Role'
 
+  has_many :role_privilege_mappings
+
   #-----------------------------------------------------------------------------
   # Scopes
   #-----------------------------------------------------------------------------
