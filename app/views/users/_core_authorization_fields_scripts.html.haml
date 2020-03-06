@@ -72,10 +72,17 @@
       $('#privilege-ids-div').show();
       role_id = parseInt(role_id);
       var privilege_ids = privilege_ids_by_role[role_id];
-      $('.super-privilege').each(function(){
+      var count = 0
+      $('.super-privilege').each(function() {
         var val = $(this).val();
         if(val && privilege_ids != undefined && privilege_ids.indexOf(parseInt(val)) >= 0) {
           $(this).parent().parent().show();
+          if (count == 0) {
+            count = 1;
+            $(this).parent().parent().css('margin-top', '10px');
+          } else {
+            $(this).parent().parent().css('margin-top', '-5px');
+          }
         } else {
           $(this).parent().parent().hide();
         }

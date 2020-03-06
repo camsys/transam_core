@@ -30,6 +30,7 @@
     - if assignable_privileges.count > 0
       .col-lg-6.col-md-6.col-sm-6.col-xs-12
         #privilege-ids-div
+          %label.check_boxes.optional User Privileges
           = f.collection_check_boxes :privilege_ids, assignable_privileges, :first, :second, :item_wrapper_class => 'checkbox' do |b|
             = b.check_box(:class => (b.object.third ? 'super-privilege' : '')) + b.text
 
