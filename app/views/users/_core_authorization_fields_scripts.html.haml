@@ -1,6 +1,7 @@
 :javascript
 
   var role_ids_by_org = JSON.parse('#{(OrganizationRoleMapping.role_ids_by_org || {}).to_json.html_safe}');
+  var privilege_ids_by_role = JSON.parse('#{(RolePrivilegeMapping.privilege_ids_by_role || {}).to_json.html_safe}');
 
   // Document Ready
   $(document).ready(function(){
@@ -66,14 +67,22 @@
 
 
   $('#user_role_ids').change(function() {
-    $('.super-privilege').each(function(){
-
-      if(parseInt($(this).data('resource-id')) == parseInt($('#user_role_ids').val())) {
-        $(this).parent().parent().show(); // get span of checkbox
-      } else {
-        $(this).parent().parent().hide();
-      }
-    });
+    role_id = $(this).val();
+    if(role_id) {
+      $('#privilege-ids-div').show();
+      role_id = parseInt(role_id);
+      var privilege_ids = privilege_ids_by_role[role_id];
+      $('.super-privilege').each(function(){
+        var val = $(this).val();
+        if(val && privilege_ids != undefined && privilege_ids.indexOf(parseInt(val)) >= 0) {
+          $(this).parent().parent().show();
+        } else {
+          $(this).parent().parent().hide();
+        }
+      });
+    } else {
+      $('#privilege-ids-div').hide();
+    }
   });
 
   // Organization change: reset role, borough, and boroughs

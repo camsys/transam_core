@@ -1,7 +1,7 @@
 :ruby
 
   assignable_roles = Role.roles.map{ |r| [r.label, r.id] if can? :assign, r }.compact
-  assignable_privileges = Role.privileges.where(show_in_user_mgmt: true).map{ |r| [r.id, r.label, r.role_privilege_mappings.count > 0] if can? :assign, r }.compact
+  assignable_privileges = Role.privileges.where(show_in_user_mgmt: true).map{ |r| [r.id, r.label, RolePrivilegeMapping.where(privilege_id: r.id).count > 0] if can? :assign, r }.compact
 
 %fieldset
   %legend User Organizations
