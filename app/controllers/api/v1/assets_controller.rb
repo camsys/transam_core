@@ -13,7 +13,8 @@ class Api::V1::AssetsController < Api::ApiController
 
   def index 
     total_assets = get_assets
-    @assets = paginate total_assets.page(params[:page]).per(params[:page_size])
+    data = {count: total_assets.count, assets: total_assets.map { |a| a.as_json }}
+    render status: 200, json: json_response(:success, data: data)
   end
 
   # Get a list of assets based on a set of filters
@@ -62,7 +63,9 @@ class Api::V1::AssetsController < Api::ApiController
 
   def get_assets
     # TODO: filtering
-    base_asset_class.all
+    #base_asset_class.all
+    orgs = current_user.viewable_organizations
+    base_asset_class.where(organization: orgs)
   end
 
   def base_asset_class
