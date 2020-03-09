@@ -435,7 +435,7 @@ class UsersController < OrganizationAwareController
     if current_user.has_role? :admin
       @viewable_organizations = Organization.ids
     else
-      @viewable_organizations = current_user.viewable_organization_ids
+      @viewable_organizations = current_user.viewable_organizations.select{|org| can?(:authorize, org)}.map(&:id)
     end
 
     get_organization_selections

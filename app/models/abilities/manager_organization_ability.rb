@@ -7,6 +7,8 @@ module Abilities
       # can update organization records
       can :update, Organization
 
+      can :authorize, Organization
+
     end
   end
 end
