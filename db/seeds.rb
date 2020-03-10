@@ -249,10 +249,10 @@ data = eval(table_name)
 klass = table_name.classify.constantize
 data.each do |row|
   x = klass.new(row.except(:role_parent))
-  row[:role_parent].split(',').each do |role|
+  x.save!
+  (row[:role_parent] || '').split(',').each do |role|
     RolePrivilegeMapping.create!(privilege_id: x.id, role_id: Role.find_by(name: role).id)
   end
-  x.save!
 end
 
 puts "======= Processing TransAM CORE Reports  ======="
