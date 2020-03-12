@@ -11,6 +11,7 @@ Scenario: Login
 	Then I will see "Asset Summary"
 
 Scenario: Forgot your password
+	Given A system user
 	When I start the app
 		And I press the link "Forgot Your Password?"
 		And I fill out the forgotten password form with "jsoloski@catabus.com"
