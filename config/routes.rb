@@ -25,11 +25,17 @@ Rails.application.routes.draw do
       end
 
       resources :assets, only: [:show, :index] do
+        collection do
+          post :filter
+        end
         resources :images
         resources :documents
       end
 
-      resources :organizations, only: [:show] do 
+      resources :query_fields, only: [:index]
+      resources :query_categories, only: [:index]
+      resources :asset_types, only: [:index]
+      resources :organizations, only: [:show, :index] do 
       end
     end
   end
