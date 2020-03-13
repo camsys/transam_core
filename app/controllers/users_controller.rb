@@ -145,7 +145,7 @@ class UsersController < OrganizationAwareController
                  role_name: u.roles.roles.last&.label,
                  privilege_names: u.roles.privileges.collect{|x| x.label}.join(', '),
                  all_orgs: u.organizations.map{ |o| o.to_s }.join(', ')
-            }) if @roles.include? u.roles.roles.last.name
+            }) if @roles.nil? || @roles.include?(u.roles.roles.last.name)
           }.compact
         }
       }
