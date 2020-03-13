@@ -56,7 +56,7 @@ class UserRoleService
     end
 
     # Make sure the user has the user role and assign it if they dont (except for guests)
-    if (!(user.has_role? :guest) && !(user.has_role? :user))
+    if (user.roles.where("name LIKE '%guest%'").count == 0 && !(user.has_role? :user))
       assign_role user, Role.find_by(:name => 'user'), manager
     end
   end
