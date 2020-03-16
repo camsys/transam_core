@@ -33,11 +33,7 @@ class UsersController < OrganizationAwareController
 
     @organization_id = params[:organization_id].to_i
     @search_text = params[:search_text]
-    if params[:role] && params[:role].include?(",")
-      @role = params[:role].split(",")
-    else
-      @role = params[:role]
-    end
+    @role = params[:role].split(",") if params[:role]
     @id_filter_list = params[:ids]
 
     # Start to set up the query
@@ -101,15 +97,12 @@ class UsersController < OrganizationAwareController
 
     # Get the Users but check to see if a role was selected
     @users = User.unscoped.distinct.joins(:organization).order('organizations.organization_type_id', 'organizations.short_name', :last_name).joins(:organizations).includes(:organization,:roles).where(conditions.join(' AND '), *values)
-    if !@role.blank?
-      if @role.kind_of?(Array)
-        all_users = @users
-        @users = @users.with_role(@role[0])
-        @role[1..-1].each do |r|
-          @users = @users.or(all_users.with_role(r))
-        end
-      else
-        @users = @users.with_role(@role)
+
+    unless @role.blank?
+      all_users = @users
+      @users = @users.with_role(@role[0])
+      @role[1..-1].each do |r|
+        @users = @users.or(all_users.with_role(r))
       end
     end
 
@@ -149,11 +142,11 @@ class UsersController < OrganizationAwareController
             u.as_json.merge!({
                  organization_short_name: u.organization.short_name,
                  organization_name: u.organization.name,
-                 role_name: !@role.blank? && (@role.kind_of?(Array) ? !Role.find_by(name:@role.first).privilege : !Role.find_by(name: @role).privilege) ? (@role.kind_of?(Array) ? u.roles.roles.where(name: @role).last.label : u.roles.roles.find_by(name: @role).label) : u.roles.roles.last.label,
+                 role_name: u.roles.roles.last&.label,
                  privilege_names: u.roles.privileges.collect{|x| x.label}.join(', '),
                  all_orgs: u.organizations.map{ |o| o.to_s }.join(', ')
-            })
-          }
+            }) if @roles.nil? || @roles.include?(u.roles.roles.last.name)
+          }.compact
         }
       }
 
