@@ -13,7 +13,7 @@ class Api::V1::OrganizationsController < Api::ApiController
 
   def index
     orgs = current_user.viewable_organizations.map{ |o| {id: o.id, name: o.name}}
-    render status: 200, json: orgs 
+    render status: 200, json: json_response(:success, data: orgs)
   end
 
   private

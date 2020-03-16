@@ -41,6 +41,12 @@ class Api::V1::AssetsController < Api::ApiController
     render json: {data: {count: query.data.size, assets: assets}}
   end
 
+  def update
+    @asset = get_selected_asset(params[:id])
+    @asset.update!(asset_params(@asset))
+    render status: 200, json: json_response(:success, data: @asset.as_json)
+  end
+
   private
 
   def get_selected_asset(asset_id, convert=true, use_id=false)
@@ -74,5 +80,9 @@ class Api::V1::AssetsController < Api::ApiController
 
   def query_params
     params.require(:query).permit(filters: [:query_field_id, :op, :value], orgs: [])
+  end
+
+  def asset_params(asset)
+    params.require(:asset).permit(asset.allowable_params)
   end
 end
