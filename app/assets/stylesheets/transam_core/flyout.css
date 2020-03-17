@@ -37,6 +37,14 @@ html {
     z-index: 999;
 }
 
+.flyout-content-right-stretch {
+    position: absolute;
+    left: 110vw;
+    transition: left 0.5s ease;
+    background: white;
+    z-index: 999;
+}
+
 .flyout-content-left {
     position: absolute;
     left: -100vw;
@@ -79,14 +87,29 @@ html {
     display: none;
 }
 
-.flyout-content-right header:after, .flyout-content-left header:after {
+.flyout-content-right-stretch .flyout-panel {
+    width: 40vw;
+}
+
+.flyout-content-right  header:after, .flyout-content-left header:after {
     content: '\00d7';
     opacity: 0.5;
     position: absolute;
     right: 2%;
     pointer-events: none;
 }
+.flyout-content-right-stretch  header:after, .flyout-content-left header:after {
+    content: '\00d7';
+    opacity: 0.5;
+    position: absolute;
+    right: 2%;
+    pointer-events: none;
+}
+
 .flyout-content-right header:hover:after, .flyout-content-left header:hover:after {
+    opacity: 1;
+}
+.flyout-content-right-stretch header:hover:after, .flyout-content-left header:hover:after {
     opacity: 1;
 }
 
@@ -96,6 +119,11 @@ html {
 
 .flyout-checkbox:checked ~ .flyout-content-right {
     left: -25vw;
+    display: block;
+}
+
+.flyout-checkbox:checked ~ .flyout-content-right-stretch {
+    left: 33vw;
     display: block;
 }
 

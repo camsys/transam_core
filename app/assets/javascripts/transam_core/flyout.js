@@ -7,12 +7,11 @@
 // }
 
 
-function createFlyout(before, append) {
+function createFlyout(elem, before, append) {
     $(document).ready(function(){
         before;
-        $("#flyout-body:empty").append(append);
+        $(elem + ":empty").append(append);
     });
-    // closeFlyout();
 }
 
 function toggleExtend(trigger, elem, isRight) {
