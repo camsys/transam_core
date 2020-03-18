@@ -75,6 +75,7 @@
       var count = 0
       $('.super-privilege').each(function() {
         var val = $(this).val();
+        $(this).prop( "checked", false );
         if(val && privilege_ids != undefined && privilege_ids.indexOf(parseInt(val)) >= 0) {
           $(this).parent().parent().show();
           if (count == 0) {
@@ -102,6 +103,7 @@
     all_org_updates(org_id);
 
     $('#user_role_ids').val('');
+    $('#user_role_ids').change();
     $('#privilege-ids-div input').attr('checked', false);
   });
 
