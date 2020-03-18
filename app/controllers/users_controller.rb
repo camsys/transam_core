@@ -292,13 +292,13 @@ class UsersController < OrganizationAwareController
         # set organizations
         @user.organizations = Organization.where(id: org_list)
 
-        # Perform an post-creation tasks such as sending emails, etc.
-        new_user_service.post_process @user
-
         # Assign the role and privileges
         role_service = get_user_role_service
         role_service.set_roles_and_privileges @user, current_user, role_id, privilege_ids
         role_service.post_process @user
+
+        # Perform an post-creation tasks such as sending emails, etc.
+        new_user_service.post_process @user
 
         notify_user(:notice, "User #{@user.name} was successfully created.")
         format.html { redirect_to user_url(@user) }
@@ -333,10 +333,6 @@ class UsersController < OrganizationAwareController
           @user.organizations = Organization.where(id: org_list)
         end
 
-        new_user_service = get_new_user_service
-        # Perform an post-creation tasks such as sending emails, etc.
-        new_user_service.post_process @user, true
-
         #-----------------------------------------------------------------------
         # Assign the role and privileges but only on a profile form, not a
         # settings form
@@ -346,6 +342,10 @@ class UsersController < OrganizationAwareController
           role_service.set_roles_and_privileges @user, current_user, role_id, privilege_ids
           role_service.post_process @user
         end
+
+        new_user_service = get_new_user_service
+        # Perform an post-creation tasks such as sending emails, etc.
+        new_user_service.post_process @user, true
         
         if @user.id == current_user.id
           notify_user(:notice, "Your profile was successfully updated.")
