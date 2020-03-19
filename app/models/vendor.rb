@@ -89,6 +89,10 @@ class Vendor < ActiveRecord::Base
     SEARCHABLE_FIELDS
   end
 
+  def api_json(options={})
+    as_json(options)
+  end
+
   #------------------------------------------------------------------------------
   #
   # Protected Methods

@@ -220,6 +220,26 @@ class Organization < ActiveRecord::Base
     a.uniq
   end
 
+  # TODO Expand this when we get to the Organization API Suite
+  def api_json(options={})
+    {
+      id: id, 
+      name: name, 
+      short_name: short_name,
+      legal_name: legal_name,
+      address1: address1,
+      address2: address2,
+      county: county,
+      city: city,
+      state: state,
+      zip: zip,
+      phone: phone,
+      url: url,
+      latitude: latitude, 
+      longitude: longitude,
+    }
+  end
+
   #------------------------------------------------------------------------------
   #
   # Protected Methods

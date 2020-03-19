@@ -474,6 +474,10 @@ class TransamAsset < TransamAssetRecord
     nil
   end
 
+  def api_json(options={})
+    as_json(options)
+  end
+
 
   private
 

@@ -8,12 +8,12 @@ class Api::V1::AssetsController < Api::ApiController
       @data = {id: "Asset #{params[:id]} not found."}
       render status: :not_found, json: json_response(:fail, data: @data)
     end
-    render status: 200, json: json_response(:success, data: @asset.as_json)
+    render status: 200, json: json_response(:success, data: @asset.api_json)
   end
 
   def index 
     total_assets = get_assets
-    data = {count: total_assets.count, assets: total_assets.map { |a| a.as_json }}
+    data = {count: total_assets.count, assets: total_assets.map { |a| a.api_json }}
     render status: 200, json: json_response(:success, data: data)
   end
 
