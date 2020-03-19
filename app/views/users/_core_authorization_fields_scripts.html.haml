@@ -53,7 +53,7 @@
       t.set_values(selected);
     }
 
-    $('#user_role_ids').change();
+    update_privilege_checkboxes($('#user_role_ids').val());
 
     $('btn.selector-clearall').hide();
 
@@ -68,6 +68,11 @@
 
   $('#user_role_ids').change(function() {
     role_id = $(this).val();
+    $('.super-privilege').prop( "checked", false );
+    update_privilege_checkboxes(role_id);
+  });
+
+  function update_privilege_checkboxes(role_id) {
     if(role_id) {
       $('#privilege-ids-div').show();
       role_id = parseInt(role_id);
@@ -75,7 +80,6 @@
       var count = 0
       $('.super-privilege').each(function() {
         var val = $(this).val();
-        $(this).prop( "checked", false );
         if(val && privilege_ids != undefined && privilege_ids.indexOf(parseInt(val)) >= 0) {
           $(this).parent().parent().show();
           if (count == 0) {
@@ -91,7 +95,7 @@
     } else {
       $('#privilege-ids-div').hide();
     }
-  });
+  }
 
   // Organization change: reset role, borough, and boroughs
   $('#user_organization_id').on('change', function(e) {
