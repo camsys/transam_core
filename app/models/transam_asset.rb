@@ -477,6 +477,7 @@ class TransamAsset < TransamAssetRecord
   ######## API Serializer ##############
   def api_json(options={})
     {
+      object_key: object_key,
       asset_tag: asset_tag,
       external_id: external_id,
       description: description,
