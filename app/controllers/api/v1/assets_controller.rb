@@ -37,14 +37,14 @@ class Api::V1::AssetsController < Api::ApiController
     query.parse_query_fields query_fields, query_filters
 
     # Convert those asset ids into Asset Objects
-    assets = query.data.map{ |i| base_asset_class.find(i["id"]).as_json }
+    assets = query.data.map{ |i| base_asset_class.find(i["id"]).api_json }
     render json: {data: {count: query.data.size, assets: assets}}
   end
 
   def update
     @asset = get_selected_asset(params[:id])
     @asset.update!(asset_params(@asset))
-    render status: 200, json: json_response(:success, data: @asset.as_json)
+    render status: 200, json: json_response(:success, data: @asset.api_json)
   end
 
   private
