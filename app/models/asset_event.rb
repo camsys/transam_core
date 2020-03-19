@@ -99,6 +99,19 @@ class AssetEvent < ActiveRecord::Base
     evt = is_typed? ? self : AssetEvent.as_typed_event(self)
     return evt.get_update unless evt.nil?
   end
+
+  ######## API Serializer ##############
+  def api_json(options={})
+    {
+      event_type: asset_event_type.to_s,
+      summary: get_update,
+      event_date: event_date,
+      comments: comments,
+      upload_id: upload.try(:object_key),
+      creator: creator.to_s,
+      updater: updater.to_s
+    }
+  end
   #------------------------------------------------------------------------------
   #
   # Traversal Methods

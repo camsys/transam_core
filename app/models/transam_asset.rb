@@ -474,10 +474,29 @@ class TransamAsset < TransamAssetRecord
     nil
   end
 
+  ######## API Serializer ##############
   def api_json(options={})
-    as_json(options)
-  end
+    {
+      asset_tag: asset_tag,
+      external_id: external_id,
+      description: description,
+      organization: organization.try(:api_json),
+      asset_subtype: asset_subtype.try(:api_json),
+      manufacturer: manufacturer.try(:api_json),
+      manufacturer_model: manufacturer_model.try(:api_json),
+      other_manufacturer_model: other_manufacturer_model,
+      manufacture_year:  manufacture_year,
+      purchase_cost: purchase_cost,
+      purchase_date: purchase_date,
+      purchased_new: purchased_new,
+      in_service_date: in_service_date,
+      vendor: vendor.try(:api_json),
+      quantity: quantity,
+      quantity_unit: quantity_unit,
 
+      asset_events: asset_events.map{|e| e.try(:api_json)}
+    }
+  end
 
   private
 

@@ -25,11 +25,11 @@
 
 :ruby
   obj ||= nil
-  disabled_fields ||= (obj.present? ? obj.attributes.keys.select{|x| cannot?("update_#{x}", obj)} : [])
+  disabled_fields ||= (obj.present? ? obj.attributes.keys.select{|x| cannot?("update_#{x}".to_sym, obj)} : [])
 
 :javascript
 
-  var disabled_fields = '#{disabled_fields}';
+  var disabled_fields = JSON.parse('#{disabled_fields.to_json.html_safe}');
 
   // show Other text entry only if it's a Other type; otherwise, hide and empty its value
   // type_el: HTML element of the Type dropdown
@@ -90,9 +90,9 @@
       $('#'+tab_id+' input[type=radio]').removeAttr('disabled');
       //$('#'+tab_id+' .editable-input').find('input, select').first().focus();
 
-      $('#'+tab_id+' .editable-field').each(function(field) {
+      $('#'+tab_id+' .editable-field').each(function(idx, field) {
         if ($.inArray( $(field).attr('id'), disabled_fields ) >= 0) {
-          $('.editable-field').editable('disable');
+          $(field).editable('disable');
         }
       });
 
