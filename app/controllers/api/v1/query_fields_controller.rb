@@ -6,6 +6,6 @@ class Api::V1::QueryFieldsController < Api::ApiController
     else
       query_fields = QueryField.all.map{ |qf| qf.as_json({get_multi_select_options: true})}
     end
-    render status: 200, json: query_fields
+    render status: 200, json: json_response(:success, data: query_fields)
   end
 end
