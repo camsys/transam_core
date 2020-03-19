@@ -44,4 +44,9 @@ RSpec.describe Manufacturer, :type => :model do
   it '.to_s' do
     expect(test_manufacturer.to_s).to eq("#{test_manufacturer.code} - #{test_manufacturer.name}")
   end
+
+  it 'responds to api_json' do
+    expect(test_manufacturer).to respond_to(:api_json)
+  end
+  
 end

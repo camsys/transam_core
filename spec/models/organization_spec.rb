@@ -192,4 +192,8 @@ RSpec.describe Organization, :type => :model do
     expect(Organization.new.active).to be true
     expect(Organization.new.state).to eq(SystemConfig.instance.default_state_code)
   end
+
+  it 'responds to api_json' do
+    expect(test_org).to respond_to(:api_json)
+  end
 end

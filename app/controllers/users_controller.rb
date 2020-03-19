@@ -126,8 +126,8 @@ class UsersController < OrganizationAwareController
       add_breadcrumb org.short_name, users_path(:organization_id => org.id)
     end
     if @role.present?
-      role_string = @role.kind_of?(Array) ? Role.find_by(name: @role).label.parameterize.underscore : @role
-      add_breadcrumb role_string.titleize, users_path(:role => role_string)
+      role_string = @role.kind_of?(Array) ? Role.find_by(name: @role).try(:label).try(:parameterize).try(:underscore) : @role
+      add_breadcrumb role_string.titleize, users_path(:role => role_string) if role_string
     end
 
     # remember the view type
