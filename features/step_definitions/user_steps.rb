@@ -41,10 +41,12 @@ def sign_in(email, password)
 end
 
 ### GIVEN ###
-Given(/^A system user"$/) do
+Given("A system user") do
   org1 = create_organization
   create_user('system@test.com', org1.short_name,'system','user')
 end
+
+
 Given(/^A user with email "(.*?)"$/) do |user_email|
   org1 = create_organization
   create_user(user_email, org1.short_name)
