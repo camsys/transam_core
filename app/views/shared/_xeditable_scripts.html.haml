@@ -25,7 +25,7 @@
 
 :ruby
   obj ||= nil
-  disabled_fields ||= (obj.present? ? obj.attributes.keys.select{|x| cannot?("update_#{x}".to_sym, obj)} : [])
+  disabled_fields ||= (obj.present? ? (obj.try(:allowable_params) || obj.attributes.keys).select{|x| cannot?("update_#{x}".to_sym, obj)} : [])
 
 :javascript
 
