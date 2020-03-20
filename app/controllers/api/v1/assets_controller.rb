@@ -8,13 +8,13 @@ class Api::V1::AssetsController < Api::ApiController
       @data = {id: "Asset #{params[:id]} not found."}
       render status: :not_found, json: json_response(:fail, data: @data)
     else
-      render status: 200, json: json_response(:success, data: @asset.api_json)
+      render status: 200, json: json_response(:success, data: @asset.api_json(include_events: include_events))
     end
   end
 
   def index 
     total_assets = get_assets
-    data = {count: total_assets.count, assets: total_assets.map { |a| a.api_json }}
+    data = {count: total_assets.count, assets: total_assets.map { |a| a.api_json(include_events: include_events) }}
     render status: 200, json: json_response(:success, data: data)
   end
 
@@ -68,11 +68,15 @@ class Api::V1::AssetsController < Api::ApiController
     asset
   end
 
-  def get_assets
+  def get_assets(convert=true)
     # TODO: filtering
     #base_asset_class.all
     orgs = current_user.viewable_organizations
-    base_asset_class.where(organization: orgs)
+    if convert
+      base_asset_class.where(organization: orgs).map{ |a| base_asset_class.get_typed_asset(a) }
+    else
+      base_asset_class.where(organization: orgs)
+    end
   end
 
   def base_asset_class
@@ -85,5 +89,9 @@ class Api::V1::AssetsController < Api::ApiController
 
   def asset_params(asset)
     params.require(:asset).permit(asset.allowable_params)
+  end
+
+  def include_events
+    params[:include_events].to_i == 1
   end
 end

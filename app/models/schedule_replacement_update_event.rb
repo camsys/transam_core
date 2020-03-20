@@ -50,7 +50,15 @@ class ScheduleReplacementUpdateEvent < AssetEvent
   def get_update
     "Scheduled for replacement in #{fiscal_year(replacement_year)}. Reason: #{replacement_reason_type}."
   end
-  
+
+  ######## API Serializer ##############
+  def api_json(options={})
+    super.merge({
+      replacement_year: replacement_year,
+      replacement_reason_type: replacement_reason_type
+    })
+  end
+
   protected
 
   # Set resonable defaults for a new condition update event

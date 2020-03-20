@@ -50,6 +50,13 @@ class DispositionUpdateEvent < AssetEvent
     "#{disposition_type} on #{event_date}"
   end
 
+  ######## API Serializer ##############
+  def api_json(options={})
+    super.merge({
+      disposition_type: disposition_type
+    })
+  end
+
   #------------------------------------------------------------------------------
   #
   # Protected Methods

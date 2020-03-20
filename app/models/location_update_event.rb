@@ -66,6 +66,13 @@ class LocationUpdateEvent < AssetEvent
     parent.to_s
   end
 
+  ######## API Serializer ##############
+  def api_json(options={})
+    super.merge({
+      parent: parent
+    })
+  end
+
   protected
 
   # Forces an update of an assets location. This performs an update on the record.

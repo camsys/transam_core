@@ -45,7 +45,14 @@ class ScheduleRehabilitationUpdateEvent < AssetEvent
   def get_update
     "Scheduled for rehabilitation in #{fiscal_year(rebuild_year)}"
   end
-  
+
+  ######## API Serializer ##############
+  def api_json(options={})
+    super.merge({
+      rebuild_year: rebuild_year
+    })
+  end
+
   protected
 
   # Set resonable defaults for a new condition update event

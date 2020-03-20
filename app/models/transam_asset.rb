@@ -476,7 +476,7 @@ class TransamAsset < TransamAssetRecord
 
   ######## API Serializer ##############
   def api_json(options={})
-    {
+    asset_attributes = {
       object_key: object_key,
       asset_tag: asset_tag,
       external_id: external_id,
@@ -493,10 +493,20 @@ class TransamAsset < TransamAssetRecord
       in_service_date: in_service_date,
       vendor: vendor.try(:api_json),
       quantity: quantity,
-      quantity_unit: quantity_unit,
-
-      asset_events: asset_events.map{|e| e.try(:api_json)}
+      quantity_unit: quantity_unit
     }
+
+    if options[:include_events]
+      asset_attributes.merge(
+        asset_events: AssetEventType.all.map{|t|
+          [t.to_s, asset_events.where(asset_event_type: t).map{|e|
+            AssetEvent.as_typed_event(e).try(:api_json)
+          }]
+        }.to_h
+      )
+    else
+      asset_attributes
+    end
   end
 
   private

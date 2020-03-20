@@ -86,6 +86,15 @@ class ConditionUpdateEvent < AssetEvent
     end
   end
 
+  ######## API Serializer ##############
+  def api_json(options={})
+    super.merge({
+      condition_type: condition_type.to_s,
+      assessed_rating: assessed_rating,
+      condition_type_percents: condition_type_percents
+    })
+  end
+
   protected
 
   # Set resonable defaults for a new condition update event

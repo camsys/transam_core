@@ -212,6 +212,14 @@ class EarlyDispositionRequestUpdateEvent < AssetEvent
     end
   end
 
+  ######## API Serializer ##############
+  def api_json(options={})
+    super.merge({
+      state: state,
+      document: document
+    })
+  end
+
   #------------------------------------------------------------------------------
   #
   # Protected Methods

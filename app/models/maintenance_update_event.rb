@@ -59,6 +59,13 @@ class MaintenanceUpdateEvent < AssetEvent
     str
   end
 
+  ######## API Serializer ##############
+  def api_json(options={})
+    super.merge({
+      maintenance_type: maintenance_type
+    })
+  end
+
   protected
 
   # Set resonable defaults for a new condition update event
