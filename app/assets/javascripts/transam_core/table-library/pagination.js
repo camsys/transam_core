@@ -51,6 +51,7 @@ function pagination(id, curPage, curPageSize, pageSizes) {
         dropdown.append($('<option>').text(size));
     }
     sizeSelect.append(dropdown);
+    sizeSelect.append($('<span>').text('▼'));
     footer.append(sizeSelect);
 
     let pageStatus = $('<div>').addClass("page-status");
