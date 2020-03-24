@@ -55,7 +55,7 @@ class ScheduleReplacementUpdateEvent < AssetEvent
   def api_json(options={})
     super.merge({
       replacement_year: replacement_year,
-      replacement_reason_type: replacement_reason_type
+      replacement_reason_type: replacement_reason_type.api_json
     })
   end
 

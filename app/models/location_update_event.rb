@@ -69,7 +69,8 @@ class LocationUpdateEvent < AssetEvent
   ######## API Serializer ##############
   def api_json(options={})
     super.merge({
-      parent: parent
+      parent_key: parent_key,
+      parent_name: parent_name
     })
   end
 

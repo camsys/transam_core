@@ -215,7 +215,7 @@ class EarlyDispositionRequestUpdateEvent < AssetEvent
   ######## API Serializer ##############
   def api_json(options={})
     super.merge({
-      state: state,
+      comments: comments,
       document: document
     })
   end

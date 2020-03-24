@@ -63,7 +63,7 @@ class ServiceStatusUpdateEvent < AssetEvent
   ######## API Serializer ##############
   def api_json(options={})
     super.merge({
-      service_status_type: service_status_type
+      service_status_type: service_status_type.api_json
     })
   end
 

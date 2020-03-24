@@ -103,12 +103,9 @@ class AssetEvent < ActiveRecord::Base
   ######## API Serializer ##############
   def api_json(options={})
     {
-      summary: get_update,
+      id: id,
       event_date: event_date,
-      comments: comments,
-      upload_id: upload.try(:object_key),
-      creator: creator.to_s,
-      updater: updater.to_s
+      comments: comments
     }
   end
   #------------------------------------------------------------------------------

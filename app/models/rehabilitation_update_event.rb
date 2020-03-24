@@ -72,9 +72,9 @@ class RehabilitationUpdateEvent < AssetEvent
   ######## API Serializer ##############
   def api_json(options={})
     super.merge({
-      cost: cost,
+      total_cost: cost,
       extended_useful_life_months: extended_useful_life_months,
-      asset_subsystems: asset_subsystems
+      extended_useful_life_miles: extended_useful_life_miles
     })
   end
 

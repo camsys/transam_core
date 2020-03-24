@@ -49,6 +49,7 @@ class ScheduleRehabilitationUpdateEvent < AssetEvent
   ######## API Serializer ##############
   def api_json(options={})
     super.merge({
+      replacement_year: replacement_year,
       rebuild_year: rebuild_year
     })
   end

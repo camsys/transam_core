@@ -62,7 +62,8 @@ class MaintenanceUpdateEvent < AssetEvent
   ######## API Serializer ##############
   def api_json(options={})
     super.merge({
-      maintenance_type: maintenance_type
+      maintenance_type: maintenance_type.api_json,
+      current_mileage: current_mileage
     })
   end
 
