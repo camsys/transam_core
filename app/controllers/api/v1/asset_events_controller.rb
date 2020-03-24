@@ -5,7 +5,7 @@ class Api::V1::AssetEventsController < Api::ApiController
   def destroy
     unless @asset_event.destroy
       @status = :fail
-      @message  = "Unable to destroy document due the following error: #{@asset_event.errors.messages}"
+      @message  = "Unable to destroy asset event due the following error: #{@asset_event.errors.messages}"
       render status: 400, json: json_response(:fail, message: @message)
     end
   end
