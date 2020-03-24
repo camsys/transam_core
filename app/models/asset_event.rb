@@ -103,7 +103,7 @@ class AssetEvent < ActiveRecord::Base
   ######## API Serializer ##############
   def api_json(options={})
     {
-      id: id,
+      id: object_key,
       event_date: event_date,
       comments: comments
     }
