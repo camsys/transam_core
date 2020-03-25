@@ -28,7 +28,12 @@ $("table[use]").ready(()=>{
         }
     });
 
+    $(document).on('click', '.cell-checkbox input[type="checkbox"]', function(){
+        $(this).closest('tr').toggleClass("row-checked");
+    });
+
 });
+
 
 function initialize(id, cols, col_widths, col_types, curPage, curPageSize, pageSizes) {
     updateHeader(id, cols, col_widths, col_types);
@@ -41,10 +46,10 @@ function updateHeader(id, cols, col_ws, col_ts){
     let table = $("#" + id);
     let header = $('<tr>').addClass("header");
     let colgroup = $('<colgroup>');
-    header.append($('<th>').addClass("header-item header-checkbox").append($('<input>').addClass("header-checkbox").attr('type', "checkbox")));
-    colgroup.append($('<col>').addClass('col-item').attr('style', 'width: 20px'));
+    header.append($('<th>').addClass("header-item header-checkbox").append($('<label>').append($('<input>').attr('type', "checkbox").addClass("header-checkbox")).append($('<span>').addClass('fa-stack').append($('<i class="fad fa-square fa-stack-1x" aria-hidden="true"></i>')).append($('<i class="fas fa-check-square fa-stack-1x" aria-hidden="true"></i>')))));
+    colgroup.append($('<col>').addClass('col-item').attr('style', 'width: 2.5em'));
     for (let i=0;i<cols.length;i++) {
-        header.append($('<th>').addClass('header-item').attr('col_type', col_ts[i].toString()).append('<span>').addClass('header-text').text(cols[i].toString()));
+        header.append($('<th>').addClass('header-item').attr('col_type', col_ts[i].toString()).append($('<div>').addClass('header-text').text(cols[i].toString())));
         colgroup.append($('<col>').addClass('col-item').attr('style', 'width: '+ col_ws[i].toString()));
     }
     table.prepend($('<thead>').append(header)).prepend(colgroup);
@@ -53,7 +58,7 @@ function updateHeader(id, cols, col_ws, col_ts){
 // assumes right number of columns
 function add_row(id, vals) {
     let row = $('<tr>').addClass('table-row');
-    let checkbox = $('<td>').addClass("cell-checkbox").append($('<input>').attr('type', "checkbox"));
+    let checkbox = $('<td>').addClass("cell-checkbox").append($('<label>').append($('<input>').attr('type', "checkbox")).append($('<span>').addClass('fa-stack').append($('<i class="fad fa-square fa-stack-1x" aria-hidden="true"></i>')).append($('<i class="fas fa-check-square fa-stack-1x" aria-hidden="true"></i>'))));
     row.append(checkbox);
     for(let val of vals) {
         row.append($('<td>').addClass("row-item").append($('<div>').addClass('cell-text').html(val)));

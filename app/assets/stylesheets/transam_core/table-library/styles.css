@@ -41,6 +41,12 @@
     background-color: var(--gray-light);
     padding: 20px;
     font-family: 'Source Sans Pro', sans-serif;
+    height: 100%;
+    -webkit-transition: max-height .25s ease-in-out;
+    -moz-transition: max-height .25s ease-in-out;
+    -o-transition: max-height .25s ease-in-out;
+    transition: max-height .25s ease-in-out;
+    overflow: hidden;
 }
 
 .elbat {
@@ -51,6 +57,7 @@
     -moz-border-radius: .5em;
     border-radius: .5em;
     width: 100%;
+    height: 100%;
     table-layout: fixed;
 }
 
@@ -58,8 +65,11 @@
 }
 
 .header-checkbox, .cell-checkbox {
+    border-left: 1px solid var(--gray-medium-light);
+    background-color: var(--white);
+    padding: .375rem .25rem;
     text-align: center;
-
+    position: relative;
 }
 
 .header-checkbox {
@@ -68,25 +78,110 @@
 
 .cell-checkbox {
     border-top: 1px solid var(--gray-medium-light);
-    border-left: 1px solid var(--gray-medium-light);
-    background-color: var(--white);
 }
+
+.fa-stack {
+    font-size: 1.25em; /* 16px */
+    position: absolute;
+    z-index: 1;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 0;
+    color: var(--white);
+    height: 0.75em !important;
+    line-height: 1em !important;
+    /* note for some reason sass wouldn't compile the second line correctly without interpolating the color variable, i assume because it's not a normal css property.
+    // more info on styling duotone icons here https://fontawesome.com/how-to-use/on-the-web/styling/duotone-icons */
+    --fa-secondary-opacity: 1.0;
+    --fa-secondary-color: var(--gray-medium-light);
+
+}
+
+.fa-stack:hover {
+    --fa-secondary-color: var(--gray-medium);
+
+}
+
+.fa-stack .fa-check-square {
+    opacity: 0;
+    color: var(--turquoise);
+}
+.fa-stack .fa-check-square input[type='checkbox'] {
+    opacity: 0;
+}
+
+.cell-checkbox input[type='checkbox']:checked + .fa-stack .fa-check-square, .header-checkbox input[type='checkbox']:checked + .fa-stack .fa-check-square {
+    opacity: 1;
+}
+
+.row-checked td {
+    border-left: none;
+    box-shadow: 5px 5px 5px 1px var(--gray-light);
+    z-index: 999;
+}
+
+.cell-checkbox input, .header-checkbox input {
+    opacity: 0;
+    display: none;
+}
+
+.cell-checkbox label {
+    display: block;
+    max-width: unset;
+    font-weight: 700;
+    height: unset;
+}
+
 
 
 .header-item {
     font-family: 'Source Sans Pro', sans-serif;
     font-weight: 600;
-    font-size: .865em; /* 12px */
     text-transform: uppercase;
-    line-height: 1.1;
+    line-height: 2.1;
     vertical-align: bottom;
-    padding: 10px;
     background-color: var(--gray-lighter);
     border-left: solid var(--gray-medium-light) 1px;
+    max-width: 16em;
     vertical-align: bottom;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    position: relative;
+    background-clip: padding-box; /* Firefox Bug */
+}
+
+.header-item:hover {
+    overflow: visible;
+}
+
+.header-text {
+    font-size: .865em; /* 12px */
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: -webkit-fill-available;
+    width: -moz-available;
+    min-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    -webkit-box-sizing: border-box;
+    padding: .375em;
+}
+
+.header-text:hover {
+    z-index: 100;
+    width: auto;
+    /*border-right: 1px solid ;*/
+    box-shadow: 0 0 0 1px var(--gray-medium-light);
+    background: -webkit-gradient(linear, left top, right top, from(var(--gray-lighter)), to(var(--white)));
+    background: -webkit-linear-gradient(left, var(--gray-lighter) 0%, var(--white) 100%);
+    background: -o-linear-gradient(left, var(--gray-lighter) 0%, var(--white) 100%);
+    background: linear-gradient(90deg, var(--gray-lighter) 0%, var(--white) 100%);
+    overflow: visible;
 }
 
 .header-item:first-child {
@@ -112,8 +207,9 @@
     text-align: left;
     letter-spacing: .03em;
     white-space: nowrap;
-    background-color: #fff;
+    background-color: var(--white);
     -webkit-transition: background-color .25s ease-in-out;
+    -moz-transition: background-color .25s ease-in-out;
     -o-transition: background-color .25s ease-in-out;
     transition: background-color .25s ease-in-out;
     max-width: 16em;
@@ -152,10 +248,10 @@
     width: auto;
     /*border-right: 1px solid ;*/
     box-shadow: 0 0 0 1px var(--gray-medium-light);
-    background: -webkit-gradient(linear, left top, right top, from(#E8EAF2), to(#F6F8FF));
-    background: -webkit-linear-gradient(left, #E8EAF2 0%, #F6F8FF 100%);
-    background: -o-linear-gradient(left, #E8EAF2 0%, #F6F8FF 100%);
-    background: linear-gradient(90deg, #E8EAF2 0%, #F6F8FF 100%);
+    background: -webkit-gradient(linear, left top, right top, from(var(--gray-light)), to(var(--gray-lighter)));
+    background: -webkit-linear-gradient(left, var(--gray-light) 0%, var(--gray-lighter) 100%);
+    background: -o-linear-gradient(left, var(--gray-light) 0%, var(--gray-lighter) 100%);
+    background: linear-gradient(90deg, var(--gray-light) 0%, var(--gray-lighter) 100%);
     overflow: visible;
 }
 
@@ -191,6 +287,11 @@
     margin: .25em;
     padding: .25em .5em;
     opacity: 1;
+    pointer-events: auto;
+    -webkit-transition: opacity .25s ease-in-out;
+    -moz-transition: opacity .25s ease-in-out;
+    -o-transition: opacity .25s ease-in-out;
+    transition: opacity .25s ease-in-out;
 }
 
 .page-select-item {
@@ -199,6 +300,10 @@
     -moz-border-radius: 5px;
     border-radius: 5px;
     margin: .25em;
+    -webkit-transition: background .1s ease-in-out;
+    -moz-transition: background .1s ease-in-out;
+    -o-transition: background .1s ease-in-out;
+    transition: background .1s ease-in-out;
 }
 
 .page-select-item:hover, .page-select-arrow-left:hover, .page-select-arrow-right:hover {

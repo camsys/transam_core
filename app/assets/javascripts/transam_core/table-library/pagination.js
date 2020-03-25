@@ -145,14 +145,14 @@ function updatePageSelect(elem, curPage, curPageSize, total, search) {
 
 
     elem.children().removeClass("page-selected").eq(curPage).addClass("page-selected");
-    elem.parent().find(".page-select-arrow-left,.page-select-arrow-right").css("opacity", 0);
+    elem.parent().find(".page-select-arrow-left,.page-select-arrow-right").css({"opacity": 0, "pointer-events": "none"});
     let cur = $(".page-selected").index();
     last = elem.children().last().index();
     if(cur != 0) {
-        $(".page-select-arrow-left").css("opacity", 1);
+        $(".page-select-arrow-left").css({"opacity": 1, "pointer-events": "auto"});
     }
     if(cur != last) {
-        $(".page-select-arrow-right").css("opacity", 1);
+        $(".page-select-arrow-right").css({"opacity": 1, "pointer-events": "auto"});
     }
 
 }
