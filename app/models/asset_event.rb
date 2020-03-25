@@ -48,7 +48,6 @@ class AssetEvent < ActiveRecord::Base
   FORM_PARAMS = [
     :asset_id,
     :asset_event_type_id,
-    :asset_type_id,
     :event_date,
     :comments
   ]
