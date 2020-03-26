@@ -32,6 +32,10 @@ $("table[use]").ready(()=>{
         $(this).closest('tr').toggleClass("row-checked");
     });
 
+    $(document).on('click', '.header-checkbox input[type="checkbox"]', function(){
+        let table = $(this).closest('.library-table').find("table").eq(0);
+        table.find('.cell-checkbox input').click();
+    });
 });
 
 

@@ -116,7 +116,7 @@
 
 .row-checked td {
     border-left: none;
-    box-shadow: 5px 5px 5px 1px var(--gray-light);
+    box-shadow: 3px 3px 6px 1px var(--gray-light);
     z-index: 999;
 }
 
