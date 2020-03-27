@@ -1,5 +1,7 @@
 class Api::V1::AssetEventsController < Api::ApiController
-  before_action :set_asset_event
+  before_action :set_asset_event, only: [:update, :destroy]
+  before_action :set_asset, only: [:create]
+  before_action :set_event_type, only: [:create]
 
   # DELETE /asset_events/1.json
   def destroy
@@ -18,6 +20,17 @@ class Api::V1::AssetEventsController < Api::ApiController
     end
   end
 
+  def create
+    @new_event = @asset.build_typed_event(@event_type.class_name.constantize)
+    @new_event.update(new_form_params)
+
+    unless @new_event.save
+      @status = :fail
+      @message  = "Unable to create asset event due the following error: #{@new_event.errors.messages}"
+      render status: 400, json: json_response(:fail, message: @message)
+    end
+  end
+
   def set_asset_event
     @asset_event = AssetEvent.find_by(object_key: params[:id])
     @typed_event = AssetEvent.as_typed_event(@asset_event)
@@ -29,7 +42,38 @@ class Api::V1::AssetEventsController < Api::ApiController
     end
   end
 
+  def set_asset
+    @asset = TransamAsset.find_by(object_key: params[:asset_id])
+    @typed_asset = TransamAsset.get_typed_asset(@asset)
+
+    unless @asset
+      @status = :fail
+      @data = {id: "Asset #{params[:asset_id]} not found."}
+      render status: :not_found, json: json_response(:fail, data: @data)
+    end
+  end
+
+  def set_event_type
+    @event_type = AssetEventType.find_by(name: params[:event_type])
+
+    unless @event_type
+      @status = :fail
+      @data = {id: "Event type #{params[:event_type]} not found."}
+      render status: :not_found, json: json_response(:fail, data: @data)
+    else
+      unless @typed_asset.event_classes.include? @event_type.class_name.constantize
+        @status = :fail
+        @data = {id: "Event type #{params[:event_type]} not applicable to asset #{params[:asset_id]}."}
+        render status: :not_found, json: json_response(:fail, data: @data)
+      end
+    end
+  end
+
   def form_params
     params.permit(AssetEvent.allowable_params + @typed_event.class.name.constantize.allowable_params - [:asset_id, :asset_event_type_id])
+  end
+
+  def new_form_params
+    params.permit(AssetEvent.allowable_params + @event_type.class_name.constantize.allowable_params - [:asset_id, :asset_event_type_id])
   end
 end
