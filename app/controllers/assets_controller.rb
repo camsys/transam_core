@@ -833,6 +833,15 @@ class AssetsController < AssetAwareController
     params[:asset][:purchase_date] = reformat_date(params[:asset][:purchase_date]) unless params[:asset][:purchase_date].blank?
     params[:asset][:in_service_date] = reformat_date(params[:asset][:in_service_date]) unless params[:asset][:in_service_date].blank?
     params[:asset][:warranty_date] = reformat_date(params[:asset][:warranty_date]) unless params[:asset][:warranty_date].blank?
+
+    # generically update any nested date fields
+    params[:asset].keys.select{|k| k.to_s.include? '_components_attributes'}.each do |key|
+      params[:asset][key].each do |asset_idx, asset_row|
+        params[:asset][key][asset_idx][:purchase_date] = reformat_date(params[:asset][key][asset_idx][:purchase_date]) unless params[:asset][key][asset_idx][:purchase_date].blank?
+        params[:asset][key][asset_idx][:in_service_date] = reformat_date(params[:asset][key][asset_idx][:in_service_date]) unless params[:asset][key][asset_idx][:in_service_date].blank?
+        params[:asset][key][asset_idx][:warranty_date] = reformat_date(params[:asset][key][asset_idx][:warranty_date]) unless params[:asset][key][asset_idx][:warranty_date].blank?
+      end
+    end
   end
 
   # Manage the vendor_id/vendor_name
