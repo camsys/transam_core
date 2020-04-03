@@ -14,7 +14,7 @@ class Api::V1::AssetsController < Api::ApiController
 
   def index 
     total_assets = get_assets
-    data = {count: total_assets.count, assets: total_assets.map { |a| a.api_json(include_events: include_events) }}
+    data = {count: total_assets.count, assets: total_assets}
     render status: 200, json: json_response(:success, data: data)
   end
 
@@ -68,15 +68,9 @@ class Api::V1::AssetsController < Api::ApiController
     asset
   end
 
-  def get_assets(convert=true)
-    # TODO: filtering
-    #base_asset_class.all
+  def get_assets
     orgs = current_user.viewable_organizations
-    if convert
-      base_asset_class.where(organization: orgs).map{ |a| base_asset_class.get_typed_asset(a) }
-    else
-      base_asset_class.where(organization: orgs)
-    end
+    TransamAsset.where(organization: orgs).map{ |a| a.summary_api_json }
   end
 
   def base_asset_class

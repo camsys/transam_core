@@ -475,6 +475,14 @@ class TransamAsset < TransamAssetRecord
   end
 
   ######## API Serializer ##############
+  def summary_api_json(options={})
+    asset_attributes = {
+      object_key: object_key,
+      description: description,
+      organization: organization.try(:api_json)
+    }
+  end
+
   def api_json(options={})
     asset_attributes = {
       object_key: object_key,
