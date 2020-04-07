@@ -55,20 +55,17 @@ class TransamWorkflowController < ApplicationController
 
       # Process each order sequentially
       event_proxy.model_objs.each do |model_obj|
-        if event_proxy.include_updates.to_i > 0
-          model_obj.transaction do
 
-            model_obj.update!(workflow_model_params(event_proxy.class_name))
+        model_obj.transaction do
 
-            if fire_state_event(model_obj,event_proxy)
-              WorkflowEvent.create(creator: current_user, accountable: model_obj, event_type: event_proxy.event_name)
-            else
-              raise ActiveRecord::Rollback
-            end
+          model_obj.update!(workflow_model_params(event_proxy.class_name)) if event_proxy.include_updates.to_i > 0
 
+          if fire_state_event(model_obj,event_proxy)
+            WorkflowEvent.create!(creator: current_user, accountable: model_obj, event_type: event_proxy.event_name)
+          else
+            raise ActiveRecord::Rollback
           end
-        else
-          fire_state_event(model_obj,event_proxy)
+
         end
       end
     end
@@ -84,11 +81,11 @@ class TransamWorkflowController < ApplicationController
     # to_state given, state change
 
     if event_proxy.event_name.present? && (can? event_proxy.event_name.to_sym, model_obj) && (model_obj.class.event_names.include? event_proxy.event_name)
-      if model_obj.class.event_transitions(event_proxy.event_name).map{|x| x.values.map(&:to_sym)}.flatten.include?(model_obj.state.to_sym)
-        success = true
-      else
-        Rails.logger.debug "fire_workflow_events event_name: #{event_proxy.event_name} for #{model_obj}."
-        success = model_obj.machine.fire_state_event(event_proxy.event_name)
+        if model_obj.class.event_transitions(event_proxy.event_name).map{|x| x.values.map(&:to_sym)}.flatten.include?(model_obj.state.to_sym)
+          success = true
+        else
+          Rails.logger.debug "fire_workflow_events event_name: #{event_proxy.event_name} for #{model_obj}."
+          success = model_obj.machine.fire_state_event(event_proxy.event_name)
       end
     elsif event_proxy.to_state.present?
       if model_obj.state == event_proxy.to_state
