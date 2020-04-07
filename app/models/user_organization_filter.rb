@@ -37,7 +37,7 @@ class UserOrganizationFilter < ActiveRecord::Base
   FORM_PARAMS = [
     :name,
     :description,
-    :organization_ids
+    :organization_ids => []
   ]
 
   #------------------------------------------------------------------------------
