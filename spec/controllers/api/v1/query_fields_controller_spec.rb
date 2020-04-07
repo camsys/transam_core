@@ -13,7 +13,7 @@ RSpec.describe Api::V1::QueryFieldsController, type: :controller do
   it "returns all the query filters " do
     # Setup
     qc = QueryCategory.first 
-    first_query_field = qc.query_fields.order(:name).first 
+    first_query_field = qc.query_fields.order(:label).first 
     number_of_query_fields = qc.query_fields.count
     
     # Make the call and unpack
@@ -24,7 +24,7 @@ RSpec.describe Api::V1::QueryFieldsController, type: :controller do
     
     # Tests
     first_response = (response_body["data"].sort_by { |qc| qc["name"] }).first
-    expect(first_response["name"]).to eq(first_query_field.name)
+    expect(first_response["name"]).to eq(first_query_field.label)
     expect(response_body["data"].count).to eq(number_of_query_fields)
     expect(response_body["status"]).to eq("success")
     
