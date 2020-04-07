@@ -21,7 +21,9 @@ class Api::V1::AssetEventsController < Api::ApiController
   end
 
   def update
-    unless @typed_event.update(form_params)
+    if @typed_event.update(form_params)
+      render status: 200, json: json_response(:success, data: @typed_event.api_json)
+    else
       @status = :fail
       @message  = "Unable to update asset event due the following error: #{@typed_event.errors.messages}"
       render status: 400, json: json_response(:fail, message: @message)
@@ -45,19 +47,19 @@ class Api::V1::AssetEventsController < Api::ApiController
 
     unless @asset_event
       @status = :fail
-      @data = {id: "Asset event #{params[:id]} not found."}
-      render status: :not_found, json: json_response(:fail, data: @data)
+      message = "Asset event #{params[:id]} not found."
+      render status: :not_found, json: json_response(:fail, message: message)
     end
   end
 
   def set_asset
-    @asset = TransamAsset.find_by(object_key: params[:asset_id])
+    @asset = TransamAsset.find_by(object_key: params[:asset_object_key])
     @typed_asset = TransamAsset.get_typed_asset(@asset)
 
     unless @asset
       @status = :fail
-      @data = {id: "Asset #{params[:asset_id]} not found."}
-      render status: :not_found, json: json_response(:fail, data: @data)
+      message =  "Asset #{params[:asset_id]} not found."
+      render status: :not_found, json: json_response(:fail, message: message)
     end
   end
 
