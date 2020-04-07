@@ -283,7 +283,7 @@ class UsersController < OrganizationAwareController
       @user.organization_id = @organization_list.first
       org_list = @organization_list
     else
-      org_list = form_params[:organization_ids].split(',')
+      org_list = form_params[:organization_ids]
     end
 
     respond_to do |format|
@@ -324,14 +324,7 @@ class UsersController < OrganizationAwareController
     Rails.logger.debug "role_id = #{role_id}, privilege_ids = #{privilege_ids}"
 
     respond_to do |format|
-      if @user.update_attributes(form_params.except(:organization_ids))
-
-
-        # Add the (possibly) new organizations into the object
-        if form_params[:organization_ids].present?
-          org_list = form_params[:organization_ids].split(',')
-          @user.organizations = Organization.where(id: org_list)
-        end
+      if @user.update_attributes(form_params)
 
         #-----------------------------------------------------------------------
         # Assign the role and privileges but only on a profile form, not a
