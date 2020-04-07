@@ -35,7 +35,7 @@ Rails.application.routes.draw do
       resources :query_fields, only: [:index]
       resources :query_categories, only: [:index]
       resources :asset_types, only: [:index]
-      resources :asset_events, only: [:create, :update, :destroy]
+      resources :asset_events, only: [:show, :create, :update, :destroy]
       resources :asset_event_types, only: [:index]
       resources :organizations, only: [:show, :index] do 
       end

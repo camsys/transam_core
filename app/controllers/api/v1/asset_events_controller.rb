@@ -1,9 +1,17 @@
 class Api::V1::AssetEventsController < Api::ApiController
-  before_action :set_asset_event, only: [:update, :destroy]
+  before_action :set_asset_event, only: [:show, :update, :destroy]
   before_action :set_asset, only: [:create]
   before_action :set_event_type, only: [:create]
 
-  # DELETE /asset_events/1.json
+  
+  def show
+    if @typed_event
+      render status: 200, json: json_response(:success, data: @typed_event.api_json)
+    else
+      render status: 404, json: json_response(:fail, data: "Unable to find event.")
+    end
+  end
+
   def destroy
     unless @asset_event.destroy
       @status = :fail
