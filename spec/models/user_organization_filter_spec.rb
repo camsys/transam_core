@@ -42,7 +42,7 @@ RSpec.describe UserOrganizationFilter, :type => :model do
     expect(UserOrganizationFilter.allowable_params).to eq([
       :name,
       :description,
-      :organization_ids
+      :organization_ids => []
     ])
   end
 
