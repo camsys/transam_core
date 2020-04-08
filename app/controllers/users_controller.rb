@@ -160,6 +160,12 @@ class UsersController < OrganizationAwareController
     end
   end
 
+  def table
+    count = User.all.count 
+    user_table = User.all.map{ |u| u.rowify }
+    render status: 200, json: {count: count, users: user_table}
+  end
+
   #-----------------------------------------------------------------------------
   # Show the list of current sessions. Only available for admin users
   #-----------------------------------------------------------------------------

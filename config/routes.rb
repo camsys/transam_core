@@ -260,6 +260,7 @@ Rails.application.routes.draw do
   resources :users do
     collection do
       get  'sessions'
+      get  'table'
     end
     member do
       get   'reset_password'

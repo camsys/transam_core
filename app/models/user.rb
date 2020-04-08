@@ -310,6 +310,49 @@ class User < ActiveRecord::Base
   end
 
   #-----------------------------------------------------------------------------
+  # Generate Table Data
+  #-----------------------------------------------------------------------------
+
+  # TODO: Make this a shareable Module or Concern
+  def rowify
+    fields = {
+              last_name: "Last", 
+              first_name: "First", 
+              organization: "Primary Organization", 
+              email: "Email", 
+              phone: "Phone",
+              phone_ext: "Ext.", 
+              title: "Title", 
+              role: "Role", #
+              priviliges: "Privileges",
+              status: "Status"
+            }
+    
+    user_row = {}
+    fields.each do |key,value|
+      user_row[value] =  self.send(key).to_s
+    end
+
+    return user_row 
+
+  end
+
+  def role 
+    'PLACEHOLDER'
+  end
+
+  def priviliges
+    'PLACEHOLDER'
+  end 
+
+  def status
+    'PLACEHOLDER'
+  end
+
+  # End Generate Table Data
+
+
+  #-----------------------------------------------------------------------------
   # Devise hooks
   #-----------------------------------------------------------------------------
 
