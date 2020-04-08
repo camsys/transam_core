@@ -2,65 +2,142 @@
   table_dom_id = SecureRandom.hex
   show_actions ||= 0
 
-#users_table_actions.row
-  - if show_actions == 1
-    = render :partial => "users/index_actions"
+= javascript_include_tag  "https://kit.fontawesome.com/c69865786e.js"
+.library-table
+  %table.elbat{:id => table_dom_id,
+  :use => 'true',
+  :data => {:use => 'true',
+    :side => 'server',
+    :current_page => '0',
+    :current_page_size => '10',
+    :page_sizes => "10,20,50,100,200,10000",
+    :search => 'server',
+    :export => "['csv', 'txt', 'excel']",
+    :columns => "Object Key,,
+                External Id,,
+                Last,,
+                First,,
+                Primary Organization,,
+                All Organizations,,
+                Email,,
+                Phone,,
+                Ext.,,
+                Title,,
+                Role,,
+                Privileges,,
+                Status,,
+                System Access,,
+                Timezone,,
+                Send Emails,,
+                Table Rows,,
+                Num Logins,,
+                Last Login,,
+                Last Login IP,,
+                Num Failed,,
+                Locked,,
+                Created At,,
+                Updated At,,",
+    :cookies => 'true',
+    :sort => 'server',
+    :sort_params => '',
+    :url => users_path(:format => :json) }}
 
-%table.table.table-hover{:id => table_dom_id,
-  :data => {:toggle => 'table',
-  :url => users_path(:format => :json),
-  :card_view => "false",
-  :pagination => 'true',
-  :sort_order => 'asc',
-  :sortable => 'true',
-  :side_pagination => 'server',
-  :show_pagination_switch => 'false',
-  :page_number => '1',
-  :page_list => "[5, 10, 20, 50, 100, 200, 10000]",
-  :page_size => current_user.num_table_rows,
-  :search => 'false',
-  :show_columns => 'true',
-  :toolbar => "#users_table_actions",
-  :row_style => 'row_style',
-  :click_to_select => 'true',
-  :show_export => 'true',
-  :id_field => 'object_key',
-  :export_types => "['csv', 'txt', 'excel']",
-  :cookie => 'true',
-  :cookie_id_table => "usersid",
-  :cookie_expire => "1y",
-  :maintain_selected => 'true',
-  :single_select => 'false',
-  :query_params => "query_params" }}
+  :javascript
+    let addRowFuncs = {};
+    addRowFuncs['#{h table_dom_id}'] = function(rows, curPage, curPageSize) {
+        for(let [index,obj] of rows.entries()) {
+          let row = [
+            obj['object_key'],
+            obj['external_id'],
+            obj['last_name'],
+            obj['first_name'],
+            obj['organization_name'],
+            obj['all_orgs'],
+            obj['email'],
+            obj['phone'],
+            obj['phone_ext'],
+            obj['title'],
+            obj['role_name'],
+            obj['privilege_names'],
+            obj['active'] === true,
+            'SYSTEM ACCESS',
+            obj['timezone'],
+            obj['notify_via_email'],
+            obj['num_table_rows'],
+            obj['user_activity_line_item_filter_id'],
+            'Last Login',
+            'Last Login IP',
+            'Num Failed',
+            obj['active'] === true,
+            obj['created_at'],
+            obj['updated_at']
+          ];
+          add_row('#{table_dom_id}', row, (curPage * curPageSize)+index);
+        }
+      }
 
-  %thead
-    %tr
-      %th.left{:data => {:field => "object_key", :visible => 'false'}} Object Key
-      %th.left{:data => {:field => "external_id", :visible => 'false'}} External Id
-      %th.left.nowrap{:data => {:field => "last_name", :sortable => 'true', :formatter => 'link_to_user', :switchable => 'false'}} Last
-      %th.left.nowrap{:data => {:field => "first_name", :sortable => 'true'}} First
-      %th.left{:data => {:field => "organization", :sortable => 'true', :formatter => 'link_to_org'}} Primary Organization
-      %th.left{:data => {:field => "all_orgs", :visible => 'false', :sortable => 'false'}} All Organizations
-      %th.left.nowrap{:data => {:field => "email", :sortable => 'true'}} Email
-      %th.left.nowrap{:data => {:field => "phone", :sortable => 'true'}} Phone
-      %th.left.nowrap{:data => {:field => "phone_ext", :sortable => 'true'}} Ext.
-      %th.left.nowrap{:data => {:field => "title", :sortable => 'true'}} Title
-      %th.left{:data => {:field => "role_name", :sortable => 'false'}} Role
-      %th.left{:data => {:field => "privilege_names", :sortable => 'false'}} Privileges
-      %th.left{:data => {:field => "active", :sortable => 'true', :formatter => 'active_formatter'}} Status
-      %th.left{:data => {:field => "active", :visible => 'false', :sortable => 'true', :formatter => 'system_access_formatter'}} System Access
-      %th.left{:data => {:field => "timezone", :visible => 'false', :sortable => 'true'}} Timezone
-      %th.center{:data => {:field => "notify_via_email", :visible => 'false', :sortable => 'true', :formatter => 'raw_boolean_formatter'}} Send Emails
-      %th.right{:data => {:field => "num_table_rows", :visible => 'false', :sortable => 'true', :formatter => 'integer_formatter'}} Table Rows
-      - if current_user.has_role? :admin
-        %th.right{:data => {:field => "sign_in_count", :visible => 'false', :sortable => 'true', :formatter => 'integer_formatter'}} Num Logins
-        %th.right{:data => {:field => "last_sign_in_at", :visible => 'false', :sortable => 'true'}} Last Login
-        %th.left.nowrap{:data => {:field => "last_sign_in_ip", :visible => 'false', :sortable => 'true'}} Last Login IP
-        %th.right{:data => {:field => "failed_attempts", :visible => 'false', :sortable => 'true', :formatter => 'integer_formatter'}} Num Failed
-        %th.center{:data => {:field => "locked_at", :visible => 'false', :sortable => 'true', :formatter => 'raw_boolean_formatter'}} Locked
-        %th.right{:data => {:field => "created_at", :visible => 'false', :sortable => 'true'}} Created At
-        %th.right{:data => {:field => "updated_at", :visible => 'false', :sortable => 'true'}} Updated At
 
+-##users_table_actions.row
+-#  - if show_actions == 1
+-#    = render :partial => "users/index_actions"
+
+-#http://localhost:3000/users.json?order=asc&limit=10&offset=0&role=&show_active_only=active&search_text=
+-#%table.table.table-hover{:id => table_dom_id,
+-#  :data => {:toggle => 'table',
+-#  :url => users_path(:format => :json),
+-#  :card_view => "false",
+-#  :pagination => 'true',
+-#  :sort_order => 'asc',
+-#  :sortable => 'true',
+-#  :side_pagination => 'server',
+-#  :show_pagination_switch => 'false',
+-#  :page_number => '1',
+-#  :page_list => "[5, 10, 20, 50, 100, 200, 10000]",
+-#  :page_size => current_user.num_table_rows,
+-#  :search => 'false',
+-#  :show_columns => 'true',
+-#  :toolbar => "#users_table_actions",
+-#  :row_style => 'row_style',
+-#  :click_to_select => 'true',
+-#  :show_export => 'true',
+-#  :id_field => 'object_key',
+-#  :export_types => "['csv', 'txt', 'excel']",
+-#  :cookie => 'true',
+-#  :cookie_id_table => "usersid",
+-#  :cookie_expire => "1y",
+-#  :maintain_selected => 'true',
+-#  :single_select => 'false',
+-#  :query_params => "query_params" }}
+-#
+-#  %thead
+-#    %tr
+-#      %th.left{:data => {:field => "object_key", :visible => 'false'}} Object Key
+-#      %th.left{:data => {:field => "external_id", :visible => 'false'}} External Id
+-#      %th.left.nowrap{:data => {:field => "last_name", :sortable => 'true', :formatter => 'link_to_user', :switchable => 'false'}} Last
+-#      %th.left.nowrap{:data => {:field => "first_name", :sortable => 'true'}} First
+-#      %th.left{:data => {:field => "organization", :sortable => 'true', :formatter => 'link_to_org'}} Primary Organization
+-#      %th.left{:data => {:field => "all_orgs", :visible => 'false', :sortable => 'false'}} All Organizations
+-#      %th.left.nowrap{:data => {:field => "email", :sortable => 'true'}} Email
+-#      %th.left.nowrap{:data => {:field => "phone", :sortable => 'true'}} Phone
+-#      %th.left.nowrap{:data => {:field => "phone_ext", :sortable => 'true'}} Ext.
+-#      %th.left.nowrap{:data => {:field => "title", :sortable => 'true'}} Title
+-#      %th.left{:data => {:field => "role_name", :sortable => 'false'}} Role
+-#      %th.left{:data => {:field => "privilege_names", :sortable => 'false'}} Privileges
+-#      %th.left{:data => {:field => "active", :sortable => 'true', :formatter => 'active_formatter'}} Status
+-#      %th.left{:data => {:field => "active", :visible => 'false', :sortable => 'true', :formatter => 'system_access_formatter'}} System Access
+-#      %th.left{:data => {:field => "timezone", :visible => 'false', :sortable => 'true'}} Timezone
+-#      %th.center{:data => {:field => "notify_via_email", :visible => 'false', :sortable => 'true', :formatter => 'raw_boolean_formatter'}} Send Emails
+-#      %th.right{:data => {:field => "num_table_rows", :visible => 'false', :sortable => 'true', :formatter => 'integer_formatter'}} Table Rows
+-#      - if current_user.has_role? :admin
+-#        %th.right{:data => {:field => "sign_in_count", :visible => 'false', :sortable => 'true', :formatter => 'integer_formatter'}} Num Logins
+-#        %th.right{:data => {:field => "last_sign_in_at", :visible => 'false', :sortable => 'true'}} Last Login
+-#        %th.left.nowrap{:data => {:field => "last_sign_in_ip", :visible => 'false', :sortable => 'true'}} Last Login IP
+-#        %th.right{:data => {:field => "failed_attempts", :visible => 'false', :sortable => 'true', :formatter => 'integer_formatter'}} Num Failed
+-#        %th.center{:data => {:field => "locked_at", :visible => 'false', :sortable => 'true', :formatter => 'raw_boolean_formatter'}} Locked
+-#        %th.right{:data => {:field => "created_at", :visible => 'false', :sortable => 'true'}} Created At
+-#        %th.right{:data => {:field => "updated_at", :visible => 'false', :sortable => 'true'}} Updated At
+-#
+-#
 
 = render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :path_pattern => user_path("xxx"), :allow_row_click => 0}
 
