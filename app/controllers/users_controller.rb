@@ -163,7 +163,7 @@ class UsersController < OrganizationAwareController
   def table
     count = User.all.count 
     user_table = User.all.map{ |u| u.rowify }
-    render status: 200, json: {count: count, users: user_table}
+    render status: 200, json: {count: count, rows: user_table}
   end
 
   #-----------------------------------------------------------------------------
