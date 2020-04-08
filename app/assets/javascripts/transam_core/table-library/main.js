@@ -3,7 +3,7 @@ $("table[use]").ready(()=>{
     $("table[use]").each((i, value)=>{
         if($(value).attr('use') == 'true'){
             const id = $(value).attr('id');
-            let pagination = $(value).data('pagination');
+            let side = $(value).data('side');
             let curPage = $(value).data('currentPage');
             let curPageSize = $(value).data('currentPageSize');
             let pageSizes = $(value).data('pageSizes').split(',');
@@ -18,12 +18,14 @@ $("table[use]").ready(()=>{
                 col_types.push(x[2]);
             }
             let search = $(value).data('search');
+            let url = $(value).data('url');
 
-
-            initialize(id, col_names, col_widths, col_types, curPage, curPageSize, pageSizes);
+            initialize(id, col_names, col_widths, col_types, curPage, curPageSize, pageSizes, side, url);
 
             if(search == 'client') {
                 addSearch(id);
+            } else if(search === 'server') {
+                addSearchServer(id);
             }
         }
     });
@@ -39,9 +41,20 @@ $("table[use]").ready(()=>{
 });
 
 
-function initialize(id, cols, col_widths, col_types, curPage, curPageSize, pageSizes) {
+async function initialize(id, cols, col_widths, col_types, curPage, curPageSize, pageSizes, side, url) {
+    $('#'+id).append($("<tbody>"));
+    if(side === 'server') {
+        // console.log("server");
+        updateHeader(id, cols, col_widths, col_types);
+        let total = await serverSide(id, url, curPage, curPageSize);
+        pagination(id, curPage, curPageSize, pageSizes, total);
+        updatePage(id, curPage, curPageSize, total);
+        return;
+    }
+    // console.log("client");
     updateHeader(id, cols, col_widths, col_types);
     pagination(id, curPage, curPageSize, pageSizes);
+    updatePage_help(id, curPage, curPageSize);
 
 }
 
@@ -60,14 +73,37 @@ function updateHeader(id, cols, col_ws, col_ts){
 }
 
 // assumes right number of columns
-function add_row(id, vals) {
-    let row = $('<tr>').addClass('table-row');
-    let checkbox = $('<td>').addClass("cell-checkbox").append($('<label>').append($('<input>').attr('type', "checkbox")).append($('<span>').addClass('fa-stack').append($('<i class="fad fa-square fa-stack-1x" aria-hidden="true"></i>')).append($('<i class="fas fa-check-square fa-stack-1x" aria-hidden="true"></i>'))));
-    row.append(checkbox);
-    for(let val of vals) {
-        row.append($('<td>').addClass("row-item").append($('<div>').addClass('cell-text').html(val)));
+function add_row(id, vals, index) {
+    if(!($('#' + id + " .table-row[at" + index + ']').length > 0)){
+        // console.log("Add row: " + index);
+        let row = $('<tr>').addClass('table-row').attr("at" + index.toString(), "true");
+        let checkbox = $('<td>').addClass("cell-checkbox").append($('<label>').append($('<input>').attr('type', "checkbox")).append($('<span>').addClass('fa-stack').append($('<i class="fad fa-square fa-stack-1x" aria-hidden="true"></i>')).append($('<i class="fas fa-check-square fa-stack-1x" aria-hidden="true"></i>'))));
+        row.append(checkbox);
+        for (let val of vals) {
+            row.append($('<td>').addClass("row-item").append($('<div>').addClass('cell-text').html(val)));
+        }
+        $('#' + id).append(row);
     }
-    $('#'+id).append(row);
+
 }
 
+
+async function serverSide(id, url, curPage, curPageSize, search="") {
+        let response = {};
+        let params = "?order=asc&limit=" + curPageSize + "&offset=" + curPage + "&role=&show_active_only=active&search_text=" + search;
+        await $.ajax({
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            url: url+params,
+            data : {'page': curPage, 'limit': curPageSize, 'search': search},
+            dataType: "json",
+            success: function (r) {
+                response = r;
+                addRowFuncs[id](r['rows'], curPage, curPageSize);
+            },
+            error: function (){
+            }
+        });
+        return response['total'];
+}
 

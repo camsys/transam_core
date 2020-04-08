@@ -1,5 +1,5 @@
 function addSearch(id) {
-    let searchbar = $('<input>').addClass("searchbar");
+    let searchbar = $('<input>').addClass("searchbar").attr('placeholder', "Search Table...");
 
     $(searchbar).on("keyup", function(){
         let value = $(this).val().toLowerCase();
@@ -15,12 +15,29 @@ function addSearch(id) {
                 $(this).addClass("search-result").show();
             }
         });
-        updatePage(id, 0, $('#'+id).data('currentPageSize'), true);
+        updatePage_help(id, 0, $('#'+id).data('currentPageSize'), true);
+    });
+    $('#'+id).parent().prepend(searchbar);
+}
+
+
+function addSearchServer(id) {
+    let searchbar = $('<input>').addClass("searchbar").attr('placeholder', "Search Table...");
+
+    $(searchbar).on("keyup", function(){
+        let value = $(this).val().toLowerCase();
+
+        if(value === "") {
+            removeSearch(id);
+            return;
+        }
+        $('#' + id + " .table-row").remove();
+        updatePage(id, 0, $('#'+id).data('currentPageSize'),-1, false, value);
     });
     $('#'+id).parent().prepend(searchbar);
 }
 
 function removeSearch(id) {
     $('#'+id +" .table-row").removeClass("search-result");
-    updatePage(id, 0, $('#'+id).data('currentPageSize'));
+    updatePage_help(id, 0, $('#'+id).data('currentPageSize'));
 }

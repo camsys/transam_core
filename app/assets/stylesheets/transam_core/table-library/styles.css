@@ -78,6 +78,7 @@
 
 .cell-checkbox {
     border-top: 1px solid var(--gray-medium-light);
+    background-clip: padding-box; /* Firefox Bug */
 }
 
 .fa-stack {
@@ -116,7 +117,9 @@
 
 .row-checked td {
     border-left: none;
-    box-shadow: 6px 3px 6px 1px var(--gray-light);
+    box-shadow: 0px 0px 10px 5px var(--gray-light);
+    clip-path: inset(0px 0px -10px 0px);
+    -webkit-clip-path: inset(0px 0px -10px 0px);
     z-index: 999;
 }
 
@@ -325,11 +328,16 @@
 }
 
 .page-size-dropdown {
+    width: 1.5em;
+    color: var(--white);
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance:none;
     border: none;
     box-shadow: none;
-    border-radius: 0;
-    background: transparent;
+    border-radius: 0.375em;
+    background: #7f849b;
+    -ms-text-align-last: center;
+    text-align-last: center;
+    margin-left: 0.375em;
 }

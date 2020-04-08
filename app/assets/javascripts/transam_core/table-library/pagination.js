@@ -1,20 +1,20 @@
 $(document).on('click', ".page-select-item:not(.search-result-page)", function(){
     let table = $(this).closest('.library-table').find("table").eq(0);
-    updatePage(table.attr('id'), $(this).index(), table.data('currentPageSize'));
+    updatePage_help(table.attr('id'), $(this).index(), table.data('currentPageSize'));
 });
 
 $(document).on('click', ".page-select-item.search-result-page", function(){
     let table = $(this).closest('.library-table').find("table").eq(0);
-    updatePage(table.attr('id'), $(this).index(), table.data('currentPageSize'), true);
+    updatePage_help(table.attr('id'), $(this).index(), table.data('currentPageSize'), true);
 });
 
 $(document).on('click', ".page-select-arrow-left", function(){
     let table = $(this).closest('.library-table').find("table").eq(0);
 
     if ($(this).parent().find(".search-result-page").length > 0){
-        updatePage(table.attr('id'), table.data("currentPage") - 1, table.data('currentPageSize'), true);
+        updatePage_help(table.attr('id'), table.data("currentPage") - 1, table.data('currentPageSize'), true);
     } else {
-        updatePage(table.attr('id'), table.data("currentPage") - 1, table.data('currentPageSize'));
+        updatePage_help(table.attr('id'), table.data("currentPage") - 1, table.data('currentPageSize'));
 
     }
 });
@@ -23,24 +23,25 @@ $(document).on('click', ".page-select-arrow-right", function(){
     let table = $(this).closest('.library-table').find("table").eq(0);
     let cur = $(".page-selected").index();
     if ($(".search-result-page").length > 0){
-        updatePage(table.attr('id'), table.data("currentPage") + 1, table.data('currentPageSize'), true);
+        updatePage_help(table.attr('id'), table.data("currentPage") + 1, table.data('currentPageSize'), true);
     } else {
-        updatePage(table.attr('id'), table.data("currentPage") + 1, table.data('currentPageSize'));
+        updatePage_help(table.attr('id'), table.data("currentPage") + 1, table.data('currentPageSize'));
 
     }
 });
 
 $(document).on('change', ".page-size-dropdown", function(){
     let table = $(this).closest('.library-table').find("table").eq(0);
-    updatePage(table.attr('id'), 0, parseInt(this.value), table.parent().find("search-result-page").length > 0);
+    updatePage_help(table.attr('id'), 0, parseInt(this.value), table.parent().find("search-result-page").length > 0);
 });
 
 
-
+// function pagination_help(id, curPage, curPageSize, pageSizes) {
+//     let total = $('#'+id).find('.table-row').length;
+//     pagination(id, curPage, curPageSize, pageSizes, total);
+// }
 
 function pagination(id, curPage, curPageSize, pageSizes) {
-
-    let total = $('#'+id).find('.table-row').length;
 
     let footer = $('<div>').addClass("pagination-wrapper");
 
@@ -51,11 +52,11 @@ function pagination(id, curPage, curPageSize, pageSizes) {
         dropdown.append($('<option>').text(size));
     }
     sizeSelect.append(dropdown);
-    sizeSelect.append($('<span>').text('▼'));
+    // sizeSelect.append($('<span>').text('▼'));
     footer.append(sizeSelect);
 
     let pageStatus = $('<div>').addClass("page-status");
-    updatePageStatus(pageStatus, curPage, curPageSize, total);
+    // updatePageStatus(pageStatus, curPage, curPageSize, total);
     footer.append(pageStatus);
 
     let pageSelectWrapper = $('<div>').addClass("page-select-wrapper");
@@ -67,20 +68,34 @@ function pagination(id, curPage, curPageSize, pageSizes) {
 
     footer.append(pageSelectWrapper);
 
-    updatePageSelect(pageSelect, curPage, curPageSize, total);
+    // updatePageSelect(pageSelect, curPage, curPageSize, total);
 
 
     $('#'+id).parent().append(footer);
 
 
-    updatePage(id, curPage, curPageSize);
+    // updatePage(id, curPage, curPageSize, total);
 
 }
 
-function updatePage(id, curPage, curPageSize, search=false){
+function updatePage_help(id, curPage, curPageSize, clientSearch=false){
+    if(!clientSearch){
+        let searchContent = $('#'+id).siblings(".searchbar").eq(0).val();
+        updatePage(id, curPage, curPageSize, $('#'+id).find('.table-row').length, clientSearch, searchContent);
+    } else {
+        updatePage(id, curPage, curPageSize, $('#'+id).find('.table-row.search-result').length, clientSearch);
+    }
+}
 
-    if(!search){
-        let total = $('#'+id).find('.table-row').length;
+
+async function updatePage(id, curPage, curPageSize, total, clientSearch=false, searchContent=""){
+    let serv = $('#'+id).data('side') === 'server';
+
+    if(serv){
+        total = await serverSide(id,  $('#'+id).data('url'), curPage, curPageSize, searchContent);
+    }
+
+    if(!clientSearch){
         let start = curPage * curPageSize;
         let end = Math.min(total, start + curPageSize-1);
         $('#'+id).find('.table-row').each(function(){
@@ -95,8 +110,6 @@ function updatePage(id, curPage, curPageSize, search=false){
         updatePageSelect($('#'+id).parent().find(".page-select").eq(0), curPage, curPageSize, total);
 
     } else {
-
-        let total = $('#'+id).find('.table-row.search-result').length;
         let start = curPage * curPageSize;
         let end = Math.min(total, start + curPageSize-1);
         $('#'+id).find('.table-row').hide();
@@ -118,7 +131,6 @@ function updatePage(id, curPage, curPageSize, search=false){
 
 
 function updatePageStatus(elem, curPage, curPageSize, total){
-
     let start = curPage * curPageSize + 1;
     let end = start + curPageSize - 1;
     elem.html("Showing <b>" + start + " to " + Math.min(end,total) + "</b> of " + total + " rows");
@@ -126,7 +138,7 @@ function updatePageStatus(elem, curPage, curPageSize, total){
 }
 
 
-function updatePageSelect(elem, curPage, curPageSize, total, search) {
+function updatePageSelect(elem, curPage, curPageSize, total, clientSearch) {
 
     let last = elem.children().last().index();
     if(last * curPageSize < total){
@@ -138,7 +150,7 @@ function updatePageSelect(elem, curPage, curPageSize, total, search) {
             elem.children().last().remove();
         }
     }
-    if(search)
+    if(clientSearch)
         elem.children().addClass("search-result-page");
     else
         elem.children().removeClass("search-result-page");
