@@ -58,7 +58,7 @@ class Api::V1::AssetEventsController < Api::ApiController
 
     unless @asset
       @status = :fail
-      message =  "Asset #{params[:asset_id]} not found."
+      message =  "Asset #{params[:asset_object_key]} not found."
       render status: :not_found, json: json_response(:fail, message: message)
     end
   end
