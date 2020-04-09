@@ -160,9 +160,14 @@ class UsersController < OrganizationAwareController
     end
   end
 
+  ## TODO: Abstract this out for all other server-side tables
   def table
     count = User.all.count 
-    user_table = User.all.map{ |u| u.rowify }
+    page = (table_params[:page] || 0).to_i
+    page_size = (table_params[:page_size] || count).to_i
+
+    offset = page*page_size
+    user_table = User.all.offset(offset).limit(page_size).map{ |u| u.rowify }
     render status: 200, json: {count: count, rows: user_table}
   end
 
@@ -492,6 +497,10 @@ class UsersController < OrganizationAwareController
     end
 
     return
+  end
+
+  def table_params
+    params.permit(:page, :page_size)
   end
 
   #-----------------------------------------------------------------------------

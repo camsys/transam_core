@@ -113,8 +113,7 @@ class User < ActiveRecord::Base
   scope :active, -> { where(active: true) }
 
   # default scope
-  default_scope { active.order(:last_name) }
-
+  default_scope { active.order(:last_name, :first_name) }
 
   #-----------------------------------------------------------------------------
   # Lists
