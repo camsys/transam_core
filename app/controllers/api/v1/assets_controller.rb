@@ -38,7 +38,11 @@ class Api::V1::AssetsController < Api::ApiController
     query.parse_query_fields query_fields, query_filters
 
     # Convert those asset ids into Asset Objects
-    assets = query.data.map{ |i| base_asset_class.find(i["id"]).api_json }
+    if summary_only 
+      assets = query.data.map{ |i| base_asset_class.find(i["id"]).summary_api_json }
+    else
+      assets = query.data.map{ |i| convert(base_asset_class.find(i["id"])).api_json }
+    end
     render json: {data: {count: query.data.size, assets: assets}}
   end
 
@@ -68,6 +72,11 @@ class Api::V1::AssetsController < Api::ApiController
     asset
   end
 
+  # Get the most specific version of the asset
+  def convert asset 
+    Rails.application.config.asset_base_class_name.constantize.get_typed_asset(asset)
+  end
+
   def get_assets
     orgs = current_user.viewable_organizations
     TransamAsset.where(organization: orgs).map{ |a| a.summary_api_json }
@@ -87,5 +96,9 @@ class Api::V1::AssetsController < Api::ApiController
 
   def include_events
     params[:include_events].to_i == 1
+  end
+
+  def summary_only
+    params[:summary_only].to_i == 1
   end
 end

@@ -39,6 +39,20 @@ class QueryField < ApplicationRecord
     return model_values
   end
 
+  def api_json(options={})
+    resp = { 
+      id: id,
+      name: label,
+      filter_type: filter_type
+    }
+    if filter_type == "multi_select"
+      resp[:options] = multi_select_options
+    end
+
+    resp
+
+  end
+
   def as_json(options = {})
     resp = super options
     if options[:get_multi_select_options]

@@ -20,7 +20,7 @@ class AssetSubtype < ActiveRecord::Base
   def api_json(options={})
     {
       id: id,
-      asset_type: asset_type.try(:api_json),
+      asset_type: asset_type.try(:api_json, options),
       name: name, 
       description: description
     }
