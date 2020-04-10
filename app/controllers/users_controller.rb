@@ -165,9 +165,18 @@ class UsersController < OrganizationAwareController
     count = User.all.count 
     page = (table_params[:page] || 0).to_i
     page_size = (table_params[:page_size] || count).to_i
-
+    search = (table_params[:search])
     offset = page*page_size
-    user_table = User.all.offset(offset).limit(page_size).map{ |u| u.rowify }
+
+    query = nil 
+    if search 
+      query = User.arel_table[:last_name].matches("Adams")
+      count = User.where(query).count 
+      user_table = User.where(query).offset(offset).limit(page_size).map{ |u| u.rowify }
+    else 
+      user_table = User.all.offset(offset).limit(page_size).map{ |u| u.rowify }
+    end
+
     render status: 200, json: {count: count, rows: user_table}
   end
 
@@ -500,7 +509,7 @@ class UsersController < OrganizationAwareController
   end
 
   def table_params
-    params.permit(:page, :page_size)
+    params.permit(:page, :page_size, :search)
   end
 
   #-----------------------------------------------------------------------------
