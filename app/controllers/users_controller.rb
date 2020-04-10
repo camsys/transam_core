@@ -170,7 +170,8 @@ class UsersController < OrganizationAwareController
 
     query = nil 
     if search 
-      query = User.arel_table[:last_name].matches("Adams")
+      search_string = "%#{search}%"
+      query = User.arel_table[:last_name].matches(search_string)
       count = User.where(query).count 
       user_table = User.where(query).offset(offset).limit(page_size).map{ |u| u.rowify }
     else 
