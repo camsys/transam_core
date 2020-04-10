@@ -279,8 +279,10 @@ class UpdatedTemplateBuilder
     alphabet = ('A'..'Z').to_a
     if num < 26
       alphabet[num]
-    else
+    elsif num < 26**2+26
       alphabet[num/26-1] + alphabet[num%26]
+    else
+      alphabet[(num-26)/(26**2)-1] + alphabet[(num/26%26)-1] + alphabet[num%26]
     end
   end
 
