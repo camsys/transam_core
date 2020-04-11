@@ -312,7 +312,7 @@ class User < ActiveRecord::Base
   # Generate Table Data
   #-----------------------------------------------------------------------------
 
-  # TODO: Make this a shareable Module or Concern
+  # TODO: Make this a shareable Module 
   def rowify
     fields = {
               last_name: "Last", 
@@ -323,7 +323,7 @@ class User < ActiveRecord::Base
               phone_ext: "Ext.", 
               title: "Title", 
               role: "Role", #
-              priviliges: "Privileges",
+              user_privileges: "Privileges",
               status: "Status"
             }
     
@@ -337,15 +337,15 @@ class User < ActiveRecord::Base
   end
 
   def role 
-    'PLACEHOLDER'
+    roles.roles.last.label
   end
 
-  def priviliges
-    'PLACEHOLDER'
+  def user_privileges
+    roles.privileges.collect{|x| x.label}.join(', ')
   end 
 
   def status
-    'PLACEHOLDER'
+    active ? "Active" : "Inactive"
   end
 
   # End Generate Table Data
@@ -382,6 +382,7 @@ class User < ActiveRecord::Base
     Rails.logger.info "Unlocking account for user with email #{email} at #{Time.now}"
   end
   #-----------------------------------------------------------------------------
+
 
   #-----------------------------------------------------------------------------
   # Protected Methods

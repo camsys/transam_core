@@ -160,7 +160,10 @@ class UsersController < OrganizationAwareController
     end
   end
 
-  ## TODO: Abstract this out for all other server-side tables
+  #-----------------------------------------------------------------------------
+  # Show the list of current sessions. Only available for admin users
+  # TODO: MOST of this will be moved to a shareable module
+  #-----------------------------------------------------------------------------
   def table
     count = User.all.count 
     page = (table_params[:page] || 0).to_i
@@ -169,16 +172,26 @@ class UsersController < OrganizationAwareController
     offset = page*page_size
 
     query = nil 
-    if search 
+    if search
+      attrs = [:first_name, :last_name, :phone, :phone_ext, :email, :title] 
       search_string = "%#{search}%"
-      query = User.arel_table[:last_name].matches(search_string)
-      count = User.where(query).count 
-      user_table = User.where(query).offset(offset).limit(page_size).map{ |u| u.rowify }
+      org_query = Organization.arel_table[:name].matches(search_string).or(Organization.arel_table[:short_name].matches(search_string))
+      query = (query_builder attrs, search_string).or(org_query)
+      count = User.joins(:organizations).where(query).count 
+      user_table = User.joins(:organization).where(query).offset(offset).limit(page_size).map{ |u| u.rowify }
     else 
       user_table = User.all.offset(offset).limit(page_size).map{ |u| u.rowify }
     end
 
     render status: 200, json: {count: count, rows: user_table}
+  end
+
+  def query_builder atts, search_string
+    if atts.count <= 1
+      return User.joins(:organziation).arel_table[atts.pop].matches(search_string)
+    else
+      return User.joins(:organization).arel_table[atts.pop].matches(search_string).or(query_builder(atts, search_string))
+    end
   end
 
   #-----------------------------------------------------------------------------
