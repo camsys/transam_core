@@ -173,11 +173,21 @@ class UsersController < OrganizationAwareController
 
     query = nil 
     if search
-      attrs = [:first_name, :last_name, :phone, :phone_ext, :email, :title] 
+      searchable_columns = [:first_name, :last_name, :phone, :phone_ext, :email, :title] 
       search_string = "%#{search}%"
       org_query = Organization.arel_table[:name].matches(search_string).or(Organization.arel_table[:short_name].matches(search_string))
-      query = (query_builder attrs, search_string).or(org_query)
-      count = User.joins(:organizations).where(query).count 
+      query = (query_builder(searchable_columns, search_string)).or(org_query)
+
+      # This does not work. TODO: find out why this doesn't work.
+      count = User.joins(:organizations).where(query).to_a.count 
+
+      # TODO: This is a horrible temporary piece of code that will be replaced with the line above is corrected.
+      index = 0
+      User.joins(:organization).where(query).each do |asdf|
+        index += 1 
+      end
+      count = index  
+
       user_table = User.joins(:organization).where(query).offset(offset).limit(page_size).map{ |u| u.rowify }
     else 
       user_table = User.all.offset(offset).limit(page_size).map{ |u| u.rowify }

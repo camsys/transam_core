@@ -18,6 +18,35 @@ RSpec.describe UsersController, :type => :controller do
     sign_in test_user
   end
 
+
+  describe 'GET table' do
+
+    it 'returns all users' do
+      get :table
+      expect(response).to be_success
+      parsed_response = JSON.parse(response.body)
+      expect(parsed_response["count"]).to eq(User.count)
+    end
+
+    it 'returns the first 10 users' do
+      get :table,  params: {page: 0, page_size: 10}
+      expect(response).to be_success
+      parsed_response = JSON.parse(response.body)
+      expect(parsed_response["count"]).to eq(User.count)
+      expect(parsed_response["rows"].count).to eq(10)
+      expect(parsed_response["rows"].first["Last"]).to eq(User.first.last_name)
+    end
+
+    it 'returns users associated with the last organization' do
+      org = Organization.last
+      get :table,  params: {search: org.short_name}
+      expect(response).to be_success
+      parsed_response = JSON.parse(response.body)
+      expect(parsed_response["count"]).to eq(User.where(organization: org).count)
+    end
+
+  end
+
   describe 'GET index' do
 
     describe 'users from a list of orgs' do

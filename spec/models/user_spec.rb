@@ -26,6 +26,14 @@ RSpec.describe User, :type => :model do
   #
   #------------------------------------------------------------------------------
 
+  it { should respond_to :rowify }
+
+  describe ".rowify" do 
+    it 'returns last name' do
+      expect(normal_user.rowify["Last"]).to eq(normal_user.last_name)
+    end
+  end
+
   describe ".set_defaults" do
     it 'initializes new objects correctly' do
       expect(normal_user.timezone).to eql('Eastern Time (US & Canada)')
