@@ -7,4 +7,11 @@ class AssetEventType < ActiveRecord::Base
     name
   end
 
+  def api_json(options={})
+    {
+      name: name,
+      description: description
+    }
+  end
+
 end
