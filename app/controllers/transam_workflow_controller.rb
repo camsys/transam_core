@@ -57,15 +57,10 @@ class TransamWorkflowController < ApplicationController
       event_proxy.model_objs.each do |model_obj|
 
         model_obj.transaction do
-
           model_obj.update!(workflow_model_params(event_proxy.class_name)) if event_proxy.include_updates.to_i > 0
-
-          if fire_state_event(model_obj,event_proxy)
-            WorkflowEvent.create!(creator: current_user, accountable: model_obj, event_type: event_proxy.event_name)
-          else
+          unless fire_state_event(model_obj,event_proxy)
             raise ActiveRecord::Rollback
           end
-
         end
       end
     end
@@ -97,6 +92,10 @@ class TransamWorkflowController < ApplicationController
           success = model_obj.machine.fire_state_event(event_name)
         end
       end
+    end
+
+    if success
+      WorkflowEvent.create!(creator: current_user, accountable: model_obj, event_type: event_proxy.event_name || event_name)
     end
 
     return success
