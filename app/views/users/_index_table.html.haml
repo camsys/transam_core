@@ -2,7 +2,7 @@
   table_dom_id = SecureRandom.hex
   show_actions ||= 0
 
-= javascript_include_tag  "https://kit.fontawesome.com/c69865786e.js"
+= javascript_include_tag  "https://kit.fontawesome.com/#{ENV['FONT_AWESOME']}.js"
 .library-table
   %table.elbat{:id => table_dom_id,
   :use => 'true',
@@ -37,44 +37,32 @@
                 Locked,,
                 Created At,,
                 Updated At,,",
+    :selected_columns => "Last,
+                First,
+                Primary Organization,
+                Email,
+                Phone,
+                Ext.,
+                Title,
+                Role,
+                Privileges,
+                Status",
     :cookies => 'true',
     :sort => 'server',
     :sort_params => '',
-    :url => users_path(:format => :json) }}
+    :url => table_users_path(:format => :json) }}
 
-  :javascript
-    let addRowFuncs = {};
-    addRowFuncs['#{h table_dom_id}'] = function(rows, curPage, curPageSize) {
-        for(let [index,obj] of rows.entries()) {
-          let row = [
-            obj['object_key'],
-            obj['external_id'],
-            obj['last_name'],
-            obj['first_name'],
-            obj['organization_name'],
-            obj['all_orgs'],
-            obj['email'],
-            obj['phone'],
-            obj['phone_ext'],
-            obj['title'],
-            obj['role_name'],
-            obj['privilege_names'],
-            obj['active'] === true,
-            'SYSTEM ACCESS',
-            obj['timezone'],
-            obj['notify_via_email'],
-            obj['num_table_rows'],
-            obj['user_activity_line_item_filter_id'],
-            'Last Login',
-            'Last Login IP',
-            'Num Failed',
-            obj['active'] === true,
-            obj['created_at'],
-            obj['updated_at']
-          ];
-          add_row('#{table_dom_id}', row, (curPage * curPageSize)+index);
-        }
-      }
+  -#:javascript
+  -#  let addRowFuncs = {};
+  -#  addRowFuncs['#{h table_dom_id}'] = function(rows, selectedCols, curPage, curPageSize) {
+  -#      for(let [index,obj] of rows.entries()) {
+  -#      let row = [];
+  -#        for(col of selectedCols) {
+  -#          row.push(obj[col.trim()]);
+  -#        }
+  -#        add_row('#{table_dom_id}', row, (curPage * curPageSize)+index);
+  -#      }
+  -#    }
 
 
 -##users_table_actions.row
