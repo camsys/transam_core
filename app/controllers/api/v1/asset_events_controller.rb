@@ -34,7 +34,9 @@ class Api::V1::AssetEventsController < Api::ApiController
     @new_event = @asset.build_typed_event(@event_type.class_name.constantize)
     @new_event.update(new_form_params)
 
-    unless @new_event.save
+    if @new_event.save
+      render status: 200, json: json_response(:success, data: @new_event.api_json)
+    else
       @status = :fail
       @message  = "Unable to create asset event due the following error: #{@new_event.errors.messages}"
       render status: 400, json: json_response(:fail, message: @message)
