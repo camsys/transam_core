@@ -103,6 +103,7 @@ class AssetEvent < ActiveRecord::Base
   def api_json(options={})
     {
       id: object_key,
+      event_type: asset_event_type.try(:api_json),
       event_date: event_date,
       comments: comments
     }

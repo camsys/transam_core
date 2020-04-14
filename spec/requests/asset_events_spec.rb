@@ -18,7 +18,7 @@ RSpec.describe Api::V1::AssetEventsController, type: :request do
         expect(json).not_to be_empty
         expect(json['status']).to eq('success')
 
-        expect(json['data']['asset_event']['assessed_rating']).to eq('2.0')
+        expect(json['data']['assessed_rating']).to eq('2.0')
       end
       it 'returns status code 200' do
         expect(response).to have_http_status(200)
