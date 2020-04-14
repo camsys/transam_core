@@ -9,6 +9,7 @@ class AssetEventType < ActiveRecord::Base
 
   def api_json(options={})
     {
+      id: id,
       name: name,
       description: description
     }
