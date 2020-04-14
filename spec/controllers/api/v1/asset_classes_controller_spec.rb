@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Api::V1::AssetTypesController, type: :controller do
+RSpec.describe Api::V1::AssetClassesController, type: :controller do
   
   let!(:user) { create :admin }
   let(:request_headers) { {"X-User-Email" => user.email, "X-User-Token" => user.authentication_token} }
