@@ -142,20 +142,20 @@ class UsersController < OrganizationAwareController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json {
-        render :json => {
-          :total => @users.count,
-          :rows => @users.limit(params[:limit]).offset(params[:offset]).collect{ |u|
-            u.as_json.merge!({
-                 organization_short_name: u.organization.short_name,
-                 organization_name: u.organization.name,
-                 role_name: !@role.blank? && (@role.kind_of?(Array) ? !Role.find_by(name:@role.first).privilege : !Role.find_by(name: @role).privilege) ? (@role.kind_of?(Array) ? u.roles.roles.where(name: @role).last.label : u.roles.roles.find_by(name: @role).label) : u.roles.roles.last.label,
-                 privilege_names: u.roles.privileges.collect{|x| x.label}.join(', '),
-                 all_orgs: u.organizations.map{ |o| o.to_s }.join(', ')
-            })
-          }
-        }
-      }
+      # format.json {
+      #   render :json => {
+      #     :total => @users.count,
+      #     :rows => @users.limit(params[:limit]).offset(params[:offset]).collect{ |u|
+      #       u.as_json.merge!({
+      #            organization_short_name: u.organization.short_name,
+      #            organization_name: u.organization.name,
+      #            role_name: !@role.blank? && (@role.kind_of?(Array) ? !Role.find_by(name:@role.first).privilege : !Role.find_by(name: @role).privilege) ? (@role.kind_of?(Array) ? u.roles.roles.where(name: @role).last.label : u.roles.roles.find_by(name: @role).label) : u.roles.roles.last.label,
+      #            privilege_names: u.roles.privileges.collect{|x| x.label}.join(', '),
+      #            all_orgs: u.organizations.map{ |o| o.to_s }.join(', ')
+      #       })
+      #     }
+      #   }
+      # }
 
     end
   end
