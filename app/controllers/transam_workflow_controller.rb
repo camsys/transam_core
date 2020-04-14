@@ -95,7 +95,7 @@ class TransamWorkflowController < ApplicationController
     end
 
     if success
-      WorkflowEvent.create!(creator: current_user, accountable: model_obj, event_type: event_proxy.event_name || event_name)
+      WorkflowEvent.create(creator: current_user, accountable: model_obj, event_type: (event_proxy.event_name || event_name))
     end
 
     return success
