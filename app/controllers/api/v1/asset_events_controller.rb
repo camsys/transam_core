@@ -66,7 +66,7 @@ class Api::V1::AssetEventsController < Api::ApiController
   end
 
   def set_event_type
-    @event_type = AssetEventType.find_by(name: params[:event_type])
+    @event_type = AssetEventType.find(params[:asset_event_type_id])
 
     unless @event_type
       @status = :fail
