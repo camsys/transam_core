@@ -12,7 +12,7 @@ RSpec.describe Api::V1::AssetEventsController, type: :request do
   describe 'POST /api/v1/asset_events' do
 
     context 'when valid params are passed' do
-      before { post "/api/v1/asset_events.json", params: { asset_object_key: asset_object_key, event_type: 'Condition', assessed_rating: 2 }, headers: valid_headers }
+      before { post "/api/v1/asset_events.json", params: { asset_object_key: asset_object_key, asset_event_type_id: AssetEventType.find_by(name: 'Condition').id, assessed_rating: 2 }, headers: valid_headers }
 
       it 'creates and returns an asset event' do
         expect(json).not_to be_empty
