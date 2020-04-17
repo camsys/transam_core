@@ -29,6 +29,7 @@
 
 :javascript
 
+  var has_run = false;
   var disabled_fields = JSON.parse('#{disabled_fields.to_json.html_safe}');
 
   // show Other text entry only if it's a Other type; otherwise, hide and empty its value
@@ -158,94 +159,97 @@
     });
 
     $('.save-xeditable-button').click(function() {
-     $('form.editableform').submit(); // save values locally, then submit to server
-     if($('.asset-subform form').length > 0) {
-      $('.asset-subform form').valid(); // validate subforms (e.g., Funding Programs)
-     }
-     if($('.has-error .form-control').length == 0) {
-       $('#processing_spinner').show();
-
-       // get params from subforms
-       var extra_data = {};
-       var tab_id = get_active_tab_id();
-
-        if ($('[data-behavior~=component-picker]').length > 0) {
-          var subforms = $('#'+ tab_id +' .tab-pane.active .asset-subform form');
-        } else {
-          var subforms = $('.asset-subform form');
-        }
-       subforms.each(function(subform) {
-         $(this).serializeArray().forEach(function(param_value, idx) {
-            if(param_value) {
-              field_name = param_value.name
-              if ($('[data-behavior~=component-picker]').length > 0) {
-
-               first_bracket_index = field_name.indexOf('[')
-
-               if (first_bracket_index >= 0) {
-                  field_name = field_name.substring(0,first_bracket_index) + '['+$('#'+ tab_id +' .tab-pane.active [data-behavior~=component-picker]').data('target-model') +'_attributes][0]' + field_name.substring(first_bracket_index,field_name.length);
-
-                  id_field_name = field_name.substring(0,first_bracket_index) + '['+$('#'+ tab_id +' .tab-pane.active [data-behavior~=component-picker]').data('target-model') +'_attributes][0][id]';
-                  if (extra_data[id_field_name] === undefined) {
-                    extra_data[id_field_name] = $('#'+ tab_id +' .tab-pane.active [data-behavior~=component-picker] option:selected').data('id');
-                  }
-               }
-              }
-
-              extra_data[field_name] = param_value.value;
-            }
-         });
-       });
-
-       var ajax_ops = {
-             type: 'PUT',
-             dataType: 'json' //assuming json response
-        };
-       if ($(this).data('xeditable-url') != undefined) {
-        ajax_ops['url'] = $(this).data('xeditable-url')
+     if (!has_run) {
+      has_run = true;
+      $('form.editableform').submit(); // save values locally, then submit to server
+       if($('.asset-subform form').length > 0) {
+        $('.asset-subform form').valid(); // validate subforms (e.g., Funding Programs)
        }
-       $('.editable-field').editable('submit', {
-           ajaxOptions: ajax_ops,
-           data: extra_data,
-           success: function(data, config) {
-              $('#processing_spinner').hide();
-              if(data && data.errors){
-                //server-side validation error, response like {"errors": {"username": "username already exist"} }
-                config.error.call(this, data.errors);
-              } else {
-                var current_url = window.location.href;
-                if(current_url.includes('?')) {
-                  if(current_url.includes('use_last_tab')) {
-                    if(current_url.includes('use_last_tab=0')) {
-                      current_url = current_url.replace("use_last_tab=0", "use_last_tab=1");
+       if($('.has-error .form-control').length == 0) {
+         $('#processing_spinner').show();
+
+         // get params from subforms
+         var extra_data = {};
+         var tab_id = get_active_tab_id();
+
+          if ($('[data-behavior~=component-picker]').length > 0) {
+            var subforms = $('#'+ tab_id +' .tab-pane.active .asset-subform form');
+          } else {
+            var subforms = $('.asset-subform form');
+          }
+         subforms.each(function(subform) {
+           $(this).serializeArray().forEach(function(param_value, idx) {
+              if(param_value) {
+                field_name = param_value.name
+                if ($('[data-behavior~=component-picker]').length > 0) {
+
+                 first_bracket_index = field_name.indexOf('[')
+
+                 if (first_bracket_index >= 0) {
+                    field_name = field_name.substring(0,first_bracket_index) + '['+$('#'+ tab_id +' .tab-pane.active [data-behavior~=component-picker]').data('target-model') +'_attributes][0]' + field_name.substring(first_bracket_index,field_name.length);
+
+                    id_field_name = field_name.substring(0,first_bracket_index) + '['+$('#'+ tab_id +' .tab-pane.active [data-behavior~=component-picker]').data('target-model') +'_attributes][0][id]';
+                    if (extra_data[id_field_name] === undefined) {
+                      extra_data[id_field_name] = $('#'+ tab_id +' .tab-pane.active [data-behavior~=component-picker] option:selected').data('id');
                     }
-                  } else {
-                    current_url += "&use_last_tab=1";
-                  }
-                } else {
-                  current_url +=  "?use_last_tab=1";
+                 }
                 }
 
-                // refresh page to show new profile
-                window.location.replace(current_url);
+                extra_data[field_name] = param_value.value;
               }
-           },
-           error: function(errors) {
-             $('#processing_spinner').hide();
-             var msg = '';
-             if(errors && errors.responseText) { //ajax error, errors = xhr object
-                 msg = errors.responseText;
-                 console.log(msg);
-                 alert('We are sorry but something went wrong. Please try again.');
-             } else { //validation error (client-side or server-side)
-                 $.each(errors, function(k, v) { msg += k+": "+v+"<br>"; });
-                 alert(msg);
+           });
+         });
+
+         var ajax_ops = {
+               type: 'PUT',
+               dataType: 'json' //assuming json response
+          };
+         if ($(this).data('xeditable-url') != undefined) {
+          ajax_ops['url'] = $(this).data('xeditable-url')
+         }
+         $('.editable-field').editable('submit', {
+             ajaxOptions: ajax_ops,
+             data: extra_data,
+             success: function(data, config) {
+                $('#processing_spinner').hide();
+                if(data && data.errors){
+                  //server-side validation error, response like {"errors": {"username": "username already exist"} }
+                  config.error.call(this, data.errors);
+                } else {
+                  var current_url = window.location.href;
+                  if(current_url.includes('?')) {
+                    if(current_url.includes('use_last_tab')) {
+                      if(current_url.includes('use_last_tab=0')) {
+                        current_url = current_url.replace("use_last_tab=0", "use_last_tab=1");
+                      }
+                    } else {
+                      current_url += "&use_last_tab=1";
+                    }
+                  } else {
+                    current_url +=  "?use_last_tab=1";
+                  }
+
+                  // refresh page to show new profile
+                  window.location.replace(current_url);
+                }
+             },
+             error: function(errors) {
+               $('#processing_spinner').hide();
+               var msg = '';
+               if(errors && errors.responseText) { //ajax error, errors = xhr object
+                   msg = errors.responseText;
+                   console.log(msg);
+                   alert('We are sorry but something went wrong. Please try again.');
+               } else { //validation error (client-side or server-side)
+                   $.each(errors, function(k, v) { msg += k+": "+v+"<br>"; });
+                   alert(msg);
+               }
              }
-           }
-       });
-     } else {
-      var tab_id = $('.has-error .form-control').parents('.tab-pane').attr('id');
-      open_tab(tab_id);
+         });
+       } else {
+        var tab_id = $('.has-error .form-control').parents('.tab-pane').attr('id');
+        open_tab(tab_id);
+       }
      }
     });
 
