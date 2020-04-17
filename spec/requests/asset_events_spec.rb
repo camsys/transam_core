@@ -11,6 +11,12 @@ RSpec.describe Api::V1::AssetEventsController, type: :request do
 
   describe 'POST /api/v1/asset_events' do
 
+    context 'testing type of test asset' do
+      it 'is a transam asset' do 
+        expect(test_asset).to be_a(TransamAsset)
+      end
+    end
+
     context 'when valid params are passed' do
       before { post "/api/v1/asset_events.json", params: { asset_object_key: asset_object_key, asset_event_type_id: AssetEventType.find_by(name: 'Condition').id, assessed_rating: 2 }, headers: valid_headers }
 
