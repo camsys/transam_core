@@ -474,6 +474,12 @@ class TransamAsset < TransamAssetRecord
     nil
   end
 
+  # Is this asset viewable by the user?
+  def viewable_by? user
+    organization_id.in? user.viewable_organization_ids
+  end
+
+
   ######## API Serializer ##############
   def summary_api_json(options={})
     asset_attributes = {

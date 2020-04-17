@@ -3,10 +3,9 @@ class Api::V1::AssetsController < Api::ApiController
   # GET /assets/{id}
   def show
     @asset = get_selected_asset(params[:id])
-    unless @asset
+    unless @asset and @asset.viewable_by? current_user
       @status = :fail
-      @data = {id: "Asset #{params[:id]} not found."}
-      render status: :not_found, json: json_response(:fail, data: @data)
+      render status: :not_found, json: json_response(:fail, message: "Asset #{params[:id]} not found.")
     else
       render status: 200, json: json_response(:success, data: @asset.api_json(include_events: include_events))
     end
