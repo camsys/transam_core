@@ -99,6 +99,11 @@ class AssetEvent < ActiveRecord::Base
     return evt.get_update unless evt.nil?
   end
 
+  # Is this asset event viewable by the user?
+  def viewable_by? user
+    transam_asset.viewable_by? user 
+  end
+
   ######## API Serializer ##############
   def api_json(options={})
     {
