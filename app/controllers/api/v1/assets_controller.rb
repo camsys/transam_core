@@ -3,6 +3,7 @@ class Api::V1::AssetsController < Api::ApiController
   # GET /assets/{id}
   def show
     @asset = get_selected_asset(params[:id])
+    #TODO: Should be able to use cancan here e.g., authorize! :show @asset. However, this does not acknowledge Orgs
     unless @asset and @asset.viewable_by? current_user
       @status = :fail
       render status: :not_found, json: json_response(:fail, message: "Asset #{params[:id]} not found.")
@@ -26,7 +27,7 @@ class Api::V1::AssetsController < Api::ApiController
     orgs = query_params[:orgs]
     viewable_orgs = current_user.viewable_organizations.pluck(:id)
     orgs = orgs.blank? ? viewable_orgs : (viewable_orgs & orgs)
-    
+
     # Pull out the filters and convert them to hash Objects
     query_filters = query_params[:filters]
     query_filters.map!{ |f| f.to_h.symbolize_keys }
@@ -47,8 +48,14 @@ class Api::V1::AssetsController < Api::ApiController
 
   def update
     @asset = get_selected_asset(params[:id])
-    @asset.update!(asset_params(@asset))
-    render status: 200, json: json_response(:success, data: @asset.api_json)
+    #TODO: This raises a 500 error. It should raise 401: Unauthorized
+    authorize! :update, @asset
+    if @asset 
+      @asset.update!(asset_params(@asset))
+      render status: 200, json: json_response(:success, data: @asset.api_json)
+    else
+      render status: :not_found, json: json_response(:fail, message: "Asset #{params[:id]} not found.")
+    end
   end
 
   private

@@ -13,6 +13,7 @@ class Api::V1::AssetEventsController < Api::ApiController
   end
 
   def destroy
+    authorize! :update, @asset_event.transam_asset 
     unless @asset_event.destroy
       @status = :fail
       @message  = "Unable to destroy asset event due the following error: #{@asset_event.errors.messages}"
@@ -21,6 +22,7 @@ class Api::V1::AssetEventsController < Api::ApiController
   end
 
   def update
+    authorize! :update, @typed_event.transam_asset 
     if @typed_event.update(form_params)
       render status: 200, json: json_response(:success, data: @typed_event.api_json)
     else
@@ -31,6 +33,7 @@ class Api::V1::AssetEventsController < Api::ApiController
   end
 
   def create
+    authorize! :update, @event
     @new_event = @asset.build_typed_event(@event_type.class_name.constantize)
     @new_event.update(new_form_params)
 
@@ -47,7 +50,7 @@ class Api::V1::AssetEventsController < Api::ApiController
     @asset_event = AssetEvent.find_by(object_key: params[:id])
     @typed_event = AssetEvent.as_typed_event(@asset_event)
 
-    unless @asset_event
+    unless @asset_event and @asset_event.viewable_by? current_user
       @status = :fail
       message = "Asset event #{params[:id]} not found."
       render status: :not_found, json: json_response(:fail, message: message)
