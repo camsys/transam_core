@@ -22,7 +22,7 @@
   :cookie_expire => "1y"}}
   %thead
     %th.left{:data => {:visible => 'false'}} Object Key
-    - unless SystemConfigFieldCustomization.find_by(table_name: 'uploads', field_name: 'organization', is_visible: false)
+    - unless SystemConfigFieldCustomization.find_by(table_name: 'uploads', field_name: 'organization_id', is_visible: false)
       %th.left{:data => {:sortable => 'true'}} Agency
     %th.left{:data => {:sortable => 'true'}} File Name
     %th.left{:data => {:sortable => 'true'}} Content
@@ -41,7 +41,7 @@
     - @uploads.each do |f|
       %tr{:id => f.object_key, :class => 'action-path'}
         %td.left= f.object_key
-        - unless SystemConfigFieldCustomization.find_by(table_name: 'uploads', field_name: 'organization', is_visible: false)
+        - unless SystemConfigFieldCustomization.find_by(table_name: 'uploads', field_name: 'organization_id', is_visible: false)
           %td.left= f.organization.present? ? f.organization.to_s : 'Multi Org'
         %td.left= f.original_filename
         %td.left= f.file_content_type

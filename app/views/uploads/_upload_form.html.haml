@@ -7,7 +7,7 @@
     .row
       .col-sm-6
         = f.association :file_content_type, :collection => FileContentType.active.select{|f| can? :read, f}, :required => true, :label => 'Spreadsheet Content', :prompt => 'Set the spreadsheet contents...'
-        - custom_field = SystemConfigFieldCustomization.find_by(table_name: 'uploads', field_name: 'organization', is_visible: 'false')
+        - custom_field = SystemConfigFieldCustomization.find_by(table_name: 'uploads', field_name: 'organization_id', is_visible: 'false')
         - if custom_field
           = f.input :organization_id, :as => :hidden, :input_html => { :value => @organization_list.first }
     - unless custom_field

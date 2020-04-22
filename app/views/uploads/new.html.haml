@@ -7,7 +7,7 @@
             .col-md-12
               %h3.panel-title
                 %i.fa.fa-list
-                - custom_field = SystemConfigFieldCustomization.find_by(table_name: 'uploads', field_name: nil)
+                - custom_field = SystemConfigFieldCustomization.find_by(table_name: 'uploads', field_name: nil, action_name: nil)
                 = custom_field&.label || 'Bulk Updates'
         .panel-body    
           = render 'upload_instructions'
