@@ -1,7 +1,7 @@
 class UploadsController < OrganizationAwareController
 
   add_breadcrumb "Home", :root_path
-  add_breadcrumb "Bulk Updates", :uploads_path
+  add_breadcrumb SystemConfigFieldCustomization.find_by(table_name: 'uploads', field_name: nil, action_name: nil)&.label || "Bulk Updates", :uploads_path
 
   before_action :set_upload, :only => [:show, :destroy, :resubmit, :undo, :download]
 
@@ -221,7 +221,7 @@ class UploadsController < OrganizationAwareController
 
   def new
 
-    add_breadcrumb "New Template"
+    add_breadcrumb SystemConfigFieldCustomization.find_by(table_name: 'uploads', action_name: 'new')&.label || "New Template"
 
     @upload = Upload.new
 
@@ -236,7 +236,7 @@ class UploadsController < OrganizationAwareController
     @upload = Upload.new(form_params)
     @upload.user = current_user
 
-    add_breadcrumb "New Template"
+    add_breadcrumb SystemConfigFieldCustomization.find_by(table_name: 'uploads', action_name: 'new')&.label || "New Template"
 
     respond_to do |format|
       if @upload.save
