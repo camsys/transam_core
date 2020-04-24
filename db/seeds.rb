@@ -152,10 +152,10 @@ roles = [
   {:privilege => false, :name => 'guest', :weight => 1, :show_in_user_mgmt => true},
   {:privilege => false, :name => 'user', :weight => 1, :show_in_user_mgmt => true},
   {:privilege => false, :name => 'manager', :weight => 7, :show_in_user_mgmt => true},
-  {:privilege => true, :name => 'admin', :show_in_user_mgmt => true},
+  {:privilege => true, :name => 'admin', :show_in_user_mgmt => true, :role_parent => 'user,manager'},
   {:privilege => true, :name => 'super_manager', :weight => 10, role_parent: 'manager', :show_in_user_mgmt => true},
   {:privilege => true, :name => 'technical_contact', :show_in_user_mgmt => true},
-  {name: 'system_admin', role_parent: Role.find_by(name: 'admin'), weight: 1, privilege: true, show_in_user_mgmt: false},
+  {name: 'system_admin', role_parent: 'admin', weight: 1, privilege: true, show_in_user_mgmt: false},
   {:privilege => true, :name => 'asset_manager', :role_parent => 'manager', :show_in_user_mgmt => true, weight: 8}
 ]
 
@@ -249,8 +249,10 @@ data = eval(table_name)
 klass = table_name.classify.constantize
 data.each do |row|
   x = klass.new(row.except(:role_parent))
-  x.role_parent = Role.find_by(name: row[:role_parent])
   x.save!
+  (row[:role_parent] || '').split(',').each do |role|
+    RolePrivilegeMapping.create!(privilege_id: x.id, role_id: Role.find_by(name: role).id)
+  end
 end
 
 puts "======= Processing TransAM CORE Reports  ======="

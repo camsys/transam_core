@@ -474,6 +474,54 @@ class TransamAsset < TransamAssetRecord
     nil
   end
 
+  # Is this asset viewable by the user?
+  def viewable_by? user
+    organization_id.in? user.viewable_organization_ids
+  end
+
+
+  ######## API Serializer ##############
+  def summary_api_json(options={})
+    asset_attributes = {
+      object_key: object_key,
+      description: description,
+      organization: organization.try(:api_json)
+    }
+  end
+
+  def api_json(options={})
+    asset_attributes = {
+      object_key: object_key,
+      asset_tag: asset_tag,
+      external_id: external_id,
+      description: description,
+      organization: organization.try(:api_json),
+      asset_subtype: asset_subtype.try(:api_json),
+      manufacturer: manufacturer.try(:api_json),
+      manufacturer_model: manufacturer_model.try(:api_json),
+      other_manufacturer_model: other_manufacturer_model,
+      manufacture_year:  manufacture_year,
+      purchase_cost: purchase_cost,
+      purchase_date: purchase_date,
+      purchased_new: purchased_new,
+      in_service_date: in_service_date,
+      vendor: vendor.try(:api_json),
+      quantity: quantity,
+      quantity_unit: quantity_unit
+    }
+
+    if options[:include_events]
+      asset_attributes.merge(
+        asset_events: AssetEventType.all.map{|t|
+          [t.to_s, asset_events.where(asset_event_type: t).map{|e|
+            AssetEvent.as_typed_event(e).try(:api_json)
+          }]
+        }.to_h
+      )
+    else
+      asset_attributes
+    end
+  end
 
   private
 

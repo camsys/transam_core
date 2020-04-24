@@ -83,14 +83,14 @@ class TransamWorkflowController < ApplicationController
     # to_state given, no state change
     # to_state given, state change
 
-    if event_proxy.event_name && (can? event_proxy.event_name.to_sym, model_obj) && (model_obj.class.event_names.include? event_proxy.event_name)
+    if event_proxy.event_name.present? && (can? event_proxy.event_name.to_sym, model_obj) && (model_obj.class.event_names.include? event_proxy.event_name)
       if model_obj.class.event_transitions(event_proxy.event_name).map{|x| x.values.map(&:to_sym)}.flatten.include?(model_obj.state.to_sym)
         success = true
       else
         Rails.logger.debug "fire_workflow_events event_name: #{event_proxy.event_name} for #{model_obj}."
         success = model_obj.machine.fire_state_event(event_proxy.event_name)
       end
-    elsif event_proxy.to_state
+    elsif event_proxy.to_state.present?
       if model_obj.state == event_proxy.to_state
         success = true
       else

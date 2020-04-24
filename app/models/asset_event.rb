@@ -48,7 +48,6 @@ class AssetEvent < ActiveRecord::Base
   FORM_PARAMS = [
     :asset_id,
     :asset_event_type_id,
-    :asset_type_id,
     :event_date,
     :comments
   ]
@@ -98,6 +97,21 @@ class AssetEvent < ActiveRecord::Base
     # get a typed version of the asset event and return its value
     evt = is_typed? ? self : AssetEvent.as_typed_event(self)
     return evt.get_update unless evt.nil?
+  end
+
+  # Is this asset event viewable by the user?
+  def viewable_by? user
+    transam_asset.viewable_by? user 
+  end
+
+  ######## API Serializer ##############
+  def api_json(options={})
+    {
+      id: object_key,
+      event_type: asset_event_type.try(:api_json),
+      event_date: event_date,
+      comments: comments
+    }
   end
   #------------------------------------------------------------------------------
   #

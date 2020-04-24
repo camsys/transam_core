@@ -20,6 +20,7 @@
       .row.col-sm-12
         - if lookup_context.template_exists?("#{@query_field.name}", "query_filters/filter_forms", true)
           = render "query_filters/filter_forms/#{@query_field.name}"
+
         - else
           - if @query_field.filter_type.blank?
             = render 'query_filters/filter_forms/default'

@@ -169,7 +169,7 @@ module TransamTagHelper
   %label.control-label
     #{label || field.to_s.titleize}
   .display-value
-    %a.editable-field{href:'#', id: '#{field}', data: {emptytext: ' - ', name: '#{(model_name || asset.class.base_class.name).underscore}[#{field_name}]', value: '#{value}', type: '#{type}', url: '#{asset_path}', source: \"#{url || "[#{source}]"}\", sourceCache: '#{url.nil?}'}}
+    %a.editable-field{href:'#', id: '#{field_name}', data: {emptytext: ' - ', name: '#{(model_name || asset.class.base_class.name).underscore}[#{field_name}]', value: '#{value}', type: '#{type}', url: '#{asset_path}', source: \"#{url || "[#{source}]"}\", sourceCache: '#{url.nil?}'}}
 ")
     return engine.render.html_safe
   end
@@ -253,7 +253,7 @@ module TransamTagHelper
   %label.control-label
     #{label || field.to_s.titleize}
   .display-value
-    %a.editable-field{href:'#', id: '#{field}', data: {inputclass: '#{inputclass}', emptytext: ' - ', name: 'asset[#{field_name}]', value: '#{value}', type: '#{type}', url: '#{asset_path(asset)}', source: \"#{url || "[#{source}]"}\", sourceCache: '#{url.nil?}'}} #{display_text}
+    %a.editable-field{href:'#', id: '#{field_name}', data: {inputclass: '#{inputclass}', emptytext: ' - ', name: 'asset[#{field_name}]', value: '#{value}', type: '#{type}', url: '#{asset_path(asset)}', source: \"#{url || "[#{source}]"}\", sourceCache: '#{url.nil?}'}} #{display_text}
 ")
     return engine.render.html_safe
   end

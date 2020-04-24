@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_22_101327) do
+ActiveRecord::Schema.define(version: 2020_02_02_230352) do
 
   create_table "activities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "object_key", limit: 12
@@ -397,6 +397,7 @@ ActiveRecord::Schema.define(version: 2019_08_22_101327) do
 
   create_table "districts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "district_type_id"
+    t.string "state"
     t.string "name", limit: 64, null: false
     t.string "code", null: false
     t.string "description", limit: 254, null: false
@@ -999,6 +1000,17 @@ ActiveRecord::Schema.define(version: 2019_08_22_101327) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "system_config_field_customizations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "table_name"
+    t.string "field_name"
+    t.string "description"
+    t.string "code_frag"
+    t.boolean "is_locked"
+    t.boolean "active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "system_configs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "customer_id"
     t.string "start_of_fiscal_year", limit: 5
@@ -1018,7 +1030,6 @@ ActiveRecord::Schema.define(version: 2019_08_22_101327) do
     t.integer "num_forecasting_years"
     t.integer "num_reporting_years"
     t.integer "max_rows_returned"
-    t.string "special_locked_fields"
     t.string "measurement_system"
     t.string "data_file_path", limit: 64
     t.datetime "created_at"
@@ -1248,6 +1259,15 @@ ActiveRecord::Schema.define(version: 2019_08_22_101327) do
     t.index ["organization_id"], name: "vendors_idx3"
   end
 
+  create_table "version_associations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.integer "version_id"
+    t.string "foreign_key_name", null: false
+    t.integer "foreign_key_id"
+    t.string "foreign_type"
+    t.index ["foreign_key_name", "foreign_key_id", "foreign_type"], name: "index_version_associations_on_foreign_key"
+    t.index ["version_id"], name: "index_version_associations_on_version_id"
+  end
+
   create_table "versions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "item_type", null: false
     t.integer "item_id", null: false
@@ -1256,6 +1276,8 @@ ActiveRecord::Schema.define(version: 2019_08_22_101327) do
     t.text "object"
     t.datetime "created_at"
     t.text "object_changes"
+    t.integer "transaction_id"
+    t.index ["transaction_id"], name: "index_versions_on_transaction_id"
   end
 
   create_table "weather_codes", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
