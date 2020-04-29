@@ -2,12 +2,18 @@ require 'rails_helper'
 
 RSpec.describe Api::V1::AssetEventsController, type: :request do
   let(:test_user) { create(:normal_user) }
-  let(:test_asset) { create(:transam_asset) }
+  let(:test_asset) { create(:transam_asset, organization_id: test_user.organization_id) }
   let(:asset_object_key) { test_asset.object_key }
-  let(:test_event) { create(:condition_update_event) }
+  let(:test_event) { create(:condition_update_event, asset_id: nil, transam_asset: test_asset) }
   let(:event_object_key) { test_event.object_key }
 
   let(:valid_headers) { {"X-User-Email" => test_user.email, "X-User-Token" => test_user.authentication_token} }
+
+  before(:each) do
+    test_user.organizations << test_user.organization
+    test_user.viewable_organizations << test_user.organization
+    test_user.save!
+  end
 
   describe 'POST /api/v1/asset_events' do
 

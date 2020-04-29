@@ -69,7 +69,7 @@ class StubOrg < Organization
   has_many :assets,   :foreign_key => 'organization_id'
 
   def get_policy
-    return StubPolicy.new
+    return StubPolicy.new(organization: self)
   end
 end
 
@@ -89,6 +89,14 @@ class StubPolicy < Policy
 
   def replacement_cost_calculation_type
     CostCalculationType.first
+  end
+
+  def service_life_calculation_type
+    ServiceLifeCalculationType.first
+  end
+
+  def min_service_life_months
+    120
   end
 
 end
