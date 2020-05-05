@@ -1,5 +1,8 @@
 class AssetsController < AssetAwareController
 
+
+  before_action :set_paper_trail_whodunnit, only: [:create, :update], if: :paper_trail_enabled?
+
   add_breadcrumb "Home", :root_path
 
   # Set the view variabless form the params @asset_type, @asset_subtype, @search_text, @spatial_filter, @view
@@ -420,19 +423,19 @@ class AssetsController < AssetAwareController
     asset_class_name = params[:asset_seed_class_name] || 'AssetType'
     if asset_class_name == 'AssetType' && params[:asset][:asset_type_id].blank?
       asset_subtype = AssetSubtype.find_by(id: params[:asset][:asset_subtype_id])
-      asset_class_instance = asset_class_name.constantize.find_by(id: asset_subtype.try(:asset_type_id))
+      @asset_class_instance = asset_class_name.constantize.find_by(id: asset_subtype.try(:asset_type_id))
     else
-      asset_class_instance = asset_class_name.constantize.find_by(id: params[:asset][asset_class_name.foreign_key.to_sym])
+      @asset_class_instance = asset_class_name.constantize.find_by(id: params[:asset][asset_class_name.foreign_key.to_sym])
     end
 
-    if asset_class_instance.nil?
+    if @asset_class_instance.nil?
       notify_user(:alert, "Asset class '#{params[:asset][asset_class_name.foreign_key.to_sym]}' not found. Can't create new asset!")
       redirect_to(root_url)
       return
     end
 
     # Use the asset class to create an asset of the correct type
-    @asset = Rails.application.config.asset_base_class_name.constantize.new_asset(asset_class_instance, params)
+    @asset = Rails.application.config.asset_base_class_name.constantize.new_asset(@asset_class_instance, params)
     @asset.attributes = new_form_params(@asset)
 
 
@@ -791,6 +794,10 @@ class AssetsController < AssetAwareController
   #------------------------------------------------------------------------------
   private
 
+  def paper_trail_enabled?
+    SystemConfigExtension.find_by(extension_name: 'PaperTrailAssetAware', active: true).present?
+  end
+
   # Never trust parameters from the scary internet, only allow the white list through.
   def form_params
     params.require(:asset).permit(asset_allowable_params)
@@ -826,6 +833,15 @@ class AssetsController < AssetAwareController
     params[:asset][:purchase_date] = reformat_date(params[:asset][:purchase_date]) unless params[:asset][:purchase_date].blank?
     params[:asset][:in_service_date] = reformat_date(params[:asset][:in_service_date]) unless params[:asset][:in_service_date].blank?
     params[:asset][:warranty_date] = reformat_date(params[:asset][:warranty_date]) unless params[:asset][:warranty_date].blank?
+
+    # generically update any nested date fields
+    params[:asset].keys.select{|k| k.to_s.include? '_components_attributes'}.each do |key|
+      params[:asset][key].each do |asset_idx, asset_row|
+        params[:asset][key][asset_idx][:purchase_date] = reformat_date(params[:asset][key][asset_idx][:purchase_date]) unless params[:asset][key][asset_idx][:purchase_date].blank?
+        params[:asset][key][asset_idx][:in_service_date] = reformat_date(params[:asset][key][asset_idx][:in_service_date]) unless params[:asset][key][asset_idx][:in_service_date].blank?
+        params[:asset][key][asset_idx][:warranty_date] = reformat_date(params[:asset][key][asset_idx][:warranty_date]) unless params[:asset][key][asset_idx][:warranty_date].blank?
+      end
+    end
   end
 
   # Manage the vendor_id/vendor_name

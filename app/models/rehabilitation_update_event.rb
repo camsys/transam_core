@@ -69,6 +69,15 @@ class RehabilitationUpdateEvent < AssetEvent
     asset_event_asset_subsystems.map(&:labor_cost).compact.reduce(0, :+)
   end
 
+  ######## API Serializer ##############
+  def api_json(options={})
+    super.merge({
+      total_cost: cost,
+      extended_useful_life_months: extended_useful_life_months,
+      extended_useful_life_miles: extended_useful_life_miles
+    })
+  end
+
   #------------------------------------------------------------------------------
   #
   # Protected Methods

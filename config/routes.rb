@@ -24,12 +24,20 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :assets, only: [:show, :index] do
+      resources :assets, only: [:show, :index, :update] do
+        collection do
+          post :filter
+        end
         resources :images
         resources :documents
       end
 
-      resources :organizations, only: [:show] do 
+      resources :query_fields, only: [:index]
+      resources :query_categories, only: [:index]
+      resources :asset_classes, only: [:index]
+      resources :asset_events, only: [:show, :create, :update, :destroy]
+      resources :asset_event_types, only: [:index]
+      resources :organizations, only: [:show, :index] do 
       end
     end
   end
@@ -227,6 +235,8 @@ Rails.application.routes.draw do
       get 'manufacturers'
       get 'manufacturer_models'
       get 'vendors'
+      get 'locations'
+      get 'parents'
     end
   end
   get 'render_new', to: 'query_filters#render_new', as: :load_new_query_filter

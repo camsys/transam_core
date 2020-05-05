@@ -22,8 +22,15 @@
   .editable-buttons {
     display: none;
   }
-  
+
+:ruby
+  obj ||= nil
+  disabled_fields ||= (obj.present? ? (obj.try(:allowable_params) || obj.attributes.keys).select{|x| cannot?("update_#{x}".to_sym, obj)} : [])
+
 :javascript
+
+  var has_run = false;
+  var disabled_fields = JSON.parse('#{disabled_fields.to_json.html_safe}');
 
   // show Other text entry only if it's a Other type; otherwise, hide and empty its value
   // type_el: HTML element of the Type dropdown
@@ -84,6 +91,12 @@
       $('#'+tab_id+' input[type=radio]').removeAttr('disabled');
       //$('#'+tab_id+' .editable-input').find('input, select').first().focus();
 
+      $('#'+tab_id+' .editable-field').each(function(idx, field) {
+        if ($.inArray( $(field).attr('id'), disabled_fields ) >= 0) {
+          $(field).editable('disable');
+        }
+      });
+
       $('.other-type-container select').each(function() {
         $(this).closest('.other-type-container').attr('data-original-value', $(this).val());
       });
@@ -136,8 +149,8 @@
       var tab_id = get_active_tab_id();
       enable_tab_editing(tab_id);
 
-      $('.edit-xeditable-button').hide();
-      $('.edit-xeditable-buttons').show();
+      $(this).hide();
+      $(this).next('.edit-xeditable-buttons').show();
     });
 
     $('.cancel-xeditable-button').on('click', function(e) {
@@ -146,89 +159,97 @@
     });
 
     $('.save-xeditable-button').click(function() {
-     $('form.editableform').submit(); // save values locally, then submit to server
-     if($('.asset-subform form').length > 0) {
-      $('.asset-subform form').valid(); // validate subforms (e.g., Funding Programs)
-     }
-     if($('.has-error .form-control').length == 0) {
-       $('#processing_spinner').show();
+     if (!has_run) {
+      has_run = true;
+      $('form.editableform').submit(); // save values locally, then submit to server
+       if($('.asset-subform form').length > 0) {
+        $('.asset-subform form').valid(); // validate subforms (e.g., Funding Programs)
+       }
+       if($('.has-error .form-control').length == 0) {
+         $('#processing_spinner').show();
 
-       // get params from subforms
-       var extra_data = {};
-       var tab_id = get_active_tab_id();
+         // get params from subforms
+         var extra_data = {};
+         var tab_id = get_active_tab_id();
 
-        if ($('[data-behavior~=component-picker]').length > 0) {
-          var subforms = $('#'+ tab_id +' .tab-pane.active .asset-subform form');
-        } else {
-          var subforms = $('.asset-subform form');
-        }
-       subforms.each(function(subform) {
-         $(this).serializeArray().forEach(function(param_value, idx) {
-            if(param_value) {
-              field_name = param_value.name
-              if ($('[data-behavior~=component-picker]').length > 0) {
+          if ($('[data-behavior~=component-picker]').length > 0) {
+            var subforms = $('#'+ tab_id +' .tab-pane.active .asset-subform form');
+          } else {
+            var subforms = $('.asset-subform form');
+          }
+         subforms.each(function(subform) {
+           $(this).serializeArray().forEach(function(param_value, idx) {
+              if(param_value) {
+                field_name = param_value.name
+                if ($('[data-behavior~=component-picker]').length > 0) {
 
-               first_bracket_index = field_name.indexOf('[')
+                 first_bracket_index = field_name.indexOf('[')
 
-               if (first_bracket_index >= 0) {
-                  field_name = field_name.substring(0,first_bracket_index) + '['+$('#'+ tab_id +' .tab-pane.active [data-behavior~=component-picker]').data('target-model') +'_attributes][0]' + field_name.substring(first_bracket_index,field_name.length);
+                 if (first_bracket_index >= 0) {
+                    field_name = field_name.substring(0,first_bracket_index) + '['+$('#'+ tab_id +' .tab-pane.active [data-behavior~=component-picker]').data('target-model') +'_attributes][0]' + field_name.substring(first_bracket_index,field_name.length);
 
-                  id_field_name = field_name.substring(0,first_bracket_index) + '['+$('#'+ tab_id +' .tab-pane.active [data-behavior~=component-picker]').data('target-model') +'_attributes][0][id]';
-                  if (extra_data[id_field_name] === undefined) {
-                    extra_data[id_field_name] = $('#'+ tab_id +' .tab-pane.active [data-behavior~=component-picker] option:selected').data('id');
-                  }
-               }
-              }
-
-              extra_data[field_name] = param_value.value;
-            }
-         });
-       });
-       $('.editable-field').editable('submit', {
-           ajaxOptions: {
-               type: 'PUT',
-               dataType: 'json' //assuming json response
-           },
-           data: extra_data,
-           success: function(data, config) {
-              $('#processing_spinner').hide();
-              if(data && data.errors){
-                //server-side validation error, response like {"errors": {"username": "username already exist"} }
-                config.error.call(this, data.errors);
-              } else {
-                var current_url = window.location.href;
-                if(current_url.includes('?')) {
-                  if(current_url.includes('use_last_tab')) {
-                    if(current_url.includes('use_last_tab=0')) {
-                      current_url = current_url.replace("use_last_tab=0", "use_last_tab=1");
+                    id_field_name = field_name.substring(0,first_bracket_index) + '['+$('#'+ tab_id +' .tab-pane.active [data-behavior~=component-picker]').data('target-model') +'_attributes][0][id]';
+                    if (extra_data[id_field_name] === undefined) {
+                      extra_data[id_field_name] = $('#'+ tab_id +' .tab-pane.active [data-behavior~=component-picker] option:selected').data('id');
                     }
-                  } else {
-                    current_url += "&use_last_tab=1";
-                  }
-                } else {
-                  current_url +=  "?use_last_tab=1";
+                 }
                 }
 
-                // refresh page to show new profile
-                window.location.replace(current_url);
+                extra_data[field_name] = param_value.value;
               }
-           },
-           error: function(errors) {
-             $('#processing_spinner').hide();
-             var msg = '';
-             if(errors && errors.responseText) { //ajax error, errors = xhr object
-                 msg = errors.responseText;
-                 console.log(msg);
-                 alert('We are sorry but something went wrong. Please try again.');
-             } else { //validation error (client-side or server-side)
-                 $.each(errors, function(k, v) { msg += k+": "+v+"<br>"; });
-                 alert(msg);
+           });
+         });
+
+         var ajax_ops = {
+               type: 'PUT',
+               dataType: 'json' //assuming json response
+          };
+         if ($(this).data('xeditable-url') != undefined) {
+          ajax_ops['url'] = $(this).data('xeditable-url')
+         }
+         $('.editable-field').editable('submit', {
+             ajaxOptions: ajax_ops,
+             data: extra_data,
+             success: function(data, config) {
+                $('#processing_spinner').hide();
+                if(data && data.errors){
+                  //server-side validation error, response like {"errors": {"username": "username already exist"} }
+                  config.error.call(this, data.errors);
+                } else {
+                  var current_url = window.location.href;
+                  if(current_url.includes('?')) {
+                    if(current_url.includes('use_last_tab')) {
+                      if(current_url.includes('use_last_tab=0')) {
+                        current_url = current_url.replace("use_last_tab=0", "use_last_tab=1");
+                      }
+                    } else {
+                      current_url += "&use_last_tab=1";
+                    }
+                  } else {
+                    current_url +=  "?use_last_tab=1";
+                  }
+
+                  // refresh page to show new profile
+                  window.location.replace(current_url);
+                }
+             },
+             error: function(errors) {
+               $('#processing_spinner').hide();
+               var msg = '';
+               if(errors && errors.responseText) { //ajax error, errors = xhr object
+                   msg = errors.responseText;
+                   console.log(msg);
+                   alert('We are sorry but something went wrong. Please try again.');
+               } else { //validation error (client-side or server-side)
+                   $.each(errors, function(k, v) { msg += k+": "+v+"<br>"; });
+                   alert(msg);
+               }
              }
-           }
-       });
-     } else {
-      var tab_id = $('.has-error .form-control').parents('.tab-pane').attr('id');
-      open_tab(tab_id);
+         });
+       } else {
+        var tab_id = $('.has-error .form-control').parents('.tab-pane').attr('id');
+        open_tab(tab_id);
+       }
      }
     });
 
@@ -245,6 +266,34 @@
       validate: function(value) {
         if($(this).hasClass('required')) {
           if($.trim(value) == '') return 'This field is required';
+        }
+        if($(this).attr('data-min') != undefined) {
+          var min = $(this).attr("data-min");
+          if(min.includes('.')) {
+            value = parseFloat(value);
+            min = parseFloat(min);
+          }
+          else {
+            value = parseInt(value);
+            min = parseInt(min);
+          }
+          if(value < min) {
+            return 'Value must be greater than or equal to ' + min + '.';
+          }
+        }
+        if($(this).attr('data-max') != undefined) {
+          var max = $(this).attr("data-max");
+          if(max.includes('.')) {
+            value = parseFloat(value);
+            max = parseFloat(max);
+          }
+          else {
+            value = parseInt(value);
+            max = parseInt(max);
+          }
+          if(value > max) {
+            return 'Value must be less than or equal to ' + max + '.';
+          }
         }
       },
       error: function() {

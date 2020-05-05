@@ -153,7 +153,7 @@ class User < ActiveRecord::Base
     :role_ids,
     :privilege_ids,
     :user_organization_filter_id,
-    :organization_ids
+    :organization_ids => [],
   ]
 
   #-----------------------------------------------------------------------------

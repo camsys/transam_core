@@ -34,4 +34,12 @@ class Manufacturer < ActiveRecord::Base
     "#{code} - #{name}"
   end
 
+  def api_json(options={})
+    {
+      id: id,
+      name: name, 
+      code: code
+    }
+  end
+
 end

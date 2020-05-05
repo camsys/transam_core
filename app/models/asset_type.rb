@@ -18,6 +18,14 @@ class AssetType < ActiveRecord::Base
     name
   end
 
+  def api_json(options={})
+    {
+      id: id,
+      name: name, 
+      description: description
+    }
+  end
+
   protected
 
   def set_defaults

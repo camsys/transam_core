@@ -11,6 +11,10 @@ module Abilities
 
         self.merge ability if ability.present?
       end
+
+      cannot :assign, Role do |r|
+        !user.has_role?(:system_admin) && r.name == "system_admin"
+      end
     end
   end
 end

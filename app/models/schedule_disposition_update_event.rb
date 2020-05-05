@@ -47,6 +47,13 @@ class ScheduleDispositionUpdateEvent < AssetEvent
   def get_update
     "Scheduled for disposition in #{fiscal_year(disposition_year)}"
   end
+
+  ######## API Serializer ##############
+  def api_json(options={})
+    super.merge({
+      disposition_year: disposition_year
+    })
+  end
   
   protected
 

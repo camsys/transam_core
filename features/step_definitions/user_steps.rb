@@ -10,9 +10,11 @@ end
 
 
 ### UTILITY METHODS ###
-def create_user(email, org_short_name)
+def create_user(email, org_short_name, first_name=nil,last_name=nil)
   o = Organization.find_by(:short_name => org_short_name)
   user = FactoryBot.build(:normal_user, :email => email, :organization => o)
+  user.first_name = first_name if first_name.present?
+  user.last_name = last_name if last_name.present?
 
   user.organizations << o
   user.save!
@@ -39,6 +41,12 @@ def sign_in(email, password)
 end
 
 ### GIVEN ###
+Given("A system user") do
+  org1 = create_organization
+  create_user('system@test.com', org1.short_name,'system','user')
+end
+
+
 Given(/^A user with email "(.*?)"$/) do |user_email|
   org1 = create_organization
   create_user(user_email, org1.short_name)

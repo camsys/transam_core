@@ -24,4 +24,9 @@ RSpec.describe AssetSubtype, :type => :model do
   it '.to_s' do
     expect(test_subtype.to_s).to eq(test_subtype.name)
   end
+
+  it 'responds to api_json' do
+    expect(test_subtype).to respond_to(:api_json)
+  end
+
 end

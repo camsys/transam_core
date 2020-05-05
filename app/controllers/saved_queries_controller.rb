@@ -269,8 +269,14 @@ class SavedQueriesController < OrganizationAwareController
                   end 
                 end
 
+                # For readability, show yes/no instead of 1/0.
                 if field_types[field_name] == 'boolean'
                   val = (val == 1 ? 'Yes' : 'No')
+                end
+
+                # For readability, print in local timezone and convert to AM/PM
+                if field_types[field_name] == 'date' and val.is_a? Time
+                  val = val.in_time_zone.strftime('%m/%d/%Y %I:%M%p')
                 end
 
                 # special case

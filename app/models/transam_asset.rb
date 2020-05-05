@@ -198,13 +198,13 @@ class TransamAsset < TransamAssetRecord
   end
 
   def self.get_typed_version(version)
-    # if live object passed to get_typed_asset
+    # live object is the object as its saved in the databse currently, ie its not a version
     unless version.respond_to? :reify
-      return get_typed_asset(version)
+      asset = version # if live object passed to get_typed_asset
+    else
+      # get reified asset of version with one level of asset ERD associations
+      asset = version.reify(belongs_to: true, has_one: true, has_many: true)
     end
-
-    # get reified asset of version with one level of asset ERD associations
-    asset = version.reify(belongs_to: true, has_one: true, has_many: true)
 
     # get typed asset class
     typed_asset = get_typed_asset(asset)
@@ -241,7 +241,15 @@ class TransamAsset < TransamAssetRecord
     lower_tmp_asset = asset
     if asset_idx > 0
       while lower_idx >= 0
-        obj_arr[lower_idx] = lower_tmp_asset.send(erd_hierarchy[lower_idx])
+        # if reifed object we can use its version to find versions of associated
+        # if live object we have to look at the associated object for its versions to find the corresponding version
+        if lower_tmp_asset.respond_to? :version
+          obj_arr[lower_idx] = lower_tmp_asset.send(erd_hierarchy[lower_idx])
+        else
+          # the reifed object of a version is the object BEFORE the changes
+          # therefore we want the first version that happened after the version we passed to get the association that was corresponding
+          obj_arr[lower_idx] = lower_tmp_asset.send(erd_hierarchy[lower_idx]).versions.where('created_at > ?', version.created_at).where.not(event: 'create').order(:created_at).first || lower_tmp_asset.send(erd_hierarchy[lower_idx])
+        end
         lower_tmp_asset = obj_arr[lower_idx].version&.reify(has_one: true, belongs_to: true, has_many: true) || obj_arr[lower_idx]
         lower_idx -= 1
       end
@@ -474,6 +482,54 @@ class TransamAsset < TransamAssetRecord
     nil
   end
 
+  # Is this asset viewable by the user?
+  def viewable_by? user
+    organization_id.in? user.viewable_organization_ids
+  end
+
+
+  ######## API Serializer ##############
+  def summary_api_json(options={})
+    asset_attributes = {
+      object_key: object_key,
+      description: description,
+      organization: organization.try(:api_json)
+    }
+  end
+
+  def api_json(options={})
+    asset_attributes = {
+      object_key: object_key,
+      asset_tag: asset_tag,
+      external_id: external_id,
+      description: description,
+      organization: organization.try(:api_json),
+      asset_subtype: asset_subtype.try(:api_json),
+      manufacturer: manufacturer.try(:api_json),
+      manufacturer_model: manufacturer_model.try(:api_json),
+      other_manufacturer_model: other_manufacturer_model,
+      manufacture_year:  manufacture_year,
+      purchase_cost: purchase_cost,
+      purchase_date: purchase_date,
+      purchased_new: purchased_new,
+      in_service_date: in_service_date,
+      vendor: vendor.try(:api_json),
+      quantity: quantity,
+      quantity_unit: quantity_unit
+    }
+
+    if options[:include_events]
+      asset_attributes.merge(
+        asset_events: AssetEventType.all.map{|t|
+          [t.to_s, asset_events.where(asset_event_type: t).map{|e|
+            AssetEvent.as_typed_event(e).try(:api_json)
+          }]
+        }.to_h
+      )
+    else
+      asset_attributes
+    end
+  end
 
   private
 
@@ -513,7 +569,7 @@ class TransamAsset < TransamAssetRecord
     end
 
     if self.changes.include?("title_ownership_organization_id") && self.other_title_ownership_organization.present?
-      self.other_titel_ownership_organization = nil unless self.title_ownership_organization_id == DEFAULT_OTHER_ID
+      self.other_title_ownership_organization = nil unless self.title_ownership_organization_id == DEFAULT_OTHER_ID
     end
 
     if self.changes.include?("lienholder_id") && self.other_lienholder.present?

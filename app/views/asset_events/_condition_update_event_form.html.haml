@@ -30,7 +30,7 @@
               = "#{s.object.condition_type.name} (#{s.object.condition_type.rating_ceiling})"
           .col-sm-6
             = s.input :pcnt, :wrapper => :vertical_prepend, :label => false do
-              = s.input_field :pcnt, :class => 'form-control pcnt-field', :min => 0, :max => 100, :label => false
+              = s.input_field :pcnt, :class => 'form-control pcnt-field', :data => {rating: s.object.condition_type.rating_ceiling}, :min => 0, :max => 100, :label => false
               %span.input-group-addon
                 %i.fa.fa-percent
 
@@ -47,13 +47,12 @@
   $('.pcnt-field').change(function() {
      overall_rating = 0;
      $('.pcnt-field').each(function() {
-        var rating = $(this).attr('id');
-        rating = rating[rating.length-6];
+        var rating = $(this).data('rating');
         var val = $(this).val();
         if (!val) {
           val = 0;
         }
-        overall_rating += parseInt(rating)*parseInt(val)/100;
+        overall_rating += parseFloat(rating)*parseInt(val)/100;
     });
 
     $('#asset_event_assessed_rating').val(overall_rating);

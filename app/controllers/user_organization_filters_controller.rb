@@ -102,7 +102,7 @@ class UserOrganizationFiltersController < OrganizationAwareController
     add_breadcrumb "Organization Filters", user_user_organization_filters_path(current_user)
     add_breadcrumb "New"
 
-    @user_organization_filter = UserOrganizationFilter.new(form_params.except(:organization_ids))
+    @user_organization_filter = UserOrganizationFilter.new(form_params)
     @user_organization_filter.creator = current_user
     if params[:share_filter]
       @user_organization_filter.users = current_user.organization.users
@@ -114,15 +114,12 @@ class UserOrganizationFiltersController < OrganizationAwareController
     # Add the organizations into the object. Make sure that the elements are unique so
     # the same org is not added more than once.
     if params[:query].to_i > 0
+
+      # clear the existing list of organizations
+      @user_organization_filter.organizations.clear
       @user_organization_filter.query_string = QueryParam.find(params[:query].to_i).try(:query_string)
     else
       @user_organization_filter.query_string = nil
-      if form_params[:organization_ids].present?
-        org_list = form_params[:organization_ids].split(',').uniq
-        org_list.each do |id|
-          @user_organization_filter.organizations << Organization.find(id)
-        end
-      end
     end
 
     respond_to do |format|
@@ -152,7 +149,7 @@ class UserOrganizationFiltersController < OrganizationAwareController
     end
 
     respond_to do |format|
-      if @user_organization_filter.update(form_params.except(:organization_ids))
+      if @user_organization_filter.update(form_params)
 
         # Add the (possibly) new organizations into the object
         if params[:query].to_i > 0
@@ -162,16 +159,6 @@ class UserOrganizationFiltersController < OrganizationAwareController
           @user_organization_filter.query_string = QueryParam.find(params[:query].to_i).try(:query_string)
         else
           @user_organization_filter.query_string = nil
-          if form_params[:organization_ids].present?
-            org_list = form_params[:organization_ids].split(',')
-            if org_list.count > 0
-              # clear the existing list of organizations
-              @user_organization_filter.organizations.clear
-              org_list.each do |id|
-                @user_organization_filter.organizations << Organization.find(id)
-              end
-            end
-          end
         end
 
         @user_organization_filter.save

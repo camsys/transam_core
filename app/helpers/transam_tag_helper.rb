@@ -114,7 +114,7 @@ module TransamTagHelper
 
     # Escape for HAML
     label = label.gsub('%','\%') if label
-
+    value = value.gsub('#', '\#') if value.is_a? String
     if url
       asset_path = url
     elsif model_name.nil? || model_obj.class.to_s == model_name
@@ -169,7 +169,7 @@ module TransamTagHelper
   %label.control-label
     #{label || field.to_s.titleize}
   .display-value
-    %a.editable-field{href:'#', id: '#{field}', data: {emptytext: ' - ', name: '#{(model_name || asset.class.base_class.name).underscore}[#{field_name}]', value: '#{value}', type: '#{type}', url: '#{asset_path}', source: \"#{url || "[#{source}]"}\", sourceCache: '#{url.nil?}'}}
+    %a.editable-field{href:'#', id: '#{field_name}', data: {emptytext: ' - ', name: '#{(model_name || asset.class.base_class.name).underscore}[#{field_name}]', value: '#{value}', type: '#{type}', url: '#{asset_path}', source: \"#{url || "[#{source}]"}\", sourceCache: '#{url.nil?}'}}
 ")
     return engine.render.html_safe
   end
@@ -178,7 +178,7 @@ module TransamTagHelper
   # updating asset fields through xeditable
   # IF YOU UPDATE THIS METHOD, update the generic field tag version as well
   #
-  def editable_asset_field_tag(asset, field, label=nil, required: true, type: 'text', min: nil, max: nil, suffix: '', inputclass: '')
+  def editable_asset_field_tag(asset, field, label=nil, required: true, type: 'text', min: nil, max: nil, suffix: '', inputclass: '', current_value: nil)
     if type == 'boolean'
       return editable_asset_association_tag(asset, field, label,
                                             [[1, 'Yes'],[0, 'No']],
@@ -190,7 +190,7 @@ module TransamTagHelper
     classes = ' '
     classes += 'required ' if required
     # classes += 'datepicker ' if type == 'date'
-    value = escape_javascript(asset.send(field).to_s)
+    value = current_value || escape_javascript(asset.send(field).to_s)
     case type
     when 'date'
       type = 'combodate'
@@ -206,6 +206,7 @@ module TransamTagHelper
     
     # Escape for HAML
     label = label.gsub('%','\%') if label
+    value = value.gsub('#', '\#') if value.is_a? String
     engine = Haml::Engine.new("
 ##{field}_group.form-group
   %label.control-label{class: '#{classes}'}
@@ -222,7 +223,7 @@ module TransamTagHelper
   # updating asset associations through xeditable
   # IF YOU UPDATE THIS METHOD, update the generic association tag version as well
   #
-  def editable_asset_association_tag(asset, field, label=nil, collection=nil, current_method: nil, include_blank: false, current_value: nil, type: 'select', url: nil, suffix: '_id', inputclass: '', include_other: false)
+  def editable_asset_association_tag(asset, field, label=nil, collection=nil, current_method: nil, include_blank: false, current_value: nil, type: 'select', url: nil, suffix: '_id', inputclass: '', include_other: false, display_text: nil)
     # value = current_value || (collection || url ? asset.send(current_method || field).to_s : asset.send(current_method || "#{field.to_s}_id").to_s)
     field_name = current_method || "#{field.to_s.singularize}#{suffix}"
     value = current_value || asset.send(current_method || field_name).to_s
@@ -234,9 +235,9 @@ module TransamTagHelper
 
     # Tags with url data sources will sometimes display as blank due to an ajax race condition.
     # Here, we force in display text containing the field's to_string implementation when the data source is from a url.
-    display_text = ""
+    display_text = display_text || ""
     if url
-      display_text = (suffix == '_ids' ? asset.send(field.to_s.pluralize).map{|x| x.to_s}.join("<br>").html_safe : asset.send(field.to_s).to_s)
+      display_text = display_text.blank? ? (suffix == '_ids' ? asset.send(field.to_s.pluralize).map{|x| x.to_s}.join("<br>").html_safe : asset.send(field.to_s).to_s) : display_text
     else
       # The source will wind up being parsed twice by X-editable, so embedded apostrophes
       # have to be doubly escaped.
@@ -252,7 +253,7 @@ module TransamTagHelper
   %label.control-label
     #{label || field.to_s.titleize}
   .display-value
-    %a.editable-field{href:'#', id: '#{field}', data: {inputclass: '#{inputclass}', emptytext: ' - ', name: 'asset[#{field_name}]', value: '#{value}', type: '#{type}', url: '#{asset_path(asset)}', source: \"#{url || "[#{source}]"}\", sourceCache: '#{url.nil?}'}} #{display_text}
+    %a.editable-field{href:'#', id: '#{field_name}', data: {inputclass: '#{inputclass}', emptytext: ' - ', name: 'asset[#{field_name}]', value: '#{value}', type: '#{type}', url: '#{asset_path(asset)}', source: \"#{url || "[#{source}]"}\", sourceCache: '#{url.nil?}'}} #{display_text}
 ")
     return engine.render.html_safe
   end
