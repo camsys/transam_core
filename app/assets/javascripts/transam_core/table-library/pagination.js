@@ -1,11 +1,11 @@
 $(document).on('click', ".page-select-item:not(.search-result-page)", function(){
     let table = $(this).closest('.library-table').find("table").eq(0);
-    updatePage_help(table.attr('id'), $(this).index(), table.data('currentPageSize'));
+    updatePage_help(table.attr('id'), $(this).text()-1, table.data('currentPageSize'));
 });
 
 $(document).on('click', ".page-select-item.search-result-page", function(){
     let table = $(this).closest('.library-table').find("table").eq(0);
-    updatePage_help(table.attr('id'), $(this).index(), table.data('currentPageSize'), true);
+    updatePage_help(table.attr('id'), $(this).text()-1, table.data('currentPageSize'), true);
 });
 
 $(document).on('click', ".page-select-arrow-left", function(){
@@ -88,11 +88,12 @@ function updatePage_help(id, curPage, curPageSize, clientSearch=false){
 }
 
 
-async function updatePage(id, curPage, curPageSize, total, clientSearch=false, searchContent=""){
+async function updatePage(id, curPage, curPageSize, total, clientSearch=false, params={}, searchContent=""){
     let serv = $('#'+id).data('side') === 'server';
+    params = $('#'+id).data('params');
 
     if(serv){
-        total = await serverSide(id,  $('#'+id).data('url'), curPage, curPageSize, searchContent);
+        total = await serverSide(id, $('#'+id).data('url'), curPage, curPageSize, params, searchContent);
     }
 
     if(!clientSearch){
@@ -139,32 +140,49 @@ function updatePageStatus(elem, curPage, curPageSize, total){
 
 
 function updatePageSelect(elem, curPage, curPageSize, total, clientSearch) {
-
-    let last = elem.children().last().index();
+    elem.find('.table-ellipses').remove();
+    let last = elem.find('.page-select-item').last().index();
     if(last * curPageSize < total){
         for(let i = 1; (i+last)*curPageSize<total; i++){
             elem.append($('<span>').addClass("page-select-item").text(i+last+1));
         }
     } else if(last * curPageSize > total) {
         for(let j=last; j*curPageSize>total; j--){
-            elem.children().last().remove();
+            elem.find('.page-select-item').last().remove();
         }
     }
     if(clientSearch)
-        elem.children().addClass("search-result-page");
+        elem.find('.page-select-item').addClass("search-result-page");
     else
-        elem.children().removeClass("search-result-page");
+        elem.find('.page-select-item').removeClass("search-result-page");
 
 
-    elem.children().removeClass("page-selected").eq(curPage).addClass("page-selected");
+    elem.find('.page-select-item').removeClass("page-selected").eq(curPage).addClass("page-selected");
     elem.parent().find(".page-select-arrow-left,.page-select-arrow-right").css({"opacity": 0, "pointer-events": "none"});
     let cur = $(".page-selected").index();
-    last = elem.children().last().index();
+    last = elem.find('.page-select-item').last().index();
     if(cur != 0) {
         $(".page-select-arrow-left").css({"opacity": 1, "pointer-events": "auto"});
     }
     if(cur != last) {
         $(".page-select-arrow-right").css({"opacity": 1, "pointer-events": "auto"});
+    }
+
+    if(elem.find('.page-select-item').length > 7) {
+        elem.children().hide();
+        elem.find($(':nth-child(1)')).show();
+        elem.find($(':nth-child(' + (last+1) + ')')).show();
+        for(let i=curPage-1;i<=curPage+3;i++){
+            elem.find($(':nth-child(' + i + ')')).show();
+        }
+        // ellipses
+        if(curPage >= 4){
+            $("<span>").addClass("table-ellipses").text("...").insertAfter(elem.find('.page-select-item').eq(0));
+        }
+        if(curPage <= last-5){
+            $("<span>").addClass("table-ellipses").text("...").insertBefore(elem.find('.page-select-item').eq(last));
+
+        }
     }
 
 }

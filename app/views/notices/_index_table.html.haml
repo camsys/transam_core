@@ -4,67 +4,111 @@
 #table_actions.btn-group
   = render :partial => "notices/index_actions"
 
-%table.table.table-hover{:id => table_dom_id, :data => {:toggle => 'table',
-  :pagination => 'true',
-  :show_pagination_switch => 'false',
-  :page_list => "[5, 10, 20, 50, 100, 200, 10000]",
-  :page_size => current_user.num_table_rows,
-  :search => 'false',
-  :toolbar => "#table_actions",
-  :export_types => "['csv', 'txt', 'excel']",
-  :show_export => 'true',
-  :show_columns => 'true',
-  :show_toggle => 'true',
-  :cookie => 'true',
-  :cookie_id_table => "noticesid",
-  :cookie_expire => "1y"}}
-  %thead
-    %th.left{:data => {:visible => 'false'}} Object Key
-    %th.left{:data => {:sortable => 'true'}} Type
-    %th.left{:data => {:sortable => 'true'}} Subject
-    %th.left{:data => {:sortable => 'true'}} Summary
-    %th.center{:data => {:sortable => 'true'}} Visible
-    %th.right{:data => {:sortable => 'true'}} Start Display
-    %th.right{:data => {:sortable => 'true'}} Display Until
-    %th.right{:data => {:visible => 'false', :sortable => 'true'}} Created At
-    %th.right{:data => {:visible => 'false', :sortable => 'true'}} Updated At
-    - if can? :update, Notice
-      %th.center Actions
-  %tbody
-    - notices.each do |notice|
-      %tr{:id => notice.object_key, :class => 'action-path'}
-        %td.left= notice.object_key
-        %td.left= notice.notice_type
-        %td.left= notice.subject
-        %td.left= notice.summary.html_safe
-        %td.center= format_as_boolean(notice.visible?)
-        %td.right= format_as_date_time(notice.display_datetime)
-        %td.right= format_as_date_time(notice.end_datetime)
-        %td.right= format_as_date_time(notice.created_at)
-        %td.right= format_as_date_time(notice.updated_at)
-        - if can? :update, notice
-          %td.center{:data => {:field => 'action-cell'}}
-            - if notice and notice.end_datetime > DateTime.current and notice.active
-              = link_to edit_notice_path(notice), :title => "Edit this notice." do
-                %i.fa.fa-fw.fa-edit.action-icon.text-info
-            - if notice.end_datetime > DateTime.current and notice.active
-              = link_to deactivate_notice_path(notice), :title => "Deactivate this notice. The notice will no longer show in the dashboard." do
-                %i.fa.fa-fw.fa-ban.action-icon.text-warning
-            - if notice.end_datetime < DateTime.current or not notice.active
-              = link_to reactivate_notice_path(notice), :title => "Reactivate this notice." do
-                %i.fa.fa-fw.fa-check.action-icon.text-success
-            - if can? :destroy, notice
-              = link_to notice_path(notice), :title => "Remove this notice", :method => :delete, :data => {:confirm => "Are you sure you want to remove this notice? The action can't be undone."} do
-                %i.fa.fa-fw.fa-trash-o.action-icon.text-danger
+= javascript_include_tag  "https://kit.fontawesome.com/#{ENV['FONT_AWESOME']}.js"
+.library-table
+  %table.elbat{:id => table_dom_id,
+    :use => 'true',
+    :data => {:use => 'true',
+      :side => 'client',
+      :current_page => '0',
+      :current_page_size => '10',
+      :page_sizes => "10,20,50,100,200",
+      :search => 'client',
+      :export => "['csv', 'txt', 'excel']",
+      :columns => "Object Key,,
+                  Type,,
+                  Subject,,
+                  Summary,,
+                  Visible,,
+                  Start Display,,
+                  Display Until,,
+                  Created At,,
+                  Updated At,,",
+      :selected_columns => "Subject,
+                            Summary,
+                            Type,
+                            Visible,
+                            Start Display,
+                            Display Until,
+                            Created At,
+                            Updated At",
+      :cookies => "true",
+      :sort => 'client',
+      :sort_params => @params,
+      :filter => "[]",
+      :data_source => 'client',
+      :url => ''}}
+  - notices.each_with_index do |notice, index|
 
-:javascript
-  var path = "#{notice_path('xxx')}";
+    :javascript
+      add_row('#{table_dom_id}',
+      {
+        "Subject":"#{notice.subject}",
+        "Summary":"#{notice.summary.html_safe}",
+        "Type":"#{notice.notice_type}",
+        "Visible":"#{format_as_boolean(notice.visible?)}",
+        "Start Display":"#{format_as_date_time(notice.display_datetime)}",
+        "Display Until":"#{format_as_date_time(notice.end_datetime)}",
+        "Created At":"#{format_as_date_time(notice.created_at)}",
+        "Updated At":"#{format_as_date_time(notice.updated_at)}",
+        //TODO; actions will be available in the future
+      }, #{index});
 
-  $('#' + '#{table_dom_id}').on('click', 'td', function () {
-    var row = $(this).parent('tr').attr('id');
 
-    if ($(this).attr('data-field') != 'action-cell') {
-      var url = path.replace("xxx", row);
-      document.location.href = url;
-    }
-  });
+
+
+
+-#
+-#%table.table.table-hover{:id => table_dom_id, :data => {:toggle => 'table',
+-#  :pagination => 'true',
+-#  :show_pagination_switch => 'false',
+-#  :page_list => "[5, 10, 20, 50, 100, 200, 10000]",
+-#  :page_size => current_user.num_table_rows,
+-#  :search => 'false',
+-#  :toolbar => "#table_actions",
+-#  :export_types => "['csv', 'txt', 'excel']",
+-#  :show_export => 'true',
+-#  :show_columns => 'true',
+-#  :show_toggle => 'true',
+-#  :cookie => 'true',
+-#  :cookie_id_table => "noticesid",
+-#  :cookie_expire => "1y"}}
+-#  %thead
+-#    %th.left{:data => {:visible => 'false'}} Object Key
+-#    %th.left{:data => {:sortable => 'true'}} Type
+-#    %th.left{:data => {:sortable => 'true'}} Subject
+-#    %th.left{:data => {:sortable => 'true'}} Summary
+-#    %th.center{:data => {:sortable => 'true'}} Visible
+-#    %th.right{:data => {:sortable => 'true'}} Start Display
+-#    %th.right{:data => {:sortable => 'true'}} Display Until
+-#    %th.right{:data => {:visible => 'false', :sortable => 'true'}} Created At
+-#    %th.right{:data => {:visible => 'false', :sortable => 'true'}} Updated At
+-#    - if can? :update, Notice
+-#      %th.center Actions
+-#  %tbody
+-#    - notices.each do |notice|
+-#      %tr{:id => notice.object_key, :class => 'action-path'}
+-#        %td.left= notice.object_key
+-#        %td.left= notice.notice_type
+-#        %td.left= notice.subject
+-#        %td.left= notice.summary.html_safe
+-#        %td.center= format_as_boolean(notice.visible?)
+-#        %td.right= format_as_date_time(notice.display_datetime)
+-#        %td.right= format_as_date_time(notice.end_datetime)
+-#        %td.right= format_as_date_time(notice.created_at)
+-#        %td.right= format_as_date_time(notice.updated_at)
+-#        - if can? :update, notice
+-#          %td.center{:data => {:field => 'action-cell'}}
+-#            - if notice and notice.end_datetime > DateTime.current and notice.active
+-#              = link_to edit_notice_path(notice), :title => "Edit this notice." do
+-#                %i.fa.fa-fw.fa-edit.action-icon.text-info
+-#            - if notice.end_datetime > DateTime.current and notice.active
+-#              = link_to deactivate_notice_path(notice), :title => "Deactivate this notice. The notice will no longer show in the dashboard." do
+-#                %i.fa.fa-fw.fa-ban.action-icon.text-warning
+-#            - if notice.end_datetime < DateTime.current or not notice.active
+-#              = link_to reactivate_notice_path(notice), :title => "Reactivate this notice." do
+-#                %i.fa.fa-fw.fa-check.action-icon.text-success
+-#            - if can? :destroy, notice
+-#              = link_to notice_path(notice), :title => "Remove this notice", :method => :delete, :data => {:confirm => "Are you sure you want to remove this notice? The action can't be undone."} do
+-#                %i.fa.fa-fw.fa-trash-o.action-icon.text-danger
+
