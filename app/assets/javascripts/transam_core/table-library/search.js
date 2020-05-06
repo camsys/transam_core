@@ -32,7 +32,7 @@ function addSearchServer(id) {
             return;
         }
         $('#' + id + " .table-row").remove();
-        updatePage(id, 0, $('#'+id).data('currentPageSize'),-1, false, value);
+        updatePage(id, 0, $('#'+id).data('currentPageSize'),-1, false, $('#'+id).data('params'), value);
     });
     $('#'+id).parent().prepend(searchbar);
 }
