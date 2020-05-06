@@ -159,13 +159,13 @@ function updatePageSelect(elem, curPage, curPageSize, total, clientSearch) {
 
     elem.find('.page-select-item').removeClass("page-selected").eq(curPage).addClass("page-selected");
     elem.parent().find(".page-select-arrow-left,.page-select-arrow-right").css({"opacity": 0, "pointer-events": "none"});
-    let cur = $(".page-selected").index();
+    let cur = elem.find(".page-selected").eq(0).index();
     last = elem.find('.page-select-item').last().index();
     if(cur != 0) {
-        $(".page-select-arrow-left").css({"opacity": 1, "pointer-events": "auto"});
+        elem.parent().find(".page-select-arrow-left").eq(0).css({"opacity": 1, "pointer-events": "auto"});
     }
     if(cur != last) {
-        $(".page-select-arrow-right").css({"opacity": 1, "pointer-events": "auto"});
+        elem.parent().find(".page-select-arrow-right").eq(0).css({"opacity": 1, "pointer-events": "auto"});
     }
 
     if(elem.find('.page-select-item').length > 7) {
