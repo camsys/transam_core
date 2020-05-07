@@ -95,9 +95,10 @@ function add_row(id, vals, index) {
         let row = $('<tr>').addClass('table-row').attr("at" + index.toString(), "true");
         let checkbox = $('<td>').addClass("cell-checkbox").append($('<label>').append($('<input>').attr('type', "checkbox")).append($('<span>').addClass('fa-stack').append($('<i class="fad fa-square fa-stack-1x" aria-hidden="true"></i>')).append($('<i class="fas fa-check-square fa-stack-1x" aria-hidden="true"></i>'))));
         row.append(checkbox);
-        let cols = Object.keys(vals);
+        // TODO: TEMP, stilll working on this
+        let cols = $('#'+id).data('selectedColumns').split(','); //Object.keys(vals);
         for (let key of cols) {
-            row.append($('<td>').addClass("row-item").append($('<div>').addClass('cell-text').html(vals[key])));
+            row.append($('<td>').addClass("row-item").append($('<div>').addClass('cell-text').html(vals[key.trim()])));
         }
         $('#' + id).append(row);
     }

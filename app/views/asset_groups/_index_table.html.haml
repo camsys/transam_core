@@ -2,39 +2,103 @@
   table_dom_id = SecureRandom.hex
   show_actions ||= 0
 
-- if show_actions == 1
-  #table_actions.btn-group
-    = render :partial => "asset_groups/index_actions"
+:css
 
-%table.table.table-hover{:id => table_dom_id, :data => {:toggle => 'table',
-  :pagination => 'true',
-  :show_pagination_switch => 'false',
-  :page_list => "[5, 10, 20, 50, 100, 200, 1000, 10000]",
-  :page_size => current_user.num_table_rows,
-  :search => 'false',
-  :toolbar => "#table_actions",
-  :export_types => "['csv', 'txt', 'excel']",
-  :show_export => 'true',
-  :show_columns => 'true',
-  :show_toggle => 'true',
-  :cookie => 'true',
-  :cookie_id_table => "asset_groups_id",
-  :cookie_expire => "1y"}}
-  %thead
-    %tr
-      %th.left{:data => {:visible => 'false'}} Object Key
-      %th.left{:data => {:sortable => 'true'}} Name
-      %th.left{:data => {:sortable => 'true'}} Code
-      %th.left{:data => {:sortable => 'true'}} Description
-      %th.right{:data => {:sortable => 'true'}} Num Assets
+  .col-item:nth-child(1){
+    width:20%;
+  }
+  .col-item:nth-child(2){
+    width:20%;
+  }
+  .col-item:nth-child(3){
+    width:20%;
+  }
+  .col-item:nth-child(4){
+    width:20%;
+  }
+  .col-item:nth-child(5){
+    width:20%;
+  }
 
-  %tbody
-    - @asset_groups.each do |a|
-      %tr{:id => a.object_key, :class => 'action-path'}
-        %td.left= a.object_key
-        %td.left= a.name
-        %td.left= a.code
-        %td.left= a.description
-        %td.right= format_as_integer(a.assets.count)
+= javascript_include_tag  "https://kit.fontawesome.com/#{ENV['FONT_AWESOME']}.js"
+.library-table
+  %table.elbat{:id => table_dom_id,
+    :use => 'true',
+    :data => {:use => 'true',
+      :side => 'client',
+      :current_page => '0',
+      :current_page_size => '10',
+      :page_sizes => "10,20,50,100,200",
+      :search => 'client',
+      :export => "['csv', 'txt', 'excel']",
+      :columns => "Object Key,drilldown-link,
+                  Name,
+                  Code,
+                  Description,
+                  Num Assets,",
+        :selected_columns => "Object Key,
+                  Name,
+                  Code,
+                  Description,
+                  Num Assets",
+      :cookies => "true",
+      :sort => 'client',
+      :params => "{}",
+      :filter => "[]",
+      :data_source => 'client',
+      :url => ''}}
+  - @asset_groups.each_with_index do |a, index|
+
+    :javascript
+      add_row('#{table_dom_id}',
+      {
+        "Object Key": '#{h link_to a.object_key }',
+        "Name": '#{h a.name }',
+        "Code": '#{h a.code }',
+        "Description": '#{h a.description }',
+        "Num Assets": '#{h format_as_integer(a.assets.count) }',
+      }, #{index});
+
+
+
+
+-# :ruby
+-#   table_dom_id = SecureRandom.hex
+-#   show_actions ||= 0
+
+-# - if show_actions == 1
+-#   #table_actions.btn-group
+-#     = render :partial => "asset_groups/index_actions"
+
+-# %table.table.table-hover{:id => table_dom_id, :data => {:toggle => 'table',
+-#   :pagination => 'true',
+-#   :show_pagination_switch => 'false',
+-#   :page_list => "[5, 10, 20, 50, 100, 200, 1000, 10000]",
+-#   :page_size => current_user.num_table_rows,
+-#   :search => 'false',
+-#   :toolbar => "#table_actions",
+-#   :export_types => "['csv', 'txt', 'excel']",
+-#   :show_export => 'true',
+-#   :show_columns => 'true',
+-#   :show_toggle => 'true',
+-#   :cookie => 'true',
+-#   :cookie_id_table => "asset_groups_id",
+-#   :cookie_expire => "1y"}}
+-#   %thead
+-#     %tr
+-#       %th.left{:data => {:visible => 'false'}} Object Key
+-#       %th.left{:data => {:sortable => 'true'}} Name
+-#       %th.left{:data => {:sortable => 'true'}} Code
+-#       %th.left{:data => {:sortable => 'true'}} Description
+-#       %th.right{:data => {:sortable => 'true'}} Num Assets
+
+-#   %tbody
+-#     - @asset_groups.each do |a|
+-#       %tr{:id => a.object_key, :class => 'action-path'}
+-#         %td.left= a.object_key
+-#         %td.left= a.name
+-#         %td.left= a.code
+-#         %td.left= a.description
+-#         %td.right= format_as_integer(a.assets.count)
 
 = render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :path_pattern => asset_group_path("xxx")}
