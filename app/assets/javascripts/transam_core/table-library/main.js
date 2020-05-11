@@ -17,6 +17,8 @@ $("table[use]").ready(()=>{
                 // col_widths.push(x[1].trim());
                 col_types.push(x[1].trim());
             }
+            window.col_names = col_names;
+            window.col_types = col_types;
             let search = $(value).data('search');
             let url = $(value).data('url');
             let params = $(value).data('params');
@@ -54,8 +56,10 @@ async function initialize(id, selected, cols, col_types, curPage, curPageSize, p
         return;
     }
     // console.log("client");
+    
     updateHeader(id, selected, cols, col_types);
     pagination(id, curPage, curPageSize, pageSizes);
+    clear_row_queue();
     updatePage_help(id, curPage, curPageSize);
 
 }
@@ -69,12 +73,21 @@ function updateHeader(id, selected, cols, col_ts){
     colgroup.append($('<col>').addClass('col-item').attr('style', 'width: 2.5em'));
     for (let i=0;i<selected.length;i++) {
         let colIndex = cols.indexOf(selected[i].toString().trim());
-        header.append(
-            $('<th>').addClass('header-item')
-                .append($('<div>').addClass('header-text').text(cols[colIndex].toString())));
-        colgroup.append(
-            $('<col>').addClass('col-item'));
-        // columnStyling()
+        try {
+            header.append(
+                $('<th>').addClass('header-item').attr("type", col_ts[colIndex])
+                    .append($('<div>').addClass('header-text').text(cols[colIndex].toString())));
+            colgroup.append(
+                $('<col>').addClass('col-item'));
+            $("#" + id + " .table-row>:nth-child(" +  ($("[type|='" + col_ts[i] + "']").eq(0).index()+1) + ")").addClass(col_ts[i]);
+
+        } catch (e) {
+            header.append(
+                $('<th>').addClass('header-item').attr("type", "")
+                    .append($('<div>').addClass('header-text').text(cols[colIndex].toString())));    
+        }
+        
+        $("#" + id + " .table-row>:nth-child(" +  ($("[type|='" + col_ts[i] + "']").eq(0).index()+1) + ")")
 
 
 
@@ -84,21 +97,49 @@ function updateHeader(id, selected, cols, col_ts){
     table.prepend($('<thead>').append(header)).prepend(colgroup);
 }
 
-
-function columnStyling(id, index, cls){
-    $('#'+id+" .table-row:nth-child("+index+")").removeClass().addClass(cls);
+function clear_row_queue(){
+    if(typeof window.table_rows !== "undefined" && window.table_rows.length > 0) {
+        for(let f of window.table_rows) {
+            f();
+        }
+    }
+    
 }
 
-// assumes right number of columns
+
 function add_row(id, vals, index) {
+    try{
+        window.table_rows.push(function(){
+            add_row_exec(id, vals, index);
+        });
+    } catch (e) {
+        window.table_rows = [];
+        window.table_rows.push(function(){
+            add_row_exec(id, vals, index);
+        });
+    }
+    
+}
+
+
+
+
+
+function add_row_exec(id, vals, index) {
     if(!($('#' + id + " .table-row[at" + index + ']').length > 0)){
         let row = $('<tr>').addClass('table-row').attr("at" + index.toString(), "true");
         let checkbox = $('<td>').addClass("cell-checkbox").append($('<label>').append($('<input>').attr('type', "checkbox")).append($('<span>').addClass('fa-stack').append($('<i class="fad fa-square fa-stack-1x" aria-hidden="true"></i>')).append($('<i class="fas fa-check-square fa-stack-1x" aria-hidden="true"></i>'))));
         row.append(checkbox);
         // TODO: TEMP, stilll working on this
-        let cols = $('#'+id).data('selectedColumns').split(','); //Object.keys(vals);
-        for (let key of cols) {
-            row.append($('<td>').addClass("row-item").append($('<div>').addClass('cell-text').html(vals[key.trim()])));
+        let s_cols = $('#'+id).data('selectedColumns').split(','); //Object.keys(vals);
+        let col_names = window.col_names;
+        let col_types = window.col_types;
+        
+        for(let key of s_cols){
+            let i = col_names.indexOf(key);
+
+            row.append($('<td>').addClass("row-item").addClass(col_types[i]).append($('<div>').addClass('cell-text').html(vals[key.trim()])));
+            //$('#'+id+" .header-item:nth-child(" + col_types[i] + ")").attr("type")
         }
         $('#' + id).append(row);
     }
