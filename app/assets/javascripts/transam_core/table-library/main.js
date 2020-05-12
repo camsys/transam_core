@@ -165,7 +165,7 @@ async function serverSide(id, url, curPage, curPageSize, params, search="") {
                     for(let col of columns) {
                         row[col] = obj[col.trim()];
                     }
-                    add_row(id, row, (curPage * curPageSize)+index);
+                    add_row_exec(id, row, (curPage * curPageSize)+index);
                 }
             },
             error: function (){
