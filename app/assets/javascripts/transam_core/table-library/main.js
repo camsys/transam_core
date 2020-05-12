@@ -52,6 +52,7 @@ async function initialize(id, selected, cols, col_types, curPage, curPageSize, p
         updateHeader(id, selected, cols, col_types);
         let total = await serverSide(id, url, curPage, curPageSize, params);
         pagination(id, curPage, curPageSize, pageSizes, total);
+        clear_row_queue();
         updatePage(id, curPage, curPageSize, total, false, params);
         return;
     }
