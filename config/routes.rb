@@ -271,6 +271,7 @@ Rails.application.routes.draw do
     collection do
       get  'sessions'
       get  'table'
+      get  'table_preferences'
     end
     member do
       get   'reset_password'

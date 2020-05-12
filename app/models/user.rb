@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
   # Enable user roles for this use
   rolify
 
-  serialize :user_prefs
+  serialize :user_prefs, JSON
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
