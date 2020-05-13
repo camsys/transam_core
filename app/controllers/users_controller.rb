@@ -454,6 +454,17 @@ class UsersController < OrganizationAwareController
     render status: 200, json: current_user.table_preferences(table_code)
   end 
 
+  def update_table_preferences
+    table_code = table_preference_params[:table_code]
+    sort_params = table_preference_params[:sort_params]
+    sorted_columns = sort_params.map{ |sp| {column: sp["column"], order: sp["order"]} }
+    table_prefs = eval(current_user.table_preferences || "{}")
+    sort_params = {sort: sorted_columns}
+    table_prefs[table_code.to_sym] = sort_params
+    current_user.update(table_prefs: table_prefs)
+    render status: 200, json: current_user.table_preferences(table_code)
+  end 
+
   #------------------------------------------------------------------------------
   # Protected Methods
   #------------------------------------------------------------------------------
@@ -488,6 +499,10 @@ class UsersController < OrganizationAwareController
 
   def table_params
     params.permit(:page, :page_size, :search)
+  end
+
+  def table_preference_params
+    params.permit(:table_code, sort_params: [:column, :order])
   end
 
   #-----------------------------------------------------------------------------
