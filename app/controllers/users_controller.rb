@@ -449,6 +449,11 @@ class UsersController < OrganizationAwareController
     @user = User.find_by_object_key(params[:id])
   end
 
+  def table_preferences
+    table_code = params[:table_code] || nil
+    render status: 200, json: current_user.table_preferences(table_code)
+  end 
+
   #------------------------------------------------------------------------------
   # Protected Methods
   #------------------------------------------------------------------------------
@@ -481,6 +486,10 @@ class UsersController < OrganizationAwareController
     params.require(:user).permit(user_allowable_params)
   end
 
+  def table_params
+    params.permit(:page, :page_size, :search)
+  end
+
   #-----------------------------------------------------------------------------
   # Callbacks to share common setup or constraints between actions.
   #-----------------------------------------------------------------------------
@@ -511,9 +520,7 @@ class UsersController < OrganizationAwareController
     return
   end
 
-  def table_params
-    params.permit(:page, :page_size, :search)
-  end
+
 
   #-----------------------------------------------------------------------------
   def add_user_breadcrumb(page)

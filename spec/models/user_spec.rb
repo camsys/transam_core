@@ -43,6 +43,25 @@ RSpec.describe User, :type => :model do
     end
   end
 
+  
+  describe 'Get table prefs' do
+    it 'responds to table_preferences' do
+      expect(normal_user.table_preferences).to be(nil)
+    end
+
+    it 'expects the user bus table preferences to match the default' do
+      expect(normal_user.table_preferences(:buses)).to eq(TablePreferences::DEFAULT_TABLE_PREFERENCES[:buses])
+    end
+
+    it 'returns the user-specifc preferences for buses' do
+      table_prefs = eval(normal_user.table_prefs|| "{}")
+      table_prefs[:buses] = "TEST"
+      normal_user.table_prefs = table_prefs 
+      normal_user.save  
+      expect(normal_user.table_preferences(:buses)).to eq("TEST")
+    end
+  end
+
   describe ".set_defaults" do
     it 'initializes new objects correctly' do
       expect(normal_user.timezone).to eql('Eastern Time (US & Canada)')
