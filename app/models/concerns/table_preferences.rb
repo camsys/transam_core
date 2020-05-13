@@ -154,7 +154,7 @@ module TablePreferences
 
   def table_preferences table_code=nil
     if table_code
-      eval(table_prefs).try(:[], table_code.to_sym) || DEFAULT_TABLE_PREFERENCES[table_code.to_sym]
+      eval(table_prefs || "{}").try(:[], table_code.to_sym) || DEFAULT_TABLE_PREFERENCES[table_code.to_sym]
     else
       table_prefs
     end
