@@ -280,9 +280,11 @@
 
 .page-select {
     display: flex;
+    justify-content: center;
+    min-width: 15em;
 }
 
-.page-select-arrow-left, .page-select-arrow-right {
+.page-select-arrow-left, .page-select-arrow-right, .page-select-arrow-left-full, .page-select-arrow-right-full {
     display:flex;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
@@ -321,7 +323,7 @@
 
 
 
-.page-select-item:hover, .page-select-arrow-left:hover, .page-select-arrow-right:hover {
+.page-select-item:hover, .page-select-arrow-left:hover, .page-select-arrow-right:hover, .page-select-arrow-left-full:hover, .page-select-arrow-right-full:hover {
     background: #FFFFFF;
 }
 
