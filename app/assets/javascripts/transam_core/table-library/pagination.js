@@ -22,7 +22,7 @@ $(document).on('click', ".page-select-arrow-left", function(){
 $(document).on('click', ".page-select-arrow-right", function(){
     let table = $(this).closest('.library-table').find("table").eq(0);
     let cur = $(".page-selected").index();
-    if ($(".search-result-page").length > 0){
+    if ($(this).parent().find(".search-result-page").length > 0){
         updatePage_help(table.attr('id'), table.data("currentPage") + 1, table.data('currentPageSize'), true);
     } else {
         updatePage_help(table.attr('id'), table.data("currentPage") + 1, table.data('currentPageSize'));
@@ -43,12 +43,10 @@ $(document).on('click', ".page-select-arrow-left-full", function(){
 
 $(document).on('click', ".page-select-arrow-right-full", function(){
     let table = $(this).closest('.library-table').find("table").eq(0);
-    let cur = $(".page-selected").index();
-    if ($(".search-result-page").length > 0){
-        updatePage_help(table.attr('id'), $(this).parent().find(".page-select-item:last-child").index(), table.data('currentPageSize'), true);
+    if ($(this).parent().find(".search-result-page").length > 0){
+        updatePage_help(table.attr('id'), $(this).parent().find(".page-select-item:last-child").text()-1, table.data('currentPageSize'), true);
     } else {
-        updatePage_help(table.attr('id'), $(this).parent().find(".page-select-item:last-child").index(), table.data('currentPageSize'));
-
+        updatePage_help(table.attr('id'), $(this).parent().find(".page-select-item:last-child").text()-1, table.data('currentPageSize'));
     }
 });
 
@@ -113,9 +111,6 @@ function updatePage_help(id, curPage, curPageSize, clientSearch=false){
 
 
 async function updatePage(id, curPage, curPageSize, total, clientSearch=false, params={}, searchContent=""){
-    //temp
-    // $(".drilldown-link .cell-text::after").append($('<i class="fas fa-level-down-alt"></i>'));
-    
     
     let serv = $('#'+id).data('side') === 'server';
     params = $('#'+id).data('params');
@@ -128,7 +123,7 @@ async function updatePage(id, curPage, curPageSize, total, clientSearch=false, p
         let start = curPage * curPageSize;
         let end = Math.min(total, start + curPageSize-1);
         $('#'+id).find('.table-row').each(function(){
-            $(this).toggle(($(this).index() >= start && $(this).index() <= end));
+            $(this).toggle(($(this).attr("index") >= start && $(this).attr("index") <= end));
         });
 
         $('#'+id).data('currentPage', curPage);
@@ -187,7 +182,8 @@ function updatePageSelect(elem, curPage, curPageSize, total, clientSearch) {
 
     elem.find('.page-select-item').removeClass("page-selected").eq(curPage).addClass("page-selected");
     elem.parent().find(".page-select-arrow-left,.page-select-arrow-right,.page-select-arrow-left-full,.page-select-arrow-right-full").css({"opacity": 0, "pointer-events": "none"});
-    let cur = $(".page-selected").index();
+    
+    let cur = elem.find(".page-selected").index();
     last = elem.find('.page-select-item').last().index();
     if(cur != 0) {
         $(".page-select-arrow-left,.page-select-arrow-left-full").css({"opacity": 1, "pointer-events": "auto"});
@@ -196,15 +192,21 @@ function updatePageSelect(elem, curPage, curPageSize, total, clientSearch) {
         $(".page-select-arrow-right,.page-select-arrow-right-full").css({"opacity": 1, "pointer-events": "auto"});
     }
 
-    if(elem.find('.page-select-item').length > 7) {
+    if(elem.find('.page-select-item').length > 3) {
         elem.children().hide();
-        elem.find($(':nth-child(1)')).show();
-        elem.find($(':nth-child(' + (last+1) + ')')).show();
+        // elem.find($(':nth-child(1)')).show();
+        // elem.find($(':nth-child(' + (last+1) + ')')).show();
         for(let i=curPage;i<=curPage+2;i++){
             elem.find($(':nth-child(' + i + ')')).show();
         }
+        if(curPage == 0) {
+            elem.find($(':nth-child(3)')).show();
+        }
+        if(curPage == last) {
+            elem.find($(':nth-child(' + (last-2) + ')')).show();
+        }
         // ellipses
-        if(curPage >= 3){
+        if(curPage >= 2){
             $("<span>").addClass("table-ellipses").text("...").insertAfter(elem.find('.page-select-item').eq(0));
         }
         if(curPage <= last-3){

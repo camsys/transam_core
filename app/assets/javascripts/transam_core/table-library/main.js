@@ -99,12 +99,8 @@ function updateHeader(id, selected, cols, col_ts){
 }
 
 function clear_row_queue(){
-    if(typeof window.table_rows !== "undefined" && window.table_rows.length > 0) {
-        for(let f of window.table_rows) {
-            f();
-        }
-    }
-    
+    if(typeof window.table_rows !== "undefined" && window.table_rows.length > 0)
+        for(let f of window.table_rows) {f();}
 }
 
 
@@ -127,8 +123,8 @@ function add_row(id, vals, index) {
 
 
 function add_row_exec(id, vals, index) {
-    if(!($('#' + id + " .table-row[at" + index + ']').length > 0)){
-        let row = $('<tr>').addClass('table-row').attr("at" + index.toString(), "true");
+    if(!($('#' + id + " .table-row[index=" + index + ']').length > 0)){
+        let row = $('<tr>').addClass('table-row').attr("index", index.toString());
         let checkbox = $('<td>').addClass("cell-checkbox").append($('<label>').append($('<input>').attr('type', "checkbox")).append($('<span>').addClass('fa-stack').append($('<i class="fad fa-square fa-stack-1x" aria-hidden="true"></i>')).append($('<i class="fas fa-check-square fa-stack-1x" aria-hidden="true"></i>'))));
         row.append(checkbox);
         // TODO: TEMP, stilll working on this
@@ -142,7 +138,11 @@ function add_row_exec(id, vals, index) {
             row.append($('<td>').addClass("row-item").addClass(col_types[i]).append($('<div>').addClass('cell-text').html(vals[key.trim()])));
             //$('#'+id+" .header-item:nth-child(" + col_types[i] + ")").attr("type")
         }
-        $('#' + id).append(row);
+        // messy way of inserting each row at correct position
+        let lt = $('#' + id + " .table-row").filter(function(){
+            return $(this).attr("index") < index;
+        });
+        (lt.length > 0) ? row.insertAfter(lt[lt.length-1]) : $('#' + id).prepend(row);
     }
 
 }

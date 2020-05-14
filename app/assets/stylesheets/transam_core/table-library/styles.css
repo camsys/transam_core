@@ -281,7 +281,7 @@
 .page-select {
     display: flex;
     justify-content: center;
-    min-width: 15em;
+    min-width: 11em;
 }
 
 .page-select-arrow-left, .page-select-arrow-right, .page-select-arrow-left-full, .page-select-arrow-right-full {
@@ -297,6 +297,11 @@
     -moz-transition: opacity .25s ease-in-out;
     -o-transition: opacity .25s ease-in-out;
     transition: opacity .25s ease-in-out;
+    /* not selectable */
+    -webkit-user-select: none; 
+    -moz-user-select: none; 
+    -ms-user-select: none; 
+    user-select: none; 
 }
 
 .page-select-item {

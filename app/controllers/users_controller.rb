@@ -179,6 +179,11 @@ class UsersController < OrganizationAwareController
       user_table = User.all.offset(offset).limit(page_size).map{ |u| u.rowify }
     end
 
+    # TEMP TEMP TEMP TODO TODO TODO: remove this, just a proof of concept
+    for i in (0...user_table.length)
+      user = user_table[i]
+      user["Last"] = "<a href='/users/" + User.all.offset(offset).limit(page_size)[i].object_key + "/'>" + user["Last"] + "</a>";
+    end  
     render status: 200, json: {count: count, rows: user_table}
   end
 
