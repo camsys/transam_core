@@ -456,7 +456,7 @@ class UsersController < OrganizationAwareController
 
   def update_table_preferences
     table_code = table_preference_params[:table_code]
-    sort_params = table_preference_params[:sort_params]
+    sort_params = table_preference_params[:sort]
     sorted_columns = sort_params.map{ |sp| {column: sp["column"], order: sp["order"]} }
     table_prefs = eval(current_user.table_preferences || "{}")
     sort_params = {sort: sorted_columns}
@@ -502,7 +502,7 @@ class UsersController < OrganizationAwareController
   end
 
   def table_preference_params
-    params.permit(:table_code, sort_params: [:column, :order])
+    params.permit(:table_code, sort: [:column, :order])
   end
 
   #-----------------------------------------------------------------------------
