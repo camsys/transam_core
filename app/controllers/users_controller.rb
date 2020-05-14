@@ -172,14 +172,7 @@ class UsersController < OrganizationAwareController
       query = (query_builder(searchable_columns, search_string)).or(org_query)
 
       # This does not work. TODO: find out why this doesn't work.
-      count = User.joins(:organizations).where(query).to_a.count 
-
-      # TODO: This is a horrible temporary piece of code that will be replaced with the line above is corrected.
-      index = 0
-      User.joins(:organization).where(query).each do |asdf|
-        index += 1 
-      end
-      count = index  
+      count = User.joins(:organization).where(query).count 
 
       user_table = User.joins(:organization).where(query).offset(offset).limit(page_size).map{ |u| u.rowify }
     else 

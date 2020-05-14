@@ -89,10 +89,14 @@ function updatePage_help(id, curPage, curPageSize, clientSearch=false){
 
 
 async function updatePage(id, curPage, curPageSize, total, clientSearch=false, params={}, searchContent=""){
+    //temp
+    // $(".drilldown-link .cell-text::after").append($('<i class="fas fa-level-down-alt"></i>'));
+    
+    
     let serv = $('#'+id).data('side') === 'server';
     params = $('#'+id).data('params');
 
-    if(serv){
+        if(serv){
         total = await serverSide(id, $('#'+id).data('url'), curPage, curPageSize, params, searchContent);
     }
 

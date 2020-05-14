@@ -370,17 +370,19 @@
     color: var(--blue-light);
 }
 
-.drilldown-link::after {
-    content: '\f3be';
+.drilldown-link .cell-text::after {
+    content: '↓';
     transition: top .125s ease-in-out;
     top: 0;
+    position: absolute;
+    padding-left: .5em;
 }
 
 .drilldown-link:hover{
     color: var(--turquoise-dark);
 }
 
-.drilldown-link::after:hover {
+.drilldown-link:hover .cell-text::after {
     top: .175em
 }
 

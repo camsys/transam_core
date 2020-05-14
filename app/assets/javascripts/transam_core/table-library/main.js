@@ -17,6 +17,8 @@ $("table[use]").ready(()=>{
                 // col_widths.push(x[1].trim());
                 col_types.push(x[1].trim());
             }
+            window.col_names = col_names;
+            window.col_types = col_types;
             let search = $(value).data('search');
             let url = $(value).data('url');
             let params = $(value).data('params');
@@ -50,12 +52,15 @@ async function initialize(id, selected, cols, col_types, curPage, curPageSize, p
         updateHeader(id, selected, cols, col_types);
         let total = await serverSide(id, url, curPage, curPageSize, params);
         pagination(id, curPage, curPageSize, pageSizes, total);
+        clear_row_queue();
         updatePage(id, curPage, curPageSize, total, false, params);
         return;
     }
     // console.log("client");
+    
     updateHeader(id, selected, cols, col_types);
     pagination(id, curPage, curPageSize, pageSizes);
+    clear_row_queue();
     updatePage_help(id, curPage, curPageSize);
 
 }
@@ -69,12 +74,21 @@ function updateHeader(id, selected, cols, col_ts){
     colgroup.append($('<col>').addClass('col-item').attr('style', 'width: 2.5em'));
     for (let i=0;i<selected.length;i++) {
         let colIndex = cols.indexOf(selected[i].toString().trim());
-        header.append(
-            $('<th>').addClass('header-item')
-                .append($('<div>').addClass('header-text').text(cols[colIndex].toString())));
-        colgroup.append(
-            $('<col>').addClass('col-item'));
-        // columnStyling()
+        try {
+            header.append(
+                $('<th>').addClass('header-item').attr("type", col_ts[colIndex])
+                    .append($('<div>').addClass('header-text').text(cols[colIndex].toString())));
+            colgroup.append(
+                $('<col>').addClass('col-item'));
+            $("#" + id + " .table-row>:nth-child(" +  ($("[type|='" + col_ts[i] + "']").eq(0).index()+1) + ")").addClass(col_ts[i]);
+
+        } catch (e) {
+            header.append(
+                $('<th>').addClass('header-item').attr("type", "")
+                    .append($('<div>').addClass('header-text').text(cols[colIndex].toString())));    
+        }
+        
+        $("#" + id + " .table-row>:nth-child(" +  ($("[type|='" + col_ts[i] + "']").eq(0).index()+1) + ")")
 
 
 
@@ -84,13 +98,35 @@ function updateHeader(id, selected, cols, col_ts){
     table.prepend($('<thead>').append(header)).prepend(colgroup);
 }
 
-
-function columnStyling(id, index, cls){
-    $('#'+id+" .table-row:nth-child("+index+")").removeClass().addClass(cls);
+function clear_row_queue(){
+    if(typeof window.table_rows !== "undefined" && window.table_rows.length > 0) {
+        for(let f of window.table_rows) {
+            f();
+        }
+    }
+    
 }
 
-// assumes right number of columns
+
 function add_row(id, vals, index) {
+    try{
+        window.table_rows.push(function(){
+            add_row_exec(id, vals, index);
+        });
+    } catch (e) {
+        window.table_rows = [];
+        window.table_rows.push(function(){
+            add_row_exec(id, vals, index);
+        });
+    }
+    
+}
+
+
+
+
+
+function add_row_exec(id, vals, index) {
     if(!($('#' + id + " .table-row[at" + index + ']').length > 0)){
         let row = $('<tr>').addClass('table-row').attr("at" + index.toString(), "true");
         let checkbox = $('<td>').addClass("cell-checkbox").append($('<label>').append($('<input>').attr('type', "checkbox")).append($('<span>').addClass('fa-stack').append($('<i class="fad fa-square fa-stack-1x" aria-hidden="true"></i>')).append($('<i class="fas fa-check-square fa-stack-1x" aria-hidden="true"></i>'))));
@@ -130,7 +166,7 @@ async function serverSide(id, url, curPage, curPageSize, params, search="") {
                     for(let col of columns) {
                         row[col] = obj[col.trim()];
                     }
-                    add_row(id, row, (curPage * curPageSize)+index);
+                    add_row_exec(id, row, (curPage * curPageSize)+index);
                 }
             },
             error: function (){

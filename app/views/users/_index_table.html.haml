@@ -15,7 +15,7 @@
     :export => "['csv', 'txt', 'excel']",
     :columns => "Object Key,,
                 External Id,,
-                Last,,
+                Last,drilldown-link,
                 First,,
                 Primary Organization,,
                 All Organizations,,
@@ -49,7 +49,7 @@
                 Status",
     :cookies => 'true',
     :sort => 'server',
-    :sort_params => '',
+    :params => '',
     :url => table_users_path(:format => :json) }}
 
   -#:javascript

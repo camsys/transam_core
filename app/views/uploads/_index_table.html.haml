@@ -6,57 +6,171 @@
   #table_actions.btn-toolbar
     = render :partial => "uploads/index_actions"
 
-%table.table.table-hover{:id => table_dom_id, :data => {:toggle => 'table',
-  :pagination => 'true',
-  :show_pagination_switch => 'false',
-  :page_list => "[5, 10, 20, 50, 100, 200, 10000]",
-  :page_size => current_user.num_table_rows,
-  :search => 'false',
-  :toolbar => "#table_actions",
-  :export_types => "['csv', 'txt', 'excel']",
-  :show_export => 'true',
-  :show_columns => 'true',
-  :show_toggle => 'true',
-  :cookie => 'true',
-  :cookie_id_table => "uploadsid",
-  :cookie_expire => "1y"}}
-  %thead
-    %th.left{:data => {:visible => 'false'}} Object Key
-    - unless SystemConfigFieldCustomization.find_by(table_name: 'uploads', field_name: 'organization_id', is_visible: false)
-      %th.left{:data => {:sortable => 'true'}} Agency
-    %th.left{:data => {:sortable => 'true'}} File Name
-    %th.left{:data => {:sortable => 'true'}} Content
-    %th.left{:data => {:sortable => 'true'}} Loaded By
-    %th.center{:data => {:sortable => 'true'}} Status
-    %th.right{:data => {:sortable => 'true'}} Num Rows Processed
-    %th.right{:data => {:visible => 'true', :sortable => 'true'}} Num Rows Added
-    %th.right{:data => {:visible => 'false', :sortable => 'true'}} Num Rows Replaced
-    %th.right{:data => {:visible => 'false', :sortable => 'true'}} Num Rows Skipped
-    %th.right{:data => {:visible => 'true', :sortable => 'true'}} Num Rows Failed
-    %th.right{:data => {:visible => 'false', :sortable => 'true'}} Processing Started
-    %th.right{:data => {:visible => 'false', :sortable => 'true'}} Processing Completed
-    %th.right{:data => {:sortable => 'true'}} Processing Time (s)
-    %th.right{:data => {:sortable => 'true'}} Uploaded At
-  %tbody
-    - @uploads.each do |f|
-      %tr{:id => f.object_key, :class => 'action-path'}
-        %td.left= f.object_key
-        - unless SystemConfigFieldCustomization.find_by(table_name: 'uploads', field_name: 'organization_id', is_visible: false)
-          %td.left= f.organization.present? ? f.organization.to_s : 'Multi Org'
-        %td.left= f.original_filename
-        %td.left= f.file_content_type
-        %td.left= f.user.name
-        %td.center= f.file_status_type
 
-        %td.right= format_as_integer(f.num_rows_processed)
-        %td.right= format_as_integer(f.num_rows_added)
-        %td.right= format_as_integer(f.num_rows_replaced)
-        %td.right= format_as_integer(f.num_rows_skipped)
-        %td.right= format_as_integer(f.num_rows_failed)
 
-        %td.right= format_as_date_time(f.processing_started_at)
-        %td.right= format_as_date_time(f.processing_completed_at)
-        %td.right= format_as_integer(f.processing_time.to_i)
-        %td.right= format_as_date_time(f.created_at)
+:css
+
+  .col-item:nth-child(1){
+    width:10%;
+  }
+  .col-item:nth-child(2){
+    width:10%;
+  }
+  .col-item:nth-child(3){
+    width:10%;
+  }
+  .col-item:nth-child(4){
+    width:10%;
+  }
+  .col-item:nth-child(5){
+    width:10%;
+  }
+  .col-item:nth-child(6){
+    width:10%;
+  }
+  .col-item:nth-child(7){
+    width:10%;
+  }
+  .col-item:nth-child(8){
+    width:10%;
+  }
+  .col-item:nth-child(9){
+    width:10%;
+  }
+  .col-item:nth-child(10){
+    width:10%;
+  }
+  .col-item:nth-child(11){
+    width:10%;
+  }
+  .col-item:nth-child(12){
+    width:10%;
+  }
+  .col-item:nth-child(13){
+    width:10%;
+  }
+  .col-item:nth-child(14){
+    width:10%;
+  }
+  .col-item:nth-child(15){
+    width:10%;
+  }
+
+= javascript_include_tag  "https://kit.fontawesome.com/#{ENV['FONT_AWESOME']}.js"
+.library-table
+  %table.elbat{:id => table_dom_id,
+    :use => 'true',
+    :data => {:use => 'true',
+      :side => 'client',
+      :current_page => '0',
+      :current_page_size => '10',
+      :page_sizes => "10,20,50,100,200",
+      :search => 'client',
+      :export => "['csv', 'txt', 'excel']",
+      :columns => "File Name,drilldown-link,
+                  Organization,
+                  Content,
+                  Loaded By,
+                  Status,
+                  Num Rows Processed,
+                  Num Rows Added,
+                  Num Rows Failed,
+                  Processing Time (s),
+                  Uploaded At,
+                  Num Rows Replaced,
+                  Num Rows Skipped,
+                  Processing Started,
+                  Processing Completed,",
+        :selected_columns => "File Name,
+                  Organization,
+                  Content,
+                  Loaded By,
+                  Status,
+                  Num Rows Processed,
+                  Num Rows Added,
+                  Num Rows Failed,
+                  Processing Time (s),
+                  Uploaded At",
+      :cookies => "true",
+      :sort => 'client',
+      :params => "{}",
+      :filter => "[]",
+      :data_source => 'client',
+      :url => ''}}
+  - @uploads.each_with_index do |f, index|
+    :javascript
+      add_row('#{table_dom_id}',
+      {
+        "File Name": '#{h link_to f.original_filename }',
+        "Organization": '#{h f.organization.present? ? f.organization.to_s : "Multi Org" }',
+        "Content": '#{h f.file_content_type }',
+        "Loaded By": '#{h f.user.name }',
+        "Status": '#{h f.file_status_type }',
+        "Num Rows Processed": '#{h format_as_integer(f.num_rows_processed) }',
+        "Num Rows Added": '#{h format_as_integer(f.num_rows_added) }',
+        "Num Rows Failed": '#{h format_as_integer(f.num_rows_failed) }',
+        "Processing Time (s)": '#{h format_as_integer(f.processing_time.to_i) }',
+        "Uploaded At": '#{h format_as_date_time(f.created_at) }',
+        "Num Rows Replaced": '#{h format_as_integer(f.num_rows_replaced) }',
+        "Num Rows Skipped": '#{h format_as_integer(f.num_rows_skipped) }',
+        "Processing Started": '#{h format_as_date_time(f.processing_started_at) }',
+        "Processing Completed": '#{h format_as_date_time(f.processing_completed_at) }',
+      }, #{index});
+
+
+
+
+-# %table.table.table-hover{:id => table_dom_id, :data => {:toggle => 'table',
+-#   :pagination => 'true',
+-#   :show_pagination_switch => 'false',
+-#   :page_list => "[5, 10, 20, 50, 100, 200, 10000]",
+-#   :page_size => current_user.num_table_rows,
+-#   :search => 'false',
+-#   :toolbar => "#table_actions",
+-#   :export_types => "['csv', 'txt', 'excel']",
+-#   :show_export => 'true',
+-#   :show_columns => 'true',
+-#   :show_toggle => 'true',
+-#   :cookie => 'true',
+-#   :cookie_id_table => "uploadsid",
+-#   :cookie_expire => "1y"}}
+-#   %thead
+-#     %th.left{:data => {:visible => 'false'}} Object Key
+-#     - unless SystemConfigFieldCustomization.find_by(table_name: 'uploads', field_name: 'organization_id', is_visible: false)
+-#       %th.left{:data => {:sortable => 'true'}} Agency
+-#     %th.left{:data => {:sortable => 'true'}} File Name
+-#     %th.left{:data => {:sortable => 'true'}} Content
+-#     %th.left{:data => {:sortable => 'true'}} Loaded By
+-#     %th.center{:data => {:sortable => 'true'}} Status
+-#     %th.right{:data => {:sortable => 'true'}} Num Rows Processed
+-#     %th.right{:data => {:visible => 'true', :sortable => 'true'}} Num Rows Added
+-#     %th.right{:data => {:visible => 'false', :sortable => 'true'}} Num Rows Replaced
+-#     %th.right{:data => {:visible => 'false', :sortable => 'true'}} Num Rows Skipped
+-#     %th.right{:data => {:visible => 'true', :sortable => 'true'}} Num Rows Failed
+-#     %th.right{:data => {:visible => 'false', :sortable => 'true'}} Processing Started
+-#     %th.right{:data => {:visible => 'false', :sortable => 'true'}} Processing Completed
+-#     %th.right{:data => {:sortable => 'true'}} Processing Time (s)
+-#     %th.right{:data => {:sortable => 'true'}} Uploaded At
+-#   %tbody
+-#     - @uploads.each do |f|
+-#       %tr{:id => f.object_key, :class => 'action-path'}
+-#         %td.left= f.object_key
+-#         - unless SystemConfigFieldCustomization.find_by(table_name: 'uploads', field_name: 'organization_id', is_visible: false)
+-#           %td.left= f.organization.present? ? f.organization.to_s : 'Multi Org'
+-#         %td.left= f.original_filename
+-#         %td.left= f.file_content_type
+-#         %td.left= f.user.name
+-#         %td.center= f.file_status_type
+
+-#         %td.right= format_as_integer(f.num_rows_processed)
+-#         %td.right= format_as_integer(f.num_rows_added)
+-#         %td.right= format_as_integer(f.num_rows_replaced)
+-#         %td.right= format_as_integer(f.num_rows_skipped)
+-#         %td.right= format_as_integer(f.num_rows_failed)
+
+-#         %td.right= format_as_date_time(f.processing_started_at)
+-#         %td.right= format_as_date_time(f.processing_completed_at)
+-#         %td.right= format_as_integer(f.processing_time.to_i)
+-#         %td.right= format_as_date_time(f.created_at)
 
 = render :partial => 'shared/table_scripts', :locals => {:table_id => table_dom_id, :path_pattern => upload_path("xxx")}
