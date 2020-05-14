@@ -47,6 +47,40 @@ RSpec.describe UsersController, :type => :controller do
 
   end
 
+  describe 'GET Table Preferences' do 
+    it 'returns a users preferred tables' do 
+      get :table_preferences, params: {table_code: "users"}
+      expect(response).to be_success
+      parsed_response = JSON.parse(response.body)
+      expect(parsed_response["sort"].first["column"].to_s).to eq(TablePreferences::DEFAULT_TABLE_PREFERENCES[:users][:sort].first[:column].to_s)
+    end
+  end
+
+  describe 'PUT Table Preferences' do 
+    it 'returns a users preferred tables' do 
+      params = {
+                "table_code": "users",
+                "sort":[
+                    {"column": "first", "order": "descending"},
+                    {"column": "last", "order": "descending"}
+                  ]
+                }
+      put :update_table_preferences, params: params
+      expect(response).to be_success
+      parsed_response = JSON.parse(response.body)
+
+      get :table_preferences, params: {table_code: "users"}
+      parsed_response = JSON.parse(response.body)
+      expect(parsed_response["sort"].first["column"].to_s).to eq("first")
+      expect(parsed_response["sort"].first["order"].to_s).to eq("descending")
+      expect(parsed_response["sort"].last["column"].to_s).to eq("last")
+
+      get :table_preferences, params: {table_code: "buses"}
+      parsed_response = JSON.parse(response.body)
+      expect(parsed_response["sort"].first["column"].to_s).to eq(TablePreferences::DEFAULT_TABLE_PREFERENCES[:buses][:sort].first[:column].to_s)
+    end
+  end
+
   describe 'GET index' do
 
     describe 'users from a list of orgs' do
