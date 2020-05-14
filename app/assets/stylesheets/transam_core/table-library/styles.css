@@ -383,3 +383,7 @@
 .drilldown-link::after:hover {
     top: .175em
 }
+
+.right-align .cell-text{
+    text-align: right;
+}

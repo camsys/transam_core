@@ -95,9 +95,16 @@ function add_row(id, vals, index) {
         let row = $('<tr>').addClass('table-row').attr("at" + index.toString(), "true");
         let checkbox = $('<td>').addClass("cell-checkbox").append($('<label>').append($('<input>').attr('type', "checkbox")).append($('<span>').addClass('fa-stack').append($('<i class="fad fa-square fa-stack-1x" aria-hidden="true"></i>')).append($('<i class="fas fa-check-square fa-stack-1x" aria-hidden="true"></i>'))));
         row.append(checkbox);
-        let cols = Object.keys(vals);
-        for (let key of cols) {
-            row.append($('<td>').addClass("row-item").append($('<div>').addClass('cell-text').html(vals[key])));
+        // TODO: TEMP, stilll working on this
+        let s_cols = $('#'+id).data('selectedColumns').split(','); //Object.keys(vals);
+        let col_names = window.col_names;
+        let col_types = window.col_types;
+        
+        for(let key of s_cols){
+            let i = col_names.indexOf(key.trim());
+            console.log(col_types, i);
+            row.append($('<td>').addClass("row-item").addClass(col_types[i]).append($('<div>').addClass('cell-text').html(vals[key.trim()])));
+            //$('#'+id+" .header-item:nth-child(" + col_types[i] + ")").attr("type")
         }
         $('#' + id).append(row);
     }
