@@ -133,8 +133,7 @@ function add_row_exec(id, vals, index) {
         let col_types = window.col_types;
         
         for(let key of s_cols){
-            let i = col_names.indexOf(key);
-
+            let i = col_names.indexOf(key.trim());
             row.append($('<td>').addClass("row-item").addClass(col_types[i]).append($('<div>').addClass('cell-text').html(vals[key.trim()])));
             //$('#'+id+" .header-item:nth-child(" + col_types[i] + ")").attr("type")
         }
