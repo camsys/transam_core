@@ -318,7 +318,7 @@ class User < ActiveRecord::Base
   # TODO: Make this a shareable Module 
   def rowify
     fields = {
-              last_name: "Last", 
+              last_name_drilldown: "Last", 
               first_name: "First", 
               organization: "Primary Organization", 
               email: "Email", 
@@ -349,6 +349,12 @@ class User < ActiveRecord::Base
 
   def status
     active ? "Active" : "Inactive"
+  end
+
+  def last_name_drilldown
+    #drilldown link
+    #TODO: use user path instead of hard coded html
+    "<a href='/users/#{self.object_key}/'>#{self.last_name}</a>"
   end
 
   # End Generate Table Data

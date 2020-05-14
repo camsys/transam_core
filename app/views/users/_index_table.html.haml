@@ -2,6 +2,10 @@
   table_dom_id = SecureRandom.hex
   show_actions ||= 0
 
+#users_table_actions.row
+  - if show_actions == 1
+    = render :partial => "users/index_actions"
+
 = javascript_include_tag  "https://kit.fontawesome.com/#{ENV['FONT_AWESOME']}.js"
 .library-table
   %table.elbat{:id => table_dom_id,
@@ -65,9 +69,7 @@
   -#    }
 
 
--##users_table_actions.row
--#  - if show_actions == 1
--#    = render :partial => "users/index_actions"
+
 
 -#http://localhost:3000/users.json?order=asc&limit=10&offset=0&role=&show_active_only=active&search_text=
 -#%table.table.table-hover{:id => table_dom_id,
