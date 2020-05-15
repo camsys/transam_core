@@ -174,7 +174,11 @@ class UsersController < OrganizationAwareController
       # This does not work. TODO: find out why this doesn't work.
       count = User.joins(:organization).where(query).count 
 
-      user_table = User.joins(:organization).where(query).offset(offset).limit(page_size).map{ |u| u.rowify }
+      users_on_role = (role_query search_string).pluck(:id)
+      all_user_table = User.joins(:organization).where(query).pluck(:id)
+      users = User.where(id: [users_on_role + all_user_table].uniq)
+      #user_table = (users_on_role +  all_user_table).uniq.offset(offset).limit(page_size).map{ |u| u.rowify }
+      user_table = users.offset(offset).limit(page_size).map{ |u| u.rowify }
     else 
       user_table = User.all.offset(offset).limit(page_size).map{ |u| u.rowify }
     end
@@ -188,6 +192,13 @@ class UsersController < OrganizationAwareController
     else
       return User.joins(:organization).arel_table[atts.pop].matches(search_string).or(query_builder(atts, search_string))
     end
+  end
+
+  def role_query search_string
+    q =  "max_user_roles.role_label like '#{search_string}'"
+    User.joins('left join max_user_roles on users.id=max_user_roles.user_id').where(q)
+    #search_string = "%Staff%"
+    #{}"max_user_roles.role_label like 'Staff'"
   end
 
   #-----------------------------------------------------------------------------
