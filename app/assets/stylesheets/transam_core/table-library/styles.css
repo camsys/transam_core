@@ -246,6 +246,13 @@
 
 }
 
+.cell-text > * {
+    overflow: hidden;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+}
+
+
 .cell-text:hover {
     z-index: 100;
     width: auto;
