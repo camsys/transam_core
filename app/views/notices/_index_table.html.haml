@@ -40,7 +40,7 @@
     :javascript
       add_row('#{table_dom_id}',
       {
-        "Subject":"#{notice.subject}",
+        "Subject":'#{link_to notice.subject, notice_path(notice) }',
         "Summary":"#{notice.summary.html_safe}",
         "Type":"#{notice.notice_type}",
         "Visible":"#{format_as_boolean(notice.visible?)}",
