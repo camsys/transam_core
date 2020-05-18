@@ -19,7 +19,9 @@
   .col-item:nth-child(5){
     width:20%;
   }
-
+- if show_actions == 1
+  #table_actions.btn-group
+    = render :partial => "asset_groups/index_actions"
 = javascript_include_tag  "https://kit.fontawesome.com/#{ENV['FONT_AWESOME']}.js"
 .library-table
   %table.elbat{:id => table_dom_id,
@@ -31,16 +33,14 @@
       :page_sizes => "10,20,50,100,200",
       :search => 'client',
       :export => "['csv', 'txt', 'excel']",
-      :columns => "Object Key,drilldown-link,
-                  Name,
-                  Code,
-                  Description,
-                  Num Assets,",
-        :selected_columns => "Object Key,
-                  Name,
-                  Code,
-                  Description,
-                  Num Assets",
+      :columns => "Group Name,drilldown-link,
+                  Group Code,
+                  Group Description,
+                  Asset Count,",
+        :selected_columns => "Group Name,
+                  Group Code,
+                  Group Description,
+                  Asset Count",
       :cookies => "true",
       :sort => 'client',
       :params => "{}",
@@ -52,11 +52,10 @@
     :javascript
       add_row('#{table_dom_id}',
       {
-        "Object Key": '#{h link_to a.object_key }',
-        "Name": '#{h a.name }',
-        "Code": '#{h a.code }',
-        "Description": '#{h a.description }',
-        "Num Assets": '#{h format_as_integer(a.assets.count) }',
+        "Group Name": '#{h a.name }',
+        "Group Code": '#{h a.code }',
+        "Group Description": '#{h a.description }',
+        "Asset Count": '#{h format_as_integer(a.assets.count) }',
       }, #{index});
 
 
