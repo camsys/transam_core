@@ -168,16 +168,17 @@ class UsersController < OrganizationAwareController
     if search
       searchable_columns = [:first_name, :last_name, :phone, :phone_ext, :email, :title] 
       search_string = "%#{search}%"
+      
       org_query = Organization.arel_table[:name].matches(search_string).or(Organization.arel_table[:short_name].matches(search_string))
       query = (query_builder(searchable_columns, search_string)).or(org_query)
-
-      # This does not work. TODO: find out why this doesn't work.
-      count = User.joins(:organization).where(query).count 
-
+      
+      # Get users who match search on role
       users_on_role = (role_query search_string).pluck(:id)
+      # Search on every column (except role)
       all_user_table = User.joins(:organization).where(query).pluck(:id)
+      # Take the union of the above searches
       users = User.where(id: [users_on_role + all_user_table].uniq)
-      #user_table = (users_on_role +  all_user_table).uniq.offset(offset).limit(page_size).map{ |u| u.rowify }
+      count = users.count 
       user_table = users.offset(offset).limit(page_size).map{ |u| u.rowify }
     else 
       user_table = User.all.offset(offset).limit(page_size).map{ |u| u.rowify }
@@ -197,8 +198,6 @@ class UsersController < OrganizationAwareController
   def role_query search_string
     q =  "max_user_roles.role_label like '#{search_string}'"
     User.joins('left join max_user_roles on users.id=max_user_roles.user_id').where(q)
-    #search_string = "%Staff%"
-    #{}"max_user_roles.role_label like 'Staff'"
   end
 
   #-----------------------------------------------------------------------------
