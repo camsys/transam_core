@@ -170,12 +170,12 @@ class UsersController < OrganizationAwareController
       search_string = "%#{search}%"
       
       org_query = Organization.arel_table[:name].matches(search_string).or(Organization.arel_table[:short_name].matches(search_string))
-      query = (query_builder(searchable_columns, search_string)).or(org_query)
+      query = (query_builder(searchable_columns, search_string)).or(org_query).or(privilege_query search_string)
       
       # Get users who match search on role
       users_on_role = (role_query search_string).pluck(:id)
       # Search on every column (except role)
-      all_user_table = User.joins(:organization).where(query).pluck(:id)
+      all_user_table = User.joins(:organization).joins(:roles).where(query).pluck(:id)
       # Take the union of the above searches
       users = User.where(id: [users_on_role + all_user_table].uniq)
       count = users.count 
@@ -198,6 +198,10 @@ class UsersController < OrganizationAwareController
   def role_query search_string
     q =  "max_user_roles_and_labels.role_label like '#{search_string}'"
     User.joins('left join max_user_roles_and_labels on users.id=max_user_roles_and_labels.user_id').where(q)
+  end
+
+  def privilege_query search_string 
+    Role.where(privilege: true).arel_table[:label].matches(search_string)
   end
 
   #-----------------------------------------------------------------------------
