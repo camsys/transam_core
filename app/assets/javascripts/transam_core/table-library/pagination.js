@@ -113,9 +113,10 @@ function updatePage_help(id, curPage, curPageSize, clientSearch=false){
 async function updatePage(id, curPage, curPageSize, total, clientSearch=false, params={}, searchContent=""){
     
     let serv = $('#'+id).data('side') === 'server';
-    params = $('#'+id).data('params');
-
-        if(serv){
+    
+    if(serv){
+        params = $('#'+id).data('params');
+        searchContent = $('#'+id).siblings(".searchbar").eq(0).val();
         total = await serverSide(id, $('#'+id).data('url'), curPage, curPageSize, params, searchContent);
     }
 
