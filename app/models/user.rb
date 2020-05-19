@@ -340,7 +340,7 @@ class User < ActiveRecord::Base
   end
 
   def role 
-    roles.try(:roles).try(:last).try(:label)
+    roles.try(:last).try(:label)
   end
 
   def user_privileges
