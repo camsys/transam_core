@@ -196,8 +196,8 @@ class UsersController < OrganizationAwareController
   end
 
   def role_query search_string
-    q =  "max_user_roles.role_label like '#{search_string}'"
-    User.joins('left join max_user_roles on users.id=max_user_roles.user_id').where(q)
+    q =  "max_user_roles_and_labels.role_label like '#{search_string}'"
+    User.joins('left join max_user_roles_and_labels on users.id=max_user_roles_and_labels.user_id').where(q)
   end
 
   #-----------------------------------------------------------------------------
