@@ -6,6 +6,15 @@
   - if show_actions == 1
     = render :partial => "users/index_actions"
 
+:css
+  .col-item:nth-child(5){
+    width:14%;
+  }
+  .col-item:nth-child(6){
+    width:6%;
+  }
+
+
 = javascript_include_tag  "https://kit.fontawesome.com/#{ENV['FONT_AWESOME']}.js"
 .library-table
   %table.elbat{:id => table_dom_id,
