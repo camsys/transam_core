@@ -17,8 +17,9 @@ $("table[use]").ready(()=>{
                 // col_widths.push(x[1].trim());
                 col_types.push(x[1].trim());
             }
-            window.col_names = col_names;
-            window.col_types = col_types;
+            window[id].col_names = col_names;
+            window[id].col_types = col_types;
+            window[id].col_selected = selected_columns;
             let search = $(value).data('search');
             let url = $(value).data('url');
             let params = $(value).data('params');
@@ -48,12 +49,11 @@ async function initialize(id, selected, cols, col_types, curPage, curPageSize, p
     $('#'+id).append($("<tbody>"));
     if(side === 'server') {
         // console.log("server");
-
-        updateHeader(id, selected, cols, col_types);
         let total = await serverSide(id, url, curPage, curPageSize, params);
         pagination(id, curPage, curPageSize, pageSizes, total);
         clear_row_queue();
         updatePage(id, curPage, curPageSize, total, false, params);
+        window[id].apply_styles();
         return;
     }
     // console.log("client");
@@ -67,6 +67,7 @@ async function initialize(id, selected, cols, col_types, curPage, curPageSize, p
 
 
 function updateHeader(id, selected, cols, col_ts){
+  if($('#'+id + " thead").length == 0){
     let table = $("#" + id);
     let header = $('<tr>').addClass("header");
     let colgroup = $('<colgroup>');
@@ -96,6 +97,7 @@ function updateHeader(id, selected, cols, col_ts){
         // colgroup.append($('<col>').addClass('col-item').attr('style', 'width: '+ col_ws[i].toString()));
     }
     table.prepend($('<thead>').append(header)).prepend(colgroup);
+  }
 }
 
 function clear_row_queue(){
@@ -128,9 +130,9 @@ function add_row_exec(id, vals, index) {
         let checkbox = $('<td>').addClass("cell-checkbox").append($('<label>').append($('<input>').attr('type', "checkbox")).append($('<span>').addClass('fa-stack').append($('<i class="fad fa-square fa-stack-1x" aria-hidden="true"></i>')).append($('<i class="fas fa-check-square fa-stack-1x" aria-hidden="true"></i>'))));
         row.append(checkbox);
         // TODO: TEMP, stilll working on this
-        let s_cols = $('#'+id).data('selectedColumns').split(','); //Object.keys(vals);
-        let col_names = window.col_names;
-        let col_types = window.col_types;
+        let s_cols = window[id].col_selected;
+        let col_names = window[id].col_names;
+        let col_types = window[id].col_types;
         
         for(let key of s_cols){
             let i = col_names.indexOf(key.trim());
@@ -159,6 +161,13 @@ async function serverSide(id, url, curPage, curPageSize, params, search="") {
             dataType: "json",
             success: function (r) {
                 response = r;
+                try {
+                  r_columns = Object.keys(r['rows'][0]); 
+                  window[id].col_selected = r_columns;
+                  updateHeader(id, r_columns, window[id].col_names, window[id].col_types);
+                } catch (e) {
+                  updateHeader(id, window[id].col_selected, window[id].col_names, window[id].col_types);
+                }
                 for(let [index,obj] of r['rows'].entries()) {
                     let row = {};
                     let columns = Object.keys(obj);
