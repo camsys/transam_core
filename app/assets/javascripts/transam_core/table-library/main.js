@@ -35,12 +35,20 @@ $("table[use]").ready(()=>{
     });
 
     $(document).on('click', '.cell-checkbox input[type="checkbox"]', function(){
-        $(this).closest('tr').toggleClass("row-checked");
+        $(this.parentNode.parentNode.parentNode).toggleClass("row-checked");
     });
 
-    $(document).on('click', '.header-checkbox input[type="checkbox"]', function(){
+    // $(document).on('click', '.header-checkbox input[type="checkbox"]', function(){
+    //     let table = $(this).closest('.library-table').find("table").eq(0);
+    //     table.find('.cell-checkbox input').click();
+    // });
+    $(document).on('click', '.header-checkbox input[type="checkbox"]:checked', function(){
         let table = $(this).closest('.library-table').find("table").eq(0);
-        table.find('.cell-checkbox input').click();
+        table.find('.table-row').addClass("row-checked").find(".cell-checkbox label input").prop( "checked", true);
+    });
+    $(document).on('click', '.header-checkbox input[type="checkbox"]:not(:checked)', function(){
+        let table = $(this).closest('.library-table').find("table").eq(0);
+        table.find('.table-row').removeClass("row-checked").find(".cell-checkbox label input").prop( "checked", false);
     });
 });
 
