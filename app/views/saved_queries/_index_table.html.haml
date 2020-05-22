@@ -132,11 +132,12 @@
       // TODO: PLEASE DON'T LET THIS GO TO PRODUCTION
       // HACKY HACK IS HACKY
       $(".row-item").eq(#{index}).ready(function (){
-        $(".actions").detach().appendTo("##{table_dom_id} > tbody > tr > .action-column > .cell-text");
+        let cell = $("##{table_dom_id} .action-column").eq(#{index}).find(".cell-text");
+        $(".actions").eq(#{index}).detach().appendTo(cell);
       });
     
 
-
+-# "##{table_dom_id} > tbody > tr > .action-column > .cell-text:nth-child("+index+")"
 
 -# - if shared_org_ids.size > 1
 -#                = link_to show_remove_form_saved_query_path(s), :title => "Remove this query from your organization", :remote => true do

@@ -405,3 +405,7 @@
 .right-align .cell-text{
     text-align: right;
 }
+
+.action-column .cell-text{
+    white-space: nowrap;
+}
