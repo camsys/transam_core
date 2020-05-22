@@ -101,7 +101,7 @@
     :javascript
       add_row('#{table_dom_id}',
       {
-        "File Name": '#{h link_to f.original_filename }',
+        "File Name": '#{h link_to f.original_filename, upload_path(f)}',
         "Organization": '#{h f.organization.present? ? f.organization.to_s : "Multi Org" }',
         "Content": '#{h f.file_content_type }',
         "Loaded By": '#{h f.user.name }',
