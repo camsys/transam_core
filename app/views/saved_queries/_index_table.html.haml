@@ -75,7 +75,8 @@
                   Created Date & Time,right-align,
                   Created By,
                   Last Updated Date & Time,right-align,
-                  Last Updated By,",
+                  Last Updated By,
+                  Actions,action-column",
         :selected_columns => "Name,
                   Description,
                   Shared To,
@@ -84,7 +85,8 @@
                   Created Date & Time,
                   Created By,
                   Last Updated Date & Time,
-                  Last Updated By",
+                  Last Updated By,
+                  Actions",
       :cookies => "true",
       :sort => 'client',
       :params => "{}",
@@ -92,6 +94,25 @@
       :data_source => 'client',
       :url => ''}}
   - @queries.each_with_index do |s, index|
+    %div.actions
+      - if can?(:update, s)
+        = link_to saved_query_path(s), :title => "Update this query." do
+          %i.fa.fa-fw.fa-edit.text-primary.fa-1-5x
+      - if can?(:delete, s)
+        = link_to saved_query_path(s), :title => "Delete this query", :method => :delete, :data => {:confirm => "Are you sure you want to delete this query? The action can't be undone."} do
+          %i.fa.fa-fw.fa-trash-o.action-icon.text-danger.fa-1-5x
+      - elsif can?(:remove, s)
+        - shared_org_ids = (s.organization_ids || []) & (current_user.organization_ids || [])
+        - if shared_org_ids.size > 1
+          = link_to show_remove_form_saved_query_path(s), :title => "Remove this query from your organization", :remote => true do
+            %i.fa.fa-fw.fa-trash-o.action-icon.text-danger.fa-1-5x
+        - elsif shared_org_ids.size == 1
+          = link_to remove_from_orgs_saved_query_path(s, saved_query:{organization_ids: shared_org_ids}), :title => "Remove this query from your organization", :method => :post, :data => {:confirm => "Are you sure you want to remove this query from your organization? The action can't be undone."} do
+            %i.fa.fa-fw.fa-trash-o.action-icon.text-danger.fa-1-5x
+      = link_to clone_saved_query_path(s), :title => "Clone this query", :method => :post do
+        %i.fa.fa-fw.fa-copy.fa-1-5x
+      = link_to export_saved_query_path(s, format: :csv), :title => "Export CSV" do
+        %i.fa.fa-fw.fa-download.fa-1-5x
     :javascript
       add_row('#{table_dom_id}',
       {        
@@ -104,11 +125,32 @@
         "Created By": '#{h s.created_by_user }',
         "Last Updated Date & Time": '#{h format_as_date_time(s.updated_at) }',
         "Last Updated By": '#{h s.updated_by_user }',
+        "Actions":"",
+        
       }, #{index});
+      // TEMP UNTIL WE DO THIS FOR REAL
+      // TODO: PLEASE DON'T LET THIS GO TO PRODUCTION
+      // HACKY HACK IS HACKY
+      $(".row-item").eq(#{index}).ready(function (){
+        $(".actions").detach().appendTo("##{table_dom_id} > tbody > tr > .action-column > .cell-text");
+      });
+    
 
 
 
-
+-# - if shared_org_ids.size > 1
+-#                = link_to show_remove_form_saved_query_path(s), :title => "Remove this query from your organization", :remote => true do
+-#                  %i.fa.fa-fw.fa-trash-o.action-icon.text-danger.fa-1-5x
+-#              - elsif shared_org_ids.size == 1
+-#                = link_to remove_from_orgs_saved_query_path(s, saved_query:{organization_ids: shared_org_ids}), :title => "Remove this query from your organization", :method => :post, :data => {:confirm => "Are you sure you want to remove this query from your organization? The action can't be undone."} do
+-#                  %i.fa.fa-fw.fa-trash-o.action-icon.text-danger.fa-1-5x
+-#            = link_to clone_saved_query_path(s), :title => "Clone this query", :method => :post do
+-#              %i.fa.fa-fw.fa-copy.fa-1-5x
+-#            = link_to export_saved_query_path(s, format: :csv), :title => "Export CSV" do
+-#              %i.fa.fa-fw.fa-download.fa-1-5x}',
+-# '#{ can?(:update, s) ? link_to saved_query_path(s) %i.fa.fa-fw.fa-edit.text-primary.fa-1-5x : "" }' +
+-#            '#{ can?(:delete, s) ? link_to saved_query_path(s), :title => "Delete this query", :method => :delete, :data => {:confirm => "Are you sure you want to delete this query? The action can\'t be undone."} do %i.fa.fa-fw.fa-trash-o.action-icon.text-danger.fa-1-5x : can?(:remove, s) ? shared_org_ids = (s.organization_ids || []) & (current_user.organization_ids || []) : "" }',
+          
 -# %table.table.table-hover{:id => table_dom_id, :data => {:toggle => 'table',
 -#   :pagination => 'true',
 -#   :show_pagination_switch => 'false',
@@ -209,3 +251,29 @@
 -#       });
 -#     });
 -#   });
+
+
+
+
+-# "Actions":  '#{\n
+-#            - if can?(:update, s) \n
+-#               link_to saved_query_path(s), :title => "Update this query." "<i class=".fa .fa-fw .fa-edit .text-primary .fa-1-5x">" \n
+-#            end }' + 
+-#            '#{- if can?(:delete, s) \n
+-#               link_to saved_query_path(s), :title => "Delete this query", :method => :delete, :data => {:confirm => "Are you sure you want to delete this query? The action can\'t be undone."} "<i class=".fa .fa-fw .fa-trash-o .action-icon .text-danger .fa-1-5x" >" \n
+-#             end \n
+-#            - elsif can?(:remove, s) \n
+-#              - shared_org_ids = (s.organization_ids || []) & (current_user.organization_ids || []) \n
+-#              - if shared_org_ids.size > 1 \n
+-#                 link_to show_remove_form_saved_query_path(s), :title => "Remove this query from your organization", :remote => true do \n
+-#                 "<i class".fa .fa-fw .fa-trash-o .action-icon .text-danger .fa-1-5x" >" \n
+-#              end \n
+-#              - elsif shared_org_ids.size == 1 \n
+-#                 link_to remove_from_orgs_saved_query_path(s, saved_query:{organization_ids: shared_org_ids}), :title => "Remove this query from your organization", :method => :post, :data => {:confirm => "Are you sure you want to remove this query from your organization? The action can\'t be undone."} do \n
+-#                 "<i class=".fa .fa-fw .fa-trash-o .action-icon .text-danger .fa-1-5x" >" \n
+-#              end \n
+-#            end \n }' +
+-#            '#{link_to clone_saved_query_path(s), :title => "Clone this query", :method => :post do \n
+-#              "<i class=".fa .fa-fw .fa-copy .fa-1-5x" >" \n
+-#            link_to export_saved_query_path(s, format: :csv), :title => "Export CSV" do \n
+-#              "<i class".fa .fa-fw .fa-download .fa-1-5x" >" }', 

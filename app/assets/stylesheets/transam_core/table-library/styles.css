@@ -255,6 +255,8 @@
 .cell-text:hover {
     z-index: 100;
     width: auto;
+    height: fit-content;
+    min-height: 2.4em;
     /*border-right: 1px solid ;*/
     box-shadow: 0 0 0 1px var(--gray-medium-light);
     background: -webkit-gradient(linear, left top, right top, from(var(--gray-light)), to(var(--gray-lighter)));
@@ -262,6 +264,7 @@
     background: -o-linear-gradient(left, var(--gray-light) 0%, var(--gray-lighter) 100%);
     background: linear-gradient(90deg, var(--gray-light) 0%, var(--gray-lighter) 100%);
     overflow: visible;
+    white-space: break-spaces;
 }
 
 .table-row .cell-checkbox:first-child {
