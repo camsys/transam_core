@@ -52,7 +52,7 @@
     :javascript
       add_row('#{table_dom_id}',
       {
-        "Group Name": '#{h a.name }',
+        "Group Name": '#{h link_to a.name, asset_group_path(a) }',
         "Group Code": '#{h a.code }',
         "Group Description": '#{h a.description }',
         "Asset Count": '#{h format_as_integer(a.assets.count) }',
