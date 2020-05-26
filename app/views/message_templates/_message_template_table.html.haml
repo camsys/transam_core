@@ -1,53 +1,117 @@
 :ruby
   table_dom_id = SecureRandom.hex
 
-%legend{style: 'border-bottom: none; margin-bottom: 0px;'} Message Templates
 
-.table-responsive
-  #table_actions.btn-group
-    - if can? :create, MessageTemplate
-      = link_to new_message_template_path, :class => 'btn btn-primary' do
-        %i.fa.fa-plus.fa-fw
-        = " Add New Message Template";
-  %table.table.table-hover{:id => table_dom_id, :data => {:toggle => 'table',
-    :pagination => 'true',
-    :show_pagination_switch => 'false',
-    :page_list => "[5, 10, 20, 50, 100, 200, 10000]",
-    :page_size => current_user.num_table_rows,
-    :search => 'false',
-    :toolbar => "#table_actions",
-    :export_types => "['csv', 'txt', 'excel']",
-    :show_export => 'true',
-    :show_columns => 'false',
-    :show_toggle => 'false',
-    :cookie => 'true',
-    :cookie_id_table => "message_templates_table",
-    :cookie_expire => "1y"}}
-    %thead
-      %tr
-        %th.center{:data => {:sortable => 'true'}} ID
-        %th.center{:data => {:sortable => 'true'}} Subject
-        %th.center{:data => {:sortable => 'true'}} Description
-        %th.center{:data => {:sortable => 'true'}} Active
-        %th.center{:data => {:sortable => 'true'}} Message
-        %th.center{:data => {:sortable => 'true'}} Email (External)
-        %th
+#table_actions.btn-group
+  - if can? :create, MessageTemplate
+    = link_to new_message_template_path, :class => 'btn btn-primary' do
+      %i.fa.fa-plus.fa-fw
+      = " Add New Message Template";
 
-    %tbody
-      - @message_templates.each do |t|
-        %tr
-          %td
-            - if can? :update, t
-              = link_to t.name, edit_message_template_path(t)
-            - else
-              t.name
 
-          %td.left= t.subject
-          %td.left.nowrap= format_as_text(t.description)
-          %td.center.nowrap{data: {tableexport: {value: "#{(t.active && t.is_implemented) ? 'Yes' : 'No'}"}}}= format_as_boolean((t.active && t.is_implemented))
-          %td.center.nowrap{data: {tableexport: {value: "#{t.message_enabled ? 'Yes' : 'No'}"}}}= format_as_boolean(t.message_enabled)
-          %td.center.nowrap{data: {tableexport: {value: "#{t.email_enabled ? 'Yes' : 'No'}"}}}= format_as_boolean(t.email_enabled)
-          %td.center
-            - if can? :destroy, t
-              = link_to message_template_path(t), :method => :delete, title: "Remove template", :data => {:confirm => "Are you sure you want to remove this template (#{t.name})? The action can't be undone."} do
-                %i.fa.fa-trash-o.fa-fw.fa-2x
+.library-table
+  %table.elbat{:id => table_dom_id,
+    :use => 'true',
+    :data => {:use => 'true',
+      :side => 'client',
+      :current_page => '0',
+      :current_page_size => '10',
+      :page_sizes => "10,20,50,100,200",
+      :search => 'client',
+      :export => "['csv', 'txt', 'excel']",
+      :columns => "ID,drilldown-link,
+                  Subject,
+                  Description,
+                  Active,
+                  Message,
+                  Email (External),
+                  Actions,action-column",
+      :selected_columns => "ID,
+                  Subject,
+                  Description,
+                  Active,
+                  Message,
+                  Email (External),
+                  Actions",
+      :cookies => "true",
+      :sort => 'client',
+      :params => "{}",
+      :filter => "[]",
+      :data_source => 'client',
+      :url => ''}}
+  - @message_templates.each_with_index do |t, index|
+    %div.actions
+      - if can? :destroy, t
+        = link_to message_template_path(t), :method => :delete, title: "Remove template", :data => {:confirm => "Are you sure you want to remove this template (#{t.name})? The action can't be undone."} do
+          %i.fa.fa-trash-o.fa-fw.fa-2x
+
+
+    :javascript
+      add_row('#{table_dom_id}',
+      {                  
+        "ID": '#{h link_to t.name, edit_message_template_path(t) }',
+        "Subject": '#{h t.subject }',
+        "Description": "#{h t.description }",
+        "Active": "#{h format_as_boolean((t.active && t.is_implemented)) }",
+        "Message": "#{h format_as_boolean(t.message_enabled) }",
+        "Email (External)": "#{h format_as_boolean(t.email_enabled) }",
+      }, #{index});
+      // TEMP UNTIL WE DO THIS FOR REAL
+      // TODO: PLEASE DON'T LET THIS GO TO PRODUCTION
+      // HACKY HACK IS HACKY
+      $(".row-item").eq(#{index}).ready(function (){
+        let cell = $("##{table_dom_id} .action-column").eq(#{index}).find(".cell-text");
+        $(".actions").eq(#{index}).detach().appendTo(cell);
+      });
+
+
+-# %legend{style: 'border-bottom: none; margin-bottom: 0px;'} Message Templates
+
+-# .table-responsive
+-#   #table_actions.btn-group
+-#     - if can? :create, MessageTemplate
+-#       = link_to new_message_template_path, :class => 'btn btn-primary' do
+-#         %i.fa.fa-plus.fa-fw
+-#         = " Add New Message Template";
+-#   %table.table.table-hover{:id => table_dom_id, :data => {:toggle => 'table',
+-#     :pagination => 'true',
+-#     :show_pagination_switch => 'false',
+-#     :page_list => "[5, 10, 20, 50, 100, 200, 10000]",
+-#     :page_size => current_user.num_table_rows,
+-#     :search => 'false',
+-#     :toolbar => "#table_actions",
+-#     :export_types => "['csv', 'txt', 'excel']",
+-#     :show_export => 'true',
+-#     :show_columns => 'false',
+-#     :show_toggle => 'false',
+-#     :cookie => 'true',
+-#     :cookie_id_table => "message_templates_table",
+-#     :cookie_expire => "1y"}}
+-#     %thead
+-#       %tr
+-#         %th.center{:data => {:sortable => 'true'}} ID
+-#         %th.center{:data => {:sortable => 'true'}} Subject
+-#         %th.center{:data => {:sortable => 'true'}} Description
+-#         %th.center{:data => {:sortable => 'true'}} Active
+-#         %th.center{:data => {:sortable => 'true'}} Message
+-#         %th.center{:data => {:sortable => 'true'}} Email (External)
+-#         %th
+
+-#     %tbody
+-#       - @message_templates.each do |t|
+-#         %tr
+-#           %td
+-#             - if can? :update, t
+-#               = link_to t.name, edit_message_template_path(t)
+-#             - else
+-#               t.name
+
+-#           %td.left= t.subject
+-#           %td.left.nowrap= format_as_text(t.description)
+-#           %td.center.nowrap{data: {tableexport: {value: "#{(t.active && t.is_implemented) ? 'Yes' : 'No'}"}}}= format_as_boolean((t.active && t.is_implemented))
+-#           %td.center.nowrap{data: {tableexport: {value: "#{t.message_enabled ? 'Yes' : 'No'}"}}}= format_as_boolean(t.message_enabled)
+-#           %td.center.nowrap{data: {tableexport: {value: "#{t.email_enabled ? 'Yes' : 'No'}"}}}= format_as_boolean(t.email_enabled)
+-#           %td.center
+-#             - if can? :destroy, t
+-#               = link_to message_template_path(t), :method => :delete, title: "Remove template", :data => {:confirm => "Are you sure you want to remove this template (#{t.name})? The action can't be undone."} do
+-#                 %i.fa.fa-trash-o.fa-fw.fa-2x
