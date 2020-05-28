@@ -118,6 +118,11 @@ async function updatePage(id, curPage, curPageSize, total, clientSearch=false, p
         params = $('#'+id).data('params');
         searchContent = $('#'+id).siblings(".searchbar").eq(0).val();
         total = await serverSide(id, $('#'+id).data('url'), curPage, curPageSize, params, searchContent);
+        try {
+            window[id].apply_styles();
+        } catch (e){
+            // don't need to
+        }
     }
 
     if(!clientSearch){

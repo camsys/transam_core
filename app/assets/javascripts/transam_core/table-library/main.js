@@ -61,7 +61,6 @@ async function initialize(id, selected, cols, col_types, curPage, curPageSize, p
         pagination(id, curPage, curPageSize, pageSizes, total);
         clear_row_queue();
         updatePage(id, curPage, curPageSize, total, false, params);
-        window[id].apply_styles();
         return;
     }
     // console.log("client");
@@ -169,6 +168,7 @@ async function serverSide(id, url, curPage, curPageSize, params, search="") {
             dataType: "json",
             success: function (r) {
                 response = r;
+                // console.log(r);
                 try {
                   r_columns = Object.keys(r['rows'][0]); 
                   window[id].col_selected = r_columns;
