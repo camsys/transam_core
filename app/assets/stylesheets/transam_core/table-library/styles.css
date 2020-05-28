@@ -409,3 +409,8 @@
 .action-column .cell-text{
     white-space: nowrap;
 }
+
+
+.checkmark-column .cell-text{
+    text-align: center;
+}
