@@ -18,14 +18,14 @@
       :search => 'client',
       :export => "['csv', 'txt', 'excel']",
       :columns => "Id,,
-                  Date/Time,,
+                  Date-Time,right-align,
                   User,,
                   Action,,
                   Activity,,",
       :selected_columns => "Action,
                             Activity,
                             User,
-                            Date/Time",
+                            Date-Time",
       :cookies => "true",
       :sort => 'client',
       :sort_params => @params,
@@ -37,10 +37,10 @@
     :javascript
       add_row('#{table_dom_id}',
       {
-        "Action": "#{format_as_date_time(a.activity_time)}",
-        "Activity": "#{a.user}",
-        "User": "#{a.item_type}",
-        "Date/Time": "#{a.activity.truncate(64).html_safe}",
+        "Action": "#{a.activity.truncate(64).html_safe}",
+        "Activity": "#{a.item_type}",
+        "User": "#{a.user}",
+        "Date-Time": "#{format_as_date_time(a.activity_time)}",
       }, #{index});
 
 
