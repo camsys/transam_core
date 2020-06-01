@@ -4,21 +4,7 @@
 
 :css
 
-  .col-item:nth-child(1){
-    width:20%;
-  }
-  .col-item:nth-child(2){
-    width:20%;
-  }
-  .col-item:nth-child(3){
-    width:20%;
-  }
-  .col-item:nth-child(4){
-    width:20%;
-  }
-  .col-item:nth-child(5){
-    width:20%;
-  }
+  
 - if show_actions == 1
   #table_actions.btn-group
     = render :partial => "asset_groups/index_actions"
@@ -30,17 +16,14 @@
       :side => 'client',
       :current_page => '0',
       :current_page_size => '10',
-      :page_sizes => "10,20,50,100,200",
+      :page_sizes => "10,20,50,100",
       :search => 'client',
       :export => "['csv', 'txt', 'excel']",
-      :columns => "Group Name,drilldown-link,
-                  Group Code,
-                  Group Description,
-                  Asset Count,",
-        :selected_columns => "Group Name,
-                  Group Code,
-                  Group Description,
-                  Asset Count",
+      :columns => '{"0":{"name":"Group Name","type":"drilldown-link"},
+                    "1":{"name":"Group Code"},
+                    "2":{"name":"Group Description"},
+                    "3":{"name":"Asset Count"}}',
+        :selected_columns => "0,1,2,3",
       :cookies => "true",
       :sort => 'client',
       :params => "{}",
@@ -52,10 +35,10 @@
     :javascript
       add_row('#{table_dom_id}',
       {
-        "Group Name": '#{h link_to a.name, asset_group_path(a) }',
-        "Group Code": '#{h a.code }',
-        "Group Description": '#{h a.description }',
-        "Asset Count": '#{h format_as_integer(a.assets.count) }',
+        "0": '#{h link_to a.name, asset_group_path(a) }',
+        "1": '#{h a.code }',
+        "2": '#{h a.description }',
+        "3": '#{h format_as_integer(a.assets.count) }',
       }, #{index});
 
 
