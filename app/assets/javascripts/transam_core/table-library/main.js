@@ -7,24 +7,26 @@ $("table[use]").ready(()=>{
             let curPage = $(value).data('currentPage');
             let curPageSize = $(value).data('currentPageSize');
             let pageSizes = $(value).data('pageSizes').split(',');
-            let columns = $(value).data('columns').split(/\r?\n/);
+            let columns = $(value).data('columns');  //.split(/\r?\n/);
             let selected_columns = $(value).data('selectedColumns').split(',');
-            let col_names = [];
-            let col_types = [];
-            for(let col of columns){
-                let x = col.split(',');
-                col_names.push(x[0].trim());
-                // col_widths.push(x[1].trim());
-                col_types.push(x[1].trim());
+            let col_names = {};
+            let col_types = {};
+            let col_widths = {};
+            for(let col of Object.keys(columns)){
+                let x = columns[col]; //.split(',');
+                col_names[col] = x["name"];
+                col_types[col] = x["type"];
+                col_widths[col] = x["width"];
             }
             window[id].col_names = col_names;
             window[id].col_types = col_types;
+            window[id].col_widths = col_widths;
             window[id].col_selected = selected_columns;
             let search = $(value).data('search');
             let url = $(value).data('url');
             let params = $(value).data('params');
 
-            initialize(id, selected_columns, col_names, col_types, curPage, curPageSize, pageSizes, side, url, params);
+            initialize(id, selected_columns, curPage, curPageSize, pageSizes, side, url, params);
 
             if(search == 'client') {
                 addSearch(id);
@@ -53,7 +55,7 @@ $("table[use]").ready(()=>{
 });
 
 
-async function initialize(id, selected, cols, col_types, curPage, curPageSize, pageSizes, side, url, params) {
+async function initialize(id, selected, curPage, curPageSize, pageSizes, side, url, params) {
     $('#'+id).append($("<tbody>"));
     if(side === 'server') {
         // console.log("server");
@@ -65,7 +67,7 @@ async function initialize(id, selected, cols, col_types, curPage, curPageSize, p
     }
     // console.log("client");
     
-    updateHeader(id, selected, cols, col_types);
+    updateHeader(id, selected);
     pagination(id, curPage, curPageSize, pageSizes);
     clear_row_queue();
     updatePage_help(id, curPage, curPageSize);
@@ -73,22 +75,25 @@ async function initialize(id, selected, cols, col_types, curPage, curPageSize, p
 }
 
 
-function updateHeader(id, selected, cols, col_ts){
+function updateHeader(id, selected){
+  let cols = window[id].col_names;
+  let col_ts = window[id].col_types;
+  let col_ws = window[id].col_widths;
   if($('#'+id + " thead").length == 0){
     let table = $("#" + id);
     let header = $('<tr>').addClass("header");
     let colgroup = $('<colgroup>');
     header.append($('<th>').addClass("header-item header-checkbox").append($('<label>').append($('<input>').attr('type', "checkbox").addClass("header-checkbox")).append($('<span>').addClass('fa-stack').append($('<i class="fad fa-square fa-stack-1x" aria-hidden="true"></i>')).append($('<i class="fas fa-check-square fa-stack-1x" aria-hidden="true"></i>')))));
-    colgroup.append($('<col>').addClass('col-item').attr('style', 'width: 24px'));
-    for (let i=0;i<selected.length;i++) {
-        let colIndex = cols.indexOf(selected[i].toString().trim());
+    colgroup.append($('<col>').addClass('col-item').attr('style', 'width: 32px'));
+    for (let colIndex of selected){ //i=0;i<selected.length;i++) {
+        //let colIndex = cols.indexOf(selected[i].toString().trim());
         try {
             header.append(
                 $('<th>').addClass('header-item').attr("type", col_ts[colIndex])
                     .append($('<div>').addClass('header-text').text(cols[colIndex].toString())));
             colgroup.append(
-                $('<col>').addClass('col-item'));
-            $("#" + id + " .table-row>:nth-child(" +  ($("[type|='" + col_ts[i] + "']").eq(0).index()+1) + ")").addClass(col_ts[i]);
+                $('<col>').addClass('col-item').css("width", col_ws[colIndex]));
+            $("#" + id + " .table-row>:nth-child(" +  ($("[type|='" + col_ts[colIndex] + "']").eq(0).index()+1) + ")").addClass(col_ts[colIndex]);
 
         } catch (e) {
             header.append(
@@ -96,7 +101,7 @@ function updateHeader(id, selected, cols, col_ts){
                     .append($('<div>').addClass('header-text').text(cols[colIndex].toString())));    
         }
         
-        $("#" + id + " .table-row>:nth-child(" +  ($("[type|='" + col_ts[i] + "']").eq(0).index()+1) + ")")
+        $("#" + id + " .table-row>:nth-child(" +  ($("[type|='" + col_ts[colIndex] + "']").eq(0).index()+1) + ")")
 
 
 
@@ -142,8 +147,8 @@ function add_row_exec(id, vals, index) {
         let col_types = window[id].col_types;
         
         for(let key of s_cols){
-            let i = col_names.indexOf(key.trim());
-            row.append($('<td>').addClass("row-item").addClass(col_types[i]).append($('<div>').addClass('cell-text').html(vals[key.trim()])));
+            // let i = col_names.indexOf(key.trim());
+            row.append($('<td>').addClass("row-item").addClass(col_types[key.trim()]).append($('<div>').addClass('cell-text').html(vals[key.trim()])));
             //$('#'+id+" .header-item:nth-child(" + col_types[i] + ")").attr("type")
         }
         // messy way of inserting each row at correct position
