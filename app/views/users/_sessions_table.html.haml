@@ -22,7 +22,7 @@
                     "8":{"name":"Inactive Time"},
                     "9":{"name":"View Count"},
                     "10":{"name":"Last View"}}',
-      :selected_columns => "0,1,2,3,4,5,6,7,8,9,10",
+      :selected_columns => "1,2,3,4,5,6,7,8,9,10",
       :cookies => "true",
       :sort => 'client',
       :sort_params => @params,
@@ -33,7 +33,6 @@
   - @sessions.keys.each_with_index do |s, index|
     - user = User.find_by(:id => @sessions[s][:user_id])
     :javascript
-      console.log("#{@sessions[s]}");
       add_row('#{table_dom_id}',
       {
         "1": '#{user.name unless user.blank?}',
@@ -45,7 +44,5 @@
         "7": "#{format_as_date_time(@sessions[s][:last_view])}",
         "8": "#{format_as_time_difference((Time.now - @sessions[s][:last_view]).to_i) unless @sessions[s][:last_view].blank?}",
         "9": "#{center= format_as_integer(@sessions[s][:views])}",
-        "10": "#{format_as_date_time(@sessions[s][:last_view])}",
-        "0": "#{@sessions[s][:path]}"
+        "10": "#{@sessions[s][:path]}"
       }, #{index});
-
