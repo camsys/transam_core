@@ -84,15 +84,9 @@ function updateHeader(id, selected){
     let header = $('<tr>').addClass("header");
     let colgroup = $('<colgroup>');
     header.append($('<th>').addClass("header-item header-checkbox").append($('<label>').append($('<input>').attr('type', "checkbox").addClass("header-checkbox")).append($('<span>').addClass('fa-stack').append($('<i class="fad fa-square fa-stack-1x" aria-hidden="true"></i>')).append($('<i class="fas fa-check-square fa-stack-1x" aria-hidden="true"></i>')))));
-<<<<<<< HEAD
-    colgroup.append($('<col>').addClass('col-item').attr('style', 'width: 2.5em'));
-    for (let i=0;i<selected.length;i++) {
-        let colIndex = cols.indexOf(selected[i].toString().trim());
-=======
     colgroup.append($('<col>').addClass('col-item').attr('style', 'width: 32px'));
     for (let col of selected){ //i=0;i<selected.length;i++) {
         //let col = cols.indexOf(selected[i].toString().trim());
->>>>>>> develop
         try {
             header.append(
                 $('<th>').addClass('header-item').attr("type", col_ts[col])
