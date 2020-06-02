@@ -14,18 +14,15 @@
       :side => 'client',
       :current_page => '0',
       :current_page_size => '10',
-      :page_sizes => "10,20,50,100,200",
+      :page_sizes => "10,20,50,100",
       :search => 'client',
       :export => "['csv', 'txt', 'excel']",
-      :columns => "Id,,
-                  Date/Time,,
-                  User,,
-                  Action,,
-                  Activity,,",
-      :selected_columns => "Action,
-                            Activity,
-                            User,
-                            Date/Time",
+      :columns => '{"0":{"name":"Action","type":"drilldown-link"},
+                    "1":{"name":"Activity"},
+                    "2":{"name":"User"},
+                    "3":{"name":"Date/Time","type":"right-align"},
+                    "4":{"name":"Id"}}',
+      :selected_columns => "0,1,2,3",
       :cookies => "true",
       :sort => 'client',
       :sort_params => @params,
@@ -37,10 +34,11 @@
     :javascript
       add_row('#{table_dom_id}',
       {
-        "Action": "#{format_as_date_time(a.activity_time)}",
-        "Activity": "#{a.user}",
-        "User": "#{a.item_type}",
-        "Date/Time": "#{a.activity.truncate(64).html_safe}",
+        "0": "#{a.activity.truncate(64).html_safe}",
+        "1": "#{a.item_type}",
+        "2": "#{a.user}",
+        "3": "#{format_as_date_time(a.activity_time)}",
+        "4": "#{a.id}"
       }, #{index});
 
 

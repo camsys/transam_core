@@ -118,6 +118,11 @@ async function updatePage(id, curPage, curPageSize, total, clientSearch=false, p
         params = $('#'+id).data('params');
         searchContent = $('#'+id).siblings(".searchbar").eq(0).val();
         total = await serverSide(id, $('#'+id).data('url'), curPage, curPageSize, params, searchContent);
+        try {
+            window[id].apply_styles();
+        } catch (e){
+            // don't need to
+        }
     }
 
     if(!clientSearch){
@@ -158,7 +163,7 @@ async function updatePage(id, curPage, curPageSize, total, clientSearch=false, p
 function updatePageStatus(elem, curPage, curPageSize, total){
     let start = curPage * curPageSize + 1;
     let end = start + curPageSize - 1;
-    elem.html("Showing <b>" + start + " to " + Math.min(end,total) + "</b> of " + total + " rows");
+    elem.html("Showing <b>" + start.toLocaleString() + " to " + Math.min(end,total).toLocaleString() + "</b> of " + total.toLocaleString() + " rows");
 
 }
 

@@ -210,6 +210,7 @@ class UsersController < OrganizationAwareController
 
     key = "000000:#{TransamController::ACTIVE_SESSION_LIST_CACHE_VAR}"
     @sessions =  Rails.cache.fetch(key)
+    @sessions.delete_if { |key, value| value[:expire_time] < Time.now }
     @sessions ||= {}
 
   end

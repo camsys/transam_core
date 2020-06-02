@@ -8,53 +8,7 @@
   }
 
 
-:css
 
-  .col-item:nth-child(1){
-    width:10%;
-  }
-  .col-item:nth-child(2){
-    width:10%;
-  }
-  .col-item:nth-child(3){
-    width:10%;
-  }
-  .col-item:nth-child(4){
-    width:10%;
-  }
-  .col-item:nth-child(5){
-    width:10%;
-  }
-  .col-item:nth-child(6){
-    width:10%;
-  }
-  .col-item:nth-child(7){
-    width:10%;
-  }
-  .col-item:nth-child(8){
-    width:10%;
-  }
-  .col-item:nth-child(9){
-    width:10%;
-  }
-  .col-item:nth-child(10){
-    width:10%;
-  }
-  .col-item:nth-child(11){
-    width:10%;
-  }
-  .col-item:nth-child(12){
-    width:10%;
-  }
-  .col-item:nth-child(13){
-    width:10%;
-  }
-  .col-item:nth-child(14){
-    width:10%;
-  }
-  .col-item:nth-child(15){
-    width:10%;
-  }
 
 = javascript_include_tag  "https://kit.fontawesome.com/#{ENV['FONT_AWESOME']}.js"
 .library-table
@@ -64,29 +18,20 @@
       :side => 'client',
       :current_page => '0',
       :current_page_size => '10',
-      :page_sizes => "10,20,50,100,200",
+      :page_sizes => "10,20,50,100",
       :search => 'client',
       :export => "['csv', 'txt', 'excel']",
-      :columns => "Name,
-                  Description,
-                  Shared To,
-                  Shared From,
-                  SQL Query,
-                  Created Date & Time,right-align,
-                  Created By,
-                  Last Updated Date & Time,right-align,
-                  Last Updated By,
-                  Actions,action-column",
-        :selected_columns => "Name,
-                  Description,
-                  Shared To,
-                  Shared From,
-                  SQL Query,
-                  Created Date & Time,
-                  Created By,
-                  Last Updated Date & Time,
-                  Last Updated By,
-                  Actions",
+      :columns => '{"0":{"name":"Name"},
+                    "1":{"name":"Description"},
+                    "2":{"name":"Shared To"},
+                    "3":{"name":"Shared From"},
+                    "4":{"name":"SQL Query"},
+                    "5":{"name":"Created Date & Time", "type":"right-align"},
+                    "6":{"name":"Created By"},
+                    "7":{"name":"Last Updated Date & Time", "type":"right-align"},
+                    "8":{"name":"Last Updated By"},
+                    "9":{"name":"Actions", "type":"action-column"}',
+        :selected_columns => "0,1,2,3,4,5,6,7,8,9",
       :cookies => "true",
       :sort => 'client',
       :params => "{}",
@@ -116,17 +61,15 @@
     :javascript
       add_row('#{table_dom_id}',
       {        
-        "Name": '#{h s.name }',
-        "Description": '#{h s.description }',
-        "Shared To": '#{h s.organizations.count > 1 ? "Multiple" : s.organizations.first.try(:to_s) }',
-        "Shared From": '#{h s.created_by_user.try(:organization) }',
-        "SQL Query": '#{h s.to_sql }', // WTF
-        "Created Date & Time": '#{h format_as_date_time(s.created_at) }',
-        "Created By": '#{h s.created_by_user }',
-        "Last Updated Date & Time": '#{h format_as_date_time(s.updated_at) }',
-        "Last Updated By": '#{h s.updated_by_user }',
-        "Actions":"",
-        
+        "0": '#{h s.name }',
+        "1": '#{h s.description }',
+        "2": '#{h s.organizations.count > 1 ? "Multiple" : s.organizations.first.try(:to_s) }',
+        "3": '#{h s.created_by_user.try(:organization) }',
+        "4": '#{h s.to_sql }', // WTF
+        "5": '#{h format_as_date_time(s.created_at) }',
+        "6": '#{h s.created_by_user }',
+        "7": '#{h format_as_date_time(s.updated_at) }',
+        "8": '#{h s.updated_by_user }',
       }, #{index});
       // TEMP UNTIL WE DO THIS FOR REAL
       // TODO: PLEASE DON'T LET THIS GO TO PRODUCTION

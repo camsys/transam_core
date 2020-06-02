@@ -316,27 +316,37 @@ class User < ActiveRecord::Base
   #-----------------------------------------------------------------------------
 
   # TODO: Make this a shareable Module 
-  def rowify
-    fields = {
-              last_name_drilldown: "Last", 
-              first_name: "First", 
-              organization: "Primary Organization", 
-              email: "Email", 
-              phone: "Phone",
-              phone_ext: "Ext.", 
-              title: "Title", 
-              role: "Role", #
-              user_privileges: "Privileges",
-              status: "Status"
-            }
+  def rowify fields=nil
+
+    fields ||= [:last_name,
+                :first_name,
+                :organization,
+                :email,
+                :phone,
+                :phone_ext,
+                :title,
+                :role,
+                :privileges,
+                :status]
+
+    field_library = {
+      last_name: {label: "Last", method: :last_name, url: "/users/#{self.object_key}/"},
+      first_name: {label: "First", method: :first_name, url: nil},
+      organization: {label: "Organization", method: :organization, url: nil}, 
+      email: {label: "Email", method: :email, url: nil},
+      phone: {label: "Phone", method: :phone, url: nil},
+      phone_ext: {label: "Ext.", method: :phone_ext, url: nil},
+      title: {label: "Title", method: :title, url: nil},
+      role: {label: "Role", method: :role, url: nil},
+      privileges: {label: "Privileges", method: :user_privileges, url: nil},
+      status: {label: "Status", method: :status, url: nil}
+    }
     
-    user_row = {}
-    fields.each do |key,value|
-      user_row[value] =  self.send(key).to_s
+    row = {}
+    fields.each do |field|
+      row[field] =  {label: field_library[field][:label], data: self.send(field_library[field][:method]).to_s, url: field_library[field][:url]} 
     end
-
-    return user_row 
-
+    return row 
   end
 
   def role 
