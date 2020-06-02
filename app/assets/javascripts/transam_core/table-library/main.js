@@ -79,29 +79,29 @@ function updateHeader(id, selected){
   let cols = window[id].col_names;
   let col_ts = window[id].col_types;
   let col_ws = window[id].col_widths;
-  if($('#'+id + " thead").length == 0){
+  if($('#'+id + " thead").length < 1){
     let table = $("#" + id);
     let header = $('<tr>').addClass("header");
     let colgroup = $('<colgroup>');
     header.append($('<th>').addClass("header-item header-checkbox").append($('<label>').append($('<input>').attr('type', "checkbox").addClass("header-checkbox")).append($('<span>').addClass('fa-stack').append($('<i class="fad fa-square fa-stack-1x" aria-hidden="true"></i>')).append($('<i class="fas fa-check-square fa-stack-1x" aria-hidden="true"></i>')))));
     colgroup.append($('<col>').addClass('col-item').attr('style', 'width: 32px'));
-    for (let colIndex of selected){ //i=0;i<selected.length;i++) {
-        //let colIndex = cols.indexOf(selected[i].toString().trim());
+    for (let col of selected){ //i=0;i<selected.length;i++) {
+        //let col = cols.indexOf(selected[i].toString().trim());
         try {
             header.append(
-                $('<th>').addClass('header-item').attr("type", col_ts[colIndex])
-                    .append($('<div>').addClass('header-text').text(cols[colIndex].toString())));
+                $('<th>').addClass('header-item').attr("type", col_ts[col])
+                    .append($('<div>').addClass('header-text').text(cols[col].toString())));
             colgroup.append(
-                $('<col>').addClass('col-item').css("width", col_ws[colIndex]));
-            $("#" + id + " .table-row>:nth-child(" +  ($("[type|='" + col_ts[colIndex] + "']").eq(0).index()+1) + ")").addClass(col_ts[colIndex]);
+                $('<col>').addClass('col-item').css("width", col_ws[col]));
+            $("#" + id + " .table-row>:nth-child(" +  ($("[type|='" + col_ts[col] + "']").eq(0).index()+1) + ")").addClass(col_ts[col]);
 
         } catch (e) {
             header.append(
                 $('<th>').addClass('header-item').attr("type", "")
-                    .append($('<div>').addClass('header-text').text(cols[colIndex].toString())));    
+                    .append($('<div>').addClass('header-text').text(cols[col].toString())));    
         }
         
-        $("#" + id + " .table-row>:nth-child(" +  ($("[type|='" + col_ts[colIndex] + "']").eq(0).index()+1) + ")")
+        $("#" + id + " .table-row>:nth-child(" +  ($("[type|='" + col_ts[col] + "']").eq(0).index()+1) + ")")
 
 
 
@@ -109,6 +109,8 @@ function updateHeader(id, selected){
         // colgroup.append($('<col>').addClass('col-item').attr('style', 'width: '+ col_ws[i].toString()));
     }
     table.prepend($('<thead>').append(header)).prepend(colgroup);
+  } else {
+    
   }
 }
 
@@ -177,15 +179,19 @@ async function serverSide(id, url, curPage, curPageSize, params, search="") {
                 try {
                   r_columns = Object.keys(r['rows'][0]); 
                   window[id].col_selected = r_columns;
-                  updateHeader(id, r_columns, window[id].col_names, window[id].col_types);
+                  updateHeader(id, r_columns);
                 } catch (e) {
-                  updateHeader(id, window[id].col_selected, window[id].col_names, window[id].col_types);
+                  updateHeader(id, window[id].col_selected);
                 }
                 for(let [index,obj] of r['rows'].entries()) {
                     let row = {};
                     let columns = Object.keys(obj);
                     for(let col of columns) {
-                        row[col] = obj[col.trim()];
+                        if(!obj[col]["url"] === "") {
+                            row[col] = "<a href='/inventory/" + obj[col]["url"] + "/'>" + obj[col]["data"] + "</a>";
+                        } else {
+                            row[col] = obj[col]["data"];
+                        }
                     }
                     add_row_exec(id, row, (curPage * curPageSize)+index);
                 }
