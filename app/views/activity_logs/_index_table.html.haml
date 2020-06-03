@@ -34,7 +34,7 @@
     :javascript
       add_row('#{table_dom_id}',
       {
-        "0": "#{a.activity.truncate(64).html_safe}",
+        "0": '#{ link_to a.activity.truncate(64).html_safe, activity_log_path(a.id)}',
         "1": "#{a.item_type}",
         "2": "#{a.user}",
         "3": "#{format_as_date_time(a.activity_time)}",
