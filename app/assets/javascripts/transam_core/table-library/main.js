@@ -187,10 +187,10 @@ async function serverSide(id, url, curPage, curPageSize, params, search="") {
                     let row = {};
                     let columns = Object.keys(obj);
                     for(let col of columns) {
-                        if(!obj[col]["url"] === "") {
-                            row[col] = "<a href='/inventory/" + obj[col]["url"] + "/'>" + obj[col]["data"] + "</a>";
-                        } else {
+                        if(!obj[col]["url"] || 0 === obj[col]["url"].trim().length) {
                             row[col] = obj[col]["data"];
+                        } else {
+                            row[col] = "<a href='" + obj[col]["url"] + "'>" + obj[col]["data"] + "</a>";
                         }
                     }
                     add_row_exec(id, row, (curPage * curPageSize)+index);
