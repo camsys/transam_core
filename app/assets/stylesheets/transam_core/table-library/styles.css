@@ -414,3 +414,12 @@
 .checkmark-column .cell-text{
     text-align: center;
 }
+
+
+/*font-awesome checkmark cells had delayed background animations on hover */
+.checkmark-column {
+    -webkit-transition: none !important;
+    -o-transition: none !important;
+    -moz-transition: none !important;
+    transition: none !important;
+}
