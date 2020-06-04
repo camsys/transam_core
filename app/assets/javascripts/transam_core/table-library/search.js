@@ -28,6 +28,7 @@ function addSearchServer(id) {
         let value = $(this).val().toLowerCase();
 
         if(value === "") {
+            $('#' + id + " .table-row").remove();
             removeSearch(id);
             return;
         }
