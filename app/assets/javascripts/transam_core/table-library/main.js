@@ -61,7 +61,7 @@ async function initialize(id, selected, curPage, curPageSize, pageSizes, side, u
         // console.log("server");
         let total = await serverSide(id, url, curPage, curPageSize, params);
         pagination(id, curPage, curPageSize, pageSizes, total);
-        clear_row_queue();
+        clear_row_queue(id);
         updatePage(id, curPage, curPageSize, total, false, params);
         return;
     }
@@ -69,7 +69,7 @@ async function initialize(id, selected, curPage, curPageSize, pageSizes, side, u
     
     updateHeader(id, selected);
     pagination(id, curPage, curPageSize, pageSizes);
-    clear_row_queue();
+    clear_row_queue(id);
     updatePage_help(id, curPage, curPageSize);
 
 }
@@ -114,20 +114,20 @@ function updateHeader(id, selected){
   }
 }
 
-function clear_row_queue(){
-    if(typeof window.table_rows !== "undefined" && window.table_rows.length > 0)
-        for(let f of window.table_rows) {f();}
+function clear_row_queue(id){
+    if(typeof window[id].table_rows !== "undefined" && window[id].table_rows.length > 0)
+        for(let f of window[id].table_rows) {f();}
 }
 
 
 function add_row(id, vals, index) {
     try{
-        window.table_rows.push(function(){
+        window[id].table_rows.push(function(){
             add_row_exec(id, vals, index);
         });
     } catch (e) {
-        window.table_rows = [];
-        window.table_rows.push(function(){
+        window[id].table_rows = [];
+        window[id].table_rows.push(function(){
             add_row_exec(id, vals, index);
         });
     }
