@@ -88,20 +88,18 @@ function updateHeader(id, selected){
     for (let col of selected){ //i=0;i<selected.length;i++) {
         //let col = cols.indexOf(selected[i].toString().trim());
         try {
-            header.append(
-                $('<th>').addClass('header-item').attr("type", col_ts[col])
+            
+            header.append($('<th>').addClass('header-item').attr("type", col_ts[col])
                     .append($('<div>').addClass('header-text').text(cols[col].toString())));
+
             colgroup.append(
                 $('<col>').addClass('col-item').css("width", col_ws[col]));
             $("#" + id + " .table-row>:nth-child(" +  ($("[type|='" + col_ts[col] + "']").eq(0).index()+1) + ")").addClass(col_ts[col]);
 
         } catch (e) {
-            header.append(
-                $('<th>').addClass('header-item').attr("type", "")
-                    .append($('<div>').addClass('header-text').text(cols[col].toString())));    
+            header.append($('<th>').addClass('header-item').attr("type", "")
+                    .append($('<div>').addClass('header-text').text(cols[col].toString())));  
         }
-        
-        $("#" + id + " .table-row>:nth-child(" +  ($("[type|='" + col_ts[col] + "']").eq(0).index()+1) + ")")
 
 
 
@@ -150,7 +148,7 @@ function add_row_exec(id, vals, index) {
         
         for(let key of s_cols){
             // let i = col_names.indexOf(key.trim());
-            row.append($('<td>').addClass("row-item").addClass(col_types[key.trim()]).append($('<div>').addClass('cell-text').html(vals[key.trim()]["content"])));
+            row.append($('<td>').addClass("row-item").addClass(col_types[key.trim()]).attr("sort-order", vals[key.trim()]["sort"]).append($('<div>').addClass('cell-text').html(vals[key.trim()]["content"])));
             //$('#'+id+" .header-item:nth-child(" + col_types[i] + ")").attr("type")
         }
         // messy way of inserting each row at correct position
