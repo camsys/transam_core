@@ -10,8 +10,8 @@ class UsersController < OrganizationAwareController
   add_breadcrumb "Users", :users_path
 
   #-----------------------------------------------------------------------------
-  skip_before_action :get_organization_selections,      :only => [:authorizations]
-  before_action :set_viewable_organizations,      :only => [:authorizations]
+  skip_before_action :get_organization_selections,      :only => [:new, :authorizations]
+  before_action :set_viewable_organizations,      :only => [:new, :authorizations]
 
 
   before_action :set_user, :only => [:show, :edit, :settings, :update, :destroy, :change_password, :update_password, :profile_photo, :reset_password, :authorizations]
@@ -468,6 +468,7 @@ class UsersController < OrganizationAwareController
     render status: 200, json: current_user.table_preferences(table_code)
   end 
 
+  #TODO Update to new Format
   def update_table_preferences
     table_code = table_preference_params[:table_code]
     sort_params = table_preference_params[:sort]

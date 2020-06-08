@@ -3,94 +3,94 @@ module TablePreferences
   DEFAULT_TABLE_PREFERENCES = 
     {
       buses: { 
-          sort: [{column: :organization, order: :ascending}, {column: :asset_id, order: :ascending}]
+          sort: [{organization: :ascending}, {asset_id: :ascending}]
       },
       rail_cars: {
-        sort: [{column: :organization, order: :ascending}, {column: :asset_id, order: :ascending}]
+        sort: [{organization: :ascending}, {asset_id: :ascending}]
       },
       ferries: {
-        sort: [{column: :organization, order: :ascending}, {column: :asset_id, order: :ascending}]
+        sort: [{organization: :ascending}, {asset_id: :ascending}]
       },
       other_passenger_vehicles: {
-        sort: [{column: :organization, order: :ascending}, {column: :asset_id, order: :ascending}]
+        sort: [{organization: :ascending}, {asset_id: :ascending}]
       },
       service_vehicles: {
-        sort: [{column: :organization, order: :ascending}, {column: :asset_id, order: :ascending}]
+        sort: [{organization: :ascending}, {asset_id: :ascending}]
       },
       capital_equipment: {
-        sort: [{column: :organization, order: :ascending}, {column: :asset_id, order: :ascending}]
+        sort: [{organization: :ascending}, {asset_id: :ascending}]
       },
       administrative: {
-        sort: [{column: :organization, order: :ascending}, {column: :asset_id, order: :ascending}]
+        sort: [{organization: :ascending}, {asset_id: :ascending}]
       },
       maintenance: {
-        sort: [{column: :organization, order: :ascending}, {column: :asset_id, order: :ascending}]
+        sort: [{organization: :ascending}, {asset_id: :ascending}]
       },
       passenger: {
-        sort: [{column: :organization, order: :ascending}, {column: :asset_id, order: :ascending}]
+        sort: [{organization: :ascending}, {asset_id: :ascending}]
       },
       parking: {
-        sort: [{column: :organization, order: :ascending}, {column: :asset_id, order: :ascending}]
+        sort: [{organization: :ascending}, {asset_id: :ascending}]
       },
       track: {
-        sort: [{column: :organization, order: :ascending}, {column: :asset_id, order: :ascending}]
+        sort: [{organization: :ascending}, {asset_id: :ascending}]
       },
       guideway: {
-        sort: [{column: :organization, order: :ascending}, {column: :asset_id, order: :ascending}]
+        sort: [{organization: :ascending}, {asset_id: :ascending}]
       },
       power_signal: {
-        sort: [{column: :organization, order: :ascending}, {column: :asset_id, order: :ascending}]
+        sort: [{organization: :ascending}, {asset_id: :ascending}]
       },
       groups: {
-        sort: [{column: :name, order: :ascending}]
+        sort: [{name: :ascending}]
       },
       disposition: {
-        sort: [{column: :organization, order: :ascending}]
+        sort: [{organization: :ascending}]
       },
       transfer: {
-        sort: [{column: :organization, order: :ascending}]
+        sort: [{organization: :ascending}]
       },
       saved_queries: {
-        sort: [{column: :name, order: :ascending}]
+        sort: [{name: :ascending}]
       },
       bulk_updates: {
-        sort: [{column: :uploaded_at, order: :descending}]
+        sort: [{uploaded_at: :descending}]
       },
       projects: {
-        sort: [{column: :year, order: :ascending}, {column: :organization, order: :ascending},  {column: :project_id, order: :ascending}]
+        sort: [{year: :ascending}, {organization: :ascending},  {project_id: :ascending}]
       },
       project_phase: {
-        sort: [{column: :year, order: :ascending}, {column: :organization, order: :ascending},  {column: :project_id, order: :ascending}]
+        sort: [{year: :ascending}, {organization: :ascending},  {project_id: :ascending}]
       },
       programs: {
-        sort: [{column: :name, order: :ascending}]
+        sort: [{name: :ascending}]
       },
       templates: {
-        sort: [{column: :name, order: :ascending}]
+        sort: [{name: :ascending}]
       },
       buckets: {
-        sort: [{column: :year, order: :ascending}, {column: :name, order: :ascending}, {column: :owner, order: :ascending}]
+        sort: [{year: :ascending}, {name: :ascending}, {owner: :ascending}]
       },
       grants: {
-        sort: [{column: :owner, order: :ascending}, {column: :year, order: :descending}]
+        sort: [{owner: :ascending}, {year: :descending}]
       },
       bond_requests: {
-        sort: [{column: :organization, order: :ascending}, {column: :created, order: :descending}]
+        sort: [{organization: :ascending}, {created: :descending}]
       },
       import_export: {
-        sort: [{column: :created_at, order: :descending}, {column: :type, order: :ascending}]
+        sort: [{created_at: :descending}, {type: :ascending}]
       },
       my_funds: {
-        sort: [{column: :year, order: :ascending}, {column: :name, order: :ascending}, {column: :owner, order: :ascending}]
+        sort: [{year: :ascending}, {name: :ascending}, {owner: :ascending}]
       },
       status: {sort: []},
       audit: {
-        sort: [{column: :organization, order: :ascending}, {column: :audit_type, order: :ascending}, {column: :asset_id, order: :ascending}]
+        sort: [{organization: :ascending}, {audit_type: :ascending}, {asset_id: :ascending}]
       },
       user_login_report: {sort: []},
       issues_report: {sort: []},
       performance_restrictions: {
-        sort: [{column: :active_start, order: :descending}]
+        sort: [{active_start: :descending}]
       },
       asset_condition_report: [],
       asset_age_report: [],
@@ -103,52 +103,52 @@ module TablePreferences
       capital_plan_report: [],
       bond_request_report: [],
       quarterly_reports: {
-        sort: [{column: :fy_q, order: :descending}, {column: :operator, order: :ascending}]
+        sort: [{fy_q: :descending}, {operator: :ascending}]
       },
       opt5b_reports: {
-        sort: [{column: :fy_q, order: :descending}, {column: :operator, order: :ascending}]
+        sort: [{fy_q: :descending}, {operator: :ascending}]
       },
       ntd_revenue_vehicles: {
-        sort: [{column: :organization, order: :ascending}, {column: :year_manufactured, order: :descending}]
+        sort: [{organization: :ascending}, {year_manufactured: :descending}]
       },
       ntd_service_vehicles: {
-        sort: [{column: :organization, order: :ascending}, {column: :year_manufactured, order: :descending}]
+        sort: [{organization: :ascending}, {year_manufactured: :descending}]
       },
       ntd_manage_fleets: {
-        sort: [{column: :organization, order: :ascending}, {column: :asset_id, order: :ascending}]
+        sort: [{organization: :ascending}, {asset_id: :ascending}]
       },
       ntd_asset_reports: {
-        sort: [{column: :organization, order: :ascending}, {column: :ntd_reporting_year, order: :descending}]
+        sort: [{organization: :ascending}, {ntd_reporting_year: :descending}]
       },
       tam_service_life_summary_report_vehicles: [],
       tam_service_life_summary_report_facilities: [],
       tam_service_life_summary_report_track: [],
       map_overlay_service: {
-        sort: [{column: :name, order: :ascending}]
+        sort: [{name: :ascending}]
       },
       message_templates: {
-        sort: [{column: :id, order: :ascending}]
+        sort: [{id: :ascending}]
       },
       message_history: {
-        sort: [{column: :entry_date_and_time, order: :descending}]
+        sort: [{entry_date_and_time: :descending}]
       },
       audits: {
-        sort: [{column: :name, order: :ascending}, {column: :description, order: :ascending}, {column: :last_run, order: :descending}]
+        sort: [{name: :ascending}, {description: :ascending}, {last_run: :descending}]
       },
       organizations: {
-        sort: [{column: :short_name, order: :ascending}]
+        sort: [{short_name: :ascending}]
       },
       users: {
-        sort: [{column: :last, order: :ascending}, {column: :primary_organization, order: :ascending}]
+        sort: [{last: :ascending}, {primary_organization: :ascending}]
       },
       activity_log: {
-        sort: [{column: :date_time, order: :descending}]
+        sort: [{date_time: :descending}]
       },
       notices: {
-        sort: [{column: :visible, order: :ascending}, {column: :display_until, order: :descending}]
+        sort: [{visible: :ascending}, {display_until: :descending}]
       },
       online_users: {
-        sort: [{column: :user, order: :ascending}]
+        sort: [{user: :ascending}]
       }
     }
 

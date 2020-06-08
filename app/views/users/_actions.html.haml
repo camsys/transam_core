@@ -43,7 +43,7 @@
             = " Update #{@user.first_name}'s profile"
           - else
             = " Update my profile"
-    - if (@user != current_user && (can? :assign, @user.roles.roles.last))
+    - if (@user != current_user && (can? :authorizations, @user))
       %li
         = link_to authorizations_user_path(@user) do
           %i.fa.fa-lock.fa-fw
