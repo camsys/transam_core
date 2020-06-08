@@ -173,7 +173,7 @@ function add_row_exec(id, vals, index) {
         
         for(let key of s_cols){
             // let i = col_names.indexOf(key.trim());
-            row.append($('<td>').addClass("row-item").addClass(col_types[key.trim()]).append($('<div>').addClass('cell-text').html(vals[key.trim()]["content"])));
+            row.append($('<td>').addClass("row-item").addClass(col_types[key.trim()]).append($('<div>').addClass('cell-text').html(vals[key.trim()])));
             //$('#'+id+" .header-item:nth-child(" + col_types[i] + ")").attr("type")
         }
         // messy way of inserting each row at correct position
