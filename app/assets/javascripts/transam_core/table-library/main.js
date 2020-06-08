@@ -1,8 +1,9 @@
 $("table[use]").ready(()=>{
 
-    $("table[use]").each((i, value)=>{
+    $("table[use]").each(async function(i, value){
         if($(value).attr('use') == 'true'){
             const id = $(value).attr('id');
+            const table_code = $(value).data('tableCode');
             let side = $(value).data('side');
             let curPage = $(value).data('currentPage');
             let curPageSize = $(value).data('currentPageSize');
@@ -24,9 +25,25 @@ $("table[use]").ready(()=>{
             window[id].col_selected = selected_columns;
             let search = $(value).data('search');
             let url = $(value).data('url');
+            let sort = $(value).data('sort');
+            let sort_params = {};
+            await $.ajax({
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                data:{"table_code":table_code},
+                url: "/users/table_preferences?table_code="+table_code,
+                success: function(data){
+                    sort_params = data["sort"].reduce((obj,item)=>{
+                        key=Object.keys(item)[0];
+                        obj[key]=item[key];return obj;
+                    }, {});
+                },
+                dataType: "json"
+            });
+            window[id].sort_params = sort_params;
             let params = $(value).data('params');
 
-            initialize(id, selected_columns, curPage, curPageSize, pageSizes, side, url, params);
+            initialize(id, selected_columns, curPage, curPageSize, pageSizes, side, url, params, sort);
 
             if(search == 'client') {
                 addSearch(id);
@@ -55,7 +72,7 @@ $("table[use]").ready(()=>{
 });
 
 
-async function initialize(id, selected, curPage, curPageSize, pageSizes, side, url, params) {
+async function initialize(id, selected, curPage, curPageSize, pageSizes, side, url, params, sort) {
     $('#'+id).append($("<tbody>"));
     if(side === 'server') {
         // console.log("server");
@@ -67,7 +84,7 @@ async function initialize(id, selected, curPage, curPageSize, pageSizes, side, u
     }
     // console.log("client");
     
-    updateHeader(id, selected);
+    updateHeader(id, selected, sort);
     pagination(id, curPage, curPageSize, pageSizes);
     clear_row_queue(id);
     updatePage_help(id, curPage, curPageSize);
@@ -75,21 +92,23 @@ async function initialize(id, selected, curPage, curPageSize, pageSizes, side, u
 }
 
 
-function updateHeader(id, selected){
+function updateHeader(id, selected, sort){
   let cols = window[id].col_names;
   let col_ts = window[id].col_types;
   let col_ws = window[id].col_widths;
+  let sort_params = window[id].sort_params;
   if($('#'+id + " thead").length < 1){
     let table = $("#" + id);
     let header = $('<tr>').addClass("header");
     let colgroup = $('<colgroup>');
     header.append($('<th>').addClass("header-item header-checkbox").append($('<label>').append($('<input>').attr('type', "checkbox").addClass("header-checkbox")).append($('<span>').addClass('fa-stack').append($('<i class="fad fa-square fa-stack-1x" aria-hidden="true"></i>')).append($('<i class="fas fa-check-square fa-stack-1x" aria-hidden="true"></i>')))));
     colgroup.append($('<col>').addClass('col-item').attr('style', 'width: 32px'));
+    // let sort_select = $('<div>');
     for (let col of selected){ //i=0;i<selected.length;i++) {
         //let col = cols.indexOf(selected[i].toString().trim());
         try {
             
-            header.append($('<th>').addClass('header-item').attr("type", col_ts[col])
+            header.append($('<th>').addClass('header-item').attr("type", col_ts[col]).attr("order", sort_params[col])
                     .append($('<div>').addClass('header-text').text(cols[col].toString())));
 
             colgroup.append(
@@ -100,6 +119,11 @@ function updateHeader(id, selected){
             header.append($('<th>').addClass('header-item').attr("type", "")
                     .append($('<div>').addClass('header-text').text(cols[col].toString())));  
         }
+        if (sort === "client") {
+            // sort_select.append($('<form id='+col+'_select>').text(cols[col].toString())
+            //     .append($('<input id="'+col+'_asc">').attr("type", "radio").attr("form", col+'_select').attr("name", col+'_select')).append($('<label>').attr("for",col+"_asc").text("Ascending"))
+            //     .append($('<input id="'+col+'_desc">').attr("type", "radio").attr("form", col+'_select').attr("name", col+'_select')).append($('<label>').attr("for",col+"_desc").text("Descending")));
+        }
 
 
 
@@ -107,6 +131,7 @@ function updateHeader(id, selected){
         // colgroup.append($('<col>').addClass('col-item').attr('style', 'width: '+ col_ws[i].toString()));
     }
     table.prepend($('<thead>').append(header)).prepend(colgroup);
+    // table.parent().append(sort_select);
   } else {
     
   }
@@ -148,7 +173,7 @@ function add_row_exec(id, vals, index) {
         
         for(let key of s_cols){
             // let i = col_names.indexOf(key.trim());
-            row.append($('<td>').addClass("row-item").addClass(col_types[key.trim()]).attr("sort-order", vals[key.trim()]["sort"]).append($('<div>').addClass('cell-text').html(vals[key.trim()]["content"])));
+            row.append($('<td>').addClass("row-item").addClass(col_types[key.trim()]).append($('<div>').addClass('cell-text').html(vals[key.trim()]["content"])));
             //$('#'+id+" .header-item:nth-child(" + col_types[i] + ")").attr("type")
         }
         // messy way of inserting each row at correct position
@@ -177,9 +202,9 @@ async function serverSide(id, url, curPage, curPageSize, params, search="") {
                 try {
                   r_columns = Object.keys(r['rows'][0]); 
                   window[id].col_selected = r_columns;
-                  updateHeader(id, r_columns);
+                  updateHeader(id, r_columns, "server");
                 } catch (e) {
-                  updateHeader(id, window[id].col_selected);
+                  updateHeader(id, window[id].col_selected, "server");
                 }
                 for(let [index,obj] of r['rows'].entries()) {
                     let row = {};
