@@ -468,6 +468,7 @@ class UsersController < OrganizationAwareController
     render status: 200, json: current_user.table_preferences(table_code)
   end 
 
+  #TODO Update to new Format
   def update_table_preferences
     table_code = table_preference_params[:table_code]
     sort_params = table_preference_params[:sort]
