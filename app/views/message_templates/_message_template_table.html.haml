@@ -13,6 +13,7 @@
   %table.elbat{:id => table_dom_id,
     :use => 'true',
     :data => {:use => 'true',
+      :table_code => 'message_templates',
       :side => 'client',
       :current_page => '0',
       :current_page_size => '10',
@@ -53,10 +54,7 @@
       // TEMP UNTIL WE DO THIS FOR REAL
       // TODO: PLEASE DON'T LET THIS GO TO PRODUCTION
       // HACKY HACK IS HACKY
-      $(".row-item").eq(#{index}).ready(function (){
-        let cell = $("##{table_dom_id} .action-column").eq(#{index}).find(".cell-text");
-        $(".actions").eq(#{index}).detach().appendTo(cell);
-      });
+      add_aux_queue('#{table_dom_id}',()=>$(".actions").eq(#{index}).detach().appendTo($("##{table_dom_id} .action-column").eq(#{index}).find(".cell-text")));
 
 
 -# %legend{style: 'border-bottom: none; margin-bottom: 0px;'} Message Templates

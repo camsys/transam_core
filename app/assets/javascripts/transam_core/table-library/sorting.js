@@ -5,7 +5,15 @@ $(document).ready(function(){
         var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index(), $(this).attr("order")));
         $(this).attr("order", $(this).attr("order") == "ascending" ? "descending" : "ascending");
         //todo: update the sort_params object
-        for (var i = 0; i < rows.length; i++){table.append(rows[i]);}
+        for (var i = 0; i < rows.length; i++){
+            $(rows[i]).attr("index", i);
+            table.append(rows[i]);
+        }
+        if ($(table).find(".search-result").length > 0){
+            updatePage_help(table.attr('id'), table.data("currentPage"), table.data('currentPageSize'), true);
+        } else {
+            updatePage_help(table.attr('id'), table.data("currentPage"), table.data('currentPageSize'));
+        }
     })
 )});
 
@@ -15,6 +23,8 @@ const comparer = (idx, order) => (a, b) => ((v1, v2) => (order == "ascending") ?
                     (getCellValue(a, idx), getCellValue(b, idx));
 
 
-function getCellValue(row, index){
-    return $(row).children('td').eq(index).text();
+const getCellValue = (row, index) => { 
+    let td = $(row).children('td').eq(index);
+    if($(td).attr("class").includes("checkmark-column")) { return $(td).children().eq(0).children().eq(0).css("visibility")=="hidden"; }; // needs a lot of work but gets the job done
+    return td.text(); 
 }

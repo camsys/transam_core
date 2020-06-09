@@ -424,3 +424,11 @@
     -moz-transition: none !important;
     transition: none !important;
 }
+
+.actions {
+    display: none;
+}
+
+.action-column .actions {
+    display: inline-block;
+}

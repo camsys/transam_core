@@ -198,7 +198,7 @@ function updatePageSelect(elem, curPage, curPageSize, total, clientSearch) {
         $(".page-select-arrow-right,.page-select-arrow-right-full").css({"opacity": 1, "pointer-events": "auto"});
     }
 
-    if(elem.find('.page-select-item').length > 3) {
+    if(elem.find('.page-select-item').length > 5) {
         elem.children().hide();
         // elem.find($(':nth-child(1)')).show();
         // elem.find($(':nth-child(' + (last+1) + ')')).show();

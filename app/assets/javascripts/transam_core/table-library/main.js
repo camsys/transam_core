@@ -8,13 +8,13 @@ $("table[use]").ready(()=>{
             let curPage = $(value).data('currentPage');
             let curPageSize = $(value).data('currentPageSize');
             let pageSizes = $(value).data('pageSizes').split(',');
-            let columns = $(value).data('columns');  //.split(/\r?\n/);
+            let columns = $(value).data('columns');
             let selected_columns = $(value).data('selectedColumns').split(',');
             let col_names = {};
             let col_types = {};
             let col_widths = {};
             for(let col of Object.keys(columns)){
-                let x = columns[col]; //.split(',');
+                let x = columns[col];
                 col_names[col] = x["name"];
                 col_types[col] = x["type"];
                 col_widths[col] = x["width"];
@@ -75,19 +75,18 @@ $("table[use]").ready(()=>{
 async function initialize(id, selected, curPage, curPageSize, pageSizes, side, url, params, sort) {
     $('#'+id).append($("<tbody>"));
     if(side === 'server') {
-        // console.log("server");
         let total = await serverSide(id, url, curPage, curPageSize, params);
         pagination(id, curPage, curPageSize, pageSizes, total);
         clear_row_queue(id);
         updatePage(id, curPage, curPageSize, total, false, params);
         return;
     }
-    // console.log("client");
     
     updateHeader(id, selected, sort);
     pagination(id, curPage, curPageSize, pageSizes);
     clear_row_queue(id);
     updatePage_help(id, curPage, curPageSize);
+    clear_aux_queue(id);
 
 }
 
@@ -104,8 +103,7 @@ function updateHeader(id, selected, sort){
     header.append($('<th>').addClass("header-item header-checkbox").append($('<label>').append($('<input>').attr('type', "checkbox").addClass("header-checkbox")).append($('<span>').addClass('fa-stack').append($('<i class="fad fa-square fa-stack-1x" aria-hidden="true"></i>')).append($('<i class="fas fa-check-square fa-stack-1x" aria-hidden="true"></i>')))));
     colgroup.append($('<col>').addClass('col-item').attr('style', 'width: 32px'));
     // let sort_select = $('<div>');
-    for (let col of selected){ //i=0;i<selected.length;i++) {
-        //let col = cols.indexOf(selected[i].toString().trim());
+    for (let col of selected){
         try {
             
             header.append($('<th>').addClass('header-item').attr("type", col_ts[col]).attr("order", sort_params[col])
@@ -186,6 +184,25 @@ function add_row_exec(id, vals, index) {
 }
 
 
+async function add_aux_queue(id, func){
+    try{
+        window[id].aux_queue.push(function(){
+            func();
+        });
+    } catch (e) {
+        window[id].aux_queue = [];
+        window[id].aux_queue.push(function(){
+            func();
+        });
+    }
+}
+
+function clear_aux_queue(id){
+    if(typeof window[id].aux_queue !== "undefined" && window[id].aux_queue.length > 0)
+        for(let f of window[id].aux_queue) {f();}
+}
+
+
 async function serverSide(id, url, curPage, curPageSize, params, search="") {
         let response = {};
         let data = {'page': curPage, 'page_size': curPageSize, 'search': search};
@@ -198,7 +215,6 @@ async function serverSide(id, url, curPage, curPageSize, params, search="") {
             dataType: "json",
             success: function (r) {
                 response = r;
-                // console.log(r);
                 try {
                   r_columns = Object.keys(r['rows'][0]); 
                   window[id].col_selected = r_columns;
