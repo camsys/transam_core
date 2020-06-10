@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    $(document).on("click",".header-item",(function(){
+    $(document).on("click",".library-table table[data-sort='client'] .header-item",(function(){
         var table = $(this).parents('.elbat').eq(0);
         $(this).siblings().attr("order", "");
         var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index(), $(this).attr("order")));

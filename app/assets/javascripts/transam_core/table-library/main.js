@@ -33,10 +33,12 @@ $("table[use]").ready(()=>{
                 data:{"table_code":table_code},
                 url: "/users/table_preferences?table_code="+table_code,
                 success: function(data){
+                  if(data) {
                     sort_params = data["sort"].reduce((obj,item)=>{
                         key=Object.keys(item)[0];
                         obj[key]=item[key];return obj;
                     }, {});
+                  }
                 },
                 dataType: "json"
             });
