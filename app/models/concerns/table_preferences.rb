@@ -20,17 +20,17 @@ module TablePreferences
       capital_equipment: {
         sort: [{organization: :ascending}, {asset_id: :ascending}]
       },
-      administrative: {
-        sort: [{organization: :ascending}, {asset_id: :ascending}]
+      admin_facility: {
+        sort: [{org_name: :ascending}, {asset_id: :ascending}]
       },
-      maintenance: {
-        sort: [{organization: :ascending}, {asset_id: :ascending}]
+      maintenance_facility: {
+        sort: [{org_name: :ascending}, {asset_id: :ascending}]
       },
-      passenger: {
-        sort: [{organization: :ascending}, {asset_id: :ascending}]
+      passenger_facility: {
+        sort: [{org_name: :ascending}, {asset_id: :ascending}]
       },
-      parking: {
-        sort: [{organization: :ascending}, {asset_id: :ascending}]
+      parking_facility: {
+        sort: [{org_name: :ascending}, {asset_id: :ascending}]
       },
       track: {
         sort: [{organization: :ascending}, {asset_id: :ascending}]
