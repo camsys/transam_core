@@ -425,10 +425,10 @@
     transition: none !important;
 }
 
-.actions {
+.actions, .custom-drilldown-content {
     display: none;
 }
 
-.action-column .actions {
-    display: inline-block;
+.action-column .actions, .cell-text .custom-drilldown-content {
+    display: inline-flex;
 }
