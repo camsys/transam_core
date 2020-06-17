@@ -34,7 +34,7 @@ RSpec.describe UsersController, :type => :controller do
       parsed_response = JSON.parse(response.body)
       expect(parsed_response["count"]).to eq(User.count)
       expect(parsed_response["rows"].count).to eq(10)
-      expect(parsed_response["rows"].first["Last"]).to eq(User.first.last_name)
+      expect(parsed_response["rows"].first["last_name"]["data"]).to eq(User.first.last_name)
     end
 
     it 'returns users associated with the last organization' do
