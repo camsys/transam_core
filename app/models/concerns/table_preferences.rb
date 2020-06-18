@@ -216,7 +216,24 @@ module TablePreferences
         number_of_tracks: 'num_tracks',
         location: 'relative_locations.name',
         segment_type: 'infrastructure_segment_types.name'
+      },
+    power_signal:
+      { 
+        asset_id: 'asset_tag',
+        org_name: 'organizations.name',
+        description: 'description',
+        from_line: 'from_line',
+        to_line: 'to_line',
+        from_segment: 'from_segment',
+        to_segment: 'to_segment',
+        location: 'relative_location',
+        subtype: 'asset_subtypes.name',
+        main_line: 'infrastructure_divisions.name',
+        branch: 'infrastructure_subdivisions.name',
+        location: 'relative_locations.name',
+        segment_type: 'infrastructure_segment_types.name'
       }
+
   }
 
 end
