@@ -165,8 +165,18 @@ module TablePreferences
     sorting = table_preferences(table_code)[:sort]
     column = sorting.first 
     key = column.keys.first 
-    order_string = (column[key] == :descending) ? "ASC" : "DESC"
+    order_string = (column[key] == :descending) ? "DESC" : "ASC"
     return "#{SORT_COLUMN[table_code][key]} #{order_string}"
+  end
+
+  def update_table_prefs table_code, column, order 
+    table_prefs = eval(self.table_preferences || "{}")
+    sort_params = {}
+    asc_desc = (order.to_s.downcase == "descending") ? :descending : :ascending
+    sort_params[column.to_sym] = asc_desc 
+    sort_params = {sort: [sort_params]}
+    table_prefs[table_code.to_sym] = sort_params
+    self.update(table_prefs: table_prefs)
   end
 
   private 
