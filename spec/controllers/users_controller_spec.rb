@@ -58,22 +58,24 @@ RSpec.describe UsersController, :type => :controller do
 
   describe 'PUT Table Preferences' do 
     it 'returns a users preferred tables' do 
-      params = {
-                "table_code": "users",
-                "sort":[
-                    {"column": "first", "order": "descending"},
-                    {"column": "last", "order": "descending"}
-                  ]
+      #TODO: Use strong params here. Don't let the hash key names be arbitrary.
+      params = {"table_preferences": 
+                  {
+                    "table_code": "users",
+                    "sort":[
+                      {"first_name": "descending"},
+                      {"last_name": "descending"}
+                    ]
+                  }
                 }
+
       put :update_table_preferences, params: params
       expect(response).to be_success
       parsed_response = JSON.parse(response.body)
 
       get :table_preferences, params: {table_code: "users"}
       parsed_response = JSON.parse(response.body)
-      expect(parsed_response["sort"].first["column"].to_s).to eq("first")
-      expect(parsed_response["sort"].first["order"].to_s).to eq("descending")
-      expect(parsed_response["sort"].last["column"].to_s).to eq("last")
+      expect(parsed_response["sort"].first["first_name"].to_s).to eq("descending")
 
       get :table_preferences, params: {table_code: "buses"}
       parsed_response = JSON.parse(response.body)
