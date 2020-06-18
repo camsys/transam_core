@@ -109,7 +109,9 @@ function updateHeader(id, selected, sort){
         try {
             
             header.append($('<th>').addClass('header-item').attr("type", col_ts[col]).attr("order", sort_params[col])
-                    .append($('<div>').addClass('header-text').text(cols[col].toString())));
+                    .append($('<div>').addClass('header-content')
+                      .append($('<div>').addClass('header-text').text(cols[col].toString()))
+                      .append($('<div>').addClass('header-icons'))));
 
             colgroup.append(
                 $('<col>').addClass('col-item').css("width", col_ws[col]));
@@ -117,7 +119,9 @@ function updateHeader(id, selected, sort){
 
         } catch (e) {
             header.append($('<th>').addClass('header-item').attr("type", "")
-                    .append($('<div>').addClass('header-text').text(cols[col].toString())));  
+                    .append($('<div>').addClass('header-content').text(cols[col].toString())
+                      .append($('<div>').addClass('header-text').text(cols[col].toString()))
+                      .append($('<div>').addClass('header-icons'))));  
         }
         if (sort === "client") {
             // sort_select.append($('<form id='+col+'_select>').text(cols[col].toString())
@@ -127,14 +131,38 @@ function updateHeader(id, selected, sort){
 
 
 
-        // header.append($('<th>').addClass('header-item').attr('col_type', col_ts[i].toString()).append($('<div>').addClass('header-text').text(cols[i].toString())));
+        // header.append($('<th>').addClass('header-item').attr('col_type', col_ts[i].toString()).append($('<div>').addClass('header-content').text(cols[i].toString())));
         // colgroup.append($('<col>').addClass('col-item').attr('style', 'width: '+ col_ws[i].toString()));
     }
+    applyIcons(header);
     table.prepend($('<thead>').append(header)).prepend(colgroup);
     // table.parent().append(sort_select);
   } else {
     
   }
+}
+
+function applyIcons(header) {
+    $(header).children().each((i,cell)=>{
+        if ($(cell).attr("order") === "ascending") {
+          $(cell).removeClass("sorted-desc").addClass("sorted sorted-asc");
+          $(cell).find(".header-icons").empty().append($('<span>').addClass("sort icon")
+                                  .append($('<i>').addClass("fad fa-sort-amount-down-alt sorted asc"))
+                                  .append($('<i>').addClass("fad fa-sort-amount-up sorted desc")));
+        } else if ($(cell).attr("order") === "descending") {
+          $(cell).removeClass("sorted-asc").addClass("sorted sorted-desc");
+          $(cell).find(".header-icons").empty().append($('<span>').addClass("sort icon")
+                                  .append($('<i>').addClass("fad fa-sort-amount-down-alt sorted asc"))
+                                  .append($('<i>').addClass("fad fa-sort-amount-up sorted desc")));
+        } else {
+          $(cell).removeClass("sorted sorted-desc sorted-asc").addClass("unsorted");
+          $(cell).find(".header-icons").empty().append($('<span>').addClass("sort icon")
+                                  .append($('<i>').addClass("fas fa-long-arrow-alt-up"))
+                                  .append($('<i>').addClass("fas fa-long-arrow-alt-down")));
+        }
+    });
+
+
 }
 
 function clear_row_queue(id){
