@@ -2,19 +2,19 @@ module TablePreferences
 
   DEFAULT_TABLE_PREFERENCES = 
     {
-      buses: { 
+      bus: { 
           sort: [{org_name: :ascending}, {asset_id: :ascending}]
       },
-      rail_cars: {
+      rail_car: {
         sort: [{org_name: :ascending}, {asset_id: :ascending}]
       },
-      ferries: {
+      ferry: {
         sort: [{org_name: :ascending}, {asset_id: :ascending}]
       },
-      other_passenger_vehicles: {
+      other_passenger_vehicle: {
         sort: [{org_name: :ascending}, {asset_id: :ascending}]
       },
-      service_vehicles: {
+      service_vehicle: {
         sort: [{org_name: :ascending}, {asset_id: :ascending}]
       },
       capital_equipment: {
@@ -251,6 +251,84 @@ module TablePreferences
         vin: 'serial_number',
         manufacturer: 'manufacturers.name',
         model: 'manufacturer_models.name',
+        year: 'manufacture_year',
+        type: 'fta_equipment_types.name',
+        subtype: 'asset_subtypes.name'
+      },
+    bus:
+      { 
+        asset_id: 'asset_tag',
+        org_name: 'organizations.name',
+        vin: 'serial_number',
+        manufacturer: 'manufacturers.name',
+        model: 'manufacturer_models.name',
+        year: 'manufacture_year',
+        type: 'fta_equipment_types.name',
+        subtype: 'asset_subtypes.name'
+      },
+    rail_car: { 
+        asset_id: 'asset_tag',
+        org_name: 'organizations.name',
+        vin: 'serial_number',
+        manufacturer: 'manufacturers.name',
+        model: 'manufacturer_models.name',
+        year: 'manufacture_year',
+        type: 'fta_equipment_types.name',
+        subtype: 'asset_subtypes.name'
+      },
+    ferry: { 
+        asset_id: 'asset_tag',
+        org_name: 'organizations.name',
+        vin: 'serial_number',
+        manufacturer: 'manufacturers.name',
+        model: 'manufacturer_models.name',
+        year: 'manufacture_year',
+        type: 'fta_equipment_types.name',
+        subtype: 'asset_subtypes.name'
+      },
+    other_passenger_vehicle: 
+      { 
+        asset_id: 'asset_tag',
+        org_name: 'organizations.name',
+        vin: 'serial_number',
+        manufacturer: 'manufacturers.name',
+        model: 'manufacturer_models.name',
+        year: 'manufacture_year',
+        type: 'fta_equipment_types.name',
+        subtype: 'asset_subtypes.name'
+      },
+    passenger_facility:
+      { 
+        asset_id: 'asset_tag',
+        org_name: 'organizations.name',
+        facility_name: 'facility_name',
+        year: 'manufacture_year',
+        type: 'fta_equipment_types.name',
+        subtype: 'asset_subtypes.name'
+      },
+    admin_facility:
+      { 
+        asset_id: 'asset_tag',
+        org_name: 'organizations.name',
+        facility_name: 'facility_name',
+        year: 'manufacture_year',
+        type: 'fta_equipment_types.name',
+        subtype: 'asset_subtypes.name'
+      },
+    parking_facility:
+      { 
+        asset_id: 'asset_tag',
+        org_name: 'organizations.name',
+        facility_name: 'facility_name',
+        year: 'manufacture_year',
+        type: 'fta_equipment_types.name',
+        subtype: 'asset_subtypes.name'
+      },
+    maintenance_facility:
+      { 
+        asset_id: 'asset_tag',
+        org_name: 'organizations.name',
+        facility_name: 'facility_name',
         year: 'manufacture_year',
         type: 'fta_equipment_types.name',
         subtype: 'asset_subtypes.name'
