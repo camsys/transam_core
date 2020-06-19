@@ -158,35 +158,59 @@ class UsersController < OrganizationAwareController
   # TODO: MOST of this will be moved to a shareable module
   #-----------------------------------------------------------------------------
   def table
-    count = User.all.count 
+
+    ### Get the default set of users ###
+    users = join_builder
+
+    ### Pluck out the Params ###
     page = (table_params[:page] || 0).to_i
-    page_size = (table_params[:page_size] || count).to_i
+    page_size = (table_params[:page_size] || users.count).to_i
     search = (table_params[:search])
     offset = page*page_size
+    sort_column = params[:sort_column]
+    sort_order = params[:sort_order]
 
-    query = nil 
+    ### Update SORT Preferences ###
+    if sort_column
+      current_user.update_table_prefs(:users, sort_column, sort_order)
+    end
+
+    ### Search ###
     if search
       searchable_columns = [:first_name, :last_name, :phone, :phone_ext, :email, :title] 
       search_string = "%#{search}%"
-      
-      org_query = Organization.arel_table[:name].matches(search_string).or(Organization.arel_table[:short_name].matches(search_string))
-      query = (query_builder(searchable_columns, search_string)).or(org_query).or(privilege_query search_string)
-      
-      # Get users who match search on role
-      users_on_role = (role_query search_string).pluck(:id)
-      # Search on every column (except role)
-      all_user_table = User.joins(:organization).joins(:roles).where(query).pluck(:id)
-      # Take the union of the above searches
-      users = User.where(id: [users_on_role + all_user_table].uniq)
-      count = users.count 
-      user_table = users.offset(offset).limit(page_size).map{ |u| u.rowify }
-    else 
-      user_table = User.all.offset(offset).limit(page_size).map{ |u| u.rowify }
-    end 
-    render status: 200, json: {count: count, rows: user_table}
+      query = query_builder(searchable_columns, search_string)
+      users = users.where(query)
+      ####### Get users who match search on role
+      ##users_on_role = (role_query search_string).pluck(:id)
+      ######## Search on every column (except role)
+      ##all_user_table = User.joins(:organization).joins(:roles).where(query).pluck(:id)
+      ######### Take the union of the above searches
+      ##users = User.where(id: [users_on_role + all_user_table].uniq)
+    end
+
+    ### SORT ###
+    users = users.order(current_user.table_sort_string :users)
+
+    ### Rowify Everything ###      
+    user_table = users.offset(offset).limit(page_size).map{ |u| u.rowify }
+    render status: 200, json: {count: users.count, rows: user_table}
   end
 
-  def query_builder atts, search_string
+  def join_builder
+    User.unscoped.joins(:organization)
+      #.joins(:roles)
+      #.joins('left join max_user_roles_and_labels on users.id=max_user_roles_and_labels.user_id')
+  end
+
+  def query_builder searchable_columns, search_string
+    user_query_builder(searchable_columns, search_string)
+      .or(org_query search_string)
+      #.or(privilege_query search_string)
+      #.or(role_query search_string)
+  end
+
+  def user_query_builder atts, search_string
     if atts.count <= 1
       return User.joins(:organziation).arel_table[atts.pop].matches(search_string)
     else
@@ -199,9 +223,14 @@ class UsersController < OrganizationAwareController
     User.joins('left join max_user_roles_and_labels on users.id=max_user_roles_and_labels.user_id').where(q)
   end
 
+  def org_query search_string 
+    Organization.arel_table[:name].matches(search_string).or(Organization.arel_table[:short_name].matches(search_string))
+  end
+
   def privilege_query search_string 
     Role.where(privilege: true).arel_table[:label].matches(search_string)
   end
+
 
   #-----------------------------------------------------------------------------
   # Show the list of current sessions. Only available for admin users
@@ -513,7 +542,7 @@ class UsersController < OrganizationAwareController
   end
 
   def table_params
-    params.permit(:page, :page_size, :search)
+    params.permit(:page, :page_size, :search, :sort_column, :sort_order)
   end
 
   def table_preference_params

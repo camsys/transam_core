@@ -139,7 +139,7 @@ module TablePreferences
         sort: [{short_name: :ascending}]
       },
       users: {
-        sort: [{last: :ascending}, {primary_org_name: :ascending}]
+        sort: [{last_name: :ascending}, {organization: :ascending}]
       },
       activity_log: {
         sort: [{date_time: :descending}]
@@ -334,6 +334,16 @@ module TablePreferences
         year: 'manufacture_year',
         type: 'fta_equipment_types.name',
         subtype: 'asset_subtypes.name'
+      },
+    users:
+      { 
+        last_name: "last_name",
+        first_name: "first_name",
+        organization: "organizations.short_name",
+        email: "email",
+        phone: "phone",
+        phone_ext: "phone_ext",
+        title: "title"
       }
 
   }
