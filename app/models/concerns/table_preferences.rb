@@ -243,6 +243,17 @@ module TablePreferences
         year: 'manufacture_year',
         type: 'fta_equipment_types.name',
         subtype: 'asset_subtypes.name'
+      },
+    service_vehicle:
+      { 
+        asset_id: 'asset_tag',
+        org_name: 'organizations.name',
+        vin: 'serial_number',
+        manufacturer: 'manufacturers.name',
+        model: 'manufacturer_models.name',
+        year: 'manufacture_year',
+        type: 'fta_equipment_types.name',
+        subtype: 'asset_subtypes.name'
       }
 
   }
