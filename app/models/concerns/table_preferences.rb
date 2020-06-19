@@ -232,6 +232,17 @@ module TablePreferences
         branch: 'infrastructure_subdivisions.name',
         location: 'relative_locations.name',
         segment_type: 'infrastructure_segment_types.name'
+      },
+    capital_equipment:
+      { 
+        asset_id: 'asset_tag',
+        org_name: 'organizations.name',
+        description: 'description',
+        manufacturer: 'manufacturers.name',
+        model: 'manufacturer_models.name',
+        year: 'manufacture_year',
+        type: 'fta_equipment_types.name',
+        subtype: 'asset_subtypes.name'
       }
 
   }
