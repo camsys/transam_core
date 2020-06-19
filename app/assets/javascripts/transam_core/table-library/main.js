@@ -26,18 +26,19 @@ $("table[use]").ready(()=>{
             let search = $(value).data('search');
             let url = $(value).data('url');
             let sort = $(value).data('sort');
-            let sort_params = {};
+            let sort_params = [];
             await $.ajax({
                 type: "GET",
                 contentType: "application/json; charset=utf-8",
                 data:{"table_code":table_code},
-                url: "/users/table_preferences?table_code="+table_code,
+                url: "/users/table_preferences?",
                 success: function(data){
                   if(data) {
-                    sort_params = data["sort"].reduce((obj,item)=>{
-                        key=Object.keys(item)[0];
-                        obj[key]=item[key];return obj;
-                    }, {});
+                    sort_params = data["sort"];
+                    //     .reduce((obj,item)=>{
+                    //     key=Object.keys(item)[0];
+                    //     obj[key]=item[key];return obj;
+                    // }, {});
                   }
                 },
                 dataType: "json"
@@ -107,8 +108,7 @@ function updateHeader(id, selected, sort){
     // let sort_select = $('<div>');
     for (let col of selected){
         try {
-            
-            header.append($('<th>').addClass('header-item').attr("type", col_ts[col]).attr("order", sort_params[col])
+            header.append($('<th>').addClass('header-item').attr("code", col).attr("type", col_ts[col])//.attr("order", sort_params[col])
                     .append($('<div>').addClass('header-content')
                       .append($('<div>').addClass('header-text').text(cols[col].toString()))
                       .append($('<div>').addClass('header-icons'))));
@@ -133,6 +133,10 @@ function updateHeader(id, selected, sort){
 
         // header.append($('<th>').addClass('header-item').attr('col_type', col_ts[i].toString()).append($('<div>').addClass('header-content').text(cols[i].toString())));
         // colgroup.append($('<col>').addClass('col-item').attr('style', 'width: '+ col_ws[i].toString()));
+    }
+    if(sort_params.length > 0){
+        let col = Object.keys(sort_params[0])[0];
+        header.find('.header-item[code='+ col +']').attr("order", sort_params[0][col]);
     }
     applyIcons(header);
     table.prepend($('<thead>').append(header)).prepend(colgroup);
