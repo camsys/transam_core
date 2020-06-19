@@ -161,6 +161,7 @@ module TablePreferences
     end
   end
 
+  #TODO: Move to TableTools
   def table_sort_string table_code
     sorting = table_preferences(table_code)[:sort]
     column = sorting.first 
@@ -181,6 +182,7 @@ module TablePreferences
 
   private 
 
+  #TODO: Move to TableTools
   # THis is a map between every column and the SQL string required to search on that column
   SORT_COLUMN = {
     track: 
