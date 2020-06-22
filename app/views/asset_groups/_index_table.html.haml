@@ -2,9 +2,7 @@
   table_dom_id = SecureRandom.hex
   show_actions ||= 0
 
-:css
 
-  
 - if show_actions == 1
   #table_actions.btn-group
     = render :partial => "asset_groups/index_actions"
@@ -20,11 +18,11 @@
       :page_sizes => "10,20,50,100",
       :search => 'client',
       :export => "['csv', 'txt', 'excel']",
-      :columns => '{"0":{"name":"Group Name","type":"drilldown-link"},
+      :columns => '{"name":{"name":"Group Name","type":"drilldown-link"},
                     "1":{"name":"Group Code"},
                     "2":{"name":"Group Description"},
                     "3":{"name":"Asset Count"}}',
-        :selected_columns => "0,1,2,3",
+      :selected_columns => "name,1,2,3",
       :cookies => "true",
       :sort => 'client',
       :params => "{}",
@@ -36,7 +34,7 @@
     :javascript
       add_row('#{table_dom_id}',
       {
-        "0": '#{h link_to a.name, asset_group_path(a) }',
+        "name": '#{h link_to a.name, asset_group_path(a) }',
         "1": '#{h a.code }',
         "2": '#{h a.description }',
         "3": '#{h format_as_integer(a.assets.count) }',

@@ -57,10 +57,10 @@ module TablePreferences
         sort: [{uploaded_at: :descending}]
       },
       projects: {
-        sort: [{year: :ascending}, {org_name: :ascending},  {project_id: :ascending}]
+        sort: [{fiscal_year: :ascending}, {org_name: :ascending},  {project_id: :ascending}]
       },
       project_phase: {
-        sort: [{year: :ascending}, {org_name: :ascending},  {project_id: :ascending}]
+        sort: [{fiscal_year: :ascending}, {org_name: :ascending},  {project_id: :ascending}]
       },
       programs: {
         sort: [{name: :ascending}]
@@ -69,7 +69,7 @@ module TablePreferences
         sort: [{name: :ascending}]
       },
       buckets: {
-        sort: [{year: :ascending}, {name: :ascending}, {owner: :ascending}]
+        sort: [{fiscal_year: :ascending}, {name: :ascending}, {owner: :ascending}]
       },
       grants: {
         sort: [{owner: :ascending}, {year: :descending}]
@@ -81,7 +81,7 @@ module TablePreferences
         sort: [{created_at: :descending}, {type: :ascending}]
       },
       my_funds: {
-        sort: [{year: :ascending}, {name: :ascending}, {owner: :ascending}]
+        sort: [{fiscal_year: :ascending}, {name: :ascending}, {owner: :ascending}]
       },
       status: {sort: []},
       audit: {

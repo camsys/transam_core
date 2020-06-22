@@ -90,6 +90,7 @@ async function initialize(id, selected, curPage, curPageSize, pageSizes, side, u
     clear_row_queue(id);
     updatePage_help(id, curPage, curPageSize);
     clear_aux_queue(id);
+    client_sort($('#'+id).find('.header-item[code="'+ Object.keys(window[id].sort_params[0])[0] +'"]'));
 
 }
 
@@ -239,7 +240,7 @@ function clear_aux_queue(id){
 
 async function serverSide(id, url, curPage, curPageSize, params, search="") {
         let response = {};
-        let data = {'page': curPage, 'page_size': curPageSize, 'search': search};
+        let data = {'page': curPage, 'page_size': curPageSize, 'search': search}; // , 'sort_column': Object.keys(sort)[0], 'sort_order': Object.values(sort)[0]
         for(let x in params){ data[x] = params[x]; }
         await $.ajax({
             type: "GET",

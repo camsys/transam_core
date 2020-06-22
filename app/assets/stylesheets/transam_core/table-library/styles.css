@@ -262,6 +262,12 @@
 
 
 
+.sql-text {
+    word-break: break-all;
+}
+
+
+
 
 
 
