@@ -344,6 +344,18 @@ module TablePreferences
         phone: "phone",
         phone_ext: "phone_ext",
         title: "title"
+      },
+    projects:
+      { 
+        project_number: "project_number",
+        organization: "organizations.short_name",
+        fiscal_year: "fy_year",
+        title: "title",
+        project_type: "capital_project_types.name",
+        sogr: "sogr",
+        shadow: "notional:",
+        multi_year: "multi_year",
+        emergency: "emergency"
       }
 
   }
