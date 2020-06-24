@@ -1,6 +1,7 @@
 $(document).ready(function(){
     $(document).on("click",".library-table table[data-sort='client'] .header-item",(function(){
       $(this).attr("order", $(this).attr("order") == "ascending" ? "descending" : "ascending");
+      $(this).parent().parent().parent().addClass('loading');
       client_sort(this);
     }
       // function(){
@@ -26,18 +27,18 @@ $(document).ready(function(){
     );
     $(document).on("click",".library-table table[data-sort='server'] .header-item",(async function(){
       
-      var table = $(this).parents('.elbat').eq(0);
+      let table = $(this).parents('.elbat').eq(0);
+      let id = table.attr('id')
       // toggle column
       $(this).attr("order", $(this).attr("order") == "ascending" ? "descending" : "ascending");
       $(this).siblings().attr("order", "");
-      // update server with new sort preference
-      await updateSortPreferences(table.attr('id'), table.data('tableCode'), $(this).attr("code"), $(this).attr("order"));
-      // console.log(window[table.attr('id')].sort_params);
-      // request new page once prefs have been updated
+      let obj = {};
+      obj[$(this).attr("code")] = $(this).attr("order");
+      window[id].sort_params = [obj];
       if ($(table).find(".search-result").length > 0){
-          updatePage_help(table.attr('id'), table.data("currentPage"), table.data('currentPageSize'), true);
+        updatePage(table.attr('id'), table.data("currentPage"), table.data('currentPageSize'), $('#'+id).find('.table-row.search-result').length, clientSearch, "", window[id].sort_params);
       } else {
-          updatePage_help(table.attr('id'), table.data("currentPage"), table.data('currentPageSize'));
+        updatePage(table.attr('id'), table.data("currentPage"), table.data('currentPageSize'), $('#'+id).find('.table-row').length, false, "", window[id].sort_params);
       }
       applyIcons(table.find('.header'));
     })
@@ -61,6 +62,7 @@ async function client_sort(elem){
       updatePage_help(table.attr('id'), table.data("currentPage"), table.data('currentPageSize'));
   }
   applyIcons(table.find('.header'));
+  table.removeClass("loading");
 }
 
 const comparer = (idx, order) => (a, b) => ((v1, v2) => (order == "ascending") ?

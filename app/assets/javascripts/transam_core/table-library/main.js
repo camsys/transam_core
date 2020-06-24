@@ -1,6 +1,8 @@
 $("table[use]").ready(()=>{
 
     $("table[use]").each(async function(i, value){
+
+        $(this).addClass('loading');
         if($(value).attr('use') == 'true'){
             const id = $(value).attr('id');
             const table_code = $(value).data('tableCode');
@@ -82,6 +84,7 @@ async function initialize(id, selected, curPage, curPageSize, pageSizes, side, u
         pagination(id, curPage, curPageSize, pageSizes, total);
         clear_row_queue(id);
         updatePage(id, curPage, curPageSize, total, false, params);
+        applyIcons($('#'+id).find('.header'));
         return;
     }
     
@@ -214,6 +217,8 @@ function add_row_exec(id, vals, index) {
             return $(this).attr("index") < index;
         });
         (lt.length > 0) ? row.insertAfter(lt[lt.length-1]) : $('#' + id).prepend(row);
+    } else {
+        
     }
 
 }
@@ -238,9 +243,15 @@ function clear_aux_queue(id){
 }
 
 
-async function serverSide(id, url, curPage, curPageSize, params, search="") {
+async function serverSide(id, url, curPage, curPageSize, params, search="", sort_by={}) {
+        $('#'+id).addClass('loading');
         let response = {};
-        let data = {'page': curPage, 'page_size': curPageSize, 'search': search}; // , 'sort_column': Object.keys(sort)[0], 'sort_order': Object.values(sort)[0]
+        let data = {'page': curPage, 'page_size': curPageSize, 'search': search};
+        if(!$.isEmptyObject(sort_by)) { // asumes 1 column
+            data['sort_column'] = Object.keys(sort_by[0])[0];
+            data['sort_order'] = Object.values(sort_by[0])[0]; 
+            $('#'+id).find('.table-row').remove(); // clear out table
+        }
         for(let x in params){ data[x] = params[x]; }
         await $.ajax({
             type: "GET",

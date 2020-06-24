@@ -117,7 +117,7 @@ async function updatePage(id, curPage, curPageSize, total, clientSearch=false, p
     if(serv){
         params = $('#'+id).data('params');
         searchContent = $('#'+id).siblings(".searchbar").eq(0).val();
-        total = await serverSide(id, $('#'+id).data('url'), curPage, curPageSize, params, searchContent);
+        total = await serverSide(id, $('#'+id).data('url'), curPage, curPageSize, params, searchContent, window[id].sort_params);
         try {
             window[id].apply_styles();
         } catch (e){
@@ -156,6 +156,8 @@ async function updatePage(id, curPage, curPageSize, total, clientSearch=false, p
 
     }
     $('#'+ id + ' .table-row:visible:nth-child(' + curPageSize + ') .row-item:last-child').css('border-bottom-right-radius', '.5em');
+
+    $('#'+ id).removeClass("loading");
 
 }
 
