@@ -117,7 +117,11 @@ async function updatePage(id, curPage, curPageSize, total, clientSearch=false, p
     if(serv){
         params = $('#'+id).data('params');
         searchContent = $('#'+id).siblings(".searchbar").eq(0).val();
-        total = await serverSide(id, $('#'+id).data('url'), curPage, curPageSize, params, searchContent, window[id].sort_params);
+        try {
+            total = await serverSide(id, $('#'+id).data('url'), curPage, curPageSize, params, searchContent, window[id].sort_params);
+        } catch (e) {
+            console.log("aborted request");
+        }
         try {
             window[id].apply_styles();
         } catch (e){
@@ -163,6 +167,11 @@ async function updatePage(id, curPage, curPageSize, total, clientSearch=false, p
 
 
 function updatePageStatus(elem, curPage, curPageSize, total){
+    
+    if(total == -1) {
+        elem.html("loading...");
+        return;
+    }
     let start = curPage * curPageSize + 1;
     let end = start + curPageSize - 1;
     elem.html("Showing <b>" + start.toLocaleString() + " to " + Math.min(end,total).toLocaleString() + "</b> of " + total.toLocaleString() + " rows");
@@ -171,6 +180,12 @@ function updatePageStatus(elem, curPage, curPageSize, total){
 
 
 function updatePageSelect(elem, curPage, curPageSize, total, clientSearch) {
+    if(total === -1) {
+        elem.hide();
+        return;
+    } else {
+        elem.show();
+    }
     elem.find('.table-ellipses').remove();
     let last = elem.find('.page-select-item').last().index();
     if(last * curPageSize < total){

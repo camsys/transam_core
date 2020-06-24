@@ -80,10 +80,16 @@ $("table[use]").ready(()=>{
 async function initialize(id, selected, curPage, curPageSize, pageSizes, side, url, params, sort) {
     $('#'+id).append($("<tbody>"));
     if(side === 'server') {
-        let total = await serverSide(id, url, curPage, curPageSize, params);
-        pagination(id, curPage, curPageSize, pageSizes, total);
-        clear_row_queue(id);
-        updatePage(id, curPage, curPageSize, total, false, params);
+        // let total = -1;
+        // try{
+        //     total = await serverSide(id, url, curPage, curPageSize, params);
+        // } catch(e){
+        //     console.log("aborted request");
+        //     return;
+        // }
+        pagination(id, curPage, curPageSize, pageSizes, -1);
+        // clear_row_queue(id);
+        updatePage(id, curPage, curPageSize, -1, false, params);
         applyIcons($('#'+id).find('.header'));
         return;
     }
@@ -259,29 +265,46 @@ async function serverSide(id, url, curPage, curPageSize, params, search="", sort
             url: url,
             data : data,
             dataType: "json",
-            success: function (r) {
-                response = r;
-                try {
-                  r_columns = Object.keys(r['rows'][0]); 
-                  window[id].col_selected = r_columns;
-                  updateHeader(id, r_columns, "server");
-                } catch (e) {
-                  updateHeader(id, window[id].col_selected, "server");
+            beforeSend:(xhr) => {
+                // console.log(window[id].activeRequest);
+                if(window[id].activeRequest && window[id].activeRequest.readyState !== 4) {
+                    // console.log("abort: ", window[id].activeRequest);
+                    // console.log("keep: ", xhr);
+                    window[id].activeRequest.abort();
                 }
-                for(let [index,obj] of r['rows'].entries()) {
-                    let row = {};
-                    let columns = Object.keys(obj);
-                    for(let col of columns) {
-                        if(!obj[col]["url"] || 0 === obj[col]["url"].trim().length) {
-                            row[col] = obj[col]["data"];
-                        } else {
-                            row[col] = "<a href='" + obj[col]["url"] + "'>" + obj[col]["data"] + "</a>";
-                        }
+                window[id].activeRequest = xhr;
+            },
+            success: (d, s, xhr)=> {
+                response = d;
+            },
+            complete: (jqXHR, status) => {
+                // console.log(status);
+                if(status == 'success') {
+                    r = response;
+                    try {
+                    r_columns = Object.keys(r['rows'][0]); 
+                    window[id].col_selected = r_columns;
+                    updateHeader(id, r_columns, "server");
+                    } catch (e) {
+                    updateHeader(id, window[id].col_selected, "server");
                     }
-                    add_row_exec(id, row, (curPage * curPageSize)+index);
+                    for(let [index,obj] of r['rows'].entries()) {
+                        let row = {};
+                        let columns = Object.keys(obj);
+                        for(let col of columns) {
+                            if(!obj[col]["url"] || 0 === obj[col]["url"].trim().length) {
+                                row[col] = obj[col]["data"];
+                            } else {
+                                row[col] = "<a href='" + obj[col]["url"] + "'>" + obj[col]["data"] + "</a>";
+                            }
+                        }
+                        add_row_exec(id, row, (curPage * curPageSize)+index);
+                    }
                 }
             },
             error: function (){
+                // console.log("error");
+                return -1;
             }
         });
 
@@ -290,3 +313,46 @@ async function serverSide(id, url, curPage, curPageSize, params, search="", sort
         return response['count'];
 }
 
+// function server_side_exec(id, r, curPage, curPageSize) 
+
+
+// statusCode: {
+//     500: async function(){
+//         console.log("handling 500");
+//         // retry without sorting
+//         data['sort_column'] = "asset_id"; // what sould the default be? 
+//         data['sort_order'] = "ascending"; //  how would we determine a good guess?
+//         $('#'+id+' .header-item').attr("order", "");
+//         await $.ajax({
+//             type: "GET",
+//             contentType: "application/json; charset=utf-8",
+//             url: url,
+//             data : data,
+//             dataType: "json",
+//             complete: (r) => {
+//                 response = r;
+//                 try {
+//                   r_columns = Object.keys(r['rows'][0]); 
+//                   window[id].col_selected = r_columns;
+//                   updateHeader(id, r_columns, "server");
+//                 } catch (e) {
+//                   updateHeader(id, window[id].col_selected, "server");
+//                 }
+//                 for(let [index,obj] of r['rows'].entries()) {
+//                     let row = {};
+//                     let columns = Object.keys(obj);
+//                     for(let col of columns) {
+//                         if(!obj[col]["url"] || 0 === obj[col]["url"].trim().length) {
+//                             row[col] = obj[col]["data"];
+//                         } else {
+//                             row[col] = "<a href='" + obj[col]["url"] + "'>" + obj[col]["data"] + "</a>";
+//                         }
+//                     }
+//                     add_row_exec(id, row, (curPage * curPageSize)+index);
+//                 }
+//             },
+//             error: function (){
+//             }
+//         });
+//     }
+// },
