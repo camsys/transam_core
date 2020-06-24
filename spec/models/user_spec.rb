@@ -30,16 +30,16 @@ RSpec.describe User, :type => :model do
 
   describe ".rowify" do 
     it 'returns last name' do
-      expect(normal_user.rowify["Last"]).to eq(normal_user.last_name)
-      expect(normal_user.rowify["First"]).to eq(normal_user.first_name)
-      expect(normal_user.rowify["Primary Organization"]).to eq(normal_user.organization.to_s)
-      expect(normal_user.rowify["Email"]).to eq(normal_user.email)
-      expect(normal_user.rowify["Phone"]).to eq(normal_user.phone.to_s)
-      expect(normal_user.rowify["Ext."]).to eq(normal_user.phone_ext.to_s)
-      expect(normal_user.rowify["Title"]).to eq(normal_user.title.to_s)
-      expect(normal_user.rowify["Role"]).to eq(normal_user.roles.try(:roles).try(:last).try(:label))
-      expect(normal_user.rowify["Privileges"]).to eq(normal_user.roles.privileges.collect{|x| x.label}.join(', '))
-      expect(normal_user.rowify["Status"]).to eq(normal_user.status)
+      expect(normal_user.rowify[:last_name][:data]).to eq(normal_user.last_name)
+      expect(normal_user.rowify[:first_name][:data]).to eq(normal_user.first_name)
+      expect(normal_user.rowify[:organization][:data]).to eq(normal_user.organization.to_s)
+      expect(normal_user.rowify[:email][:data]).to eq(normal_user.email)
+      expect(normal_user.rowify[:phone][:data]).to eq(normal_user.phone.to_s)
+      expect(normal_user.rowify[:phone_ext][:data]).to eq(normal_user.phone_ext.to_s)
+      expect(normal_user.rowify[:title][:data]).to eq(normal_user.title.to_s)
+      expect(normal_user.rowify[:role][:data]).to eq(normal_user.roles.try(:roles).try(:last).try(:label).to_s)
+      expect(normal_user.rowify[:privileges][:data]).to eq(normal_user.roles.privileges.collect{|x| x.label}.join(', '))
+      expect(normal_user.rowify[:status][:data]).to eq(normal_user.status)
     end
   end
 
