@@ -23,16 +23,17 @@ RSpec.describe UsersController, :type => :controller do
 
     it 'returns all users' do
       get :table
+      user_count = User.unscoped.count 
       expect(response).to be_success
       parsed_response = JSON.parse(response.body)
-      expect(parsed_response["count"]).to eq(User.count)
+      expect(parsed_response["count"]).to eq(user_count)
     end
 
     it 'returns the first 10 users' do
       get :table,  params: {page: 0, page_size: 10}
       expect(response).to be_success
       parsed_response = JSON.parse(response.body)
-      expect(parsed_response["count"]).to eq(User.count)
+      expect(parsed_response["count"]).to eq(User.unscoped.count)
       expect(parsed_response["rows"].count).to eq(10)
       expect(parsed_response["rows"].first["last_name"]["data"]).to eq(User.first.last_name)
     end
@@ -77,9 +78,9 @@ RSpec.describe UsersController, :type => :controller do
       parsed_response = JSON.parse(response.body)
       expect(parsed_response["sort"].first["first_name"].to_s).to eq("descending")
 
-      get :table_preferences, params: {table_code: "buses"}
+      get :table_preferences, params: {table_code: "bus"}
       parsed_response = JSON.parse(response.body)
-      expect(parsed_response["sort"].first["column"].to_s).to eq(TablePreferences::DEFAULT_TABLE_PREFERENCES[:buses][:sort].first[:column].to_s)
+      expect(parsed_response["sort"].first["org_name"]).to eq("ascending")
     end
   end
 
