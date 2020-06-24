@@ -538,3 +538,58 @@
 .action-column .actions, .cell-text .custom-drilldown-content {
     display: inline-flex;
 }
+
+
+
+
+.tabs_wrapper {
+    display: flex;
+    flex-direction: column;
+    background: var(--gray-light);
+}
+
+.tabs {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: fit-content;
+    max-width: 75%;
+    border-radius: 5px;
+    background: var(--gray-medium-light);
+    margin: 10px 20px;
+}
+
+.tab {
+    color: var(--gray-dark);
+    float: left;
+    padding: 5px;
+    margin: 5px;
+    border-radius: 5px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.tab.active {
+    background: var(--white);
+    color: var(--blue-base);
+    font-weight: bold;
+}
+
+.tab.active:hover {
+    overflow: visible;
+}
+
+.tab:not(.active):hover {
+    color: var(--white);
+    background: var(--blue-base);
+    overflow: visible;
+}
+
+.tab_content {
+    display: none;
+}
+
+.tab_content.active {
+    display: block;
+}
