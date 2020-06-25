@@ -39,4 +39,13 @@ User.find_or_create_by(
   :num_table_rows => 10
   )
 
+puts "  ensure all roles have labesl"
+Role.all.each do |r|
+  if r.label.nil?
+    r.label = r.name.titleize
+    r.save 
+  end
+end
+
+
 ActiveRecord::Base.connection.execute("ALTER TABLE `transam_core_testing`.`assets` ADD COLUMN `geometry` GEOMETRY NULL AFTER `vendor_id`;")
