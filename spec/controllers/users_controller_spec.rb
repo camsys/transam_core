@@ -23,7 +23,7 @@ RSpec.describe UsersController, :type => :controller do
 
     it 'returns all users' do
       get :table
-      user_count = User.unscoped.count 
+      user_count =  User.unscoped.joins(:organization).count
       expect(response).to be_success
       parsed_response = JSON.parse(response.body)
       expect(parsed_response["count"]).to eq(user_count)
@@ -33,7 +33,7 @@ RSpec.describe UsersController, :type => :controller do
       get :table,  params: {page: 0, page_size: 10}
       expect(response).to be_success
       parsed_response = JSON.parse(response.body)
-      expect(parsed_response["count"]).to eq(User.unscoped.count)
+      expect(parsed_response["count"]).to eq(User.unscoped.joins(:organization).count)
       expect(parsed_response["rows"].count).to eq(10)
       expect(parsed_response["rows"].first["last_name"]["data"]).to eq(User.first.last_name)
     end
