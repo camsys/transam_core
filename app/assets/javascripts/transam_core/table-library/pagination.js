@@ -56,10 +56,8 @@ $(document).on('change', ".page-size-dropdown", function(){
 });
 
 
-// function pagination_help(id, curPage, curPageSize, pageSizes) {
-//     let total = $('#'+id).find('.table-row').length;
-//     pagination(id, curPage, curPageSize, pageSizes, total);
-// }
+
+
 
 function pagination(id, curPage, curPageSize, pageSizes) {
 
@@ -72,11 +70,9 @@ function pagination(id, curPage, curPageSize, pageSizes) {
         dropdown.append($('<option>').text(size));
     }
     sizeSelect.append(dropdown);
-    // sizeSelect.append($('<span>').text('▼'));
     footer.append(sizeSelect);
 
     let pageStatus = $('<div>').addClass("page-status");
-    // updatePageStatus(pageStatus, curPage, curPageSize, total);
     footer.append(pageStatus);
 
     let pageSelectWrapper = $('<div>').addClass("page-select-wrapper");
@@ -90,13 +86,7 @@ function pagination(id, curPage, curPageSize, pageSizes) {
 
     footer.append(pageSelectWrapper);
 
-    // updatePageSelect(pageSelect, curPage, curPageSize, total);
-
-
     $('#'+id).parent().append(footer);
-
-
-    // updatePage(id, curPage, curPageSize, total);
 
 }
 
@@ -159,7 +149,9 @@ async function updatePage(id, curPage, curPageSize, total, clientSearch=false, p
         updatePageSelect($('#'+id).parent().find(".page-select").eq(0), curPage, curPageSize, total, true);
 
     }
-    $('#'+ id + ' .table-row:visible:nth-child(' + curPageSize + ') .row-item:last-child').css('border-bottom-right-radius', '.5em');
+
+
+    post_styles(id, curPageSize);
 
     $('#'+ id).removeClass("loading");
 
@@ -235,6 +227,19 @@ function updatePageSelect(elem, curPage, curPageSize, total, clientSearch) {
         if(curPage <= last-3){
             $("<span>").addClass("table-ellipses").text("...").insertBefore(elem.find('.page-select-item').eq(last));
         }
+    }
+
+}
+
+
+
+
+function post_styles(id, curPageSize) {
+
+    $('#'+ id + ' .table-row:visible:nth-child(' + curPageSize + ') .row-item:last-child').css('border-bottom-right-radius', '.5em');
+
+    if($('#'+id+" .row-item.drilldown-link .cell-text i").length === 0){
+        $('#'+id+" .row-item.drilldown-link .cell-text").append($('<i class="fas fa-level-down-alt"></i>'));
     }
 
 }

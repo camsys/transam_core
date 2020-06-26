@@ -101,6 +101,8 @@ async function initialize(id, selected, curPage, curPageSize, pageSizes, side, u
     clear_aux_queue(id);
     client_sort($('#'+id).find('.header-item[code="'+ Object.keys(window[id].sort_params[0])[0] +'"]'));
 
+    
+
 }
 
 
@@ -312,6 +314,29 @@ async function serverSide(id, url, curPage, curPageSize, params, search="", sort
 
         return response['count'];
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // function server_side_exec(id, r, curPage, curPageSize) 
 

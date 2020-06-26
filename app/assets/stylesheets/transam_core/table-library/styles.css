@@ -492,11 +492,15 @@
     color: var(--blue-light);
 }
 
-.drilldown-link .cell-text::after {
-    content: '↓';
+.drilldown-link .cell-text i {
+    overflow: visible;
+}
+
+.drilldown-link .cell-text i::before {
     transition: top .125s ease-in-out;
-    top: 0;
-    position: absolute;
+    font-size: .8em;
+    top: 0em;
+    position: relative;
     padding-left: .5em;
 }
 
@@ -504,8 +508,8 @@
     color: var(--turquoise-dark);
 }
 
-.drilldown-link:hover .cell-text::after {
-    top: .175em
+.drilldown-link .cell-text a:hover ~ i::before {
+    top: .25em;
 }
 
 .right-align .cell-text{
