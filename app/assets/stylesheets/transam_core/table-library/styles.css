@@ -404,7 +404,7 @@
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
-    margin: .25em;
+    margin: .5em .25em;
     padding: .25em .5em;
     opacity: 1;
     pointer-events: auto;

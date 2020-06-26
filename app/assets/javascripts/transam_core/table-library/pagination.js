@@ -81,12 +81,12 @@ function pagination(id, curPage, curPageSize, pageSizes) {
 
     let pageSelectWrapper = $('<div>').addClass("page-select-wrapper");
     let pageSelect = $('<div>').addClass("page-select");
-    pageSelectWrapper.append($('<div>').addClass("page-select-arrow-left").text("◄"));
-    pageSelectWrapper.append($('<div>').addClass("page-select-arrow-left-full").text("◄◄"));
+    pageSelectWrapper.append($('<div>').addClass("page-select-arrow-left").append($('<i class="fa fa-angle-left" aria-hidden="true"></i>')));
+    pageSelectWrapper.append($('<div>').addClass("page-select-arrow-left-full").append($('<i class="fa fa-angle-double-left" aria-hidden="true"></i>')));
     pageSelect.append($('<span>').addClass("page-select-item").text("1"));
     pageSelectWrapper.append(pageSelect);
-    pageSelectWrapper.append($('<div>').addClass("page-select-arrow-right-full").text("►►"));
-    pageSelectWrapper.append($('<div>').addClass("page-select-arrow-right").text("►"));
+    pageSelectWrapper.append($('<div>').addClass("page-select-arrow-right-full").append($('<i class="fa fa-angle-double-right" aria-hidden="true"></i>')));
+    pageSelectWrapper.append($('<div>').addClass("page-select-arrow-right").append($('<i class="fa fa-angle-right" aria-hidden="true"></i>')));
 
     footer.append(pageSelectWrapper);
 
