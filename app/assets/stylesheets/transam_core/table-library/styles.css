@@ -545,7 +545,7 @@
     float: right;
 }
 
-.export_button {
+.function_button {
     color: var(--white);
     padding: 5px 10px;
     margin-left: .5em;
@@ -562,7 +562,11 @@
     transition: .25s ease-in-out;
 }
 
-.export_button:before {
+.function_button:hover, .open .function_button {
+    background-color: #56C6DE;
+}
+
+.function_button:before {
     content: '';
     position: absolute;
     top: 2px;
@@ -578,7 +582,14 @@
     background: linear-gradient(0deg, #5B8EDC 0%, rgba(255, 255, 255, 0.5) 100%);
 }
 
-.export_button:after {
+.function_button:hover:before, .open .function_button:before {
+    background: -webkit-gradient(linear, left bottom, left top, from(rgba(255, 255, 255, 0.5)), to(#56C6DE));
+    background: -webkit-linear-gradient(bottom, rgba(255, 255, 255, 0.5) 0%, #56C6DE 100%);
+    background: -o-linear-gradient(bottom, rgba(255, 255, 255, 0.5) 0%, #56C6DE 100%);
+    background: linear-gradient(0deg, rgba(255, 255, 255, 0.5) 0%, #56C6DE 100%);
+}
+
+.function_button:after {
     content: '';
     position: absolute;
     top: 3px;
@@ -594,7 +605,16 @@
     background: linear-gradient(0deg, rgba(55, 98, 161, 0.6) 0%, #5B8EDC 100%);
 }
 
-.export_button i {
+.function_button:hover:after, .open .function_button::after {
+    background-color: #039CCD;
+    background-color: rgba(86, 198, 222, 0.6);
+    background: -webkit-gradient(linear, left bottom, left top, from(rgba(86, 198, 222, 0.6)), to(#039CCD));
+    background: -webkit-linear-gradient(bottom, rgba(86, 198, 222, 0.6) 0%, #039CCD 100%);
+    background: -o-linear-gradient(bottom, rgba(86, 198, 222, 0.6) 0%, #039CCD 100%);
+    background: linear-gradient(0deg, rgba(86, 198, 222, 0.6) 0%, #039CCD 100%);
+}
+
+.function_button i {
     position: relative;
     z-index: 10;
 }
