@@ -6,15 +6,16 @@ $("table[use]").ready(()=>{
         if($(value).attr('use') == 'true'){
             const id = $(value).attr('id');
             const table_code = $(value).data('tableCode');
-            let side = $(value).data('side');
+            const side = $(value).data('side');
+            const export_types = $(value).data('export').replace(/[\[\]']+/g,'').split(',');
             let curPage = $(value).data('currentPage');
             let curPageSize = $(value).data('currentPageSize');
-            let pageSizes = $(value).data('pageSizes').split(',');
-            let columns = $(value).data('columns');
+            const pageSizes = $(value).data('pageSizes').split(',');
+            const columns = $(value).data('columns');
             let selected_columns = $(value).data('selectedColumns').split(',');
-            let col_names = {};
-            let col_types = {};
-            let col_widths = {};
+            const col_names = {};
+            const col_types = {};
+            const col_widths = {};
             for(let col of Object.keys(columns)){
                 let x = columns[col];
                 col_names[col] = x["name"];
@@ -25,9 +26,9 @@ $("table[use]").ready(()=>{
             window[id].col_types = col_types;
             window[id].col_widths = col_widths;
             window[id].col_selected = selected_columns;
-            let search = $(value).data('search');
-            let url = $(value).data('url');
-            let sort = $(value).data('sort');
+            const search = $(value).data('search');
+            const url = $(value).data('url');
+            const sort = $(value).data('sort');
             let sort_params = [];
             await $.ajax({
                 type: "GET",
@@ -48,7 +49,7 @@ $("table[use]").ready(()=>{
             window[id].sort_params = sort_params;
             let params = $(value).data('params');
 
-            initialize(id, selected_columns, curPage, curPageSize, pageSizes, side, url, params, sort);
+            initialize(id, selected_columns, curPage, curPageSize, pageSizes, side, url, params, sort, export_types);
 
             if(search == 'client') {
                 addSearch(id);
@@ -77,17 +78,12 @@ $("table[use]").ready(()=>{
 });
 
 
-async function initialize(id, selected, curPage, curPageSize, pageSizes, side, url, params, sort) {
+async function initialize(id, selected, curPage, curPageSize, pageSizes, side, url, params, sort, export_types) {
+    $('#'+id).parent().prepend($('<div class="function_bar">'));
     $('#'+id).append($("<tbody>"));
     if(side === 'server') {
-        // let total = -1;
-        // try{
-        //     total = await serverSide(id, url, curPage, curPageSize, params);
-        // } catch(e){
-        //     console.log("aborted request");
-        //     return;
-        // }
         pagination(id, curPage, curPageSize, pageSizes, -1);
+        init_export(id, export_types);
         // clear_row_queue(id);
         updatePage(id, curPage, curPageSize, -1, false, params);
         applyIcons($('#'+id).find('.header'));
@@ -96,6 +92,7 @@ async function initialize(id, selected, curPage, curPageSize, pageSizes, side, u
     
     updateHeader(id, selected, sort);
     pagination(id, curPage, curPageSize, pageSizes);
+    init_export(id, export_types);
     clear_row_queue(id);
     updatePage_help(id, curPage, curPageSize);
     clear_aux_queue(id);

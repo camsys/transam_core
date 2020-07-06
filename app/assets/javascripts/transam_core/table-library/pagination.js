@@ -106,7 +106,7 @@ async function updatePage(id, curPage, curPageSize, total, clientSearch=false, p
     
     if(serv){
         params = $('#'+id).data('params');
-        searchContent = $('#'+id).siblings(".searchbar").eq(0).val();
+        searchContent = $('#'+id).siblings(".function_bar").find(".searchbar").val();
         try {
             total = await serverSide(id, $('#'+id).data('url'), curPage, curPageSize, params, searchContent, window[id].sort_params);
         } catch (e) {
