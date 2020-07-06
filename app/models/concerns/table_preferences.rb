@@ -180,6 +180,12 @@ module TablePreferences
     self.update(table_prefs: table_prefs)
   end
 
+  def delete_table_prefs table_code 
+    table_prefs = eval(self.table_preferences || "{}")
+    table_prefs.delete(table_code.to_sym)
+    self.update(table_prefs: table_prefs)
+  end
+
   private 
 
   #TODO: Move to TableTools

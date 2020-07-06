@@ -21,7 +21,7 @@ RSpec.describe ScheduleRehabilitationUpdateEvent, :type => :model do
 
   it '.get_update' do
     test_event.rebuild_year = 2020
-    expect(test_event.get_update).to eq("Scheduled for rehabilitation in FY 20-21")
+    expect(test_event.get_update).to eq("Scheduled for rehabilitation in 20-21")
   end
 
   it '.set_defaults' do

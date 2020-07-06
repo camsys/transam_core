@@ -17,7 +17,7 @@ function addSearch(id) {
         });
         updatePage_help(id, 0, $('#'+id).data('currentPageSize'), true);
     });
-    $('#'+id).parent().prepend(searchbar);
+    $('#'+id).parent().find(".function_bar").append(searchbar);
 }
 
 
@@ -35,7 +35,7 @@ function addSearchServer(id) {
         $('#' + id + " .table-row").remove();
         updatePage(id, 0, $('#'+id).data('currentPageSize'),-1, false, $('#'+id).data('params'), value);
     });
-    $('#'+id).parent().prepend(searchbar);
+    $('#'+id).parent().find(".function_bar").append(searchbar);
 }
 
 function removeSearch(id) {

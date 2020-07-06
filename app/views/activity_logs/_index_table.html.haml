@@ -21,9 +21,9 @@
       :columns => '{"0":{"name":"Action","type":"drilldown-link"},
                     "1":{"name":"Activity"},
                     "2":{"name":"User"},
-                    "3":{"name":"Date/Time","type":"right-align"},
+                    "date_time":{"name":"Date/Time","type":"right-align"},
                     "4":{"name":"Id"}}',
-      :selected_columns => "0,1,2,3",
+      :selected_columns => "0,1,2,date_time",
       :cookies => "true",
       :sort => 'client',
       :sort_params => @params,
@@ -38,7 +38,7 @@
         "0": '#{ link_to a.activity.truncate(64).html_safe, activity_log_path(a.id)}',
         "1": "#{a.item_type}",
         "2": "#{a.user}",
-        "3": "#{format_as_date_time(a.activity_time)}",
+        "date_time": "#{format_as_date_time(a.activity_time)}",
         "4": "#{a.id}"
       }, #{index});
 

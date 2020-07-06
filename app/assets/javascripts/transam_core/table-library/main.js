@@ -1,18 +1,21 @@
 $("table[use]").ready(()=>{
 
     $("table[use]").each(async function(i, value){
+
+        $(this).addClass('loading');
         if($(value).attr('use') == 'true'){
             const id = $(value).attr('id');
             const table_code = $(value).data('tableCode');
-            let side = $(value).data('side');
+            const side = $(value).data('side');
+            const export_types = $(value).data('export').replace(/[\[\]']+/g,'').split(',');
             let curPage = $(value).data('currentPage');
             let curPageSize = $(value).data('currentPageSize');
-            let pageSizes = $(value).data('pageSizes').split(',');
-            let columns = $(value).data('columns');
+            const pageSizes = $(value).data('pageSizes').split(',');
+            const columns = $(value).data('columns');
             let selected_columns = $(value).data('selectedColumns').split(',');
-            let col_names = {};
-            let col_types = {};
-            let col_widths = {};
+            const col_names = {};
+            const col_types = {};
+            const col_widths = {};
             for(let col of Object.keys(columns)){
                 let x = columns[col];
                 col_names[col] = x["name"];
@@ -23,9 +26,9 @@ $("table[use]").ready(()=>{
             window[id].col_types = col_types;
             window[id].col_widths = col_widths;
             window[id].col_selected = selected_columns;
-            let search = $(value).data('search');
-            let url = $(value).data('url');
-            let sort = $(value).data('sort');
+            const search = $(value).data('search');
+            const url = $(value).data('url');
+            const sort = $(value).data('sort');
             let sort_params = [];
             await $.ajax({
                 type: "GET",
@@ -46,7 +49,7 @@ $("table[use]").ready(()=>{
             window[id].sort_params = sort_params;
             let params = $(value).data('params');
 
-            initialize(id, selected_columns, curPage, curPageSize, pageSizes, side, url, params, sort);
+            initialize(id, selected_columns, curPage, curPageSize, pageSizes, side, url, params, sort, export_types);
 
             if(search == 'client') {
                 addSearch(id);
@@ -75,22 +78,27 @@ $("table[use]").ready(()=>{
 });
 
 
-async function initialize(id, selected, curPage, curPageSize, pageSizes, side, url, params, sort) {
+async function initialize(id, selected, curPage, curPageSize, pageSizes, side, url, params, sort, export_types) {
+    $('#'+id).parent().prepend($('<div class="function_bar">'));
     $('#'+id).append($("<tbody>"));
     if(side === 'server') {
-        let total = await serverSide(id, url, curPage, curPageSize, params);
-        pagination(id, curPage, curPageSize, pageSizes, total);
-        clear_row_queue(id);
-        updatePage(id, curPage, curPageSize, total, false, params);
+        pagination(id, curPage, curPageSize, pageSizes, -1);
+        init_export(id, export_types);
+        // clear_row_queue(id);
+        updatePage(id, curPage, curPageSize, -1, false, params);
+        applyIcons($('#'+id).find('.header'));
         return;
     }
     
     updateHeader(id, selected, sort);
     pagination(id, curPage, curPageSize, pageSizes);
+    init_export(id, export_types);
     clear_row_queue(id);
     updatePage_help(id, curPage, curPageSize);
     clear_aux_queue(id);
     client_sort($('#'+id).find('.header-item[code="'+ Object.keys(window[id].sort_params[0])[0] +'"]'));
+
+    
 
 }
 
@@ -214,6 +222,8 @@ function add_row_exec(id, vals, index) {
             return $(this).attr("index") < index;
         });
         (lt.length > 0) ? row.insertAfter(lt[lt.length-1]) : $('#' + id).prepend(row);
+    } else {
+        
     }
 
 }
@@ -238,9 +248,15 @@ function clear_aux_queue(id){
 }
 
 
-async function serverSide(id, url, curPage, curPageSize, params, search="") {
+async function serverSide(id, url, curPage, curPageSize, params, search="", sort_by={}) {
+        $('#'+id).addClass('loading');
         let response = {};
-        let data = {'page': curPage, 'page_size': curPageSize, 'search': search}; // , 'sort_column': Object.keys(sort)[0], 'sort_order': Object.values(sort)[0]
+        let data = {'page': curPage, 'page_size': curPageSize, 'search': search};
+        if(!$.isEmptyObject(sort_by)) { // asumes 1 column
+            data['sort_column'] = Object.keys(sort_by[0])[0];
+            data['sort_order'] = Object.values(sort_by[0])[0]; 
+            $('#'+id).find('.table-row').remove(); // clear out table
+        }
         for(let x in params){ data[x] = params[x]; }
         await $.ajax({
             type: "GET",
@@ -248,29 +264,46 @@ async function serverSide(id, url, curPage, curPageSize, params, search="") {
             url: url,
             data : data,
             dataType: "json",
-            success: function (r) {
-                response = r;
-                try {
-                  r_columns = Object.keys(r['rows'][0]); 
-                  window[id].col_selected = r_columns;
-                  updateHeader(id, r_columns, "server");
-                } catch (e) {
-                  updateHeader(id, window[id].col_selected, "server");
+            beforeSend:(xhr) => {
+                // console.log(window[id].activeRequest);
+                if(window[id].activeRequest && window[id].activeRequest.readyState !== 4) {
+                    // console.log("abort: ", window[id].activeRequest);
+                    // console.log("keep: ", xhr);
+                    window[id].activeRequest.abort();
                 }
-                for(let [index,obj] of r['rows'].entries()) {
-                    let row = {};
-                    let columns = Object.keys(obj);
-                    for(let col of columns) {
-                        if(!obj[col]["url"] || 0 === obj[col]["url"].trim().length) {
-                            row[col] = obj[col]["data"];
-                        } else {
-                            row[col] = "<a href='" + obj[col]["url"] + "'>" + obj[col]["data"] + "</a>";
-                        }
+                window[id].activeRequest = xhr;
+            },
+            success: (d, s, xhr)=> {
+                response = d;
+            },
+            complete: (jqXHR, status) => {
+                // console.log(status);
+                if(status == 'success') {
+                    r = response;
+                    try {
+                    r_columns = Object.keys(r['rows'][0]); 
+                    window[id].col_selected = r_columns;
+                    updateHeader(id, r_columns, "server");
+                    } catch (e) {
+                    updateHeader(id, window[id].col_selected, "server");
                     }
-                    add_row_exec(id, row, (curPage * curPageSize)+index);
+                    for(let [index,obj] of r['rows'].entries()) {
+                        let row = {};
+                        let columns = Object.keys(obj);
+                        for(let col of columns) {
+                            if(!obj[col]["url"] || 0 === obj[col]["url"].trim().length) {
+                                row[col] = obj[col]["data"];
+                            } else {
+                                row[col] = "<a href='" + obj[col]["url"] + "'>" + obj[col]["data"] + "</a>";
+                            }
+                        }
+                        add_row_exec(id, row, (curPage * curPageSize)+index);
+                    }
                 }
             },
             error: function (){
+                // console.log("error");
+                return -1;
             }
         });
 
@@ -279,3 +312,69 @@ async function serverSide(id, url, curPage, curPageSize, params, search="") {
         return response['count'];
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// function server_side_exec(id, r, curPage, curPageSize) 
+
+
+// statusCode: {
+//     500: async function(){
+//         console.log("handling 500");
+//         // retry without sorting
+//         data['sort_column'] = "asset_id"; // what sould the default be? 
+//         data['sort_order'] = "ascending"; //  how would we determine a good guess?
+//         $('#'+id+' .header-item').attr("order", "");
+//         await $.ajax({
+//             type: "GET",
+//             contentType: "application/json; charset=utf-8",
+//             url: url,
+//             data : data,
+//             dataType: "json",
+//             complete: (r) => {
+//                 response = r;
+//                 try {
+//                   r_columns = Object.keys(r['rows'][0]); 
+//                   window[id].col_selected = r_columns;
+//                   updateHeader(id, r_columns, "server");
+//                 } catch (e) {
+//                   updateHeader(id, window[id].col_selected, "server");
+//                 }
+//                 for(let [index,obj] of r['rows'].entries()) {
+//                     let row = {};
+//                     let columns = Object.keys(obj);
+//                     for(let col of columns) {
+//                         if(!obj[col]["url"] || 0 === obj[col]["url"].trim().length) {
+//                             row[col] = obj[col]["data"];
+//                         } else {
+//                             row[col] = "<a href='" + obj[col]["url"] + "'>" + obj[col]["data"] + "</a>";
+//                         }
+//                     }
+//                     add_row_exec(id, row, (curPage * curPageSize)+index);
+//                 }
+//             },
+//             error: function (){
+//             }
+//         });
+//     }
+// },

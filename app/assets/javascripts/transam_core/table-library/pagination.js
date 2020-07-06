@@ -56,10 +56,8 @@ $(document).on('change', ".page-size-dropdown", function(){
 });
 
 
-// function pagination_help(id, curPage, curPageSize, pageSizes) {
-//     let total = $('#'+id).find('.table-row').length;
-//     pagination(id, curPage, curPageSize, pageSizes, total);
-// }
+
+
 
 function pagination(id, curPage, curPageSize, pageSizes) {
 
@@ -72,31 +70,23 @@ function pagination(id, curPage, curPageSize, pageSizes) {
         dropdown.append($('<option>').text(size));
     }
     sizeSelect.append(dropdown);
-    // sizeSelect.append($('<span>').text('▼'));
     footer.append(sizeSelect);
 
     let pageStatus = $('<div>').addClass("page-status");
-    // updatePageStatus(pageStatus, curPage, curPageSize, total);
     footer.append(pageStatus);
 
     let pageSelectWrapper = $('<div>').addClass("page-select-wrapper");
     let pageSelect = $('<div>').addClass("page-select");
-    pageSelectWrapper.append($('<div>').addClass("page-select-arrow-left").text("◄"));
-    pageSelectWrapper.append($('<div>').addClass("page-select-arrow-left-full").text("◄◄"));
+    pageSelectWrapper.append($('<div>').addClass("page-select-arrow-left").append($('<i class="fa fa-angle-left" aria-hidden="true"></i>')));
+    pageSelectWrapper.append($('<div>').addClass("page-select-arrow-left-full").append($('<i class="fa fa-angle-double-left" aria-hidden="true"></i>')));
     pageSelect.append($('<span>').addClass("page-select-item").text("1"));
     pageSelectWrapper.append(pageSelect);
-    pageSelectWrapper.append($('<div>').addClass("page-select-arrow-right-full").text("►►"));
-    pageSelectWrapper.append($('<div>').addClass("page-select-arrow-right").text("►"));
+    pageSelectWrapper.append($('<div>').addClass("page-select-arrow-right-full").append($('<i class="fa fa-angle-double-right" aria-hidden="true"></i>')));
+    pageSelectWrapper.append($('<div>').addClass("page-select-arrow-right").append($('<i class="fa fa-angle-right" aria-hidden="true"></i>')));
 
     footer.append(pageSelectWrapper);
 
-    // updatePageSelect(pageSelect, curPage, curPageSize, total);
-
-
     $('#'+id).parent().append(footer);
-
-
-    // updatePage(id, curPage, curPageSize, total);
 
 }
 
@@ -116,8 +106,12 @@ async function updatePage(id, curPage, curPageSize, total, clientSearch=false, p
     
     if(serv){
         params = $('#'+id).data('params');
-        searchContent = $('#'+id).siblings(".searchbar").eq(0).val();
-        total = await serverSide(id, $('#'+id).data('url'), curPage, curPageSize, params, searchContent);
+        searchContent = $('#'+id).siblings(".function_bar").find(".searchbar").val();
+        try {
+            total = await serverSide(id, $('#'+id).data('url'), curPage, curPageSize, params, searchContent, window[id].sort_params);
+        } catch (e) {
+            console.log("aborted request");
+        }
         try {
             window[id].apply_styles();
         } catch (e){
@@ -155,12 +149,21 @@ async function updatePage(id, curPage, curPageSize, total, clientSearch=false, p
         updatePageSelect($('#'+id).parent().find(".page-select").eq(0), curPage, curPageSize, total, true);
 
     }
-    $('#'+ id + ' .table-row:visible:nth-child(' + curPageSize + ') .row-item:last-child').css('border-bottom-right-radius', '.5em');
+
+
+    post_styles(id, curPageSize);
+
+    $('#'+ id).removeClass("loading");
 
 }
 
 
 function updatePageStatus(elem, curPage, curPageSize, total){
+    
+    if(total == -1) {
+        elem.html("loading...");
+        return;
+    }
     let start = curPage * curPageSize + 1;
     let end = start + curPageSize - 1;
     elem.html("Showing <b>" + start.toLocaleString() + " to " + Math.min(end,total).toLocaleString() + "</b> of " + total.toLocaleString() + " rows");
@@ -169,6 +172,12 @@ function updatePageStatus(elem, curPage, curPageSize, total){
 
 
 function updatePageSelect(elem, curPage, curPageSize, total, clientSearch) {
+    if(total === -1) {
+        elem.hide();
+        return;
+    } else {
+        elem.show();
+    }
     elem.find('.table-ellipses').remove();
     let last = elem.find('.page-select-item').last().index();
     if(last * curPageSize < total){
@@ -218,6 +227,19 @@ function updatePageSelect(elem, curPage, curPageSize, total, clientSearch) {
         if(curPage <= last-3){
             $("<span>").addClass("table-ellipses").text("...").insertBefore(elem.find('.page-select-item').eq(last));
         }
+    }
+
+}
+
+
+
+
+function post_styles(id, curPageSize) {
+
+    $('#'+ id + ' .table-row:visible:nth-child(' + curPageSize + ') .row-item:last-child').css('border-bottom-right-radius', '.5em');
+
+    if($('#'+id+" .row-item.drilldown-link .cell-text i").length === 0){
+        $('#'+id+" .row-item.drilldown-link .cell-text").append($('<i class="fas fa-level-down-alt"></i>'));
     }
 
 }

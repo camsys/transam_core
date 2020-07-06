@@ -13,7 +13,7 @@
       :search => 'client',
       :export => "['csv', 'txt', 'excel']",
       :columns => '{"0":{"name":"Session ID"},
-                    "1":{"name":"User"},
+                    "user":{"name":"User"},
                     "2":{"name":"IP Address"},
                     "3":{"name":"Organization"},
                     "4":{"name":"Started", "type":"right-align"},
@@ -23,7 +23,7 @@
                     "8":{"name":"Inactive Time"},
                     "9":{"name":"View Count"},
                     "10":{"name":"Last View"}}',
-      :selected_columns => "1,2,3,4,5,6,7,8,9,10",
+      :selected_columns => "user,2,3,4,5,6,7,8,9,10",
       :cookies => "true",
       :sort => 'client',
       :sort_params => @params,
@@ -36,7 +36,7 @@
     :javascript
       add_row('#{table_dom_id}',
       {
-        "1": '#{user.name unless user.blank?}',
+        "user": '#{user.name unless user.blank?}',
         "2": "#{@sessions[s][:ip_addr]}",
         "3": "#{user.organization.to_s unless user.blank?}",
         "4": "#{format_as_date_time(@sessions[s][:start_time])}",
