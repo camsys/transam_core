@@ -79,7 +79,9 @@ $("table[use]").ready(()=>{
 
 
 async function initialize(id, selected, curPage, curPageSize, pageSizes, side, url, params, sort, export_types) {
-    $('#'+id).parent().prepend($('<div class="function_bar">'));
+    if($('#'+id).parent().find('.function_bar').length === 0) {
+        $('#'+id).parent().prepend($('<div class="function_bar">'));
+    }
     $('#'+id).append($("<tbody>"));
     if(side === 'server') {
         pagination(id, curPage, curPageSize, pageSizes, -1);
