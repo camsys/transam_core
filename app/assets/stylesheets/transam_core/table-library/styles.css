@@ -37,8 +37,13 @@
     --green-light: #DBF3DD;
 }
 
+.container-fluid {
+    padding: 0px;
+}
+
 .library-table {
     background-color: var(--gray-light);
+    background: linear-gradient(0deg, var(--gray-light) 95%, #bbbfce69 100%);
     padding: 20px;
     font-family: 'Source Sans Pro', sans-serif;
     height: 100%;
@@ -485,6 +490,8 @@
     display: flex;
     flex-direction: column;
     background: var(--gray-light);
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 1.1em;
 }
 
 .tabs {
@@ -495,24 +502,38 @@
     max-width: 75%;
     border-radius: 5px;
     background: var(--gray-medium-light);
-    margin: 10px 20px;
+    margin: 16px 20px 0px 20px;
+    position: absolute;
 }
 
 .tab {
     color: var(--gray-dark);
     float: left;
-    padding: 5px;
-    margin: 5px;
+    padding: 1px 9px;
+    margin: 4px;
     border-radius: 5px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    -webkit-transition: .25s ease-in-out;
+    -o-transition: .25s ease-in-out;
+    transition: .25s ease-in-out;
+    height: 30px;
+    line-height: 24px;
+    border: 2px solid rgb(255, 255, 255, 0);
 }
 
 .tab.active {
     background: var(--white);
     color: var(--blue-base);
-    font-weight: bold;
+    text-shadow:0px 0px 1px var(--blue-base);
+    border: 2px solid var(--white);
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(102, 102, 102, 0.33);
+    -moz-box-shadow: 0px 0px 5px 0px rgba(102,102,102,0.33);
+    box-shadow: 0px 0px 5px 0px rgba(102,102,102,0.33);
+    background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.6) 0%, #ffffff 60%);
+    background: -o-linear-gradient(top, rgba(255, 255, 255, 0.6) 0%, #ffffff 60%);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.6) 0%, #ffffff 60%);
 }
 
 .tab.active:hover {
@@ -521,7 +542,7 @@
 
 .tab:not(.active):hover {
     color: var(--white);
-    background: var(--blue-base);
+    background: var(--blue-light);
     overflow: visible;
 }
 
@@ -535,6 +556,7 @@
 
 .function_bar {
     float: right;
+    margin-bottom: 20px;
 }
 
 .searchbar {
