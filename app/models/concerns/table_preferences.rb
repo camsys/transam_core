@@ -4,45 +4,58 @@ module TablePreferences
     {
       bus: { 
           sort: [{org_name: :ascending}, {asset_id: :ascending}],
+          columns: [:asset_id, :org_name, :vin, :manufacturer, :model, :year, :type, :subtype, :service_status, :last_life_cycle_action, :life_cycle_action_date]
       },
       rail_car: {
-        sort: [{org_name: :ascending}, {asset_id: :ascending}]
+        sort: [{org_name: :ascending}, {asset_id: :ascending}],
+        columns: [:asset_id, :org_name, :vin, :manufacturer, :model, :year, :type, :subtype, :service_status, :last_life_cycle_action, :life_cycle_action_date]
       },
       ferry: {
-        sort: [{org_name: :ascending}, {asset_id: :ascending}]
+        sort: [{org_name: :ascending}, {asset_id: :ascending}],
+        columns: [:asset_id, :org_name, :vin, :manufacturer, :model, :year, :type, :subtype, :service_status, :last_life_cycle_action, :life_cycle_action_date]
       },
       other_passenger_vehicle: {
-        sort: [{org_name: :ascending}, {asset_id: :ascending}]
+        sort: [{org_name: :ascending}, {asset_id: :ascending}],
+        columns: [:asset_id, :org_name, :vin, :manufacturer, :model, :year, :type, :subtype, :service_status, :last_life_cycle_action, :life_cycle_action_date]
       },
       service_vehicle: {
-        sort: [{org_name: :ascending}, {asset_id: :ascending}]
+        sort: [{org_name: :ascending}, {asset_id: :ascending}],
+        columns: [:asset_id, :org_name, :vin, :manufacturer, :model, :year, :type, :subtype, :service_status, :last_life_cycle_action, :life_cycle_action_date]
       },
       capital_equipment: {
-        sort: [{org_name: :ascending}, {asset_id: :ascending}]
+        sort: [{org_name: :ascending}, {asset_id: :ascending}],
+        columns: [:asset_id, :org_name, :description, :manufacturer, :model, :year, :type, :subtype, :service_status, :last_life_cycle_action, :life_cycle_action_date]
       },
       admin_facility: {
-        sort: [{org_name: :ascending}, {asset_id: :ascending}]
+        sort: [{org_name: :ascending}, {asset_id: :ascending}],
+        columns: [:asset_id, :org_name, :facility_name, :year, :type, :subtype, :service_status, :last_life_cycle_action, :life_cycle_action_date]
       },
       maintenance_facility: {
-        sort: [{org_name: :ascending}, {asset_id: :ascending}]
+        sort: [{org_name: :ascending}, {asset_id: :ascending}],
+        columns: [:asset_id, :org_name, :facility_name, :year, :type, :subtype, :service_status, :last_life_cycle_action, :life_cycle_action_date]
       },
       passenger_facility: {
-        sort: [{org_name: :ascending}, {asset_id: :ascending}]
+        sort: [{org_name: :ascending}, {asset_id: :ascending}],
+        columns: [:asset_id, :org_name, :facility_name, :year, :type, :subtype, :service_status, :last_life_cycle_action, :life_cycle_action_date]
       },
       parking_facility: {
-        sort: [{org_name: :ascending}, {asset_id: :ascending}]
+        sort: [{org_name: :ascending}, {asset_id: :ascending}],
+        columns: [:asset_id, :org_name, :facility_name, :year, :type, :subtype, :service_status, :last_life_cycle_action, :life_cycle_action_date]
       },
       track: {
-        sort: [{org_name: :ascending}, {asset_id: :ascending}]
+        sort: [{org_name: :ascending}, {asset_id: :ascending}],
+        columns: [:asset_id, :org_name, :from_line, :from_segment, :to_line, :to_segment, :subtype, :description, :main_line,  :branch, :track, :segment_type, :location, :service_status, :last_life_cycle_action, :life_cycle_action_date]
       },
       guideway: {
-        sort: [{org_name: :ascending}, {asset_id: :ascending}]
+        sort: [{org_name: :ascending}, {asset_id: :ascending}],
+        columns: [:asset_id, :org_name, :from_line, :from_segment, :to_line, :to_segment, :subtype, :description, :main_line,  :branch, :number_of_tracks, :segment_type, :location, :service_status, :last_life_cycle_action, :life_cycle_action_date]
       },
       power_signal: {
-        sort: [{org_name: :ascending}, {asset_id: :ascending}]
+        sort: [{org_name: :ascending}, {asset_id: :ascending}],
+        columns: [:asset_id, :org_name, :from_line, :from_segment, :to_line, :to_segment, :subtype, :description, :main_line,  :branch, :segment_type, :location, :service_status, :last_life_cycle_action, :life_cycle_action_date]
       },
       groups: {
-        sort: [{name: :ascending}]
+        sort: [{name: :ascending}],
       },
       disposition: {
         sort: [{org_name: :ascending}]
@@ -152,13 +165,7 @@ module TablePreferences
       }
     }
 
-  DEFAULT_COLUMN_PREFERENCES = 
-    {
-      bus: [:asset_id, :org_name, :vin, :manufacturer, :model, :year, :type, :subtype, :service_status, :last_life_cycle_action, :life_cycle_action_date]
-    } 
-
-
-
+  # Get all table preferences, or preferences for a specific table
   def table_preferences table_code=nil
     if table_code
       eval(table_prefs || "{}").try(:[], table_code.to_sym) || DEFAULT_TABLE_PREFERENCES[table_code.to_sym]
@@ -167,20 +174,13 @@ module TablePreferences
     end
   end
 
-  def column_preferences table_code=nil
-    if table_code
-      preferences = eval(table_prefs || "{}")
-      preferences = preferences.try(:[], table_code.to_sym)
-      preferences.try(:[], :columns) || DEFAULT_COLUMN_PREFERENCES[table_code.to_sym]
-    else
-      table_prefs
-    end
+  # Get column preferences for a specific table
+  def column_preferences table_code
+      preferences = table_preferences table_code
+      preferences.try(:[], :columns) || DEFAULT_TABLE_PREFERENCES[table_code.to_sym][:columns]
   end
 
-  def preferred_columns table_code
-    column_preferences(table_code)
-  end 
-
+  # Used to generate a SQL string for sorting on the preferred column
   #TODO: Move to TableTools
   def table_sort_string table_code
     sorting = table_preferences(table_code)[:sort]
@@ -190,9 +190,12 @@ module TablePreferences
     return "#{SORT_COLUMN[table_code][key]} #{order_string}"
   end
 
+  # Update a user's sort and preferred columns for a table 
   def update_table_prefs table_code, sort_column, sort_order, columns_string 
-
+    # Get the user's current set of preferences for all tables.
     table_prefs = eval(self.table_preferences || "{}")
+    
+    # Update the sort order
     if sort_column
       sort_params = {}
       asc_desc = (sort_order.to_s.downcase == "descending") ? :descending : :ascending
@@ -201,6 +204,7 @@ module TablePreferences
       table_prefs[table_code.to_sym][:sort] = sort_params
     end 
 
+    # Update the selected columns
     if columns_string
       columns = columns_string.split(',').map{ |x| x.downcase.strip.to_sym}
       table_prefs[table_code.to_sym][:columns] = columns
@@ -209,6 +213,7 @@ module TablePreferences
     self.update(table_prefs: table_prefs)
   end
 
+  # This is done as a reset
   def delete_table_prefs table_code 
     table_prefs = eval(self.table_preferences || "{}")
     table_prefs.delete(table_code.to_sym)
