@@ -3,7 +3,7 @@ module TablePreferences
   DEFAULT_TABLE_PREFERENCES = 
     {
       bus: { 
-          sort: [{org_name: :ascending}, {asset_id: :ascending}]
+          sort: [{org_name: :ascending}, {asset_id: :ascending}],
       },
       rail_car: {
         sort: [{org_name: :ascending}, {asset_id: :ascending}]
@@ -152,6 +152,12 @@ module TablePreferences
       }
     }
 
+  DEFAULT_COLUMN_PREFERENCES = 
+    {
+      bus: [:asset_id, :org_name, :vin, :manufacturer, :model, :year, :type, :subtype, :service_status, :last_life_cycle_action, :life_cycle_action_date]
+    } 
+
+
 
   def table_preferences table_code=nil
     if table_code
@@ -160,6 +166,20 @@ module TablePreferences
       table_prefs
     end
   end
+
+  def column_preferences table_code=nil
+    if table_code
+      preferences = eval(table_prefs || "{}")
+      preferences = preferences.try(:[], table_code.to_sym)
+      preferences.try(:[], :columns) || DEFAULT_COLUMN_PREFERENCES[table_code.to_sym]
+    else
+      table_prefs
+    end
+  end
+
+  def preferred_columns table_code
+    column_preferences(table_code)
+  end 
 
   #TODO: Move to TableTools
   def table_sort_string table_code
@@ -170,13 +190,22 @@ module TablePreferences
     return "#{SORT_COLUMN[table_code][key]} #{order_string}"
   end
 
-  def update_table_prefs table_code, column, order 
+  def update_table_prefs table_code, sort_column, sort_order, columns_string 
+
     table_prefs = eval(self.table_preferences || "{}")
-    sort_params = {}
-    asc_desc = (order.to_s.downcase == "descending") ? :descending : :ascending
-    sort_params[column.to_sym] = asc_desc 
-    sort_params = {sort: [sort_params]}
-    table_prefs[table_code.to_sym] = sort_params
+    if sort_column
+      sort_params = {}
+      asc_desc = (sort_order.to_s.downcase == "descending") ? :descending : :ascending
+      sort_params[sort_column.to_sym] = asc_desc 
+      sort_params = [sort_params]
+      table_prefs[table_code.to_sym][:sort] = sort_params
+    end 
+
+    if columns_string
+      columns = columns_string.split(',').map{ |x| x.downcase.strip.to_sym}
+      table_prefs[table_code.to_sym][:columns] = columns
+    end
+
     self.update(table_prefs: table_prefs)
   end
 
@@ -189,7 +218,7 @@ module TablePreferences
   private 
 
   #TODO: Move to TableTools
-  # THis is a map between every column and the SQL string required to search on that column
+  # THis is a map between every column and the SQL string required to sort on that column
   SORT_COLUMN = {
     track: 
       { 
