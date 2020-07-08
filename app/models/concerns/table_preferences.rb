@@ -309,7 +309,9 @@ module TablePreferences
         subtype: 'asset_subtypes.name',
         external_id: 'external_id',
         license_plate: 'license_plate',
-        fta_asset_class: 'fta_asset_classes.name'
+        fta_asset_class: 'fta_asset_classes.name',
+        vehicle_length: 'vehicle_length',
+        vehicle_length_unit: 'vehicle_length_unit'
       },
     rail_car: { 
         asset_id: 'asset_tag',
