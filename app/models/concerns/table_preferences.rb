@@ -306,7 +306,10 @@ module TablePreferences
         model: 'manufacturer_models.name',
         year: 'manufacture_year',
         type: 'fta_equipment_types.name',
-        subtype: 'asset_subtypes.name'
+        subtype: 'asset_subtypes.name',
+        external_id: 'external_id',
+        license_plate: 'license_plate',
+        fta_asset_class: 'fta_asset_classes.name'
       },
     rail_car: { 
         asset_id: 'asset_tag',
