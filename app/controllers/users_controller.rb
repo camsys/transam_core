@@ -502,7 +502,18 @@ class UsersController < OrganizationAwareController
     table_code = table_preference_params[:table_code]
     sort_params = table_preference_params[:sort]
     table_prefs = eval(current_user.table_preferences || "{}")
-    sort_params = {sort: sort_params}
+    
+    #Turn all the keys and values from string to sym
+    keyed_params = []
+    sort_params.each do |kp|
+      kp.each do |k,v|
+        new_hash = {}
+        new_hash[k.to_sym] = v.to_sym
+        keyed_params << new_hash 
+      end
+    end
+
+    sort_params = {sort: keyed_params}
     table_prefs[table_code.to_sym] = sort_params
     current_user.update(table_prefs: table_prefs)
 

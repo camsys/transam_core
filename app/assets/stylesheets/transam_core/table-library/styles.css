@@ -520,7 +520,7 @@
     transition: .25s ease-in-out;
     height: 30px;
     line-height: 24px;
-    border: 2px solid rgb(255, 255, 255, 0);
+    border: 2px solid #ffffff00;
 }
 
 .tab.active {
