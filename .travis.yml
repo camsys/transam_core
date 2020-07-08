@@ -7,6 +7,8 @@ branches:
   only:
     - master
     - /quarter\d*/
+    - develop
+    - /2.\d*.\d*/
 env:
 - TEST_SUITE=rspec
 - TEST_SUITE=cucumber

@@ -2,7 +2,7 @@ module TransamFormatHelper
 
   # Include the fiscal year mixin
   include FiscalYear
-
+  include ActionView::Helpers::NumberHelper
 
   # Formats text as as HTML using simple_format
   def format_as_text(val, sanitize=false)

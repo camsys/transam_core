@@ -135,23 +135,102 @@ class UsersController < OrganizationAwareController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json {
-        render :json => {
-          :total => @users.count,
-          :rows => @users.limit(params[:limit]).offset(params[:offset]).collect{ |u|
-            u.as_json.merge!({
-                 organization_short_name: u.organization.short_name,
-                 organization_name: u.organization.name,
-                 role_name: u.roles.roles.last&.label,
-                 privilege_names: u.roles.privileges.collect{|x| x.label}.join(', '),
-                 all_orgs: u.organizations.map{ |o| o.to_s }.join(', ')
-            }) if @roles.nil? || @roles.include?(u.roles.roles.last.name)
-          }.compact
-        }
-      }
+      # format.json {
+      #   render :json => {
+      #     :total => @users.count,
+      #     :rows => @users.limit(params[:limit]).offset(params[:offset]).collect{ |u|
+      #       u.as_json.merge!({
+      #            organization_short_name: u.organization.short_name,
+      #            organization_name: u.organization.name,
+      #            role_name: !@role.blank? && (@role.kind_of?(Array) ? !Role.find_by(name:@role.first).privilege : !Role.find_by(name: @role).privilege) ? (@role.kind_of?(Array) ? u.roles.roles.where(name: @role).last.label : u.roles.roles.find_by(name: @role).label) : u.roles.roles.last.label,
+      #            privilege_names: u.roles.privileges.collect{|x| x.label}.join(', '),
+      #            all_orgs: u.organizations.map{ |o| o.to_s }.join(', ')
+      #       })
+      #     }
+      #   }
+      # }
 
     end
   end
+
+  #-----------------------------------------------------------------------------
+  # Show the list of current sessions. Only available for admin users
+  # TODO: MOST of this will be moved to a shareable module
+  #-----------------------------------------------------------------------------
+  def table
+
+    ### Get the default set of users ###
+    users = join_builder
+
+    ### Pluck out the Params ###
+    page = (table_params[:page] || 0).to_i
+    page_size = (table_params[:page_size] || users.count).to_i
+    search = (table_params[:search])
+    offset = page*page_size
+    sort_column = params[:sort_column]
+    sort_order = params[:sort_order]
+
+    ### Update SORT Preferences ###
+    if sort_column
+      current_user.update_table_prefs(:users, sort_column, sort_order)
+    end
+
+    ### Search ###
+    if search
+      searchable_columns = [:first_name, :last_name, :phone, :phone_ext, :email, :title] 
+      search_string = "%#{search}%"
+      query = query_builder(searchable_columns, search_string)
+      users = users.where(query)
+      ####### Get users who match search on role
+      ##users_on_role = (role_query search_string).pluck(:id)
+      ######## Search on every column (except role)
+      ##all_user_table = User.joins(:organization).joins(:roles).where(query).pluck(:id)
+      ######### Take the union of the above searches
+      ##users = User.where(id: [users_on_role + all_user_table].uniq)
+    end
+
+    ### SORT ###
+    users = users.order(current_user.table_sort_string :users)
+
+    ### Rowify Everything ###      
+    user_table = users.offset(offset).limit(page_size).map{ |u| u.rowify }
+    render status: 200, json: {count: users.count, rows: user_table}
+  end
+
+  def join_builder
+    User.unscoped.joins(:organization)
+      #.joins(:roles)
+      #.joins('left join max_user_roles_and_labels on users.id=max_user_roles_and_labels.user_id')
+  end
+
+  def query_builder searchable_columns, search_string
+    user_query_builder(searchable_columns, search_string)
+      .or(org_query search_string)
+      #.or(privilege_query search_string)
+      #.or(role_query search_string)
+  end
+
+  def user_query_builder atts, search_string
+    if atts.count <= 1
+      return User.joins(:organziation).arel_table[atts.pop].matches(search_string)
+    else
+      return User.joins(:organization).arel_table[atts.pop].matches(search_string).or(query_builder(atts, search_string))
+    end
+  end
+
+  def role_query search_string
+    q =  "max_user_roles_and_labels.role_label like '#{search_string}'"
+    User.joins('left join max_user_roles_and_labels on users.id=max_user_roles_and_labels.user_id').where(q)
+  end
+
+  def org_query search_string 
+    Organization.arel_table[:name].matches(search_string).or(Organization.arel_table[:short_name].matches(search_string))
+  end
+
+  def privilege_query search_string 
+    Role.where(privilege: true).arel_table[:label].matches(search_string)
+  end
+
 
   #-----------------------------------------------------------------------------
   # Show the list of current sessions. Only available for admin users
@@ -160,6 +239,7 @@ class UsersController < OrganizationAwareController
 
     key = "000000:#{TransamController::ACTIVE_SESSION_LIST_CACHE_VAR}"
     @sessions =  Rails.cache.fetch(key)
+    @sessions.delete_if { |key, value| value[:expire_time] < Time.now }
     @sessions ||= {}
 
   end
@@ -412,6 +492,23 @@ class UsersController < OrganizationAwareController
     @user = User.find_by_object_key(params[:id])
   end
 
+  def table_preferences
+    table_code = params[:table_code] || nil
+    render status: 200, json: current_user.table_preferences(table_code)
+  end 
+
+  #TODO Update to new Format
+  def update_table_preferences
+    table_code = table_preference_params[:table_code]
+    sort_params = table_preference_params[:sort]
+    table_prefs = eval(current_user.table_preferences || "{}")
+    sort_params = {sort: sort_params}
+    table_prefs[table_code.to_sym] = sort_params
+    current_user.update(table_prefs: table_prefs)
+
+    render status: 200, json: current_user.table_preferences(table_code)
+  end 
+
   #------------------------------------------------------------------------------
   # Protected Methods
   #------------------------------------------------------------------------------
@@ -444,6 +541,15 @@ class UsersController < OrganizationAwareController
     params.require(:user).permit(user_allowable_params)
   end
 
+  def table_params
+    params.permit(:page, :page_size, :search, :sort_column, :sort_order)
+  end
+
+  def table_preference_params
+    request.parameters[:table_preferences]
+    #params.permit(:table_code, sort: [:column, :order])
+  end
+
   #-----------------------------------------------------------------------------
   # Callbacks to share common setup or constraints between actions.
   #-----------------------------------------------------------------------------
@@ -473,6 +579,8 @@ class UsersController < OrganizationAwareController
 
     return
   end
+
+
 
   #-----------------------------------------------------------------------------
   def add_user_breadcrumb(page)

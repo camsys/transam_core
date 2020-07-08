@@ -12,11 +12,11 @@ describe "assets/_core_asset_dt_columns.html.haml", :type => :view do
     expect(rendered).to have_content(test_asset.asset_tag)
     expect(rendered).to have_content(test_asset.description)
     expect(rendered).to have_link(test_asset.parent.name)
-    expect(rendered).to have_content('FY 10-11')
+    expect(rendered).to have_content('10-11')
     expect(rendered).to have_content(Date.today.year-2010)
     expect(rendered).to have_content('4.0')
     expect(rendered).to have_content(ServiceStatusType.first.code)
-    expect(rendered).to have_content('FY 24-25')
-    expect(rendered).to have_content('FY 25-26')
+    expect(rendered).to have_content('24-25')
+    expect(rendered).to have_content('25-26')
   end
 end

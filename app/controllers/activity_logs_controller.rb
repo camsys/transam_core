@@ -13,7 +13,7 @@ class ActivityLogsController < OrganizationAwareController
     add_breadcrumb "Activity Log"
 
     # get the policies for this agency
-    @activities = ActivityLog.where(organization: @organization_list).order('activity_time')
+    @activities = ActivityLog.where(organization: @organization_list).order(activity_time: :desc).limit(1000)
 
     # cache the set of object keys in case we need them later
     #cache_list(@activities, INDEX_KEY_LIST_VAR)

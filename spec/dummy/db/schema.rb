@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_02_230352) do
+ActiveRecord::Schema.define(version: 2020_05_18_154632) do
 
   create_table "activities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "object_key", limit: 12
@@ -477,6 +477,7 @@ ActiveRecord::Schema.define(version: 2020_02_02_230352) do
   create_table "image_classifications", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name"
     t.string "category"
+    t.integer "sort_order"
     t.boolean "active"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -906,6 +907,13 @@ ActiveRecord::Schema.define(version: 2020_02_02_230352) do
     t.index ["report_type_id"], name: "reports_idx1"
   end
 
+  create_table "role_privilege_mappings", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "role_id"
+    t.bigint "privilege_id"
+    t.index ["privilege_id"], name: "index_role_privilege_mappings_on_privilege_id"
+    t.index ["role_id"], name: "index_role_privilege_mappings_on_role_id"
+  end
+
   create_table "roles", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name", limit: 64, null: false
     t.integer "weight"
@@ -1009,6 +1017,9 @@ ActiveRecord::Schema.define(version: 2020_02_02_230352) do
     t.boolean "active"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "is_visible"
+    t.string "label"
+    t.string "action_name"
   end
 
   create_table "system_configs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -1198,6 +1209,7 @@ ActiveRecord::Schema.define(version: 2020_02_02_230352) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "authentication_token", limit: 30
+    t.text "table_prefs"
     t.index ["authentication_token"], name: "index_users_on_authentication_token", unique: true
     t.index ["email"], name: "users_idx3"
     t.index ["object_key"], name: "users_idx1"

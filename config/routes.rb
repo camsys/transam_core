@@ -270,6 +270,9 @@ Rails.application.routes.draw do
   resources :users do
     collection do
       get  'sessions'
+      get  'table'
+      get  'table_preferences'
+      put  'table_preferences', to: 'users#update_table_preferences'
     end
     member do
       get   'reset_password'

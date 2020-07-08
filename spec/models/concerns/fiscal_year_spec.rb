@@ -116,7 +116,7 @@ RSpec.describe FiscalYear do
     expected_yr_end = (expected_yr+1).to_s
     expected_yr_end = expected_yr_end[-2..expected_yr_end.length]
 
-    expect(test_fy_class.current_fiscal_year).to eq("FY #{expected_yr_start}-#{expected_yr_end}")
+    expect(test_fy_class.current_fiscal_year).to eq("#{expected_yr_start}-#{expected_yr_end}")
   end
   it '.current_planning_year' do
     expected_yr = Date.today.month < 7 ? Date.today.year : Date.today.year + 1
@@ -125,20 +125,20 @@ RSpec.describe FiscalYear do
     expected_yr_end = (expected_yr+1).to_s
     expected_yr_end = expected_yr_end[-2..expected_yr_end.length]
 
-    expect(test_fy_class.current_planning_year).to eq("FY #{expected_yr_start}-#{expected_yr_end}")
+    expect(test_fy_class.current_planning_year).to eq("#{expected_yr_start}-#{expected_yr_end}")
   end
   it '.fiscal_year_on_date' do
-    expect(test_fy_class.fiscal_year_on_date(Date.new(2015,5,1))).to eq('FY 14-15')
-    expect(test_fy_class.fiscal_year_on_date(Date.new(2015,10,1))).to eq('FY 15-16')
+    expect(test_fy_class.fiscal_year_on_date(Date.new(2015,5,1))).to eq('14-15')
+    expect(test_fy_class.fiscal_year_on_date(Date.new(2015,10,1))).to eq('15-16')
   end
   it '.fiscal_year' do
-    expect(test_fy_class.fiscal_year(2015)).to eq('FY 15-16')
+    expect(test_fy_class.fiscal_year(2015)).to eq('15-16')
   end
   it '.get_all_fiscal_years' do
     fy_yr = Date.today.month < 7 ? Date.today.year - 4 - 1 : Date.today.year - 4
     results = []
     (fy_yr..test_fy_class.last_fiscal_year_year).each do |yr|
-      results << ["FY #{(yr-2000).to_s}-#{(yr-2000+1).to_s}", yr]
+      results << ["#{(yr-2000).to_s}-#{(yr-2000+1).to_s}", yr]
     end
     expect(test_fy_class.get_all_fiscal_years).to eq(test_fy_class.get_fiscal_years(Date.today - 4.years))
     expect(test_fy_class.get_all_fiscal_years).to eq(results)
@@ -147,7 +147,7 @@ RSpec.describe FiscalYear do
     it 'no date or forecasting years' do
       results = []
       (test_fy_class.current_planning_year_year..test_fy_class.last_fiscal_year_year).each do |yr|
-        results << ["FY #{(yr-2000).to_s}-#{(yr-2000+1).to_s}", yr]
+        results << ["#{(yr-2000).to_s}-#{(yr-2000+1).to_s}", yr]
       end
       expect(test_fy_class.get_fiscal_years).to eq(results)
     end
@@ -156,7 +156,7 @@ RSpec.describe FiscalYear do
       test_date2 = Date.new(2015,6,30)
       results = []
       (2014..test_fy_class.last_fiscal_year_year).each do |yr|
-        results << ["FY #{(yr-2000).to_s}-#{(yr-2000+1).to_s}", yr]
+        results << ["#{(yr-2000).to_s}-#{(yr-2000+1).to_s}", yr]
       end
       expect(test_fy_class.get_fiscal_years(test_date1)).to eq(results[1..results.length-1])
       expect(test_fy_class.get_fiscal_years(test_date2)).to eq(results)
@@ -165,7 +165,7 @@ RSpec.describe FiscalYear do
       current_planning_yr = Date.today.month < 7 ? Date.today.year : Date.today.year + 1
       results = []
       (0..4).each do |forecast_yr|
-        results << ["FY #{(current_planning_yr+forecast_yr-2000).to_s}-#{(current_planning_yr+forecast_yr-2000+1).to_s}", current_planning_yr+forecast_yr]
+        results << ["#{(current_planning_yr+forecast_yr-2000).to_s}-#{(current_planning_yr+forecast_yr-2000+1).to_s}", current_planning_yr+forecast_yr]
       end
       expect(test_fy_class.get_fiscal_years(nil,4)).to eq(results)
     end
@@ -175,7 +175,7 @@ RSpec.describe FiscalYear do
       test_date2 = Date.new(2015,6,30)
       results = []
       (2014..2021).each do |yr|
-        results << ["FY #{(yr-2000).to_s}-#{(yr-2000+1).to_s}", yr]
+        results << ["#{(yr-2000).to_s}-#{(yr-2000+1).to_s}", yr]
       end
       expect(test_fy_class.get_fiscal_years(test_date1, 6)).to eq(results[1..results.length-1])
       expect(test_fy_class.get_fiscal_years(test_date2, 7)).to eq(results)
@@ -187,7 +187,7 @@ RSpec.describe FiscalYear do
     last_year = test_fy_class.last_fiscal_year_year
     results = []
     (2010..last_year).each do |yr|
-      results << ["FY #{(yr-2000).to_s}-#{(yr-2000+1).to_s}", yr]
+      results << ["#{(yr-2000).to_s}-#{(yr-2000+1).to_s}", yr]
     end
 
     expect(test_fy_class.get_planning_fiscal_years(test_date)).to eq(results)

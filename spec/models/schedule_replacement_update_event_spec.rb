@@ -36,7 +36,7 @@ RSpec.describe ScheduleReplacementUpdateEvent, :type => :model do
 
   it '.get_update' do
     test_event.replacement_year = 2020
-    expect(test_event.get_update).to eq("Scheduled for replacement in FY 20-21. Reason: #{test_event.replacement_reason_type}.")
+    expect(test_event.get_update).to eq("Scheduled for replacement in 20-21. Reason: #{test_event.replacement_reason_type}.")
   end
 
   it '.set_defaults' do

@@ -135,7 +135,7 @@ module FiscalYear
         next_yr = (yr + 1)
       end
       last = "%.2d" % next_yr
-      "FY #{first}-#{last}"
+      "#{first}-#{last}"
     end
   end
 
