@@ -86,9 +86,9 @@
     background-clip: padding-box; /* Firefox Bug */
 }
 
-.fa-stack {
+.cell-checkbox .fa-stack, .header-checkbox .fa-stack {
     font-size: 1.25em; /* 16px */
-    position: absolute;
+    position: relative;
     z-index: 1;
     left: 50%;
     transform: translateX(-50%);
