@@ -42,8 +42,7 @@
 }
 
 .library-table {
-    background-color: var(--gray-light);
-    background: linear-gradient(0deg, var(--gray-light) 95%, #bbbfce69 100%);
+    background: linear-gradient(0deg, var(--gray-light) 97%, #bbbfce69 100%);
     padding: 20px;
     font-family: 'Source Sans Pro', sans-serif;
     height: 100%;
@@ -52,6 +51,7 @@
     -o-transition: max-height .25s ease-in-out;
     transition: max-height .25s ease-in-out;
     overflow: hidden;
+    box-shadow: 0px 10px 10px 0px #8f98a57d;
 }
 
 .elbat {
@@ -403,6 +403,8 @@
     display: flex;
     justify-content: center;
     min-width: 11em;
+    color: var(--blue-medium);
+
 }
 
 .page-select-arrow-left, .page-select-arrow-right, .page-select-arrow-left-full, .page-select-arrow-right-full {
