@@ -311,7 +311,11 @@ module TablePreferences
         license_plate: 'license_plate',
         fta_asset_class: 'fta_asset_classes.name',
         vehicle_length: 'vehicle_length',
-        vehicle_length_unit: 'vehicle_length_unit'
+        vehicle_length_unit: 'vehicle_length_unit',
+        purchase_cost: 'purchase_cost',
+        esl_category: 'esl_categories.name',
+        chassis: 'chasses.name',
+        fuel_type: 'fuel_types.name'
       },
     rail_car: { 
         asset_id: 'asset_tag',
