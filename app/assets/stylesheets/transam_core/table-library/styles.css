@@ -175,6 +175,7 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     -o-text-overflow: ellipsis;
+    font-size: 1em !important;
 }
 
 .header-content {
@@ -491,7 +492,6 @@
     flex-direction: column;
     background: var(--gray-light);
     font-family: 'Source Sans Pro', sans-serif;
-    font-size: 1.1em;
 }
 
 .tabs {
@@ -521,6 +521,7 @@
     height: 30px;
     line-height: 24px;
     border: 2px solid #ffffff00;
+    font-size: 1.1em;
 }
 
 .tab.active {
