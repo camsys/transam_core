@@ -315,7 +315,8 @@ module TablePreferences
         purchase_cost: 'purchase_cost',
         esl_category: 'esl_categories.name',
         chassis: 'chasses.name',
-        fuel_type: 'fuel_types.name'
+        fuel_type: 'fuel_types.name',
+        pcnt_capital_responsibility: 'pcnt_capital_responsibility'
       },
     rail_car: { 
         asset_id: 'asset_tag',
