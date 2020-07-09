@@ -318,7 +318,8 @@ module TablePreferences
         fuel_type: 'fuel_types.name',
         pcnt_capital_responsibility: 'pcnt_capital_responsibility',
         in_service_date: 'in_service_date',
-        operator: 'operators.short_name'
+        operator: 'operators.short_name',
+        seating_capacity: 'seating_capacity'
       },
     rail_car: { 
         asset_id: 'asset_tag',
