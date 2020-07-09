@@ -316,7 +316,9 @@ module TablePreferences
         esl_category: 'esl_categories.name',
         chassis: 'chasses.name',
         fuel_type: 'fuel_types.name',
-        pcnt_capital_responsibility: 'pcnt_capital_responsibility'
+        pcnt_capital_responsibility: 'pcnt_capital_responsibility',
+        in_service_date: 'in_service_date',
+        operator: 'operators.short_name'
       },
     rail_car: { 
         asset_id: 'asset_tag',
