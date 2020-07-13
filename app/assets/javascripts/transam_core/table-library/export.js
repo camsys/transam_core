@@ -15,32 +15,74 @@ $(document).on('click', ".export_option", function(event){
 
 
 
-function export_table(id, type) {
+async function export_table(id, type) {
   const table = $('#'+id);
+  const side = $(table).data('side');
   const header = table.find("tr:has(th)").eq(0).find(".header-item:not(.header-checkbox)");
   let rows = [];
-  if($('#' + id + '_export_checkbox').is(':checked')) {
-    rows = table.find(".row-checked:has(td)");
-  } else {
-    rows = table.find("tr:has(td)");
-  }
-  let csv = "";
-  for(let cell of header){
-    csv = csv + $(cell).find(".header-text").text().replace(/,/g, '') + ",";
-  }
-  csv = csv + '\n';
-  for(let row of rows){
-    for(let c of $(row).find(".row-item")) {
-      if($(c).hasClass("action-column")) {
-        continue;
-      } else if($(c).hasClass("checkmark-column")) {
-        csv = csv + (($(c).find(".cell-text i").css("visibility") == "visible")? "Yes,": "No,");
-      } else {
-        csv = csv + $(c).find(".cell-text").text().replace(/,/g, '') + ",";
-      }
+  if(side === "client") {
+    if($('#' + id + '_export_checkbox').is(':checked')) {
+      rows = table.find(".row-checked:has(td)");
+    } else {
+      rows = table.find("tr:has(td)");
+    }
+    let csv = "";
+    for(let cell of header){
+      csv = csv + $(cell).find(".header-text").text().replace(/,/g, '') + ",";
     }
     csv = csv + '\n';
+    for(let row of rows){
+      for(let c of $(row).find(".row-item")) {
+        if($(c).hasClass("action-column")) {
+          continue;
+        } else if($(c).hasClass("checkmark-column")) {
+          csv = csv + (($(c).find(".cell-text i").css("visibility") == "visible")? "Yes,": "No,");
+        } else {
+          csv = csv + $(c).find(".cell-text").text().replace(/,/g, '') + ",";
+        }
+      }
+      csv = csv + '\n';
+    }    
+  } else {
+    let csv = "";
+    let data = {'page': 0, 'page_size': 22222, 'search': $('#'+id).siblings(".function_bar").find(".searchbar").val()}; // 22222 page size is meant to include all of the rows, ugly hack
+    sorted_column = $(header).children(".sorted");
+    data['sort_column'] = $(sorted_column).attr("code");
+    data['sort_order'] = ($(sorted_column).hasClass("sorted-desc")) ? "descending": "ascending";
+    await $.ajax({
+      type: "GET",
+      contentType: "application/json; charset=utf-8",
+      url: url,
+      data : data,
+      dataType: "json",
+      success: (d, s, xhr)=> {
+        response = d;
+      },
+      complete: (jqXHR, status) => {  
+        let rows = [];
+        if(status == 'success') {
+          r = response;
+          r_columns = Object.keys(r['rows'][0]); 
+          for(let [index,obj] of r['rows'].entries()) {
+            let row = {};
+            let columns = Object.keys(obj);
+            for(let col of columns) {
+              row[col] = obj[col]["data"];
+            }
+            rows.append(row);
+          }
+        }
+        console.log(rows);
+      },
+      error: function (e){
+          console.log(e);
+          return -1;
+      }
+    });
   }
+
+
+
   if(type === "csv") {
     csvData = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv);
     return csvData;
