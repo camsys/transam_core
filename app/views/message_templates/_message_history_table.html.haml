@@ -1,70 +1,41 @@
 %legend{style: 'border-bottom: none; margin-bottom: 0px;'} Message History
 
-.library-table
-  %table.elbat{:id => table_dom_id,
-  :use => 'true',
-  :data => {:use => 'true',
-    :table_code => 'message_history',
-    :side => 'server',
-    :current_page => '0',
-    :current_page_size => '10',
-    :page_sizes => "10,20,50,100",
-    :search => 'server',
-    :export => "['csv', 'txt', 'excel']",
-    :columns => '{"0":{"name":"ID","type":"drilldown-link"},
-                  "1":{"name":"Subject"},
-                  "2":{"name":"Description"},
-                  "3":{"name":"Active"},
-                  "4":{"name":"Message"},
-                  "5":{"name":"Email (External)"},
-                  "6":{"name":"Entry Date & Time","type":"right-align"},
-                  "7":{"name":"Event By"},
-                  "8":{"name":"Sent To"},
-                  "9":{"name":"Email (External) Status"}}',
-    :selected_columns => "0,1,2,3,4,5,6,7,8,9",
-    :cookies => 'true',
-    :sort => 'server',
-    :params => '',
-    :url => table_message_history_message_templates_path(:format => :json) }}
-
-
-
--# .table-responsive
--#   #table_actions.btn-toolbar
--#   %table.table.table-condensed.table-hover{:id => 'message_history_server_table',
--#     :data => {:toggle => 'table',
--#     :url => message_history_message_templates_path(:format => :json),
--#     :card_view => "false",
--#     :pagination => 'true',
--#     :sort_order => 'asc',
--#     :sortable => 'true',
--#     :side_pagination => 'server',
--#     :show_pagination_switch => 'false',
--#     :page_number => '1',
--#     :page_list => "[5, 10, 20, 50, 100, 200, 10000]",
--#     :page_size => current_user.num_table_rows,
--#     :search => 'true',
--#     :show_columns => 'true',
--#     :toolbar => "#table_actions",
--#     :show_export => 'true',
--#     :id_field => 'object_key',
--#     :export_types => "['csv', 'txt', 'excel']",
--#     :cookie => 'true',
--#     :cookie_id_table => "message_history_table",
--#     :cookie_expire => "1y"}}
--#     %thead
--#       %tr
--#         %th.left{:data => {:field => "object_key", :visible => 'false'}} Object Key
--#         %th.left{:data => {:field => "name", :sortable => 'true', :formatter => 'message_link_formatter'}} ID
--#         %th.left{:data => {:field => "subject", sortable: 'true'}} Subject
--#         %th.left{:data => {:field => "description", sortable: 'true'}} Description
--#         %th.left{:data => {:field => "active", :formatter => "raw_boolean_formatter", sortable: 'true'}} Active
--#         %th.left{:data => {:field => "message_enabled", :formatter => "raw_boolean_formatter", sortable: 'true'}} Message
--#         %th.left{:data => {:field => "email_enabled", :formatter => "raw_boolean_formatter", sortable: 'true'}} Email (External)
--#         %th.left{:data => {:field => "created_at", :formatter => "date_time_formatter", sortable: 'true'}} Entry Date & Time
--#         %th.left{:data => {:field => "user", sortable: 'true'}} Event By
--#         %th.left{:data => {:field => "to_user", sortable: 'true'}} Sent To
--#         %th.left{:data => {:field => "email_status", sortable: 'true'}} Email (External) Status
+.table-responsive
+  #table_actions.btn-toolbar
+  %table.table.table-condensed.table-hover{:id => 'message_history_server_table',
+    :data => {:toggle => 'table',
+    :url => message_history_message_templates_path(:format => :json),
+    :card_view => "false",
+    :pagination => 'true',
+    :sort_order => 'asc',
+    :sortable => 'true',
+    :side_pagination => 'server',
+    :show_pagination_switch => 'false',
+    :page_number => '1',
+    :page_list => "[5, 10, 20, 50, 100, 200, 10000]",
+    :page_size => current_user.num_table_rows,
+    :search => 'true',
+    :show_columns => 'true',
+    :toolbar => "#table_actions",
+    :show_export => 'true',
+    :id_field => 'object_key',
+    :export_types => "['csv', 'txt', 'excel']",
+    :cookie => 'true',
+    :cookie_id_table => "message_history_table",
+    :cookie_expire => "1y"}}
+    %thead
+      %tr
+        %th.left{:data => {:field => "object_key", :visible => 'false'}} Object Key
+        %th.left{:data => {:field => "name", :sortable => 'true', :formatter => 'message_link_formatter'}} ID
+        %th.left{:data => {:field => "subject", sortable: 'true'}} Subject
+        %th.left{:data => {:field => "description", sortable: 'true'}} Description
+        %th.left{:data => {:field => "active", :formatter => "raw_boolean_formatter", sortable: 'true'}} Active
+        %th.left{:data => {:field => "message_enabled", :formatter => "raw_boolean_formatter", sortable: 'true'}} Message
+        %th.left{:data => {:field => "email_enabled", :formatter => "raw_boolean_formatter", sortable: 'true'}} Email (External)
+        %th.left{:data => {:field => "created_at", :formatter => "date_time_formatter", sortable: 'true'}} Entry Date & Time
+        %th.left{:data => {:field => "user", sortable: 'true'}} Event By
+        %th.left{:data => {:field => "to_user", sortable: 'true'}} Sent To
+        %th.left{:data => {:field => "email_status", sortable: 'true'}} Email (External) Status
 
 = render 'shared/table_formatters'
 
@@ -104,4 +75,3 @@
       return params;
     }
   });
-
