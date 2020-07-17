@@ -295,7 +295,14 @@ module TablePreferences
         model: 'manufacturer_models.name',
         year: 'manufacture_year',
         type: 'fta_equipment_types.name',
-        subtype: 'asset_subtypes.name'
+        subtype: 'asset_subtypes.name',
+        fta_asset_class: 'fta_asset_classes.name',
+        external_id: 'external_id',
+        chassis: 'chasses.name',
+        purchase_cost: 'purchase_cost',
+        in_service_date: 'in_service_date',
+        license_plate: 'license_plate',
+        pcnt_capital_responsibility: 'pcnt_capital_responsibility'
       },
     bus:
       { 
