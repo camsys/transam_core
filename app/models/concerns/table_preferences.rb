@@ -168,7 +168,18 @@ module TablePreferences
   # Get all table preferences, or preferences for a specific table
   def table_preferences table_code=nil
     if table_code
-      eval(table_prefs || "{}").try(:[], table_code.to_sym) || DEFAULT_TABLE_PREFERENCES[table_code.to_sym]
+      prefs = eval(table_prefs || "{}").try(:[], table_code.to_sym)
+      if prefs.nil? 
+        return DEFAULT_TABLE_PREFERENCES[table_code.to_sym]
+      else
+        # We have preferences, make sure that every type of preference is filled out
+        if prefs[:sort].nil?
+          prefs[:sort] = DEFAULT_TABLE_PREFERENCES[table_code.to_sym][:sort]
+        elsif prefs[:columns].nil? 
+          prefs[:columns] = DEFAULT_TABLE_PREFERENCES[table_code.to_sym][:columns]
+        end
+        return prefs 
+      end
     else
       table_prefs
     end
@@ -193,25 +204,25 @@ module TablePreferences
   # Update a user's sort and preferred columns for a table 
   def update_table_prefs table_code, sort_column, sort_order, columns_string 
     # Get the user's current set of preferences for all tables.
-    table_prefs = eval(self.table_preferences || "{}")
-    
+    all_table_prefs = eval(self.table_preferences || "{}")
+    this_table_prefs = all_table_prefs[table_code.to_sym] || {}
+
     # Update the sort order
     if sort_column
       sort_params = {}
       asc_desc = (sort_order.to_s.downcase == "descending") ? :descending : :ascending
       sort_params[sort_column.to_sym] = asc_desc 
       sort_params = [sort_params]
-      sort_hash = {sort: sort_params}
-      table_prefs[table_code.to_sym] = sort_hash
+      this_table_prefs[:sort] =  sort_params
     end 
 
     # Update the selected columns
     if columns_string
       columns = columns_string.split(',').map{ |x| x.downcase.strip.to_sym}
-      table_prefs[table_code.to_sym][:columns] = columns
+      this_table_prefs[:columns] =  columns
     end
-
-    self.update(table_prefs: table_prefs)
+    all_table_prefs[table_code.to_sym] = this_table_prefs
+    self.update(table_prefs: all_table_prefs)
   end
 
   # This is done as a reset
@@ -241,7 +252,13 @@ module TablePreferences
         branch: 'infrastructure_subdivisions.name',
         track: 'infrastructure_tracks.name',
         location: 'relative_locations.name',
-        segment_type: 'infrastructure_segment_types.name'
+        segment_type: 'infrastructure_segment_types.name',
+        fta_asset_class: 'fta_asset_classes.name',
+        type: 'fta_track_types.name',
+        external_id: 'external_id',
+        purchase_cost: 'purchase_cost',
+        in_service_date: 'in_service_date',
+        pcnt_capital_responsibility: 'pcnt_capital_responsibility'
       },
     guideway: 
       { 
@@ -258,7 +275,13 @@ module TablePreferences
         branch: 'infrastructure_subdivisions.name',
         number_of_tracks: 'num_tracks',
         location: 'relative_locations.name',
-        segment_type: 'infrastructure_segment_types.name'
+        segment_type: 'infrastructure_segment_types.name',
+        fta_asset_class: 'fta_asset_classes.name',
+        type: 'fta_guideway_types.name',
+        external_id: 'external_id',
+        purchase_cost: 'purchase_cost',
+        in_service_date: 'in_service_date',
+        pcnt_capital_responsibility: 'pcnt_capital_responsibility'
       },
     power_signal:
       { 
@@ -274,7 +297,13 @@ module TablePreferences
         main_line: 'infrastructure_divisions.name',
         branch: 'infrastructure_subdivisions.name',
         location: 'relative_locations.name',
-        segment_type: 'infrastructure_segment_types.name'
+        segment_type: 'infrastructure_segment_types.name',
+        fta_asset_class: 'fta_asset_classes.name',
+        type: 'fta_power_signal_types.name',
+        external_id: 'external_id',
+        purchase_cost: 'purchase_cost',
+        in_service_date: 'in_service_date',
+        pcnt_capital_responsibility: 'pcnt_capital_responsibility'
       },
     capital_equipment:
       { 
@@ -295,7 +324,7 @@ module TablePreferences
         manufacturer: 'manufacturers.name',
         model: 'manufacturer_models.name',
         year: 'manufacture_year',
-        type: 'fta_equipment_types.name',
+        type: 'fta_vehicle_types.name',
         subtype: 'asset_subtypes.name',
         fta_asset_class: 'fta_asset_classes.name',
         external_id: 'external_id',
@@ -313,7 +342,7 @@ module TablePreferences
         manufacturer: 'manufacturers.name',
         model: 'manufacturer_models.name',
         year: 'manufacture_year',
-        type: 'fta_equipment_types.name',
+        type: 'fta_vehicle_types.name',
         subtype: 'asset_subtypes.name',
         external_id: 'external_id',
         license_plate: 'license_plate',
@@ -338,7 +367,7 @@ module TablePreferences
         manufacturer: 'manufacturers.name',
         model: 'manufacturer_models.name',
         year: 'manufacture_year',
-        type: 'fta_equipment_types.name',
+        type: 'fta_vehicle_types.name',
         subtype: 'asset_subtypes.name',
         external_id: 'external_id',
         license_plate: 'license_plate',
@@ -363,7 +392,7 @@ module TablePreferences
         manufacturer: 'manufacturers.name',
         model: 'manufacturer_models.name',
         year: 'manufacture_year',
-        type: 'fta_equipment_types.name',
+        type: 'fta_vehicle_types.name',
         subtype: 'asset_subtypes.name',
         external_id: 'external_id',
         license_plate: 'license_plate',
@@ -389,7 +418,7 @@ module TablePreferences
         manufacturer: 'manufacturers.name',
         model: 'manufacturer_models.name',
         year: 'manufacture_year',
-        type: 'fta_equipment_types.name',
+        type: 'fta_vehicle_types.name',
         subtype: 'asset_subtypes.name',
         external_id: 'external_id',
         license_plate: 'license_plate',
