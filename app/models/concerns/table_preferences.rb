@@ -201,7 +201,8 @@ module TablePreferences
       asc_desc = (sort_order.to_s.downcase == "descending") ? :descending : :ascending
       sort_params[sort_column.to_sym] = asc_desc 
       sort_params = [sort_params]
-      table_prefs[table_code.to_sym][:sort] = sort_params
+      sort_hash = {sort: sort_params}
+      table_prefs[table_code.to_sym] = sort_hash
     end 
 
     # Update the selected columns
