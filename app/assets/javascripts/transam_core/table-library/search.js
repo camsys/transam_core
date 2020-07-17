@@ -1,5 +1,5 @@
 function addSearch(id) {
-    let searchbar = $('<input>').addClass("searchbar").attr('placeholder', "Search Table...");
+    let searchbar = $("<div>").addClass("search-wrapper").append($('<i class="fas fa-search">')).append($('<input>').addClass("searchbar").attr('placeholder', "Search Table..."));
 
     $(searchbar).on("keyup", function(){
         let value = $(this).val().toLowerCase();
@@ -22,7 +22,7 @@ function addSearch(id) {
 
 
 function addSearchServer(id) {
-    let searchbar = $('<input>').addClass("searchbar").attr('placeholder', "Search Table...");
+    let searchbar = $("<div>").addClass("search-wrapper").append($('<i class="fas fa-search">')).append($('<input>').addClass("searchbar").attr('placeholder', "Search Table..."));
 
     $(searchbar).on("keyup", function(){
         let value = $(this).val().toLowerCase();

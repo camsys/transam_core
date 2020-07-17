@@ -129,16 +129,22 @@ function updateHeader(id, selected, sort){
             $("#" + id + " .table-row>:nth-child(" +  ($("[type|='" + col_ts[col] + "']").eq(0).index()+1) + ")").addClass(col_ts[col]);
 
         } catch (e) {
-            header.append($('<th>').addClass('header-item').attr("type", "")
+            try {
+                header.append($('<th>').addClass('header-item').attr("type", "")
                     .append($('<div>').addClass('header-content').text(cols[col].toString())
                       .append($('<div>').addClass('header-text').text(cols[col].toString()))
                       .append($('<div>').addClass('header-icons'))));  
+            } catch(e) {
+                console.error("Bad column name in selected?", e);
+                continue;
+            }
+            
         }
-        if (sort === "client") {
-            // sort_select.append($('<form id='+col+'_select>').text(cols[col].toString())
-            //     .append($('<input id="'+col+'_asc">').attr("type", "radio").attr("form", col+'_select').attr("name", col+'_select')).append($('<label>').attr("for",col+"_asc").text("Ascending"))
-            //     .append($('<input id="'+col+'_desc">').attr("type", "radio").attr("form", col+'_select').attr("name", col+'_select')).append($('<label>').attr("for",col+"_desc").text("Descending")));
-        }
+        // if (sort === "client") {
+        //     // sort_select.append($('<form id='+col+'_select>').text(cols[col].toString())
+        //     //     .append($('<input id="'+col+'_asc">').attr("type", "radio").attr("form", col+'_select').attr("name", col+'_select')).append($('<label>').attr("for",col+"_asc").text("Ascending"))
+        //     //     .append($('<input id="'+col+'_desc">').attr("type", "radio").attr("form", col+'_select').attr("name", col+'_select')).append($('<label>').attr("for",col+"_desc").text("Descending")));
+        // }
 
 
 
