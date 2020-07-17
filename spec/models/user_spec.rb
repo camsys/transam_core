@@ -55,10 +55,10 @@ RSpec.describe User, :type => :model do
 
     it 'returns the user-specifc preferences for buses' do
       table_prefs = eval(normal_user.table_prefs|| "{}")
-      table_prefs[:buses] = "TEST"
+      table_prefs[:bus] = {sort: :test, columns: [:test1, :test2]}
       normal_user.table_prefs = table_prefs 
       normal_user.save  
-      expect(normal_user.table_preferences(:buses)).to eq("TEST")
+      expect(normal_user.table_preferences(:bus)[:sort]).to eq(:test)
     end
   end
 
