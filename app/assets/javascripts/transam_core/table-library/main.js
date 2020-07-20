@@ -129,16 +129,22 @@ function updateHeader(id, selected, sort){
             $("#" + id + " .table-row>:nth-child(" +  ($("[type|='" + col_ts[col] + "']").eq(0).index()+1) + ")").addClass(col_ts[col]);
 
         } catch (e) {
-            header.append($('<th>').addClass('header-item').attr("type", "")
+            try {
+                header.append($('<th>').addClass('header-item').attr("type", "")
                     .append($('<div>').addClass('header-content').text(cols[col].toString())
                       .append($('<div>').addClass('header-text').text(cols[col].toString()))
                       .append($('<div>').addClass('header-icons'))));  
+            } catch(e) {
+                console.error("Bad column name in selected?", e);
+                continue;
+            }
+            
         }
-        if (sort === "client") {
-            // sort_select.append($('<form id='+col+'_select>').text(cols[col].toString())
-            //     .append($('<input id="'+col+'_asc">').attr("type", "radio").attr("form", col+'_select').attr("name", col+'_select')).append($('<label>').attr("for",col+"_asc").text("Ascending"))
-            //     .append($('<input id="'+col+'_desc">').attr("type", "radio").attr("form", col+'_select').attr("name", col+'_select')).append($('<label>').attr("for",col+"_desc").text("Descending")));
-        }
+        // if (sort === "client") {
+        //     // sort_select.append($('<form id='+col+'_select>').text(cols[col].toString())
+        //     //     .append($('<input id="'+col+'_asc">').attr("type", "radio").attr("form", col+'_select').attr("name", col+'_select')).append($('<label>').attr("for",col+"_asc").text("Ascending"))
+        //     //     .append($('<input id="'+col+'_desc">').attr("type", "radio").attr("form", col+'_select').attr("name", col+'_select')).append($('<label>').attr("for",col+"_desc").text("Descending")));
+        // }
 
 
 
@@ -254,7 +260,7 @@ async function serverSide(id, url, curPage, curPageSize, params, search="", sort
         $('#'+id).addClass('loading');
         let response = {};
         let data = {'page': curPage, 'page_size': curPageSize, 'search': search};
-        if(!$.isEmptyObject(sort_by)) { // asumes 1 column
+        if(!$.isEmptyObject(sort_by)) { // assumes 1 column
             data['sort_column'] = Object.keys(sort_by[0])[0];
             data['sort_order'] = Object.values(sort_by[0])[0]; 
             $('#'+id).find('.table-row').remove(); // clear out table
@@ -267,10 +273,7 @@ async function serverSide(id, url, curPage, curPageSize, params, search="", sort
             data : data,
             dataType: "json",
             beforeSend:(xhr) => {
-                // console.log(window[id].activeRequest);
                 if(window[id].activeRequest && window[id].activeRequest.readyState !== 4) {
-                    // console.log("abort: ", window[id].activeRequest);
-                    // console.log("keep: ", xhr);
                     window[id].activeRequest.abort();
                 }
                 window[id].activeRequest = xhr;
@@ -279,14 +282,14 @@ async function serverSide(id, url, curPage, curPageSize, params, search="", sort
                 response = d;
             },
             complete: (jqXHR, status) => {
-                // console.log(status);
                 if(status == 'success') {
                     r = response;
                     try {
                     r_columns = Object.keys(r['rows'][0]); 
                     window[id].col_selected = r_columns;
                     updateHeader(id, r_columns, "server");
-                    } catch (e) {
+                    } 
+                    catch (e) {
                     updateHeader(id, window[id].col_selected, "server");
                     }
                     for(let [index,obj] of r['rows'].entries()) {
@@ -303,8 +306,8 @@ async function serverSide(id, url, curPage, curPageSize, params, search="", sort
                     }
                 }
             },
-            error: function (){
-                // console.log("error");
+            error: function (e){
+                console.log(e);
                 return -1;
             }
         });

@@ -50,12 +50,17 @@ $(document).on('click', ".page-select-arrow-right-full", function(){
     }
 });
 
-$(document).on('change', ".page-size-dropdown", function(){
+$(document).on('click', ".page-size-dropdown .page-size-option", function(){
     let table = $(this).closest('.library-table').find("table").eq(0);
-    updatePage_help(table.attr('id'), 0, parseInt(this.value), table.parent().find("search-result-page").length > 0);
+    $(this).closest(".page-size-dropdown").find(".page-size-current").text($(this).text());
+    updatePage_help(table.attr('id'), 0, parseInt($(this).text()), table.parent().find("search-result-page").length > 0);
+    $(this).parent().hide();
 });
 
-
+$(document).on('click', ".page-size-current", function(e){
+    e.stopPropagation();
+    $(this).siblings(".page-size-option-wrapper").toggle();
+});
 
 
 
@@ -65,10 +70,13 @@ function pagination(id, curPage, curPageSize, pageSizes) {
 
     let sizeSelect = $('<div>').addClass("size-select");
     sizeSelect.text("Rows per page ");
-    let dropdown = $('<select>').addClass("page-size-dropdown");
+
+    let dropdown = $('<div>').addClass("page-size-dropdown");
+    let options = $('<div>').addClass("page-size-option-wrapper");
     for(let size of pageSizes) {
-        dropdown.append($('<option>').text(size));
+        options.append($('<div>').addClass("page-size-option").text(size));
     }
+    dropdown.append(options).append($('<div>').addClass("page-size-current").text(pageSizes[0]));
     sizeSelect.append(dropdown);
     footer.append(sizeSelect);
 
@@ -243,3 +251,8 @@ function post_styles(id, curPageSize) {
     }
 
 }
+
+// close page size box on click away
+$(document).on('click', 'html > *:not(.page-size-current)', function(e){
+    $(".page-size-option-wrapper").hide();
+  });
