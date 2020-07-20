@@ -116,6 +116,7 @@ async function initialize(id, selected, curPage, curPageSize, pageSizes, side, u
     if(side === 'server') {
         pagination(id, curPage, curPageSize, pageSizes, -1);
         init_export(id, export_types);
+        init_selection(id, selected);
         // clear_row_queue(id);
         updatePage(id, curPage, curPageSize, -1, false, params);
         applyIcons($('#'+id).find('.header'));

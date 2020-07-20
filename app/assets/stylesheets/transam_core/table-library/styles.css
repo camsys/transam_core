@@ -658,6 +658,10 @@
     float: right;
 }
 
+.export, .select_columns {
+    float: right;
+}
+
 .function_button {
     color: var(--white);
     padding: 5px 10px;
