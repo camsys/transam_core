@@ -49,7 +49,7 @@ $("table[use]").ready(()=>{
             window[id].sort_params = sort_params;
             let params = $(value).data('params');
 
-            initialize(id, selected_columns, curPage, curPageSize, pageSizes, side, url, params, sort, export_types);
+            initialize(id, columns, selected_columns, curPage, curPageSize, pageSizes, side, url, params, sort, export_types);
 
             if(search == 'client') {
                 addSearch(id);
@@ -108,7 +108,7 @@ $("table[use]").ready(()=>{
 });
 
 
-async function initialize(id, selected, curPage, curPageSize, pageSizes, side, url, params, sort, export_types) {
+async function initialize(id, columns, selected, curPage, curPageSize, pageSizes, side, url, params, sort, export_types) {
     if($('#'+id).parent().find('.function_bar').length === 0) {
         $('#'+id).parent().prepend($('<div class="function_bar">'));
     }
@@ -116,7 +116,7 @@ async function initialize(id, selected, curPage, curPageSize, pageSizes, side, u
     if(side === 'server') {
         pagination(id, curPage, curPageSize, pageSizes, -1);
         init_export(id, export_types);
-        init_selection(id, selected);
+        init_selection(id, columns, selected);
         // clear_row_queue(id);
         updatePage(id, curPage, curPageSize, -1, false, params);
         applyIcons($('#'+id).find('.header'));
