@@ -75,7 +75,6 @@ $("table[use]").ready(()=>{
             });
             window[id].checkedRows[row.attr("index")] = flat;
         }
-        console.log(window[id].checkedRows);
     });
 
     $(document).on('click', '.cell-checkbox input[type="checkbox"]:not(:checked)', function(e){
@@ -90,7 +89,6 @@ $("table[use]").ready(()=>{
                 delete window[id].checkedRows[row.attr("index")];
             }
         }
-        console.log(window[id].checkedRows);
     });
 
     // $(document).on('click', '.header-checkbox input[type="checkbox"]', function(){
