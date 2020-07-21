@@ -59,8 +59,38 @@ $("table[use]").ready(()=>{
         }
     });
 
-    $(document).on('click', '.cell-checkbox input[type="checkbox"]', function(){
+    $(document).on('click', '.cell-checkbox input[type="checkbox"]:checked', function(e){
         $(this.parentNode.parentNode.parentNode).toggleClass("row-checked");
+        const table = $(this).closest('.library-table').find("table").eq(0);
+        const id = $(table).attr('id');
+        if($(table).data('side') === "server") {
+            if(!window[id].checkedRows){
+                window[id].checkedRows = {};
+            }
+            let flat = {};
+            const row = $(this).closest(".table-row");
+            const columns = $(table).find(".header-item:not(.header-checkbox) .header-text");
+            $(row).find(".cell-text").each(function(index){
+                flat[$(columns[index]).text()] = $(this).text();
+            });
+            window[id].checkedRows[row.attr("index")] = flat;
+        }
+        console.log(window[id].checkedRows);
+    });
+
+    $(document).on('click', '.cell-checkbox input[type="checkbox"]:not(:checked)', function(e){
+        $(this.parentNode.parentNode.parentNode).toggleClass("row-checked");
+        const table = $(this).closest('.library-table').find("table").eq(0);
+        const id = $(table).attr('id');
+        if($(table).data('side') === "server") {
+            if(!window[id].checkedRows){
+                window[id].checkedRows = {};
+            } else {
+                const row = $(this).closest(".table-row");
+                delete window[id].checkedRows[row.attr("index")];
+            }
+        }
+        console.log(window[id].checkedRows);
     });
 
     // $(document).on('click', '.header-checkbox input[type="checkbox"]', function(){
@@ -214,8 +244,12 @@ function add_row_exec(id, vals, index) {
     if(!($('#' + id + " .table-row[index=" + index + ']').length > 0)){
         let row = $('<tr>').addClass('table-row').attr("index", index.toString());
         let checkbox = $('<td>').addClass("cell-checkbox").append($('<label>').append($('<input>').attr('type', "checkbox")).append($('<span>').addClass('fa-stack').append($('<i class="fad fa-square fa-stack-1x" aria-hidden="true"></i>')).append($('<i class="fas fa-check-square fa-stack-1x" aria-hidden="true"></i>'))));
+        if(window[id].checkedRows && window[id].checkedRows[index]) {
+            row.addClass("row-checked");
+            checkbox.find("label input").prop( "checked", true);
+        } 
         row.append(checkbox);
-        // TODO: TEMP, stilll working on this
+        // i've accepted that for the forseeable future we're using window variables
         let s_cols = window[id].col_selected;
         let col_names = window[id].col_names;
         let col_types = window[id].col_types;
