@@ -22,6 +22,8 @@ $("table[use]").ready(()=>{
                 col_types[col] = x["type"];
                 col_widths[col] = x["width"];
             }
+	  console.log(columns);
+	    window[id].columns = columns;
             window[id].col_names = col_names;
             window[id].col_types = col_types;
             window[id].col_widths = col_widths;
@@ -114,7 +116,7 @@ async function initialize(id, columns, selected, curPage, curPageSize, pageSizes
     if(side === 'server') {
         pagination(id, curPage, curPageSize, pageSizes, -1);
         init_export(id, export_types);
-        init_selection(id, columns, selected);
+        init_columns(id, columns, selected);
         // clear_row_queue(id);
         updatePage(id, curPage, curPageSize, -1, false, params);
         applyIcons($('#'+id).find('.header'));
@@ -139,7 +141,10 @@ function updateHeader(id, selected, sort){
   let col_ts = window[id].col_types;
   let col_ws = window[id].col_widths;
   let sort_params = window[id].sort_params;
-  if($('#'+id + " thead").length < 1){
+  if($('#'+id + " thead").length > 0){
+    $('#'+id + " thead").remove();
+    $('#'+id + " colgroup").remove();
+  }
     let table = $("#" + id);
     let header = $('<tr>').addClass("header");
     let colgroup = $('<colgroup>');
@@ -187,9 +192,6 @@ function updateHeader(id, selected, sort){
     applyIcons(header);
     table.prepend($('<thead>').append(header)).prepend(colgroup);
     // table.parent().append(sort_select);
-  } else {
-    
-  }
 }
 
 function applyIcons(header) {
@@ -318,9 +320,9 @@ async function serverSide(id, url, curPage, curPageSize, params, search="", sort
                 if(status == 'success') {
                     r = response;
                     try {
-                    r_columns = Object.keys(r['rows'][0]); 
-                    window[id].col_selected = r_columns;
-                    updateHeader(id, r_columns, "server");
+                      r_columns = Object.keys(r['rows'][0]); 
+                      window[id].col_selected = r_columns;
+                      updateHeader(id, r_columns, "server");
                     } 
                     catch (e) {
                     updateHeader(id, window[id].col_selected, "server");

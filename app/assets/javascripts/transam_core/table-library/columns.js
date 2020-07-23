@@ -1,4 +1,4 @@
-function init_selection(id, columns, current) {
+function init_columns(id, columns, current) {
   const table = $('#'+id);
   const wrapper_html =
 '<div class="select_columns">' +
@@ -35,12 +35,12 @@ function init_selection(id, columns, current) {
   ;
 
   $(document).ready(function(){
-    let wrapper = $(wrapper_html);
+    let $wrapper = $(wrapper_html);
 
-    $(document).on('click', ".select_button, .close-flyout", function(event){
+    table.parent().on('click', ".select_button, .close-flyout", function(event){
       event.stopPropagation();
       event.stopImmediatePropagation();
-      $('#'+id).parent().find(".select_columns").toggleClass("open");
+      table.parent().find(".select_columns").toggleClass("open");
     });
     
     $(".manage-columns-list").sortable({
@@ -52,6 +52,11 @@ function init_selection(id, columns, current) {
       },
       beforeStop: function(e, t) {
         t.item.removeClass("dragging")
+      },
+      update: function(e, t) {
+	let id = t.item.closest('.function_bar').parent().find('table')[0].id;
+	let columns = t.item.closest('.panel-columns').find('#visible-columns li').map(function() {return this.id;}).get().join();
+	updatePage(id, 0, table.data('currentPageSize'), -1, false, {}, "", columns);
       }
     });
     
@@ -62,27 +67,47 @@ function init_selection(id, columns, current) {
       });
     });
     
-    let flyout = $(flyout_html);
-    let content = $(content_html);
-    let visible = content.find('#visible-columns');
-    let available = content.find('#available-columns');
-    
-    for (let col of current) {
-      if (col == 'asset_id') {
-	visible.append('<li class="unsortable rule-below">Asset ID</li>');
-      } else {
-	visible.append($('<li class="ui-sortable-handle"></li>').text(columns[col].name));
-      }
-      delete columns[col];
-    }
-    for (const col in columns) {
-      available.append($('<li class="ui-sortable-handle"></li>').text(columns[col].name));
-    }
-    flyout.append(content);
-    wrapper.append(flyout);
+    let $flyout = $(flyout_html);
+    let $content = $(content_html);
+    let $visible = $content.find('#visible-columns');
+    let $available = $content.find('#available-columns');
 
-    table.parent().find(".function_bar").append(wrapper);
+    update_visible_available_columns(columns, current, $visible, $available);
+    
+    $flyout.append($content);
+    $wrapper.append($flyout);
+
+    table.parent().find(".function_bar").append($wrapper);
   });
+}
+
+function update_visible_available_columns(columns, current, $visible, $available) {
+  let unmovable_above = true;
+  let cols_copy = Object.assign({}, columns);
+
+  $visible.empty();
+  $available.empty();
+  
+  for (let col of current) {
+    let name = cols_copy[col].name;
+    if (cols_copy[col].unmovable) {
+      if (unmovable_above) {
+	classes = "unsortable rule-below";
+	unmovable_above = false;
+      } else {
+	classes = "unsortable rule-above";
+	unmovable_above = true;
+      }
+    } else {
+      classes = "ui-sortable-handle";
+    }
+    $visible.append($('<li></li>', {"class": classes, "id": col}).text(name));
+    delete cols_copy[col];
+  }
+  for (const col in cols_copy) {
+    $available.append($('<li></li>', {"class": "ui-sortable-handle", "id": col}).text(cols_copy[col].name));
+  }
+
 }
     
     
