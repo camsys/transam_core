@@ -138,11 +138,7 @@ function init_columns(id, columns, current) {
     $wrapper.append($flyout);
 
     table.parent().find(".function_bar").append($wrapper);
-    $(".sortable-columns .column-content").each(function() {
-      var e = Math.round($(this).parent(".panel-column").outerHeight() - $(this).prev(".column-header").outerHeight());
-      console.log(e);
-      $(this).css("height", e);
-    });
+
     table.parent().on('keyup', '.search', function(e) {
       let value = $(this).val().toLowerCase();
       console.log(value);
