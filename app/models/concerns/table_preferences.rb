@@ -318,7 +318,7 @@ module TablePreferences
         fta_asset_class: 'fta_asset_classes.name',
         external_id: 'external_id',
         quantity: 'quantity',
-        quantity_unit: 'quanity_unit',
+        quantity_unit: 'quantity_unit',
         purchase_cost: 'purchase_cost',
         in_service_date: 'in_service_date',
         pcnt_capital_responsibility: 'pcnt_capital_responsibility'
