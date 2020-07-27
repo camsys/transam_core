@@ -130,7 +130,7 @@ async function updatePage(id, curPage, curPageSize, total, clientSearch=false, p
       if (columns == "") {
         let $visible = $('#'+id).parent().find('#visible-columns');
         let $available = $('#'+id).parent().find('#available-columns');
-        update_visible_available_columns(window[id].columns, window[id].col_selected, $visible, $available);
+        updateVisibleAvailableColumns(window[id].columns, window[id].col_selected, $visible, $available);
       }
     }
 

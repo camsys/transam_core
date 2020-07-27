@@ -57,6 +57,7 @@ html {
 
 .flyout-panel {
     width: 46rem;
+    height: 42rem;
 }
 
 .flyout-panel.editing {
@@ -303,7 +304,7 @@ html {
 
 .open .flyout-button ~ .flyout-content-right {
     box-shadow: -1px 1px 0.5rem rgba(14, 24, 36, 0.4);
-    right: -0.5rem;
+    right: 0rem;
 }
 
 .bootstrap-table, .fixed-table-container, .fixed-table-body {
@@ -345,3 +346,274 @@ html {
     font-size: .95em;
     vertical-align: middle;
 }
+.link-secondary {
+  font-size: .95rem;
+  color: currentColor;
+  text-decoration: underline;
+  padding: 0;
+  margin: 0;
+}
+.link-secondary .link-icon {
+    margin-right: .5em;
+    text-decoration: none;
+    font-size: .95em;
+}
+.link-secondary .link-icon-right {
+      margin-right: 0;
+      margin-left: .5em;
+}
+.link-secondary:hover {
+    text-decoration: none;
+}
+
+.formfield, .button {
+  font-size: 1.1rem;
+  height: 2.5rem;
+  border: 0;
+  outline: 0;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  border-radius: 0.25rem;
+  vertical-align: middle;
+  padding: .5rem .75rem;
+}
+
+.formfield {
+    -webkit-transition: background-color .25s ease-in-out;
+    -o-transition: background-color .25s ease-in-out;
+    transition: background-color .25s ease-in-out;
+    color: #18406E;
+}
+.formfield::-webkit-input-placeholder {
+    color: #9DA1B5;
+}
+.formfield:-ms-input-placeholder {
+    color: #9DA1B5;
+}
+.formfield::-ms-input-placeholder {
+    color: #9DA1B5;
+}
+.formfield::placeholder {
+    color: #9DA1B5;
+}
+.formfield-select {
+    background-color: #F6F8FF;
+    border: 1px solid #18406E;
+    position: relative;
+    color: #7F849B;
+}
+.formfield-select .formfield-text {
+    color: inherit;
+}
+.formfield-select.set {
+    color: #18406E;
+    font-weight: 600;
+    background-color: #fff;
+}
+.formfield-select .select-icon {
+    position: absolute;
+    top: 50%;
+    right: .5em;
+    text-align: center;
+    -webkit-transform: translateY(-50%) rotate(0deg);
+    -ms-transform: translateY(-50%) rotate(0deg);
+    transform: translateY(-50%) rotate(0deg);
+    padding: 0;
+    line-height: 1;
+    width: 1em;
+    height: 1em;
+    -webkit-transition: -webkit-transform .125s ease-in;
+    transition: -webkit-transform .125s ease-in;
+    -o-transition: transform .125s ease-in;
+    transition: transform .125s ease-in;
+    transition: transform .125s ease-in, -webkit-transform .125s ease-in;
+    -webkit-transform-origin: 50% 50%;
+    -ms-transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
+}
+.formfield-select .select-icon::before {
+    content: '\f0d7';
+    font-family: "Font Awesome 5 Pro";
+    font-weight: 900;
+    display: inline-block;
+    color: #BBBFCE;
+    font-size: .95em;
+    line-height: 0;
+}
+.formfield-select.open, .formfield-select:focus {
+    background-color: #fff;
+}
+.formfield-select.open {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.formfield-select.open .select-icon {
+    -webkit-transform: translateY(-50%) rotate(180deg);
+    -ms-transform: translateY(-50%) rotate(180deg);
+    transform: translateY(-50%) rotate(180deg);
+}
+.inactive:not(.new) .formfield-select {
+    border-color: transparent;
+    background-color: #E8EAF2;
+}
+.formfield-toggle {
+    background-color: #CDD0DC;
+    vertical-align: middle;
+    position: relative;
+    line-height: 0;
+    padding: 0 0.25rem;
+}
+.formfield-toggle label {
+    background-color: transparent;
+    -webkit-transition: background-color .25s ease-in-out;
+    -o-transition: background-color .25s ease-in-out;
+    transition: background-color .25s ease-in-out;
+    display: inline-block;
+    height: 2rem;
+    position: relative;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    line-height: 1;
+    padding: 0 .75rem;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    border-radius: 0.25rem;
+}
+.formfield-toggle label > * {
+    position: relative;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    display: inline-block;
+    z-index: 3;
+}
+.formfield-toggle label .label-icon {
+    margin-right: .5rem;
+}
+.formfield-toggle label:hover {
+    cursor: pointer;
+    background-color: #5B8EDC;
+    color: #fff;
+}
+.formfield-toggle input[type="radio"] {
+    width: 0;
+    height: 0;
+    opacity: 0;
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+.formfield-toggle input[type="radio"]:checked + label {
+    background-color: #F6F8FF;
+    font-weight: 600;
+    -webkit-box-shadow: 1px 1px 0.25em rgba(14, 24, 36, 0.25);
+    box-shadow: 1px 1px 0.25em rgba(14, 24, 36, 0.25);
+}
+.formfield-toggle input[type="radio"]:checked + label:before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    right: 2px;
+    bottom: 2px;
+    z-index: 1;
+    border-radius: 2px;
+    background-color: #BBBFCE;
+    background: -webkit-gradient(linear, left bottom, left top, from(#F6F8FF), to(rgba(187, 191, 206, 0.5)));
+    background: -webkit-linear-gradient(bottom, #F6F8FF 0%, rgba(187, 191, 206, 0.5) 100%);
+    background: -o-linear-gradient(bottom, #F6F8FF 0%, rgba(187, 191, 206, 0.5) 100%);
+    background: linear-gradient(0deg, #F6F8FF 0%, rgba(187, 191, 206, 0.5) 100%);
+}
+.formfield-toggle input[type="radio"]:checked + label:after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    right: 3px;
+    bottom: 3px;
+    z-index: 2;
+    border-radius: 1px;
+    background-color: #E8EAF2;
+    background: -webkit-gradient(linear, left bottom, left top, from(rgba(255, 255, 255, 0.6)), to(#E8EAF2));
+    background: -webkit-linear-gradient(bottom, rgba(255, 255, 255, 0.6) 0%, #E8EAF2 100%);
+    background: -o-linear-gradient(bottom, rgba(255, 255, 255, 0.6) 0%, #E8EAF2 100%);
+    background: linear-gradient(0deg, rgba(255, 255, 255, 0.6) 0%, #E8EAF2 100%);
+}
+.panel-row.inactive:not(.new) .formfield-toggle input[type="radio"]:checked + label {
+    background-color: #E8EAF2;
+}
+.panel-row.inactive:not(.new) .formfield-toggle input[type="radio"]:checked + label:before, .panel-row.inactive:not(.new) .formfield-toggle input[type="radio"]:checked + label:after {
+    display: none;
+}
+.formfield-toggle input[type="radio"]:checked + label:hover {
+    color: #0E2744;
+    background-color: #E8EAF2;
+    cursor: default;
+}
+
+.formfield-wrap {
+    position: relative;
+}
+.formfield-wrap input[type='text'] {
+    width: 100%;
+}
+.formfield-wrap.has-icon i {
+    color: #BBBFCE;
+    position: absolute;
+    left: 1.25rem;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    font-size: .95em;
+}
+.formfield-wrap.has-icon-left .formfield {
+    padding-left: 2.5rem;
+}
+
+.formfield-menu {
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    overflow: hidden;
+    z-index: 1001;
+}
+.formfield-menu:after {
+    content: '';
+    width: 100%;
+    height: 1rem;
+    background-color: red;
+    position: absolute;
+    bottom: 0;
+    background: -webkit-gradient(linear, left bottom, left top, from(#18406e), to(rgba(24, 64, 110, 0)));
+    background: -webkit-linear-gradient(bottom, #18406e 0%, rgba(24, 64, 110, 0) 100%);
+    background: -o-linear-gradient(bottom, #18406e 0%, rgba(24, 64, 110, 0) 100%);
+    background: linear-gradient(0deg, #18406e 0%, rgba(24, 64, 110, 0) 100%);
+}
+.formfield-menu ul {
+    background-color: none;
+    background-color: #18406E;
+    color: #fff;
+    border: none;
+    max-height: 10rem;
+    overflow-x: auto;
+    padding: .25rem 0 1rem 0;
+}
+.formfield-menu ul li {
+    padding: 0;
+    margin: 0;
+    line-height: 1;
+    padding: .375rem .75rem;
+    font-size: 1.125rem;
+}
+.formfield-menu ul li:hover {
+    background-color: #5B8EDC;
+}
+.formfield-menu ul li[aria-disabled="true"] {
+    color: #BBBFCE;
+}
+

@@ -13,13 +13,29 @@ function init_columns(id, columns, current) {
 '      Manage Columns' +
 '    </div>' +
 '    <button class="close-flyout button-clear button-icononly">' +
-'      <i class="fas fa-arrow-alt-to-right">'
+'      <i class="fas fa-arrow-alt-to-right"/>' +
+'    </button>' +
+'  </header>' +
+'  <div class="panel-links">' +
+'    <div class="link-group">' + 
+'      <button class="link-secondary button-clear restore-defaults"><i class="fal fa-undo link-icon restore-defaults"></i>Restore Defaults</button>' +
+'    </div>' +
+'    <div class="link-group">' +
+'      <button class="link-secondary button-clear trigger-flyout" data-target="table-filters"><i class="fal fa-filter link-icon"></i>Filter Data</button>' +
+'      <button class="link-secondary button-clear trigger-flyout" data-target="sort-columns"><span class="combo-sort-icon link-icon"><i class="fal fa-long-arrow-up"></i><i class="fal fa-long-arrow-down"></i></span></i>Sort Columns</button>' +
+'    </div>' +
+'  </div>'
   ;
+	
   const content_html =
 '    <div class="panel-content panel-columns sortable-columns">' +
 '      <div class="panel-column active">' +
 '        <div class="column-header">' +
 '          <div class="column-title panel-header">Visible Columns</div>' +
+'            <button class="link-secondary button-clear deselect-all">Deselect All<i class="fal fa-long-arrow-right link-icon link-icon-right"></i></button>' +
+'            <label class="column-search formfield-wrap has-icon has-icon-left"><i class="fas fa-search"></i>' +
+'              <input type="text" class="search formfield" placeholder="Search…">' +
+'            </label>' +
 '        </div>' + 
 '        <div class="column-content">' +
 '          <ul id="visible-columns" class="manage-columns-list sortable-columns-list">' +
@@ -29,6 +45,10 @@ function init_columns(id, columns, current) {
 '      <div class="panel-column">' +
 '        <div class="column-header">' +
 '          <div class="column-title panel-header">Available Columns</div>' +
+'            <button class="link-secondary button-clear select-all"><i class="fal fa-long-arrow-left link-icon"></i>Select All</button>' +
+'            <label class="column-search formfield-wrap has-icon has-icon-left"><i class="fas fa-search"></i>' +
+'              <input type="text" class="search formfield" placeholder="Search…">' +
+'            </label>' +
 '        </div>' +
 '        <div class="column-content">' +
 '          <ul id="available-columns" class="sortable-columns-list manage-columns-list">'
@@ -42,11 +62,50 @@ function init_columns(id, columns, current) {
       event.stopImmediatePropagation();
       table.parent().find(".select_columns").toggleClass("open");
     });
+
+    table.parent().on('click', ".restore-defaults", function(event){
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      let id = table[0].id;
+      let selected = window[id].default_selected;
+      updateVisibleAvailableColumns(window[id].columns, selected,
+				    table.parent().find('#visible-columns'), table.parent().find('#available-columns'));
+      updatePage(id, 0, table.data('currentPageSize'), -1, false, {}, "", selected.join());
+    });
     
+    table.parent().on('click', ".deselect-all", function(event){
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      let id = table[0].id;
+      let selected = [];
+      let columns = window[id].columns;
+      for (const col in columns) {
+	if (columns[col].unmovable) { selected.push(col); }
+      }
+      updateVisibleAvailableColumns(window[id].columns, selected,
+				    table.parent().find('#visible-columns'), table.parent().find('#available-columns'));
+      updatePage(id, 0, table.data('currentPageSize'), -1, false, {}, "", selected.join());
+    });
+
+    table.parent().on('click', ".select-all", function(event){
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      let id = table[0].id;
+      let columns = window[id].columns;
+      let all =  Object.keys(columns);
+      updateVisibleAvailableColumns(columns, all,
+				    table.parent().find('#visible-columns'), table.parent().find('#available-columns'));
+      updatePage(id, 0, table.data('currentPageSize'), -1, false, {}, "", all);
+    });
+
     $(".manage-columns-list").sortable({
       items: "li:not(.unsortable)",
       connectWith: ".manage-columns-list",
       placeholder: "target-placeholder",
+      start: function(e, t) {
+	t.item.closest('.sortable-columns').find('input.search').val('');
+	t.item.closest('.sortable-columns').find('input.search').keyup();
+      },
       sort: function(e, t) {
         t.item.addClass("dragging")
       },
@@ -63,6 +122,7 @@ function init_columns(id, columns, current) {
     $(window).on("load", function() {
       $(".sortable-columns .column-content").each(function() {
         var e = Math.round($(this).parent(".panel-column").outerHeight() - $(this).prev(".column-header").outerHeight());
+	console.log(e);
         $(this).css("height", e);
       });
     });
@@ -72,16 +132,31 @@ function init_columns(id, columns, current) {
     let $visible = $content.find('#visible-columns');
     let $available = $content.find('#available-columns');
 
-    update_visible_available_columns(columns, current, $visible, $available);
+    updateVisibleAvailableColumns(columns, current, $visible, $available);
     
     $flyout.append($content);
     $wrapper.append($flyout);
 
     table.parent().find(".function_bar").append($wrapper);
+    $(".sortable-columns .column-content").each(function() {
+      var e = Math.round($(this).parent(".panel-column").outerHeight() - $(this).prev(".column-header").outerHeight());
+      console.log(e);
+      $(this).css("height", e);
+    });
+    table.parent().on('keyup', '.search', function(e) {
+      let value = $(this).val().toLowerCase();
+      console.log(value);
+      $(this).closest('.panel-column').find('.manage-columns-list li').each(function() {
+	$(this).css('display', '');
+	if ($(this).text().toLowerCase().indexOf(value) < 0) {
+	  $(this).css('display', 'none');
+	}
+      });
+    });
   });
 }
 
-function update_visible_available_columns(columns, current, $visible, $available) {
+function updateVisibleAvailableColumns(columns, current, $visible, $available) {
   let unmovable_above = true;
   let cols_copy = Object.assign({}, columns);
 
