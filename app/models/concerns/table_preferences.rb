@@ -450,7 +450,13 @@ module TablePreferences
         facility_name: 'facility_name',
         year: 'manufacture_year',
         type: 'fta_equipment_types.name',
-        subtype: 'asset_subtypes.name'
+        subtype: 'asset_subtypes.name',
+        fta_asset_class: 'fta_asset_classes.name',
+        external_id: 'external_id',
+        purchase_cost: 'purchase_cost',
+        in_service_date: 'in_service_date',
+        description: 'description',
+        pcnt_capital_responsibility: 'pcnt_capital_responsibility'
       },
     admin_facility:
       { 
@@ -459,7 +465,13 @@ module TablePreferences
         facility_name: 'facility_name',
         year: 'manufacture_year',
         type: 'fta_equipment_types.name',
-        subtype: 'asset_subtypes.name'
+        subtype: 'asset_subtypes.name',
+        fta_asset_class: 'fta_asset_classes.name',
+        external_id: 'external_id',
+        purchase_cost: 'purchase_cost',
+        in_service_date: 'in_service_date',
+        description: 'description',
+        pcnt_capital_responsibility: 'pcnt_capital_responsibility'
       },
     parking_facility:
       { 
@@ -468,7 +480,13 @@ module TablePreferences
         facility_name: 'facility_name',
         year: 'manufacture_year',
         type: 'fta_equipment_types.name',
-        subtype: 'asset_subtypes.name'
+        subtype: 'asset_subtypes.name',
+        fta_asset_class: 'fta_asset_classes.name',
+        external_id: 'external_id',
+        purchase_cost: 'purchase_cost',
+        in_service_date: 'in_service_date',
+        description: 'description',
+        pcnt_capital_responsibility: 'pcnt_capital_responsibility'
       },
     maintenance_facility:
       { 
@@ -477,7 +495,13 @@ module TablePreferences
         facility_name: 'facility_name',
         year: 'manufacture_year',
         type: 'fta_equipment_types.name',
-        subtype: 'asset_subtypes.name'
+        subtype: 'asset_subtypes.name',
+        fta_asset_class: 'fta_asset_classes.name',
+        external_id: 'external_id',
+        purchase_cost: 'purchase_cost',
+        in_service_date: 'in_service_date',
+        description: 'description',
+        pcnt_capital_responsibility: 'pcnt_capital_responsibility'
       },
     users:
       { 
