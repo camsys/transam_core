@@ -234,7 +234,7 @@ html {
     overflow-x: scroll; 
 }
 .flyout-panel .sortable-columns .column-content .sortable-columns-list {
-    min-height: 100%;
+    min-height: 1em;
     margin: 0;
     padding: 0;
     list-style: none; 
