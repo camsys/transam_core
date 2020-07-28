@@ -95,7 +95,7 @@ function init_columns(id, columns, current) {
       let all =  Object.keys(columns);
       updateVisibleAvailableColumns(columns, all,
 				    table.parent().find('#visible-columns'), table.parent().find('#available-columns'));
-      updatePage(id, 0, table.data('currentPageSize'), -1, false, {}, "", all);
+      updatePage(id, 0, table.data('currentPageSize'), -1, false, {}, "", all.join());
     });
 
     $(".manage-columns-list").sortable({
@@ -119,30 +119,23 @@ function init_columns(id, columns, current) {
       }
     });
     
-    $(window).on("load", function() {
-      $(".sortable-columns .column-content").each(function() {
-        var e = Math.round($(this).parent(".panel-column").outerHeight() - $(this).prev(".column-header").outerHeight());
-	console.log(e);
-        $(this).css("height", e);
-      });
-    });
-    
     let $flyout = $(flyout_html);
     let $content = $(content_html);
     let $visible = $content.find('#visible-columns');
     let $available = $content.find('#available-columns');
+    let visibleCount = Object.keys(current).length;
 
     updateVisibleAvailableColumns(columns, current, $visible, $available);
-    
+
     $flyout.append($content);
     $wrapper.append($flyout);
 
     table.parent().find(".function_bar").append($wrapper);
-    $(".sortable-columns .column-content").each(function() {
-      var e = Math.round($(this).parent(".panel-column").outerHeight() - $(this).prev(".column-header").outerHeight());
-      console.log(e);
-      $(this).css("height", e);
-    });
+
+    if (table.is(':visible')) {
+      updateColumnsFlyout(table.parent());
+    }
+
     table.parent().on('keyup', '.search', function(e) {
       let value = $(this).val().toLowerCase();
       console.log(value);
@@ -182,7 +175,16 @@ function updateVisibleAvailableColumns(columns, current, $visible, $available) {
   for (const col in cols_copy) {
     $available.append($('<li></li>', {"class": "ui-sortable-handle", "id": col}).text(cols_copy[col].name));
   }
-
 }
+function updateColumnsFlyout(parent) {
+  parent.find(".sortable-columns .column-content").each(function() {
+    console.log($(this).parent(".panel-column").outerHeight());
+    console.log($(this).prev(".column-header").outerHeight());
+    var e = Math.round($(this).parent(".panel-column").outerHeight() - $(this).prev(".column-header").outerHeight());
+    console.log(e);
+    $(this).css("height", e);
+  });
+}
+
     
     
