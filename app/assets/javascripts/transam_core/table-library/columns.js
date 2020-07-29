@@ -138,7 +138,6 @@ function init_columns(id, columns, current) {
 
     table.parent().on('keyup', '.search', function(e) {
       let value = $(this).val().toLowerCase();
-      console.log(value);
       $(this).closest('.panel-column').find('.manage-columns-list li').each(function() {
 	$(this).css('display', '');
 	if ($(this).text().toLowerCase().indexOf(value) < 0) {
@@ -176,12 +175,10 @@ function updateVisibleAvailableColumns(columns, current, $visible, $available) {
     $available.append($('<li></li>', {"class": "ui-sortable-handle", "id": col}).text(cols_copy[col].name));
   }
 }
+
 function updateColumnsFlyout(parent) {
   parent.find(".sortable-columns .column-content").each(function() {
-    console.log($(this).parent(".panel-column").outerHeight());
-    console.log($(this).prev(".column-header").outerHeight());
     var e = Math.round($(this).parent(".panel-column").outerHeight() - $(this).prev(".column-header").outerHeight());
-    console.log(e);
     $(this).css("height", e);
   });
 }
