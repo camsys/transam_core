@@ -202,7 +202,7 @@ module TablePreferences
   end
 
   # Update a user's sort and preferred columns for a table 
-  def update_table_prefs table_code, sort_column, sort_order, columns_string 
+  def update_table_prefs table_code, sort_column, sort_order, columns_string=nil 
     # Get the user's current set of preferences for all tables.
     all_table_prefs = eval(self.table_preferences || "{}")
     this_table_prefs = all_table_prefs[table_code.to_sym] || {}
@@ -318,7 +318,7 @@ module TablePreferences
         fta_asset_class: 'fta_asset_classes.name',
         external_id: 'external_id',
         quantity: 'quantity',
-        quantity_unit: 'quanity_unit',
+        quantity_unit: 'quantity_unit',
         purchase_cost: 'purchase_cost',
         in_service_date: 'in_service_date',
         pcnt_capital_responsibility: 'pcnt_capital_responsibility'
@@ -450,7 +450,13 @@ module TablePreferences
         facility_name: 'facility_name',
         year: 'manufacture_year',
         type: 'fta_equipment_types.name',
-        subtype: 'asset_subtypes.name'
+        subtype: 'asset_subtypes.name',
+        fta_asset_class: 'fta_asset_classes.name',
+        external_id: 'external_id',
+        purchase_cost: 'purchase_cost',
+        in_service_date: 'in_service_date',
+        description: 'description',
+        pcnt_capital_responsibility: 'pcnt_capital_responsibility'
       },
     admin_facility:
       { 
@@ -459,7 +465,13 @@ module TablePreferences
         facility_name: 'facility_name',
         year: 'manufacture_year',
         type: 'fta_equipment_types.name',
-        subtype: 'asset_subtypes.name'
+        subtype: 'asset_subtypes.name',
+        fta_asset_class: 'fta_asset_classes.name',
+        external_id: 'external_id',
+        purchase_cost: 'purchase_cost',
+        in_service_date: 'in_service_date',
+        description: 'description',
+        pcnt_capital_responsibility: 'pcnt_capital_responsibility'
       },
     parking_facility:
       { 
@@ -468,7 +480,13 @@ module TablePreferences
         facility_name: 'facility_name',
         year: 'manufacture_year',
         type: 'fta_equipment_types.name',
-        subtype: 'asset_subtypes.name'
+        subtype: 'asset_subtypes.name',
+        fta_asset_class: 'fta_asset_classes.name',
+        external_id: 'external_id',
+        purchase_cost: 'purchase_cost',
+        in_service_date: 'in_service_date',
+        description: 'description',
+        pcnt_capital_responsibility: 'pcnt_capital_responsibility'
       },
     maintenance_facility:
       { 
@@ -477,7 +495,13 @@ module TablePreferences
         facility_name: 'facility_name',
         year: 'manufacture_year',
         type: 'fta_equipment_types.name',
-        subtype: 'asset_subtypes.name'
+        subtype: 'asset_subtypes.name',
+        fta_asset_class: 'fta_asset_classes.name',
+        external_id: 'external_id',
+        purchase_cost: 'purchase_cost',
+        in_service_date: 'in_service_date',
+        description: 'description',
+        pcnt_capital_responsibility: 'pcnt_capital_responsibility'
       },
     users:
       { 
