@@ -617,3 +617,6 @@ html {
     color: #BBBFCE;
 }
 
+.ui-sortable-handle {
+    cursor: grab;
+}

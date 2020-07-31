@@ -102,6 +102,7 @@ function init_columns(id, columns, current) {
       items: "li:not(.unsortable)",
       connectWith: ".manage-columns-list",
       placeholder: "target-placeholder",
+      cursor: "grabbing",
       start: function(e, t) {
 	t.item.closest('.sortable-columns').find('input.search').val('');
 	t.item.closest('.sortable-columns').find('input.search').keyup();
