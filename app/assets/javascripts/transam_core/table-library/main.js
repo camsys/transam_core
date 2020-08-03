@@ -342,7 +342,7 @@ async function serverSide(id, url, curPage, curPageSize, params, search="", sort
                 }
             },
             error: function (e){
-                console.log(e);
+                console.error(e);
                 return -1;
             }
         });

@@ -68,7 +68,7 @@ async function export_table(id, type) {
         }
         csv = csv + '\n';
       }
-      console.log(csv);
+      // console.log(csv);
     } else {
       let data = {"table_code":table_code, 'page': 0, 'page_size': 22222, 'search': $('#'+id).siblings(".function_bar").find(".searchbar").val()}; // 22222 page size is meant to include all of the rows, ugly hack
       const params = $(table).data('params');
@@ -105,7 +105,7 @@ async function export_table(id, type) {
           }
         },
         error: function (e){
-            console.log(e);
+            console.error(e);
             return -1;
         }
       });

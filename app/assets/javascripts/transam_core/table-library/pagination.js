@@ -119,7 +119,7 @@ async function updatePage(id, curPage, curPageSize, total, clientSearch=false, p
         try {
             total = await serverSide(id, $('#'+id).data('url'), curPage, curPageSize, params, searchContent, window[id].sort_params);
         } catch (e) {
-            console.log("aborted request");
+            console.error("aborted request");
         }
         try {
             window[id].apply_styles();

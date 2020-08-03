@@ -42,7 +42,7 @@
 }
 
 .library-table {
-    background: linear-gradient(0deg, var(--gray-light) 97%, #bbbfce69 100%);
+    background: linear-gradient(0deg, var(--gray-light) 97%, #bbbfceaa 100%);
     padding: 20px;
     font-family: 'Source Sans Pro', sans-serif;
     height: 100%;
@@ -389,19 +389,21 @@
 }
 
 
-.cell-text > .custom-drilldown-content:hover {
+.cell-text:hover > .custom-drilldown-content {
     z-index: 10;
     width: auto;
     height: unset;
     min-height: unset;
     /*border-right: 1px solid ;*/
-    box-shadow: 0 0 0 1px var(--gray-medium-light);
+    /* box-shadow: 0 0 0 1px var(--gray-medium-light);
     background: -webkit-gradient(linear, left top, right top, from(var(--gray-light)), to(var(--gray-lighter)));
     background: -webkit-linear-gradient(left, var(--gray-light) 0%, var(--gray-lighter) 100%);
     background: -o-linear-gradient(left, var(--gray-light) 0%, var(--gray-lighter) 100%);
-    background: linear-gradient(90deg, var(--gray-light) 0%, var(--gray-lighter) 100%);
+    background: linear-gradient(90deg, var(--gray-light) 0%, var(--gray-lighter) 100%); */
     overflow: unset;
     white-space: unset;
+    position: relative;
+    top: -18px;
 }
 
 
@@ -647,6 +649,7 @@
     border: none;
     padding-left: 1.5rem;
     border-radius: 0.5rem;
+    outline: none;
 }
 
 .searchbar::placeholder {
@@ -877,3 +880,31 @@
 }
 
 
+/* GENERAL PAGE ELEMENTS */
+#primary_header, legend, .row h2{
+    font-family: 'Source Sans Pro', sans-serif;
+    padding: 0px 20px;
+    border: none !important;
+    margin-bottom: 10px;
+}
+
+.breadcrumbs {
+    margin-top: -7px;
+}
+
+.breadcrumb {
+    font-family: 'Source Sans Pro', sans-serif;
+    border: none;
+    padding: 5px 20px;
+    background: var(--gray-light);
+    border-radius: 0;
+}
+
+ol.breadcrumb li {
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.row form {
+    padding-left: 24px;
+}
