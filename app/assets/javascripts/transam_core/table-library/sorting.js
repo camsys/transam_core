@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    $(document).on("click",".library-table table[data-sort='client'] .header-item",(function(){
+    $(document).on("click",".library-table table[data-sort='client'] .header-item:not(.header-checkbox)",(function(){
       $(this).attr("order", $(this).attr("order") == "ascending" ? "descending" : "ascending");
       $(this).parent().parent().parent().addClass('loading');
       client_sort(this);
@@ -25,7 +25,7 @@ $(document).ready(function(){
       // }
       )
     );
-    $(document).on("click",".library-table table[data-sort='server'] .header-item",(async function(){
+    $(document).on("click",".library-table table[data-sort='server'] .header-item:not(.header-checkbox)",(async function(){
       
       let table = $(this).parents('.elbat').eq(0);
       let id = table.attr('id')
@@ -41,6 +41,7 @@ $(document).ready(function(){
         updatePage(table.attr('id'), table.data("currentPage"), table.data('currentPageSize'), $('#'+id).find('.table-row').length, false, "", window[id].sort_params);
       }
       applyIcons(table.find('.header'));
+      window[id].checkedRows = {}; // clear selected rows on sort // TODO: this is a bad idea, but it's the only way to prevent duplicates on export since the row indexs are recalculated on sort
     })
   );
 });

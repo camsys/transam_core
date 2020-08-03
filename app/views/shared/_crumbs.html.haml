@@ -1,8 +1,9 @@
 %ol.breadcrumb
-  = render_breadcrumbs :builder => ::BootstrapBreadcrumbsBuilder, :separator => "&raquo;"
-    - if Rails.application.config.try(:release_notes).present?
-    %div{style: 'padding-top:3px; float:right;'}
-      = link_to 'Updates', html_release_notes_pdf_path, download: '', target: '_blank'
-  - if Rails.application.config.try(:user_guide).present?
-    %div{style: 'padding: 3px 10px; float:right;'}
-      = link_to 'User Guide', html_help_pdf_path(current_user.has_role? :admin), download: '', target: '_blank'
+  = render_breadcrumbs :builder => ::BootstrapBreadcrumbsBuilder
+  -# , :separator => "&raquo;"
+    -# - if Rails.application.config.try(:release_notes).present?
+    -# %div{style: 'padding-top:3px; float:right;'}
+    -#   = link_to 'Updates', html_release_notes_pdf_path, download: '', target: '_blank'
+  -# - if Rails.application.config.try(:user_guide).present?
+  -#   %div{style: 'padding: 3px 10px; float:right;'}
+  -#     = link_to 'User Guide', html_help_pdf_path(current_user.has_role? :admin), download: '', target: '_blank'

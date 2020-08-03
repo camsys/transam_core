@@ -22,10 +22,12 @@ $("table[use]").ready(()=>{
                 col_types[col] = x["type"];
                 col_widths[col] = x["width"];
             }
+	    window[id].columns = columns;
             window[id].col_names = col_names;
             window[id].col_types = col_types;
             window[id].col_widths = col_widths;
             window[id].col_selected = selected_columns;
+            window[id].default_selected = selected_columns;
             const search = $(value).data('search');
             const url = $(value).data('url');
             const sort = $(value).data('sort');
@@ -49,7 +51,7 @@ $("table[use]").ready(()=>{
             window[id].sort_params = sort_params;
             let params = $(value).data('params');
 
-            initialize(id, selected_columns, curPage, curPageSize, pageSizes, side, url, params, sort, export_types);
+            initialize(id, columns, selected_columns, curPage, curPageSize, pageSizes, side, url, params, sort, export_types);
 
             if(search == 'client') {
                 addSearch(id);
@@ -59,8 +61,36 @@ $("table[use]").ready(()=>{
         }
     });
 
-    $(document).on('click', '.cell-checkbox input[type="checkbox"]', function(){
+    $(document).on('click', '.cell-checkbox input[type="checkbox"]:checked', function(e){
         $(this.parentNode.parentNode.parentNode).toggleClass("row-checked");
+        const table = $(this).closest('.library-table').find("table").eq(0);
+        const id = $(table).attr('id');
+        if($(table).data('side') === "server") {
+            if(!window[id].checkedRows){
+                window[id].checkedRows = {};
+            }
+            let flat = {};
+            const row = $(this).closest(".table-row");
+            const columns = $(table).find(".header-item:not(.header-checkbox) .header-text");
+            $(row).find(".cell-text").each(function(index){
+                flat[$(columns[index]).text()] = $(this).text();
+            });
+            window[id].checkedRows[row.attr("index")] = flat;
+        }
+    });
+
+    $(document).on('click', '.cell-checkbox input[type="checkbox"]:not(:checked)', function(e){
+        $(this.parentNode.parentNode.parentNode).toggleClass("row-checked");
+        const table = $(this).closest('.library-table').find("table").eq(0);
+        const id = $(table).attr('id');
+        if($(table).data('side') === "server") {
+            if(!window[id].checkedRows){
+                window[id].checkedRows = {};
+            } else {
+                const row = $(this).closest(".table-row");
+                delete window[id].checkedRows[row.attr("index")];
+            }
+        }
     });
 
     // $(document).on('click', '.header-checkbox input[type="checkbox"]', function(){
@@ -78,7 +108,7 @@ $("table[use]").ready(()=>{
 });
 
 
-async function initialize(id, selected, curPage, curPageSize, pageSizes, side, url, params, sort, export_types) {
+async function initialize(id, columns, selected, curPage, curPageSize, pageSizes, side, url, params, sort, export_types) {
     if($('#'+id).parent().find('.function_bar').length === 0) {
         $('#'+id).parent().prepend($('<div class="function_bar">'));
     }
@@ -86,6 +116,7 @@ async function initialize(id, selected, curPage, curPageSize, pageSizes, side, u
     if(side === 'server') {
         pagination(id, curPage, curPageSize, pageSizes, -1);
         init_export(id, export_types);
+        init_columns(id, columns, selected);
         // clear_row_queue(id);
         updatePage(id, curPage, curPageSize, -1, false, params);
         applyIcons($('#'+id).find('.header'));
@@ -110,7 +141,10 @@ function updateHeader(id, selected, sort){
   let col_ts = window[id].col_types;
   let col_ws = window[id].col_widths;
   let sort_params = window[id].sort_params;
-  if($('#'+id + " thead").length < 1){
+  if($('#'+id + " thead").length > 0){
+    $('#'+id + " thead").remove();
+    $('#'+id + " colgroup").remove();
+  }
     let table = $("#" + id);
     let header = $('<tr>').addClass("header");
     let colgroup = $('<colgroup>');
@@ -158,9 +192,6 @@ function updateHeader(id, selected, sort){
     applyIcons(header);
     table.prepend($('<thead>').append(header)).prepend(colgroup);
     // table.parent().append(sort_select);
-  } else {
-    
-  }
 }
 
 function applyIcons(header) {
@@ -214,8 +245,12 @@ function add_row_exec(id, vals, index) {
     if(!($('#' + id + " .table-row[index=" + index + ']').length > 0)){
         let row = $('<tr>').addClass('table-row').attr("index", index.toString());
         let checkbox = $('<td>').addClass("cell-checkbox").append($('<label>').append($('<input>').attr('type', "checkbox")).append($('<span>').addClass('fa-stack').append($('<i class="fad fa-square fa-stack-1x" aria-hidden="true"></i>')).append($('<i class="fas fa-check-square fa-stack-1x" aria-hidden="true"></i>'))));
+        if(window[id].checkedRows && window[id].checkedRows[index]) {
+            row.addClass("row-checked");
+            checkbox.find("label input").prop( "checked", true);
+        } 
         row.append(checkbox);
-        // TODO: TEMP, stilll working on this
+        // i've accepted that for the forseeable future we're using window variables
         let s_cols = window[id].col_selected;
         let col_names = window[id].col_names;
         let col_types = window[id].col_types;
@@ -285,9 +320,9 @@ async function serverSide(id, url, curPage, curPageSize, params, search="", sort
                 if(status == 'success') {
                     r = response;
                     try {
-                    r_columns = Object.keys(r['rows'][0]); 
-                    window[id].col_selected = r_columns;
-                    updateHeader(id, r_columns, "server");
+                      r_columns = Object.keys(r['rows'][0]); 
+                      window[id].col_selected = r_columns;
+                      updateHeader(id, r_columns, "server");
                     } 
                     catch (e) {
                     updateHeader(id, window[id].col_selected, "server");
@@ -307,7 +342,7 @@ async function serverSide(id, url, curPage, curPageSize, params, search="", sort
                 }
             },
             error: function (e){
-                console.log(e);
+                console.error(e);
                 return -1;
             }
         });

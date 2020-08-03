@@ -12,4 +12,5 @@ $(document).on("click", ".tab", function(){
   }
   tab_content.siblings(".active").hide();
   tab_content.show();
+  updateColumnsFlyout(tab_content);
 });
