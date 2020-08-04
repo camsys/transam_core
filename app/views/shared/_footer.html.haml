@@ -19,7 +19,7 @@
         = link_to "Cambridge Systematics", "http://camsys.com", :target => "_blank"
     .col-lg-4.col-md-4.col-sm-6.col-xs-12
       %p.text-muted.credit.text-center
-        = link_to 'Help', html_help_pdf_path, :download => '', :target => "_blank"
+        -# = link_to 'Help', html_help_pdf_path, :download => '', :target => "_blank"
         -#= link_to 'Privacy Policy', page_path('privacy_policy')
         -#&#8226;
         -#= link_to 'Security Policy', page_path('security_policy')
@@ -33,3 +33,6 @@
           = link_to "TransAM Ver #{transam_version}", "http://camsys.software/products/transam", :target => "_blank", title: SystemConfig.transam_modules.map{|t| "#{t.name}: #{t.version}"}.join("\n")
         - else
           = link_to "TransAM Ver #{transam_version}", "http://camsys.software/products/transam", :target => "_blank", title: `bundle show | grep transam`
+        = "|".html_safe
+        %i.fa.fa-file-pdf
+        = link_to "User Guide", html_help_pdf_path, :download => '', :target => "_blank"
