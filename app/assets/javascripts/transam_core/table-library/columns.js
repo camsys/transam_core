@@ -21,8 +21,8 @@ function init_columns(id, columns, current) {
 '      <button class="link-secondary button-clear restore-defaults"><i class="fal fa-undo link-icon restore-defaults"></i>Restore Defaults</button>' +
 '    </div>' +
 '    <div class="link-group">' +
-'      <button class="link-secondary button-clear trigger-flyout" data-target="table-filters"><i class="fal fa-filter link-icon"></i>Filter Data</button>' +
-'      <button class="link-secondary button-clear trigger-flyout" data-target="sort-columns"><span class="combo-sort-icon link-icon"><i class="fal fa-long-arrow-up"></i><i class="fal fa-long-arrow-down"></i></span></i>Sort Columns</button>' +
+// '      <button class="link-secondary button-clear trigger-flyout" data-target="table-filters"><i class="fal fa-filter link-icon"></i>Filter Data</button>' +
+// '      <button class="link-secondary button-clear trigger-flyout" data-target="sort-columns"><span class="combo-sort-icon link-icon"><i class="fal fa-long-arrow-up"></i><i class="fal fa-long-arrow-down"></i></span></i>Sort Columns</button>' +
 '    </div>' +
 '  </div>'
   ;
