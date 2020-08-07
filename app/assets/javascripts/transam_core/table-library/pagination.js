@@ -66,6 +66,8 @@ $(document).on('click', ".page-size-current", function(e){
 
 function pagination(id, curPage, curPageSize, pageSizes) {
 
+    $('#'+id).closest("html").css("background", "var(--gray-light)"); // lets just force it
+
     let footer = $('<div>').addClass("pagination-wrapper");
 
     let sizeSelect = $('<div>').addClass("size-select");
@@ -119,7 +121,7 @@ async function updatePage(id, curPage, curPageSize, total, clientSearch=false, p
         try {
             total = await serverSide(id, $('#'+id).data('url'), curPage, curPageSize, params, searchContent, window[id].sort_params);
         } catch (e) {
-            console.error("aborted request");
+            console.log("aborted request");
         }
         try {
             window[id].apply_styles();

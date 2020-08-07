@@ -169,7 +169,7 @@ function updateHeader(id, selected, sort){
                       .append($('<div>').addClass('header-text').text(cols[col].toString()))
                       .append($('<div>').addClass('header-icons'))));  
             } catch(e) {
-                console.error("Bad column name in selected?", e);
+                console.log("Bad column name in selected?", e);
                 continue;
             }
             
@@ -342,7 +342,7 @@ async function serverSide(id, url, curPage, curPageSize, params, search="", sort
                 }
             },
             error: function (e){
-                console.error(e);
+                console.log(e);
                 return -1;
             }
         });

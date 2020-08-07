@@ -43,7 +43,7 @@
 
 .library-table {
     background: linear-gradient(0deg, var(--gray-light) 97%, #bbbfceaa 100%);
-    padding: 20px;
+    padding: 20px; /*  */
     font-family: 'Source Sans Pro', sans-serif;
     height: 100%;
     -webkit-transition: max-height .25s ease-in-out;
@@ -51,7 +51,7 @@
     -o-transition: max-height .25s ease-in-out;
     transition: max-height .25s ease-in-out;
     overflow: hidden;
-    box-shadow: 0px 8px 8px 0px #b2bdcc80;
+    /* box-shadow: 0px 8px 8px 0px #b2bdcc80; */
 }
 
 .elbat {
@@ -94,8 +94,7 @@
     color: var(--white);
     height: 0.75em !important;
     line-height: 1em !important;
-    /* note for some reason sass wouldn't compile the second line correctly without interpolating the color variable, i assume because it's not a normal css property.
-    // more info on styling duotone icons here https://fontawesome.com/how-to-use/on-the-web/styling/duotone-icons */
+    /* more info on styling duotone icons here https://fontawesome.com/how-to-use/on-the-web/styling/duotone-icons */
     --fa-secondary-opacity: 1.0;
     --fa-secondary-color: var(--gray-medium-light);
 
@@ -881,7 +880,7 @@
 
 
 /* GENERAL PAGE ELEMENTS */
-#primary_header, legend, .row h2{
+#primary_header, legend, .row h2, .breadcrumbs ~ h2 {
     font-family: 'Source Sans Pro', sans-serif;
     padding: 0px 20px;
     border: none !important;
@@ -907,4 +906,21 @@ ol.breadcrumb li {
 
 .row form {
     padding-left: 24px;
+}
+
+footer {
+    background: linear-gradient(0deg, var(--gray-medium) 75%, #969696aa 100%) !important;
+    color: var(--white);
+    height: 40px !important;
+}
+
+footer p, footer a {
+    font-family: 'Source Sans Pro', sans-serif !important;
+    color: var(--white) !important;
+    font-weight: 700;
+    margin: 10px 0px !important;
+}
+
+footer a {
+    text-decoration: underline;
 }

@@ -7,7 +7,7 @@ $(document).on("click", ".tab", function(){
     try {
       tab_content = $('#'+$(this).attr("table_id")).closest('.tab_content').addClass("active");
     } catch (e) {
-      console.error("Error in generating tabbed tables: ", e);
+      console.log("Error in generating tabbed tables: ", e);
     }
   }
   tab_content.siblings(".active").hide();

@@ -68,7 +68,6 @@ async function export_table(id, type) {
         }
         csv = csv + '\n';
       }
-      // console.log(csv);
     } else {
       let data = {"table_code":table_code, 'page': 0, 'page_size': 22222, 'search': $('#'+id).siblings(".function_bar").find(".searchbar").val()}; // 22222 page size is meant to include all of the rows, ugly hack
       const params = $(table).data('params');
@@ -91,21 +90,24 @@ async function export_table(id, type) {
             try {
               r_columns = Object.keys(r['rows'][0]);
             } catch(e) {
-              console.error("empty table?", e);
+              console.log("empty table?", e);
               return;
             }
-          
             for(let [index,obj] of r['rows'].entries()) {
-              let columns = Object.keys(obj);
-              for(let col of columns) {
-                csv = csv + (""+obj[col]["data"]).toString().replace(/,/g, '') + ",";
-              }
+                let columns = Object.keys(obj);
+                for(let col of columns) {
+                  try {
+                    csv = csv + (""+obj[col]["data"]).toString().replace(/,/g, '') + ",";
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }
               csv = csv + '\n';
             }
           }
         },
         error: function (e){
-            console.error(e);
+            console.log(e);
             return -1;
         }
       });
