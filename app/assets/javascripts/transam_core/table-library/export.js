@@ -59,8 +59,8 @@ async function export_table(id, type) {
       }
       csv = csv + '\n';
     }    
-  } else {
-    if($('#' + id + '_export_checkbox').is(':checked')) {
+  } else { // server
+    if($('#' + id + '_export_checkbox').is(':checked') && !window[id].selectAll) { // if the header checkbox is selected then all of the rows should be exported, which is the same case as not checking the "selected only" option
       let checked = window[id].checkedRows;
       for(let row in checked) {
         for(let cell in checked[row]) {

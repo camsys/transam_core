@@ -28,6 +28,7 @@ $("table[use]").ready(()=>{
             window[id].col_widths = col_widths;
             window[id].col_selected = selected_columns;
             window[id].default_selected = selected_columns;
+            window[id].selectAll = false;
             const search = $(value).data('search');
             const url = $(value).data('url');
             const sort = $(value).data('sort');
@@ -65,6 +66,8 @@ $("table[use]").ready(()=>{
         $(this.parentNode.parentNode.parentNode).toggleClass("row-checked");
         const table = $(this).closest('.library-table').find("table").eq(0);
         const id = $(table).attr('id');
+        // $('#' + id + " .header-checkbox").prop('checked', false); // case shouldn't be needed, omitted for efficiency
+        // window[id].selectAll = false;
         if($(table).data('side') === "server") {
             if(!window[id].checkedRows){
                 window[id].checkedRows = {};
@@ -83,6 +86,8 @@ $("table[use]").ready(()=>{
         $(this.parentNode.parentNode.parentNode).toggleClass("row-checked");
         const table = $(this).closest('.library-table').find("table").eq(0);
         const id = $(table).attr('id');
+        $('#' + id + " .header-checkbox").prop('checked', false);
+        window[id].selectAll = false;
         if($(table).data('side') === "server") {
             if(!window[id].checkedRows){
                 window[id].checkedRows = {};
@@ -93,18 +98,35 @@ $("table[use]").ready(()=>{
         }
     });
 
-    // $(document).on('click', '.header-checkbox input[type="checkbox"]', function(){
-    //     let table = $(this).closest('.library-table').find("table").eq(0);
-    //     table.find('.cell-checkbox input').click();
-    // });
     $(document).on('click', '.header-checkbox input[type="checkbox"]:checked', function(){
         let table = $(this).closest('.library-table').find("table").eq(0);
-        table.find('.table-row').addClass("row-checked").find(".cell-checkbox label input").prop( "checked", true);
+        const id = $(table).attr('id');
+        window[id].selectAll = true;
+        table.find('.table-row:not(.row-checked) .cell-checkbox input').click();
     });
     $(document).on('click', '.header-checkbox input[type="checkbox"]:not(:checked)', function(){
         let table = $(this).closest('.library-table').find("table").eq(0);
-        table.find('.table-row').removeClass("row-checked").find(".cell-checkbox label input").prop( "checked", false);
+        const id = $(table).attr('id');
+        window[id].selectAll = false;
+        table.find('.table-row.row-checked .cell-checkbox input').click();
     });
+    // $(document).on('click', '.header-checkbox input[type="checkbox"]:checked', function(){
+    //     let table = $(this).closest('.library-table').find("table").eq(0);
+    //     table.find('.table-row:not(.row-checked))').each(function(){
+    //         $(this).addClass("row-checked").find(".cell-checkbox label input").prop("checked", true);
+    //         let flat = {};
+    //         const row = $(this);
+    //         const columns = $(table).find(".header-item:not(.header-checkbox) .header-text");
+    //         $(row).find(".cell-text").each(function(index){
+    //             flat[$(columns[index]).text()] = $(this).text();
+    //         });
+    //         window[id].checkedRows[row.attr("index")] = flat;
+    //     });
+    // });
+    // $(document).on('click', '.header-checkbox input[type="checkbox"]:not(:checked)', function(){
+    //     let table = $(this).closest('.library-table').find("table").eq(0);
+    //     table.find('.table-row.row-checked').removeClass("row-checked").find(".cell-checkbox label input").prop("checked", false);
+    // });
 });
 
 
@@ -148,7 +170,7 @@ function updateHeader(id, selected, sort){
     let table = $("#" + id);
     let header = $('<tr>').addClass("header");
     let colgroup = $('<colgroup>');
-    header.append($('<th>').addClass("header-item header-checkbox").append($('<label>').append($('<input>').attr('type', "checkbox").addClass("header-checkbox")).append($('<span>').addClass('fa-stack').append($('<i class="fad fa-square fa-stack-1x" aria-hidden="true"></i>')).append($('<i class="fas fa-check-square fa-stack-1x" aria-hidden="true"></i>')))));
+    header.append($('<th>').addClass("header-item header-checkbox").append($('<label>').append($('<input>').attr('type', "checkbox").addClass("header-checkbox").prop('checked', window[id].selectAll)).append($('<span>').addClass('fa-stack').append($('<i class="fad fa-square fa-stack-1x" aria-hidden="true"></i>')).append($('<i class="fas fa-check-square fa-stack-1x" aria-hidden="true"></i>')))));
     colgroup.append($('<col>').addClass('col-item').attr('style', 'width: 32px'));
     // let sort_select = $('<div>');
     for (let col of selected){
@@ -245,10 +267,10 @@ function add_row_exec(id, vals, index) {
     if(!($('#' + id + " .table-row[index=" + index + ']').length > 0)){
         let row = $('<tr>').addClass('table-row').attr("index", index.toString());
         let checkbox = $('<td>').addClass("cell-checkbox").append($('<label>').append($('<input>').attr('type', "checkbox")).append($('<span>').addClass('fa-stack').append($('<i class="fad fa-square fa-stack-1x" aria-hidden="true"></i>')).append($('<i class="fas fa-check-square fa-stack-1x" aria-hidden="true"></i>'))));
-        if(window[id].checkedRows && window[id].checkedRows[index]) {
+        if((window[id].checkedRows && window[id].checkedRows[index]) || window[id].selectAll) {
             row.addClass("row-checked");
-            checkbox.find("label input").prop( "checked", true);
-        } 
+            checkbox.find("label input").prop("checked", true);
+        }
         row.append(checkbox);
         // i've accepted that for the forseeable future we're using window variables
         let s_cols = window[id].col_selected;
