@@ -3,7 +3,7 @@ class UsersController < OrganizationAwareController
   #-----------------------------------------------------------------------------
   # Protect controller methods using the cancan ability
   #-----------------------------------------------------------------------------
-  authorize_resource :user, except: :popup
+  authorize_resource :user, except: [:popup, :table_preferences, :update_table_preferences]
 
   #-----------------------------------------------------------------------------
   add_breadcrumb "Home",  :root_path
