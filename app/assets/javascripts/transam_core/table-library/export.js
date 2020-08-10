@@ -154,7 +154,8 @@ function init_export(id, types) {
 
 
 // close on click away
-$(document).on('click', 'body > *:not(.selected_rows_checkbox_label)', function(e){
+
+$(document).on('click', '*:not(.selected_rows_checkbox_label)', function(e){
   if($(e.target).closest('.open').length === 0) {
     $('.open').removeClass('open');
   }

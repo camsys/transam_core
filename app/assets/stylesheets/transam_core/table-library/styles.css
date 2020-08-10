@@ -924,3 +924,16 @@ footer p, footer a {
 footer a {
     text-decoration: underline;
 }
+
+
+
+
+/* Grouping */
+
+.page-size-current, .page-select-item, .page-select-arrow-left, .page-select-arrow-left-full, .page-select-arrow-right, .page-select-arrow-right-full, .export_option, .header-checkbox label, .cell-checkbox label {
+    cursor: pointer;
+}
+
+.size-select, .page-status {
+    cursor: default;
+}
