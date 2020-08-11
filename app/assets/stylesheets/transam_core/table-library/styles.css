@@ -856,10 +856,15 @@
      text-align: center;
 }
 
-
 .checkmark-column .cell-text{
     text-align: center;
 }
+
+.numeric {
+    font-family: 'Source Code Pro', monospace;
+    letter-spacing: 0;
+}
+
 
 
 /*font-awesome checkmark cells had delayed background animations on hover */

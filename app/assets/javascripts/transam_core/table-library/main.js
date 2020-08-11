@@ -278,9 +278,7 @@ function add_row_exec(id, vals, index) {
         let col_types = window[id].col_types;
         
         for(let key of s_cols){
-            // let i = col_names.indexOf(key.trim());
-            row.append($('<td>').addClass("row-item").addClass(col_types[key.trim()]).append($('<div>').addClass('cell-text').html(vals[key.trim()])));
-            //$('#'+id+" .header-item:nth-child(" + col_types[i] + ")").attr("type")
+            row.append($('<td>').addClass("row-item").addClass(col_types[key.trim()]).append($('<div>').addClass('cell-text').html(""+vals[key.trim()].replace(/\>https?\:\/\//i, ">")).addClass((!isNaN(vals[key.trim()]))?"numeric":""))); // removes http(s) and determines if it is a number
         }
         // messy way of inserting each row at correct position
         let lt = $('#' + id + " .table-row").filter(function(){
@@ -354,7 +352,7 @@ async function serverSide(id, url, curPage, curPageSize, params, search="", sort
                         let columns = Object.keys(obj);
                         for(let col of columns) {
                             if(!obj[col]["url"] || 0 === obj[col]["url"].trim().length) {
-                                row[col] = obj[col]["data"];
+                                row[col] = obj[col]["data"].toString();
                             } else {
                                 row[col] = "<a href='" + obj[col]["url"] + "'>" + obj[col]["data"] + "</a>";
                             }
