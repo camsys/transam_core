@@ -97,8 +97,25 @@ function init_columns(id, columns, current) {
 				    table.parent().find('#visible-columns'), table.parent().find('#available-columns'));
       updatePage(id, 0, table.data('currentPageSize'), -1, false, {}, "", all.join());
     });
+    
+    let $flyout = $(flyout_html);
+    let $content = $(content_html);
+    let $visible = $content.find('#visible-columns');
+    let $available = $content.find('#available-columns');
+    let visibleCount = Object.keys(current).length;
 
-    $(".manage-columns-list").sortable({
+    updateVisibleAvailableColumns(columns, current, $visible, $available);
+
+    $flyout.append($content);
+    $wrapper.append($flyout);
+
+    table.parent().find(".function_bar").append($wrapper);
+
+    if (table.is(':visible')) {
+      updateColumnsFlyout(table.parent());
+    }
+
+    table.parent().find(".manage-columns-list").sortable({
       items: "li:not(.unsortable)",
       connectWith: ".manage-columns-list",
       placeholder: "target-placeholder",
@@ -119,23 +136,6 @@ function init_columns(id, columns, current) {
 	updatePage(id, 0, table.data('currentPageSize'), -1, false, {}, "", columns);
       }
     });
-    
-    let $flyout = $(flyout_html);
-    let $content = $(content_html);
-    let $visible = $content.find('#visible-columns');
-    let $available = $content.find('#available-columns');
-    let visibleCount = Object.keys(current).length;
-
-    updateVisibleAvailableColumns(columns, current, $visible, $available);
-
-    $flyout.append($content);
-    $wrapper.append($flyout);
-
-    table.parent().find(".function_bar").append($wrapper);
-
-    if (table.is(':visible')) {
-      updateColumnsFlyout(table.parent());
-    }
 
     table.parent().on('keyup', '.search', function(e) {
       let value = $(this).val().toLowerCase();
