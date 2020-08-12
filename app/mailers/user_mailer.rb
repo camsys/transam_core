@@ -14,4 +14,8 @@ class UserMailer < ActionMailer::Base
     mail(:to => created_user.email, :subject => MessageTemplate.find_by(name: 'User1').subject)
   end
 
+  def updated 
+    mail(to: ENV['SERVER_UPDATE_SUBSCRIPTION_LIST'], subject: "Server Updated")
+  end
+
 end
