@@ -16,16 +16,19 @@ $("table[use]").ready(()=>{
             const col_names = {};
             const col_types = {};
             const col_widths = {};
+            const col_sortable = {};
             for(let col of Object.keys(columns)){
                 let x = columns[col];
                 col_names[col] = x["name"];
                 col_types[col] = x["type"];
                 col_widths[col] = x["width"];
+                col_sortable[col] = x["sortable"];
             }
 	    window[id].columns = columns;
             window[id].col_names = col_names;
             window[id].col_types = col_types;
             window[id].col_widths = col_widths;
+            window[id].col_sortable = col_sortable;
             window[id].col_selected = selected_columns;
             window[id].default_selected = selected_columns;
             window[id].selectAll = false;
@@ -159,9 +162,10 @@ async function initialize(id, columns, selected, curPage, curPageSize, pageSizes
 
 
 function updateHeader(id, selected, sort){
-  let cols = window[id].col_names;
-  let col_ts = window[id].col_types;
-  let col_ws = window[id].col_widths;
+  const cols = window[id].col_names;
+  const col_ts = window[id].col_types;
+  const col_ws = window[id].col_widths;
+  const col_sortable = window[id].col_sortable;
   let sort_params = window[id].sort_params;
   if($('#'+id + " thead").length > 0){
     $('#'+id + " thead").remove();
@@ -178,7 +182,7 @@ function updateHeader(id, selected, sort){
             header.append($('<th>').addClass('header-item').attr("code", col).attr("type", col_ts[col])//.attr("order", sort_params[col])
                     .append($('<div>').addClass('header-content')
                       .append($('<div>').addClass('header-text').text(cols[col].toString()))
-                      .append($('<div>').addClass('header-icons'))));
+                      .append((col_sortable[col]!=="False")?$('<div>').addClass('header-icons'):$('<div>').addClass("not-sortable"))));
 
             colgroup.append(
                 $('<col>').addClass('col-item').css("width", col_ws[col]));
@@ -189,7 +193,7 @@ function updateHeader(id, selected, sort){
                 header.append($('<th>').addClass('header-item').attr("type", "")
                     .append($('<div>').addClass('header-content').text(cols[col].toString())
                       .append($('<div>').addClass('header-text').text(cols[col].toString()))
-                      .append($('<div>').addClass('header-icons'))));  
+                      .append((col_sortable[col]!=="False")?$('<div>').addClass('header-icons'):$('<div>').addClass("not-sortable"))));  
             } catch(e) {
                 console.log("Bad column name in selected?", e);
                 continue;
