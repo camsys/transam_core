@@ -165,18 +165,21 @@ class UsersController < OrganizationAwareController
     ### Pluck out the Params ###
     page = (table_params[:page] || 0).to_i
     page_size = (table_params[:page_size] || users.count).to_i
+    role = params[:role]
     search = (table_params[:search])
+    show_status = params[:show_active_only] || 'active'
     offset = page*page_size
     sort_column = params[:sort_column]
     sort_order = params[:sort_order]
-
-    ### Update SORT Preferences ###
-    if sort_column
-      current_user.update_table_prefs(:users, sort_column, sort_order)
+    columns = params[:columns]
+    
+    ### Update SORT and COLUMNS Preferences ###
+    if sort_column.present? || columns.present?
+      current_user.update_table_prefs(:users, sort_column, sort_order, columns)
     end
 
     ### Search ###
-    if search
+    if search.present?
       searchable_columns = [:first_name, :last_name, :phone, :phone_ext, :email, :title] 
       search_string = "%#{search}%"
       query = query_builder(searchable_columns, search_string)
@@ -189,11 +192,26 @@ class UsersController < OrganizationAwareController
       ##users = User.where(id: [users_on_role + all_user_table].uniq)
     end
 
+    ### Filter ###
+    if role.present?
+      users = users.joins(:roles).where({roles: {name: role.split(',')}}).distinct
+    end
+    
+    case show_status
+    when 'active'
+      users = users.where(active: true)
+    when 'inactive'
+      users = users.where(active: false)
+    when 'all'
+    end
+
+    
     ### SORT ###
     users = users.order(current_user.table_sort_string :users)
 
-    ### Rowify Everything ###      
-    user_table = users.offset(offset).limit(page_size).map{ |u| u.rowify }
+    ### Rowify Everything ###
+    column_prefs = current_user.column_preferences :users
+    user_table = users.offset(offset).limit(page_size).map{ |u| u.rowify column_prefs}
     render status: 200, json: {count: users.count, rows: user_table}
   end
 
