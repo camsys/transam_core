@@ -198,7 +198,8 @@ module TablePreferences
     column = sorting.first 
     key = column.keys.first 
     order_string = (column[key] == :descending) ? "DESC" : "ASC"
-    return "#{SORT_COLUMN[table_code][key]} #{order_string}"
+    sort_column = SORT_COLUMN[table_code][key] || DEFAULT_TABLE_PREFERENCES[table_code.to_sym][:sort].first.keys[0]
+    return "#{sort_column} #{order_string}"
   end
 
   # Update a user's sort and preferred columns for a table 
@@ -511,7 +512,20 @@ module TablePreferences
         email: "email",
         phone: "phone",
         phone_ext: "phone_ext",
-        title: "title"
+        title: "title",
+        status: "active",
+        external_id: "external_id",
+        system_access: "active",
+        timezone: "timezone",
+        notify_via_email: "notify_via_email",
+        num_table_rows: "num_table_rows",
+        sign_in_count: "sign_in_count",
+        last_sign_in_at: "last_sign_in_at",
+        last_sign_in_ip: "last_sign_in_ip",
+        failed_attempts: "failed_attempts",
+        locked_at: "locked_at",
+        created_at: "created_at",
+        updated_at: "updated_at"
       },
     projects:
       { 
