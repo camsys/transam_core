@@ -885,7 +885,7 @@
 
 
 /* GENERAL PAGE ELEMENTS */
-#primary_header, legend, .row h2, .breadcrumbs ~ h2 {
+#primary_header, legend, .row h2, .breadcrumbs ~ h2, .subheader-label h2, #subheader-label h2, .btn-toolbar, .page-header, #table_actions {
     font-family: 'Source Sans Pro', sans-serif;
     padding: 0px 20px;
     border: none !important;
