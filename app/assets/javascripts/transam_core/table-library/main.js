@@ -282,7 +282,13 @@ function add_row_exec(id, vals, index) {
         let col_types = window[id].col_types;
         
         for(let key of s_cols){
-            row.append($('<td>').addClass("row-item").addClass(col_types[key.trim()]).append($('<div>').addClass('cell-text').html(""+vals[key.trim()].replace(/\>https?\:\/\//i, ">")).addClass((!isNaN(vals[key.trim()]))?"numeric":""))); // removes http(s) and determines if it is a number
+            let text = "";
+            try{
+                text = ""+vals[key.trim()].replace(/\>https?\:\/\//i, ">");
+            } catch(e) {
+                text = vals[key.trim()];
+            }
+            row.append($('<td>').addClass("row-item").addClass(col_types[key.trim()]).append($('<div>').addClass('cell-text').html(text).addClass((!isNaN(vals[key.trim()]))?"numeric":""))); // removes http(s) and determines if it is a number
         }
         // messy way of inserting each row at correct position
         let lt = $('#' + id + " .table-row").filter(function(){
