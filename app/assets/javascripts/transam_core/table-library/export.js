@@ -123,7 +123,7 @@ async function export_table(id, type) {
     csvData = 'data:application/txt;charset=utf-8,' + encodeURIComponent(csv);
     return csvData;
   } else if(type === "excel") {
-    csvData = 'data:application/xls;charset=utf-8,' + encodeURIComponent(csv);
+    csvData = 'data:application/xls;charset=utf-8,' + escape(csv);
     return csvData;
   }
   
