@@ -76,26 +76,26 @@ function init_columns(id, columns, current) {
     table.parent().on('click', ".deselect-all", function(event){
       event.stopPropagation();
       event.stopImmediatePropagation();
+      let newItems = table.parent().find('#visible-columns li:not(.unsortable)');
+      table.parent().find('#available-columns li').first().before(newItems);
+      let columns = table.parent().find('#visible-columns li').map(function() {return this.id;}).get().join();
       let id = table[0].id;
-      let selected = [];
-      let columns = window[id].columns;
-      for (const col in columns) {
-	if (columns[col].unmovable) { selected.push(col); }
-      }
-      updateVisibleAvailableColumns(window[id].columns, selected,
-				    table.parent().find('#visible-columns'), table.parent().find('#available-columns'));
-      updatePage(id, 0, table.data('currentPageSize'), -1, false, {}, "", selected.join());
+
+      table.parent().find('#visible-columns .rule-below').after($('<li></li>', {"class": "target-placeholder"}));
+      updatePage(id, 0, table.data('currentPageSize'), -1, false, {}, "", columns);
     });
 
     table.parent().on('click', ".select-all", function(event){
       event.stopPropagation();
       event.stopImmediatePropagation();
+
+      let newItems = table.parent().find('#available-columns li');
+      table.parent().find('#visible-columns li:not(.unsortable)').last().after(newItems);
+      let columns = table.parent().find('#visible-columns li').map(function() {return this.id;}).get().join();
       let id = table[0].id;
-      let columns = window[id].columns;
-      let all =  Object.keys(columns);
-      updateVisibleAvailableColumns(columns, all,
-				    table.parent().find('#visible-columns'), table.parent().find('#available-columns'));
-      updatePage(id, 0, table.data('currentPageSize'), -1, false, {}, "", all.join());
+
+      table.parent().find('#visible-columns .target-placeholder').remove();
+      updatePage(id, 0, table.data('currentPageSize'), -1, false, {}, "", columns);
     });
     
     let $flyout = $(flyout_html);
@@ -132,7 +132,12 @@ function init_columns(id, columns, current) {
       },
       update: function(e, t) {
 	let id = t.item.closest('.function_bar').parent().find('table')[0].id;
-	let columns = t.item.closest('.panel-columns').find('#visible-columns li').map(function() {return this.id;}).get().join();
+	let columns = t.item.closest('.panel-columns').find('#visible-columns li:not(.target-placeholder)').map(function() {return this.id;}).get().join();
+	if (t.item.closest('.panel-columns').find('#visible-columns .ui-sortable-handle').length > 0) {
+	  t.item.closest('.panel-columns').find('#visible-columns .target-placeholder').remove();
+	} else if (t.item.closest('.panel-columns').find('#visible-columns .target-placeholder').length < 1) {
+	  t.item.closest('.panel-columns').find('#visible-columns .rule-below').after($('<li></li>', {"class": "target-placeholder"}));
+	}
 	updatePage(id, 0, table.data('currentPageSize'), -1, false, {}, "", columns);
       }
     });
@@ -151,23 +156,33 @@ function init_columns(id, columns, current) {
 
 function updateVisibleAvailableColumns(columns, current, $visible, $available) {
   let unmovable_above = true;
+  let unmovable_below = false;
+  let has_movable = false;
   let cols_copy = Object.assign({}, columns);
 
   $visible.empty();
   $available.empty();
-  
+
+  // Assumes a single unmovable column at the top
   for (let col of current) {
     let name = cols_copy[col].name;
     if (cols_copy[col].unmovable) {
       if (unmovable_above) {
 	classes = "unsortable rule-below";
 	unmovable_above = false;
+      } else if (unmovable_below) {
+	classes = "unsortable";
       } else {
+	if (!has_movable) {
+	  // Add a placeholder
+	  $visible.append($('<li></li>', {"class": "target-placeholder"}))
+	}
 	classes = "unsortable rule-above";
-	unmovable_above = true;
+	unmovable_below = true;
       }
     } else {
       classes = "ui-sortable-handle";
+      has_movable = true;
     }
     $visible.append($('<li></li>', {"class": classes, "id": col}).text(name));
     delete cols_copy[col];
