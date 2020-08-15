@@ -76,8 +76,9 @@ function init_columns(id, columns, current) {
     table.parent().on('click', ".deselect-all", function(event){
       event.stopPropagation();
       event.stopImmediatePropagation();
+      table.parent().find('#visible-columns .target-placeholder').remove();
       let newItems = table.parent().find('#visible-columns li:not(.unsortable)');
-      table.parent().find('#available-columns li').first().before(newItems);
+      table.parent().find('#available-columns').prepend(newItems);
       let columns = table.parent().find('#visible-columns li').map(function() {return this.id;}).get().join();
       let id = table[0].id;
 
@@ -91,10 +92,10 @@ function init_columns(id, columns, current) {
 
       let newItems = table.parent().find('#available-columns li');
       table.parent().find('#visible-columns li:not(.unsortable)').last().after(newItems);
+      table.parent().find('#visible-columns .target-placeholder').remove();
       let columns = table.parent().find('#visible-columns li').map(function() {return this.id;}).get().join();
       let id = table[0].id;
 
-      table.parent().find('#visible-columns .target-placeholder').remove();
       updatePage(id, 0, table.data('currentPageSize'), -1, false, {}, "", columns);
     });
     
