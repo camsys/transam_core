@@ -856,10 +856,15 @@
      text-align: center;
 }
 
-
 .checkmark-column .cell-text{
     text-align: center;
 }
+
+.numeric {
+    font-family: 'Source Code Pro', monospace;
+    letter-spacing: 0;
+}
+
 
 
 /*font-awesome checkmark cells had delayed background animations on hover */
@@ -880,7 +885,7 @@
 
 
 /* GENERAL PAGE ELEMENTS */
-#primary_header, legend, .row h2, .breadcrumbs ~ h2 {
+#primary_header, legend, .row h2, .breadcrumbs ~ h2, .subheader-label h2, #subheader-label h2, .btn-toolbar, .page-header, #table_actions {
     font-family: 'Source Sans Pro', sans-serif;
     padding: 0px 20px;
     border: none !important;
@@ -923,4 +928,17 @@ footer p, footer a {
 
 footer a {
     text-decoration: underline;
+}
+
+
+
+
+/* Grouping */
+
+.page-size-current, .page-select-item, .page-select-arrow-left, .page-select-arrow-left-full, .page-select-arrow-right, .page-select-arrow-right-full, .export_option, .header-checkbox label, .cell-checkbox label {
+    cursor: pointer;
+}
+
+.size-select, .page-status {
+    cursor: default;
 }

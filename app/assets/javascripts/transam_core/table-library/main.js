@@ -16,18 +16,22 @@ $("table[use]").ready(()=>{
             const col_names = {};
             const col_types = {};
             const col_widths = {};
+            const col_sortable = {};
             for(let col of Object.keys(columns)){
                 let x = columns[col];
                 col_names[col] = x["name"];
                 col_types[col] = x["type"];
                 col_widths[col] = x["width"];
+                col_sortable[col] = x["sortable"];
             }
 	    window[id].columns = columns;
             window[id].col_names = col_names;
             window[id].col_types = col_types;
             window[id].col_widths = col_widths;
+            window[id].col_sortable = col_sortable;
             window[id].col_selected = selected_columns;
             window[id].default_selected = selected_columns;
+            window[id].selectAll = false;
             const search = $(value).data('search');
             const url = $(value).data('url');
             const sort = $(value).data('sort');
@@ -65,6 +69,8 @@ $("table[use]").ready(()=>{
         $(this.parentNode.parentNode.parentNode).toggleClass("row-checked");
         const table = $(this).closest('.library-table').find("table").eq(0);
         const id = $(table).attr('id');
+        // $('#' + id + " .header-checkbox").prop('checked', false); // case shouldn't be needed, omitted for efficiency
+        // window[id].selectAll = false;
         if($(table).data('side') === "server") {
             if(!window[id].checkedRows){
                 window[id].checkedRows = {};
@@ -83,6 +89,8 @@ $("table[use]").ready(()=>{
         $(this.parentNode.parentNode.parentNode).toggleClass("row-checked");
         const table = $(this).closest('.library-table').find("table").eq(0);
         const id = $(table).attr('id');
+        $('#' + id + " .header-checkbox").prop('checked', false);
+        window[id].selectAll = false;
         if($(table).data('side') === "server") {
             if(!window[id].checkedRows){
                 window[id].checkedRows = {};
@@ -93,18 +101,35 @@ $("table[use]").ready(()=>{
         }
     });
 
-    // $(document).on('click', '.header-checkbox input[type="checkbox"]', function(){
-    //     let table = $(this).closest('.library-table').find("table").eq(0);
-    //     table.find('.cell-checkbox input').click();
-    // });
     $(document).on('click', '.header-checkbox input[type="checkbox"]:checked', function(){
         let table = $(this).closest('.library-table').find("table").eq(0);
-        table.find('.table-row').addClass("row-checked").find(".cell-checkbox label input").prop( "checked", true);
+        const id = $(table).attr('id');
+        window[id].selectAll = true;
+        table.find('.table-row:not(.row-checked) .cell-checkbox input').click();
     });
     $(document).on('click', '.header-checkbox input[type="checkbox"]:not(:checked)', function(){
         let table = $(this).closest('.library-table').find("table").eq(0);
-        table.find('.table-row').removeClass("row-checked").find(".cell-checkbox label input").prop( "checked", false);
+        const id = $(table).attr('id');
+        window[id].selectAll = false;
+        table.find('.table-row.row-checked .cell-checkbox input').click();
     });
+    // $(document).on('click', '.header-checkbox input[type="checkbox"]:checked', function(){
+    //     let table = $(this).closest('.library-table').find("table").eq(0);
+    //     table.find('.table-row:not(.row-checked))').each(function(){
+    //         $(this).addClass("row-checked").find(".cell-checkbox label input").prop("checked", true);
+    //         let flat = {};
+    //         const row = $(this);
+    //         const columns = $(table).find(".header-item:not(.header-checkbox) .header-text");
+    //         $(row).find(".cell-text").each(function(index){
+    //             flat[$(columns[index]).text()] = $(this).text();
+    //         });
+    //         window[id].checkedRows[row.attr("index")] = flat;
+    //     });
+    // });
+    // $(document).on('click', '.header-checkbox input[type="checkbox"]:not(:checked)', function(){
+    //     let table = $(this).closest('.library-table').find("table").eq(0);
+    //     table.find('.table-row.row-checked').removeClass("row-checked").find(".cell-checkbox label input").prop("checked", false);
+    // });
 });
 
 
@@ -137,9 +162,10 @@ async function initialize(id, columns, selected, curPage, curPageSize, pageSizes
 
 
 function updateHeader(id, selected, sort){
-  let cols = window[id].col_names;
-  let col_ts = window[id].col_types;
-  let col_ws = window[id].col_widths;
+  const cols = window[id].col_names;
+  const col_ts = window[id].col_types;
+  const col_ws = window[id].col_widths;
+  const col_sortable = window[id].col_sortable;
   let sort_params = window[id].sort_params;
   if($('#'+id + " thead").length > 0){
     $('#'+id + " thead").remove();
@@ -148,7 +174,7 @@ function updateHeader(id, selected, sort){
     let table = $("#" + id);
     let header = $('<tr>').addClass("header");
     let colgroup = $('<colgroup>');
-    header.append($('<th>').addClass("header-item header-checkbox").append($('<label>').append($('<input>').attr('type', "checkbox").addClass("header-checkbox")).append($('<span>').addClass('fa-stack').append($('<i class="fad fa-square fa-stack-1x" aria-hidden="true"></i>')).append($('<i class="fas fa-check-square fa-stack-1x" aria-hidden="true"></i>')))));
+    header.append($('<th>').addClass("header-item header-checkbox").append($('<label>').append($('<input>').attr('type', "checkbox").addClass("header-checkbox").prop('checked', window[id].selectAll)).append($('<span>').addClass('fa-stack').append($('<i class="fad fa-square fa-stack-1x" aria-hidden="true"></i>')).append($('<i class="fas fa-check-square fa-stack-1x" aria-hidden="true"></i>')))));
     colgroup.append($('<col>').addClass('col-item').attr('style', 'width: 32px'));
     // let sort_select = $('<div>');
     for (let col of selected){
@@ -156,7 +182,7 @@ function updateHeader(id, selected, sort){
             header.append($('<th>').addClass('header-item').attr("code", col).attr("type", col_ts[col])//.attr("order", sort_params[col])
                     .append($('<div>').addClass('header-content')
                       .append($('<div>').addClass('header-text').text(cols[col].toString()))
-                      .append($('<div>').addClass('header-icons'))));
+                      .append((col_sortable[col]!=="False")?$('<div>').addClass('header-icons'):$('<div>').addClass("not-sortable"))));
 
             colgroup.append(
                 $('<col>').addClass('col-item').css("width", col_ws[col]));
@@ -167,7 +193,7 @@ function updateHeader(id, selected, sort){
                 header.append($('<th>').addClass('header-item').attr("type", "")
                     .append($('<div>').addClass('header-content').text(cols[col].toString())
                       .append($('<div>').addClass('header-text').text(cols[col].toString()))
-                      .append($('<div>').addClass('header-icons'))));  
+                      .append((col_sortable[col]!=="False")?$('<div>').addClass('header-icons'):$('<div>').addClass("not-sortable"))));  
             } catch(e) {
                 console.log("Bad column name in selected?", e);
                 continue;
@@ -245,10 +271,10 @@ function add_row_exec(id, vals, index) {
     if(!($('#' + id + " .table-row[index=" + index + ']').length > 0)){
         let row = $('<tr>').addClass('table-row').attr("index", index.toString());
         let checkbox = $('<td>').addClass("cell-checkbox").append($('<label>').append($('<input>').attr('type', "checkbox")).append($('<span>').addClass('fa-stack').append($('<i class="fad fa-square fa-stack-1x" aria-hidden="true"></i>')).append($('<i class="fas fa-check-square fa-stack-1x" aria-hidden="true"></i>'))));
-        if(window[id].checkedRows && window[id].checkedRows[index]) {
+        if((window[id].checkedRows && window[id].checkedRows[index]) || window[id].selectAll) {
             row.addClass("row-checked");
-            checkbox.find("label input").prop( "checked", true);
-        } 
+            checkbox.find("label input").prop("checked", true);
+        }
         row.append(checkbox);
         // i've accepted that for the forseeable future we're using window variables
         let s_cols = window[id].col_selected;
@@ -256,9 +282,13 @@ function add_row_exec(id, vals, index) {
         let col_types = window[id].col_types;
         
         for(let key of s_cols){
-            // let i = col_names.indexOf(key.trim());
-            row.append($('<td>').addClass("row-item").addClass(col_types[key.trim()]).append($('<div>').addClass('cell-text').html(vals[key.trim()])));
-            //$('#'+id+" .header-item:nth-child(" + col_types[i] + ")").attr("type")
+            let text = "";
+            try{
+                text = ""+vals[key.trim()].replace(/\>https?\:\/\//i, ">");
+            } catch(e) {
+                text = vals[key.trim()];
+            }
+            row.append($('<td>').addClass("row-item").addClass(col_types[key.trim()]).append($('<div>').addClass('cell-text').html(text).addClass((!isNaN(vals[key.trim()]))?"numeric":""))); // removes http(s) and determines if it is a number
         }
         // messy way of inserting each row at correct position
         let lt = $('#' + id + " .table-row").filter(function(){
@@ -332,7 +362,7 @@ async function serverSide(id, url, curPage, curPageSize, params, search="", sort
                         let columns = Object.keys(obj);
                         for(let col of columns) {
                             if(!obj[col]["url"] || 0 === obj[col]["url"].trim().length) {
-                                row[col] = obj[col]["data"];
+                                row[col] = obj[col]["data"].toString();
                             } else {
                                 row[col] = "<a href='" + obj[col]["url"] + "'>" + obj[col]["data"] + "</a>";
                             }

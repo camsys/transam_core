@@ -2,6 +2,9 @@
   table_dom_id = SecureRandom.hex
   show_actions ||= 0
 
+#subheader-label
+  %h2 Bulk Update
+
 - if show_actions == 1
   #table_actions.btn-toolbar
     = render :partial => "uploads/index_actions"

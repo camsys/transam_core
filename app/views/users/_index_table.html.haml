@@ -1,6 +1,7 @@
 :ruby
   table_dom_id = SecureRandom.hex
   show_actions ||= 0
+  params = "{\"role\":\"#{@role&.join(',')}\", \"search\":\"#{@search_text}\", \"show_active_only\":\"#{@show_active_only}\"}"
 
 #users_table_actions.row
   - if show_actions == 1
@@ -21,34 +22,33 @@
     :page_sizes => "10,20,50,100",
     :search => 'server',
     :export => "['csv', 'txt', 'excel']",
-    :columns => '{"0":{"name":"Object Key"},
-                  "1":{"name":"External Id"},
-                  "last_name":{"name":"Last","type":"drilldown-link"},
+    :columns => '{"last_name":{"name":"Last","type":"drilldown-link","unmovable":true},
                   "first_name":{"name":"First"},
                   "organization":{"name":"Primary Organization"},
-                  "5":{"name":"All Organizations"},
                   "email":{"name":"Email","width":"14%"},
                   "phone":{"name":"Phone","width":"6%"},
                   "phone_ext":{"name":"Ext."},
                   "title":{"name":"Title"},
-                  "role":{"name":"Role"},
-                  "privileges":{"name":"Privileges"},
+                  "role":{"name":"Role","sortable":"False"},
+                  "privileges":{"name":"Privileges","sortable":"False"},
                   "status":{"name":"Status"},
-                  "13":{"name":"System Access"},
-                  "14":{"name":"Timezone"},
-                  "15":{"name":"Send Emails"},
-                  "16":{"name":"Table Rows"},
-                  "17":{"name":"Num Logins"},
-                  "18":{"name":"Last Login"},
-                  "19":{"name":"Last Login IP"},
-                  "20":{"name":"Num Failed"},
-                  "21":{"name":"Locked"},
-                  "22":{"name":"Created At"},
-                  "23":{"name":"Updated At"}}',
+                  "external_id":{"name":"External Id"},
+                  "organizations":{"name":"All Organizations","sortable":"False"},
+                  "system_access":{"name":"System Access"},
+                  "timezone":{"name":"Timezone"},
+                  "notify_via_email":{"name":"Send Emails"},
+                  "num_table_rows":{"name":"Table Rows"},
+                  "sign_in_count":{"name":"Num Logins"},
+                  "last_sign_in_at":{"name":"Last Login"},
+                  "last_sign_in_ip":{"name":"Last Login IP"},
+                  "failed_attempts":{"name":"Num Failed"},
+                  "locked_at":{"name":"Locked"},
+                  "created_at":{"name":"Created At"},
+                  "updated_at":{"name":"Updated At"}}',
     :selected_columns => "last_name,first_name,organization,email,phone,phone_ext,title,role,privileges,status",
     :cookies => 'true',
     :sort => 'server',
-    :params => '',
+    :params => params,
     :url => table_users_path(:format => :json) }}
 
 

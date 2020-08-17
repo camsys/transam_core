@@ -114,7 +114,7 @@ async function updatePage(id, curPage, curPageSize, total, clientSearch=false, p
     let serv = $('#'+id).data('side') === 'server';
 
     if(serv){
-        params = $('#'+id).data('params');
+        params = $('#'+id).data('params') || {};
         if (columns != "") { params.columns = columns; }
       
         searchContent = $('#'+id).siblings(".function_bar").find(".searchbar").val();

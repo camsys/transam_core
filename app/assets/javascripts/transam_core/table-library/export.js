@@ -59,8 +59,8 @@ async function export_table(id, type) {
       }
       csv = csv + '\n';
     }    
-  } else {
-    if($('#' + id + '_export_checkbox').is(':checked')) {
+  } else { // server
+    if($('#' + id + '_export_checkbox').is(':checked') && !window[id].selectAll) { // if the header checkbox is selected then all of the rows should be exported, which is the same case as not checking the "selected only" option
       let checked = window[id].checkedRows;
       for(let row in checked) {
         for(let cell in checked[row]) {
@@ -123,7 +123,7 @@ async function export_table(id, type) {
     csvData = 'data:application/txt;charset=utf-8,' + encodeURIComponent(csv);
     return csvData;
   } else if(type === "excel") {
-    csvData = 'data:application/xls;charset=utf-8,' + encodeURIComponent(csv);
+    csvData = 'data:application/xls;charset=utf-8,' + escape(csv);
     return csvData;
   }
   
@@ -154,7 +154,8 @@ function init_export(id, types) {
 
 
 // close on click away
-$(document).on('click', 'body > *:not(.selected_rows_checkbox_label)', function(e){
+
+$(document).on('click', '*:not(.selected_rows_checkbox_label)', function(e){
   if($(e.target).closest('.open').length === 0) {
     $('.open').removeClass('open');
   }
