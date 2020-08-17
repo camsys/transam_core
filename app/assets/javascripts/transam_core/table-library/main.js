@@ -362,7 +362,9 @@ async function serverSide(id, url, curPage, curPageSize, params, search="", sort
                         let columns = Object.keys(obj);
                         for(let col of columns) {
                             if(!obj[col]["url"] || 0 === obj[col]["url"].trim().length) {
-                                row[col] = obj[col]["data"].toString();
+			        if(obj[col]["data"] !== null) {
+                                    row[col] = obj[col]["data"].toString();
+			        }
                             } else {
                                 row[col] = "<a href='" + obj[col]["url"] + "'>" + obj[col]["data"] + "</a>";
                             }

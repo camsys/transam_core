@@ -242,7 +242,7 @@ module TablePreferences
       { 
         asset_id: 'asset_tag',
         org_name: 'organizations.name',
-        description: 'description',
+        description: 'transam_assets.description',
         from_line: 'from_line',
         to_line: 'to_line',
         from_segment: 'from_segment',
@@ -265,7 +265,7 @@ module TablePreferences
       { 
         asset_id: 'asset_tag',
         org_name: 'organizations.name',
-        description: 'description',
+        description: 'transam_assets.description',
         from_line: 'from_line',
         to_line: 'to_line',
         from_segment: 'from_segment',
@@ -288,7 +288,7 @@ module TablePreferences
       { 
         asset_id: 'asset_tag',
         org_name: 'organizations.name',
-        description: 'description',
+        description: 'transam_assets.description',
         from_line: 'from_line',
         to_line: 'to_line',
         from_segment: 'from_segment',
@@ -310,7 +310,7 @@ module TablePreferences
       { 
         asset_id: 'asset_tag',
         org_name: 'organizations.name',
-        description: 'description',
+        description: 'transam_assets.description',
         manufacturer: 'manufacturers.name',
         model: 'manufacturer_models.name',
         year: 'manufacture_year',
@@ -456,7 +456,7 @@ module TablePreferences
         external_id: 'transam_assets.external_id',
         purchase_cost: 'purchase_cost',
         in_service_date: 'in_service_date',
-        description: 'description',
+        description: 'transam_assets.description',
         pcnt_capital_responsibility: 'pcnt_capital_responsibility'
       },
     admin_facility:
@@ -471,7 +471,7 @@ module TablePreferences
         external_id: 'transam_assets.external_id',
         purchase_cost: 'purchase_cost',
         in_service_date: 'in_service_date',
-        description: 'description',
+        description: 'transam_assets.description',
         pcnt_capital_responsibility: 'pcnt_capital_responsibility'
       },
     parking_facility:
@@ -486,7 +486,7 @@ module TablePreferences
         external_id: 'transam_assets.external_id',
         purchase_cost: 'purchase_cost',
         in_service_date: 'in_service_date',
-        description: 'description',
+        description: 'transam_assets.description',
         pcnt_capital_responsibility: 'pcnt_capital_responsibility'
       },
     maintenance_facility:
@@ -501,7 +501,7 @@ module TablePreferences
         external_id: 'transam_assets.external_id',
         purchase_cost: 'purchase_cost',
         in_service_date: 'in_service_date',
-        description: 'description',
+        description: 'transam_assets.description',
         pcnt_capital_responsibility: 'pcnt_capital_responsibility'
       },
     users:
