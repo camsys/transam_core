@@ -24,7 +24,7 @@ $("table[use]").ready(()=>{
                 col_widths[col] = x["width"];
                 col_sortable[col] = x["sortable"];
             }
-	    window[id].columns = columns;
+	        window[id].columns = columns;
             window[id].col_names = col_names;
             window[id].col_types = col_types;
             window[id].col_widths = col_widths;
@@ -32,6 +32,7 @@ $("table[use]").ready(()=>{
             window[id].col_selected = selected_columns;
             window[id].default_selected = selected_columns;
             window[id].selectAll = false;
+            window[id].aux_queue = [];
             const search = $(value).data('search');
             const url = $(value).data('url');
             const sort = $(value).data('sort');
@@ -303,16 +304,9 @@ function add_row_exec(id, vals, index) {
 
 
 async function add_aux_queue(id, func){
-    try{
-        window[id].aux_queue.push(function(){
-            func();
-        });
-    } catch (e) {
-        window[id].aux_queue = [];
-        window[id].aux_queue.push(function(){
-            func();
-        });
-    }
+    window[id].aux_queue.push(function(){
+        func();
+    });
 }
 
 function clear_aux_queue(id){
