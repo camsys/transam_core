@@ -304,6 +304,9 @@ function add_row_exec(id, vals, index) {
 
 
 async function add_aux_queue(id, func){
+    if(!window[id].aux_queue) {
+        window[id].aux_queue = [];
+    }
     window[id].aux_queue.push(function(){
         func();
     });
