@@ -34,5 +34,6 @@
         - else
           = link_to "TransAM Ver #{transam_version}", "http://camsys.software/products/transam", :target => "_blank", title: `bundle show | grep transam`
         = "|".html_safe
-        %i.fa.fa-file-pdf
-        = link_to "User Guide", html_help_pdf_path, :download => '', :target => "_blank"
+        - if current_user
+          %i.fa.fa-file-pdf
+          = link_to "User Guide", html_help_pdf_path(current_user.has_role?(:admin)), :download => '', :target => "_blank"
