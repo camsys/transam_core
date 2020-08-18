@@ -935,7 +935,7 @@ footer a {
 
 /* Grouping */
 
-.page-size-current, .page-select-item, .page-select-arrow-left, .page-select-arrow-left-full, .page-select-arrow-right, .page-select-arrow-right-full, .export_option, .header-checkbox label, .cell-checkbox label {
+.page-size-current, .page-select-item, .page-select-arrow-left, .page-select-arrow-left-full, .page-select-arrow-right, .page-select-arrow-right-full, .export_option, .header-checkbox label, .cell-checkbox label, .page-size-option , .selected_rows_checkbox_label, .selected_rows_checkbox{
     cursor: pointer;
 }
 
