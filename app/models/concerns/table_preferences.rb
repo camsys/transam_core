@@ -198,7 +198,8 @@ module TablePreferences
     column = sorting.first 
     key = column.keys.first 
     order_string = (column[key] == :descending) ? "DESC" : "ASC"
-    sort_column = SORT_COLUMN[table_code][key] || DEFAULT_TABLE_PREFERENCES[table_code.to_sym][:sort].first.keys[0]
+    fallback_key =  DEFAULT_TABLE_PREFERENCES[table_code.to_sym][:sort].first.keys[0]
+    sort_column = SORT_COLUMN[table_code][key] || SORT_COLUMN[table_code][fallback_key]
     return "#{sort_column} #{order_string}"
   end
 
@@ -340,7 +341,8 @@ module TablePreferences
         purchase_cost: 'purchase_cost',
         in_service_date: 'in_service_date',
         license_plate: 'license_plate',
-        pcnt_capital_responsibility: 'pcnt_capital_responsibility'
+        pcnt_capital_responsibility: 'pcnt_capital_responsibility',
+        mileage: 'current_mileage'
       },
     bus:
       { 
@@ -366,7 +368,8 @@ module TablePreferences
         operator: 'operators.short_name',
         seating_capacity: 'seating_capacity',
         fta_funding_type: 'fta_funding_types.name',
-        fta_ownership_type: 'fta_ownership_types.name'
+        fta_ownership_type: 'fta_ownership_types.name',
+        mileage: 'current_mileage'
       },
     rail_car: { 
         asset_id: 'asset_tag',
@@ -391,7 +394,8 @@ module TablePreferences
         operator: 'operators.short_name',
         seating_capacity: 'seating_capacity',
         fta_funding_type: 'fta_funding_types.name',
-        fta_ownership_type: 'fta_ownership_types.name'
+        fta_ownership_type: 'fta_ownership_types.name',
+        mileage: 'current_mileage'
       },
     ferry: { 
         asset_id: 'asset_tag',
@@ -416,7 +420,8 @@ module TablePreferences
         operator: 'operators.short_name',
         seating_capacity: 'seating_capacity',
         fta_funding_type: 'fta_funding_types.name',
-        fta_ownership_type: 'fta_ownership_types.name'
+        fta_ownership_type: 'fta_ownership_types.name',
+        mileage: 'current_mileage'
       },
     other_passenger_vehicle: 
       { 
@@ -442,7 +447,8 @@ module TablePreferences
         operator: 'operators.short_name',
         seating_capacity: 'seating_capacity',
         fta_funding_type: 'fta_funding_types.name',
-        fta_ownership_type: 'fta_ownership_types.name'
+        fta_ownership_type: 'fta_ownership_types.name',
+        mileage: 'current_mileage'
       },
     passenger_facility:
       { 
