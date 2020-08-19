@@ -32,7 +32,6 @@ $("table[use]").ready(()=>{
             window[id].col_selected = selected_columns;
             window[id].default_selected = selected_columns;
             window[id].selectAll = false;
-            window[id].aux_queue = [];
             const search = $(value).data('search');
             const url = $(value).data('url');
             const sort = $(value).data('sort');
