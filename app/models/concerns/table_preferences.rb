@@ -260,7 +260,9 @@ module TablePreferences
         external_id: 'transam_assets.external_id',
         purchase_cost: 'purchase_cost',
         in_service_date: 'in_service_date',
-        pcnt_capital_responsibility: 'pcnt_capital_responsibility'
+        pcnt_capital_responsibility: 'pcnt_capital_responsibility',
+        term_condition: 'condition_events.assessed_rating',
+        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name'
       },
     guideway: 
       { 
@@ -283,7 +285,9 @@ module TablePreferences
         external_id: 'transam_assets.external_id',
         purchase_cost: 'purchase_cost',
         in_service_date: 'in_service_date',
-        pcnt_capital_responsibility: 'pcnt_capital_responsibility'
+        pcnt_capital_responsibility: 'pcnt_capital_responsibility',
+        term_condition: 'condition_events.assessed_rating',
+        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name'
       },
     power_signal:
       { 
@@ -305,7 +309,9 @@ module TablePreferences
         external_id: 'transam_assets.external_id',
         purchase_cost: 'purchase_cost',
         in_service_date: 'in_service_date',
-        pcnt_capital_responsibility: 'pcnt_capital_responsibility'
+        pcnt_capital_responsibility: 'pcnt_capital_responsibility',
+        term_condition: 'condition_events.assessed_rating',
+        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name'
       },
     capital_equipment:
       { 
@@ -323,7 +329,9 @@ module TablePreferences
         quantity_unit: 'quantity_unit',
         purchase_cost: 'purchase_cost',
         in_service_date: 'in_service_date',
-        pcnt_capital_responsibility: 'pcnt_capital_responsibility'
+        pcnt_capital_responsibility: 'pcnt_capital_responsibility',
+        term_condition: 'condition_events.assessed_rating',
+        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name'
       },
     service_vehicle:
       { 
@@ -342,7 +350,9 @@ module TablePreferences
         in_service_date: 'in_service_date',
         license_plate: 'license_plate',
         pcnt_capital_responsibility: 'pcnt_capital_responsibility',
-        mileage: 'current_mileage'
+        mileage: 'mileage_events.current_mileage',
+        term_condition: 'condition_events.assessed_rating',
+        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name'
       },
     bus:
       { 
@@ -369,7 +379,9 @@ module TablePreferences
         seating_capacity: 'seating_capacity',
         fta_funding_type: 'fta_funding_types.name',
         fta_ownership_type: 'fta_ownership_types.name',
-        mileage: 'current_mileage'
+        mileage: 'mileage_events.current_mileage',
+        term_condition: 'condition_events.assessed_rating',
+        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name'
       },
     rail_car: { 
         asset_id: 'asset_tag',
@@ -395,7 +407,9 @@ module TablePreferences
         seating_capacity: 'seating_capacity',
         fta_funding_type: 'fta_funding_types.name',
         fta_ownership_type: 'fta_ownership_types.name',
-        mileage: 'current_mileage'
+        mileage: 'mileage_events.current_mileage',
+        term_condition: 'condition_events.assessed_rating',
+        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name'
       },
     ferry: { 
         asset_id: 'asset_tag',
@@ -421,7 +435,9 @@ module TablePreferences
         seating_capacity: 'seating_capacity',
         fta_funding_type: 'fta_funding_types.name',
         fta_ownership_type: 'fta_ownership_types.name',
-        mileage: 'current_mileage'
+        mileage: 'mileage_events.current_mileage',
+        term_condition: 'condition_events.assessed_rating',
+        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name'
       },
     other_passenger_vehicle: 
       { 
@@ -448,7 +464,9 @@ module TablePreferences
         seating_capacity: 'seating_capacity',
         fta_funding_type: 'fta_funding_types.name',
         fta_ownership_type: 'fta_ownership_types.name',
-        mileage: 'current_mileage'
+        mileage: 'mileage_events.current_mileage',
+        term_condition: 'condition_events.assessed_rating',
+        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name'
       },
     passenger_facility:
       { 
@@ -463,7 +481,9 @@ module TablePreferences
         purchase_cost: 'purchase_cost',
         in_service_date: 'in_service_date',
         description: 'transam_assets.description',
-        pcnt_capital_responsibility: 'pcnt_capital_responsibility'
+        pcnt_capital_responsibility: 'pcnt_capital_responsibility',
+        term_condition: 'condition_events.assessed_rating',
+        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name'
       },
     admin_facility:
       { 
@@ -478,7 +498,9 @@ module TablePreferences
         purchase_cost: 'purchase_cost',
         in_service_date: 'in_service_date',
         description: 'transam_assets.description',
-        pcnt_capital_responsibility: 'pcnt_capital_responsibility'
+        pcnt_capital_responsibility: 'pcnt_capital_responsibility',
+        term_condition: 'condition_events.assessed_rating',
+        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name'
       },
     parking_facility:
       { 
@@ -493,7 +515,9 @@ module TablePreferences
         purchase_cost: 'purchase_cost',
         in_service_date: 'in_service_date',
         description: 'transam_assets.description',
-        pcnt_capital_responsibility: 'pcnt_capital_responsibility'
+        pcnt_capital_responsibility: 'pcnt_capital_responsibility',
+        term_condition: 'condition_events.assessed_rating',
+        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name'
       },
     maintenance_facility:
       { 
@@ -508,7 +532,9 @@ module TablePreferences
         purchase_cost: 'purchase_cost',
         in_service_date: 'in_service_date',
         description: 'transam_assets.description',
-        pcnt_capital_responsibility: 'pcnt_capital_responsibility'
+        pcnt_capital_responsibility: 'pcnt_capital_responsibility',
+        term_condition: 'condition_events.assessed_rating',
+        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name'
       },
     users:
       { 
