@@ -352,7 +352,9 @@ module TablePreferences
         pcnt_capital_responsibility: 'pcnt_capital_responsibility',
         mileage: 'mileage_events.current_mileage',
         term_condition: 'condition_events.assessed_rating',
-        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name'
+        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name',
+        last_life_cycle_action: 'asset_event_types.name',
+        life_cycle_action_date: 'all_events.event_date'
       },
     bus:
       { 
