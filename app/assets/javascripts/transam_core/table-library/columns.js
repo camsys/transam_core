@@ -76,7 +76,7 @@ function init_columns(id, columns, current) {
     table.parent().on('click', ".deselect-all", function(event){
       event.stopPropagation();
       event.stopImmediatePropagation();
-      table.parent().find('#visible-columns .target-placeholder').remove();
+      table.parent().find('.target-placeholder').remove();
       let newItems = table.parent().find('#visible-columns li:not(.unsortable)');
       table.parent().find('#available-columns').prepend(newItems);
       let columns = table.parent().find('#visible-columns li').map(function() {return this.id;}).get().join();
@@ -93,6 +93,7 @@ function init_columns(id, columns, current) {
       let newItems = table.parent().find('#available-columns li');
       table.parent().find('#visible-columns li:not(.unsortable)').last().after(newItems);
       table.parent().find('#visible-columns .target-placeholder').remove();
+      table.parent().find('#available-columns').append($('<li></li>', {"class": "target-placeholder"}));
       let columns = table.parent().find('#visible-columns li').map(function() {return this.id;}).get().join();
       let id = table[0].id;
 
@@ -138,6 +139,11 @@ function init_columns(id, columns, current) {
 	  t.item.closest('.panel-columns').find('#visible-columns .target-placeholder').remove();
 	} else if (t.item.closest('.panel-columns').find('#visible-columns .target-placeholder').length < 1) {
 	  t.item.closest('.panel-columns').find('#visible-columns .rule-below').after($('<li></li>', {"class": "target-placeholder"}));
+	}
+	if (t.item.closest('.panel-columns').find('#available-columns .ui-sortable-handle').length > 0) {
+	  t.item.closest('.panel-columns').find('#available-columns .target-placeholder').remove();
+	} else if (t.item.closest('.panel-columns').find('#available-columns .target-placeholder').length < 1) {
+	  t.item.closest('.panel-columns').find('#available-columns').append($('<li></li>', {"class": "target-placeholder"}));
 	}
 	updatePage(id, 0, table.data('currentPageSize'), -1, false, {}, "", columns);
       }
