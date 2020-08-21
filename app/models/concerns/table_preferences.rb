@@ -259,6 +259,7 @@ module TablePreferences
         external_id: 'transam_assets.external_id',
         purchase_cost: 'purchase_cost',
         in_service_date: 'in_service_date',
+        direct_capital_responsibility: 'pcnt_capital_responsibility',
         pcnt_capital_responsibility: 'pcnt_capital_responsibility'
       },
     guideway: 
@@ -282,6 +283,7 @@ module TablePreferences
         external_id: 'transam_assets.external_id',
         purchase_cost: 'purchase_cost',
         in_service_date: 'in_service_date',
+        direct_capital_responsibility: 'pcnt_capital_responsibility',
         pcnt_capital_responsibility: 'pcnt_capital_responsibility'
       },
     power_signal:
@@ -304,6 +306,7 @@ module TablePreferences
         external_id: 'transam_assets.external_id',
         purchase_cost: 'purchase_cost',
         in_service_date: 'in_service_date',
+        direct_capital_responsibility: 'pcnt_capital_responsibility',
         pcnt_capital_responsibility: 'pcnt_capital_responsibility'
       },
     capital_equipment:
@@ -322,6 +325,7 @@ module TablePreferences
         quantity_unit: 'quantity_unit',
         purchase_cost: 'purchase_cost',
         in_service_date: 'in_service_date',
+        direct_capital_responsibility: 'pcnt_capital_responsibility',
         pcnt_capital_responsibility: 'pcnt_capital_responsibility'
       },
     service_vehicle:
@@ -340,6 +344,7 @@ module TablePreferences
         purchase_cost: 'purchase_cost',
         in_service_date: 'in_service_date',
         license_plate: 'license_plate',
+        direct_capital_responsibility: 'pcnt_capital_responsibility',
         pcnt_capital_responsibility: 'pcnt_capital_responsibility'
       },
     bus:
@@ -361,6 +366,7 @@ module TablePreferences
         esl_category: 'esl_categories.name',
         chassis: 'chasses.name',
         fuel_type: 'fuel_types.name',
+        direct_capital_responsibility: 'pcnt_capital_responsibility',
         pcnt_capital_responsibility: 'pcnt_capital_responsibility',
         in_service_date: 'in_service_date',
         operator: 'operators.short_name',
@@ -386,6 +392,7 @@ module TablePreferences
         esl_category: 'esl_categories.name',
         chassis: 'chasses.name',
         fuel_type: 'fuel_types.name',
+        direct_capital_responsibility: 'pcnt_capital_responsibility',
         pcnt_capital_responsibility: 'pcnt_capital_responsibility',
         in_service_date: 'in_service_date',
         operator: 'operators.short_name',
@@ -411,6 +418,7 @@ module TablePreferences
         esl_category: 'esl_categories.name',
         chassis: 'chasses.name',
         fuel_type: 'fuel_types.name',
+        direct_capital_responsibility: 'pcnt_capital_responsibility',
         pcnt_capital_responsibility: 'pcnt_capital_responsibility',
         in_service_date: 'in_service_date',
         operator: 'operators.short_name',
@@ -437,6 +445,7 @@ module TablePreferences
         esl_category: 'esl_categories.name',
         chassis: 'chasses.name',
         fuel_type: 'fuel_types.name',
+        direct_capital_responsibility: 'pcnt_capital_responsibility',
         pcnt_capital_responsibility: 'pcnt_capital_responsibility',
         in_service_date: 'in_service_date',
         operator: 'operators.short_name',
@@ -457,6 +466,7 @@ module TablePreferences
         purchase_cost: 'purchase_cost',
         in_service_date: 'in_service_date',
         description: 'transam_assets.description',
+        direct_capital_responsibility: 'pcnt_capital_responsibility',
         pcnt_capital_responsibility: 'pcnt_capital_responsibility'
       },
     admin_facility:
@@ -472,6 +482,7 @@ module TablePreferences
         purchase_cost: 'purchase_cost',
         in_service_date: 'in_service_date',
         description: 'transam_assets.description',
+        direct_capital_responsibility: 'pcnt_capital_responsibility',
         pcnt_capital_responsibility: 'pcnt_capital_responsibility'
       },
     parking_facility:
@@ -487,6 +498,7 @@ module TablePreferences
         purchase_cost: 'purchase_cost',
         in_service_date: 'in_service_date',
         description: 'transam_assets.description',
+        direct_capital_responsibility: 'pcnt_capital_responsibility',
         pcnt_capital_responsibility: 'pcnt_capital_responsibility'
       },
     maintenance_facility:
@@ -502,6 +514,7 @@ module TablePreferences
         purchase_cost: 'purchase_cost',
         in_service_date: 'in_service_date',
         description: 'transam_assets.description',
+        direct_capital_responsibility: 'pcnt_capital_responsibility',
         pcnt_capital_responsibility: 'pcnt_capital_responsibility'
       },
     users:
