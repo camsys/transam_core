@@ -172,7 +172,8 @@ class UsersController < OrganizationAwareController
     sort_column = params[:sort_column]
     sort_order = params[:sort_order]
     columns = params[:columns]
-    
+    organization_id = params[:organization_id].to_i
+
     ### Update SORT and COLUMNS Preferences ###
     if sort_column.present? || columns.present?
       current_user.update_table_prefs(:users, sort_column, sort_order, columns)
@@ -196,6 +197,13 @@ class UsersController < OrganizationAwareController
     if role.present?
       users = users.joins(:roles).where({roles: {name: role.split(',')}}).distinct
     end
+
+    # Handle org list
+    if organization_id > 0
+      users = users.where(users_organizations: {organization_id: organization_id})
+    else
+      users = users.where(users_organizations: {organization_id: @organization_list})
+    end
     
     case show_status
     when 'active'
@@ -216,7 +224,7 @@ class UsersController < OrganizationAwareController
   end
 
   def join_builder
-    User.unscoped.joins(:organization)
+    User.unscoped.joins(:organization).joins(:organizations)
       #.joins(:roles)
       #.joins('left join max_user_roles_and_labels on users.id=max_user_roles_and_labels.user_id')
   end
