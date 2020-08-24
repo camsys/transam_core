@@ -167,7 +167,6 @@ class UsersController < OrganizationAwareController
     page_size = (table_params[:page_size] || users.count).to_i
     role = params[:role]
     search = (table_params[:search])
-    show_status = params[:show_active_only] || 'active'
     offset = page*page_size
     sort_column = params[:sort_column]
     sort_order = params[:sort_order]
@@ -181,10 +180,17 @@ class UsersController < OrganizationAwareController
 
     ### Search ###
     if search.present?
-      searchable_columns = [:first_name, :last_name, :phone, :phone_ext, :email, :title] 
+      searchable_columns = [:first_name, :last_name, :phone, :phone_ext, :email, :title, :external_id] 
       search_string = "%#{search}%"
       query = query_builder(searchable_columns, search_string)
+      case search.downcase
+      when 'active'
+        query = query.or(User.arel_table[:active].eq(true))
+      when 'inactive'
+        query = query.or(User.arel_table[:active].eq(false))
+      end
       users = users.where(query)
+
       ####### Get users who match search on role
       ##users_on_role = (role_query search_string).pluck(:id)
       ######## Search on every column (except role)
@@ -205,15 +211,6 @@ class UsersController < OrganizationAwareController
       users = users.where(users_organizations: {organization_id: @organization_list})
     end
     
-    case show_status
-    when 'active'
-      users = users.where(active: true)
-    when 'inactive'
-      users = users.where(active: false)
-    when 'all'
-    end
-
-    
     ### SORT ###
     users = users.order(current_user.table_sort_string :users)
 
@@ -224,7 +221,7 @@ class UsersController < OrganizationAwareController
   end
 
   def join_builder
-    User.unscoped.joins(:organization).joins(:organizations)
+    User.unscoped.distinct.joins(:organization).joins(:organizations)
       #.joins(:roles)
       #.joins('left join max_user_roles_and_labels on users.id=max_user_roles_and_labels.user_id')
   end
@@ -240,7 +237,7 @@ class UsersController < OrganizationAwareController
     if atts.count <= 1
       return User.joins(:organziation).arel_table[atts.pop].matches(search_string)
     else
-      return User.joins(:organization).arel_table[atts.pop].matches(search_string).or(query_builder(atts, search_string))
+      return User.joins(:organization).arel_table[atts.pop].matches(search_string).or(user_query_builder(atts, search_string))
     end
   end
 
