@@ -262,7 +262,10 @@ module TablePreferences
         in_service_date: 'in_service_date',
         pcnt_capital_responsibility: 'pcnt_capital_responsibility',
         term_condition: 'condition_events.assessed_rating',
-        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name'
+        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name',
+        service_status: 'service_status_types.name',
+        last_life_cycle_action: 'asset_event_types.name',
+        life_cycle_action_date: 'all_events.event_date'
       },
     guideway: 
       { 
@@ -287,7 +290,10 @@ module TablePreferences
         in_service_date: 'in_service_date',
         pcnt_capital_responsibility: 'pcnt_capital_responsibility',
         term_condition: 'condition_events.assessed_rating',
-        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name'
+        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name',
+        service_status: 'service_status_types.name',
+        last_life_cycle_action: 'asset_event_types.name',
+        life_cycle_action_date: 'all_events.event_date'
       },
     power_signal:
       { 
@@ -311,7 +317,10 @@ module TablePreferences
         in_service_date: 'in_service_date',
         pcnt_capital_responsibility: 'pcnt_capital_responsibility',
         term_condition: 'condition_events.assessed_rating',
-        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name'
+        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name',
+        service_status: 'service_status_types.name',
+        last_life_cycle_action: 'asset_event_types.name',
+        life_cycle_action_date: 'all_events.event_date'
       },
     capital_equipment:
       { 
@@ -331,7 +340,10 @@ module TablePreferences
         in_service_date: 'in_service_date',
         pcnt_capital_responsibility: 'pcnt_capital_responsibility',
         term_condition: 'condition_events.assessed_rating',
-        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name'
+        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name',
+        service_status: 'service_status_types.name',
+        last_life_cycle_action: 'asset_event_types.name',
+        life_cycle_action_date: 'all_events.event_date'
       },
     service_vehicle:
       { 
@@ -353,6 +365,7 @@ module TablePreferences
         mileage: 'mileage_events.current_mileage',
         term_condition: 'condition_events.assessed_rating',
         term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name',
+        service_status: 'service_status_types.name',
         last_life_cycle_action: 'asset_event_types.name',
         life_cycle_action_date: 'all_events.event_date'
       },
@@ -383,7 +396,10 @@ module TablePreferences
         fta_ownership_type: 'fta_ownership_types.name',
         mileage: 'mileage_events.current_mileage',
         term_condition: 'condition_events.assessed_rating',
-        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name'
+        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name',
+        service_status: 'service_status_types.name',
+        last_life_cycle_action: 'asset_event_types.name',
+        life_cycle_action_date: 'all_events.event_date'
       },
     rail_car: { 
         asset_id: 'asset_tag',
@@ -411,7 +427,10 @@ module TablePreferences
         fta_ownership_type: 'fta_ownership_types.name',
         mileage: 'mileage_events.current_mileage',
         term_condition: 'condition_events.assessed_rating',
-        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name'
+        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name',
+        service_status: 'service_status_types.name',
+        last_life_cycle_action: 'asset_event_types.name',
+        life_cycle_action_date: 'all_events.event_date'
       },
     ferry: { 
         asset_id: 'asset_tag',
@@ -439,7 +458,10 @@ module TablePreferences
         fta_ownership_type: 'fta_ownership_types.name',
         mileage: 'mileage_events.current_mileage',
         term_condition: 'condition_events.assessed_rating',
-        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name'
+        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name',
+        service_status: 'service_status_types.name',
+        last_life_cycle_action: 'asset_event_types.name',
+        life_cycle_action_date: 'all_events.event_date'
       },
     other_passenger_vehicle: 
       { 
@@ -468,7 +490,10 @@ module TablePreferences
         fta_ownership_type: 'fta_ownership_types.name',
         mileage: 'mileage_events.current_mileage',
         term_condition: 'condition_events.assessed_rating',
-        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name'
+        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name',
+        service_status: 'service_status_types.name',
+        last_life_cycle_action: 'asset_event_types.name',
+        life_cycle_action_date: 'all_events.event_date'
       },
     passenger_facility:
       { 
@@ -485,7 +510,10 @@ module TablePreferences
         description: 'transam_assets.description',
         pcnt_capital_responsibility: 'pcnt_capital_responsibility',
         term_condition: 'condition_events.assessed_rating',
-        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name'
+        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name',
+        service_status: 'service_status_types.name',
+        last_life_cycle_action: 'asset_event_types.name',
+        life_cycle_action_date: 'all_events.event_date'
       },
     admin_facility:
       { 
@@ -502,7 +530,10 @@ module TablePreferences
         description: 'transam_assets.description',
         pcnt_capital_responsibility: 'pcnt_capital_responsibility',
         term_condition: 'condition_events.assessed_rating',
-        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name'
+        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name',
+        service_status: 'service_status_types.name',
+        last_life_cycle_action: 'asset_event_types.name',
+        life_cycle_action_date: 'all_events.event_date'
       },
     parking_facility:
       { 
@@ -519,7 +550,10 @@ module TablePreferences
         description: 'transam_assets.description',
         pcnt_capital_responsibility: 'pcnt_capital_responsibility',
         term_condition: 'condition_events.assessed_rating',
-        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name'
+        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name',
+        service_status: 'service_status_types.name',
+        last_life_cycle_action: 'asset_event_types.name',
+        life_cycle_action_date: 'all_events.event_date'
       },
     maintenance_facility:
       { 
@@ -536,7 +570,10 @@ module TablePreferences
         description: 'transam_assets.description',
         pcnt_capital_responsibility: 'pcnt_capital_responsibility',
         term_condition: 'condition_events.assessed_rating',
-        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name'
+        term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name',
+        service_status: 'service_status_types.name',
+        last_life_cycle_action: 'asset_event_types.name',
+        life_cycle_action_date: 'all_events.event_date'
       },
     users:
       { 
@@ -573,7 +610,6 @@ module TablePreferences
         multi_year: "multi_year",
         emergency: "emergency"
       }
-
   }
 
 end
