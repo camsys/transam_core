@@ -17,15 +17,15 @@
       %p.text-muted.credit
         = "&copy; 2013-#{Date.today.year}".html_safe
         = link_to "Cambridge Systematics", "http://camsys.com", :target => "_blank"
-    .col-lg-4.col-md-4.col-sm-6.col-xs-12
-      %p.text-muted.credit.text-center
+    -# .col-lg-4.col-md-4.col-sm-6.col-xs-12
+    -#   %p.text-muted.credit.text-center
         -# = link_to 'Help', html_help_pdf_path, :download => '', :target => "_blank"
         -#= link_to 'Privacy Policy', page_path('privacy_policy')
         -#&#8226;
         -#= link_to 'Security Policy', page_path('security_policy')
         -#&#8226;
         -#= link_to 'About', page_path('about')
-    .col-lg-4.col-md-4.col-sm-6.col-xs-12
+    .col-lg-8.col-md-4.col-sm-6.col-xs-12
       %p.text-muted.credit.text-right
         = "Build #{app_version}"
         Powered by
@@ -37,3 +37,6 @@
         - if current_user
           %i.fa.fa-file-pdf
           = link_to "User Guide", html_help_pdf_path(current_user.has_role?(:admin)), :download => '', :target => "_blank"
+          = "|".html_safe
+          %i.fa.fa-file-pdf
+          = link_to 'Updates', html_release_notes_pdf_path, download: '', target: '_blank'
