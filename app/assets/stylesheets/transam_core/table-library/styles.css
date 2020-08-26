@@ -860,7 +860,7 @@
     text-align: center;
 }
 
-.numeric {
+.numeric, .numeric .cell-text {
     font-family: 'Source Code Pro', monospace;
     letter-spacing: 0;
 }
