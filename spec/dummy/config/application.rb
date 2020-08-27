@@ -27,6 +27,7 @@ module Dummy
 
     config.help_directory = (ENV['HELP_PATH'] || "https://camsys.github.io/transam_user_guide/user_guide")
     config.time_zone = 'Eastern Time (US & Canada)'
+    config.release_notes = 'Release notes (version_number)_All.pdf'
 
     # Sends back appropriate JSON 400 response if a bad JSON request is sent.
     config.middleware.insert_before Rack::Head, JsonResponseHelper::CatchJsonParseErrors

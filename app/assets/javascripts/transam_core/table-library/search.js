@@ -1,9 +1,9 @@
 function addSearch(id) {
-    let searchbar = $("<div>").addClass("search-wrapper").append($('<i class="fas fa-search">')).append($('<input>').addClass("searchbar").attr('placeholder', "Search Table..."));
+    let input = $('<input>').addClass("searchbar").attr('placeholder', "Search Table...");
+    let searchbar = $("<div>").addClass("search-wrapper").append($('<i class="fas fa-search">')).append(input);
 
-    $(searchbar).on("keyup", function(){
+    $(input).on("keyup", function(){
         let value = $(this).val().toLowerCase();
-
         if(value === "") {
             removeSearch(id);
             return;

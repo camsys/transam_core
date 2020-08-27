@@ -24,7 +24,7 @@ $("table[use]").ready(()=>{
                 col_widths[col] = x["width"];
                 col_sortable[col] = x["sortable"];
             }
-	    window[id].columns = columns;
+	        window[id].columns = columns;
             window[id].col_names = col_names;
             window[id].col_types = col_types;
             window[id].col_widths = col_widths;
@@ -303,16 +303,12 @@ function add_row_exec(id, vals, index) {
 
 
 async function add_aux_queue(id, func){
-    try{
-        window[id].aux_queue.push(function(){
-            func();
-        });
-    } catch (e) {
+    if(!window[id].aux_queue) {
         window[id].aux_queue = [];
-        window[id].aux_queue.push(function(){
-            func();
-        });
     }
+    window[id].aux_queue.push(function(){
+        func();
+    });
 }
 
 function clear_aux_queue(id){
@@ -362,7 +358,9 @@ async function serverSide(id, url, curPage, curPageSize, params, search="", sort
                         let columns = Object.keys(obj);
                         for(let col of columns) {
                             if(!obj[col]["url"] || 0 === obj[col]["url"].trim().length) {
-                                row[col] = obj[col]["data"].toString();
+			        if(obj[col]["data"] !== null) {
+                                    row[col] = obj[col]["data"].toString();
+			        }
                             } else {
                                 row[col] = "<a href='" + obj[col]["url"] + "'>" + obj[col]["data"] + "</a>";
                             }

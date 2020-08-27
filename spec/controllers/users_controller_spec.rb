@@ -22,7 +22,7 @@ RSpec.describe UsersController, :type => :controller do
   describe 'GET table' do
 
     it 'returns all users' do
-      get :table
+      get :table, params: {show_active_only: 'all'}
       user_count =  User.unscoped.joins(:organization).count
       expect(response).to be_success
       parsed_response = JSON.parse(response.body)
@@ -30,7 +30,7 @@ RSpec.describe UsersController, :type => :controller do
     end
 
     it 'returns the first 10 users' do
-      get :table,  params: {page: 0, page_size: 10}
+      get :table,  params: {page: 0, page_size: 10, show_active_only: 'all'}
       expect(response).to be_success
       parsed_response = JSON.parse(response.body)
       expect(parsed_response["count"]).to eq(User.unscoped.joins(:organization).count)
