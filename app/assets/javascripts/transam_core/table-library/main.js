@@ -284,11 +284,23 @@ function add_row_exec(id, vals, index) {
         for(let key of s_cols){
             let text = "";
             try{
-                text = ""+vals[key.trim()].replace(/\>https?\:\/\//i, ">");
+                text = ""+vals[key.trim()].replace(/\>https?\:\/\//i, ">"); // removes http(s)
             } catch(e) {
-                text = vals[key.trim()];
+                try {
+                    text = vals[key.trim()];
+                }
+                catch (e) {
+                    text = ""+vals[key.trim()];
+                }
+                
             }
-            row.append($('<td>').addClass("row-item").addClass(col_types[key.trim()]).append($('<div>').addClass('cell-text').html(text).addClass((!isNaN(vals[key.trim()]))?"numeric":""))); // removes http(s) and determines if it is a number
+            row.append($('<td>').addClass("row-item").addClass(col_types[key.trim()]).append($('<div>').addClass('cell-text').html(text).addClass(
+                (
+                    (typeof text !== 'undefined')
+                    &&((!isNaN(text)) // check if its a number
+                    ||(!isNaN(text.replace(/\d+%/g,'').replace(/[$,]+/g,'').replace(/[-]+/g,'').replace(/[\/]+/g,''))) // check if text is a percentage, currency value, year range, date // separated for clarity
+                    )
+                )?"numeric":"")));  // if any of those are true, apply numeric class
         }
         // messy way of inserting each row at correct position
         let lt = $('#' + id + " .table-row").filter(function(){
@@ -296,7 +308,7 @@ function add_row_exec(id, vals, index) {
         });
         (lt.length > 0) ? row.insertAfter(lt[lt.length-1]) : $('#' + id).prepend(row);
     } else {
-        
+        // 
     }
 
 }
