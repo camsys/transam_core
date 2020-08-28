@@ -131,7 +131,7 @@ class AssetsController < AssetAwareController
 
     terminal_crumb = nil
     if @early_disposition
-      terminal_crumb = "Early disposition proposed"
+      terminal_crumb = "Early Disposition Proposed"
     elsif @transferred_assets
       terminal_crumb = "Transferred Assets"
     elsif @asset_group.present?
