@@ -206,9 +206,9 @@ class UsersController < OrganizationAwareController
 
     # Handle org list
     if organization_id > 0
-      users = users.where(users_organizations: {organization_id: organization_id})
+      users = users.where(organization_id: organization_id)
     else
-      users = users.where(users_organizations: {organization_id: @organization_list})
+      users = users.where(organization: @organization_list)
     end
     
     ### SORT ###
