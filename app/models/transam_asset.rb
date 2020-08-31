@@ -402,11 +402,11 @@ class TransamAsset < TransamAssetRecord
   end
 
   def asset_type_id
-    asset_subtype.asset_type_id
+    asset_subtype.try(:asset_type_id)
   end
 
   def asset_type
-    asset_subtype.asset_type
+    asset_subtype.try(:asset_type)
   end
 
   def parent_name
