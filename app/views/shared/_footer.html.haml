@@ -36,7 +36,8 @@
         = "|".html_safe
         - if current_user
           %i.fa.fa-file-pdf
-          = link_to "User Guide", html_help_pdf_path(current_user.has_role?(:admin)), :download => '', :target => "_blank"
+          = link_to 'Updates', html_release_notes_pdf_path, download: '', target: '_blank'
           = "|".html_safe
           %i.fa.fa-file-pdf
-          = link_to 'Updates', html_release_notes_pdf_path, download: '', target: '_blank'
+          = link_to "User Guide", html_help_pdf_path(current_user.has_role?(:admin)), :download => '', :target => "_blank"
+
