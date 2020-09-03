@@ -8,7 +8,7 @@ $(document).on('click', ".export_option", async function(event){
   } else if($(this).text().trim() === "txt") {
     $(this).append($('<a class="hidden-link">').attr({ 'download': "output.txt", 'href': href, 'target': '_blank' }));
   } else if($(this).text().trim() === "excel") {
-    $(this).append($('<a class="hidden-link">').attr({ 'download': "output.xls", 'href': href, 'target': '_blank' }));
+    $(this).append($('<a class="hidden-link">').attr({ 'download': "output.csv", 'href': href, 'target': '_blank' })); // TODO: THIS IS NOT AN EXCEL FILE, THIS IS A CSV. TO GET AN XLS OR XLSX FILE WE NEED TO GO BACK TO THE SERVER OR USE A LIBRARY. EXCEL CAN READ CSV. WEB APPLICATIONS GENERATING XLSX DOESN'T EXACTLY MAKE SENSE. 
   }
   let hidden = $(this).find(".hidden-link")[0];
   hidden.click()
@@ -123,7 +123,7 @@ async function export_table(id, type) {
     csvData = 'data:application/txt;charset=utf-8,' + encodeURIComponent(csv);
     return csvData;
   } else if(type === "excel") {
-    csvData = 'data:application/xls;charset=utf-8,' + escape(csv);
+    csvData = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv); // TODO: SEE EARLIER TODO
     return csvData;
   }
   
