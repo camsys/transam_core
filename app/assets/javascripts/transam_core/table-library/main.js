@@ -71,7 +71,7 @@ $("table[use]").ready(()=>{
         const id = $(table).attr('id');
         // $('#' + id + " .header-checkbox").prop('checked', false); // case shouldn't be needed, omitted for efficiency
         // window[id].selectAll = false;
-        if($(table).data('side') === "server") {
+        // if($(table).data('side') === "server") {
             if(!window[id].checkedRows){
                 window[id].checkedRows = {};
             }
@@ -82,7 +82,7 @@ $("table[use]").ready(()=>{
                 flat[$(columns[index]).text()] = $(this).text();
             });
             window[id].checkedRows[row.attr("index")] = flat;
-        }
+        // }
     });
 
     $(document).on('click', '.cell-checkbox input[type="checkbox"]:not(:checked)', function(e){
@@ -91,14 +91,14 @@ $("table[use]").ready(()=>{
         const id = $(table).attr('id');
         $('#' + id + " .header-checkbox").prop('checked', false);
         window[id].selectAll = false;
-        if($(table).data('side') === "server") {
+        // if($(table).data('side') === "server") {
             if(!window[id].checkedRows){
                 window[id].checkedRows = {};
             } else {
                 const row = $(this).closest(".table-row");
                 delete window[id].checkedRows[row.attr("index")];
             }
-        }
+        // }
     });
 
     $(document).on('click', '.header-checkbox input[type="checkbox"]:checked', function(){
