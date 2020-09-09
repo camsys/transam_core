@@ -32,6 +32,7 @@ $("table[use]").ready(()=>{
             window[id].col_selected = selected_columns;
             window[id].default_selected = selected_columns;
             window[id].selectAll = false;
+            window[id].stickySelect = false; // client side library managing selections for server side data... no... i'm serious...
             const search = $(value).data('search');
             const url = $(value).data('url');
             const sort = $(value).data('sort');
@@ -90,14 +91,17 @@ $("table[use]").ready(()=>{
         const table = $(this).closest('.library-table').find("table").eq(0);
         const id = $(table).attr('id');
         $('#' + id + " .header-checkbox").prop('checked', false);
-        window[id].selectAll = false;
+        if(!window[id].checkedRows){
+            window[id].checkedRows = {};
+        } else {
+            const row = $(this).closest(".table-row");
+            delete window[id].checkedRows[row.attr("index")];
+        }
+        
+        window[id].stickySelect = window[id].selectAll;
+        
         // if($(table).data('side') === "server") {
-            if(!window[id].checkedRows){
-                window[id].checkedRows = {};
-            } else {
-                const row = $(this).closest(".table-row");
-                delete window[id].checkedRows[row.attr("index")];
-            }
+            
         // }
     });
 
@@ -105,12 +109,14 @@ $("table[use]").ready(()=>{
         let table = $(this).closest('.library-table').find("table").eq(0);
         const id = $(table).attr('id');
         window[id].selectAll = true;
+        window[id].stickySelect = false;
         table.find('.table-row:not(.row-checked) .cell-checkbox input').click();
     });
     $(document).on('click', '.header-checkbox input[type="checkbox"]:not(:checked)', function(){
         let table = $(this).closest('.library-table').find("table").eq(0);
         const id = $(table).attr('id');
         window[id].selectAll = false;
+        window[id].stickySelect = false;
         table.find('.table-row.row-checked .cell-checkbox input').click();
     });
     // $(document).on('click', '.header-checkbox input[type="checkbox"]:checked', function(){
@@ -174,7 +180,7 @@ function updateHeader(id, selected, sort){
     let table = $("#" + id);
     let header = $('<tr>').addClass("header");
     let colgroup = $('<colgroup>');
-    header.append($('<th>').addClass("header-item header-checkbox").append($('<label>').append($('<input>').attr('type', "checkbox").addClass("header-checkbox").prop('checked', window[id].selectAll)).append($('<span>').addClass('fa-stack').append($('<i class="fad fa-square fa-stack-1x" aria-hidden="true"></i>')).append($('<i class="fas fa-check-square fa-stack-1x" aria-hidden="true"></i>')))));
+    header.append($('<th>').addClass("header-item header-checkbox").append($('<label>').append($('<input>').attr('type', "checkbox").addClass("header-checkbox").prop('checked', window[id].selectAll && !window[id].stickySelect)).append($('<span>').addClass('fa-stack').append($('<i class="fad fa-square fa-stack-1x" aria-hidden="true"></i>')).append($('<i class="fas fa-check-square fa-stack-1x" aria-hidden="true"></i>')))));
     colgroup.append($('<col>').addClass('col-item').attr('style', 'width: 32px'));
     // let sort_select = $('<div>');
     for (let col of selected){
