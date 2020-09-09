@@ -46,7 +46,8 @@
           %td.left.nowrap= format_as_text(t.description)
           %td.center.nowrap{data: {tableexport: {value: "#{(t.active && t.is_implemented) ? 'Yes' : 'No'}"}}}= format_as_boolean((t.active && t.is_implemented))
           %td.center.nowrap{data: {tableexport: {value: "#{t.message_enabled ? 'Yes' : 'No'}"}}}= format_as_boolean(t.message_enabled)
-          %td.center.nowrap{data: {tableexport: {value: "#{t.email_enabled ? 'Yes' : 'No'}"}}}= format_as_boolean(t.email_enabled)
+          -# IF a system template is enabled, its email is also enabled but email_enabled may be false so messages dont send duplicates as other parts of the system already send the email
+          %td.center.nowrap{data: {tableexport: {value: "#{(t.is_system_template || t.email_enabled) ? 'Yes' : 'No'}"}}}= format_as_boolean(t.is_system_template || t.email_enabled)
           %td.center
             - if can? :destroy, t
               = link_to message_template_path(t), :method => :delete, title: "Remove template", :data => {:confirm => "Are you sure you want to remove this template (#{t.name})? The action can't be undone."} do
