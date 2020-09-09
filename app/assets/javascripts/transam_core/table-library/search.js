@@ -23,9 +23,12 @@ function addSearch(id) {
 
 function addSearchServer(id) {
     let searchbar = $("<div>").addClass("search-wrapper").append($('<i class="fas fa-search">')).append($('<input>').addClass("searchbar").attr('placeholder', "Search Table..."));
+    const TIMEOUT_MS = 500;
+    let timeout = null;
 
     $(searchbar).on("keyup", function(){
-        let value = $(this).val().toLowerCase();
+        clearTimeout(timeout);
+        let value = $(this).find('.searchbar').val();
 
         if(value === "") {
             $('#' + id + " .table-row").remove();
@@ -33,7 +36,9 @@ function addSearchServer(id) {
             return;
         }
         $('#' + id + " .table-row").remove();
-        updatePage(id, 0, $('#'+id).data('currentPageSize'),-1, false, $('#'+id).data('params'), value);
+        timeout = setTimeout(function () {
+            updatePage(id, 0, $('#'+id).data('currentPageSize'),-1, false, $('#'+id).data('params'), value);
+        }, TIMEOUT_MS);
     });
     $('#'+id).parent().find(".function_bar").append(searchbar);
 }
