@@ -14,15 +14,15 @@
     margin-right: 10px;
   }
 
-= form_tag organizations_path, :id => 'filter_form', :method => 'get', :class => 'navbar-form navbar-left panel-action', :style => 'margin-left: 0!important; padding-top: 7px' do
-  %label Organization Type
-  = select_tag(:organization_type_id, options_for_select(OrganizationType.all.map{|t| [t.name, t.id]}, :selected => @organization_type_id), :include_blank => 'All Organization Types', :class => "form-control")
-  %label Status
-  = select_tag(:show_active_only, options_for_select([['All Organizations', 'all'], ['Active', 'active'], ['Inactive', 'inactive']], :selected => @show_active_only), :class => "form-control")
+-# = form_tag organizations_path, :id => 'filter_form', :method => 'get', :class => 'navbar-form navbar-left panel-action', :style => 'margin-left: 0!important; padding-top: 7px' do
+-#   %label Organization Type
+-#   = select_tag(:organization_type_id, options_for_select(OrganizationType.all.map{|t| [t.name, t.id]}, :selected => @organization_type_id), :include_blank => 'All Organization Types', :class => "form-control")
+-#   %label Status
+-#   = select_tag(:show_active_only, options_for_select([['All Organizations', 'all'], ['Active', 'active'], ['Inactive', 'inactive']], :selected => @show_active_only), :class => "form-control")
 
-  = button_tag :type => 'submit', :id => 'form-submit', :class => 'btn btn-info', :style => 'margin-left: 2px; ' do
-    %i.fa.fa-filter
-    = " Filter"
+-#   = button_tag :type => 'submit', :id => 'form-submit', :class => 'btn btn-info', :style => 'margin-left: 2px; ' do
+-#     %i.fa.fa-filter
+-#     = " Filter"
 
 .navbar-form.navbar-right
   %button.btn.btn-primary.dropdown-toggle{:data => {:toggle => 'dropdown'}, :aria => {:exapanded => 'false'}, :id => "add_button", :style => 'vertical-align: top;'}
