@@ -668,7 +668,7 @@ class AssetsController < AssetAwareController
   end
 
   def add_breadcrumbs
-    add_breadcrumb "#{@asset.fta_asset_class.name}", transit_assets_path(:fta_asset_class_code => @asset.fta_asset_class.code)
+    add_breadcrumb @asset.fta_asset_category, transit_assets_path(:fta_asset_class_code => @asset.fta_asset_class.code)
     add_breadcrumb "#{@asset.fta_asset_class.name.singularize} Profile"
   end
 
