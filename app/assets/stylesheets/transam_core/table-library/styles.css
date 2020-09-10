@@ -388,7 +388,7 @@
 }
 
 
-.cell-text:hover > .custom-drilldown-content {
+.cell-text:hover > .custom-drilldown-content[toggle="popover"] {
     z-index: 10;
     width: auto;
     height: unset;

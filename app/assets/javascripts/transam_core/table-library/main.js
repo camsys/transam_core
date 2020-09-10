@@ -136,6 +136,7 @@ $("table[use]").ready(()=>{
     //     let table = $(this).closest('.library-table').find("table").eq(0);
     //     table.find('.table-row.row-checked').removeClass("row-checked").find(".cell-checkbox label input").prop("checked", false);
     // });
+    $(".custom-drilldown-content").hover((e)=>{e.stopPropagation();});
 });
 
 
@@ -397,6 +398,8 @@ async function serverSide(id, url, curPage, curPageSize, params, search="", sort
 
         return response['count'];
 }
+
+
 
 
 
