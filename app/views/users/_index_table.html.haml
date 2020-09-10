@@ -3,15 +3,11 @@
   show_actions ||= 0
   params = "{\"role\":\"#{@role&.join(',')}\", \"show_active_only\":\"#{@show_active_only}\"}"
 
-#users_table_actions.row
-  - if show_actions == 1
-    = render :partial => "users/index_actions"
-
-:css
-
-
 = javascript_include_tag  "https://kit.fontawesome.com/#{ENV['FONT_AWESOME']}.js"
 .library-table
+  - if show_actions == 1
+    #users_table_actions.row
+      = render partial: "users/index_actions", locals: {show_filter: false}
   %table.elbat{:id => table_dom_id,
   :use => 'true',
   :data => {:use => 'true',
