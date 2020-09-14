@@ -94,6 +94,9 @@ async function export_table(id, type) {
               return;
             }
             for(let [index,obj] of r['rows'].entries()) {
+                if(window[id].stickySelect && window[id].uncheckedRows[index]){
+                  continue;
+                }
                 let columns = Object.keys(obj);
                 for(let col of columns) {
                   try {
@@ -102,7 +105,7 @@ async function export_table(id, type) {
                     console.log(e);
                   }
                 }
-              csv = csv + '\n';
+                csv = csv + '\n';
             }
           }
         },
