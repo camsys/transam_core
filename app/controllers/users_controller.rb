@@ -3,7 +3,7 @@ class UsersController < OrganizationAwareController
   #-----------------------------------------------------------------------------
   # Protect controller methods using the cancan ability
   #-----------------------------------------------------------------------------
-  authorize_resource :user, except: [:popup, :table_preferences, :update_table_preferences]
+  authorize_resource :user, except: [:popup, :table_preferences, :update_table_preferences, :table]
 
   #-----------------------------------------------------------------------------
   add_breadcrumb "Home",  :root_path
@@ -171,7 +171,8 @@ class UsersController < OrganizationAwareController
     sort_column = params[:sort_column]
     sort_order = params[:sort_order]
     columns = params[:columns]
-    organization_id = params[:organization_id].to_i
+
+    organization_id = [params[:organization_id].to_i] & @organization_list
 
     ### Update SORT and COLUMNS Preferences ###
     if sort_column.present? || columns.present?
@@ -205,7 +206,7 @@ class UsersController < OrganizationAwareController
     end
 
     # Handle org list
-    if organization_id > 0
+    unless organization_id.empty?
       users = users.where(organization_id: organization_id)
     else
       users = users.where(organization: @organization_list)
