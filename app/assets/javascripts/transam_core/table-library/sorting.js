@@ -83,8 +83,8 @@ const getCellValue = (row, index) => {
     else if(td.text().includes('$')){ return Number(cleanNum); }
     else if(td.text().includes('%')){ return Number(cleanNum); }
     else if(td.text().includes('-')){ return td.text(); }
+    else if(isNaN(td.text().replace(/[,.]/g, "")) && date && date.toString() !== "Invalid Date"){ console.log("here"); return date.getTime(); } // assumes that dates are not convertable into numbers, but in the case where that is possible, sorting by number value should still be accurate
     else if(cleanNum.length > 0 && !isNaN(cleanNum) && cleanLetters.length == 0){ return Number(cleanNum); } 
-    else if(isNaN(cleanNum) && date && date.toString() !== "Invalid Date"){ return date.getTime(); } // assumes that dates are not convertable into numbers, but in the case where that is possible, sorting by number value should still be accurate
     return td.text(); 
 }
 
