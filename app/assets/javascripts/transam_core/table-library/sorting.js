@@ -74,13 +74,15 @@ const comparer = (idx, order) => (a, b) => ((v1, v2) => (order == "ascending") ?
 
 
 const getCellValue = (row, index) => { 
+    
     let td = $(row).children('td').eq(index);
+    const clean = td.text().replace(/[^\d.]/g, ''); // pull numbers out, allowing a decimal place
     let date = new Date(td.text());
     if($(td).attr("class").includes("checkmark-column")) { return $(td).children().eq(0).children().eq(0).css("visibility")=="hidden"; } // needs a lot of work but gets the job done
-    else if(td.text().includes('$')){ return Number(td.text().replace(/[^\d.]/g, '')); }
-    else if(td.text().includes('%')){ return Number(td.text().replace(/[^\d.]/g, '')); }
+    else if(td.text().includes('$')){ return Number(clean); }
+    else if(td.text().includes('%')){ return Number(clean); }
     else if(td.text().includes('-')){ return td.text(); }
-    else if(date && date.toString() !== "Invalid Date"){ return date.getTime(); }
+    else if(isNaN(clean) && date && date.toString() !== "Invalid Date"){ return date.getTime(); } // assumes that dates are not convertable into numbers, but in the case where that is possible, sorting by number value should still be accurate
     return td.text(); 
 }
 
