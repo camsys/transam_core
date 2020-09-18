@@ -37,3 +37,4 @@ shadowed_views.log
 .byebug_history
 *.scss~
 *.sql~
+*.js~

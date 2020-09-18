@@ -29,9 +29,10 @@ FactoryBot.define do
     purchase_cost { 2000.0 }
     purchase_date { 1.year.ago }
     in_service_date { 1.year.ago }
-    purchased_new { false }
+    purchased_new { true }
+    policy_replacement_year { 2000 }
     association :asset_subtype
-    association :organization, :factory => :organization_basic
+    association :organization, :factory => :organization
   end
 
   factory :buslike_asset_basic_org, :class => :asset do # An untyped asset which looks like a bus

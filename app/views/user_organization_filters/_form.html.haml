@@ -4,7 +4,7 @@
       = dialog_tag('Details', {:icon => 'fa fa-list', :class => "form-part"}) do
         = f.input :name, :placeholder => "Enter a name for this filter", :required => true
         = f.input :description, :as => :text, :placeholder => "Enter a description for this filter.", :rows => 3, :required => true
-        = f.input :organization_ids, :as => :hidden
+        = f.hidden_field :organization_ids, :multiple => true
 
         - if can? :share, @user_organization_filter
           .form-group

@@ -9,7 +9,7 @@ describe "asset_events/_schedule_replacement_update_event_view.html.haml", :type
     assign(:asset_event, test_event)
     render
 
-    expect(rendered).to have_content('FY 10-11')
+    expect(rendered).to have_content('10-11')
     expect(rendered).to have_content(ReplacementReasonType.first.to_s)
     expect(rendered).to have_content(Date.today.strftime('%m/%d/%Y'))
     expect(rendered).to have_content('test comment 123')

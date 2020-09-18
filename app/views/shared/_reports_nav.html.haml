@@ -15,16 +15,16 @@
     - ReportType.active.each do | rt |
       - reports = rt.reports.where(show_in_nav: true, active: true).where(report_conditions.join(' OR '), *report_values)
       - if reports.count > 0
-        %li.text-left.dropdown-submenu
+        %li.text-left
           = link_to reports_path(:report_type => rt.id)  do
             %i{:class => "#{rt.display_icon_name} fa-fw"}
             = rt.name.pluralize(2)
-          %ul.dropdown-menu
-            - reports.each do |report|
-              %li.text-left
-                = link_to report_path(report)  do
-                  %i{:class => "#{report.report_type.display_icon_name} fa-fw"}
-                  = report.name
+          -# %ul.dropdown-menu
+          -#   - reports.each do |report|
+          -#     %li.text-left
+          -#       = link_to report_path(report)  do
+          -#         %i{:class => "#{report.report_type.display_icon_name} fa-fw"}
+          -#         = report.name
 
     - if Form.count > 0
       %li.divider

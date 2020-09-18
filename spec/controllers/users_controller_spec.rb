@@ -18,6 +18,75 @@ RSpec.describe UsersController, :type => :controller do
     sign_in test_user
   end
 
+
+  describe 'GET table' do
+
+    it 'returns all users' do
+      get :table
+      user_count =  User.unscoped.distinct.joins(:organization).joins(:organizations)
+                      .where(users_organizations: {organization_id: test_user.viewable_organizations}).count
+      expect(response).to be_successful
+      parsed_response = JSON.parse(response.body)
+      expect(parsed_response["count"]).to eq(user_count)
+    end
+
+    it 'returns the first 10 users' do
+      get :table,  params: {page: 0, page_size: 10}
+      user_count =  User.unscoped.distinct.joins(:organization).joins(:organizations)
+                      .where(users_organizations: {organization_id: test_user.viewable_organizations}).count
+      expect(response).to be_successful
+      parsed_response = JSON.parse(response.body)
+      expect(parsed_response["count"]).to eq(user_count)
+      expect(parsed_response["rows"].count).to eq([10, user_count].min)
+      expect(parsed_response["rows"].first["last_name"]["data"]).to eq(User.first.last_name)
+    end
+
+    it 'returns users associated with the last organization' do
+      org = Organization.last
+      get :table,  params: {search: org.short_name}
+      expect(response).to be_successful
+      parsed_response = JSON.parse(response.body)
+      expect(parsed_response["count"]).to eq(User.where(organization: org).count)
+    end
+
+  end
+
+  describe 'GET Table Preferences' do 
+    it 'returns a users preferred tables' do 
+      get :table_preferences, params: {table_code: "users"}
+      expect(response).to be_successful
+      parsed_response = JSON.parse(response.body)
+      expect(parsed_response["sort"].first["column"].to_s).to eq(TablePreferences::DEFAULT_TABLE_PREFERENCES[:users][:sort].first[:column].to_s)
+    end
+  end
+
+  describe 'PUT Table Preferences' do 
+    it 'returns a users preferred tables' do 
+      #TODO: Use strong params here. Don't let the hash key names be arbitrary.
+      params = {"table_preferences": 
+                  {
+                    "table_code": "users",
+                    "sort":[
+                      {"first_name": "descending"},
+                      {"last_name": "descending"}
+                    ]
+                  }
+                }
+
+      put :update_table_preferences, params: params
+      expect(response).to be_successful
+      parsed_response = JSON.parse(response.body)
+
+      get :table_preferences, params: {table_code: "users"}
+      parsed_response = JSON.parse(response.body)
+      expect(parsed_response["sort"].first["first_name"].to_s).to eq("descending")
+
+      get :table_preferences, params: {table_code: "bus"}
+      parsed_response = JSON.parse(response.body)
+      expect(parsed_response["sort"].first["org_name"]).to eq("ascending")
+    end
+  end
+
   describe 'GET index' do
 
     describe 'users from a list of orgs' do

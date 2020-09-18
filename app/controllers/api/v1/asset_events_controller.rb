@@ -13,7 +13,7 @@ class Api::V1::AssetEventsController < Api::ApiController
   end
 
   def destroy
-    authorize! :update, @asset_event.transam_asset 
+    authorize! :update, @asset_event
     unless @asset_event.destroy
       @status = :fail
       @message  = "Unable to destroy asset event due the following error: #{@asset_event.errors.messages}"
@@ -22,7 +22,7 @@ class Api::V1::AssetEventsController < Api::ApiController
   end
 
   def update
-    authorize! :update, @typed_event.transam_asset 
+    authorize! :update, @typed_event
     if @typed_event.update(form_params)
       render status: 200, json: json_response(:success, data: @typed_event.api_json)
     else
@@ -63,7 +63,7 @@ class Api::V1::AssetEventsController < Api::ApiController
 
     unless @asset
       @status = :fail
-      message =  "Asset #{params[:asset_id]} not found."
+      message =  "Asset #{params[:asset_object_key]} not found."
       render status: :not_found, json: json_response(:fail, message: message)
     end
   end

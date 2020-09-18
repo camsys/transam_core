@@ -22,6 +22,11 @@
         //var id_list = new Array();
         //alert(id_list);
         form_target.val(id_list);
+        $('input[name="user[organization_ids][]"]').each(function ( index, element ) {
+          if ($.inArray($(element).val(), id_list) == -1) {
+              $(element).val('');
+          }
+        });
         //elem.children().map(function() {
         //	id_list.push($(this).val());
         //});

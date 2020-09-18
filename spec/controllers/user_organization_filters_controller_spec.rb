@@ -42,7 +42,7 @@ RSpec.describe UserOrganizationFiltersController, :type => :controller do
   it 'POST create' do
     UserOrganizationFilter.destroy_all
     test_org = create(:organization)
-    post :create, params: {:user_id => subject.current_user.object_key, :user_organization_filter => attributes_for(:user_organization_filter, :organization_ids => "#{test_org.id}")}
+    post :create, params: {:user_id => subject.current_user.object_key, :user_organization_filter => attributes_for(:user_organization_filter, :organization_ids => [test_org.id])}
 
     expect(UserOrganizationFilter.count).to eq(1)
     test_filter = UserOrganizationFilter.first
@@ -52,7 +52,7 @@ RSpec.describe UserOrganizationFiltersController, :type => :controller do
   end
   it 'PUT update' do
     test_org = create(:organization)
-    put :update, params: {:user_id => subject.current_user.object_key, :id => test_filter.object_key, :user_organization_filter => {:description => 'new descrip222', :organization_ids => "#{test_org.id}"}}
+    put :update, params: {:user_id => subject.current_user.object_key, :id => test_filter.object_key, :user_organization_filter => {:description => 'new descrip222', :organization_ids => [test_org.id]}}
     test_filter.reload
 
     expect(assigns(:user_organization_filter)).to eq(test_filter)
