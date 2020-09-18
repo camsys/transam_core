@@ -21,7 +21,7 @@ class SessionCacheCleanupJob < ActivityJob
 
 
     # Add a row into the activity table
-    ActivityLog.create({:organization_id => Grantor.first.id, :user_id => User.find_by(first_name: 'system').id, :item_type => self.class.name, :activity => 'Executing Session Cache Cleanup', :activity_time => Time.now})
+    ActivityLog.create({:organization_id => Organization.first.id, :user_id => User.find_by(first_name: 'system').id, :item_type => self.class.name, :activity => 'Executing Session Cache Cleanup', :activity_time => Time.now})
   end
 
   def prepare
