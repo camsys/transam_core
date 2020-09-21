@@ -8,7 +8,7 @@ $(document).on('click', ".export_option", async function(event){
   } else if($(this).text().trim() === "txt") {
     $(this).append($('<a class="hidden-link">').attr({ 'download': "output.txt", 'href': href, 'target': '_blank' }));
   } else if($(this).text().trim() === "excel") {
-    $(this).append($('<a class="hidden-link">').attr({ 'download': "output.xls", 'href': href, 'target': '_blank' }));
+    $(this).append($('<a class="hidden-link">').attr({ 'download': "output.csv", 'href': href, 'target': '_blank' })); // TODO: THIS IS NOT AN EXCEL FILE, THIS IS A CSV. TO GET AN XLS OR XLSX FILE WE NEED TO GO BACK TO THE SERVER OR USE A LIBRARY. EXCEL CAN READ CSV. WEB APPLICATIONS GENERATING XLSX DOESN'T EXACTLY MAKE SENSE. 
   }
   let hidden = $(this).find(".hidden-link")[0];
   hidden.click()
@@ -30,7 +30,7 @@ $(document).on('click', ".hidden-link", (e) => {
 
 async function export_table(id, type) {
   const table = $('#'+id);
-  const side = $(table).data('side');
+  const side = $(table).data('side'); //Client Side or Server Side
   const url = $(table).data('url');
   const table_code = $(table).data('tableCode');
   const header = table.find("tr:has(th)").eq(0).find(".header-item:not(.header-checkbox)");
@@ -40,26 +40,31 @@ async function export_table(id, type) {
   }
   csv = csv + '\n';
   let rows = [];
-  if(side === "client") {
-    if($('#' + id + '_export_checkbox').is(':checked')) {
+  if(side === "client") { // Client-Side Table
+
+
+    if($('#' + id + '_export_checkbox').is(':checked')) { // Only export selected rows
       rows = table.find(".row-checked:has(td)");
-    } else {
+    } else { // Export All Rows
       rows = table.find("tr:has(td)");
     }
     
     for(let row of rows){
+      let new_row = ""
       for(let c of $(row).find(".row-item")) {
+        let new_value = "";
         if($(c).hasClass("action-column")) {
           continue;
         } else if($(c).hasClass("checkmark-column")) {
-          csv = csv + (($(c).find(".cell-text i").css("visibility") == "visible")? "Yes,": "No,");
+          new_value = (($(c).find(".cell-text i").css("visibility") == "visible")? "Yes,": "No,");
         } else {
-          csv = csv + $(c).find(".cell-text").text().replace(/,/g, '') + ",";
+          new_value =  $(c).find(".cell-text").text().replace(/(,|\r|\n|\r\n)/g, '') + ",";
         }
+        new_row = new_row + new_value;
       }
-      csv = csv + '\n';
+      csv = csv + new_row + '\n';
     }    
-  } else { // server
+  } else { // Server-Side Table Export
     if($('#' + id + '_export_checkbox').is(':checked') && !window[id].selectAll) { // if the header checkbox is selected then all of the rows should be exported, which is the same case as not checking the "selected only" option
       let checked = window[id].checkedRows;
       for(let row in checked) {
@@ -94,6 +99,9 @@ async function export_table(id, type) {
               return;
             }
             for(let [index,obj] of r['rows'].entries()) {
+                if(window[id].stickySelect && window[id].uncheckedRows[index]){
+                  continue;
+                }
                 let columns = Object.keys(obj);
                 for(let col of columns) {
                   try {
@@ -102,7 +110,7 @@ async function export_table(id, type) {
                     console.log(e);
                   }
                 }
-              csv = csv + '\n';
+                csv = csv + '\n';
             }
           }
         },
@@ -123,7 +131,7 @@ async function export_table(id, type) {
     csvData = 'data:application/txt;charset=utf-8,' + encodeURIComponent(csv);
     return csvData;
   } else if(type === "excel") {
-    csvData = 'data:application/xls;charset=utf-8,' + escape(csv);
+    csvData = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv); // TODO: SEE EARLIER TODO
     return csvData;
   }
   

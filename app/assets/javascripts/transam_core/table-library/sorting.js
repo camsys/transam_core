@@ -42,6 +42,7 @@ $(document).ready(function(){
       }
       applyIcons(table.find('.header'));
       window[id].checkedRows = {}; // clear selected rows on sort // TODO: this is a bad idea, but it's the only way to prevent duplicates on export since the row indexs are recalculated on sort
+      window[id].uncheckedRows = {};
     })
   );
 });
@@ -73,13 +74,17 @@ const comparer = (idx, order) => (a, b) => ((v1, v2) => (order == "ascending") ?
 
 
 const getCellValue = (row, index) => { 
+    
     let td = $(row).children('td').eq(index);
+    const cleanNum = td.text().replace(/[^\d.]/g, ''); // pull numbers out, allowing a decimal place
+    const cleanLetters = td.text().replace(/[^a-zA-Z]+/g, ''); // pull letters out
     let date = new Date(td.text());
     if($(td).attr("class").includes("checkmark-column")) { return $(td).children().eq(0).children().eq(0).css("visibility")=="hidden"; } // needs a lot of work but gets the job done
-    else if(td.text().includes('$')){ return Number(td.text().replace(/[^\d.]/g, '')); }
-    else if(td.text().includes('%')){ return Number(td.text().replace(/[^\d.]/g, '')); }
+    else if(td.text().includes('$')){ return Number(cleanNum); }
+    else if(td.text().includes('%')){ return Number(cleanNum); }
     else if(td.text().includes('-')){ return td.text(); }
-    else if(date && date.toString() !== "Invalid Date"){ return date.getTime(); }
+    else if(isNaN(td.text().replace(/[,.]/g, "")) && date && date.toString() !== "Invalid Date"){ return date.getTime(); } // assumes that dates are not convertable into numbers, but in the case where that is possible, sorting by number value should still be accurate
+    else if(cleanNum.length > 0 && !isNaN(cleanNum) && cleanLetters.length == 0){ return Number(cleanNum); } 
     return td.text(); 
 }
 
