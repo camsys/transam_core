@@ -35,9 +35,10 @@
           = link_to "TransAM Ver #{transam_version}", "http://camsys.software/products/transam", :target => "_blank", title: `bundle show | grep transam`
         = "|".html_safe
         - if current_user
-          %i.fa.fa-file-pdf
-          = link_to 'Updates', html_release_notes_pdf_path, download: '', target: '_blank'
-          = "|".html_safe
+          - if Rails.application.config.respond_to? :release_notes
+            %i.fa.fa-file-pdf
+            = link_to 'Updates', html_release_notes_pdf_path, download: '', target: '_blank'
+            = "|".html_safe
           %i.fa.fa-file-pdf
           = link_to "User Guide", html_help_pdf_path(current_user.has_role?(:admin)), :download => '', :target => "_blank"
 
