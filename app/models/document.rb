@@ -37,8 +37,6 @@ class Document < ActiveRecord::Base
   # Each comment was created by a user
   belongs_to :creator, -> { unscope(where: :active) }, :class_name => "User", :foreign_key => "created_by_id"
 
-  belongs_to :document_tag
-
   default_scope { order('created_at DESC') }
 
   validates :description,         :presence => true
