@@ -160,12 +160,15 @@ function init_export(id, types) {
   });
 }
 
-
+  
 // close on click away
 
 $(document).on('click', '*', function(e){
   if($(e.target).closest('.open').length === 0) {
     $('.open').removeClass('open');
+  }
+  if($(e.target).closest(".flyout_button").length == 0 && $(e.target).closest('.flyout_wrapper').length === 0) {
+    $('.flyout_wrapper').addClass("close");
   }
 });
 

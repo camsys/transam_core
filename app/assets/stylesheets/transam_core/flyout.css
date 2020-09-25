@@ -4,6 +4,17 @@ html {
     overflow-x: hidden;
 }
 
+
+.flyout_button {
+    border-radius: 4px !important;
+    color: var(--white) !important;
+    background: linear-gradient(180deg, var(--blue-light) 0%, var(--blue-medium) 100%) !important;
+    font-weight: 700 !important;
+}
+.flyout_button:hover {
+    background: linear-gradient(0deg, var(--turquoise) 0%, var(--turquoise-dark) 100%) !important;
+}
+
 .flyout-label {
     cursor: pointer;
     border-radius: 5px;
@@ -64,7 +75,7 @@ html {
     background-color: #fff;
 }
 
-.flyout-panel header {
+.flyout-panel header, .flyout-body header {
     color: #fff;
     display: -webkit-box;
     display: -ms-flexbox;
@@ -80,7 +91,7 @@ html {
     background-color: #7F849B;
     padding-bottom: 0.5rem;
     padding-right: 0.5rem;
-    height: 1.25rem;
+    height: 2rem;
     box-sizing: content-box;
 }
 
@@ -302,9 +313,13 @@ html {
     margin:20px;
 }
 
-.open .flyout-button ~ .flyout-content-right {
+.open .flyout_button ~ .flyout-content-right {
     box-shadow: -1px 1px 0.5rem rgba(14, 24, 36, 0.4);
     right: 0rem;
+}
+
+.flyout_button:hover, .flyout_wrapper, .flyout-body {
+    z-index: 20 !important;
 }
 
 .bootstrap-table, .fixed-table-container, .fixed-table-body {
@@ -323,8 +338,46 @@ html {
 }
 
 .flyout-body {
-    padding: 40px 20px;
-    margin-left: 25%;
+    /* padding: 20px 12px; */
+    position: fixed;
+    width: 30vw;
+    z-index: 20 !important;
+    padding-bottom: 10px;
+}
+
+.flyout_wrapper {
+    z-index: 20;
+}
+
+.open.flyout_wrapper > .flyout-body {
+    box-shadow: -1px 1px 0.5rem rgba(14, 24, 36, 0.4);
+    
+}
+
+.close-flyout {
+    margin: 0px !important;
+}
+
+.close.flyout_wrapper > .flyout-body {
+    box-shadow: none;
+    right: -35vw;
+}
+
+.flyout-right {
+    right: 0vw;
+    margin-top: 40px;
+    box-shadow: -1px 1px 0.5rem rgba(14, 24, 36, 0.4);
+    transition: right .5s ease-in, box-shadow .5s ease-in, -webkit-box-shadow .5s ease-in;
+    background-color: #F6F8FF;
+    border: 0.5rem solid #7F849B;
+    border-right: none;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    z-index: 999;
 }
 
 .closeFlyout {
