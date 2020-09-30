@@ -1,8 +1,7 @@
 // $(document).ready(function(){
 
   function add_flyout(button, title, content, classes){
-    $("table").each(function(table){
-      const flyout_html = $('<div class="flyout_wrapper close">').append($('<div class="flyout-body">').addClass(classes)
+      const flyout_html = $('<div class="flyout_wrapper close">').addClass(classes).append($('<div class="flyout-body">')
         .append($('<header><div class="panel-title">'+ title +'</div><button class="close-flyout button-clear button-icononly"><i class="fas fa-arrow-alt-to-right"/></button></header>'))
         .append($(content)));
                             
@@ -26,8 +25,6 @@
         event.stopImmediatePropagation();
         $(this).closest(".flyout_wrapper").addClass("close");
       });
-
-    });
   }
 
   

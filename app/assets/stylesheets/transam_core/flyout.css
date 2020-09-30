@@ -339,7 +339,7 @@ html {
 
 .flyout-body {
     /* padding: 20px 12px; */
-    position: fixed;
+    /* position: fixed; */
     width: 30vw;
     z-index: 20 !important;
     padding-bottom: 10px;
@@ -347,6 +347,9 @@ html {
 
 .flyout_wrapper {
     z-index: 20;
+    position: fixed;
+    max-height: 600px;
+    overflow-y: scroll;
 }
 
 .open.flyout_wrapper > .flyout-body {
@@ -358,7 +361,7 @@ html {
     margin: 0px !important;
 }
 
-.close.flyout_wrapper > .flyout-body {
+.close.flyout_wrapper {
     box-shadow: none;
     right: -35vw;
 }
