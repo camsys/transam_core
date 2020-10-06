@@ -464,6 +464,10 @@ fieldset + fieldset {
   color: $gray-light;
   font-size: $font-size-h4;
 }
+.desc-content {
+  padding: 0px 20px;
+}
+
 .display-label {
   /*font-weight: bold;*/
   color: $gray-light;
