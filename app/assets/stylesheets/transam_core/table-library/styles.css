@@ -889,11 +889,17 @@
 
 
 /* GENERAL PAGE ELEMENTS */
-#primary_header, legend, .row h2, .breadcrumbs ~ h2, .subheader-label h2, #subheader-label h2, .btn-toolbar, .page-header, #table_actions {
+#primary_header, legend, .row h2, .breadcrumbs ~ h2, .subheader-label h2, #subheader-label h2, .subheader-label-details h2, .btn-toolbar, .page-header, #table_actions {
     font-family: 'Source Sans Pro', sans-serif;
     padding: 0px 20px;
     border: none !important;
     margin-bottom: 10px;
+}
+
+.subheader-label-details h2 {
+    padding: 20px 20px 40px;
+    margin: -5px 0px 0px;
+    box-shadow: 0px 0px 16px #d5d5d5;
 }
 
 .breadcrumbs {
@@ -910,7 +916,7 @@
 
 ol.breadcrumb li {
     font-size: 15px;
-    font-weight: 700;
+    font-weight: 600;
 }
 
 .row form {

@@ -192,7 +192,7 @@ $application-active:      #FFFFDD;
 //.breadcrumb a:hover {color: rgba(42, 100, 150, 1);}
 //.breadcrumb>.active {color: rgba(153, 153, 153, 1);}
 .breadcrumb > .active {color: $gray-darker;}
-.breadcrumb > li+li:before {color: rgba(204, 204, 204, 1); content: "\003E\00a0";}
+.breadcrumb > li+li:before {color: rgba(204, 204, 204, 1); font-family: "Font Awesome 5 Pro"; content: "\f105";}
 .row-pager > li+li:before {padding: 0 5px; content: "\00a0";}
 .row-pager i {font-size: 1.25em;}
 
