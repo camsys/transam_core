@@ -754,6 +754,10 @@
     z-index: 20;
 }
 
+.tab-content .export_options {
+    right: 4em;
+}
+
 .export_options::before {
     content: '';
     width: 0;

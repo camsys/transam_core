@@ -348,7 +348,7 @@ html {
 .flyout_wrapper {
     z-index: 20;
     position: fixed;
-    max-height: 600px;
+    max-height: 33vh;
     overflow-y: scroll;
 }
 
