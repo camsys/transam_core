@@ -8,6 +8,7 @@
 //= require bootstrap-editable-rails
 //= require cocoon
 //= require bootstrap-datepicker/core
+//= require selectize
 //= require_tree .
 if($.fn.bootstrapTable) {
   // override bootstrap table default option, set silentSort as false 
