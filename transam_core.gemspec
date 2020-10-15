@@ -84,6 +84,8 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'browser'
 
+  s.add_dependency 'selectize-rails'
+
   # Development
   s.add_development_dependency 'mail', '2.5.5'
   s.add_development_dependency "rspec-rails"
