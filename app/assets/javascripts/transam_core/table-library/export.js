@@ -168,7 +168,9 @@ $(document).on('click', '*', function(e){
     $('.open').removeClass('open');
   }
   if($(e.target).closest(".flyout_button").length == 0 && $(e.target).closest('.flyout_wrapper').length === 0) {
-    $('.flyout_wrapper').addClass("close");
+    if(!e.target.classList.contains("remove")) {
+      $('.flyout_wrapper').addClass("close");
+    }
   }
 });
 
