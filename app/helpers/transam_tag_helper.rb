@@ -178,7 +178,7 @@ module TransamTagHelper
   # updating asset fields through xeditable
   # IF YOU UPDATE THIS METHOD, update the generic field tag version as well
   #
-  def editable_asset_field_tag(asset, field, label=nil, required: true, type: 'text', min: nil, max: nil, suffix: '', inputclass: '', current_value: nil)
+  def editable_asset_field_tag(asset, field, label=nil, required: true, type: 'text', min: nil, max: nil, suffix: '', inputclass: '', maxyear: Date.today.year, current_value: nil)
     if type == 'boolean'
       return editable_asset_association_tag(asset, field, label,
                                             [[1, 'Yes'],[0, 'No']],
@@ -196,7 +196,7 @@ module TransamTagHelper
       type = 'combodate'
       classes += 'combodate'
       value = format_as_date(Date.parse(value)) unless value.blank?
-      # extras += ", format: 'MM/DD/YYYY', viewformat: 'MM/DD/YYYY'"
+      extras += ", template: 'MMM D YYYY', viewformat: 'MM/DD/YYYY', combodate: '{minYear: 1900, maxYear: #{maxyear}}'"
     when 'currency'
       type = 'number'
       classes += 'currency-number'
