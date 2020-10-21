@@ -17,7 +17,7 @@ module TaggableDocument
 
   module ClassOverrides
     def allowable_params
-      Document::FORM_PARAMS << :document_tag_id
+      Document::FORM_PARAMS << [:document_tag_id, :file_date]
     end
   end
     
