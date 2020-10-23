@@ -10,9 +10,9 @@ RSpec.describe Document, :type => :model do
     end
   end
   describe 'validations' do
-    it 'must have a description' do
+    it 'is not required to have a description' do
       test_doc.description = nil
-      expect(test_doc.valid?).to be false
+      expect(test_doc.valid?).to be true
     end
     it 'must have an original filename' do
       test_doc.original_filename = nil
