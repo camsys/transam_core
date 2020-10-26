@@ -53,9 +53,11 @@ class DocumentsController < NestedResourceController
         notify_user(:notice, 'Document was successfully created.')
         format.html { redirect_back(fallback_location: root_path) }
         format.json { render action: 'show', status: :created, location: @document }
+        format.js { @asset = @document.documentable }
       else
         format.html { render action: 'new' }
         format.json { render json: @document.errors, status: :unprocessable_entity }
+        format.js { render action: 'new' }
       end
     end
   end
