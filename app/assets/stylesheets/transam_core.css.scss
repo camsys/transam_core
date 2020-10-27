@@ -29,3 +29,8 @@
 .radio-buttons-inline .radio:not(:first-of-type) {
   margin-left: 1em;
 }
+
+// make selectize input look like form-control
+.selectize-input {
+  background-color: #FFFFEE;
+}
