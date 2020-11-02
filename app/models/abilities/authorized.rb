@@ -7,13 +7,6 @@ module Abilities
       # view everything except the activity logs
       can :read, :all
 
-
-      SystemConfig.transam_module_names.each do |mod|
-        ability = "Abilities::Authorized#{mod.classify}Ability".constantize.new(user) rescue nil
-
-        self.merge ability if ability.present?
-      end
-
       #-------------------------------------------------------------------------
       # Comments
       #-------------------------------------------------------------------------
@@ -35,7 +28,7 @@ module Abilities
       #-------------------------------------------------------------------------
       # documents for assets only if user can update asset
       can :create, Document do |d|
-        if d.documentable_type == 'Asset'
+        if d.documentable_type == Rails.application.config.asset_base_class_name
           user.organization_ids.include? d.documentable.organization.id
         else
           true
@@ -63,7 +56,11 @@ module Abilities
         d.created_by_id == user.id
       end
 
+      SystemConfig.transam_module_names.each do |mod|
+        ability = "Abilities::Authorized#{mod.classify}Ability".constantize.new(user) rescue nil
 
+        self.merge ability if ability.present?
+      end
 
 
 
