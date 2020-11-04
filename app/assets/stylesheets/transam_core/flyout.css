@@ -134,7 +134,7 @@ html {
     left: 0;
     bottom: 0;
     background-color: #7F849B;
-    height: 2rem;
+    height: 2.75rem;
     width: 100%;
     color: #fff;
     padding: 0.5rem;
@@ -160,7 +160,7 @@ html {
     margin-right: 0; 
 }
 .flyout-panel .panel-links + .panel-content {
-    height: calc(100% - 1.25rem - 0.5rem - 2rem); 
+    height: calc(100% - 1.25rem - 0.5rem - 4rem);
 }
 .flyout-panel .panel-row {
     position: relative;
@@ -325,6 +325,11 @@ html {
 }
 
 .open .flyout_button ~ .flyout-content-right {
+    box-shadow: -1px 1px 0.5rem rgba(14, 24, 36, 0.4);
+    right: 0rem;
+}
+
+.open .flyout-button ~ .flyout-content-right {
     box-shadow: -1px 1px 0.5rem rgba(14, 24, 36, 0.4);
     right: 0rem;
 }
