@@ -28,6 +28,7 @@ require 'wicked'
 require 'cocoon'
 require 'jquery-ui-rails'
 require 'jquery-form-rails'
+require 'selectize-rails'
 require 'roo-xls'
 require 'kaminari'
 
