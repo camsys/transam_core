@@ -54,6 +54,7 @@ class Api::V1::ImagesController < Api::V1::NestedResourceController
   
   # Never trust parameters from the scary internet, only allow the white list through.
   def form_params
+    params[:exportable] = params[:exportable].nil? ? true : params[:exportable]
     params.permit(Image.allowable_params)
   end
 

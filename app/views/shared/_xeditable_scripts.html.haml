@@ -37,7 +37,6 @@
   // type_id: Type dropdown value
   function show_hide_other_text_entry(type_el, type_id) {
     var other_text_container = $(type_el).parents('.other-fields-container').find('.other-value-container');
-    console.log(other_text_container);
     if(other_text_container) {
       var other_ids = $(type_el).parents('.other-type-container').data('other-type-ids');
       var other_edit_field = other_text_container.find('.editable-field');
@@ -169,7 +168,7 @@
          $('#processing_spinner').show();
 
          // get params from subforms
-         var extra_data = {};
+         var extra_data = {is_xeditable: 1};
          var tab_id = get_active_tab_id();
 
           if ($('[data-behavior~=component-picker]').length > 0) {
@@ -214,7 +213,29 @@
                 $('#processing_spinner').hide();
                 if(data && data.errors){
                   //server-side validation error, response like {"errors": {"username": "username already exist"} }
-                  config.error.call(this, data.errors);
+                  //config.error.call(this, data.errors);
+
+                  if ($('xeditable-errors')) {
+                     count_errors = 0;
+                     msg = '';
+                     $.each( data.errors, function( key, value ) {
+                        $.each( value, function( index, err ) {
+                          count_errors += 1;
+                          field = key.replace(/_/g, ' ');
+                          field = field.charAt(0).toUpperCase() + field.slice(1).toLowerCase();
+                          msg += '<p>'+field+ ' '+err+'.</p>';
+                        });
+                     });
+
+                     msg = '<div class="row"><div class="col-md-12"><div class="alert alert-danger" role="alert"><button class="close" data-dismiss="alert" type="button">×</button><h4>'+count_errors+' errors prohibited this from being saved.</h4>'+msg+'</div></div></div>';
+                     $('#xeditable-errors').html(msg);
+
+                     var tab_id = get_active_tab_id();
+                     enable_tab_editing(tab_id);
+                     has_run = false;
+                  }
+
+
                 } else {
                   var current_url = window.location.href;
                   if(current_url.includes('?')) {
@@ -327,7 +348,6 @@
     });
 
     $('.other-type-container .editable-field').each(function() {
-      console.log($(this).data('name'))
       var type_id = $(this).editable('getValue')[$(this).data('name')];
       if(type_id) {
         type_id = parseInt(type_id);

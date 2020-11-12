@@ -370,8 +370,9 @@ class TransamAsset < TransamAssetRecord
   # end
 
   # returns the list of events associated with this asset ordered by date, newest first
+  # added id descending to ensure consistency between the history table and last life cycle action
   def history
-    asset_events.reorder(event_date: :desc, updated_at: :desc)
+    asset_events.reorder(event_date: :desc, updated_at: :desc, id: :desc)
   end
 
 
@@ -401,11 +402,11 @@ class TransamAsset < TransamAssetRecord
   end
 
   def asset_type_id
-    asset_subtype.asset_type_id
+    asset_subtype.try(:asset_type_id)
   end
 
   def asset_type
-    asset_subtype.asset_type
+    asset_subtype.try(:asset_type)
   end
 
   def parent_name

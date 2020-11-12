@@ -9,6 +9,8 @@ class User < ActiveRecord::Base
   # Enable user roles for this use
   rolify
 
+  serialize :user_prefs, JSON
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :lockable, :recoverable, :rememberable, :trackable, :validatable, :timeoutable
@@ -17,6 +19,7 @@ class User < ActiveRecord::Base
   include TransamObjectKey
 
   include TransamTokenAuthentication
+  include TablePreferences
   
   #-----------------------------------------------------------------------------
   # Callbacks
@@ -113,8 +116,7 @@ class User < ActiveRecord::Base
   scope :active, -> { where(active: true) }
 
   # default scope
-  default_scope { active.order(:last_name) }
-
+  default_scope { active.order(:last_name, :first_name) }
 
   #-----------------------------------------------------------------------------
   # Lists
@@ -310,6 +312,92 @@ class User < ActiveRecord::Base
   end
 
   #-----------------------------------------------------------------------------
+  # Generate Table Data
+  #-----------------------------------------------------------------------------
+
+  # TODO: Make this a shareable Module 
+  def rowify fields=nil
+
+    fields ||= [:last_name,
+                :first_name,
+                :organization,
+                :email,
+                :phone,
+                :phone_ext,
+                :title,
+                :role,
+                :privileges,
+                :status]
+
+    field_library = {
+      last_name: {label: "Last", method: :last_name, url: "/users/#{self.object_key}/"},
+      first_name: {label: "First", method: :first_name, url: nil},
+      organization: {label: "Primary Organization", method: :organization, url: nil},
+      organizations: {lable: "All Organizations", method: :org_list},
+      email: {label: "Email", method: :email, url: nil},
+      phone: {label: "Phone", method: :phone, url: nil},
+      phone_ext: {label: "Ext.", method: :phone_ext, url: nil},
+      title: {label: "Title", method: :title, url: nil},
+      role: {label: "Role", method: :role, url: nil},
+      privileges: {label: "Privileges", method: :user_privileges, url: nil},
+      status: {label: "Status", method: :status, url: nil},
+      external_id: {},
+      system_access: {},
+      timezone: {},
+      notify_via_email: {label: "Send Emails", helper: :format_as_yes_no},
+      num_table_rows: {label: "Table Rows"},
+      sign_in_count: {label: "Num Logins"},
+      last_sign_in_at: {label: "Last Login", helper: :format_as_date_time},
+      last_sign_in_ip: {label: "Last Login IP"},
+      failed_attempts: {label: "Num Failed"},
+      locked_at: {label: "Locked", helper: :format_as_date_time},
+      created_at: {helper: :format_as_date_time},
+      updated_at: {helper: :format_as_date_time}
+    }
+    
+    row = {}
+    fields.each do |field|
+      # Use conventions
+      label = field_library[field][:label] || field.to_s.titleize
+      method = field_library[field][:method] || field
+      value = self.send(method)
+      helper_method = field_library[field][:helper]
+      data = helper_method ? ApplicationController.helpers.send(helper_method, value).to_s : value.to_s
+      row[field] =  {label: label, data: data, url: field_library[field][:url]} 
+    end
+    return row 
+  end
+
+  def role 
+    roles.roles.last&.label
+  end
+
+  def user_privileges
+    roles.privileges.collect{|x| x.label}.join(', ')
+  end 
+
+  def status
+    active ? "Active" : "Inactive"
+  end
+
+  def system_access
+    active ? "Yes" : "No"
+  end
+  
+  def last_name_drilldown
+    #drilldown link
+    #TODO: use user path instead of hard coded html
+    "<a href='/users/#{self.object_key}/'>#{self.last_name}</a>"
+  end
+
+  def org_list
+    organizations.each(&:to_s).join(', ')
+  end
+
+  # End Generate Table Data
+
+
+  #-----------------------------------------------------------------------------
   # Devise hooks
   #-----------------------------------------------------------------------------
 
@@ -340,6 +428,7 @@ class User < ActiveRecord::Base
     Rails.logger.info "Unlocking account for user with email #{email} at #{Time.now}"
   end
   #-----------------------------------------------------------------------------
+
 
   #-----------------------------------------------------------------------------
   # Protected Methods

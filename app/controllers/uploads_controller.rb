@@ -221,7 +221,7 @@ class UploadsController < OrganizationAwareController
 
   def new
 
-    add_breadcrumb SystemConfigFieldCustomization.find_by(table_name: 'uploads', action_name: 'new')&.label || "New Template"
+    add_breadcrumb SystemConfigFieldCustomization.find_by(table_name: 'uploads', action_name: 'new')&.label || "Upload Template"
 
     @upload = Upload.new
 
@@ -236,7 +236,7 @@ class UploadsController < OrganizationAwareController
     @upload = Upload.new(form_params)
     @upload.user = current_user
 
-    add_breadcrumb SystemConfigFieldCustomization.find_by(table_name: 'uploads', action_name: 'new')&.label || "New Template"
+    add_breadcrumb SystemConfigFieldCustomization.find_by(table_name: 'uploads', action_name: 'new')&.label || "Upload Template"
 
     respond_to do |format|
       if @upload.save

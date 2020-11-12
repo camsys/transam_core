@@ -48,7 +48,7 @@ class MessageTemplate < ActiveRecord::Base
     self.priority_type_id = PriorityType.default&.id if self.priority_type_id.nil?
     self.message_enabled = true if self.message_enabled.nil?
     self.email_enabled = true if self.email_enabled.nil?
-    self.is_system_template = false if self.is_system_template.nil?
+    self.is_system_template = false if self.is_system_template.nil?  # IF a system template is enabled, its email is also enabled but email_enabled may be false so messages dont send duplicates as other parts of the system already send the email
     self.is_implemented = false if self.is_implemented.nil?
   end
 

@@ -26,6 +26,42 @@ RSpec.describe User, :type => :model do
   #
   #------------------------------------------------------------------------------
 
+  it { should respond_to :rowify }
+
+  describe ".rowify" do 
+    it 'returns last name' do
+      expect(normal_user.rowify[:last_name][:data]).to eq(normal_user.last_name)
+      expect(normal_user.rowify[:first_name][:data]).to eq(normal_user.first_name)
+      expect(normal_user.rowify[:organization][:data]).to eq(normal_user.organization.to_s)
+      expect(normal_user.rowify[:email][:data]).to eq(normal_user.email)
+      expect(normal_user.rowify[:phone][:data]).to eq(normal_user.phone.to_s)
+      expect(normal_user.rowify[:phone_ext][:data]).to eq(normal_user.phone_ext.to_s)
+      expect(normal_user.rowify[:title][:data]).to eq(normal_user.title.to_s)
+      expect(normal_user.rowify[:role][:data]).to eq(normal_user.roles.try(:roles).try(:last).try(:label).to_s)
+      expect(normal_user.rowify[:privileges][:data]).to eq(normal_user.roles.privileges.collect{|x| x.label}.join(', '))
+      expect(normal_user.rowify[:status][:data]).to eq(normal_user.status)
+    end
+  end
+
+  
+  describe 'Get table prefs' do
+    it 'responds to table_preferences' do
+      expect(normal_user.table_preferences).to be(nil)
+    end
+
+    it 'expects the user bus table preferences to match the default' do
+      expect(normal_user.table_preferences(:buses)).to eq(TablePreferences::DEFAULT_TABLE_PREFERENCES[:buses])
+    end
+
+    it 'returns the user-specifc preferences for buses' do
+      table_prefs = eval(normal_user.table_prefs|| "{}")
+      table_prefs[:bus] = {sort: :test, columns: [:test1, :test2]}
+      normal_user.table_prefs = table_prefs 
+      normal_user.save  
+      expect(normal_user.table_preferences(:bus)[:sort]).to eq(:test)
+    end
+  end
+
   describe ".set_defaults" do
     it 'initializes new objects correctly' do
       expect(normal_user.timezone).to eql('Eastern Time (US & Canada)')

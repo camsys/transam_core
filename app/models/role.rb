@@ -38,10 +38,6 @@ class Role < ActiveRecord::Base
     name
   end
 
-  def label
-    read_attribute(:label) || name.titleize
-  end
-
   def privilege?
     (privilege)
   end

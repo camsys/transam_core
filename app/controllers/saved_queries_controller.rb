@@ -30,7 +30,7 @@ class SavedQueriesController < OrganizationAwareController
   # GET /saved_queries/1.json
   def show
     add_breadcrumb "Query", saved_queries_url
-    add_breadcrumb @query.name
+    add_breadcrumb "Edit Query"
 
     respond_to do |format|
       format.html 

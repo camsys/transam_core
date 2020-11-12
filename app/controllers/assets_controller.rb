@@ -131,7 +131,7 @@ class AssetsController < AssetAwareController
 
     terminal_crumb = nil
     if @early_disposition
-      terminal_crumb = "Early disposition proposed"
+      terminal_crumb = "Early Disposition Proposed"
     elsif @transferred_assets
       terminal_crumb = "Transferred Assets"
     elsif @asset_group.present?
@@ -313,7 +313,7 @@ class AssetsController < AssetAwareController
     # end
 
     respond_to do |format|
-      if @asset.update!(new_form_params(@asset))
+      if @asset.update(new_form_params(@asset))
 
         # If the asset was successfully updated, schedule update the condition and disposition asynchronously
         #Delayed::Job.enqueue AssetUpdateJob.new(@asset.asset.object_key), :priority => 0
@@ -330,7 +330,12 @@ class AssetsController < AssetAwareController
       else
         format.html { render :action => "edit" }
         format.js { render :action => "edit" }
-        format.json { render :json => @asset.errors, :status => :unprocessable_entity }
+        if params[:is_xeditable]
+          format.json { render :json => {errors: @asset.errors}, :status => :ok }
+        else
+          format.json { render :json => @asset.errors, :status => :unprocessable_entity }
+        end
+
       end
     end
   end
@@ -663,6 +668,11 @@ class AssetsController < AssetAwareController
   end
 
   def add_breadcrumbs
+    add_breadcrumb "#{@asset.asset_type.name}".pluralize, inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
+    add_breadcrumb "#{@asset.asset_type.name.singularize} Profile"
+  end
+
+  def add_old_breadcrumbs
     add_breadcrumb "#{@asset.asset_type.name}".pluralize, inventory_index_path(:asset_type => @asset.asset_type, :asset_subtype => 0)
     add_breadcrumb "#{@asset.asset_type.name.singularize} Profile"
   end
