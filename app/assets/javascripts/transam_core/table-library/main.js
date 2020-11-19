@@ -34,6 +34,8 @@ $("table[use]").ready(()=>{
             window[id].selectAll = false;
             window[id].stickySelect = false; // client side library managing selections for server side data... no... i'm serious...
 	    window[id].table_data = []
+	    window[id].table_timeouts = new Set();
+
             const search = $(value).data('search');
             const url = $(value).data('url');
             const sort = $(value).data('sort');
@@ -290,7 +292,7 @@ function add_row(id, vals, index) {
 
 
 function add_row_exec(id, vals, index) {
-    window[id].table_data.push(vals);
+    window[id].table_data.push(vals); // Save for use by column selection
 
   if(!($('#' + id + " .table-row[index=" + index + ']').length > 0)){
     let index_str = index.toString();
@@ -349,6 +351,7 @@ function clear_aux_queue(id){
         for(let f of window[id].aux_queue) {f();}
 }
 
+// Create table cells and add to table row
 function addCellsForData(row, data, selectedCols, colTypes, skipActions=true) {
   for (let key of selectedCols) {
     key = key.trim();
@@ -375,6 +378,7 @@ function addCellsForData(row, data, selectedCols, colTypes, skipActions=true) {
   }
 }
 
+// Recreate table cells based on selected columns and stashed row data
 function updateTable(id, selectedCols) {
   let colTypes = window[id].col_types
   // First update visible rows
@@ -383,16 +387,21 @@ function updateTable(id, selectedCols) {
     updateRow(data, $(this), selectedCols, colTypes);
   });
   setTimeout(function () { updateHiddenRows(id, selectedCols, colTypes); }, 100);
-  // updateHiddenRows(id, selectedCols, colTypes);
 }
 
 function updateHiddenRows(id, selectedCols, colTypes) {
-  window[id].table_data.forEach(function (data, index) {
-    let row = $('tr#' + index);
-    setTimeout(function () { updateRow(data, row, selectedCols, colTypes); }, 1);
+  // Clear out any existing timeouts to prevent race conditions and improve performance
+  let timeouts = window[id].table_timeouts;
+  timeouts.forEach(function (timeout) { clearTimeout(timeout); });
+  timeouts.clear();
+  $('tbody > tr:hidden').each(function () {
+    let data = window[id].table_data[this.id];
+    let row = $(this);
+    timeouts.add(setTimeout(function () { updateRow(data, row, selectedCols, colTypes); }, 1));
   });
 }
 
+// Handle action column and removing old data cells
 function updateRow(data, row, selectedCols, colTypes) {
   let action_td = row.find('td.action-column').detach();
 
