@@ -8,6 +8,7 @@ describe "user_organization_filters/_form.html.haml", :type => :view do
     
     expect(rendered).to have_field(:user_organization_filter_name)
     expect(rendered).to have_field(:user_organization_filter_description)
-    expect(rendered).to have_xpath('//input[@id="user_organization_filter_organization_ids"]')
+    expect(rendered).to have_field(:user_organization_filter_organization_ids)
+
   end
 end
