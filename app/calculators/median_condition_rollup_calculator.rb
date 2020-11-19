@@ -1,3 +1,7 @@
+# --------------------------------
+# # NOT USED see TTPLAT-1832 or https://wiki.camsys.com/pages/viewpage.action?pageId=51183790
+# --------------------------------
+
 class MedianConditionRollupCalculator < Calculator
   
   # Calculates the last year for service given the asset sub type and the date the asset was placed

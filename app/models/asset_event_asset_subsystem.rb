@@ -1,3 +1,7 @@
+# --------------------------------
+# # NOT USED see TTPLAT-1832 or https://wiki.camsys.com/pages/viewpage.action?pageId=51183790
+# --------------------------------
+
 # During a rehabilitation update, subsystems can be selected and associated
 # with a cost
 class AssetEventAssetSubsystem < ActiveRecord::Base
