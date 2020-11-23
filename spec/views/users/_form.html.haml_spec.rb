@@ -8,7 +8,7 @@ describe "users/_form.html.haml", :type => :view do
     assign(:user, User.new)
     render
 
-    expect(rendered).to have_field('user_organization_id')
+    # expect(rendered).to have_field('user_organization_id') # this has been turned into a selectize box
     expect(rendered).to have_field('user_first_name')
     expect(rendered).to have_field('user_last_name')
     expect(rendered).to have_field('user_email')

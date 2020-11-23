@@ -362,6 +362,7 @@ html {
     z-index: 20 !important;
     padding-bottom: 10px;
     border-radius: 5px;
+    text-align: left;
 }
 
 .flyout-body label {
