@@ -36,7 +36,7 @@ class PutMetricDataService
   end
 
   def log_exception_to_cw
-    @cw.put_metric_data(@namespace, [{'MetricName' => 'MonitoringException', 'Unit' => 'None', 'Value' => 1}]) unless @env=='development'
+    #@cw.put_metric_data(@namespace, [{'MetricName' => 'MonitoringException', 'Unit' => 'None', 'Value' => 1}]) unless @env=='development'
   end
 
   def log text
