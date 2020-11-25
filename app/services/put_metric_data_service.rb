@@ -28,7 +28,7 @@ class PutMetricDataService
 #          else
           log "Exception: #{e}"
           log_exception_to_cw
-          raise e
+          #raise e
 #          end
         end
       end
