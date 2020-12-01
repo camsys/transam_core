@@ -10,28 +10,25 @@ class PutMetricDataService
   end
 
   def put_metric(name, unit, value, dimensions=[])
-    #puts [{'MetricName' => name, 'Unit' => unit, 'Value' => value, 'Dimensions' => dimensions}.select { |k, v| v!=[] }]
+    ####puts [{'MetricName' => name, 'Unit' => unit, 'Value' => value, 'Dimensions' => dimensions}.select { |k, v| v!=[] }]
     put_metrics_prepared([{'MetricName' => name, 'Unit' => unit, 'Value' => value, 'Dimensions' => dimensions}.select { |k, v| v!=[] }]) if @cw && @env != 'development'
   end
 
   def put_metrics_prepared metrics
     metrics.each_slice(20).each do |slice|
-      while true
-        begin
+     
+      ## Log to CloudWatch
+      begin
+        Timeout::timeout(5) do #If this takes more than 5 seconds, just move on.
           log "Sent #{slice.size} prepared metrics to CW for namespace #{@namespace} #{slice.collect{|s| s['MetricName']}.sort.uniq.join(',')}"
           debug slice.inspect
           @cw.put_metric_data(@namespace, slice)
-          break
-        rescue Exception => e
-#          if e.response.body =~ %r{<Message>Rate exceeded</Message>}
-#            sleep 1
-#          else
-          log "Exception: #{e}"
-          log_exception_to_cw
-          raise e
-#          end
+          wait_a_bunch
         end
+      rescue Exception => e
+        log "Exception: #{e}"
       end
+    
     end
   end
 
