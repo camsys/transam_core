@@ -41,7 +41,7 @@
       // add new
       new_list.forEach(function(li) {
         var li_html = "";
-        var common_html = "<span class='pull-right'><i title='select column' class='fa fa-arrow-right select-column'/></span>" + li.label + "</li>";
+        var common_html = "<span class='pull-right'><i class='fa fa-arrow-right select-column'/></span>" + li.label + "</li>";
         if(selectedFieldIds.indexOf(li.id) >= 0) {
           // hide selected item
           li_html = "<li data-id=" + li.id + " data-name='" + li.name + "' class='list-group-item' style='display: none;'>" 

@@ -33,6 +33,9 @@ $("table[use]").ready(()=>{
             window[id].default_selected = selected_columns;
             window[id].selectAll = false;
             window[id].stickySelect = false; // client side library managing selections for server side data... no... i'm serious...
+	    window[id].table_data = []
+	    window[id].table_timeouts = new Set();
+
             const search = $(value).data('search');
             const url = $(value).data('url');
             const sort = $(value).data('sort');
@@ -171,6 +174,7 @@ async function initialize(id, columns, selected, curPage, curPageSize, pageSizes
     updateHeader(id, selected, sort);
     pagination(id, curPage, curPageSize, pageSizes);
     init_export(id, export_types);
+    init_columns(id, columns, selected);
     clear_row_queue(id);
     updatePage_help(id, curPage, curPageSize);
     clear_aux_queue(id);
@@ -288,36 +292,20 @@ function add_row(id, vals, index) {
 
 
 function add_row_exec(id, vals, index) {
-    if(!($('#' + id + " .table-row[index=" + index + ']').length > 0)){
-        let row = $('<tr>').addClass('table-row').attr("index", index.toString());
+    window[id].table_data.push(vals); // Save for use by column selection
+
+  if(!($('#' + id + " .table-row[index=" + index + ']').length > 0)){
+    let index_str = index.toString();
+    let row = $('<tr>').addClass('table-row').attr("index", index.toString()).attr("id", index_str);
         let checkbox = $('<td>').addClass("cell-checkbox").append($('<label>').append($('<input>').attr('type', "checkbox")).append($('<span>').addClass('fa-stack').append($('<i class="fad fa-square fa-stack-1x" aria-hidden="true"></i>')).append($('<i class="fas fa-check-square fa-stack-1x" aria-hidden="true"></i>'))));
         
         // i've accepted that for the forseeable future we're using window variables
         let s_cols = window[id].col_selected;
         let col_names = window[id].col_names;
         let col_types = window[id].col_types;
-        
-        for(let key of s_cols){
-            let text = "";
-            try{
-                text = ""+vals[key.trim()].replace(/\>https?\:\/\//i, ">"); // removes http(s)
-            } catch(e) {
-                try {
-                    text = vals[key.trim()];
-                }
-                catch (e) {
-                    text = ""+vals[key.trim()];
-                }
-                
-            }
-            row.append($('<td>').addClass("row-item").addClass(col_types[key.trim()]).append($('<div>').addClass('cell-text').html(text).addClass(
-                (
-                    (typeof text !== 'undefined')
-                    &&((!isNaN(text)) // check if its a number
-                    ||(!isNaN(text.replace(/\d+%/g,'').replace(/[$,]+/g,'').replace(/[-]+/g,'').replace(/[\/]+/g,''))) // check if text is a percentage, currency value, year range, date // separated for clarity
-                    )
-                )?"numeric":"")));  // if any of those are true, apply numeric class
-        }
+
+        addCellsForData(row, vals, s_cols, col_types, false);
+
         if(    (window[id].checkedRows && window[id].checkedRows[index]) && (window[id].selectAll && window[id].stickySelect)   // sticky select on
             || (window[id].selectAll && !window[id].stickySelect)                                                               // sticky select off, select all on
             || (!window[id].selectAll && (window[id].checkedRows && window[id].checkedRows[index]))) {                          // select all off
@@ -363,7 +351,65 @@ function clear_aux_queue(id){
         for(let f of window[id].aux_queue) {f();}
 }
 
+// Create table cells and add to table row
+function addCellsForData(row, data, selectedCols, colTypes, skipActions=true) {
+  for (let key of selectedCols) {
+    key = key.trim();
+    if (skipActions && (colTypes[key] == "action-column")) continue;
+    let text = "";
+    try {
+      text = ""+data[key].replace(/\>https?\:\/\//i, ">"); // removes http(s)
+    } catch(e) {
+      try {
+        text = data[key];
+      }
+      catch (e) {
+        text = ""+data[key];
+      }
+    }
+    let cellText = $('<div>').addClass('cell-text').html(text)
+    if ((typeof text !== 'undefined')
+	&& (!isNaN(text) // check if its a number
+	    // check if text is a percentage, currency value, year range, date // separated for clarity
+            || (!isNaN(text.replace(/\d+%/g,'').replace(/[$,]+/g,'').replace(/[-]+/g,'').replace(/[\/]+/g,''))))) {
+	cellText = cellText.addClass('numeric');
+      }
+    row.append($('<td>').addClass("row-item").addClass(colTypes[key]).append(cellText));
+  }
+}
 
+// Recreate table cells based on selected columns and stashed row data
+function updateTable(id, selectedCols) {
+  let colTypes = window[id].col_types
+  // First update visible rows
+  $('tbody > tr:visible').each(function () {
+    let data = window[id].table_data[this.id];
+    updateRow(data, $(this), selectedCols, colTypes);
+  });
+  setTimeout(function () { updateHiddenRows(id, selectedCols, colTypes); }, 100);
+}
+
+function updateHiddenRows(id, selectedCols, colTypes) {
+  // Clear out any existing timeouts to prevent race conditions and improve performance
+  let timeouts = window[id].table_timeouts;
+  timeouts.forEach(function (timeout) { clearTimeout(timeout); });
+  timeouts.clear();
+  $('tbody > tr:hidden').each(function () {
+    let data = window[id].table_data[this.id];
+    let row = $(this);
+    timeouts.add(setTimeout(function () { updateRow(data, row, selectedCols, colTypes); }, 1));
+  });
+}
+
+// Handle action column and removing old data cells
+function updateRow(data, row, selectedCols, colTypes) {
+  let action_td = row.find('td.action-column').detach();
+
+  row.find('td.row-item').remove();
+  addCellsForData(row, data, selectedCols, colTypes);
+  row.append(action_td);
+}
+  
 async function serverSide(id, url, curPage, curPageSize, params, search="", sort_by={}) {
         $('#'+id).addClass('loading');
         let response = {};

@@ -108,7 +108,7 @@ module TransamFormatHelper
   end
 
   # if no precision is set this truncates any decimals and returns the number as currency
-  def format_as_currency(val, precision = 0, negative_format: "%u%n")
+  def format_as_currency(val, precision = 0, negative_format: "(%u%n)")
     val ||= 0
     if precision == 0
       if val < 0

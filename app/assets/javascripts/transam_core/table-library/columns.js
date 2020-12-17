@@ -57,7 +57,7 @@ function init_columns(id, columns, current) {
   $(document).ready(function(){
     let $wrapper = $(wrapper_html);
 
-    table.parent().on('click', ".select_button, .close-flyout", function(event){
+    table.parent().on('click', ".select_button, .select_columns .close-flyout", function(event){
       event.stopPropagation();
       event.stopImmediatePropagation();
       table.parent().find(".select_columns").toggleClass("open");
@@ -70,7 +70,7 @@ function init_columns(id, columns, current) {
       let selected = window[id].default_selected;
       updateVisibleAvailableColumns(window[id].columns, selected,
 				    table.parent().find('#visible-columns'), table.parent().find('#available-columns'));
-      updatePage(id, 0, table.data('currentPageSize'), -1, false, {}, "", selected.join());
+      updatePage(id, 0, table.data('currentPageSize'), $('#'+id).find('.table-row').length, ($('.table-row.search-result').length > 0), {}, "", selected.join());
     });
     
     table.parent().on('click', ".deselect-all", function(event){
@@ -83,7 +83,7 @@ function init_columns(id, columns, current) {
       let id = table[0].id;
 
       table.parent().find('#visible-columns .rule-below').after($('<li></li>', {"class": "target-placeholder"}));
-      updatePage(id, 0, table.data('currentPageSize'), -1, false, {}, "", columns);
+      updatePage(id, 0, table.data('currentPageSize'), $('#'+id).find('.table-row').length, ($('.table-row.search-result').length > 0), {}, "", columns);
     });
 
     table.parent().on('click', ".select-all", function(event){
@@ -97,7 +97,7 @@ function init_columns(id, columns, current) {
       let columns = table.parent().find('#visible-columns li').map(function() {return this.id;}).get().join();
       let id = table[0].id;
 
-      updatePage(id, 0, table.data('currentPageSize'), -1, false, {}, "", columns);
+      updatePage(id, 0, table.data('currentPageSize'), $('#'+id).find('.table-row').length, ($('.table-row.search-result').length > 0), {}, "", columns);
     });
     
     let $flyout = $(flyout_html);
@@ -145,7 +145,7 @@ function init_columns(id, columns, current) {
 	} else if (t.item.closest('.panel-columns').find('#available-columns .target-placeholder').length < 1) {
 	  t.item.closest('.panel-columns').find('#available-columns').append($('<li></li>', {"class": "target-placeholder"}));
 	}
-	updatePage(id, 0, table.data('currentPageSize'), -1, false, {}, "", columns);
+	updatePage(id, 0, table.data('currentPageSize'), $('#'+id).find('.table-row').length, ($('.table-row.search-result').length > 0), {}, "", columns);
       }
     });
 

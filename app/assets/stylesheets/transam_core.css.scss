@@ -11,6 +11,8 @@
  *= require bootstrap-datepicker3
  *= require bootstrap-editable
  *= require jquery-ui
+ *= require selectize
+ *= require selectize.default
  *= require_self
  *= require_tree .
  */
@@ -26,4 +28,20 @@
 }
 .radio-buttons-inline .radio:not(:first-of-type) {
   margin-left: 1em;
+}
+
+// make selectize input look like form-control
+.selectize-input {
+  background-color: #FFFFEE;
+}
+
+.selectize-input.required.invalid {
+  max-height: 40px;
+  overflow: visible;
+}
+
+.selectize-input.required label.error {
+  position: relative;
+  top: 30px;
+  right: 14px;
 }

@@ -134,6 +134,12 @@ async function updatePage(id, curPage, curPageSize, total, clientSearch=false, p
         let $available = $('#'+id).parent().find('#available-columns');
         updateVisibleAvailableColumns(window[id].columns, window[id].col_selected, $visible, $available);
       }
+    } else {
+      if (columns != "") {
+	let selectedCols = columns.split(',');
+	updateHeader(id, selectedCols, "client");
+	updateTable(id, selectedCols);
+      }
     }
 
     if(!clientSearch){
@@ -145,7 +151,6 @@ async function updatePage(id, curPage, curPageSize, total, clientSearch=false, p
 
         $('#'+id).data('currentPage', curPage);
         $('#'+id).data('currentPageSize', curPageSize);
-
 
         updatePageStatus($('#'+id).parent().find(".page-status").eq(0), curPage, curPageSize, total);
         updatePageSelect($('#'+id).parent().find(".page-select").eq(0), curPage, curPageSize, total);

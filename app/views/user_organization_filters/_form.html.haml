@@ -4,7 +4,6 @@
       = dialog_tag('Details', {:icon => 'fa fa-list', :class => "form-part"}) do
         = f.input :name, :placeholder => "Enter a name for this filter", :required => true
         = f.input :description, :as => :text, :placeholder => "Enter a description for this filter.", :rows => 3, :required => true
-        = f.hidden_field :organization_ids, :multiple => true
 
         - if can? :share, @user_organization_filter
           .form-group
@@ -14,10 +13,14 @@
     .col-md-6
       = dialog_tag('Organizations Filter', {:icon => 'fa fa-list', :class => "form-part"}) do
 
-        .form-group
-          =# select_tag(:query, options_for_select(QueryParam.active.where(class_name: f.object.class.name).map{|x| [x.to_s,x.id]}, :selected => QueryParam.find_by(class_name: f.object.class.name, query_string: f.object.query_string).try(:id)), :class => "form-control", :prompt => "Choose Organizations")
-
-        #org_select.input-xlarge
+        .form-group.required
+          %label.required.control-label
+            %abbr{title: 'required'} *
+            Organizations
+          = f.select(:organization_ids,
+                  current_user.viewable_organizations.map{|o| [o.coded_name, o.id]},
+                  {:include_blank => true},
+                  {multiple: true})
 
  
     .col-md-12
@@ -25,43 +28,26 @@
         = f.button :submit, "Update Organization Filter", :class => "btn btn-primary"
       = f.button :submit, "Update and Select This Filter", :class => "btn btn-primary"
 
-= render 'form_scripts'
-
 :javascript
 
-  // if (parseInt($('#query').val()) > 0) { // if query
-  //   $('#org_select').hide();
-  // }  else {
-  //   $('#org_select').show();
-  // }
-  //
-  // // check if using query or selecting orgs
-  // $('#query').on('change', function(e) {
-  //   var val = $(this).val();
-  //   if (parseInt(val) > 0) { // if query
-  //     $('#org_select').data().bootstrapTransfer.move_all(true, false); // clear out all selected values
-  //     $('#org_select').hide();
-  //     $('input[name="commit"]').attr('disabled', false);
-  //   }  else {
-  //     $('#org_select').show();
-  //     if ($('#selected_grantees option').length > 0) {
-  //       $('input[name="commit"]').attr('disabled', false);
-  //     } else {
-  //       $('input[name="commit"]').attr('disabled', true);
-  //     }
-  //   }
-  // });
+  $(document).ready(function(){
+    $(function() {
+      $("#user_organization_filter_organization_ids").selectize({
+          plugins: ['remove_button'],
+          delimiter: ',',
+          persist: false,
+          create: function(input) {
+            return {
+                value: input,
+                text: input
+            }
+          }
+      });
+    });
+  });
 
   $('#filter_form').validate({
-    ignore: '#user_organization_filter_organization_ids, .filtered, .filter-input'
-  });
-
-  $('#org_select').on('click', 'btn', function(){
-    if ($('#selected_grantees option').length > 0) {
-      $('input[name="commit"]').attr('disabled', false);
-    } else {
-      $('input[name="commit"]').attr('disabled', true);
+    submitHandler: function(form) {
+      form.submit();
     }
   });
-
-  $('input[name="commit"]').attr('disabled', '#{@user_organization_filter.new_record?}' == 'true');
