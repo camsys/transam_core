@@ -206,7 +206,7 @@ module TablePreferences
   # Update a user's sort and preferred columns for a table 
   def update_table_prefs table_code, sort_column, sort_order, columns_string=nil 
     # Get the user's current set of preferences for all tables.
-    all_table_prefs = eval(self.table_preferences || "{}")
+    all_table_prefs = eval(self.table_preferences.to_s) || {}
     this_table_prefs = all_table_prefs[table_code.to_sym] || {}
 
     # Update the sort order
