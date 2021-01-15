@@ -34,3 +34,14 @@
 .selectize-input {
   background-color: #FFFFEE;
 }
+
+.selectize-input.required.invalid {
+  max-height: 40px;
+  overflow: visible;
+}
+
+.selectize-input.required label.error {
+  position: relative;
+  top: 30px;
+  right: 14px;
+}

@@ -52,7 +52,7 @@
         "0": '#{h link_to f.original_filename, upload_path(f)}',
         "1": '#{h f.organization.present? ? f.organization.to_s : "Multi Org" }',
         "2": '#{h f.file_content_type }',
-        "3": '#{h f.user.name }',
+        "3": '#{h f.user.try(:name) }',
         "4": '#{h f.file_status_type }',
         "5": '#{h format_as_integer(f.num_rows_processed) }',
         "6": '#{h format_as_integer(f.num_rows_added) }',

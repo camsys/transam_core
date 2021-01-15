@@ -16,8 +16,10 @@ class PutMetricDataService
 
   def put_metrics_prepared metrics
     metrics.each_slice(20).each do |slice|
-      while true
-        begin
+     
+      ## Log to CloudWatch
+      begin
+        Timeout::timeout(5) do #If this takes more than 5 seconds, just move on.
           log "Sent #{slice.size} prepared metrics to CW for namespace #{@namespace} #{slice.collect{|s| s['MetricName']}.sort.uniq.join(',')}"
           debug slice.inspect
           @cw.put_metric_data(@namespace, slice)
@@ -31,7 +33,10 @@ class PutMetricDataService
           #raise e
 #          end
         end
+      rescue Exception => e
+        log "Exception: #{e}"
       end
+    
     end
   end
 

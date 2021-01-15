@@ -1,4 +1,7 @@
-#
+# --------------------------------
+# # DEPRECATED see TTPLAT-1832 or https://wiki.camsys.com/pages/viewpage.action?pageId=51183790
+# --------------------------------
+# #
 # Schedule Disposition update event. This is event type is required for
 # all implementations
 #
