@@ -206,7 +206,7 @@ module TablePreferences
   # Update a user's sort and preferred columns for a table 
   def update_table_prefs table_code, sort_column, sort_order, columns_string=nil 
     # Get the user's current set of preferences for all tables.
-    all_table_prefs = eval(self.table_preferences || "{}")
+    all_table_prefs = eval(self.table_preferences.to_s) || {}
     this_table_prefs = all_table_prefs[table_code.to_sym] || {}
 
     # Update the sort order
@@ -244,10 +244,10 @@ module TablePreferences
         asset_id: 'asset_tag',
         org_name: 'organizations.name',
         description: 'transam_assets.description',
-        from_line: 'from_line',
-        to_line: 'to_line',
-        from_segment: 'from_segment',
-        to_segment: 'to_segment',
+        from_line: 'infrastructures.from_line',
+        to_line: 'infrastructures.to_line',
+        from_segment: 'infrastructures.from_segment',
+        to_segment: 'infrastructures.to_segment',
         location: 'relative_location',
         subtype: 'asset_subtypes.name',
         main_line: 'infrastructure_divisions.name',
@@ -265,17 +265,20 @@ module TablePreferences
         term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name',
         service_status: 'service_status_types.name',
         last_life_cycle_action: 'asset_event_types.name',
-        life_cycle_action_date: 'all_events.event_date'
+        life_cycle_action_date: 'all_events.event_date',
+        policy_replacement_year_as_fiscal_year: 'policy_replacement_year',
+        scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
+        scheduled_replacement_cost: 'scheduled_replacement_cost'
       },
     guideway: 
       { 
         asset_id: 'asset_tag',
         org_name: 'organizations.name',
         description: 'transam_assets.description',
-        from_line: 'from_line',
-        to_line: 'to_line',
-        from_segment: 'from_segment',
-        to_segment: 'to_segment',
+        from_line: 'infrastructures.from_line',
+        to_line: 'infrastructures.to_line',
+        from_segment: 'infrastructures.from_segment',
+        to_segment: 'infrastructures.to_segment',
         location: 'relative_location',
         subtype: 'asset_subtypes.name',
         main_line: 'infrastructure_divisions.name',
@@ -293,17 +296,20 @@ module TablePreferences
         term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name',
         service_status: 'service_status_types.name',
         last_life_cycle_action: 'asset_event_types.name',
-        life_cycle_action_date: 'all_events.event_date'
+        life_cycle_action_date: 'all_events.event_date',
+        policy_replacement_year_as_fiscal_year: 'policy_replacement_year',
+        scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
+        scheduled_replacement_cost: 'scheduled_replacement_cost'
       },
     power_signal:
       { 
         asset_id: 'asset_tag',
         org_name: 'organizations.name',
         description: 'transam_assets.description',
-        from_line: 'from_line',
-        to_line: 'to_line',
-        from_segment: 'from_segment',
-        to_segment: 'to_segment',
+        from_line: 'infrastructures.from_line',
+        to_line: 'infrastructures.to_line',
+        from_segment: 'infrastructures.from_segment',
+        to_segment: 'infrastructures.to_segment',
         location: 'relative_location',
         subtype: 'asset_subtypes.name',
         main_line: 'infrastructure_divisions.name',
@@ -320,7 +326,10 @@ module TablePreferences
         term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name',
         service_status: 'service_status_types.name',
         last_life_cycle_action: 'asset_event_types.name',
-        life_cycle_action_date: 'all_events.event_date'
+        life_cycle_action_date: 'all_events.event_date',
+        policy_replacement_year_as_fiscal_year: 'policy_replacement_year',
+        scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
+        scheduled_replacement_cost: 'scheduled_replacement_cost'
       },
     capital_equipment:
       { 
@@ -343,7 +352,10 @@ module TablePreferences
         term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name',
         service_status: 'service_status_types.name',
         last_life_cycle_action: 'asset_event_types.name',
-        life_cycle_action_date: 'all_events.event_date'
+        life_cycle_action_date: 'all_events.event_date',
+        policy_replacement_year_as_fiscal_year: 'policy_replacement_year',
+        scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
+        scheduled_replacement_cost: 'scheduled_replacement_cost'
       },
     service_vehicle:
       { 
@@ -367,7 +379,10 @@ module TablePreferences
         term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name',
         service_status: 'service_status_types.name',
         last_life_cycle_action: 'asset_event_types.name',
-        life_cycle_action_date: 'all_events.event_date'
+        life_cycle_action_date: 'all_events.event_date',
+        policy_replacement_year_as_fiscal_year: 'policy_replacement_year',
+        scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
+        scheduled_replacement_cost: 'scheduled_replacement_cost'
       },
     bus:
       { 
@@ -400,7 +415,10 @@ module TablePreferences
         term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name',
         service_status: 'service_status_types.name',
         last_life_cycle_action: 'asset_event_types.name',
-        life_cycle_action_date: 'all_events.event_date'
+        life_cycle_action_date: 'all_events.event_date',
+        policy_replacement_year_as_fiscal_year: 'policy_replacement_year',
+        scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
+        scheduled_replacement_cost: 'scheduled_replacement_cost'
       },
     rail_car: { 
         asset_id: 'asset_tag',
@@ -432,7 +450,10 @@ module TablePreferences
         term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name',
         service_status: 'service_status_types.name',
         last_life_cycle_action: 'asset_event_types.name',
-        life_cycle_action_date: 'all_events.event_date'
+        life_cycle_action_date: 'all_events.event_date',
+        policy_replacement_year_as_fiscal_year: 'policy_replacement_year',
+        scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
+        scheduled_replacement_cost: 'scheduled_replacement_cost'
       },
     ferry: { 
         asset_id: 'asset_tag',
@@ -464,7 +485,10 @@ module TablePreferences
         term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name',
         service_status: 'service_status_types.name',
         last_life_cycle_action: 'asset_event_types.name',
-        life_cycle_action_date: 'all_events.event_date'
+        life_cycle_action_date: 'all_events.event_date',
+        policy_replacement_year_as_fiscal_year: 'policy_replacement_year',
+        scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
+        scheduled_replacement_cost: 'scheduled_replacement_cost'
       },
     other_passenger_vehicle: 
       { 
@@ -497,7 +521,10 @@ module TablePreferences
         term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name',
         service_status: 'service_status_types.name',
         last_life_cycle_action: 'asset_event_types.name',
-        life_cycle_action_date: 'all_events.event_date'
+        life_cycle_action_date: 'all_events.event_date',
+        policy_replacement_year_as_fiscal_year: 'policy_replacement_year',
+        scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
+        scheduled_replacement_cost: 'scheduled_replacement_cost'
       },
     passenger_facility:
       { 
@@ -517,7 +544,10 @@ module TablePreferences
         term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name',
         service_status: 'service_status_types.name',
         last_life_cycle_action: 'asset_event_types.name',
-        life_cycle_action_date: 'all_events.event_date'
+        life_cycle_action_date: 'all_events.event_date',
+        policy_replacement_year_as_fiscal_year: 'policy_replacement_year',
+        scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
+        scheduled_replacement_cost: 'scheduled_replacement_cost'
       },
     admin_facility:
       { 
@@ -537,7 +567,10 @@ module TablePreferences
         term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name',
         service_status: 'service_status_types.name',
         last_life_cycle_action: 'asset_event_types.name',
-        life_cycle_action_date: 'all_events.event_date'
+        life_cycle_action_date: 'all_events.event_date',
+        policy_replacement_year_as_fiscal_year: 'policy_replacement_year',
+        scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
+        scheduled_replacement_cost: 'scheduled_replacement_cost'
       },
     parking_facility:
       { 
@@ -557,7 +590,10 @@ module TablePreferences
         term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name',
         service_status: 'service_status_types.name',
         last_life_cycle_action: 'asset_event_types.name',
-        life_cycle_action_date: 'all_events.event_date'
+        life_cycle_action_date: 'all_events.event_date',
+        policy_replacement_year_as_fiscal_year: 'policy_replacement_year',
+        scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
+        scheduled_replacement_cost: 'scheduled_replacement_cost'
       },
     maintenance_facility:
       { 
@@ -577,7 +613,10 @@ module TablePreferences
         term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name',
         service_status: 'service_status_types.name',
         last_life_cycle_action: 'asset_event_types.name',
-        life_cycle_action_date: 'all_events.event_date'
+        life_cycle_action_date: 'all_events.event_date',
+        policy_replacement_year_as_fiscal_year: 'policy_replacement_year',
+        scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
+        scheduled_replacement_cost: 'scheduled_replacement_cost'
       },
     users:
       { 
