@@ -3,7 +3,8 @@ class TransamController < ApplicationController
   before_action :authenticate_user!, :except => [:system_health]
   before_action :set_timezone
   before_action :log_session
-
+  before_action :set_user_guide_videos
+  
   # Include the rails4 style form parameters mixin
   include TransamAttributes
 
@@ -18,6 +19,10 @@ class TransamController < ApplicationController
   VIEW_TYPE_MAP   = 3   # map
 
   ACTIVE_SESSION_LIST_CACHE_VAR = 'active_sessions_cache_key'
+
+  USER_GUIDE_VIDEOS_FOLDER = 'user_guide/videos/'
+  DEFAULT_RESOURCE_BUCKET = 'transam-resources.camsys-apps.com'
+  USER_GUIDE_VIDEOS_CACHE_CONST = 'user_guide_videos_cache_key'
 
   #-----------------------------------------------------------------------------
   # A set of utilities to determine the database adapter type
@@ -223,5 +228,36 @@ class TransamController < ApplicationController
     current_user
   end
 
+  #--------------------------------------------------------------------------------
+  # Supports the User Guide Videos menu in the footer.
+  # Any files in the bucket and folder specified will be added to the menu as links.
+  # Any files in the subfolder matching the name of the specific client,
+  # e.g. bpt or drpt, will also be added.
+  #--------------------------------------------------------------------------------
+  def set_user_guide_videos
+    unless @user_guide_videos
+      cached = get_cached_objects(USER_GUIDE_VIDEOS_CACHE_CONST).first
+      if cached
+        @user_guide_videos = cached
+      else
+        base_folder = USER_GUIDE_VIDEOS_FOLDER
+        bucket = ENV['AWS_RESOURCE_BUCKET'] || DEFAULT_RESOURCE_BUCKET
+        @user_guide_videos = {}
+        folder_list = [base_folder, "#{base_folder}#{Rails.application.class.parent.to_s.downcase}/"]
+        folder_list.each do |folder|
+          Aws::S3::Client.new().list_objects_v2(bucket: bucket, prefix: folder, delimiter: '/').contents.each do |obj|
+            unless obj.key == folder
+              text = obj.key.split('/').last.split('.').first
+              url = "https://s3.amazonaws.com/#{bucket}/#{obj.key}"
+              @user_guide_videos[text] = url
+            end
+          end
+        rescue Aws::S3::Errors::AccessDenied => error
+          Rails.logger.warn "Access denied for #{bucket}/#{folder}"
+        end
+        cache_objects(USER_GUIDE_VIDEOS_CACHE_CONST, [@user_guide_videos])
+      end
+    end
+  end
 
 end
