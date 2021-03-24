@@ -3,7 +3,7 @@ class TransamController < ApplicationController
   before_action :authenticate_user!, :except => [:system_health]
   before_action :set_timezone
   before_action :log_session
-  before_action :set_user_guide_videos
+  before_action :set_user_guide_videos, :except => [:system_health]
   
   # Include the rails4 style form parameters mixin
   include TransamAttributes
@@ -235,7 +235,7 @@ class TransamController < ApplicationController
   # e.g. bpt or drpt, will also be added.
   #--------------------------------------------------------------------------------
   def set_user_guide_videos
-    unless @user_guide_videos
+    unless @user_guide_videos || !user_signed_in?
       cached = get_cached_objects(USER_GUIDE_VIDEOS_CACHE_CONST).first
       if cached
         @user_guide_videos = cached
