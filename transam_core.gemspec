@@ -86,6 +86,8 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'selectize-rails'
 
+  s.add_dependency 'aws-sdk-s3'
+  
   # Development
   s.add_development_dependency 'mail', '2.5.5'
   s.add_development_dependency "rspec-rails"
