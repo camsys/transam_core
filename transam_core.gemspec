@@ -48,6 +48,7 @@ Gem::Specification.new do |s|
   s.add_dependency "fog"
   s.add_dependency "fog-core"
   s.add_dependency 'carrierwave'
+  s.add_dependency 'mimemagic', '~> 0.3.0' # Rails no longer depends on mimemagic but carrierwave still does
   s.add_dependency 'fog-xenserver', '0.3.0' # 1.0.0 introduces weird xmlrpc dependency
   s.add_dependency 'countries'
   # for background processing jobs
