@@ -9,6 +9,8 @@
 //= require cocoon
 //= require bootstrap-datepicker/core
 //= require selectize
+//= require chartkick
+//= require Chart.bundle
 //= require_tree .
 if($.fn.bootstrapTable) {
   // override bootstrap table default option, set silentSort as false 

@@ -940,7 +940,17 @@ footer a {
     text-decoration: underline;
 }
 
+footer .dropdown-menu {
+    background-color: var(--gray-medium);
+}
 
+footer .dropdown-menu a {
+    margin: 0px 0px !important;
+}
+
+footer .dropup {
+    margin: 10px 0px;
+}
 
 
 /* Grouping */

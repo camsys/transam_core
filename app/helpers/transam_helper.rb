@@ -229,4 +229,9 @@ module TransamHelper
     url_for params: params.permit!.merge(new_params) # allow all params already passed
   end
 
+  ## Expose select methods at module level. This allows calling the method directly (e.g. 'TransamHelper.foo') rather than
+  ## having to include the whole module just to get one function
+  module_function :system_user
+
+
 end

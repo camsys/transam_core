@@ -35,7 +35,7 @@ Gem::Specification.new do |s|
   s.add_dependency "breadcrumbs_on_rails"
   s.add_dependency "gritter"
 
-  s.add_dependency 'paper_trail'
+  s.add_dependency 'paper_trail', '~> 11.1'
   s.add_dependency 'paper_trail-association_tracking'
   s.add_dependency 'paper_trail-globalid'
 
@@ -86,6 +86,8 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'selectize-rails'
 
+  s.add_dependency 'aws-sdk-s3'
+  
   # Development
   s.add_development_dependency 'mail', '2.5.5'
   s.add_development_dependency "rspec-rails"
