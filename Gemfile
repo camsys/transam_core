@@ -14,6 +14,7 @@ gem 'byebug'
 gem 'countries', "~> 0.11.5"  # lock gem for dummy app
 gem 'mysql2', "~> 0.5.1" # lock gem for dummy app
 gem "capybara", '2.6.2' # lock gem for old capybara behavior on hidden element xpath
+gem 'aws-sdk-s3' # for controller unit tests
 gem 'ckeditor', '4.3.0'
 gem 'rack-test'
 gem 'sass-rails'
