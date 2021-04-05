@@ -41,7 +41,7 @@
             = "|".html_safe
           %i.fa.fa-file-pdf
           = link_to "User Guide", html_help_pdf_path(current_user.has_role?(:admin)), :download => '', :target => "_blank"
-    - if current_user
+    - if current_user && @user_guide_videos.present?
       .col-lg-2.col-md-2.col-sm-6.col-xs-12
         .dropdown.pull-right.dropup
           = link_to "#", :class => 'dropdown-toggle', :data => {:toggle => 'dropdown'} do
