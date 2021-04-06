@@ -78,7 +78,7 @@ function pagination(id, curPage, curPageSize, pageSizes) {
     for(let size of pageSizes) {
         options.append($('<div>').addClass("page-size-option").text(size));
     }
-    dropdown.append(options).append($('<div>').addClass("page-size-current").text(pageSizes[0]));
+    dropdown.append(options).append($('<div>').addClass("page-size-current").text(curPageSize));
     sizeSelect.append(dropdown);
     footer.append(sizeSelect);
 
