@@ -235,7 +235,7 @@ class TransamController < ApplicationController
   # e.g. bpt or drpt, will also be added.
   #--------------------------------------------------------------------------------
   def set_user_guide_videos
-    unless @user_guide_videos || !user_signed_in?
+    unless @user_guide_videos || !user_signed_in? || Rails.env.test? # Otherwise drags in too many dependencies
       cached = get_cached_objects(USER_GUIDE_VIDEOS_CACHE_CONST).first
       if cached
         @user_guide_videos = cached
