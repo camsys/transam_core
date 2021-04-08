@@ -5,7 +5,7 @@
 # Creates a template for capturing status updates for existing inventory
 #
 #------------------------------------------------------------------------------
-class TransitDispositionUpdatesTemplateBuilder < TemplateBuilder
+class DispositionUpdatesTemplateBuilder < TemplateBuilder
 
   SHEET_NAME = DispositionUpdatesFileHandler::SHEET_NAME
 
