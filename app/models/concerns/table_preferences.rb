@@ -174,9 +174,9 @@ module TablePreferences
       else
         # We have preferences, make sure that every type of preference is filled out
         if prefs[:sort].nil?
-          prefs[:sort] = DEFAULT_TABLE_PREFERENCES[table_code.to_sym][:sort]
+          prefs[:sort] = DEFAULT_TABLE_PREFERENCES[table_code.to_sym].try(:[], :sort)
         elsif prefs[:columns].nil? 
-          prefs[:columns] = DEFAULT_TABLE_PREFERENCES[table_code.to_sym][:columns]
+          prefs[:columns] = DEFAULT_TABLE_PREFERENCES[table_code.to_sym].try(:[], :columns)
         end
         return prefs 
       end
