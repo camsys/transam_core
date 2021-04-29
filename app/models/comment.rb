@@ -83,6 +83,10 @@ class Comment < ActiveRecord::Base
     end
   end
 
+  def creator_organization
+    creator.organization
+  end
+
   #-----------------------------------------------------------------------------
   #
   # Protected Methods

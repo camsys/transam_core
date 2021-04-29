@@ -30,6 +30,7 @@
 :javascript
 
   var has_run = false;
+  var is_valid = true;
   var disabled_fields = JSON.parse('#{disabled_fields.to_json.html_safe}');
 
   // show Other text entry only if it's a Other type; otherwise, hide and empty its value
@@ -158,6 +159,12 @@
     });
 
     $('.save-xeditable-button').click(function() {
+     if(!is_valid) { // can assume that has_run is true, but there was a validation error before completing the submit
+       if(($('.asset-subform form').length > 0) && ($('form.editableform').length > 0)) {
+        is_valid = $('.asset-subform form').valid() && $('form.editableform').valid();
+        has_run = !is_valid;
+      }
+     }
      if (!has_run) {
       has_run = true;
       $('form.editableform').submit(); // save values locally, then submit to server
@@ -270,6 +277,7 @@
        } else {
         var tab_id = $('.has-error .form-control').parents('.tab-pane').attr('id');
         open_tab(tab_id);
+        is_valid = false;
        }
      }
     });
