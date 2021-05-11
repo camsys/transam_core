@@ -10,9 +10,15 @@ namespace :transam_core do
       user = User.find_or_create_by(email: "transam_admin#{n}@camsys.com", first_name: 'TransAM', last_name: "Admin#{n}",
                                     phone: '781-539-6700', notify_via_email: true, organization: org)
       user.password = pwd unless user.valid_password?(pwd)
-      sys_user_id = TransamHelper.system_user.id
-      user.user_activity_line_item_filters = UserActivityLineItemFilter.where(created_by_user_id: sys_user_id)
-      user.user_activity_line_item_filter = UserActivityLineItemFilter.find_by(name: 'All ALIs', created_by_user_id: sys_user_id)
+
+      # Only needed if client uses cpt
+      if user.respond_to?(:user_activity_line_item_filter)
+        sys_user_id = TransamHelper.system_user.id
+
+        user.user_activity_line_item_filters = UserActivityLineItemFilter.where(created_by_user_id: sys_user_id)
+        user.user_activity_line_item_filter = UserActivityLineItemFilter.find_by(name: 'All ALIs', created_by_user_id: sys_user_id)
+      end
+      
       user.save!
       user.organizations << org
       user.viewable_organizations = Organization.all
