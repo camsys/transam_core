@@ -241,6 +241,17 @@ class Organization < ActiveRecord::Base
   end
 
   #------------------------------------------------------------------------------
+  # DotGrants Export
+  #------------------------------------------------------------------------------
+  def dotgrants_json
+    {
+      external_id: external_id,
+      name: name,
+      short_name: short_name
+    }
+  end
+
+  #------------------------------------------------------------------------------
   #
   # Protected Methods
   #

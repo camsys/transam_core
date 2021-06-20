@@ -21,4 +21,12 @@ class FuelType < ActiveRecord::Base
     as_json(options)
   end
 
+  def dotgrants_json
+    {
+      id: id,
+      name: name,
+      code: code
+    }
+  end
+
 end
