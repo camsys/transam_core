@@ -135,6 +135,10 @@ class Organization < ActiveRecord::Base
     users.with_role role_name
   end
 
+  def grantor?
+    organization_type.try(:name) == "Grantor"
+  end
+
   #-----------------------------------------------------------------------------
   # Returns a hash of asset_type_ids and the counts per non-zero type
   #-----------------------------------------------------------------------------
