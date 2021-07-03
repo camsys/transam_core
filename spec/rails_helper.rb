@@ -1,6 +1,5 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= 'test'
-ENV['AWS_REGION'] ||= 'us-east-1' # For aws-sdk-s3
 
 require 'codacy-coverage'
 require 'simplecov'

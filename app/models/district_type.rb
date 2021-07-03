@@ -9,4 +9,8 @@ class DistrictType < ActiveRecord::Base
     name
   end
 
+  def dotgrants_json
+  	{name: name}
+  end
+
 end

@@ -2,6 +2,8 @@ class District < ActiveRecord::Base
 
   # Associations
   belongs_to :district_type
+  has_many :draft_project_districts, :dependent => :destroy
+  has_many :draft_projects, through: :draft_project_districts
 
   validates :name,              :presence => true
   #validates :code,              :presence => true, :uniqueness => true
@@ -34,6 +36,14 @@ class District < ActiveRecord::Base
       x = where('name LIKE ? OR code LIKE ? OR description LIKE ?', val, val, val).first
     end
     x
+  end
+
+  def dotgrants_json
+    {
+      name: name,
+      code: code,
+      district_type: district_type.try(:dotgrants_json)
+    }
   end
 
 end

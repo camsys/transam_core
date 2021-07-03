@@ -135,6 +135,10 @@ class Organization < ActiveRecord::Base
     users.with_role role_name
   end
 
+  def grantor?
+    organization_type.try(:name) == "Grantor"
+  end
+
   #-----------------------------------------------------------------------------
   # Returns a hash of asset_type_ids and the counts per non-zero type
   #-----------------------------------------------------------------------------
@@ -237,6 +241,17 @@ class Organization < ActiveRecord::Base
       url: url,
       latitude: latitude, 
       longitude: longitude,
+    }
+  end
+
+  #------------------------------------------------------------------------------
+  # DotGrants Export
+  #------------------------------------------------------------------------------
+  def dotgrants_json
+    {
+      external_id: external_id,
+      name: name,
+      short_name: short_name
     }
   end
 
