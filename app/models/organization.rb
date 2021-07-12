@@ -224,7 +224,6 @@ class Organization < ActiveRecord::Base
     a.uniq
   end
 
-  # TODO Expand this when we get to the Organization API Suite
   def api_json(options={})
     {
       id: id, 
