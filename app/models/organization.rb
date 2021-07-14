@@ -53,6 +53,9 @@ class Organization < ActiveRecord::Base
   validates :customer_id,           :presence => true
   validates :organization_type_id,  :presence => true
 
+  # Executive Director: Currently used to specify Oversight Contact
+  belongs_to :executive_director, class_name: "User"
+
   #------------------------------------------------------------------------------
   # Attributes common to all organization types
   #------------------------------------------------------------------------------
@@ -91,7 +94,8 @@ class Organization < ActiveRecord::Base
     :phone,
     :fax,
     :url,
-    :active
+    :active,
+    :executive_director_id
   ]
 
   #------------------------------------------------------------------------------
@@ -240,6 +244,7 @@ class Organization < ActiveRecord::Base
       url: url,
       latitude: latitude, 
       longitude: longitude,
+      executive_director: executive_director.try(:api_json)
     }
   end
 
