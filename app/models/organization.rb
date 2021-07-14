@@ -95,7 +95,8 @@ class Organization < ActiveRecord::Base
     :fax,
     :url,
     :active,
-    :executive_director_id
+    :executive_director_id,
+    :agency_office_address
   ]
 
   #------------------------------------------------------------------------------
@@ -244,7 +245,8 @@ class Organization < ActiveRecord::Base
       url: url,
       latitude: latitude, 
       longitude: longitude,
-      executive_director: executive_director.try(:api_json)
+      executive_director: executive_director.try(:api_json),
+      agency_office_address: agency_office_address
     }
   end
 

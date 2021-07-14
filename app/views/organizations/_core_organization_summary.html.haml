@@ -4,6 +4,7 @@
 = format_field("Acronym or Short Name", org.short_name )
 = format_field("External ID", org.external_id ) unless org.external_id.blank?
 = format_field("Address", format_as_address(org) )
+= format_field("Agency Office", org.agency_office_address)
 = format_field("Technical Contact", @org.technical_contact.nil? ? "Not Set" : link_to(@org.technical_contact, @org.technical_contact) )
 = format_field("Executive Director", @org.executive_director.nil? ? "Not Set" : link_to(@org.executive_director, @org.executive_director) )
 
