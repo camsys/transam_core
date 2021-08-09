@@ -42,4 +42,12 @@ class Role < ActiveRecord::Base
     (privilege)
   end
 
+  def api_json(options={})
+    {
+      name: name, 
+      weight: weight,
+      label: label
+    }
+  end
+
 end

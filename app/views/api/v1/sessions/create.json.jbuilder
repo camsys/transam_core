@@ -4,4 +4,5 @@ json.session do
   if @user.organization
     json.organization @user.organization, :name
   end
+  json.privileges @user.privileges, :name, :label
 end

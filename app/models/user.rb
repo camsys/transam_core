@@ -396,6 +396,21 @@ class User < ActiveRecord::Base
 
   # End Generate Table Data
 
+  def api_json(options={})
+    {
+      last_name: last_name,
+      first_name: first_name,
+      email: email,
+      phone: phone,
+      phone_ext: phone_ext,
+      title: title,
+      address1: address1,
+      address2: address2,
+      city: city,
+      state: state, 
+      zip: zip
+    }
+  end
 
   #-----------------------------------------------------------------------------
   # Devise hooks
