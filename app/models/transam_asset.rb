@@ -532,6 +532,12 @@ class TransamAsset < TransamAssetRecord
     end
   end
 
+  def inventory_api_json
+    {
+      "Identification & Classification^classification": asset_subtype.try(:name),
+    }
+  end
+
   private
 
   def in_service_date_greather_than_purchase_date

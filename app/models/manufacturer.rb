@@ -21,6 +21,15 @@ class Manufacturer < ActiveRecord::Base
     x.first
   end
 
+  # used for bulk updates
+  def self.schema_structure
+    {
+      "enum": Manufacturer.all.map{ |man| "#{man.name} (#{man.filter})" },
+      "type": "string",
+      "title": "Manufacturer"
+    }
+  end
+
 
   def asset_count(org)
     Asset.where(:organization_id => org.id, :manufacturer_id => id).count

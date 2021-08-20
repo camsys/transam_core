@@ -14,4 +14,14 @@ class ManufacturerModel < ApplicationRecord
     }
   end
 
+  #for bulk updates
+  def self.schema_structure
+    {
+      "enum": ManufacturerModel.all.pluck(:name),
+      "type": "string",
+      "title": "Model"
+    }
+    
+  end
+
 end

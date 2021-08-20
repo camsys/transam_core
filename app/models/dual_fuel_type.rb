@@ -14,4 +14,13 @@ class DualFuelType < ActiveRecord::Base
     "#{primary_fuel_type.name}-#{secondary_fuel_type.name}"
   end
 
+  #for bulk updates
+  def self.schema_structure
+    {
+      "enum": DualFuelType.all.map { |dft| dft.to_s },
+      "type": "string",
+      "title": "Dual Fuel Type"
+    }
+  end
+
 end

@@ -29,4 +29,13 @@ class FuelType < ActiveRecord::Base
     }
   end
 
+  # for bulk updates
+  def self.schema_structure
+    {
+      "enum": FuelType.all.pluck(:name),
+      "type": "string",
+      "title": "Fuel Type"
+    }
+  end
+
 end
