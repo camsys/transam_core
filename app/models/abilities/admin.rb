@@ -13,7 +13,7 @@ module Abilities
       end
 
       cannot :assign, Role do |r|
-        !user.has_role?(:system_admin) && r.name == "system_admin"
+        (!user.has_role?(:system_admin) && r.name == "system_admin") 
       end
     end
   end
