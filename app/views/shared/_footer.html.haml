@@ -29,10 +29,7 @@
       %p.text-muted.credit.text-right
         = "Build #{app_version}"
         Powered by
-        - if Rails.env == 'production'
-          = link_to "TransAM Ver #{transam_version}", "http://camsys.software/products/transam", :target => "_blank", title: SystemConfig.transam_modules.map{|t| "#{t.name}: #{t.version}"}.join("\n")
-        - else
-          = link_to "TransAM Ver #{transam_version}", "http://camsys.software/products/transam", :target => "_blank", title: `bundle list | grep transam`
+        = link_to "TransAM Ver #{transam_version}", "http://camsys.software/products/transam", :target => "_blank", title: SystemConfig.transam_modules.map{|t| "#{t.name}: #{t.version}"}.join("\n")
         - if current_user
           = "|".html_safe
           - if Rails.application.config.respond_to? :release_notes
