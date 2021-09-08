@@ -534,7 +534,9 @@ class TransamAsset < TransamAssetRecord
 
   def inventory_api_json
     {
+      "id": id,
       "Identification & Classification^classification": asset_subtype.try(:name),
+      "Characteristics^year": manufacture_year
     }
   end
 
