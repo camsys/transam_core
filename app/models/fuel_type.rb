@@ -33,6 +33,7 @@ class FuelType < ActiveRecord::Base
   def self.schema_structure
     {
       "enum": FuelType.all.pluck(:name),
+      "tuple": FuelType.all.map{|f| {"id": f.id, "val": f.name } },
       "type": "string",
       "title": "Fuel Type"
     }

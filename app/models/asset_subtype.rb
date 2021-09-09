@@ -29,7 +29,8 @@ class AssetSubtype < ActiveRecord::Base
   #for bulk updates
   def self.schema_structure
     {
-      "enum": AssetSubtype.all.pluck(:name),
+      "enum": AssetSubtype.all.pluck(:name).uniq,
+      "tuple": AssetSubtype.all.map{ |s| {"id": s.id, "val": s.name} },
       "type": "string",
       "title": "Subtype"
     }

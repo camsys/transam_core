@@ -25,6 +25,7 @@ class Manufacturer < ActiveRecord::Base
   def self.schema_structure
     {
       "enum": Manufacturer.all.map{ |man| "#{man.name} (#{man.filter})" },
+      "tuple": Manufacturer.all.map{ |m| {"id":m.id, "val": m.name + " (" + m.filter + ")" } },
       "type": "string",
       "title": "Manufacturer"
     }

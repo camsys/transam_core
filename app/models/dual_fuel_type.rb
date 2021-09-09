@@ -18,6 +18,7 @@ class DualFuelType < ActiveRecord::Base
   def self.schema_structure
     {
       "enum": DualFuelType.all.map { |dft| dft.to_s },
+      "tuple": DualFuelType.all.map{ |x| {"id": x.try(:id), "val": x.to_s} },
       "type": "string",
       "title": "Dual Fuel Type"
     }

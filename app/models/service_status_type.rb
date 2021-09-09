@@ -24,6 +24,7 @@ class ServiceStatusType < ActiveRecord::Base
   def self.schema_structure
     {
       "enum": ServiceStatusType.all.pluck(:name),
+      "tuple": ServiceStatusType.all.map{ |x| {"id": x.id, "val": x.name} },
       "type": "string",
       "title": "Service Status"
     }
