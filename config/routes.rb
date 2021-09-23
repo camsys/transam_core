@@ -14,6 +14,7 @@ Rails.application.routes.draw do
     get 'touch_session' => "api#touch_session"
     namespace :v1 do
       post 'sign_in' => 'sessions#create'
+      options 'sign_in' => 'sessions#create'
       delete 'sign_out' => 'sessions#destroy'
 
       resources :users, only: [:index] do 
