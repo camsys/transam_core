@@ -5,7 +5,7 @@ class Api::V1::SessionsController < Api::ApiController
   # POST /sign_in
   # Leverages devise lockable module: https://github.com/plataformatec/devise/blob/master/lib/devise/models/lockable.rb
   def create
-    @user = User.find_by(email: params[:email].downcase)
+    @user = params[:email].present? ? User.find_by(email: params[:email].downcase) : nil
     @fail_status = :bad_request
 
     # Check if a user was found based on the passed email. If so, continue authentication.
