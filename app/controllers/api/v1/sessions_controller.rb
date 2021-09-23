@@ -1,19 +1,10 @@
 class Api::V1::SessionsController < Api::ApiController
   skip_before_action :require_authentication, only: [:create]
 
-  def cors_set_access_control_headers
-    headers['Access-Control-Allow-Origin'] = '*'
-    headers['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS'
-    headers['Access-Control-Allow-Headers'] = '*'
-    headers['Access-Control-Max-Age'] = "1728000"
-  end
-
   # Signs in an existing user, returning auth token
   # POST /sign_in
   # Leverages devise lockable module: https://github.com/plataformatec/devise/blob/master/lib/devise/models/lockable.rb
   def create
-    cors_set_access_control_headers
-
     @user = User.find_by(email: params[:email].downcase)
     @fail_status = :bad_request
 
@@ -58,8 +49,6 @@ class Api::V1::SessionsController < Api::ApiController
   # Signs out a user based on email and auth token headers
   # DELETE /sign_out
   def destroy
-    cors_set_access_control_headers
-    
     if @user && @user.reset_authentication_token
       @message = "User #{@user.email} successfully signed out."
     else

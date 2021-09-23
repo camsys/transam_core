@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   namespace :api do
     get 'touch_session' => "api#touch_session"
     namespace :v1 do
-      match 'sign_in' => 'sessions#create', via: [:post, :options]
+      match 'sign_in' => 'sessions#create', via: [:post]
       match 'sign_out' => 'sessions#destroy', via: [:delete]
 
       resources :users, only: [:index] do 
