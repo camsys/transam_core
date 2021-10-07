@@ -20,13 +20,4 @@ class ServiceStatusType < ActiveRecord::Base
     as_json(options)
   end
 
-  # for bulk updates
-  def self.schema_structure
-    {
-        "enum": ServiceStatusType.all.pluck(:name),
-        "tuple": ServiceStatusType.all.map{ |x| {"id": x.id, "val": x.name} },
-        "type": "string"
-    }
-  end
-
 end
