@@ -24,8 +24,8 @@ class Manufacturer < ActiveRecord::Base
   # used for bulk updates
   def self.schema_structure
     {
-      "enum": Manufacturer.all.map{ |man| "#{man.name} (#{man.filter})" },
-      "tuple": Manufacturer.all.map{ |m| {"id":m.id, "val": m.name + " (" + m.filter + ")" } },
+      "enum": Manufacturer.where.not(name: "Other (Describe)").map{ |man| "#{man.name} (#{man.filter})" },
+      "tuple": Manufacturer.where.not(name: "Other (Describe)").map{ |m| {"id":m.id, "val": m.name + " (" + m.filter + ")" } },
       "type": "string",
       "title": "Manufacturer"
     }

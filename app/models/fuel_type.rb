@@ -32,8 +32,8 @@ class FuelType < ActiveRecord::Base
   # for bulk updates
   def self.schema_structure
     {
-      "enum": FuelType.all.pluck(:name),
-      "tuple": FuelType.all.map{|f| {"id": f.id, "val": f.name } },
+      "enum": FuelType.where.not(name: "Other").pluck(:name),
+      "tuple": FuelType.where.not(name: "Other").map{|f| {"id": f.id, "val": f.name } },
       "type": "string",
       "title": "Fuel Type"
     }

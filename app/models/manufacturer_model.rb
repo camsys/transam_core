@@ -17,8 +17,8 @@ class ManufacturerModel < ApplicationRecord
   #for bulk updates
   def self.schema_structure
     {
-      "enum": ManufacturerModel.all.pluck(:name),
-      "tuple": ManufacturerModel.all.map{|m| {"id": m.id, "val": m.name } },
+      "enum": ManufacturerModel.where.not(name: "Other").pluck(:name),
+      "tuple": ManufacturerModel.where.not(name: "Other").map{|m| {"id": m.id, "val": m.name } },
       "type": "string",
       "title": "Model"
     }
