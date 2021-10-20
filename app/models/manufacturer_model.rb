@@ -20,7 +20,8 @@ class ManufacturerModel < ApplicationRecord
       "enum": ManufacturerModel.where.not(name: "Other").pluck(:name),
       "tuple": ManufacturerModel.where.not(name: "Other").map{|m| {"id": m.id, "val": m.name } },
       "type": "string",
-      "title": "Model"
+      "title": "Model",
+      "allowNew": true
     }
     
   end

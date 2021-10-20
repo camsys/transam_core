@@ -35,7 +35,8 @@ class FuelType < ActiveRecord::Base
       "enum": FuelType.where.not(name: "Other").pluck(:name),
       "tuple": FuelType.where.not(name: "Other").map{|f| {"id": f.id, "val": f.name } },
       "type": "string",
-      "title": "Fuel Type"
+      "title": "Fuel Type",
+      "allowNew": true
     }
   end
 

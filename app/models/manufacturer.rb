@@ -27,7 +27,8 @@ class Manufacturer < ActiveRecord::Base
       "enum": Manufacturer.where.not(name: "Other (Describe)").map{ |man| "#{man.name} (#{man.filter})" },
       "tuple": Manufacturer.where.not(name: "Other (Describe)").map{ |m| {"id":m.id, "val": m.name + " (" + m.filter + ")" } },
       "type": "string",
-      "title": "Manufacturer"
+      "title": "Manufacturer",
+      "allowNew": true
     }
   end
 
