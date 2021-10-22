@@ -52,6 +52,7 @@ class Api::V1::AssetsController < Api::ApiController
     authorize! :update, @asset
     if @asset 
       @asset.update!(asset_params(@asset))
+      Rails.cache.delete("inventory_api" + @asset.object_key)
       render status: 200, json: json_response(:success, data: @asset.api_json)
     else
       render status: :not_found, json: json_response(:fail, message: "Asset #{params[:id]} not found.")

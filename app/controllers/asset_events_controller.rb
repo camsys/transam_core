@@ -209,6 +209,7 @@ class AssetEventsController < AssetAwareController
       if @asset_event.update_attributes(form_params)
 
         notify_user(:notice, "Event was successfully updated.")
+        Rails.cache.delete("inventory_api" + @asset.object_key)
 
         # The event was updated so we need to update the asset.
         #fire_asset_update_event(@asset_event.asset_event_type, @asset)
@@ -262,6 +263,7 @@ class AssetEventsController < AssetAwareController
         Rails.logger.debug @asset_event.inspect
 
         notify_user(:notice, "Event was successfully created.")
+        Rails.cache.delete("inventory_api" + @asset.object_key)
 
         # The event was removed so we need to update the asset
         #fire_asset_update_event(@asset_event.asset_event_type, @asset)
@@ -306,6 +308,7 @@ class AssetEventsController < AssetAwareController
     @asset_event.destroy
 
     notify_user(:notice, "Event was successfully removed.")
+    Rails.cache.delete("inventory_api" + @asset.object_key)
 
     # The event was removed so we need to update the asset condition
     #fire_asset_update_event(asset_event_type, @asset)
