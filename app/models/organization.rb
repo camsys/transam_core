@@ -250,6 +250,17 @@ class Organization < ActiveRecord::Base
     }
   end
 
+  #for bulk updates
+  def self.schema_structure
+    {
+      "enum": Organization.all.map { |o| o.try(:id) },
+      "tuple": Organization.all.map{ |x| {"id": x.try(:id), "val": x.to_s} },
+      "type": "string",
+      "title": "Organization",
+      "editable": false,
+    }
+  end
+
   #------------------------------------------------------------------------------
   # DotGrants Export
   #------------------------------------------------------------------------------

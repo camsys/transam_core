@@ -21,6 +21,17 @@ class Manufacturer < ActiveRecord::Base
     x.first
   end
 
+  # used for bulk updates
+  def self.schema_structure
+    {
+      "enum": Manufacturer.where.not(name: "Other (Describe)").map{ |man| "#{man.name} (#{man.filter})" },
+      "tuple": Manufacturer.where.not(name: "Other (Describe)").map{ |m| {"id":m.id, "val": m.name + " (" + m.filter + ")" } },
+      "type": "string",
+      "title": "Manufacturer",
+      "allowNew": true
+    }
+  end
+
 
   def asset_count(org)
     Asset.where(:organization_id => org.id, :manufacturer_id => id).count

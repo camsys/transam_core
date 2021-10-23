@@ -323,6 +323,7 @@ class AssetsController < AssetAwareController
           Delayed::Job.enqueue AssetDependentSpatialReferenceUpdateJob.new(@asset.object_key), :priority => 0
         end
         notify_user(:notice, "Asset #{@asset.to_s} was successfully updated.")
+        Rails.cache.delete("inventory_api" + @asset.object_key)
 
         format.html { redirect_to inventory_url(@asset, use_last_tab: 1) }
         format.js { notify_user(:notice, "#{@asset} successfully updated.") }
@@ -487,6 +488,7 @@ class AssetsController < AssetAwareController
     end
 
     # Destroy this asset, call backs to remove each associated object will be made
+    Rails.cache.delete("inventory_api" + @asset.object_key)
     @asset.destroy
 
     notify_user(:notice, "Asset was successfully removed.")

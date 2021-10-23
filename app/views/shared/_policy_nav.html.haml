@@ -19,6 +19,5 @@
     - # Load module specific tab content if they exist
     - SystemConfig.transam_module_names.each do |mod|
       - view_component = "#{mod}_policy_sub_nav"
-      - Rails.logger.debug "Checking for #{view_component}: Results = #{lookup_context.template_exists?(view_component, 'shared', true)}"
       - if lookup_context.template_exists?(view_component, 'shared', true)
         = render :partial => "shared/#{view_component}"
