@@ -32,4 +32,14 @@ class AssetType < ActiveRecord::Base
     self.allow_parent = self.allow_parent.nil? ? true : self.allow_parent
   end
 
+  #for bulk updates
+  def self.schema_structure
+    {
+      "enum": AssetType.all.pluck(:name),
+      "tuple": AssetType.all.map{ |s| {"id": s.id, "val": s.name} },
+      "type": "string",
+      "title": "Type"
+    }
+  end
+
 end

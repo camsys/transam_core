@@ -24,4 +24,14 @@ class ConditionType < ActiveRecord::Base
     name
   end
 
+  #for bulk updates
+  def self.schema_structure
+    {
+      "enum": ConditionType.all.pluck(:name),
+      "tuple": ConditionType.all.map{ |x| {"id": x.id, "val": x.name} },
+      "type": "string",
+      "title": "Condition"
+    }
+  end
+
 end

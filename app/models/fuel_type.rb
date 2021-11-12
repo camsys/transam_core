@@ -29,4 +29,15 @@ class FuelType < ActiveRecord::Base
     }
   end
 
+  # for bulk updates
+  def self.schema_structure
+    {
+      "enum": FuelType.where.not(name: "Other").pluck(:name),
+      "tuple": FuelType.where.not(name: "Other").map{|f| {"id": f.id, "val": f.name } },
+      "type": "string",
+      "title": "Fuel Type",
+      "allowNew": true
+    }
+  end
+
 end

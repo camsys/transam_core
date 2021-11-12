@@ -14,6 +14,7 @@ class Api::V1::AssetEventsController < Api::ApiController
 
   def destroy
     authorize! :update, @asset_event
+    Rails.cache.delete("inventory_api" + @asset_event.transam_asset.object_key)
     unless @asset_event.destroy
       @status = :fail
       @message  = "Unable to destroy asset event due the following error: #{@asset_event.errors.messages}"
@@ -24,6 +25,7 @@ class Api::V1::AssetEventsController < Api::ApiController
   def update
     authorize! :update, @typed_event
     if @typed_event.update(form_params)
+      Rails.cache.delete("inventory_api" + @asset_event.transam_asset.object_key)
       render status: 200, json: json_response(:success, data: @typed_event.api_json)
     else
       @status = :fail
@@ -38,6 +40,7 @@ class Api::V1::AssetEventsController < Api::ApiController
     @new_event.update(new_form_params)
 
     if @new_event.save
+      Rails.cache.delete("inventory_api" + @asset.object_key)
       render status: 200, json: json_response(:success, data: @new_event.api_json)
     else
       @status = :fail
