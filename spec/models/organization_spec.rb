@@ -98,7 +98,9 @@ RSpec.describe Organization, :type => :model do
       :phone,
       :fax,
       :url,
-      :active
+      :active,
+      :executive_director_id,
+      :agency_office_address
     ])
   end
 
