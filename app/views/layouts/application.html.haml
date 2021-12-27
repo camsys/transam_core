@@ -15,6 +15,15 @@
     = javascript_include_tag "https://www.google.com/jsapi"
     = javascript_include_tag "application"
     = javascript_include_tag "https://kit.fontawesome.com/#{ENV['FONT_AWESOME']}.js"
+    / Global site tag (gtag.js) - Google Analytics
+    = javascript_include_tag "https://www.googletagmanager.com/gtag/js?id=#{ENV['GOOGLE_ANALYTICS_ID'] || 'G-WLPE1RT8XM'}", async: true
+    :javascript
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', '#{ENV['GOOGLE_ANALYTICS_ID'] || 'G-WLPE1RT8XM'}');
+
   %body
     / Begin header
     = render 'shared/header'
