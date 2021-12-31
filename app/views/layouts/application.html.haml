@@ -5,7 +5,7 @@
     %meta{:content => "IE=edge", "http-equiv" => "X-UA-Compatible"}/
     %meta{:content => "width=device-width, initial-scale=1", :name => "viewport"}/
     / The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags
-    %title= app_title
+    %title= @page_title || app_title
     = csrf_meta_tags
     = stylesheet_link_tag    "application", :media => "all"
     / Render engine specific CSS and JS includes if it exists
@@ -37,6 +37,3 @@
       = content_for?(:content) ? yield(:content) : yield
     / Begin footer content
     %footer.footer= render 'shared/footer'
-    / Begin analytics
-    - unless ENV['GOOGLE_ANALYTICS_ACCOUNT'].blank?
-      = render 'shared/analytics'
