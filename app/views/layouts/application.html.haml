@@ -5,7 +5,18 @@
     %meta{:content => "IE=edge", "http-equiv" => "X-UA-Compatible"}/
     %meta{:content => "width=device-width, initial-scale=1", :name => "viewport"}/
     / The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags
-    %title= @page_title || app_title
+
+    / Google Tag Manager
+    :javascript
+      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer','GTM-NT8K4X3');
+    / End Google Tag Manager
+
+    / Use breadcrumb if set
+    %title= @breadcrumbs_on_rails ? breadcrumbs.last.name : app_title
     = csrf_meta_tags
     = stylesheet_link_tag    "application", :media => "all"
     / Render engine specific CSS and JS includes if it exists
@@ -25,6 +36,11 @@
         gtag('config', '#{ENV['GOOGLE_ANALYTICS_ID'] || 'G-WLPE1RT8XM'}');
 
   %body
+    / Google Tag Manager (noscript)
+    %noscript
+      %iframe{src: "https://www.googletagmanager.com/ns.html?id=GTM-NT8K4X3", height: "0", width: "0", style: "display:none;visibility:hidden"}
+    / End Google Tag Manager (noscript)
+
     / Begin header
     = render 'shared/header'
     / Begin page content
