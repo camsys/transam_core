@@ -23,7 +23,6 @@ class PutMetricDataService
           log "Sent #{slice.size} prepared metrics to CW for namespace #{@namespace} #{slice.collect{|s| s['MetricName']}.sort.uniq.join(',')}"
           debug slice.inspect
           @cw.put_metric_data(@namespace, slice)
-          wait_a_bunch
         end
       rescue Exception => e
         log "Exception: #{e}"
