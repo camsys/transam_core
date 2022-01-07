@@ -35,6 +35,8 @@
   var search_text = '#{@search_text}';
   var search_pattern = new RegExp(search_text, 'gi');
 
+  gtag("event", "search", {search_term: search_text});
+  
   function query_params(params) {
     params.search_text = search_text;
     //console.log(JSON.stringify(params));
