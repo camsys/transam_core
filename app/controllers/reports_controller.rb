@@ -6,21 +6,22 @@ class ReportsController < OrganizationAwareController
   #authorize_resource only: [:index, :show]
 
   add_breadcrumb "Home", :root_path
-  add_breadcrumb "Reports", :reports_path
 
   SESSION_VIEW_TYPE_VAR = 'reports_subnav_view_type'
 
   def index
-
     # remember the view type
     @view_type = get_view_type(SESSION_VIEW_TYPE_VAR)
 
     @reports = []
 
     if params[:report_type]
-      active_reports = Report.active.where(report_type: params[:report_type])
+      report_type = ReportType.find(params[:report_type])
+      active_reports = Report.active.where(report_type: report_type)
+      add_breadcrumb report_type.name.pluralize, reports_path(report_type: report_type.id)
     else
       active_reports = Report.active
+      add_breadcrumb "Reports", :reports_path
     end
 
     active_reports.each do |rep|
@@ -82,8 +83,9 @@ class ReportsController < OrganizationAwareController
 
     if @report
       @report_view = @report.view_name
+      add_breadcrumb @report.report_type.name.pluralize, reports_path(report_type: @report.report_type.id)
       add_breadcrumb @report.name
-
+      
       @report_instance = @report.class_name.constantize.new(params)
       # inject the sql for the report into the params
       params[:sql] = @report.custom_sql unless @report.custom_sql.blank?

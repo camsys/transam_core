@@ -11,7 +11,7 @@ class PutMetricDataService
 
   def put_metric(name, unit, value, dimensions=[])
     ####puts [{'MetricName' => name, 'Unit' => unit, 'Value' => value, 'Dimensions' => dimensions}.select { |k, v| v!=[] }]
-    #put_metrics_prepared([{'MetricName' => name, 'Unit' => unit, 'Value' => value, 'Dimensions' => dimensions}.select { |k, v| v!=[] }]) if @cw && @env != 'development'
+    put_metrics_prepared([{'MetricName' => name, 'Unit' => unit, 'Value' => value, 'Dimensions' => dimensions}.select { |k, v| v!=[] }]) if @cw && @env != 'development'
   end
 
   def put_metrics_prepared metrics
@@ -23,25 +23,17 @@ class PutMetricDataService
           log "Sent #{slice.size} prepared metrics to CW for namespace #{@namespace} #{slice.collect{|s| s['MetricName']}.sort.uniq.join(',')}"
           debug slice.inspect
           @cw.put_metric_data(@namespace, slice)
-          break
-        rescue Exception => e
-#          if e.response.body =~ %r{<Message>Rate exceeded</Message>}
-#            sleep 1
-#          else
-          log "Exception: #{e}"
-          log_exception_to_cw
-          #raise e
-#          end
         end
       rescue Exception => e
         log "Exception: #{e}"
+        log_exception_to_cw
       end
     
     end
   end
 
   def log_exception_to_cw
-    #@cw.put_metric_data(@namespace, [{'MetricName' => 'MonitoringException', 'Unit' => 'None', 'Value' => 1}]) unless @env=='development'
+    @cw.put_metric_data(@namespace, [{'MetricName' => 'MonitoringException', 'Unit' => 'None', 'Value' => 1}]) unless @env=='development'
   end
 
   def log text
