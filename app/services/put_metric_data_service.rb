@@ -26,6 +26,7 @@ class PutMetricDataService
         end
       rescue Exception => e
         log "Exception: #{e}"
+        log_exception_to_cw
       end
     
     end
