@@ -38,6 +38,17 @@ async function export_table(id, type) {
   for(let cell of header){
     csv = csv + $(cell).find(".header-text").text().replace(/,/g, '') + ",";
   }
+  // Google Tag Manager
+  window.dataLayer = window.dataLayer || [];
+  event = {
+    'event': 'export',
+    'tableCode': table_code,
+    'type': type,
+    'selectedOnly': false,
+    'sortColumn': '',
+    'sortOrder': 'ascending'
+  };
+
   csv = csv + '\n';
   let rows = [];
   if(side === "client") { // Client-Side Table
@@ -45,6 +56,7 @@ async function export_table(id, type) {
 
     if($('#' + id + '_export_checkbox').is(':checked')) { // Only export selected rows
       rows = table.find(".row-checked:has(td)");
+      event['selectedOnly'] = true;
     } else { // Export All Rows
       rows = table.find("tr:has(td)");
     }
@@ -66,6 +78,7 @@ async function export_table(id, type) {
     }    
   } else { // Server-Side Table Export
     if($('#' + id + '_export_checkbox').is(':checked') && !window[id].selectAll) { // if the header checkbox is selected then all of the rows should be exported, which is the same case as not checking the "selected only" option
+      event['selectedOnly'] = true;
       let checked = window[id].checkedRows;
       for(let row in checked) {
         for(let cell in checked[row]) {
@@ -80,6 +93,9 @@ async function export_table(id, type) {
       sorted_column = $(table).find(".header-item.sorted").eq(0);
       data['sort_column'] = $(sorted_column).attr("code");
       data['sort_order'] = ($(sorted_column).hasClass("sorted-desc")) ? "descending": "ascending";
+      event['sortColumn'] = data['sort_column'];
+      event['sortOrder'] = data['sort_order'];
+
       await $.ajax({
         type: "GET",
         contentType: "application/json; charset=utf-8",
@@ -121,8 +137,8 @@ async function export_table(id, type) {
       });
     }
   }
-
-
+  window.dataLayer.push(event);
+  
   let csvData = "";
   if(type === "csv") {
     csvData = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv);

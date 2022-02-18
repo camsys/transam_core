@@ -68,9 +68,12 @@ function init_columns(id, columns, current) {
       event.stopImmediatePropagation();
       let id = table[0].id;
       let selected = window[id].default_selected;
+
       updateVisibleAvailableColumns(window[id].columns, selected,
 				    table.parent().find('#visible-columns'), table.parent().find('#available-columns'));
       updatePage(id, 0, table.data('currentPageSize'), $('#'+id).find('.table-row').length, ($('.table-row.search-result').length > 0), {}, "", selected.join());
+
+      sendEventToAnalytics(table.data('tableCode'), 'restore-defaults', selected);
     });
     
     table.parent().on('click', ".deselect-all", function(event){
@@ -84,6 +87,8 @@ function init_columns(id, columns, current) {
 
       table.parent().find('#visible-columns .rule-below').after($('<li></li>', {"class": "target-placeholder"}));
       updatePage(id, 0, table.data('currentPageSize'), $('#'+id).find('.table-row').length, ($('.table-row.search-result').length > 0), {}, "", columns);
+
+      sendEventToAnalytics(table.data('tableCode'), 'deselect-all', columns.split(','));
     });
 
     table.parent().on('click', ".select-all", function(event){
@@ -98,6 +103,8 @@ function init_columns(id, columns, current) {
       let id = table[0].id;
 
       updatePage(id, 0, table.data('currentPageSize'), $('#'+id).find('.table-row').length, ($('.table-row.search-result').length > 0), {}, "", columns);
+
+      sendEventToAnalytics(table.data('tableCode'), 'select-all', columns.split(','));
     });
     
     let $flyout = $(flyout_html);
@@ -146,6 +153,8 @@ function init_columns(id, columns, current) {
 	  t.item.closest('.panel-columns').find('#available-columns').append($('<li></li>', {"class": "target-placeholder"}));
 	}
 	updatePage(id, 0, table.data('currentPageSize'), $('#'+id).find('.table-row').length, ($('.table-row.search-result').length > 0), {}, "", columns);
+
+	sendEventToAnalytics(table.data('tableCode'), 'update', columns.split(','));
       }
     });
 
@@ -206,5 +215,15 @@ function updateColumnsFlyout(parent) {
   });
 }
 
+// Google Tag Manager
+function sendEventToAnalytics(tableCode, action, columns) {
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({
+    'event': 'columns_change',
+    'columnsTable': tableCode,
+    'columnsAction': action,
+    'columns': columns
+  });
+}
     
     
