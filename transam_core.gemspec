@@ -45,12 +45,9 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'roo-xls'
   s.add_dependency  'rubyXL', '3.1.0'
-  # s.add_dependency "fog-aws"
-  # s.add_dependency "fog-core"
   s.add_dependency 'carrierwave'
   s.add_dependency 'carrierwave-aws'
   s.add_dependency 'mimemagic', '~> 0.3.0' # Rails no longer depends on mimemagic but carrierwave still does
-  # s.add_dependency 'fog-xenserver', '0.3.0' # 1.0.0 introduces weird xmlrpc dependency
   s.add_dependency 'countries'
   # for background processing jobs
   s.add_dependency 'delayed_job_active_record'

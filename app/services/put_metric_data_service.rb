@@ -1,18 +1,12 @@
 class PutMetricDataService
 
   def initialize
-    # @cw = Fog::AWS::CloudWatch.new({:aws_secret_access_key => ENV['AWS_SECRET_KEY'],
-    #                                 :aws_access_key_id => ENV['AWS_ACCESS_KEY']
-    #                                }) unless ENV['AWS_SECRET_KEY'].blank? && ENV['AWS_ACCESS_KEY'].blank?
     @cw = Aws::CloudWatch::Client.new
     @env = ENV['RAILS_ENV']
     @namespace = "#{Rails.application.class.parent}:#{@env}"
-
   end
 
   def put_metric(name, unit, value, dimensions=[])
-    ####puts [{'MetricName' => name, 'Unit' => unit, 'Value' => value, 'Dimensions' => dimensions}.select { |k, v| v!=[] }]
-    # put_metrics_prepared([{'MetricName' => name, 'Unit' => unit, 'Value' => value, 'Dimensions' => dimensions}.select { |k, v| v!=[] }]) if @cw # && @env != 'development'
     put_metrics_prepared([{metric_name: name, unit: unit, value: value, dimensions: dimensions}.select { |k, v| v!=[] }]) if @cw
   end
 
@@ -24,7 +18,6 @@ class PutMetricDataService
         Timeout::timeout(5) do #If this takes more than 5 seconds, just move on.
           log "Sent #{slice.size} prepared metrics to CW for namespace #{@namespace} #{slice.collect{|s| s['MetricName']}.sort.uniq.join(',')}"
           debug slice.inspect
-          # @cw.put_metric_data(@namespace, slice)
           @cw.put_metric_data(namespace: @namespace, metric_data: slice)
         end
       rescue Exception => e
