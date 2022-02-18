@@ -2,13 +2,13 @@ CarrierWave.configure do |config|
   config.root = Rails.root.join('tmp') # adding these...
   config.cache_dir = 'carrierwave' # ...two lines
 
-  config.fog_credentials = {
-    :provider               => 'AWS',
-    :aws_access_key_id      => ENV['AWS_ACCESS_KEY'],
-    :aws_secret_access_key  => ENV['AWS_SECRET_KEY'],
-    :region                 => ENV['AWS_S3_REGION'],
-    :path_style            => true
-  } unless Rails.env.test? # no tests depend on this right now.  Just turn off fog
+  # config.fog_credentials = {
+  #   :provider               => 'AWS',
+  #   :aws_access_key_id      => ENV['AWS_ACCESS_KEY'],
+  #   :aws_secret_access_key  => ENV['AWS_SECRET_KEY'],
+  #   :region                 => ENV['AWS_S3_REGION'],
+  #   :path_style            => true
+  # } unless Rails.env.test? # no tests depend on this right now.  Just turn off fog
 
   # For testing, upload files to local `tmp` folder.
   if Rails.env.test? || Rails.env.cucumber?
@@ -16,7 +16,24 @@ CarrierWave.configure do |config|
     config.enable_processing = false
     config.root = "#{Rails.root}/tmp"
   else
-    config.storage = :fog
+    # config.storage = :fog
+    config.storage = :aws
+    config.aws_bucket = ENV.fetch('AWS_S3_BUCKET') # for AWS-side bucket access permissions config, see section below
+    config.aws_acl    = 'private'
+
+    if Rails.env.development?
+      config.aws_credentials = {
+        access_key_id:     ENV.fetch('AWS_ACCESS_KEY'),
+        secret_access_key: ENV.fetch('AWS_SECRET_KEY'),
+        region:            ENV.fetch('AWS_S3_REGION'), # Required
+        stub_responses:    Rails.env.test? # Optional, avoid hitting S3 actual during tests
+      }
+    else
+      config.aws_credentials = {
+        region:            ENV.fetch('AWS_S3_REGION'), # Required
+        stub_responses:    Rails.env.test? # Optional, avoid hitting S3 actual during tests
+      }
+    end
   end
 
   config.cache_dir = "#{Rails.root}/tmp/uploads"                  # To let CarrierWave work on heroku
