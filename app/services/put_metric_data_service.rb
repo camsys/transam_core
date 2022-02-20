@@ -7,7 +7,7 @@ class PutMetricDataService
   end
 
   def put_metric(name, unit, value, dimensions=[])
-    put_metrics_prepared([{metric_name: name, unit: unit, value: value, dimensions: dimensions}.select { |k, v| v!=[] }]) if @cw
+    put_metrics_prepared([{metric_name: name, unit: unit, value: value, dimensions: dimensions}.select { |k, v| v!=[] }]) if @cw && @env != 'test'
   end
 
   def put_metrics_prepared metrics
@@ -22,13 +22,14 @@ class PutMetricDataService
         end
       rescue Exception => e
         log "Exception: #{e}"
+        log_exception_to_cw
       end
     
     end
   end
 
   def log_exception_to_cw
-    @cw.put_metric_data(@namespace, [{'MetricName' => 'MonitoringException', 'Unit' => 'None', 'Value' => 1}]) unless @env=='development'
+    @cw.put_metric_data(namespace: @namespace, metric_data: [{metric_name: 'MonitoringException', unit: 'None', value: 1}]) if @env != 'test'
   end
 
   def log text
