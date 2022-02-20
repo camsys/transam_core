@@ -13,19 +13,12 @@ CarrierWave.configure do |config|
     config.aws_bucket = ENV.fetch('AWS_S3_BUCKET') # for AWS-side bucket access permissions config, see section below
     config.aws_acl    = 'private'
 
-    if Rails.env.development?
-      config.aws_credentials = {
-        access_key_id:     ENV.fetch('AWS_ACCESS_KEY'),
-        secret_access_key: ENV.fetch('AWS_SECRET_KEY'),
-        region:            ENV.fetch('AWS_S3_REGION'), # Required
-        stub_responses:    Rails.env.test? # Optional, avoid hitting S3 actual during tests
-      }
-    else
-      config.aws_credentials = {
-        region:            ENV.fetch('AWS_S3_REGION'), # Required
-        stub_responses:    Rails.env.test? # Optional, avoid hitting S3 actual during tests
-      }
-    end
+    config.aws_credentials = {
+      access_key_id:     ENV.fetch('AWS_ACCESS_KEY'),
+      secret_access_key: ENV.fetch('AWS_SECRET_KEY'),
+      region:            ENV.fetch('AWS_S3_REGION'), # Required
+      stub_responses:    Rails.env.test? # Optional, avoid hitting S3 actual during tests
+    }
   end
 
   config.cache_dir = "#{Rails.root}/tmp/uploads"                  # To let CarrierWave work on heroku
