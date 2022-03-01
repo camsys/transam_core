@@ -74,7 +74,7 @@ class SpreadsheetReader
     @sheet_name = sheet_name
     
     # See what type of spreadsheet we are opening, XLSX or XLS
-    file_ext = File.extname(@file_url)
+    file_ext = File.extname(URI.parse(@file_url).path)
     if file_ext == ".xlsx"
       @sheet = Roo::Excelx.new(@file_url)
     elsif file_ext == ".xls"
