@@ -6,6 +6,7 @@ services:
 branches:
   only:
     - master
+    - qa
     - /quarter\d*/
     - develop
     - /2.\d*.\d*/
