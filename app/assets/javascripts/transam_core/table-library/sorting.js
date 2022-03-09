@@ -43,6 +43,14 @@ $(document).ready(function(){
       applyIcons(table.find('.header'));
       window[id].checkedRows = {}; // clear selected rows on sort // TODO: this is a bad idea, but it's the only way to prevent duplicates on export since the row indexs are recalculated on sort
       window[id].uncheckedRows = {};
+
+      // Google Tag Manager
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+	'event': 'table_sort',
+	'sortTable': $(table).data('tableCode'),
+	'tableSortColumnOrder': $(this).attr("code") + ":" +  $(this).attr("order")
+      });
     })
   );
 });
