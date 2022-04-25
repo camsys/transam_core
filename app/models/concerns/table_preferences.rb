@@ -343,7 +343,7 @@ module TablePreferences
         quantity: 'quantity',
         quantity_unit: 'quantity_unit',
         purchase_cost: 'purchase_cost',
-        in_service_date: 'in_service_date',
+        in_service_date: 'transam_assets.in_service_date',
         pcnt_capital_responsibility: 'pcnt_capital_responsibility',
         term_condition: 'condition_events.assessed_rating',
         term_rating: 'condition_events.condition_type_id IS NULL, condition_types.name',
