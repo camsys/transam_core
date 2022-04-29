@@ -6,6 +6,7 @@
   .col-md-10.col-md-offset-1
 
     %h2 System Rollover
+
     %fieldset
       %legend= @system_config.fy_year.present? ? 'Manual' : 'Automatic'
 
@@ -28,6 +29,16 @@
           %li Status section resets for new year (prior year changes and archive actions must be completed prior to rollover).
           %li All year-based field selections will add one additional year and remove the earliest year from selectable options.
           %li Canned reports willdisplay one additional year of data and remove the earliest year available.
+
+    .row
+      .col-sm-2
+        .form-group
+          %label.control-label Current Fiscal Year
+          .display-value= "#{get_fy_label} #{current_fiscal_year}"
+      .col-sm-2
+        .form-group
+          %label.control-label Current Planning Year
+          .display-value= "#{get_fy_label} #{current_planning_year}"
 
     = simple_form_for(@system_config,
       :html => {:class => 'form-vertical'},
@@ -61,7 +72,7 @@
           = f.input :fy_year, as: :hidden, input_html: {value: @system_config.fy_year.present? ? @system_config.fy_year + 1 : @system_config.fy_year} #ou set to next year if manual in case you rollover. cant save so FY won't update
         .col-sm-2
           = f.button :submit, 'Save', :class => 'btn btn-primary', :id => 'submit_btn', :disabled => true
-          = f.button :submit, 'Rollover', :class => 'btn btn-primary', :id => 'rollover_btn', :disabled => @system_config.fy_year.blank?, data: { confirm: 'The system will rollover at this point, are you sure you wish to proceed? This process cannot be reversed.' }
+          = f.button :submit, 'Rollover', :class => 'btn btn-primary', :id => 'rollover_btn', :disabled => @system_config.fy_year.blank?, data: { confirm: "You are changing the fiscal year from #{current_fiscal_year} to #{current_planning_year}. The system will rollover at this point, are you sure you wish to proceed? This process cannot be reversed." }
 
     %fieldset{style: 'margin-top: 20px;'}
       %legend History

@@ -87,6 +87,9 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'aws-sdk-s3'
   s.add_dependency 'aws-sdk-cloudwatch'
+
+  # Deal with security issues
+  s.add_dependency 'nokogiri', '>= 1.13.4'
   
   # Development
   s.add_development_dependency 'mail', '2.5.5'
