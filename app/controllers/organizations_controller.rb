@@ -187,11 +187,49 @@ class OrganizationsController < OrganizationAwareController
 
     respond_to do |format|
       bootstrap_toggle_fields = organization_allowable_params.select{|x| (x.to_s.include? '_ids') && !(x.to_s.include? '[]')}
-      if @org.update_attributes(form_params.except(*bootstrap_toggle_fields))
+      if @org.update_attributes(form_params.except(*bootstrap_toggle_fields, :rta_org_credentials_attributes))
         bootstrap_toggle_fields.each do |field|
           if form_params[field].present?
             list = form_params[field].split(',')
             @org.send("#{field.to_s}=",list)
+          end
+        end
+        # TODO: Refactor for new table
+        if rta_credentials = form_params[:rta_org_credentials_attributes]
+          rta_credentials.values.each do |c|
+            if c[:_destroy] == "1"
+              if credential = RtaOrgCredential.find_by(id: c[:id])
+                unless credential.destroy
+                  notify_user(:alert, "There was an issue removing RTA integration credentials:\n#{credential.errors.full_messages.join("\n")}")
+                  format.html { redirect_to edit_organization_path(@org) }
+                  format.json { head :no_content }
+                end
+              end
+            elsif credential = RtaOrgCredential.find_by(id: c[:id])
+              unless credential.update(name: c[:name],
+                                       rta_client_id: c[:rta_client_id],
+                                       rta_client_secret: c[:rta_client_secret],
+                                       rta_tenant_id: c[:rta_tenant_id])
+                notify_user(:alert, "There was an issue updating RTA integration credentials:\n#{credential.errors.full_messages.join("\n")}")
+                format.html { redirect_to edit_organization_path(@org) }
+                format.json { head :no_content }
+              end
+            else
+              unless credential = RtaOrgCredential.create(organization: @org,
+                                                          name: c[:name],
+                                                          rta_client_id: c[:rta_client_id],
+                                                          rta_client_secret: c[:rta_client_secret],
+                                                          rta_tenant_id: c[:rta_tenant_id])
+                notify_user(:alert, "There was an creating RTA integration credentials:\n#{credential.errors.full_messages.join("\n")}")
+                format.html { redirect_to edit_organization_path(@org) }
+                format.json { head :no_content }
+              end
+              unless credential.valid?
+                notify_user(:alert, "There was an creating RTA integration credentials:\n#{credential.errors.full_messages.join("\n")}")
+                format.html { redirect_to edit_organization_path(@org) }
+                format.json { head :no_content }
+              end
+            end
           end
         end
         notify_user(:notice, "#{@org.name} was successfully updated.")

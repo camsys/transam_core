@@ -63,6 +63,12 @@ module TransamHelper
     "#{config.help_directory}/#{file}"
   end
 
+  def html_hsp_pdf_path
+    config = Rails.application.config
+    file = config.hsp_user_guide
+    "#{config.help_directory}/#{file}"
+  end
+
   def html_release_notes_pdf_path
     config = Rails.application.config
     file = config.release_notes.gsub('version_number', config.version.split('-')[0])
