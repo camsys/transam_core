@@ -330,19 +330,19 @@ module TablePreferences
       },
     capital_equipment:
       { 
-        asset_id: 'asset_tag',
+        asset_id: 'transam_assets.asset_tag',
         org_name: 'organizations.name',
         description: 'transam_assets.description',
         manufacturer: 'manufacturers.name',
         model: 'transam_assets_model_names.combined_name',
-        year: 'manufacture_year',
+        year: 'transam_assets.manufacture_year',
         type: 'fta_equipment_types.name',
         subtype: 'asset_subtypes.name',
         fta_asset_class: 'fta_asset_classes.name',
         external_id: 'transam_assets.external_id',
-        quantity: 'quantity',
-        quantity_unit: 'quantity_unit',
-        purchase_cost: 'purchase_cost',
+        quantity: 'transam_assets.quantity',
+        quantity_unit: 'transam_assets.quantity_unit',
+        purchase_cost: 'transam_assets.purchase_cost',
         in_service_date: 'transam_assets.in_service_date',
         pcnt_capital_responsibility: 'pcnt_capital_responsibility',
         term_condition: 'condition_events.assessed_rating',
@@ -350,9 +350,9 @@ module TablePreferences
         service_status: 'service_status_types.name',
         last_life_cycle_action: 'asset_event_types.name',
         life_cycle_action_date: 'all_events.event_date',
-        policy_replacement_year_as_fiscal_year: 'policy_replacement_year',
-        scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
-        scheduled_replacement_cost: 'scheduled_replacement_cost'
+        policy_replacement_year_as_fiscal_year: 'transam_assets.policy_replacement_year',
+        scheduled_replacement_year_as_fiscal_year: 'transam_assets.scheduled_replacement_year',
+        scheduled_replacement_cost: 'transam_assets.scheduled_replacement_cost'
       },
     service_vehicle:
       { 
