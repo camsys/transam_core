@@ -243,7 +243,7 @@ class SavedQueriesController < OrganizationAwareController
         field.query_asset_classes.each do |qac|
           as_names << "#{qac.table_name}_#{field_name}"
         end
-        field_names[field_name] = as_names
+        field_names[field_name] = (field_names[field_name] || []) + as_names
       end
 
       # Excel is stupid if the first two characters of a csv file are "ID". Necessary to
@@ -260,13 +260,10 @@ class SavedQueriesController < OrganizationAwareController
 
             # find_each would reduce memory usage, but it relies on valid primary_key
             @query.data.find_each do |row|
-              row_data = field_names.map { |field_name, as_names|
-                val = nil
+              row_data = field_names.flat_map { |field_name, as_names|
+                val = []
                 as_names.each do |as_name|
-                  if row.send(as_name)
-                    val = row.send(as_name)
-                    break
-                  end 
+                  val << row.send(as_name)
                 end
 
                 # For readability, show yes/no instead of 1/0.
