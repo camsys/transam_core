@@ -30,7 +30,7 @@
       appendTo: document.body,
       stop: function( event, ui ) {
         var newIds = [];
-        $('.columns-container span').each(function() {
+        $('.columns-container [data-id]').each(function() {
           newIds.push($(this).data('id'));
         });
         _saved_query.setOrderedOutputFieldIds(newIds);
