@@ -483,6 +483,18 @@ class TransamAsset < TransamAssetRecord
     nil
   end
 
+  def last_rebuild_rehab_event
+    asset_events.where(asset_event_type_id: AssetEventType.find_by(class_name: "RehabilitationUpdateEvent")).last
+  end
+
+  def last_rebuild_rehab_description
+    last_rebuild_rehab_event&.comments
+  end
+
+  def last_rebuild_rehab_date
+    last_rebuild_rehab_event&.event_date
+  end
+
   # Is this asset viewable by the user?
   def viewable_by? user
     organization_id.in? user.viewable_organization_ids
