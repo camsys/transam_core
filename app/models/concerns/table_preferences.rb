@@ -267,7 +267,9 @@ module TablePreferences
         life_cycle_action_date: 'all_events.event_date',
         policy_replacement_year_as_fiscal_year: 'policy_replacement_year',
         scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
-        scheduled_replacement_cost: 'scheduled_replacement_cost'
+        scheduled_replacement_cost: 'scheduled_replacement_cost',
+        rebuild_rehab_description: 'rebuild_rehab_events.comments',
+        rebuild_rehab_date: 'rebuild_rehab_events.event_date'
       },
     guideway: 
       { 
@@ -297,7 +299,9 @@ module TablePreferences
         life_cycle_action_date: 'all_events.event_date',
         policy_replacement_year_as_fiscal_year: 'policy_replacement_year',
         scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
-        scheduled_replacement_cost: 'scheduled_replacement_cost'
+        scheduled_replacement_cost: 'scheduled_replacement_cost',
+        rebuild_rehab_description: 'rebuild_rehab_events.comments',
+        rebuild_rehab_date: 'rebuild_rehab_events.event_date'
       },
     power_signal:
       { 
@@ -326,7 +330,9 @@ module TablePreferences
         life_cycle_action_date: 'all_events.event_date',
         policy_replacement_year_as_fiscal_year: 'policy_replacement_year',
         scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
-        scheduled_replacement_cost: 'scheduled_replacement_cost'
+        scheduled_replacement_cost: 'scheduled_replacement_cost',
+        rebuild_rehab_description: 'rebuild_rehab_events.comments',
+        rebuild_rehab_date: 'rebuild_rehab_events.event_date'
       },
     capital_equipment:
       { 
@@ -352,7 +358,9 @@ module TablePreferences
         life_cycle_action_date: 'all_events.event_date',
         policy_replacement_year_as_fiscal_year: 'transam_assets.policy_replacement_year',
         scheduled_replacement_year_as_fiscal_year: 'transam_assets.scheduled_replacement_year',
-        scheduled_replacement_cost: 'transam_assets.scheduled_replacement_cost'
+        scheduled_replacement_cost: 'transam_assets.scheduled_replacement_cost',
+        rebuild_rehab_description: 'rebuild_rehab_events.comments',
+        rebuild_rehab_date: 'rebuild_rehab_events.event_date'
       },
     service_vehicle:
       { 
@@ -379,7 +387,9 @@ module TablePreferences
         life_cycle_action_date: 'all_events.event_date',
         policy_replacement_year_as_fiscal_year: 'policy_replacement_year',
         scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
-        scheduled_replacement_cost: 'scheduled_replacement_cost'
+        scheduled_replacement_cost: 'scheduled_replacement_cost',
+        rebuild_rehab_description: 'rebuild_rehab_events.comments',
+        rebuild_rehab_date: 'rebuild_rehab_events.event_date'
       },
     bus:
       { 
@@ -415,7 +425,9 @@ module TablePreferences
         life_cycle_action_date: 'all_events.event_date',
         policy_replacement_year_as_fiscal_year: 'policy_replacement_year',
         scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
-        scheduled_replacement_cost: 'scheduled_replacement_cost'
+        scheduled_replacement_cost: 'scheduled_replacement_cost',
+        rebuild_rehab_description: 'rebuild_rehab_events.comments',
+        rebuild_rehab_date: 'rebuild_rehab_events.event_date'
       },
     rail_car: { 
         asset_id: 'asset_tag',
@@ -450,7 +462,9 @@ module TablePreferences
         life_cycle_action_date: 'all_events.event_date',
         policy_replacement_year_as_fiscal_year: 'policy_replacement_year',
         scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
-        scheduled_replacement_cost: 'scheduled_replacement_cost'
+        scheduled_replacement_cost: 'scheduled_replacement_cost',
+        rebuild_rehab_description: 'rebuild_rehab_events.comments',
+        rebuild_rehab_date: 'rebuild_rehab_events.event_date'
       },
     ferry: { 
         asset_id: 'asset_tag',
@@ -485,7 +499,9 @@ module TablePreferences
         life_cycle_action_date: 'all_events.event_date',
         policy_replacement_year_as_fiscal_year: 'policy_replacement_year',
         scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
-        scheduled_replacement_cost: 'scheduled_replacement_cost'
+        scheduled_replacement_cost: 'scheduled_replacement_cost',
+        rebuild_rehab_description: 'rebuild_rehab_events.comments',
+        rebuild_rehab_date: 'rebuild_rehab_events.event_date'
       },
     other_passenger_vehicle: 
       { 
@@ -521,7 +537,9 @@ module TablePreferences
         life_cycle_action_date: 'all_events.event_date',
         policy_replacement_year_as_fiscal_year: 'policy_replacement_year',
         scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
-        scheduled_replacement_cost: 'scheduled_replacement_cost'
+        scheduled_replacement_cost: 'scheduled_replacement_cost',
+        rebuild_rehab_description: 'rebuild_rehab_events.comments',
+        rebuild_rehab_date: 'rebuild_rehab_events.event_date'
       },
     passenger_facility:
       { 
@@ -544,7 +562,9 @@ module TablePreferences
         life_cycle_action_date: 'all_events.event_date',
         policy_replacement_year_as_fiscal_year: 'policy_replacement_year',
         scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
-        scheduled_replacement_cost: 'scheduled_replacement_cost'
+        scheduled_replacement_cost: 'scheduled_replacement_cost',
+        rebuild_rehab_description: 'rebuild_rehab_events.comments',
+        rebuild_rehab_date: 'rebuild_rehab_events.event_date'
       },
     admin_facility:
       { 
@@ -567,7 +587,9 @@ module TablePreferences
         life_cycle_action_date: 'all_events.event_date',
         policy_replacement_year_as_fiscal_year: 'policy_replacement_year',
         scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
-        scheduled_replacement_cost: 'scheduled_replacement_cost'
+        scheduled_replacement_cost: 'scheduled_replacement_cost',
+        rebuild_rehab_description: 'rebuild_rehab_events.comments',
+        rebuild_rehab_date: 'rebuild_rehab_events.event_date'
       },
     parking_facility:
       { 
@@ -590,7 +612,9 @@ module TablePreferences
         life_cycle_action_date: 'all_events.event_date',
         policy_replacement_year_as_fiscal_year: 'policy_replacement_year',
         scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
-        scheduled_replacement_cost: 'scheduled_replacement_cost'
+        scheduled_replacement_cost: 'scheduled_replacement_cost',
+        rebuild_rehab_description: 'rebuild_rehab_events.comments',
+        rebuild_rehab_date: 'rebuild_rehab_events.event_date'
       },
     maintenance_facility:
       { 
@@ -613,7 +637,9 @@ module TablePreferences
         life_cycle_action_date: 'all_events.event_date',
         policy_replacement_year_as_fiscal_year: 'policy_replacement_year',
         scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
-        scheduled_replacement_cost: 'scheduled_replacement_cost'
+        scheduled_replacement_cost: 'scheduled_replacement_cost',
+        rebuild_rehab_description: 'rebuild_rehab_events.comments',
+        rebuild_rehab_date: 'rebuild_rehab_events.event_date'
       },
     users:
       { 
