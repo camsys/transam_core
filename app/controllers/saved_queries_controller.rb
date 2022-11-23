@@ -268,17 +268,17 @@ class SavedQueriesController < OrganizationAwareController
 
                 # For readability, show yes/no instead of 1/0.
                 if field_types[field_name] == 'boolean'
-                  val = (val == 1 ? 'Yes' : 'No')
+                  val[0] = (val[0] == 1 ? 'Yes' : 'No')
                 end
 
                 # For readability, print in local timezone and convert to AM/PM
-                if field_types[field_name] == 'date' and val.is_a? Time
-                  val = val.in_time_zone.strftime('%m/%d/%Y %I:%M%p')
+                if field_types[field_name] == 'date' and val[0].is_a? Time
+                  val[0] = val[0].in_time_zone.strftime('%m/%d/%Y %I:%M%p')
                 end
 
                 # special case
-                if field_name == 'replacement_status_type_id' && val.blank?
-                  val = 'By Policy'
+                if field_name == 'replacement_status_type_id' && val[0].blank?
+                  val[0] = 'By Policy'
                 end
 
                 val
