@@ -267,6 +267,7 @@ class SavedQuery < ActiveRecord::Base
         association_table_name = field_association.table_name
         association_id_field_name = field_association.id_field_name
         association_display_field_name = field_association.display_field_name
+        use_field_name = field_association.use_field_name
       end
 
       field.query_asset_classes.each do |qac|
@@ -279,6 +280,7 @@ class SavedQuery < ActiveRecord::Base
 
         unless association_table_name.blank?
           as_table_name = "#{asset_table_name}_#{association_table_name}"
+          as_table_name += "_#{query_field_name}" if use_field_name
           # select value from association table
           unless join_tables.keys.include?(as_table_name)
             join_tables[as_table_name] = "left join #{association_table_name} as #{as_table_name} on #{as_table_name}.#{association_id_field_name} = #{asset_table_name}.#{query_field_name}"
