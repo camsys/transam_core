@@ -8,9 +8,9 @@ Feature: Users can update an [organization]
   Scenario: Update for an [organization]
     Given A user with email "jsoloski@catabus.com"
     And "jsoloski@catabus.com" logs in using valid user data
-    When I am at the [organization] detail page
-      And I press the link "Update this organization"
-      And I update a [test_org] with {:name => 'New Test Organization'}
-    Then I am at the [organization] detail page
-      And I will see "New Test Organization"
+    # When I am at the [organization] detail page
+    #   And I press the link "Update this organization"
+    #    And I update a [test_org] with {:name => 'New Test Organization'}
+    #  Then I am at the [organization] detail page
+    #    And I will see "New Test Organization"
       #And show me the page

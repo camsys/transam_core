@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_07_14_191717) do
+ActiveRecord::Schema.define(version: 2022_12_06_222429) do
 
   create_table "activities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "object_key", limit: 12
@@ -838,6 +838,7 @@ ActiveRecord::Schema.define(version: 2021_07_14_191717) do
     t.string "table_name"
     t.string "display_field_name"
     t.string "id_field_name", default: "id"
+    t.boolean "use_field_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
