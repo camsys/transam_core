@@ -26,7 +26,7 @@ RSpec.describe Api::V1::UsersController, type: :request do
         # test output
         expect(json['data']['user']).not_to be_empty
         expect(json['data']['user']['email']).to eq(email)
-        expect(json['data']['user'].keys).to match(["id", "name", "email", "organization"])
+        expect(json['data']['user'].keys).to match(["id", "name", "first_name", "last_name", "email", "organization", "privileges"])
         expect(json['data']['user']['organization'].keys).to match(["id", "name", "short_name"])
       end
       it 'returns status code 200' do
