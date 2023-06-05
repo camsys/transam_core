@@ -34,19 +34,24 @@
 
 :javascript
 
-  $(document).ready(function() {
+  var updateSearchDivLocation = function () {
     // Start with 15px to deal with a potential vertical scroll bar
-      var bp = 15;
+    var bp = 15;
 
-      $('ul.nav.navbar-nav.pull-right li.dropdown').each(function() {
+    $('ul.nav.navbar-nav.pull-right li.dropdown').each(function() {
         bp += parseFloat($(this).css('width')) + 1;
-      });
+    });
 
-      $('#keyword_search_div').css('right', bp.toString() + 'px')
-  });
+    $('#keyword_search_div').css('right', bp.toString() + 'px');
+  };
 
+  $(document).ready(updateSearchDivLocation);
 
-
+  // TTPLAT-2279 I don't like doing this on resize, but could not find any reliable
+  // event for hitting the media breakpoint that didn't require considerable additional code
+  // and performance is not noticeably impacted
+  $(window).on('resize', updateSearchDivLocation);
+  
   $('.search-trigger').click(function(e) {
     if ($('#search_text:hidden').length) {
       e.preventDefault();
