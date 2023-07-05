@@ -74,13 +74,13 @@ $("table[use]").ready(()=>{
 		.append($('<label class="disposed_checkbox_label" for="disposed_checkbox">').html("&nbsp;Include Disposed"));
 	    $(disposedCheckbox).on("click", function(){
 	      let include_disposed = $(this).find('#disposed_checkbox').is(':checked');
-	      console.log(include_disposed);
 	      let table = $(this).closest('.library-table').find("table").eq(0);
 	      let params = table.data('params') || {};
 	      let id = table.attr('id');
+
 	      params['include_disposed'] = include_disposed;
 	      table.data('params', params);
-	      console.log(table.data('params'));
+
 	      updatePage_help(id, table.data("currentPage"), table.data('currentPageSize'));
 	    });
 
