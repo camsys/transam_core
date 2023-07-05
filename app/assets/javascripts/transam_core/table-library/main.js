@@ -66,6 +66,26 @@ $("table[use]").ready(()=>{
             } else if(search === 'server') {
                 addSearchServer(id);
             }
+
+	  // Conditionally add only for appropriate tables
+	  if (['bus', 'rail_car', 'ferry', 'other_passenger_vehicle'].includes(table_code)) {
+	    let disposedCheckbox = $("<div>").addClass("include_disposed")
+		.append($('<input type="checkbox" id="disposed_checkbox">'))
+		.append($('<label class="disposed_checkbox_label" for="disposed_checkbox">').html("&nbsp;Include Disposed"));
+	    $(disposedCheckbox).on("click", function(){
+	      let include_disposed = $(this).find('#disposed_checkbox').is(':checked');
+	      console.log(include_disposed);
+	      let table = $(this).closest('.library-table').find("table").eq(0);
+	      let params = table.data('params') || {};
+	      let id = table.attr('id');
+	      params['include_disposed'] = include_disposed;
+	      table.data('params', params);
+	      console.log(table.data('params'));
+	      updatePage_help(id, table.data("currentPage"), table.data('currentPageSize'));
+	    });
+
+	    $('#'+id).parent().find(".function_bar").append(disposedCheckbox);
+	  }
         }
     });
 
