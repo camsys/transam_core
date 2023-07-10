@@ -630,6 +630,13 @@
     margin-bottom: 20px;
 }
 
+.include_disposed {
+    position: relative;
+    float: right;
+    padding-right: 1rem;
+    padding-top: 0.5rem;
+}
+
 .search-wrapper {
     position: relative;
     border: 1px solid var(--blue-light);

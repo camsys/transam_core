@@ -12,7 +12,7 @@ class Api::V1::OrganizationsController < Api::ApiController
   end
 
   def index
-    orgs = current_user.viewable_organizations.map{ |o| o.api_json }
+    orgs = current_user.viewable_organizations.where.not(organization_type: OrganizationType.find_by(class_name: 'PlanningPartner')).map{ |o| o.api_json }
     render status: 200, json: json_response(:success, data: orgs)
   end
 
