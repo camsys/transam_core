@@ -1,3 +1,3 @@
 module TransamCore
-  VERSION = "2.31.0-rc"
+  VERSION = "2.32.0-rc"
 end
