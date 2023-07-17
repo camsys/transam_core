@@ -68,7 +68,10 @@ $("table[use]").ready(()=>{
             }
 
 	  // Conditionally add only for appropriate tables
-	  if (['bus', 'rail_car', 'ferry', 'other_passenger_vehicle'].includes(table_code)) {
+	  if (['bus', 'rail_car', 'ferry', 'other_passenger_vehicle',
+	       'service_vehicle', 'capital_equipment',
+	       'admin_facility', 'maintenance_facility', 'passenger_facility', 'parking_facility',
+	       'track', 'guideway', 'power_signal'].includes(table_code)) {
 	    let disposedCheckbox = $("<div>").addClass("include_disposed")
 		.append($('<input type="checkbox" id="disposed_checkbox">'))
 		.append($('<label class="disposed_checkbox_label" for="disposed_checkbox">').html("&nbsp;Include Disposed"));
