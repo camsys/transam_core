@@ -265,6 +265,8 @@ function updateHeader(id, selected, sort){
     applyIcons(header);
     table.prepend($('<thead>').append(header)).prepend(colgroup);
     // table.parent().append(sort_select);
+    let navbarHeight = $(".navbar-fixed-top")[0].clientHeight;
+    $(".header-item").css({top: `${navbarHeight}px`});
 }
 
 function applyIcons(header) {
