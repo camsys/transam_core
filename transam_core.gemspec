@@ -45,7 +45,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'roo-xls'
   s.add_dependency  'rubyXL', '3.1.0'
-  s.add_dependency 'carrierwave'
+  s.add_dependency 'carrierwave', '~> 2.2.5'
   s.add_dependency 'carrierwave-aws'
   s.add_dependency 'mimemagic', '~> 0.3.0' # Rails no longer depends on mimemagic but carrierwave still does
   s.add_dependency 'countries'
