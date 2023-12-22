@@ -67,7 +67,7 @@ async function export_table(id, type) {
         let new_value = "";
         if($(c).hasClass("action-column")) {
           continue;
-        } else if($(c).hasClass("checkmark-column")) {
+        } else if($(c).hasClass("checkmark-column") || $(c).hasClass("x-column")) {
           new_value = (($(c).find(".cell-text i").css("visibility") == "visible")? "Yes,": "No,");
         } else {
           new_value =  $(c).find(".cell-text").text().replace(/(,|\r|\n|\r\n)/g, '') + ",";

@@ -868,7 +868,7 @@
      text-align: center;
 }
 
-.checkmark-column .cell-text{
+.checkmark-column .cell-text, .x-column .cell-text{
     text-align: center;
 }
 
@@ -880,7 +880,7 @@
 
 
 /*font-awesome checkmark cells had delayed background animations on hover */
-.checkmark-column {
+.checkmark-column, .x-column {
     -webkit-transition: none !important;
     -o-transition: none !important;
     -moz-transition: none !important;
