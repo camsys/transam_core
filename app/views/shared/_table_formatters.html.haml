@@ -22,6 +22,15 @@
     }
   }
 
+  function raw_boolean_x_formatter(value) {
+    if (value) {
+      // hidden div for exporting
+      return '<i class="fa fa-times"></i><div style = "visibility: hidden;">Yes</div>';
+    } else {
+      return '<div style = "visibility: hidden;">No</div>';
+    }
+  }
+
   function integer_formatter(value) {
     if (value == null) {
       return value;
