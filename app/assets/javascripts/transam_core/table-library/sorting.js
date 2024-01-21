@@ -87,7 +87,7 @@ const getCellValue = (row, index) => {
     const cleanNum = td.text().replace(/[^\d.]/g, ''); // pull numbers out, allowing a decimal place
     const cleanLetters = td.text().replace(/[^a-zA-Z]+/g, ''); // pull letters out
     let date = new Date(td.text());
-    if($(td).attr("class").includes("checkmark-column")) { return $(td).children().eq(0).children().eq(0).css("visibility")=="hidden"; } // needs a lot of work but gets the job done
+    if($(td).attr("class").some("checkmark-column", "x-column")) { return $(td).children().eq(0).children().eq(0).css("visibility")=="hidden"; } // needs a lot of work but gets the job done
     else if(td.text().includes('$')){ return Number(cleanNum); }
     else if(td.text().includes('%')){ return Number(cleanNum); }
     else if(td.text().includes('-')){ return td.text(); }
