@@ -47,5 +47,3 @@ Role.all.each do |r|
   end
 end
 
-
-ActiveRecord::Base.connection.execute("ALTER TABLE `transam_core_testing`.`assets` ADD COLUMN `geometry` GEOMETRY NULL AFTER `vendor_id`;")
