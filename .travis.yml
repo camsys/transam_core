@@ -1,6 +1,6 @@
 language: ruby
 rvm:
-- 2.6.10
+- 2.7.6
 services:
   - mysql
 branches:
