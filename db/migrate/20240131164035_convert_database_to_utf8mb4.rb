@@ -4,7 +4,7 @@ class ConvertDatabaseToUtf8mb4 < ActiveRecord::Migration[5.2]
   end
 
   def up
-    return if Rails.env.staging? or Rails.env.production?
+    return if Rails.env.production?
 
     execute "ALTER DATABASE `#{db.current_database}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
     db.tables.each do |table|
