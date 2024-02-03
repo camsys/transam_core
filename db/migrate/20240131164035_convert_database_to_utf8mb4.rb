@@ -12,6 +12,11 @@ class ConvertDatabaseToUtf8mb4 < ActiveRecord::Migration[5.2]
       drop_table old_table if connection.table_exists?(old_table)
     end
 
+    # Drop view that is blocking upgrade. Restore with 'rake app:transam_spatial:update_geometry_view
+    execute <<-SQL
+      DROP VIEW IF EXISTS geometry_transam_assets_view
+    SQL
+    
     execute "ALTER DATABASE `#{db.current_database}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
     db.tables.each do |table|
       execute "ALTER TABLE `#{table}` ROW_FORMAT=DYNAMIC CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
