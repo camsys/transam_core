@@ -12,9 +12,14 @@ class ConvertDatabaseToUtf8mb4 < ActiveRecord::Migration[5.2]
       drop_table old_table if connection.table_exists?(old_table)
     end
 
-    # Drop view that is blocking upgrade. Restore with 'rake app:transam_spatial:update_geometry_view
+    # Drop view that is blocking upgrade. Restore with 'rake transam_spatial:update_geometry_view
     execute <<-SQL
       DROP VIEW IF EXISTS geometry_transam_assets_view
+    SQL
+    
+    # This view is left with "Illegal mix of collations for operation 'UNION'". Restore with 'rake transam_core:restore_parent_view
+    execute <<-SQL
+      DROP VIEW IF EXISTS parent_transam_assets_view
     SQL
     
     execute "ALTER DATABASE `#{db.current_database}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
@@ -34,26 +39,6 @@ class ConvertDatabaseToUtf8mb4 < ActiveRecord::Migration[5.2]
             execute "ALTER TABLE `#{table}` MODIFY `#{column.name}` #{sql_type} CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci #{default} #{null};"
         end
       end
-    end
-
-    # This view is left with "Illegal mix of collations for operation 'UNION'" Recreating fixes.
-    parent_transam_assets_view = <<-SQL
-      CREATE OR REPLACE VIEW parent_transam_assets_view AS
-        SELECT transam_assets.organization_id, transam_assets.object_key as parent_id, transam_assets.asset_tag, facilities.facility_name, transam_assets.description,
-        CONCAT(asset_tag, IF(facility_name IS NOT NULL OR description IS NOT NULL, ' : ', ''), IFNULL(facility_name,description)) AS parent_name
-        FROM transam_assets
-        INNER JOIN `transit_assets` ON `transam_assets`.`transam_assetible_id` = `transit_assets`.`id` AND `transam_assets`.`transam_assetible_type` = 'TransitAsset'
-        LEFT JOIN `facilities` ON `transit_assets`.`transit_assetible_id` = `facilities`.`id` AND `transit_assets`.`transit_assetible_type` = 'Facility'
-        WHERE transam_assets.id IN (SELECT DISTINCT parent_id FROM transam_assets INNER JOIN `transit_assets` ON `transam_assets`.`transam_assetible_id` = `transit_assets`.`id` AND `transam_assets`.`transam_assetible_type` = 'TransitAsset' WHERE parent_id IS NOT NULL AND fta_asset_category_id != 4)
-        UNION
-        SELECT transam_assets.organization_id, transam_assets.object_key as parent_id, transam_assets.asset_tag, NULL, transam_assets.description,
-        CONCAT(asset_tag, IF(description IS NOT NULL, ' : ', ''), description) AS parent_name
-        FROM transam_assets
-        INNER JOIN `transit_assets` ON `transam_assets`.`transam_assetible_id` = `transit_assets`.`id` AND `transam_assets`.`transam_assetible_type` = 'TransitAsset'
-        INNER JOIN `infrastructures` ON `transit_assets`.`transit_assetible_id` = `infrastructures`.`id` AND `transit_assets`.`transit_assetible_type` = 'Infrastructure'
-        WHERE transam_assets.id IN (SELECT DISTINCT parent_id FROM transam_assets INNER JOIN `transit_assets` ON `transam_assets`.`transam_assetible_id` = `transit_assets`.`id` AND `transam_assets`.`transam_assetible_type` = 'TransitAsset' WHERE parent_id IS NOT NULL AND fta_asset_category_id = 4)
-    SQL
-    execute parent_transam_assets_view
-    
+    end    
   end
 end
