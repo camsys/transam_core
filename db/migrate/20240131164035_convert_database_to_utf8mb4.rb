@@ -4,8 +4,6 @@ class ConvertDatabaseToUtf8mb4 < ActiveRecord::Migration[5.2]
   end
 
   def up
-    return if Rails.env.production?
-
     # Remove problematical tables that are no longer needed
     [:capital_equipment_asset_table_views, :facility_primary_asset_table_views, :infrastructure_asset_table_views,
      :revenue_vehicle_asset_table_views, :service_vehicle_asset_table_views].each do |old_table|
