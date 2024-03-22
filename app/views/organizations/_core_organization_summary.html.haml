@@ -6,5 +6,5 @@
 = format_field("Address", format_as_address(org) )
 = format_field("Agency Office", org.agency_office_address)
 = format_field("Technical Contact", @org.technical_contact.nil? ? "Not Set" : link_to(@org.technical_contact, @org.technical_contact) )
-= format_field("Executive Director", @org.executive_director.nil? ? "Not Set" : link_to(@org.executive_director, @org.executive_director) )
+= format_field("eGrants Primary Contact", @org.executive_director.nil? ? "Not Set" : link_to(@org.executive_director, @org.executive_director) )
 
