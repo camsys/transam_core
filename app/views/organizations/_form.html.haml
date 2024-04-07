@@ -21,7 +21,7 @@
         - field_custom = SystemConfigFieldCustomization.find_by(is_locked: true, table_name: 'organizations', field_name: 'short_name', active: true)
         = f.input :short_name, :required => true, :label => "Acronym or Short Name", :disabled => (field_custom.present? && eval(field_custom.code_frag))
         = f.input :external_id, :label => "External ID"
-        = f.input :executive_director_id, required: false, label: "Executive Director", collection: @org.users
+        = f.input :executive_director_id, required: false, label: "eGrants Primary Contact", collection: @org.users
     .col-md-6
       = dialog_tag('Contact', {:icon => 'fa fa-book', :class => "header-part"}) do
         = f.input :phone, :required => true, :as => :tel, :hint => 'Format 123-456-7890'
