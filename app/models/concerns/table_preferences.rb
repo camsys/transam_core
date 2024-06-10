@@ -269,7 +269,8 @@ module TablePreferences
         scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
         scheduled_replacement_cost: 'scheduled_replacement_cost',
         rebuild_rehab_description: 'rebuild_rehab_events.comments',
-        rebuild_rehab_date: 'rebuild_rehab_events.event_date'
+        rebuild_rehab_date: 'rebuild_rehab_events.event_date',
+        min_service_life_months: 'policy_asset_subtype_rules.min_service_life_months'
       },
     guideway: 
       { 
@@ -301,7 +302,8 @@ module TablePreferences
         scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
         scheduled_replacement_cost: 'scheduled_replacement_cost',
         rebuild_rehab_description: 'rebuild_rehab_events.comments',
-        rebuild_rehab_date: 'rebuild_rehab_events.event_date'
+        rebuild_rehab_date: 'rebuild_rehab_events.event_date',
+        min_service_life_months: 'policy_asset_subtype_rules.min_service_life_months'
       },
     power_signal:
       { 
@@ -332,7 +334,8 @@ module TablePreferences
         scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
         scheduled_replacement_cost: 'scheduled_replacement_cost',
         rebuild_rehab_description: 'rebuild_rehab_events.comments',
-        rebuild_rehab_date: 'rebuild_rehab_events.event_date'
+        rebuild_rehab_date: 'rebuild_rehab_events.event_date',
+        min_service_life_months: 'policy_asset_subtype_rules.min_service_life_months'
       },
     capital_equipment:
       { 
@@ -360,7 +363,8 @@ module TablePreferences
         scheduled_replacement_year_as_fiscal_year: 'transam_assets.scheduled_replacement_year',
         scheduled_replacement_cost: 'transam_assets.scheduled_replacement_cost',
         rebuild_rehab_description: 'rebuild_rehab_events.comments',
-        rebuild_rehab_date: 'rebuild_rehab_events.event_date'
+        rebuild_rehab_date: 'rebuild_rehab_events.event_date',
+        min_service_life_months: 'policy_asset_subtype_rules.min_service_life_months'
       },
     service_vehicle:
       { 
@@ -389,7 +393,8 @@ module TablePreferences
         scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
         scheduled_replacement_cost: 'scheduled_replacement_cost',
         rebuild_rehab_description: 'rebuild_rehab_events.comments',
-        rebuild_rehab_date: 'rebuild_rehab_events.event_date'
+        rebuild_rehab_date: 'rebuild_rehab_events.event_date',
+        min_service_life_months: 'policy_asset_subtype_rules.min_service_life_months'
       },
     bus:
       { 
@@ -427,7 +432,9 @@ module TablePreferences
         scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
         scheduled_replacement_cost: 'scheduled_replacement_cost',
         rebuild_rehab_description: 'rebuild_rehab_events.comments',
-        rebuild_rehab_date: 'rebuild_rehab_events.event_date'
+        rebuild_rehab_date: 'rebuild_rehab_events.event_date',
+        min_service_life_months: 'policy_asset_subtype_rules.min_service_life_months',
+        min_service_life_miles: 'policy_asset_subtype_rules.min_service_life_miles'
       },
     rail_car: { 
         asset_id: 'asset_tag',
@@ -464,7 +471,9 @@ module TablePreferences
         scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
         scheduled_replacement_cost: 'scheduled_replacement_cost',
         rebuild_rehab_description: 'rebuild_rehab_events.comments',
-        rebuild_rehab_date: 'rebuild_rehab_events.event_date'
+        rebuild_rehab_date: 'rebuild_rehab_events.event_date',
+        min_service_life_months: 'policy_asset_subtype_rules.min_service_life_months',
+        min_service_life_miles: 'policy_asset_subtype_rules.min_service_life_miles'
       },
     ferry: { 
         asset_id: 'asset_tag',
@@ -501,7 +510,9 @@ module TablePreferences
         scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
         scheduled_replacement_cost: 'scheduled_replacement_cost',
         rebuild_rehab_description: 'rebuild_rehab_events.comments',
-        rebuild_rehab_date: 'rebuild_rehab_events.event_date'
+        rebuild_rehab_date: 'rebuild_rehab_events.event_date',
+        min_service_life_months: 'policy_asset_subtype_rules.min_service_life_months',
+        min_service_life_miles: 'policy_asset_subtype_rules.min_service_life_miles'
       },
     other_passenger_vehicle: 
       { 
@@ -539,7 +550,9 @@ module TablePreferences
         scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
         scheduled_replacement_cost: 'scheduled_replacement_cost',
         rebuild_rehab_description: 'rebuild_rehab_events.comments',
-        rebuild_rehab_date: 'rebuild_rehab_events.event_date'
+        rebuild_rehab_date: 'rebuild_rehab_events.event_date',
+        min_service_life_months: 'policy_asset_subtype_rules.min_service_life_months',
+        min_service_life_miles: 'policy_asset_subtype_rules.min_service_life_miles'
       },
     passenger_facility:
       { 
@@ -564,7 +577,8 @@ module TablePreferences
         scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
         scheduled_replacement_cost: 'scheduled_replacement_cost',
         rebuild_rehab_description: 'rebuild_rehab_events.comments',
-        rebuild_rehab_date: 'rebuild_rehab_events.event_date'
+        rebuild_rehab_date: 'rebuild_rehab_events.event_date',
+        min_service_life_months: 'policy_asset_subtype_rules.min_service_life_months'
       },
     admin_facility:
       { 
@@ -589,7 +603,8 @@ module TablePreferences
         scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
         scheduled_replacement_cost: 'scheduled_replacement_cost',
         rebuild_rehab_description: 'rebuild_rehab_events.comments',
-        rebuild_rehab_date: 'rebuild_rehab_events.event_date'
+        rebuild_rehab_date: 'rebuild_rehab_events.event_date',
+        min_service_life_months: 'policy_asset_subtype_rules.min_service_life_months'
       },
     parking_facility:
       { 
@@ -614,7 +629,8 @@ module TablePreferences
         scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
         scheduled_replacement_cost: 'scheduled_replacement_cost',
         rebuild_rehab_description: 'rebuild_rehab_events.comments',
-        rebuild_rehab_date: 'rebuild_rehab_events.event_date'
+        rebuild_rehab_date: 'rebuild_rehab_events.event_date',
+        min_service_life_months: 'policy_asset_subtype_rules.min_service_life_months'
       },
     maintenance_facility:
       { 
@@ -639,7 +655,8 @@ module TablePreferences
         scheduled_replacement_year_as_fiscal_year: 'scheduled_replacement_year',
         scheduled_replacement_cost: 'scheduled_replacement_cost',
         rebuild_rehab_description: 'rebuild_rehab_events.comments',
-        rebuild_rehab_date: 'rebuild_rehab_events.event_date'
+        rebuild_rehab_date: 'rebuild_rehab_events.event_date',
+        min_service_life_months: 'policy_asset_subtype_rules.min_service_life_months'
       },
     users:
       { 
