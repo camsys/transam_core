@@ -115,7 +115,9 @@ module TransamTagHelper
 
     # Escape for HAML
     label = label.gsub('%','\%') if label
-    value = value.gsub('#', '\#') if value.is_a? String
+    # this is sort of a hack for now outright removing the '#{' to prevent escaping ruby code
+    value = value.gsub('#{', '') if value.is_a? String
+
     if url
       asset_path = url
     elsif model_name.nil? || model_obj.class.to_s == model_name
@@ -207,7 +209,8 @@ module TransamTagHelper
     
     # Escape for HAML
     label = label.gsub('%','\%') if label
-    value = value.gsub('#', '\#') if value.is_a? String
+    # this is sort of a hack for now outright removing the '#{' to prevent escaping ruby code
+    value = value.gsub('#{', '') if value.is_a? String
     engine = Haml::Engine.new("
 ##{field}_group.form-group
   %label.control-label{class: '#{classes}'}
