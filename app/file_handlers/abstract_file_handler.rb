@@ -104,6 +104,8 @@ class AbstractFileHandler
     # Check for any validation errors
     event = loader.event
     if event.valid?
+      event.creator = @upload.user
+      event.updater = @upload.user
       event.save
       add_processing_message(3, 'success', "#{event_message} added.")
     else
