@@ -129,6 +129,8 @@ class EarlyDispositionRequestUpdatesFileHandler < AbstractFileHandler
             event = loader.event
             if event.valid?
               event.upload = upload
+              event.creator = upload.user
+              event.updater = upload.user
               event.save
               add_processing_message(3, 'success', 'Disposition Request added.')
               @num_rows_added +=  1

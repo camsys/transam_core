@@ -124,6 +124,8 @@ class MaintenanceUpdatesFileHandler < AbstractFileHandler
             end
 
             event.upload = upload
+            event.creator = upload.user
+            event.updater = upload.user
             event.save
             add_processing_message(3, 'success', 'Maintenance history updated.')
             #Delayed::Job.enqueue AssetMaintenanceUpdateJob.new(asset.object_key), :priority => 10
