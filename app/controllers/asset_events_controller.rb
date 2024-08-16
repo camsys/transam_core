@@ -428,8 +428,10 @@ class AssetEventsController < AssetAwareController
   def reformat_date_field
     date_str = params[:asset_event][:event_date]
     if date_str.present?
-      form_date = Date.strptime(date_str, '%m/%d/%Y')
-      params[:asset_event][:event_date] = form_date.strftime('%Y-%m-%d')
+      unless date_str.match(/\d{4}-\d{2}-\d{2}/)
+        form_date = Date.strptime(date_str, '%m/%d/%Y')
+        params[:asset_event][:event_date] = form_date.strftime('%Y-%m-%d')
+      end
     end
   end
 
