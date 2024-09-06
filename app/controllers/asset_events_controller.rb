@@ -5,7 +5,7 @@ class AssetEventsController < AssetAwareController
   # set the @asset_event variable before any actions are invoked
   before_action :get_asset_event,       :only => [:show, :edit, :update, :destroy, :fire_workflow_event, :popup]
   before_action :check_for_cancel,      :only => [:create, :update]
-  before_action :reformat_date_field,   :only => [:create, :update]
+  before_action :reformat_date_fields,   :only => [:create, :update]
 
   skip_before_action :get_asset,        :only => [:get_summary, :popup]
 
@@ -425,12 +425,16 @@ class AssetEventsController < AssetAwareController
   #------------------------------------------------------------------------------
   private
 
-  def reformat_date_field
-    date_str = params[:asset_event][:event_date]
-    if date_str.present?
-      unless date_str.match(/\d{4}-\d{2}-\d{2}/)
-        form_date = Date.strptime(date_str, '%m/%d/%Y')
-        params[:asset_event][:event_date] = form_date.strftime('%Y-%m-%d')
+  def reformat_date_fields
+    params[:asset_event].keys.each do |k|
+      if k.split("_").include? "date"
+        date_str = params[:asset_event][k]
+        if date_str.present?
+          unless date_str.match(/\d{4}-\d{2}-\d{2}/)
+            form_date = Date.strptime(date_str, '%m/%d/%Y')
+            params[:asset_event][k] = form_date.strftime('%Y-%m-%d')
+          end
+        end
       end
     end
   end
