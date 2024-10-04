@@ -15,6 +15,9 @@
       %fieldset
         = f.input :email, :placeholder => "Email address", :label => false
         = f.input :password, :placeholder => "Password", :label => false
+        %label.checkbox-inline
+          = check_box_tag 'show_password'
+          Show password
 
         = f.input :remember_me, :label => "Remember Me", :as => :boolean if devise_mapping.rememberable?
 
@@ -22,3 +25,8 @@
 
     = link_to "Forgot Your Password?", new_password_path(resource_name), :style => 'margin-top: 15px;'
     = render 'shared/devise_messages'
+
+:javascript
+  $("#show_password").change(function(e) {
+    $("#user_password")[0].type = (e.target.checked ? "text" : "password");
+  });
