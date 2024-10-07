@@ -37,7 +37,9 @@
             = link_to 'Updates', html_release_notes_pdf_path, download: '', target: '_blank'
             = "|".html_safe
           %i.fa.fa-file-pdf
-          = link_to "User Guide", html_help_pdf_path(current_user.has_role?(:admin)), :download => '', :target => "_blank"
+          = link_to "User Guide",
+            html_help_pdf_path(current_user.has_any_role?(*((Rails.application.config.try(:admin_adjacent_roles) || []) << :admin))),
+            :download => '', :target => "_blank"
     - if current_user && @user_guide_videos.present?
       .col-lg-2.col-md-2.col-sm-6.col-xs-12
         .dropdown.pull-right.dropup

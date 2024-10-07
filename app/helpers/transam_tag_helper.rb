@@ -117,6 +117,8 @@ module TransamTagHelper
     label = label.gsub('%','\%') if label
     # this is sort of a hack for now outright removing the '#{' to prevent escaping ruby code
     value = value.gsub('#{', '') if value.is_a? String
+    # remove any added '\' characters added from escaping special characters in the string
+    value = value.gsub('\\', '') if value.is_a? String
 
     if url
       asset_path = url
@@ -211,6 +213,8 @@ module TransamTagHelper
     label = label.gsub('%','\%') if label
     # this is sort of a hack for now outright removing the '#{' to prevent escaping ruby code
     value = value.gsub('#{', '') if value.is_a? String
+    # remove any added '\' characters added from escaping special characters in the string
+    value = value.gsub('\\', '') if value.is_a? String
     engine = Haml::Engine.new("
 ##{field}_group.form-group
   %label.control-label{class: '#{classes}'}
