@@ -104,6 +104,8 @@
       // enable subforms
       $('#'+tab_id+' .asset-subform').find('input, select').removeAttr('disabled');
       $('#'+tab_id+' .asset-subform .asset-subform-action').show();
+      // manually trigger change in subform actions for appropriate listeners on individual forms
+      $('#'+tab_id+' .asset-subform .asset-subform-action').trigger("change");
       $('#'+tab_id+' .asset-subform .asset-subform-display').hide();
 
       // de-focus form: 1. make it select the first one; 2. lost is focus
