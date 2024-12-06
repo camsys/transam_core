@@ -16,6 +16,7 @@ env:
 before_install:
 - export TZ="America/New_York" # set timezone
 - mysql -e "create database IF NOT EXISTS transam_core_testing;" -uroot
+- gem install -v 2.3.4 bundler --document=
 addons:
   code_climate:
     repo_token: d5c0c26a73feef46179efdd2e5d8c26c464c2f2be870db3ebbd3bb620996d19c
