@@ -15,9 +15,11 @@ function init_columns(id, columns, current) {
 '    <button class="close-flyout button-clear button-icononly">' +
 '      <i class="fas fa-arrow-alt-to-right"/>' +
 '    </button>' +
-'  </header>' +
+'  </header>'
+  ;
+  const links_html =
 '  <div class="panel-links">' +
-'    <div class="link-group">' + 
+'    <div class="link-group">' +
 '      <button class="link-secondary button-clear restore-defaults"><i class="fal fa-undo link-icon restore-defaults"></i>Restore Defaults</button>' +
 '    </div>' +
 '    <div class="link-group">' +
@@ -25,8 +27,7 @@ function init_columns(id, columns, current) {
 // '      <button class="link-secondary button-clear trigger-flyout" data-target="sort-columns"><span class="combo-sort-icon link-icon"><i class="fal fa-long-arrow-up"></i><i class="fal fa-long-arrow-down"></i></span></i>Sort Columns</button>' +
 '    </div>' +
 '  </div>'
-  ;
-	
+    ;
   const content_html =
 '    <div class="panel-content panel-columns sortable-columns">' +
 '      <div class="panel-column active">' +
@@ -122,6 +123,7 @@ function init_columns(id, columns, current) {
     });
     
     let $flyout = $(flyout_html);
+    let $links = $(links_html);
     let $content = $(content_html);
     let $visible = $content.find('#visible-columns');
     let $available = $content.find('#available-columns');
@@ -130,6 +132,7 @@ function init_columns(id, columns, current) {
     updateVisibleAvailableColumns(columns, current, $visible, $available);
 
     $flyout.append($content);
+    $flyout.append($links);
     $wrapper.append($flyout);
 
     table.parent().find(".function_bar").append($wrapper);
@@ -189,6 +192,7 @@ function updateVisibleAvailableColumns(columns, current, $visible, $available) {
   let unmovable_below = false;
   let has_movable = false;
   let cols_copy = Object.assign({}, columns);
+  let tabIndex = "-1";
 
   $visible.empty();
   $available.empty();
@@ -209,22 +213,24 @@ function updateVisibleAvailableColumns(columns, current, $visible, $available) {
 	}
 	classes = "unsortable rule-above";
 	unmovable_below = true;
+    tabIndex = "-1";
       }
     } else {
       classes = "ui-sortable-handle";
       has_movable = true;
+      tabIndex = "0";
     }
-    $visible.append($('<li></li>', {"class": classes, "id": col}).text(name));
+    $visible.append($('<li></li>', {"tabindex": tabIndex, "class": classes, "id": col}).text(name));
     delete cols_copy[col];
   }
   for (const col in cols_copy) {
-    $available.append($('<li></li>', {"class": "ui-sortable-handle", "id": col}).text(cols_copy[col].name));
+    $available.append($('<li tabindex="0"></li>', {"class": "ui-sortable-handle", "id": col}).text(cols_copy[col].name));
   }
 }
 
 function updateColumnsFlyout(parent) {
   parent.find(".sortable-columns .column-content").each(function() {
-    var e = Math.round($(this).parent(".panel-column").outerHeight() - $(this).prev(".column-header").outerHeight());
+    var e = Math.round($(this).parent(".panel-column").outerHeight() - $(this).prev(".column-header").outerHeight() - 30);
     $(this).css("height", e);
   });
 }
