@@ -40,7 +40,7 @@ function addSearchServer(id) {
             updatePage(id, 0, $('#'+id).data('currentPageSize'),-1, false, $('#'+id).data('params'), value);
         }, TIMEOUT_MS);
     });
-    $('#'+id).parent().find(".function_bar").append(searchbar);
+    $('#'+id).parent().find(".function_bar").prepend(searchbar);
 }
 
 function removeSearch(id) {

@@ -2,7 +2,7 @@ function init_columns(id, columns, current) {
   const table = $('#'+id);
   const wrapper_html =
 '<div class="select_columns">' +
-'  <div class="function_button select_button flyout-button">' +
+'  <button class="function_button select_button flyout-button">' +
 '    <i class="fas fa-table button-label button-icon" aria-hidden="true">'
   ;
   const flyout_html =
@@ -57,10 +57,24 @@ function init_columns(id, columns, current) {
   $(document).ready(function(){
     let $wrapper = $(wrapper_html);
 
+    table.parent().find(".flyout-panel").css("visibility", "hidden");
     table.parent().on('click', ".select_button, .select_columns .close-flyout", function(event){
       event.stopPropagation();
       event.stopImmediatePropagation();
-      table.parent().find(".select_columns").toggleClass("open");
+
+      let selectColumns = table.parent().find(".select_columns");
+      let flyout = table.parent().find(".flyout-panel");
+
+      if (selectColumns.hasClass("open")) {
+          selectColumns.removeClass("open");
+          selectColumns.one('transitionend', function() {
+              flyout.css("visibility", "hidden");
+          });
+      } else {
+          selectColumns.addClass("open");
+          flyout.css("visibility", "visible");
+      }
+
     });
 
     table.parent().on('click', ".restore-defaults", function(event){

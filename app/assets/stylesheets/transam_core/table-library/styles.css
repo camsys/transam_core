@@ -633,7 +633,7 @@
 
 .include_disposed {
     position: relative;
-    float: right;
+    float: left;
     padding-right: 1rem;
     padding-top: 0.5rem;
 }
@@ -642,7 +642,7 @@
     position: relative;
     border: 1px solid var(--blue-light);
     border-radius: 0.5rem;
-    float: right;
+    float: left;
     background-color: var(--white);
 }
 
@@ -665,11 +665,11 @@
 }
 
 .export {
-    float: right;
+    float: left;
 }
 
 .export, .select_columns {
-    float: right;
+    float: left;
 }
 
 .function_button {

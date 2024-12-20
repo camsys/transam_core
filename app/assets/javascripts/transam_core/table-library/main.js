@@ -87,7 +87,7 @@ $("table[use]").ready(()=>{
 	      updatePage_help(id, table.data("currentPage"), table.data('currentPageSize'));
 	    });
 
-	    $('#'+id).parent().find(".function_bar").append(disposedCheckbox);
+	    $('#'+id).parent().find(".function_bar").prepend(disposedCheckbox);
 	  }
         }
     });
@@ -186,8 +186,8 @@ async function initialize(id, columns, selected, curPage, curPageSize, pageSizes
     $('#'+id).append($("<tbody>"));
     if(side === 'server') {
         pagination(id, curPage, curPageSize, pageSizes, -1);
-        init_export(id, export_types);
         init_columns(id, columns, selected);
+        init_export(id, export_types);
         // clear_row_queue(id);
         updatePage(id, curPage, curPageSize, -1, false, params);
         applyIcons($('#'+id).find('.header'));
