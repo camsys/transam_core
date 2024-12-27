@@ -58,7 +58,6 @@ function init_columns(id, columns, current) {
   $(document).ready(function(){
     let $wrapper = $(wrapper_html);
 
-    table.parent().find(".flyout-panel").css("visibility", "hidden");
     table.parent().on('click', ".select_button, .select_columns .close-flyout", function(event){
       event.stopPropagation();
       event.stopImmediatePropagation();
@@ -174,6 +173,8 @@ function init_columns(id, columns, current) {
 	sendEventToAnalytics(table.data('tableCode'), 'update', columns.split(','));
       }
     });
+
+    table.parent().find(".flyout-panel").css("visibility", "hidden");
 
     table.parent().on('keyup', '.search', function(e) {
       let value = $(this).val().toLowerCase();
