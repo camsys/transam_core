@@ -142,39 +142,21 @@ $("table[use]").ready(()=>{
         // }
     });
 
-    $(document).on('click', '.header-checkbox input[type="checkbox"]:checked', function(){
+    $(document).on('change', '.header-checkbox input[type="checkbox"]', function(){
         let table = $(this).closest('.library-table').find("table").eq(0);
         const id = $(table).attr('id');
-        window[id].selectAll = true;
         window[id].stickySelect = false;
-        table.find('.table-row:not(.row-checked) .cell-checkbox input').click();
-        window[id].uncheckedRows = {};
+        if ($(this).is(":checked")) {
+            window[id].selectAll = true;
+            table.find('.table-row .cell-checkbox input:not(:checked)').click();
+            window[id].uncheckedRows = {};
+        } else {
+            window[id].selectAll = false;
+            table.find('.table-row .cell-checkbox input:checked').click();
+            window[id].checkedRows = {};
+        }
     });
-    $(document).on('click', '.header-checkbox input[type="checkbox"]:not(:checked)', function(){
-        let table = $(this).closest('.library-table').find("table").eq(0);
-        const id = $(table).attr('id');
-        window[id].selectAll = false;
-        window[id].stickySelect = false;
-        table.find('.table-row.row-checked .cell-checkbox input').click();
-        window[id].checkedRows = {};
-    });
-    // $(document).on('click', '.header-checkbox input[type="checkbox"]:checked', function(){
-    //     let table = $(this).closest('.library-table').find("table").eq(0);
-    //     table.find('.table-row:not(.row-checked))').each(function(){
-    //         $(this).addClass("row-checked").find(".cell-checkbox label input").prop("checked", true);
-    //         let flat = {};
-    //         const row = $(this);
-    //         const columns = $(table).find(".header-item:not(.header-checkbox) .header-text");
-    //         $(row).find(".cell-text").each(function(index){
-    //             flat[$(columns[index]).text()] = $(this).text();
-    //         });
-    //         window[id].checkedRows[row.attr("index")] = flat;
-    //     });
-    // });
-    // $(document).on('click', '.header-checkbox input[type="checkbox"]:not(:checked)', function(){
-    //     let table = $(this).closest('.library-table').find("table").eq(0);
-    //     table.find('.table-row.row-checked').removeClass("row-checked").find(".cell-checkbox label input").prop("checked", false);
-    // });
+
     $(".custom-drilldown-content").hover((e)=>{e.stopPropagation();});
 });
 
@@ -221,7 +203,9 @@ function updateHeader(id, selected, sort){
     let table = $("#" + id);
     let header = $('<tr>').addClass("header");
     let colgroup = $('<colgroup>');
-    header.append($('<th>').addClass("header-item header-checkbox").append($('<label>').append($('<input>').attr('type', "checkbox").addClass("header-checkbox").prop('checked', window[id].selectAll && !window[id].stickySelect)).append($('<span>').addClass('fa-stack').append($('<i class="fad fa-square fa-stack-1x" aria-hidden="true"></i>')).append($('<i class="fas fa-check-square fa-stack-1x" aria-hidden="true"></i>')))));
+    let checkbox_html = '<input type="checkbox" class="header-checkbox">';
+
+    header.append($('<th>').addClass("header-item header-checkbox").append($(checkbox_html).prop('checked', window[id].selectAll && !window[id].stickySelect)));
     colgroup.append($('<col>').addClass('col-item').attr('style', 'width: 32px'));
     // let sort_select = $('<div>');
     for (let col of selected){
@@ -322,8 +306,8 @@ function add_row_exec(id, vals, index) {
   if(!($('#' + id + " .table-row[index=" + index + ']').length > 0)){
     let index_str = index.toString();
     let row = $('<tr>').addClass('table-row').attr("index", index.toString()).attr("id", index_str);
-        let checkbox = $('<td>').addClass("cell-checkbox").append($('<label>').append($('<input>').attr('type', "checkbox")).append($('<span>').addClass('fa-stack').append($('<i class="fad fa-square fa-stack-1x" aria-hidden="true"></i>')).append($('<i class="fas fa-check-square fa-stack-1x" aria-hidden="true"></i>'))));
-        
+      let checkbox = $('<td>').addClass("cell-checkbox").append($('<input>').attr('type', "checkbox"));
+
         // i've accepted that for the forseeable future we're using window variables
         let s_cols = window[id].col_selected;
         let col_names = window[id].col_names;

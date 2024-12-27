@@ -153,8 +153,8 @@
 }
 
 .cell-checkbox input, .header-checkbox input {
-    opacity: 0;
-    display: none;
+    /* opacity: 0; */
+    /* display: none; */
 }
 
 .cell-checkbox label {
