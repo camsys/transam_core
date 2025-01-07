@@ -177,6 +177,8 @@ function init_columns(id, columns, current) {
     table.parent().find(".manage-columns-list").on('keydown', function(e) {
       let activeItem = $(document.activeElement);
       let itemMoved = false;
+      let visible = activeItem.closest('.panel-columns').find('#visible-columns');
+      let available = activeItem.closest('.panel-columns').find('#available-columns');
 
       switch (e.key) {
         case "ArrowUp":
@@ -195,9 +197,18 @@ function init_columns(id, columns, current) {
           break;
 
         case "ArrowLeft":
+          if ($.contains(available[0], activeItem[0])) {
+            visible.find('li:not(.unsortable)').first().before(activeItem);
+            itemMoved = true;
+          }
+          break;
+
         case "ArrowRight":
-          let visible = activeItem.closest('.panel-columns').find('#visible-columns');
-          let available = activeItem.closest('.panel-columns').find('#available-columns');
+          if ($.contains(visible[0], activeItem[0])) {
+            available.find('li:not(.unsortable)').first().before(activeItem);
+            itemMoved = true;
+          }
+          break;
 
           
       }
@@ -261,7 +272,7 @@ function updateVisibleAvailableColumns(columns, current, $visible, $available) {
     delete cols_copy[col];
   }
   for (const col in cols_copy) {
-    $available.append($('<li tabindex="0"></li>', {"class": "ui-sortable-handle", "id": col}).text(cols_copy[col].name));
+    $available.append($('<li></li>', {"tabindex": "0", "class": "ui-sortable-handle", "id": col}).text(cols_copy[col].name));
   }
 }
 
