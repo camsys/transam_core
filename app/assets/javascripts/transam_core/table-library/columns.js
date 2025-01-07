@@ -174,6 +174,42 @@ function init_columns(id, columns, current) {
       }
     });
 
+    table.parent().find(".manage-columns-list").on('keydown', function(e) {
+      let activeItem = $(document.activeElement);
+      let itemMoved = false;
+
+      switch (e.key) {
+        case "ArrowUp":
+          let prevItem = activeItem.prev();
+          if (prevItem.length && !prevItem.hasClass('unsortable')) {
+            activeItem.insertBefore(prevItem);
+            itemMoved = true;
+          }
+          break;
+        case "ArrowDown":
+          let nextItem = activeItem.next();
+          if (nextItem.length && !nextItem.hasClass('unsortable')) {
+            activeItem.insertAfter(nextItem);
+            itemMoved = true;
+          }
+          break;
+
+        case "ArrowLeft":
+        case "ArrowRight":
+          let visible = activeItem.closest('.panel-columns').find('#visible-columns');
+          let available = activeItem.closest('.panel-columns').find('#available-columns');
+
+          
+      }
+      activeItem.focus();
+      if (itemMoved) {
+        let columns = activeItem.closest('.panel-columns').find('#visible-columns li:not(.target-placeholder)').map(function() {return this.id;}).get().join();
+        updatePage(id, 0, table.data('currentPageSize'), $('#' + id).find('.table-row').length, ($('.table-row.search-result').length > 0), {}, "", columns);
+
+        sendEventToAnalytics(table.data('tableCode'), 'update', columns.split(','));
+      }
+    });
+
     table.parent().find(".flyout-panel").css("visibility", "hidden");
 
     table.parent().on('keyup', '.search', function(e) {
