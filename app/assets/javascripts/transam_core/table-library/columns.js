@@ -2,7 +2,7 @@ function init_columns(id, columns, current) {
   const table = $('#'+id);
   const wrapper_html =
 '<div class="select_columns">' +
-'  <button class="function_button select_button flyout-button">' +
+'  <button class="function_button select_button flyout-button" title="Manage columns">' +
 '    <i class="fas fa-table button-label button-icon" aria-hidden="true">'
   ;
   const flyout_html =

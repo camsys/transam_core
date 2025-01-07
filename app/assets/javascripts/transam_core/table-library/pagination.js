@@ -87,12 +87,12 @@ function pagination(id, curPage, curPageSize, pageSizes) {
 
     let pageSelectWrapper = $('<div>').addClass("page-select-wrapper");
     let pageSelect = $('<div>').addClass("page-select");
-    pageSelectWrapper.append($('<button>').addClass("page-select-arrow-left table-button").append($('<i class="fa fa-angle-left" aria-hidden="true"></i>')));
-    pageSelectWrapper.append($('<button>').addClass("page-select-arrow-left-full table-button").append($('<i class="fa fa-angle-double-left" aria-hidden="true"></i>')));
+    pageSelectWrapper.append($('<button title="Previous page">').addClass("page-select-arrow-left table-button").append($('<i class="fa fa-angle-left" aria-hidden="true"></i>')));
+    pageSelectWrapper.append($('<button title="First page">').addClass("page-select-arrow-left-full table-button").append($('<i class="fa fa-angle-double-left" aria-hidden="true"></i>')));
     pageSelect.append($('<button>').addClass("page-select-item table-button").text("1"));
     pageSelectWrapper.append(pageSelect);
-    pageSelectWrapper.append($('<button>').addClass("page-select-arrow-right-full table-button").append($('<i class="fa fa-angle-double-right" aria-hidden="true"></i>')));
-    pageSelectWrapper.append($('<button>').addClass("page-select-arrow-right table-button").append($('<i class="fa fa-angle-right" aria-hidden="true"></i>')));
+    pageSelectWrapper.append($('<button title="Last page">').addClass("page-select-arrow-right-full table-button").append($('<i class="fa fa-angle-double-right" aria-hidden="true"></i>')));
+    pageSelectWrapper.append($('<button title="Next page">').addClass("page-select-arrow-right table-button").append($('<i class="fa fa-angle-right" aria-hidden="true"></i>')));
 
     footer.append(pageSelectWrapper);
 
