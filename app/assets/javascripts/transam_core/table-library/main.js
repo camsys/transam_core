@@ -211,7 +211,7 @@ function updateHeader(id, selected, sort){
     for (let col of selected){
         try {
             header.append($('<th>').addClass('header-item').attr("code", col).attr("type", col_ts[col])//.attr("order", sort_params[col])
-                    .append($('<button>').addClass('header-content table-header-button')
+                    .append($('<button>').addClass('header-content table-button')
                       .append($('<div>').addClass('header-text').text(cols[col].toString()))
                       .append((col_sortable[col]!=="False")?$('<div>').addClass('header-icons'):$('<div>').addClass("not-sortable"))));
 
@@ -222,7 +222,7 @@ function updateHeader(id, selected, sort){
         } catch (e) {
             try {
                 header.append($('<th>').addClass('header-item').attr("type", "")
-                    .append($('<button>').addClass('header-content table-header-button').text(cols[col].toString())
+                    .append($('<button>').addClass('header-content table-button').text(cols[col].toString())
                       .append($('<div>').addClass('header-text').text(cols[col].toString()))
                       .append((col_sortable[col]!=="False")?$('<div>').addClass('header-icons'):$('<div>').addClass("not-sortable"))));  
             } catch(e) {
