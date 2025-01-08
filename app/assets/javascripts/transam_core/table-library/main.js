@@ -190,7 +190,7 @@ async function initialize(id, columns, selected, curPage, curPageSize, pageSizes
 }
 
 
-function updateHeader(id, selected, sort){
+function updateHeader(id, selected, sort, focus = false){
   const cols = window[id].col_names;
   const col_ts = window[id].col_types;
   const col_ws = window[id].col_widths;
@@ -209,22 +209,19 @@ function updateHeader(id, selected, sort){
     colgroup.append($('<col>').addClass('col-item').attr('style', 'width: 32px'));
     // let sort_select = $('<div>');
     for (let col of selected){
+        let button = $('<button>').addClass('header-content table-button')
+          .append($('<div>').addClass('header-text').text(cols[col].toString()))
+          .append((col_sortable[col]!=="False")?$('<div>').addClass('header-icons'):$('<div>').addClass("not-sortable"));
+
         try {
-            header.append($('<th>').addClass('header-item').attr("code", col).attr("type", col_ts[col])//.attr("order", sort_params[col])
-                    .append($('<button>').addClass('header-content table-button')
-                      .append($('<div>').addClass('header-text').text(cols[col].toString()))
-                      .append((col_sortable[col]!=="False")?$('<div>').addClass('header-icons'):$('<div>').addClass("not-sortable"))));
+            header.append($('<th>').addClass('header-item').attr("code", col).attr("type", col_ts[col]).append(button));
 
             colgroup.append(
                 $('<col>').addClass('col-item').css("width", col_ws[col]));
             $("#" + id + " .table-row>:nth-child(" +  ($("[type|='" + col_ts[col] + "']").eq(0).index()+1) + ")").addClass(col_ts[col]);
-
         } catch (e) {
             try {
-                header.append($('<th>').addClass('header-item').attr("type", "")
-                    .append($('<button>').addClass('header-content table-button').text(cols[col].toString())
-                      .append($('<div>').addClass('header-text').text(cols[col].toString()))
-                      .append((col_sortable[col]!=="False")?$('<div>').addClass('header-icons'):$('<div>').addClass("not-sortable"))));  
+                header.append($('<th>').addClass('header-item').attr("type", "").append(button));
             } catch(e) {
                 console.log("Bad column name in selected?", e);
                 continue;
@@ -246,25 +243,31 @@ function updateHeader(id, selected, sort){
         let col = Object.keys(sort_params[0])[0];
         header.find('.header-item[code='+ col +']').attr("order", sort_params[0][col]);
     }
-    applyIcons(header);
+    let focusButton = applyIcons(header);
     table.prepend($('<thead>').append(header)).prepend(colgroup);
     // table.parent().append(sort_select);
     let navbarHeight = $(".navbar-fixed-top")[0].clientHeight;
     $(".header-item").css({top: `${navbarHeight}px`});
+
+    if (focus && focusButton) focusButton.focus();
 }
 
 function applyIcons(header) {
+    let sortedButton = false;
+
     $(header).children().each((i,cell)=>{
         if ($(cell).attr("order") === "ascending") {
           $(cell).removeClass("sorted-desc").addClass("sorted sorted-asc");
           $(cell).find(".header-icons").empty().append($('<span>').addClass("sort icon")
                                   .append($('<i>').addClass("fad fa-sort-amount-down-alt sorted asc"))
                                   .append($('<i>').addClass("fad fa-sort-amount-up sorted desc")));
+          sortedButton = $(cell).find("button");
         } else if ($(cell).attr("order") === "descending") {
           $(cell).removeClass("sorted-asc").addClass("sorted sorted-desc");
           $(cell).find(".header-icons").empty().append($('<span>').addClass("sort icon")
                                   .append($('<i>').addClass("fad fa-sort-amount-down-alt sorted asc"))
                                   .append($('<i>').addClass("fad fa-sort-amount-up sorted desc")));
+          sortedButton = $(cell).find("button");
         } else {
           $(cell).removeClass("sorted sorted-desc sorted-asc").addClass("unsorted");
           $(cell).find(".header-icons").empty().append($('<span>').addClass("sort icon")
@@ -272,8 +275,7 @@ function applyIcons(header) {
                                   .append($('<i>').addClass("fas fa-long-arrow-alt-down")));
         }
     });
-
-
+    return sortedButton;
 }
 
 function clear_row_queue(id){
@@ -419,7 +421,7 @@ function updateRow(data, row, selectedCols, colTypes) {
   row.append(action_td);
 }
   
-async function serverSide(id, url, curPage, curPageSize, params, search="", sort_by={}) {
+async function serverSide(id, url, curPage, curPageSize, params, search="", sort_by={}, headerFocus = false) {
         $('#'+id).addClass('loading');
         let response = {};
         let data = {'page': curPage, 'page_size': curPageSize, 'search': search};
@@ -450,7 +452,7 @@ async function serverSide(id, url, curPage, curPageSize, params, search="", sort
                     try {
                       r_columns = Object.keys(r['rows'][0]); 
                       window[id].col_selected = r_columns;
-                      updateHeader(id, r_columns, "server");
+                      updateHeader(id, r_columns, "server", headerFocus);
                     } 
                     catch (e) {
                     updateHeader(id, window[id].col_selected, "server");

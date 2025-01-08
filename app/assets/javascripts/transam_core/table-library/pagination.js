@@ -110,7 +110,7 @@ function updatePage_help(id, curPage, curPageSize, clientSearch=false){
 }
 
 
-async function updatePage(id, curPage, curPageSize, total, clientSearch=false, params={}, searchContent="", columns=""){
+async function updatePage(id, curPage, curPageSize, total, clientSearch=false, params={}, searchContent="", columns="", headerFocus = false){
     let serv = $('#'+id).data('side') === 'server';
 
     if(serv){
@@ -119,7 +119,7 @@ async function updatePage(id, curPage, curPageSize, total, clientSearch=false, p
       
         searchContent = $('#'+id).siblings(".function_bar").find(".searchbar").val();
         try {
-            total = await serverSide(id, $('#'+id).data('url'), curPage, curPageSize, params, searchContent, window[id].sort_params);
+            total = await serverSide(id, $('#'+id).data('url'), curPage, curPageSize, params, searchContent, window[id].sort_params, headerFocus);
         } catch (e) {
             console.log("aborted request");
         }
