@@ -518,6 +518,7 @@
     margin-left: 0.75em;
     position: absolute;
     top: 6.75em;
+    padding: 0;
 }
 
 .page-size-option-wrapper {
@@ -553,6 +554,7 @@
     margin: auto;
     width: 66%;
     font-weight: 600;
+    padding: 0;
 }
 
 
