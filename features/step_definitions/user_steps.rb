@@ -69,10 +69,10 @@ When(/^"(.*?)" logs in using invalid user data$/) do |email|
   sign_in(email, "Welcome2")
 end
 
-When(/^I fill out the forgotten password form with "(.*?)"$/) do |email|
-  fill_in "user_email", :with => email
-  click_button "Send me reset password instructions"
-end
+# When(/^I fill out the forgotten password form with "(.*?)"$/) do |email|
+#   fill_in "user_email", :with => email
+#   click_button "Send me reset password instructions"
+# end
 
 When(/^The user logs out$/) do
   sign_out

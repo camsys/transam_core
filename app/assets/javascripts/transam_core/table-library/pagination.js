@@ -76,9 +76,9 @@ function pagination(id, curPage, curPageSize, pageSizes) {
     let dropdown = $('<div>').addClass("page-size-dropdown");
     let options = $('<div>').addClass("page-size-option-wrapper");
     for(let size of pageSizes) {
-        options.append($('<div>').addClass("page-size-option").text(size));
+        options.append($('<button>').addClass("page-size-option table-button").text(size));
     }
-    dropdown.append(options).append($('<div>').addClass("page-size-current").text(curPageSize));
+    dropdown.append($('<button>').addClass("page-size-current table-button").text(curPageSize)).append(options);
     sizeSelect.append(dropdown);
     footer.append(sizeSelect);
 
@@ -87,12 +87,12 @@ function pagination(id, curPage, curPageSize, pageSizes) {
 
     let pageSelectWrapper = $('<div>').addClass("page-select-wrapper");
     let pageSelect = $('<div>').addClass("page-select");
-    pageSelectWrapper.append($('<div>').addClass("page-select-arrow-left").append($('<i class="fa fa-angle-left" aria-hidden="true"></i>')));
-    pageSelectWrapper.append($('<div>').addClass("page-select-arrow-left-full").append($('<i class="fa fa-angle-double-left" aria-hidden="true"></i>')));
-    pageSelect.append($('<span>').addClass("page-select-item").text("1"));
+    pageSelectWrapper.append($('<button title="Previous page">').addClass("page-select-arrow-left table-button").append($('<i class="fa fa-angle-left" aria-hidden="true"></i>')));
+    pageSelectWrapper.append($('<button title="First page">').addClass("page-select-arrow-left-full table-button").append($('<i class="fa fa-angle-double-left" aria-hidden="true"></i>')));
+    pageSelect.append($('<button>').addClass("page-select-item table-button").text("1"));
     pageSelectWrapper.append(pageSelect);
-    pageSelectWrapper.append($('<div>').addClass("page-select-arrow-right-full").append($('<i class="fa fa-angle-double-right" aria-hidden="true"></i>')));
-    pageSelectWrapper.append($('<div>').addClass("page-select-arrow-right").append($('<i class="fa fa-angle-right" aria-hidden="true"></i>')));
+    pageSelectWrapper.append($('<button title="Last page">').addClass("page-select-arrow-right-full table-button").append($('<i class="fa fa-angle-double-right" aria-hidden="true"></i>')));
+    pageSelectWrapper.append($('<button title="Next page">').addClass("page-select-arrow-right table-button").append($('<i class="fa fa-angle-right" aria-hidden="true"></i>')));
 
     footer.append(pageSelectWrapper);
 
@@ -110,7 +110,7 @@ function updatePage_help(id, curPage, curPageSize, clientSearch=false){
 }
 
 
-async function updatePage(id, curPage, curPageSize, total, clientSearch=false, params={}, searchContent="", columns=""){
+async function updatePage(id, curPage, curPageSize, total, clientSearch=false, params={}, searchContent="", columns="", headerFocus = false){
     let serv = $('#'+id).data('side') === 'server';
 
     if(serv){
@@ -119,7 +119,7 @@ async function updatePage(id, curPage, curPageSize, total, clientSearch=false, p
       
         searchContent = $('#'+id).siblings(".function_bar").find(".searchbar").val();
         try {
-            total = await serverSide(id, $('#'+id).data('url'), curPage, curPageSize, params, searchContent, window[id].sort_params);
+            total = await serverSide(id, $('#'+id).data('url'), curPage, curPageSize, params, searchContent, window[id].sort_params, headerFocus);
         } catch (e) {
             console.log("aborted request");
         }
@@ -204,7 +204,7 @@ function updatePageSelect(elem, curPage, curPageSize, total, clientSearch) {
     let last = elem.find('.page-select-item').last().index();
     if(last * curPageSize < total){
         for(let i = 1; (i+last)*curPageSize<total; i++){
-            elem.append($('<span>').addClass("page-select-item").text(i+last+1));
+            elem.append($('<button>').addClass("page-select-item table-button").text(i+last+1));
         }
     } else if(last * curPageSize > total) {
         for(let j=last; j*curPageSize>total; j--){
@@ -218,15 +218,16 @@ function updatePageSelect(elem, curPage, curPageSize, total, clientSearch) {
 
 
     elem.find('.page-select-item').removeClass("page-selected").eq(curPage).addClass("page-selected");
-    elem.parent().find(".page-select-arrow-left,.page-select-arrow-right,.page-select-arrow-left-full,.page-select-arrow-right-full").css({"opacity": 0, "pointer-events": "none"});
+    elem.parent().find(".page-select-arrow-left,.page-select-arrow-right,.page-select-arrow-left-full,.page-select-arrow-right-full")
+        .css({"opacity": 0, "pointer-events": "none"}).attr('tabindex', -1);
     
     let cur = elem.find(".page-selected").index();
     last = elem.find('.page-select-item').last().index();
     if(cur != 0) {
-        $(".page-select-arrow-left,.page-select-arrow-left-full").css({"opacity": 1, "pointer-events": "auto"});
+        $(".page-select-arrow-left,.page-select-arrow-left-full").css({"opacity": 1, "pointer-events": "auto"}).attr('tabindex', 0);
     }
     if(cur != last) {
-        $(".page-select-arrow-right,.page-select-arrow-right-full").css({"opacity": 1, "pointer-events": "auto"});
+        $(".page-select-arrow-right,.page-select-arrow-right-full").css({"opacity": 1, "pointer-events": "auto"}).attr('tabindex', 0);
     }
 
     if(elem.find('.page-select-item').length > 5) {

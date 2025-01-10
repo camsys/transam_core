@@ -87,7 +87,7 @@ $("table[use]").ready(()=>{
 	      updatePage_help(id, table.data("currentPage"), table.data('currentPageSize'));
 	    });
 
-	    $('#'+id).parent().find(".function_bar").append(disposedCheckbox);
+	    $('#'+id).parent().find(".function_bar").prepend(disposedCheckbox);
 	  }
         }
     });
@@ -142,39 +142,21 @@ $("table[use]").ready(()=>{
         // }
     });
 
-    $(document).on('click', '.header-checkbox input[type="checkbox"]:checked', function(){
+    $(document).on('change', '.header-checkbox input[type="checkbox"]', function(){
         let table = $(this).closest('.library-table').find("table").eq(0);
         const id = $(table).attr('id');
-        window[id].selectAll = true;
         window[id].stickySelect = false;
-        table.find('.table-row:not(.row-checked) .cell-checkbox input').click();
-        window[id].uncheckedRows = {};
+        if ($(this).is(":checked")) {
+            window[id].selectAll = true;
+            table.find('.table-row .cell-checkbox input:not(:checked)').click();
+            window[id].uncheckedRows = {};
+        } else {
+            window[id].selectAll = false;
+            table.find('.table-row .cell-checkbox input:checked').click();
+            window[id].checkedRows = {};
+        }
     });
-    $(document).on('click', '.header-checkbox input[type="checkbox"]:not(:checked)', function(){
-        let table = $(this).closest('.library-table').find("table").eq(0);
-        const id = $(table).attr('id');
-        window[id].selectAll = false;
-        window[id].stickySelect = false;
-        table.find('.table-row.row-checked .cell-checkbox input').click();
-        window[id].checkedRows = {};
-    });
-    // $(document).on('click', '.header-checkbox input[type="checkbox"]:checked', function(){
-    //     let table = $(this).closest('.library-table').find("table").eq(0);
-    //     table.find('.table-row:not(.row-checked))').each(function(){
-    //         $(this).addClass("row-checked").find(".cell-checkbox label input").prop("checked", true);
-    //         let flat = {};
-    //         const row = $(this);
-    //         const columns = $(table).find(".header-item:not(.header-checkbox) .header-text");
-    //         $(row).find(".cell-text").each(function(index){
-    //             flat[$(columns[index]).text()] = $(this).text();
-    //         });
-    //         window[id].checkedRows[row.attr("index")] = flat;
-    //     });
-    // });
-    // $(document).on('click', '.header-checkbox input[type="checkbox"]:not(:checked)', function(){
-    //     let table = $(this).closest('.library-table').find("table").eq(0);
-    //     table.find('.table-row.row-checked').removeClass("row-checked").find(".cell-checkbox label input").prop("checked", false);
-    // });
+
     $(".custom-drilldown-content").hover((e)=>{e.stopPropagation();});
 });
 
@@ -186,8 +168,8 @@ async function initialize(id, columns, selected, curPage, curPageSize, pageSizes
     $('#'+id).append($("<tbody>"));
     if(side === 'server') {
         pagination(id, curPage, curPageSize, pageSizes, -1);
-        init_export(id, export_types);
         init_columns(id, columns, selected);
+        init_export(id, export_types);
         // clear_row_queue(id);
         updatePage(id, curPage, curPageSize, -1, false, params);
         applyIcons($('#'+id).find('.header'));
@@ -208,7 +190,7 @@ async function initialize(id, columns, selected, curPage, curPageSize, pageSizes
 }
 
 
-function updateHeader(id, selected, sort){
+function updateHeader(id, selected, sort, focus = false){
   const cols = window[id].col_names;
   const col_ts = window[id].col_types;
   const col_ws = window[id].col_widths;
@@ -221,26 +203,25 @@ function updateHeader(id, selected, sort){
     let table = $("#" + id);
     let header = $('<tr>').addClass("header");
     let colgroup = $('<colgroup>');
-    header.append($('<th>').addClass("header-item header-checkbox").append($('<label>').append($('<input>').attr('type', "checkbox").addClass("header-checkbox").prop('checked', window[id].selectAll && !window[id].stickySelect)).append($('<span>').addClass('fa-stack').append($('<i class="fad fa-square fa-stack-1x" aria-hidden="true"></i>')).append($('<i class="fas fa-check-square fa-stack-1x" aria-hidden="true"></i>')))));
+    let checkbox_html = '<input type="checkbox" class="header-checkbox">';
+
+    header.append($('<th>').addClass("header-item header-checkbox").append($(checkbox_html).prop('checked', window[id].selectAll && !window[id].stickySelect)));
     colgroup.append($('<col>').addClass('col-item').attr('style', 'width: 32px'));
     // let sort_select = $('<div>');
     for (let col of selected){
+        let button = $('<button>').addClass('header-content table-button')
+          .append($('<div>').addClass('header-text').text(cols[col].toString()))
+          .append((col_sortable[col]!=="False")?$('<div>').addClass('header-icons'):$('<div>').addClass("not-sortable"));
+
         try {
-            header.append($('<th>').addClass('header-item').attr("code", col).attr("type", col_ts[col])//.attr("order", sort_params[col])
-                    .append($('<div>').addClass('header-content')
-                      .append($('<div>').addClass('header-text').text(cols[col].toString()))
-                      .append((col_sortable[col]!=="False")?$('<div>').addClass('header-icons'):$('<div>').addClass("not-sortable"))));
+            header.append($('<th>').addClass('header-item').attr("code", col).attr("type", col_ts[col]).append(button));
 
             colgroup.append(
                 $('<col>').addClass('col-item').css("width", col_ws[col]));
             $("#" + id + " .table-row>:nth-child(" +  ($("[type|='" + col_ts[col] + "']").eq(0).index()+1) + ")").addClass(col_ts[col]);
-
         } catch (e) {
             try {
-                header.append($('<th>').addClass('header-item').attr("type", "")
-                    .append($('<div>').addClass('header-content').text(cols[col].toString())
-                      .append($('<div>').addClass('header-text').text(cols[col].toString()))
-                      .append((col_sortable[col]!=="False")?$('<div>').addClass('header-icons'):$('<div>').addClass("not-sortable"))));  
+                header.append($('<th>').addClass('header-item').attr("type", "").append(button));
             } catch(e) {
                 console.log("Bad column name in selected?", e);
                 continue;
@@ -262,25 +243,31 @@ function updateHeader(id, selected, sort){
         let col = Object.keys(sort_params[0])[0];
         header.find('.header-item[code='+ col +']').attr("order", sort_params[0][col]);
     }
-    applyIcons(header);
+    let focusButton = applyIcons(header);
     table.prepend($('<thead>').append(header)).prepend(colgroup);
     // table.parent().append(sort_select);
     let navbarHeight = $(".navbar-fixed-top")[0].clientHeight;
     $(".header-item").css({top: `${navbarHeight}px`});
+
+    if (focus && focusButton) focusButton.focus();
 }
 
 function applyIcons(header) {
+    let sortedButton = false;
+
     $(header).children().each((i,cell)=>{
         if ($(cell).attr("order") === "ascending") {
           $(cell).removeClass("sorted-desc").addClass("sorted sorted-asc");
           $(cell).find(".header-icons").empty().append($('<span>').addClass("sort icon")
                                   .append($('<i>').addClass("fad fa-sort-amount-down-alt sorted asc"))
                                   .append($('<i>').addClass("fad fa-sort-amount-up sorted desc")));
+          sortedButton = $(cell).find("button");
         } else if ($(cell).attr("order") === "descending") {
           $(cell).removeClass("sorted-asc").addClass("sorted sorted-desc");
           $(cell).find(".header-icons").empty().append($('<span>').addClass("sort icon")
                                   .append($('<i>').addClass("fad fa-sort-amount-down-alt sorted asc"))
                                   .append($('<i>').addClass("fad fa-sort-amount-up sorted desc")));
+          sortedButton = $(cell).find("button");
         } else {
           $(cell).removeClass("sorted sorted-desc sorted-asc").addClass("unsorted");
           $(cell).find(".header-icons").empty().append($('<span>').addClass("sort icon")
@@ -288,8 +275,7 @@ function applyIcons(header) {
                                   .append($('<i>').addClass("fas fa-long-arrow-alt-down")));
         }
     });
-
-
+    return sortedButton;
 }
 
 function clear_row_queue(id){
@@ -322,8 +308,8 @@ function add_row_exec(id, vals, index) {
   if(!($('#' + id + " .table-row[index=" + index + ']').length > 0)){
     let index_str = index.toString();
     let row = $('<tr>').addClass('table-row').attr("index", index.toString()).attr("id", index_str);
-        let checkbox = $('<td>').addClass("cell-checkbox").append($('<label>').append($('<input>').attr('type', "checkbox")).append($('<span>').addClass('fa-stack').append($('<i class="fad fa-square fa-stack-1x" aria-hidden="true"></i>')).append($('<i class="fas fa-check-square fa-stack-1x" aria-hidden="true"></i>'))));
-        
+      let checkbox = $('<td>').addClass("cell-checkbox").append($('<input>').attr('type', "checkbox"));
+
         // i've accepted that for the forseeable future we're using window variables
         let s_cols = window[id].col_selected;
         let col_names = window[id].col_names;
@@ -435,7 +421,7 @@ function updateRow(data, row, selectedCols, colTypes) {
   row.append(action_td);
 }
   
-async function serverSide(id, url, curPage, curPageSize, params, search="", sort_by={}) {
+async function serverSide(id, url, curPage, curPageSize, params, search="", sort_by={}, headerFocus = false) {
         $('#'+id).addClass('loading');
         let response = {};
         let data = {'page': curPage, 'page_size': curPageSize, 'search': search};
@@ -466,7 +452,7 @@ async function serverSide(id, url, curPage, curPageSize, params, search="", sort
                     try {
                       r_columns = Object.keys(r['rows'][0]); 
                       window[id].col_selected = r_columns;
-                      updateHeader(id, r_columns, "server");
+                      updateHeader(id, r_columns, "server", headerFocus);
                     } 
                     catch (e) {
                     updateHeader(id, window[id].col_selected, "server");

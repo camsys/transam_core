@@ -157,7 +157,7 @@ function init_export(id, types) {
   const table = $('#'+id);
   $(document).ready(function(){
     let wrapper = $('<div class="export">');
-    let button = $('<div class=" function_button export_button">').append('<i class="fas fa-file-download button-label button-icon" aria-hidden="true">');
+    let button = $('<button class=" function_button export_button" title="Export">').append('<i class="fas fa-file-download button-label button-icon" aria-hidden="true">');
     let options = $('<div class="export_options">');
     let selected_rows_checkbox = $('<div class="selected_rows_checkbox_wrapper">').append($('<input type="checkbox" class="selected_rows_checkbox" id="' + id + '_export_checkbox">')).append($('<label class="selected_rows_checkbox_label" for="' + id + '_export_checkbox">').text("Selected Rows Only"));
     $(document).on('click', ".export", function(event){

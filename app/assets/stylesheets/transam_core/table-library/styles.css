@@ -153,8 +153,8 @@
 }
 
 .cell-checkbox input, .header-checkbox input {
-    opacity: 0;
-    display: none;
+    /* opacity: 0; */
+    /* display: none; */
 }
 
 .cell-checkbox label {
@@ -312,10 +312,10 @@
 
 
 
-
-
-
-
+.table-button {
+    background: transparent;
+    border: none;
+}
 
 .table-row:hover .row-item .cell-text,
 .table-row:hover .cell-checkbox,
@@ -518,6 +518,7 @@
     margin-left: 0.75em;
     position: absolute;
     top: 6.75em;
+    padding: 0;
 }
 
 .page-size-option-wrapper {
@@ -553,6 +554,7 @@
     margin: auto;
     width: 66%;
     font-weight: 600;
+    padding: 0;
 }
 
 
@@ -633,7 +635,7 @@
 
 .include_disposed {
     position: relative;
-    float: right;
+    float: left;
     padding-right: 1rem;
     padding-top: 0.5rem;
 }
@@ -642,7 +644,7 @@
     position: relative;
     border: 1px solid var(--blue-light);
     border-radius: 0.5rem;
-    float: right;
+    float: left;
     background-color: var(--white);
 }
 
@@ -665,11 +667,11 @@
 }
 
 .export {
-    float: right;
+    float: left;
 }
 
 .export, .select_columns {
-    float: right;
+    float: left;
 }
 
 .function_button {

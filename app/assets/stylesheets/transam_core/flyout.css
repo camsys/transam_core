@@ -231,7 +231,7 @@ html {
     position: relative; 
 }
 .flyout-panel .panel-column.active {
-    background-color: #fff; 
+    background-color: #fff;
 }
 .flyout-panel .panel-column .column-header {
     padding: 0.75rem; 
@@ -310,10 +310,10 @@ html {
     display: none; 
 }
 .flyout-panel .sortable-columns .panel-column.active .sortable-columns-list {
-    font-weight: 600; 
+    font-weight: 600;
 }
 .flyout-panel .sortable-columns .panel-column.active .sortable-columns-list li.target-placeholder {
-    background-color: #F6F8FF; 
+    background-color: #F6F8FF;
 }
 .flyout-panel#sort-columns .panel-row.new .formfield-sort-direction {
     display: none; 
@@ -389,6 +389,10 @@ html {
 
 .close-flyout {
     margin: 0px !important;
+}
+.flyout-panel .panel-column .column-search input.search:focus, .close-flyout:focus, .link-secondary:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px hsla(220, 100%, 50%, 80%);
 }
 
 .close.flyout_wrapper {
