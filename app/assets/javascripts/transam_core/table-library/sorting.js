@@ -36,9 +36,9 @@ $(document).ready(function(){
       obj[$(this).attr("code")] = $(this).attr("order");
       window[id].sort_params = [obj];
       if ($(table).find(".search-result").length > 0){
-        updatePage(table.attr('id'), table.data("currentPage"), table.data('currentPageSize'), $('#'+id).find('.table-row.search-result').length, clientSearch, "", window[id].sort_params);
+        updatePage(table.attr('id'), table.data("currentPage"), table.data('currentPageSize'), $('#'+id).find('.table-row.search-result').length, clientSearch, "", window[id].sort_params, "",true);
       } else {
-        updatePage(table.attr('id'), table.data("currentPage"), table.data('currentPageSize'), $('#'+id).find('.table-row').length, false, "", window[id].sort_params);
+        updatePage(table.attr('id'), table.data("currentPage"), table.data('currentPageSize'), $('#'+id).find('.table-row').length, false, "", window[id].sort_params, "",true);
       }
       applyIcons(table.find('.header'));
       window[id].checkedRows = {}; // clear selected rows on sort // TODO: this is a bad idea, but it's the only way to prevent duplicates on export since the row indexs are recalculated on sort
