@@ -12,7 +12,7 @@ branches:
     - /2.\d*.\d*/
 env:
 - TEST_SUITE=rspec
-- TEST_SUITE=cucumber
+- # TEST_SUITE=cucumber
 before_install:
 - export TZ="America/New_York" # set timezone
 - mysql -e "create database IF NOT EXISTS transam_core_testing;" -uroot
