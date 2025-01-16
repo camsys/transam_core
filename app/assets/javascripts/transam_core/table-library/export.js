@@ -168,7 +168,8 @@ function init_export(id, types) {
     options.append($('<div class="export_label">').text("Export Data"));
     options.append(selected_rows_checkbox);
     for(let type of types){
-      options.append($('<a class="export_option">').text(type).prepend('<i class="fas fa-file-download button-label button-icon" aria-hidden="true">'));
+      // include href to make focusable
+      options.append($('<a class="export_option" href="javascript:;">').text(type).prepend('<i class="fas fa-file-download button-label button-icon" aria-hidden="true">'));
     }
     wrapper.append(button).append(options);
     table.parent().find(".function_bar").append(wrapper);
@@ -178,8 +179,7 @@ function init_export(id, types) {
 
   
 // close on click away
-
-$(document).on('click', '*', function(e){
+$(document).on('click focus', '*', function(e){
   if($(e.target).closest('.open').length === 0) {
     $('.open').removeClass('open');
   }

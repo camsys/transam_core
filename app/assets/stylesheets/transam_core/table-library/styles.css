@@ -796,7 +796,7 @@
     text-decoration: none;
 }
 
-.export_option:hover {
+.export_option:hover, .export_option:focus {
     background-color: var(--blue-light);
     text-decoration: none;
     color: var(--white);
