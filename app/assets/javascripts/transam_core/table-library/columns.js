@@ -55,6 +55,21 @@ function init_columns(id, columns, current) {
 '          <ul id="available-columns" class="sortable-columns-list manage-columns-list">'
   ;
 
+  function toggleFlyout(table) {
+    let selectColumns = table.parent().find(".select_columns");
+    let flyout = table.parent().find(".flyout-panel");
+
+    if (selectColumns.hasClass("open")) {
+      selectColumns.removeClass("open");
+      selectColumns.one('transitionend', function() {
+        flyout.css("visibility", "hidden");
+      });
+    } else {
+      selectColumns.addClass("open");
+      flyout.css("visibility", "visible");
+    }
+  }
+
   $(document).ready(function(){
     let $wrapper = $(wrapper_html);
 
@@ -62,19 +77,22 @@ function init_columns(id, columns, current) {
       event.stopPropagation();
       event.stopImmediatePropagation();
 
-      let selectColumns = table.parent().find(".select_columns");
-      let flyout = table.parent().find(".flyout-panel");
+      toggleFlyout(table);
+    });
 
-      if (selectColumns.hasClass("open")) {
-          selectColumns.removeClass("open");
-          selectColumns.one('transitionend', function() {
-              flyout.css("visibility", "hidden");
-          });
-      } else {
-          selectColumns.addClass("open");
-          flyout.css("visibility", "visible");
+    table.parent().on('focus', '*', function(event){
+      if ($(event.target).hasClass('flyout-button')) return;
+      event.stopPropagation();
+
+      if ($(event.target).closest('.open').length === 0) {
+        let selectColumns = table.parent().find(".select_columns");
+        let flyout = table.parent().find(".flyout-panel");
+
+        selectColumns.removeClass("open");
+        selectColumns.one('transitionend', function() {
+          flyout.css("visibility", "hidden");
+        });
       }
-
     });
 
     table.parent().on('click', ".restore-defaults", function(event){
