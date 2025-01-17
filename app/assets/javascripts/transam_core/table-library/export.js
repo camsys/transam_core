@@ -169,14 +169,18 @@ function init_export(id, types) {
     options.append(selected_rows_checkbox);
     for(let type of types){
       // include href to make focusable
-      options.append($('<a class="export_option" href="javascript:;">').text(type).prepend('<i class="fas fa-file-download button-label button-icon" aria-hidden="true">'));
+      let option = $('<a class="export_option" href="javascript:;">').text(type).prepend('<i class="fas fa-file-download button-label button-icon" aria-hidden="true">');
+      options.append(option);
+      if (type === types.at(-1)) {
+        $(option).on('keydown', function(e) {
+          if ((e.key === "Tab") && !(e.shiftKey)) $('.open').removeClass('open');
+        });
+      }
     }
     wrapper.append(button).append(options);
     table.parent().find(".function_bar").append(wrapper);
-    
   });
 }
-
   
 // close on click away
 $(document).on('click focus', '*', function(e){
