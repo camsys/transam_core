@@ -12,7 +12,7 @@ function init_columns(id, columns, current) {
 '      <i class="fas fa-table title-icon" aria-hidden="true"></i>' +
 '      Manage Columns' +
 '    </div>' +
-'    <button class="close-flyout button-clear button-icononly">' +
+'    <button class="close-flyout button-clear button-icononly" title="Close Manage Columns">' +
 '      <i class="fas fa-arrow-alt-to-right"/>' +
 '    </button>' +
 '  </header>'
@@ -61,6 +61,8 @@ function init_columns(id, columns, current) {
 
     if (selectColumns.hasClass("open")) {
       selectColumns.removeClass("open");
+      // Clear search boxes and refresh lists
+      table.parent().find("input.search.formfield").val('').keyup();
       selectColumns.one('transitionend', function() {
         flyout.css("visibility", "hidden");
       });
