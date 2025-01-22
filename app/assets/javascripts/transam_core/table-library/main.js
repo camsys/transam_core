@@ -164,7 +164,11 @@ $("table[use]").ready(()=>{
 
 async function initialize(id, columns, selected, curPage, curPageSize, pageSizes, side, url, params, sort, export_types) {
     if($('#'+id).parent().find('.function_bar').length === 0) {
-        $('#'+id).parent().prepend($('<div class="function_bar">'));
+        if($('#' + id).parent().find('.navbar-form').length > 0) {
+            $('#' + id).parent().find('.navbar-form').after($('<div class="function_bar">'));
+        } else {
+            $('#' + id).parent().prepend($('<div class="function_bar">'));
+        }
     }
     $('#'+id).append($("<tbody>"));
     if(side === 'server') {
