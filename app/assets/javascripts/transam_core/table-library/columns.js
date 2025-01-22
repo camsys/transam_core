@@ -55,11 +55,11 @@ function init_columns(id, columns, current) {
 '          <ul id="available-columns" class="sortable-columns-list manage-columns-list">'
   ;
 
-  function toggleFlyout(table) {
+  function toggleFlyout(table, onlyClose=false) {
     let selectColumns = table.parent().find(".select_columns");
     let flyout = table.parent().find(".flyout-panel");
 
-    if (selectColumns.hasClass("open")) {
+    if (selectColumns.hasClass("open") || onlyClose) {
       selectColumns.removeClass("open");
       // Clear search boxes and refresh lists
       table.parent().find("input.search.formfield").val('').keyup();
@@ -80,6 +80,10 @@ function init_columns(id, columns, current) {
       event.stopImmediatePropagation();
 
       toggleFlyout(table);
+      if ($(event.target).hasClass('close-flyout')) {
+        // Return focus to Manage columns button, otherwise it's mysterious
+        $(event.target).closest('.select_columns').find('.flyout-button').focus();
+      }
     });
 
     table.parent().on('focus', '*', function(event){
@@ -87,13 +91,7 @@ function init_columns(id, columns, current) {
       event.stopPropagation();
 
       if ($(event.target).closest('.open').length === 0) {
-        let selectColumns = table.parent().find(".select_columns");
-        let flyout = table.parent().find(".flyout-panel");
-
-        selectColumns.removeClass("open");
-        selectColumns.one('transitionend', function() {
-          flyout.css("visibility", "hidden");
-        });
+        toggleFlyout(table, true);
       }
     });
 
