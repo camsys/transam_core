@@ -168,18 +168,22 @@ function init_export(id, types) {
     options.append($('<div class="export_label">').text("Export Data"));
     options.append(selected_rows_checkbox);
     for(let type of types){
-      options.append($('<a class="export_option">').text(type).prepend('<i class="fas fa-file-download button-label button-icon" aria-hidden="true">'));
+      // include href to make focusable
+      let option = $('<a class="export_option" href="javascript:;">').text(type).prepend('<i class="fas fa-file-download button-label button-icon" aria-hidden="true">');
+      options.append(option);
+      if (type === types.at(-1)) {
+        $(option).on('keydown', function(e) {
+          if ((e.key === "Tab") && !(e.shiftKey)) $('.open').removeClass('open');
+        });
+      }
     }
     wrapper.append(button).append(options);
     table.parent().find(".function_bar").append(wrapper);
-    
   });
 }
-
   
 // close on click away
-
-$(document).on('click', '*', function(e){
+$(document).on('click focus', '*', function(e){
   if($(e.target).closest('.open').length === 0) {
     $('.open').removeClass('open');
   }

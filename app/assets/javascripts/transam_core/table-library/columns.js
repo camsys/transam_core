@@ -12,7 +12,7 @@ function init_columns(id, columns, current) {
 '      <i class="fas fa-table title-icon" aria-hidden="true"></i>' +
 '      Manage Columns' +
 '    </div>' +
-'    <button class="close-flyout button-clear button-icononly">' +
+'    <button class="close-flyout button-clear button-icononly" title="Close Manage Columns">' +
 '      <i class="fas fa-arrow-alt-to-right"/>' +
 '    </button>' +
 '  </header>'
@@ -55,6 +55,23 @@ function init_columns(id, columns, current) {
 '          <ul id="available-columns" class="sortable-columns-list manage-columns-list">'
   ;
 
+  function toggleFlyout(table, onlyClose=false) {
+    let selectColumns = table.parent().find(".select_columns");
+    let flyout = table.parent().find(".flyout-panel");
+
+    if (selectColumns.hasClass("open") || onlyClose) {
+      selectColumns.removeClass("open");
+      // Clear search boxes and refresh lists
+      table.parent().find("input.search.formfield").val('').keyup();
+      selectColumns.one('transitionend', function() {
+        flyout.css("visibility", "hidden");
+      });
+    } else {
+      selectColumns.addClass("open");
+      flyout.css("visibility", "visible");
+    }
+  }
+
   $(document).ready(function(){
     let $wrapper = $(wrapper_html);
 
@@ -62,19 +79,20 @@ function init_columns(id, columns, current) {
       event.stopPropagation();
       event.stopImmediatePropagation();
 
-      let selectColumns = table.parent().find(".select_columns");
-      let flyout = table.parent().find(".flyout-panel");
-
-      if (selectColumns.hasClass("open")) {
-          selectColumns.removeClass("open");
-          selectColumns.one('transitionend', function() {
-              flyout.css("visibility", "hidden");
-          });
-      } else {
-          selectColumns.addClass("open");
-          flyout.css("visibility", "visible");
+      toggleFlyout(table);
+      if ($(event.target).hasClass('close-flyout')) {
+        // Return focus to Manage columns button, otherwise it's mysterious
+        $(event.target).closest('.select_columns').find('.flyout-button').focus();
       }
+    });
 
+    table.parent().on('focus', '*', function(event){
+      if ($(event.target).hasClass('flyout-button')) return;
+      event.stopPropagation();
+
+      if ($(event.target).closest('.open').length === 0) {
+        toggleFlyout(table, true);
+      }
     });
 
     table.parent().on('click', ".restore-defaults", function(event){

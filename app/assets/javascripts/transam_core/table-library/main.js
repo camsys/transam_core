@@ -136,7 +136,8 @@ $("table[use]").ready(()=>{
         
         window[id].stickySelect = window[id].selectAll;
         $('#' + id + " .header-checkbox").prop('checked', false);
-        
+        window[id].selectAll = false;
+
         // if($(table).data('side') === "server") {
             
         // }
