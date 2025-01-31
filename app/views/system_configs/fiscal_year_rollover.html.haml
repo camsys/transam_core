@@ -70,7 +70,7 @@
                 = radio_button_tag :rollover_method, 'manual', @system_config.fy_year.present?
                 Manual
 
-          = f.input :fy_year, as: :hidden, input_html: {value: @system_config.fy_year.present? ? @system_config.fy_year + 1 : @system_config.fy_year} #ou set to next year if manual in case you rollover. cant save so FY won't update
+          = f.input :fy_year, as: :hidden, input_html: {value: @system_config.fy_year.present? ? current_fiscal_year_year + 1 : @system_config.fy_year} #ou set to next year if manual in case you rollover. cant save so FY won't update
         .col-sm-2
           = f.button :submit, 'Save', :class => 'btn btn-primary', :id => 'submit_btn', :disabled => true
           = f.button :submit, 'Rollover', :class => 'btn btn-primary', :id => 'rollover_btn', :disabled => @system_config.fy_year.blank?, data: { confirm: "You are changing the fiscal year from #{current_fiscal_year} to #{current_planning_year}. The system will rollover at this point, are you sure you wish to proceed? This process cannot be reversed." }
