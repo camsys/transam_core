@@ -208,8 +208,12 @@ $application-active:      #FFFFDD;
   background-color: $application-active;
 }
 
+.action-thumbnail {
+  color: $application-primary !important;
+}
 .action-thumbnail:hover {
   border: 1px solid $link-hover-color;
+  text-decoration: none;
 }
 .thumbnail-content {
   min-height: 120px;
