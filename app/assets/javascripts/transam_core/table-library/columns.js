@@ -128,7 +128,11 @@ function init_columns(id, columns, current) {
       event.stopImmediatePropagation();
 
       let newItems = table.parent().find('#available-columns li');
-      table.parent().find('#visible-columns li:not(.unsortable)').last().after(newItems);
+      if (table.parent().find('#visible-columns li:not(.unsortable)').length === 0) {
+        table.parent().find('#visible-columns').append(newItems);
+      } else {
+        table.parent().find('#visible-columns li:not(.unsortable)').last().after(newItems);
+      }
       table.parent().find('#visible-columns .target-placeholder').remove();
       table.parent().find('#available-columns').append($('<li></li>', {"class": "target-placeholder"}));
       let columns = table.parent().find('#visible-columns li').map(function() {return this.id;}).get().join();
@@ -216,14 +220,22 @@ function init_columns(id, columns, current) {
 
         case "ArrowLeft":
           if ($.contains(available[0], activeItem[0])) {
-            visible.find('li:not(.unsortable)').first().before(activeItem);
+            if (visible.find('li:not(.unsortable)').length === 0) {
+              visible.append(activeItem);
+            } else {
+              visible.find('li:not(.unsortable)').first().before(activeItem);
+            }
             itemMoved = true;
           }
           break;
 
         case "ArrowRight":
           if ($.contains(visible[0], activeItem[0])) {
-            available.find('li:not(.unsortable)').first().before(activeItem);
+            if (available.find('li:not(.unsortable)').length === 0) {
+              available.append(activeItem);
+            } else {
+              available.find('li:not(.unsortable)').first().before(activeItem);
+            }
             itemMoved = true;
           }
           break;
