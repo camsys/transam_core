@@ -88,6 +88,23 @@ $("table[use]").ready(()=>{
 	    });
 
 	    $('#'+id).parent().find(".function_bar").prepend(disposedCheckbox);
+
+        let snapshotDate = $("<div>").addClass("snapshot_date")
+        .append($('<label class="snapshot_datepicker_label" for="snapshot_datepicker">').html("Snapshot at Date:"))
+        .append($('<input type="date" id="snapshot_datepicker">'));
+        $(snapshotDate).on("change", function(){
+          let selectedDate = $(this).find('#snapshot_datepicker').val();
+          let table = $(this).closest('.library-table').find("table").eq(0);
+          let params = table.data('params') || {};
+          let id = table.attr('id');
+
+          params['snapshot_date'] = selectedDate;
+          table.data('params', params);
+
+          updatePage_help(id, table.data("currentPage"), table.data('currentPageSize'));
+        });
+
+        $('#'+id).parent().find(".function_bar").prepend(snapshotDate);
 	  }
         }
     });
