@@ -178,7 +178,7 @@ function init_columns(id, columns, current) {
         t.item.removeClass("dragging")
       },
       update: function(e, t) {
-	let id = t.item.closest('.function_bar').parent().find('table')[0].id;
+	let id = t.item.closest('.function_bar').closest('.library-table').find('table')[0].id;
 	let columns = t.item.closest('.panel-columns').find('#visible-columns li:not(.target-placeholder)').map(function() {return this.id;}).get().join();
 	if (t.item.closest('.panel-columns').find('#visible-columns .ui-sortable-handle').length > 0) {
 	  t.item.closest('.panel-columns').find('#visible-columns .target-placeholder').remove();
