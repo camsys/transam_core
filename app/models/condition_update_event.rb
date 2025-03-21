@@ -43,6 +43,7 @@ class ConditionUpdateEvent < AssetEvent
   FORM_PARAMS = [
     :condition_type_id,
     :assessed_rating,
+    :created_by_id,
     :condition_type_percents_attributes => [ConditionTypePercent.allowable_params]
   ]
 
