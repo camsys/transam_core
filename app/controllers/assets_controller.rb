@@ -451,6 +451,11 @@ class AssetsController < AssetAwareController
       @asset.organization_id = @organization_list.first
     end
 
+    # If Facility asset, assign creator as current_user
+    if @asset.class.name == "Facility"
+      @asset.creator = current_user
+    end
+
     #@asset.creator = current_user
     #@asset.updator = current_user
 

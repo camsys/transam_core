@@ -25,7 +25,8 @@ class ServiceStatusUpdateEvent < AssetEvent
 
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
-    :service_status_type_id
+    :service_status_type_id,
+    :created_by_id
   ]
 
   #------------------------------------------------------------------------------

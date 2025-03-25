@@ -43,7 +43,7 @@ module TransamTagHelper
     html = "<div class='"
     html << options[:class] unless options[:class].blank?
     html << "'>"
-    html << "<div class='thumbnail action-thumbnail' data-action-path='"
+    html << "<a class='thumbnail action-thumbnail' href='"
     html << options[:path]
     html << "'>"
 
@@ -61,7 +61,7 @@ module TransamTagHelper
     html << content
 
     html << "</div>"
-    html << "</div>"
+    html << "</a>"
     html << "</div>"
 
 

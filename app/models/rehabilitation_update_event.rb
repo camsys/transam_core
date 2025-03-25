@@ -25,6 +25,7 @@ class RehabilitationUpdateEvent < AssetEvent
   FORM_PARAMS = [
     :total_cost,
     :extended_useful_life_months,
+    :created_by_id,
     :asset_event_asset_subsystems_attributes => [AssetEventAssetSubsystem.allowable_params]
   ]
 

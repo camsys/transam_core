@@ -33,6 +33,7 @@ RSpec.describe RehabilitationUpdateEvent, :type => :model do
     expect(RehabilitationUpdateEvent.allowable_params).to eq([
       :total_cost,
       :extended_useful_life_months,
+      :created_by_id,
       :asset_event_asset_subsystems_attributes => [AssetEventAssetSubsystem.allowable_params]
     ])
   end

@@ -26,7 +26,8 @@ class LocationUpdateEvent < AssetEvent
   # List of hash parameters allowed by the controller
   FORM_PARAMS = [
     :parent_key,
-    :parent_name
+    :parent_name,
+    :created_by_id
   ]
 
   #------------------------------------------------------------------------------

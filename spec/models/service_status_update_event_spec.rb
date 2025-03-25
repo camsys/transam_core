@@ -16,7 +16,7 @@ RSpec.describe ServiceStatusUpdateEvent, :type => :model do
   end
 
   it '#allowable_params' do
-    expect(ServiceStatusUpdateEvent.allowable_params).to eq([:service_status_type_id])
+    expect(ServiceStatusUpdateEvent.allowable_params).to eq([:service_status_type_id, :created_by_id])
   end
   it '#asset_event_type' do
     expect(ServiceStatusUpdateEvent.asset_event_type).to eq(AssetEventType.find_by(:class_name => 'ServiceStatusUpdateEvent'))
