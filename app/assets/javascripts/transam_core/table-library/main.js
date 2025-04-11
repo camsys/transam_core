@@ -99,8 +99,11 @@ $("table[use]").ready(()=>{
                   let table = $(this).closest('.library-table').find("table").eq(0);
                   let params = table.data('params') || {};
                   let id = table.attr('id');
-
-                  params['snapshot_date'] = selectedDate;
+                  if (selectedDate === "") {
+                      delete params['snapshot_date'];
+                  } else {
+                      params['snapshot_date'] = selectedDate;
+                  }
                   table.data('params', params);
 
                   updatePage_help(id, table.data("currentPage"), table.data('currentPageSize'));
