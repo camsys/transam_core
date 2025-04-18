@@ -8,6 +8,7 @@ $("table[use]").ready(()=>{
             const table_code = $(value).data('tableCode');
             const side = $(value).data('side');
             const export_types = $(value).data('export').replace(/[\[\]']+/g,'').split(',');
+            const snapshot_date_filter = $(value).data('snapshotDateFilter');
             let curPage = $(value).data('currentPage');
             let curPageSize = $(value).data('currentPageSize');
             const pageSizes = $(value).data('pageSizes').split(',');
@@ -72,22 +73,44 @@ $("table[use]").ready(()=>{
 	       'service_vehicle', 'capital_equipment',
 	       'admin_facility', 'maintenance_facility', 'passenger_facility', 'parking_facility',
 	       'track', 'guideway', 'power_signal'].includes(table_code)) {
-	    let disposedCheckbox = $("<div>").addClass("include_disposed")
-		.append($('<input type="checkbox" id="disposed_checkbox">'))
-		.append($('<label class="disposed_checkbox_label" for="disposed_checkbox">').html("&nbsp;Include Disposed"));
-	    $(disposedCheckbox).on("click", function(){
-	      let include_disposed = $(this).find('#disposed_checkbox').is(':checked');
-	      let table = $(this).closest('.library-table').find("table").eq(0);
-	      let params = table.data('params') || {};
-	      let id = table.attr('id');
+          let disposedCheckbox = $("<div>").addClass("include_disposed")
+              .append($('<input type="checkbox" id="disposed_checkbox">'))
+              .append($('<label class="disposed_checkbox_label" for="disposed_checkbox">').html("&nbsp;Include Disposed"));
+          $(disposedCheckbox).on("click", function () {
+              let include_disposed = $(this).find('#disposed_checkbox').is(':checked');
+              let table = $(this).closest('.library-table').find("table").eq(0);
+              let params = table.data('params') || {};
+              let id = table.attr('id');
 
-	      params['include_disposed'] = include_disposed;
-	      table.data('params', params);
+              params['include_disposed'] = include_disposed;
+              table.data('params', params);
 
-	      updatePage_help(id, table.data("currentPage"), table.data('currentPageSize'));
-	    });
+              updatePage_help(id, table.data("currentPage"), table.data('currentPageSize'));
+          });
 
-	    $('#'+id).parent().find(".function_bar").prepend(disposedCheckbox);
+          $('#' + id).parent().find(".function_bar").prepend(disposedCheckbox);
+
+          if (snapshot_date_filter) {
+              let snapshotDate = $("<div>").addClass("snapshot_date")
+                  .append($('<label class="snapshot_datepicker_label" for="snapshot_datepicker">').html("Snapshot at Date:"))
+                  .append($('<input type="date" id="snapshot_datepicker">'));
+              $(snapshotDate).on("change", function () {
+                  let selectedDate = $(this).find('#snapshot_datepicker').val();
+                  let table = $(this).closest('.library-table').find("table").eq(0);
+                  let params = table.data('params') || {};
+                  let id = table.attr('id');
+                  if (selectedDate === "") {
+                      delete params['snapshot_date'];
+                  } else {
+                      params['snapshot_date'] = selectedDate;
+                  }
+                  table.data('params', params);
+
+                  updatePage_help(id, table.data("currentPage"), table.data('currentPageSize'));
+              });
+
+              $('#' + id).parent().find(".function_bar").prepend(snapshotDate);
+          }
 	  }
         }
     });

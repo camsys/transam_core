@@ -633,7 +633,7 @@
     margin-bottom: 20px;
 }
 
-.include_disposed {
+.include_disposed, .snapshot_date {
     position: relative;
     float: left;
     padding-right: 1rem;

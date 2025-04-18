@@ -445,11 +445,15 @@ class TransamAsset < TransamAssetRecord
     [(age_in_years).floor, 0].max
   end
 
-  def service_status_type
+  def service_status_type snapshot_date=nil
     if try(:disposed?)
       ServiceStatusType.find_by(name: 'Disposed')
     else
-      ServiceStatusType.find_by(id: service_status_updates.last.try(:service_status_type_id))
+      if snapshot_date
+        ServiceStatusType.find_by(id: service_status_updates.where("event_date <= '#{snapshot_date}'").last.try(:service_status_type_id))
+      else
+        ServiceStatusType.find_by(id: service_status_updates.last.try(:service_status_type_id))
+      end
     end
   end
 
@@ -463,13 +467,17 @@ class TransamAsset < TransamAssetRecord
     # end
     condition_updates.last.try(:event_date)
   end
-  def reported_condition_rating
+  def reported_condition_rating snapshot_date=nil
     # if dependents.count > 0
     #   policy_analyzer.get_condition_rollup_calculation_type.class_name.constantize.new.calculate(self)
     # else
     #   condition_updates.last.try(:assessed_rating)
     # end
-    condition_updates.last.try(:assessed_rating)
+    if snapshot_date
+      condition_updates.where("event_date <= '#{snapshot_date}'").last.try(:assessed_rating)
+    else
+      condition_updates.last.try(:assessed_rating)
+    end
   end
   def reported_condition_type
     ConditionType.from_rating(reported_condition_rating)
