@@ -162,10 +162,12 @@
 
     $('.save-xeditable-button').click(function() {
      if(!is_valid) { // can assume that has_run is true, but there was a validation error before completing the submit
-       if(($('.asset-subform form').length > 0) && ($('form.editableform').length > 0)) {
-        is_valid = $('.asset-subform form').valid() && $('form.editableform').valid();
-        has_run = !is_valid;
-      }
+       if (($('.asset-subform form').length > 0) || ($('form.editableform').length > 0)) {
+         is_valid = true;
+         if ($('.asset-subform form').length > 0) is_valid &&= $('.asset-subform form').valid();
+         if ($('form.editableform').length > 0) is_valid &&= $('form.editableform').valid();
+         has_run = !is_valid;
+       }
      }
      if (!has_run) {
       has_run = true;

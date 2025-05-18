@@ -12,9 +12,9 @@ class FixOrganizationQueryFields < ActiveRecord::DataMigration
     vendor_qf.query_association_class = vendor_qac
     vendor_qf.save!
     
-    # Connect Lienholder and Title Owner QueryFields to "use_field_name" QAC
+    # Connect Lienholder and Title Holder QueryFields to "use_field_name" QAC
     lienholder_qf = QueryField.find_by(label: 'Lienholder')
-    title_qf = QueryField.find_by(label: 'Title Owner')
+    title_qf = QueryField.find_by(label: 'Title Holder')
 
     lienholder_qf.query_association_class = field_name_qac
     title_qf.query_association_class = field_name_qac
