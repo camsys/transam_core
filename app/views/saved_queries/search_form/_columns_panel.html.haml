@@ -1,11 +1,15 @@
 :css
   .select-column, .remove-column {
     cursor: pointer;
+    border: none;
+    background: none;
   }
 
   .remove-selected-column {
     cursor: pointer;
     padding-left: 10px;
+    border: none;
+    background: none;
   }
 
 .panel.panel-primary.columns-panel
@@ -41,7 +45,7 @@
       // add new
       new_list.forEach(function(li) {
         var li_html = "";
-        var common_html = "<span class='pull-right'><i class='fa fa-arrow-right select-column'/></span>" + li.label + "</li>";
+        var common_html = "<span class='pull-right'><button class='select-column'><i class='fa fa-arrow-right'/></button></span><button class='column-title' style='background: none; border: none; cursor: default;'>" + li.label + "</button></li>";
         if(selectedFieldIds.indexOf(li.id) >= 0) {
           // hide selected item
           li_html = "<li data-id=" + li.id + " data-name='" + li.name + "' class='list-group-item' style='display: none;'>" 
@@ -71,9 +75,9 @@
 
     function renderSelectedColumn(category_id, field_id, field_name, field_label, is_new) {
 
-      var li_html = "<li data-id=" + field_id + " data-name='" + field_name + "' class='list-group-item'>" 
+      var li_html = "<li data-id=" + field_id + " data-name='" + field_name + "' class='list-group-item'><button class='column-title' style='background: none; border: none; cursor: default;'>"
         + field_label 
-        + "<span class='pull-right'><i title='remove column' class='fa fa-close remove-column'></span>"
+        + "</button><span class='pull-right'><button class='remove-column'><i title='remove column' class='fa fa-close'></button></span>"
         + "</li>";
 
       $('.selected-columns-panel .column-list').append(li_html);
@@ -134,26 +138,31 @@
     });
 
     // select column button
-    $('.available-columns-panel').on('click', '.select-column', function() {
-      var li = $(this).parents('li');
-      li.hide();
-      var field_id = li.data('id');
-      var field_name  = li.data('name');
-      var field_label  = li.text();
+    $('.available-columns-panel').on('click keydown', '.select-column, .column-title', function(e) {
+      var keypress = e.type === 'keydown' ? e.key : null;
+      if (keypress === 'ArrowRight' || ($(this)[0].className === 'select-column' && (e.type === 'click' || keypress === ' '))) {
+        var li = $(this).parents('li');
+        li.hide();
+        var field_id = li.data('id');
+        var field_name  = li.data('name');
+        var field_label  = li.text();
 
-      var category_id = $('.available-columns-panel').data('category-id');
-      
-      renderColumn(category_id, field_id, field_name, field_label);
+        var category_id = $('.available-columns-panel').data('category-id');
+
+        renderColumn(category_id, field_id, field_name, field_label);
+      }
     });
 
     // remove selected column button
-    $('.selected-columns-panel').on('click', '.remove-column', function() {
-      
-      var li = $(this).parents('li');
-      var field_id = li.data('id');
-      var category_id = $('.selected-columns-panel').data('category-id');
+    $('.selected-columns-panel').on('click keydown', '.remove-column, .column-title', function(e) {
+      var keypress = e.type === 'keydown' ? e.key : null;
+      if (keypress === 'ArrowLeft' || ($(this)[0].className === 'remove-column' && (e.type === 'click' || keypress === ' '))) {
+        var li = $(this).parents('li');
+        var field_id = li.data('id');
+        var category_id = $('.selected-columns-panel').data('category-id');
 
-      removeColumn(category_id, field_id);
+        removeColumn(category_id, field_id);
+      }
     });
 
     $('.columns-container').on('click', '.remove-selected-column', function() {
