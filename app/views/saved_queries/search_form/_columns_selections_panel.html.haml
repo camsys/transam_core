@@ -8,8 +8,9 @@
     overflow: auto;
   }
 
-  .columns-container span {
+  .columns-container button {
     display: inline-block;
+    border: none;
   }
   
 .panel.panel-default.column-selections-panel
@@ -26,14 +27,41 @@
 
 :javascript
   $(function() {
+    function reorderColumns() {
+      var newIds = [];
+      $('.columns-container [data-id]').each(function() {
+        newIds.push($(this).data('id'));
+      });
+      _saved_query.setOrderedOutputFieldIds(newIds);
+    };
     $( ".columns-container" ).sortable({
       appendTo: document.body,
+      cancel: '',
       stop: function( event, ui ) {
-        var newIds = [];
-        $('.columns-container [data-id]').each(function() {
-          newIds.push($(this).data('id'));
-        });
-        _saved_query.setOrderedOutputFieldIds(newIds);
+        reorderColumns();
+      }
+    });
+    $(".columns-container").on("keydown", ".label-info", function(e) {
+      let activeItem = $(document.activeElement);
+      switch (e.key) {
+        case "ArrowLeft":
+          let prevItem = activeItem.prev();
+          if (prevItem.length && !prevItem.hasClass('unsortable')) {
+            activeItem.insertBefore(prevItem);
+            activeItem.focus();
+            reorderColumns();
+          }
+          break;
+        case "ArrowRight":
+          let nextItem = activeItem.next();
+          if (nextItem.length && !nextItem.hasClass('unsortable')) {
+            activeItem.insertAfter(nextItem);
+            activeItem.focus();
+            reorderColumns();
+          }
+          break;
       }
     });
   });
+
+

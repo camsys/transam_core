@@ -28,10 +28,10 @@
 :javascript
   function addColumnToSelectionsPanel(category_id, field_id, field_label) {
       // column selections panel
-      var column_label_html = "<span data-category-id=" + category_id + " data-id=" + field_id + " class='label label-info'>" 
+      var column_label_html = "<button data-category-id=" + category_id + " data-id=" + field_id + " class='label label-info'>"
         + field_label 
-        + "<i title='remove column' class='fa fa-close remove-selected-column'></i>"
-        + "</span>";
+        + "<button title='remove column' class='fa fa-close remove-selected-column'></button>"
+        + "</button>";
 
       $('.columns-container').append(column_label_html);
     }
@@ -101,7 +101,7 @@
       _saved_query.removeColumn(category_id, field_id);
 
       $('.selected-columns-panel li[data-id=' + field_id + ']').remove();
-      $('.columns-container span[data-id=' + field_id + ']').remove();
+      $('.columns-container button[data-id=' + field_id + ']').remove();
       $('.available-columns-panel .column-list li[data-id=' + field_id + ']').show();
     }
 
@@ -129,7 +129,7 @@
 
     // reset button
     $('.columns-panel .reset-button').click(function() {
-      $('.columns-container span').remove();
+      $('.columns-container button').remove();
       _saved_query.resetOutputColumns();
       $('.selected-columns-panel .column-list li').remove();
       $('.available-columns-panel .column-list li').show();
@@ -165,13 +165,15 @@
       }
     });
 
-    $('.columns-container').on('click', '.remove-selected-column', function() {
-      
-      var span = $(this).parents('span');
-      var field_id = span.data('id');
-      var category_id = span.data('category-id');
+    $('.columns-container').on('click keydown', '.remove-selected-column', function(e) {
+      var keypress = e.type === 'keydown' ? e.key : null;
+      if (e.type === 'click' || keypress === ' ' || keypress === 'Enter') {
+        var button = $(this).parents('button');
+        var field_id = button.data('id');
+        var category_id = button.data('category-id');
 
-      removeColumn(category_id, field_id);
+        removeColumn(category_id, field_id);
+      }
     });
 
   });
