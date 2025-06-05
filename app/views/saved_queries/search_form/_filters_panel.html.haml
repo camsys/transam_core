@@ -39,7 +39,7 @@
         }
 
         var li_html = "";
-        var common_html = "<span class='pull-right'><button class='select-filter'><i class='fa fa-arrow-right'/></button></span><button class='filter-title' style='background: none; border: none; cursor: default;'>" + li.label + "</button></li>";
+        var common_html = "<span class='pull-right'><button class='select-filter'><i class='fa fa-arrow-right'/></button></span>" + li.label + "</li>";
         if(selectedFieldIds.indexOf(li.id) >= 0) {
           // hide selected item
           li_html = "<li data-id=" + li.id + " data-name='" + li.name + "' class='list-group-item' style='display: none;'>" 
@@ -69,9 +69,9 @@
 
     function renderSelectedFilter(field_id, field_name, field_label) {
 
-      var li_html = "<li data-id=" + field_id + " data-name='" + field_name + "' class='list-group-item'><button class='filter-title' style='background: none; border: none; cursor: default;'>"
+      var li_html = "<li data-id=" + field_id + " data-name='" + field_name + "' class='list-group-item'>"
         + field_label 
-        + "</button><span class='pull-right'><button class='remove-filter'><i title='remove filter' class='fa fa-close'></button></span>"
+        + "<span class='pull-right'><button class='remove-filter'><i title='remove filter' class='fa fa-close'></button></span>"
         + "</li>";
 
       $('.selected-filters-panel .filter-list').append(li_html);
@@ -123,9 +123,9 @@
     });
 
     // select filter button
-    $('.available-filters-panel').on('click keydown', '.select-filter, .filter-title', function(e) {
+    $('.available-filters-panel').on('click keydown', '.select-filter', function(e) {
       var keypress = e.type === 'keydown' ? e.key : null;
-      if (keypress === 'ArrowRight' || ($(this)[0].className === 'select-filter' && (e.type === 'click' || keypress === ' '))) {
+      if (keypress === 'ArrowRight' || keypress === ' ' || e.type === 'click') {
         var li = $(this).parents('li');
         li.hide();
         var field_id = li.data('id');
@@ -133,18 +133,30 @@
         var field_label  = li.text();
 
         var category_id = $('.available-filters-panel').data('category-id');
+        var next_column = $(this).closest('li').nextAll(':visible:first').find('.select-filter');
+        if (next_column.length > 0) {
+          $(next_column).focus();
+        } else {
+          $(this).closest('li').prevAll(':visible:first').find('.select-filter').focus();
+        }
 
         selectFilter(category_id, field_id, field_name, field_label);
       }
     });
 
     // remove selected filter button
-    $('.selected-filters-panel').on('click keydown', '.remove-filter, .filter-title', function(e) {
+    $('.selected-filters-panel').on('click keydown', '.remove-filter', function(e) {
       var keypress = e.type === 'keydown' ? e.key : null;
-      if (keypress === 'ArrowLeft' || ($(this)[0].className === 'remove-filter' && (e.type === 'click' || keypress === ' '))) {
+      if (keypress === 'ArrowLeft' || keypress === ' ' || e.type === 'click') {
         var li = $(this).parents('li');
         var field_id = li.data('id');
         var category_id = $('.selected-filters-panel').data('category-id');
+        var next_column = $(this).closest('li').nextAll(':visible:first').find('.remove-filter');
+        if (next_column.length > 0) {
+          $(next_column).focus();
+        } else {
+          $(this).closest('li').prevAll(':visible:first').find('.remove-filter').focus();
+        }
 
         removeFilter(category_id, field_id);
       }
