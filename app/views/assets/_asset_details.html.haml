@@ -14,5 +14,6 @@
       = format_field("Groups",  format_asset_groups(asset))
   = format_field("Parent",  link_to(asset.parent.to_s, inventory_path(asset.parent))) unless asset.parent.nil?
   = format_field("Location", link_to(asset.location.to_s, inventory_path(asset.location))) unless asset.location.nil?
+  = format_field("Address", asset.location_address) if asset.location_address.present?
 - else
   %p No asset found

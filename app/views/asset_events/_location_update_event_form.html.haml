@@ -15,12 +15,13 @@
 
   $('#parent_name').on('focus', function() {
     _typeahead_source_url = $(this).data('url');
+    $(this).trigger('keyup');
   });
 
   // Enable typeahead for the SMO filter
   $('#parent_name').typeahead({
-    items: 10,
-    minLength: 2,
+    items: 50,
+    minLength: 0,
     source: _typeahead_searcher,
     matcher: _typeahead_matcher,
     highlighter: _typeahead_highlighter,
