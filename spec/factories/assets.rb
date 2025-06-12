@@ -22,7 +22,6 @@ FactoryBot.define do
     purchase_cost { 2000.0 }
     expected_useful_life { 120 }
     reported_condition_rating { 2.0 }
-    location_address {"123 Fake Street"}
   end
 
   factory :transam_asset do
