@@ -282,6 +282,10 @@ class AssetEventsController < AssetAwareController
           end
         end
 
+        if asset_event_type.class_name == 'LocationUpdateEvent' && @asset.location_address
+          @asset.update(location_address: nil)
+        end
+
         format.html { redirect_to inventory_url(@asset) }
         format.js
         format.json { render :json => @asset_event, :status => :created, :location => @asset_event }

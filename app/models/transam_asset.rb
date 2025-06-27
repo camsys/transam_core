@@ -109,6 +109,7 @@ class TransamAsset < TransamAssetRecord
       :parent_id,
       :quantity,
       :quantity_unit,
+      :location_address,
       {condition_updates_attributes: ConditionUpdateEvent.allowable_params},
       {service_status_updates_attributes: ServiceStatusUpdateEvent.allowable_params},
       {location_updates_attributes: LocationUpdateEvent.allowable_params}
