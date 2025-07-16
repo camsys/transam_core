@@ -32,6 +32,7 @@ class AssetsController < AssetAwareController
     assets = klass.where(organization_id: current_user.viewable_organization_ids)
                   .where(params[:search_params])
                   .where("(asset_tag LIKE ? OR object_key LIKE ? OR description LIKE ?)", query_str, query_str, query_str)
+                  .order('asset_tag')
 
     assets.each do |asset|
       matches << {
