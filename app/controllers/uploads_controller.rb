@@ -3,6 +3,8 @@ class UploadsController < OrganizationAwareController
   add_breadcrumb "Home", :root_path
   add_breadcrumb SystemConfigFieldCustomization.find_by(table_name: 'uploads', field_name: nil, action_name: nil)&.label || "Bulk Updates", :uploads_path
 
+  skip_before_action :get_organization_selections
+  before_action :set_viewable_organizations
   before_action :set_upload, :only => [:show, :destroy, :resubmit, :undo, :download]
 
   # Lock down the controller
@@ -295,5 +297,11 @@ class UploadsController < OrganizationAwareController
   end
 
   private
+
+  def set_viewable_organizations
+    @viewable_organizations = current_user.viewable_organization_ids
+
+    get_organization_selections
+  end
 
 end
