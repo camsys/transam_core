@@ -154,7 +154,9 @@ module ReplaceableAsset
   def estimated_replacement_cost_in_year year=Time.now.year
     on_date =start_of_fiscal_year year 
     analyzer = self.policy_analyzer
-    replacement_cost_calculation_type = analyzer.get_replacement_cost_calculation_type
+    replacement_cost_calculation_type = (analyzer.get_replacement_cost == 0) ?
+                                          CostCalculationType.find_by(class_name: 'PurchasePricePlusInterestCalculator') :
+                                          analyzer.get_replacement_cost_calculation_type
     calculator_instance = replacement_cost_calculation_type.class_name.constantize.new
     (calculator_instance.calculate_on_date(self, on_date)+0.5).to_i #round
   end
