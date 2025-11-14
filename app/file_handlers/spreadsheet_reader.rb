@@ -27,8 +27,8 @@ class SpreadsheetReader
   end
   
   # returns true if the row is empty, false otherwise. Note, this just tests the first 10 columns
-  def empty_row?
-    0.upto(9) do |col|
+  def empty_row?(limit=9)
+    0.upto(limit) do |col|
       unless @row[col].blank?
         return false
       end
