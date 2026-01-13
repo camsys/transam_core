@@ -1,0 +1,18 @@
+%li{:class => get_nav_link_class(['help'])}
+  = link_to "#", :class => "dropdown-toggle", :data => {"toggle" => "dropdown"}, :title => 'Help' do
+    %i.fa.fa-question.fa-2x
+    %b.caret
+  %ul.dropdown-menu.multi-level{:role => 'menu'}
+    %li.text-left
+      = link_to html_help_pdf_path(current_user.has_any_role?(*((Rails.application.config.try(:admin_adjacent_roles) || []) << :admin))), :download => '', :target => "_blank" do
+        %i.fa.fa-file-pdf
+        User Guide
+    - if current_user && @user_guide_videos.present?
+      %li.text-left.dropdown-submenu
+        = link_to "#", :class => 'dropdown-toggle', :data => {:toggle => 'dropdown'} do
+          %i.fa.fa-file-video-o
+          User Guide Videos
+        %ul.dropdown-menu
+          - @user_guide_videos.each do |k,v|
+            %li.text-left
+              = link_to k, v, download: '', target: '_blank'
