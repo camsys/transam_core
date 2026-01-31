@@ -70,10 +70,10 @@
                 = radio_button_tag :rollover_method, 'manual', @system_config.fy_year.present?
                 Manual
 
-          = f.input :fy_year, as: :hidden, input_html: {value: @system_config.fy_year.present? ? current_fiscal_year_year + 1 : @system_config.fy_year} #ou set to next year if manual in case you rollover. cant save so FY won't update
+          = f.input :fy_year, label: 'Target Year', collection: ((current_fiscal_year_year == fiscal_year_year_on_date(Date.today) + 2 ? [fiscal_year_year_on_date(Date.today) + 2] : (current_fiscal_year_year + 1..fiscal_year_year_on_date(Date.today) + 2)).to_a.map{ |y| ["#{get_fy_label} #{fiscal_year(y)}", y] }), hidden: !(@system_config.fy_year.to_i > 0)
         .col-sm-2
           = f.button :submit, 'Save', :class => 'btn btn-primary', :id => 'submit_btn', :disabled => true
-          = f.button :submit, 'Rollover', :class => 'btn btn-primary', :id => 'rollover_btn', :disabled => @system_config.fy_year.blank?, data: { confirm: "You are changing the fiscal year from #{current_fiscal_year} to #{current_planning_year}. The system will rollover at this point, are you sure you wish to proceed? This process cannot be reversed." }
+          = f.button :submit, 'Rollover', :class => 'btn btn-primary', :id => 'rollover_btn', :disabled => @system_config.fy_year.blank?, data: { confirm: "You are changing the fiscal year from #{current_fiscal_year} to |target_year|. The system will rollover at this point, are you sure you wish to proceed? This process cannot be reversed." }
 
     %fieldset{style: 'margin-top: 20px;'}
       %legend History
@@ -82,23 +82,51 @@
 :javascript
 
   var initially_manual = '#{@system_config.fy_year.to_i > 0}';
-
-  $("input[name='rollover_method']").on("click", function() {
-    if ($(this).val() == 'manual') {
-      if (initially_manual == 'true') {
-        $('#submit_btn').attr("disabled", "disabled");
-      } else {
-        $('#system_config_fy_year').val('#{fiscal_year_year_on_date(Date.today)}');
-        $('#submit_btn').removeAttr("disabled");
-      }
-      $('#rollover_btn').removeAttr("disabled");
+  $(document).ready(function() {
+    if (initially_manual == "false") {
+      $('.system_config_fy_year').hide();
     } else {
-      if (initially_manual == 'true') {
-        $('#system_config_fy_year').val('');
-        $('#submit_btn').removeAttr("disabled");
-      } else {
-        $('#submit_btn').attr("disabled", "disabled");
+      if ($('#system_config_fy_year option[value=""]').length > 0) {
+        $('#system_config_fy_year option[value=""]').remove();
       }
-      $('#rollover_btn').attr("disabled", "disabled");
     }
+    var modal_confirm_text = $("#rollover_btn").data("confirm");
+    function replace_modal_confirm_text() {
+      var formatted_target_year = `${parseInt($("#system_config_fy_year").val()) - 2000}-${parseInt($("#system_config_fy_year").val()) - 1999}`
+      $("#rollover_btn").data("confirm", modal_confirm_text.replace("|target_year|", formatted_target_year));
+    }
+    replace_modal_confirm_text();
+
+    $("input[name='rollover_method']").on("click", function() {
+      if ($(this).val() == 'manual') {
+        $('.system_config_fy_year').show();
+        if ($('#system_config_fy_year option[value=""]').length > 0) {
+          $('#system_config_fy_year option[value=""]').remove();
+        }
+        if (initially_manual == 'true') {
+          $('#submit_btn').attr("disabled", "disabled");
+        } else {
+          $('#system_config_fy_year').val('#{fiscal_year_year_on_date(Date.today) + 1}');
+          $('#submit_btn').removeAttr("disabled");
+          replace_modal_confirm_text();
+        }
+        $('#rollover_btn').removeAttr("disabled");
+      } else {
+        $('.system_config_fy_year').hide();
+        if ($('#system_config_fy_year option[value=""]').length == 0) {
+          $('#system_config_fy_year').append($('<option>', {value: '',text: ''}));
+        }
+        if (initially_manual == 'true') {
+          $('#system_config_fy_year').val('');
+          $('#submit_btn').removeAttr("disabled");
+        } else {
+          $('#submit_btn').attr("disabled", "disabled");
+        }
+        $('#rollover_btn').attr("disabled", "disabled");
+      }
+    });
+
+    $("#system_config_fy_year").on("change", function() {
+      replace_modal_confirm_text();
+    });
   });
