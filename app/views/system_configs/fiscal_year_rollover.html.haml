@@ -70,7 +70,7 @@
                 = radio_button_tag :rollover_method, 'manual', @system_config.fy_year.present?
                 Manual
 
-          = f.input :fy_year, label: 'Target Year', collection: (current_fiscal_year_year + 1..fiscal_year_year_on_date(Date.today) + 2).to_a, hidden: !(@system_config.fy_year.to_i > 0)
+          = f.input :fy_year, label: 'Target Year', collection: ((current_fiscal_year_year == fiscal_year_year_on_date(Date.today) + 2 ? [fiscal_year_year_on_date(Date.today) + 2] : (current_fiscal_year_year + 1..fiscal_year_year_on_date(Date.today) + 2)).to_a.map{ |y| ["#{get_fy_label} #{fiscal_year(y)}", y] }), hidden: !(@system_config.fy_year.to_i > 0)
         .col-sm-2
           = f.button :submit, 'Save', :class => 'btn btn-primary', :id => 'submit_btn', :disabled => true
           = f.button :submit, 'Rollover', :class => 'btn btn-primary', :id => 'rollover_btn', :disabled => @system_config.fy_year.blank?, data: { confirm: "You are changing the fiscal year from #{current_fiscal_year} to |target_year|. The system will rollover at this point, are you sure you wish to proceed? This process cannot be reversed." }
@@ -108,6 +108,7 @@
         } else {
           $('#system_config_fy_year').val('#{fiscal_year_year_on_date(Date.today) + 1}');
           $('#submit_btn').removeAttr("disabled");
+          replace_modal_confirm_text();
         }
         $('#rollover_btn').removeAttr("disabled");
       } else {
