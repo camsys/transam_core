@@ -235,13 +235,15 @@ class SavedQueriesController < OrganizationAwareController
       headers = []
       @query.ordered_query_fields.each do |field|
         headers << field.label
-        
-        field_name = field.name
+
+        # Neither field.name nor field.label is unique, but the combination appears to be.
+        # This fixes the alignment issues with including two fields with the same name in a query.
+        field_name = "#{field.name} #{field.label}"
         field_types[field_name] = field.filter_type
 
         as_names = []
         field.query_asset_classes.each do |qac|
-          as_names << "#{qac.table_name}_#{field_name}"
+          as_names << "#{qac.table_name}_#{field.name}"
         end
         field_names[field_name] = (field_names[field_name] || []) + as_names
       end
@@ -265,6 +267,8 @@ class SavedQueriesController < OrganizationAwareController
                 as_names.each do |as_name|
                   val << row.send(as_name)
                 end
+                # Even if a field has multiple as_names, it still corresponds to a single column in the spreadsheet
+                val = [val.reject(&:blank?).join(',')] if val.length > 1
 
                 # For readability, show yes/no instead of 1/0.
                 if field_types[field_name] == 'boolean'
@@ -277,7 +281,7 @@ class SavedQueriesController < OrganizationAwareController
                 end
 
                 # special case
-                if field_name == 'replacement_status_type_id' && val[0].blank?
+                if field_name.split(' ')[0] == 'replacement_status_type_id' && val[0].blank?
                   val[0] = 'By Policy'
                 end
 
