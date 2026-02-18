@@ -9,6 +9,12 @@
     font-size: 11px;
   }
 
+  #subselect-orgs {
+    position: sticky;
+    top: 0px;
+    z-index: 100;
+  }
+
 :ruby
   my_system_filters = current_user.user_organization_filters.system_filters.sorted
   my_shared_filters = current_user.user_organization_filters.other_filters.sorted
@@ -67,8 +73,8 @@
                 New Filter
         .col-sm-6
           %ul.multi-column-dropdown
-            %li
-              = link_to '#', id: 'subselect-orgs' do
+            %li#subselect-orgs
+              = button_to '#', id: 'subselect-orgs', class: 'btn btn-primary' do
                 Update Selection
             %li.divider
             %li#select-all
