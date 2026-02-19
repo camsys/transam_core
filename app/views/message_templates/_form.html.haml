@@ -17,7 +17,7 @@
       = f.input :subject, :required => true
     
     .col-sm-12
-      = f.input :body, label: 'Message', :required => true, :as => :ckeditor, :input_html => { :ckeditor => {:toolbar => 'mini'}, :class => "form-control"}
+      = f.input :body, label: 'Message', :required => true, :as => :text, :input_html => { :rows => 10, :class => "form-control"}
     
     .col-lg-3.col-md-3.col-sm-6.col-xs-6
       = f.input :priority_type_id, :collection => PriorityType.active, :include_blank => false, :label => "Priority"
@@ -45,12 +45,5 @@
     ignore: [], //validate hidden fields
     submitHandler: function(form) {
       form.submit();
-    }
-  });
-
-  $('#message_template_body').rules("add", {
-    required: function()
-    {
-      CKEDITOR.instances.message_template_body.updateElement();
     }
   });
