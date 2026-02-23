@@ -2,8 +2,9 @@
   asset_types = AssetType.pluck(:id, :name, :display_icon_name)
 
 %li{:class => "dropdown #{get_nav_link_class('assets')}"}
-  = link_to "#", :class => "dropdown-toggle", :data => {"toggle" => "dropdown"}, :title => 'Inventory' do
+  = link_to "#", :class => "dropdown-toggle", :style => 'padding-top:19px;', :data => {"toggle" => "dropdown"} do
     %i.fa.fa-bus.fa-2x
+    Inventory
     %b.caret
   %ul.dropdown-menu.multi-level{:role => "menu"}
     - asset_types.each do |type|

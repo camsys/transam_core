@@ -1,7 +1,8 @@
 %li#notifications_li
   %span#notification_count{style: 'display: none;'}
-  = link_to "#", :id => "notificationLink", :class => "dropdown-toggle", :data => {"toggle" => "dropdown"}, :title => 'Notifications' do
-    %i.fa.fa-globe-americas.fa-2x
+  = link_to "#", :id => "notificationLink", :class => "dropdown-toggle", :style => 'padding-top:19px;', :data => {"toggle" => "dropdown"} do
+    %i.fa.fa-globe-americas.fa-lg
+    Notifications
   #notificationContainer{style: "overflow-y:scroll;max-height:400px;"}
     #notificationsBody.notifications
     #notificationFooter
