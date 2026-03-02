@@ -1,6 +1,7 @@
 %li{:class => get_nav_link_class(['help'])}
-  = link_to "#", :class => "dropdown-toggle", :data => {"toggle" => "dropdown"}, :title => 'Help' do
-    %i.fa.fa-question.fa-2x
+  = link_to "#", :class => "dropdown-toggle", :style => 'padding: 19px 4px 14px;', :data => {"toggle" => "dropdown"} do
+    %i.fa.fa-question.fa-lg
+    Help
     %b.caret
   %ul.dropdown-menu.multi-level{:role => 'menu'}
     %li.text-left
