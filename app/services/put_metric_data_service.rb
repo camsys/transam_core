@@ -1,7 +1,8 @@
 class PutMetricDataService
 
   def initialize
-    @cw = Aws::CloudWatch::Client.new
+    # In the test environment often credentials are not set properly for CloudWatch to work
+    @cw = Rails.env.test? ? nil : Aws::CloudWatch::Client.new
     @env = ENV['RAILS_ENV']
     @namespace = "#{Rails.application.class.parent}:#{@env}"
   end
@@ -18,7 +19,7 @@ class PutMetricDataService
         Timeout::timeout(5) do #If this takes more than 5 seconds, just move on.
           log "Sent #{slice.size} prepared metrics to CW for namespace #{@namespace} #{slice.collect{|s| s['MetricName']}.sort.uniq.join(',')}"
           debug slice.inspect
-          @cw.put_metric_data(namespace: @namespace, metric_data: slice)
+          @cw&.put_metric_data(namespace: @namespace, metric_data: slice)
         end
       rescue Exception => e
         log "Exception: #{e}"
