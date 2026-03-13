@@ -21,7 +21,7 @@
     .col-md-3
       = f.input :send_reminder, :label => "Send Reminder"
 
-  = f.input :body, :required => true, :label => false, :as => :ckeditor, :input_html => { :ckeditor => {:toolbar => 'mini'}}
+  = f.input :body, :required => true, :label => "Description", :as => :text, :input_html => { :rows => 10 }
 
   = f.button :submit, :class => "btn btn-primary"
 
@@ -31,12 +31,5 @@
     ignore: [], //validate hidden fields
     submitHandler: function(form) {
       form.submit();
-    }
-  });
-
-  $('#task_body').rules("add", {
-    required: function()
-    {
-      CKEDITOR.instances.task_body.updateElement();
     }
   });

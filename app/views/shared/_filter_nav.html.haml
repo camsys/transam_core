@@ -9,6 +9,12 @@
     font-size: 11px;
   }
 
+  #subselect-orgs {
+    position: sticky;
+    top: 0px;
+    z-index: 100;
+  }
+
 :ruby
   my_system_filters = current_user.user_organization_filters.system_filters.sorted
   my_shared_filters = current_user.user_organization_filters.other_filters.sorted
@@ -24,7 +30,7 @@
 
 - if (current_user.organizations.count > 1 || current_user.user_organization_filters.count > 1) && !@viewable_organizations
   %li.dropdown
-    = link_to "#", :class => 'dropdown-toggle', :style => 'padding-top:19px;', :data => {:toggle => 'dropdown'} do
+    = link_to "#", :class => 'dropdown-toggle', :style => 'padding: 19px 4px 14px;', :data => {:toggle => 'dropdown'} do
       %i.fa.fa-filter
       = " #{session[:user_organization_filter].to_s[0..31]}#{session[:user_organization_filter].to_s.length > 32 ? '...' : ''}"
       %b.caret
@@ -67,8 +73,8 @@
                 New Filter
         .col-sm-6
           %ul.multi-column-dropdown
-            %li
-              = link_to '#', id: 'subselect-orgs' do
+            %li#subselect-orgs
+              = button_to '#', id: 'subselect-orgs', class: 'btn btn-primary' do
                 Update Selection
             %li.divider
             %li#select-all
