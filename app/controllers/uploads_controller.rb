@@ -30,7 +30,7 @@ class UploadsController < OrganizationAwareController
 
     # get assets from multi org or just uploaded by user (to get multi not yet processed)
     asset_ids = Rails.application.config.asset_base_class_name.constantize.where.not(upload_id: nil).where(organization_id: @organization_list).pluck(:upload_id)
-    @uploads = @uploads.where('organization_id IN (?) OR id IN (?) OR user_id = ?', @organization_list, asset_ids, current_user.id).order(:created_at)
+    @uploads = @uploads.where('organization_id IN (?) OR id IN (?) OR user_id = ?', @organization_list, asset_ids, current_user.id).where(updated_at: Rails.application.config.uploads_days_ago.days.ago..Time.current).order(:created_at)
 
     # cache the set of asset ids in case we need them later
     cache_list(@uploads, INDEX_KEY_LIST_VAR)

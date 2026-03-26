@@ -12,6 +12,7 @@ Rails.application.config.max_rows_returned = 500          # maximum number of ro
 
 Rails.application.config.max_upload_file_size = 4          # maximum file size able to be uploaded
 Rails.application.config.epoch = Date.new(1900,1,1)      # epoch
+Rails.application.config.uploads_days_ago = 90          # number of days before present that uploads on the Bulk Updates table will be shown
 
 
 begin
