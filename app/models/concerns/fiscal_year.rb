@@ -167,9 +167,9 @@ module FiscalYear
     a
   end
 
-  def get_past_fiscal_years
+  def get_past_fiscal_years(years_before_current = 1)
     date = Date.today-(SystemConfig.instance.num_forecasting_years).years
-    num_forecasting_years = SystemConfig.instance.num_forecasting_years-1
+    num_forecasting_years = SystemConfig.instance.num_forecasting_years-years_before_current
 
     get_fiscal_years(date,num_forecasting_years)
   end
