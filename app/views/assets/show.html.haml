@@ -48,3 +48,11 @@
 .modal.fade#form-modal{:tabindex => -1, :role => 'dialog', :aria => {:hidden => true}}
 
 =render 'show_scripts'
+
+:javascript
+  // Select all data-toggle="tab" elements
+  $('[data-toggle="tab"]').on('focus', function (e) {
+    e.preventDefault(); // Prevent default focus behavior if necessary
+    // Use the Bootstrap tab plugin's show method to activate the tab
+    $(this).tab('show');
+  });

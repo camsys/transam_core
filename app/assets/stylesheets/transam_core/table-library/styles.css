@@ -181,7 +181,6 @@
     vertical-align: bottom;
     background-color: var(--gray-lighter);
     border-left: solid var(--gray-medium-light) 1px;
-    max-width: 16em;
     vertical-align: bottom;
     overflow: hidden;
     white-space: nowrap;
@@ -205,13 +204,12 @@
 
 .header-content {
     font-size: .865em; /* 12px */
-    position: absolute;
     left: 0;
     top: 0;
     bottom: 0;
     width: -webkit-fill-available;
     width: -moz-available;
-    min-width: 100%;
+    min-width: calc(100% - 1em);
     overflow: hidden;
     white-space: nowrap;
     -o-text-overflow: ellipsis;
