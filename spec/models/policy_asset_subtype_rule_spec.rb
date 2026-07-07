@@ -45,6 +45,22 @@ RSpec.describe PolicyAssetSubtypeRule, :type => :model do
         expect(test_rule.valid?).to be false
       end
     end
+
+    describe 'procurement_lead_time' do
+      it 'sanitizes inputs' do
+        test_rule.procurement_lead_time = "foo"
+        expect(test_rule.procurement_lead_time).to eq(0)
+      end
+      it 'can be absent' do
+        expect(test_rule.valid?).to be true
+      end
+      it 'must be a number >= 0' do
+        test_rule.procurement_lead_time = "foo"
+        expect(test_rule.valid?).to be true # coerced to 0
+        test_rule.procurement_lead_time = -1
+        expect(test_rule.valid?).to be true # sanitize_to_int does an implicit absolute value
+      end
+    end
   end
 
   it '#allowable_params' do
@@ -53,6 +69,7 @@ RSpec.describe PolicyAssetSubtypeRule, :type => :model do
       :policy_id,
       :asset_subtype_id,
       :min_service_life_months,
+      :procurement_lead_time,
       :replacement_cost,
       :cost_fy_year,
       :replace_with_new,
@@ -101,6 +118,7 @@ RSpec.describe PolicyAssetSubtypeRule, :type => :model do
     test_rule = PolicyAssetSubtypeRule.new
 
     expect(test_rule.min_service_life_months).to eq(0)
+    expect(test_rule.procurement_lead_time).to eq(0)
     expect(test_rule.replacement_cost).to eq(0)
     expect(test_rule.lease_length_months).to eq(0)
     expect(test_rule.rehabilitation_service_month).to eq(0)
