@@ -242,14 +242,14 @@ function updateHeader(id, selected, sort, focus = false){
           .append((col_sortable[col]!=="False")?$('<div>').addClass('header-icons'):$('<div>').addClass("not-sortable"));
 
         try {
-            header.append($('<th>').addClass('header-item').attr("code", col).attr("type", col_ts[col]).append(button));
+            header.append($('<th>').addClass('header-item').attr("code", col).attr("type", col_ts[col]).append($('<div>').addClass("table-header-container").append(button).append($('<div>').addClass("column-resize-handle"))));
 
             colgroup.append(
                 $('<col>').addClass('col-item').css("width", col_ws[col]));
             $("#" + id + " .table-row>:nth-child(" +  ($("[type|='" + col_ts[col] + "']").eq(0).index()+1) + ")").addClass(col_ts[col]);
         } catch (e) {
             try {
-                header.append($('<th>').addClass('header-item').attr("type", "").append(button));
+                header.append($('<th>').addClass('header-item').attr("type", "").append($('<div>').addClass("table-header-container").append(button).append($('<div>').addClass("column-resize-handle"))));
             } catch(e) {
                 console.log("Bad column name in selected?", e);
                 continue;

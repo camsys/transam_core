@@ -9,8 +9,9 @@
         %i.fa.fa-file-pdf
         User Guide
     - if current_user && @user_guide_videos.present?
-      %li.text-left.dropdown-submenu
-        = link_to "#", :class => 'dropdown-toggle', :data => {:toggle => 'dropdown'} do
+      -# TODO: add tabbing functionality to this too??
+      %li.text-left.dropdown-submenu{tabindex: 0}
+        = link_to "#", :class => 'dropdown-toggle', :data => {:toggle => 'dropdown'}, tabindex: -1 do
           %i.fa.fa-file-video-o
           User Guide Videos
         %ul.dropdown-menu

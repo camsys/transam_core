@@ -1,0 +1,9 @@
+.column-resize-handle {
+    cursor: col-resize;
+    width: 1em;
+    height: auto;
+}
+
+.table-header-container {
+    display: flex;
+}

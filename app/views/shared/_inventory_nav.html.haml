@@ -43,8 +43,8 @@
         - transferred_assets = Rails.application.config.asset_base_class_name.constantize.where(organization_id: @organization_list).where('asset_tag = object_key').count
         - if (early_events > 0 && can_view_early_disposition) || (transferred_assets > 0 && can?(:accept_transfers,Rails.application.config.asset_base_class_name.constantize))
           %li.divider
-          %li.text-left.dropdown-submenu
-            = link_to '#' do
+          %li.text-left.dropdown-submenu{tabindex: 0}
+            = link_to '#', tabindex: -1 do
               %i.fa.fa-exclamation.fa-fw
               Action Events
             %ul.dropdown-menu
