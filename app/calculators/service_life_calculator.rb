@@ -14,7 +14,8 @@ class ServiceLifeCalculator < Calculator
   # in any increase in longevity based on the current policy
   def by_age(asset)
 
-    year = fiscal_year_year_on_date(asset.in_service_date + asset.expected_useful_life.months - asset.procurement_lead_time.months)
+    # TTPLAT-2735 Added try around procurement_lead_time to deal with old unit tests in transit that should probably be deprecated
+    year = fiscal_year_year_on_date(asset.in_service_date + asset.expected_useful_life.months - (asset.try(:procurement_lead_time).to_i).months)
     if asset.last_rehabilitation_date.present?
       asset.rehabilitation_updates.each do |evt|
         year += (evt.extended_useful_life_months / 12)
