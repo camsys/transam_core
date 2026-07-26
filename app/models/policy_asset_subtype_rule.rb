@@ -37,6 +37,7 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
   validates :asset_subtype,           :presence => true
 
   validates :min_service_life_months,  :presence => true,  :numericality => {:only_integer => true,   :greater_than_or_equal_to => 0}
+  validates :procurement_lead_time,                        :numericality => {:only_integer => true,   :greater_than_or_equal_to => 0}
   validates :replacement_cost,         :presence => true,  :numericality => {:only_integer => true,   :greater_than_or_equal_to => 0}
   validates :cost_fy_year,             :presence => true,  :numericality => {:only_integer => true,   :greater_than_or_equal_to => 0}
   validates_inclusion_of :replace_with_new, :in => [true, false]
@@ -66,6 +67,7 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
     :policy_id,
     :asset_subtype_id,
     :min_service_life_months,
+    :procurement_lead_time,
     :replacement_cost,
     :cost_fy_year,
     :replace_with_new,
@@ -114,6 +116,9 @@ class PolicyAssetSubtypeRule < ActiveRecord::Base
   # Override setters to remove any extraneous formats from the number strings eg $, etc.
   def min_service_life_months=(num)
     self[:min_service_life_months] = sanitize_to_int(num)
+  end
+  def procurement_lead_time=(num)
+    self[:procurement_lead_time] = sanitize_to_int(num)
   end
   def replacement_cost=(num)
     self[:replacement_cost] = sanitize_to_int(num)

@@ -99,6 +99,10 @@ class StubPolicy < Policy
     120
   end
 
+  def procurement_lead_time
+    18
+  end
+
 end
 
 # declare concrete Asset class for tests

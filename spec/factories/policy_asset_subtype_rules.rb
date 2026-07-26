@@ -3,6 +3,7 @@ FactoryBot.define do
   trait :policy_asset_subtype_rule_attributes do
     min_service_life_months { 144 }
     min_service_life_miles { 500000 }
+    procurement_lead_time { 0 }
     replacement_cost { 2000 }
     cost_fy_year { Date.today.month > 6 ? Date.today.year - 1 : Date.today.year - 2 }
     replace_with_new { true }
