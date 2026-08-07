@@ -17,10 +17,10 @@ class ReportsController < OrganizationAwareController
 
     if params[:report_type]
       report_type = ReportType.find(params[:report_type])
-      active_reports = Report.active.where(report_type: report_type)
+      active_reports = Report.show_in_nav.where(report_type: report_type)
       add_breadcrumb report_type.name.pluralize, reports_path(report_type: report_type.id)
     else
-      active_reports = Report.active
+      active_reports = Report.show_in_nav
       add_breadcrumb "Reports", :reports_path
     end
 

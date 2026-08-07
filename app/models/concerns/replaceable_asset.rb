@@ -202,5 +202,8 @@ module ReplaceableAsset
     rehabilitation_updates.last.try(:event_date)
   end
 
+  def procurement_lead_time
+    policy_analyzer.get_procurement_lead_time
+  end
 
 end
