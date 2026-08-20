@@ -4,7 +4,7 @@
     .media-heading{:class => notice.notice_type.display_class}
       %strong= notice.subject
       %span.pull-right.text-default.text-muted{:style => 'font-size: 0.75em'}= format_as_date_time(notice.display_datetime)
-    %p.text-muted.pull-left{:style => 'font-size: 0.85em'}= notice.summary
+    %p.text-muted.pull-left{:style => 'font-size: 0.85em'}= notice.summary.html_safe
     - if notice.details.present?
       %span.pull-right.text-default.text-muted{:style => 'font-size: 0.75em'}
         = popover_tag("Details...", {:title => notice.subject, :content => notice.details.html_safe})
