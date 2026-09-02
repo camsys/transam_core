@@ -120,13 +120,19 @@ RSpec.describe TransamAsset, :type => :model do
     end
   end
 
-  # Mirrors spec/models/asset_spec.rb (legacy .very_specific coverage) - core's
-  # dummy app has no model anywhere that declares acts_as :transam_assetible
-  # (confirmed via repo-wide grep; transit's TransitAsset does, per the mirror
-  # brief's §3a), so the recursive drill-down branch is unreachable in core
-  # and out of scope here. Only the reachable, degenerate case is written:
-  # with zero distinct transam_assetible_type values, the method returns
-  # every TransamAsset unfiltered.
+  # No legacy counterpart - added from the TTPLAT-3072 coverage screen.
+  # Asset.very_specific exists under the same name in the legacy hierarchy
+  # (app/models/asset.rb:334), but a repo-wide grep confirms no spec, legacy
+  # or new, has ever tested either version by name - this corrects an earlier
+  # "Mirrors spec/models/asset_spec.rb" citation that did not hold up (pass 7
+  # §3 check, the same class of catch as M4's provenance correction).
+  #
+  # Core's dummy app has no model anywhere that declares acts_as
+  # :transam_assetible (confirmed via repo-wide grep; transit's TransitAsset
+  # does, per the mirror brief's §3a), so the recursive drill-down branch is
+  # unreachable in core and out of scope here. Only the reachable, degenerate
+  # case is written: with zero distinct transam_assetible_type values, the
+  # method returns every TransamAsset unfiltered.
   #
   # Compares against TransamAsset.all rather than a fixed set of created
   # records: another describe block in this suite (early_disposition_request_

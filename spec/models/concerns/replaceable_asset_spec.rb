@@ -2,11 +2,13 @@ require 'rails_helper'
 
 RSpec.describe ReplaceableAsset do
 
-  # Cataloged as M4 in the TTPLAT-3072 mirror list (implying a legacy parity
-  # obligation), but no legacy spec anywhere in the repo exercises disposable?,
-  # eligible_for_early_disposition_request?, or scheduled_for_disposition? by
-  # name - a repo-wide grep confirms this. Treating these as coverage-screen
-  # gains (no legacy counterpart) rather than fabricating a citation.
+  # Cataloged as M4 in the TTPLAT-3072 mirror list, but these methods have no
+  # legacy counterpart - a repo-wide grep confirms no legacy spec anywhere
+  # exercises disposable?, eligible_for_early_disposition_request?, or
+  # scheduled_for_disposition? by name. The behavior itself is inherited from
+  # the legacy disposition specs (asset_spec.rb and the disposition job specs
+  # test the same disposition/early-disposition domain rules against the old
+  # hierarchy); only the methods carrying that behavior forward are new.
   #
   # All eight scenarios below were built and their real return values observed
   # and reported before writing any assertion (mirror report 3), then ruled

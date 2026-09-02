@@ -160,7 +160,13 @@ RSpec.describe AssetEvent, :type => :model do
     expect(next_event).to be_nil
   end
 
-  # Mirrors legacy spec: AssetEvent#validate_event_date_with_purchase
+  # No legacy counterpart - added from the TTPLAT-3072 coverage screen. This
+  # validation's two error branches had never fired before this pass (pass 1
+  # brief's original framing); a repo-wide grep confirms no legacy spec
+  # exercises validate_event_date_with_purchase or its error messages (pass 7
+  # §3 check, the same class of catch as M4's and .very_specific's provenance
+  # corrections). Corrects an earlier "Mirrors legacy spec" comment that cited
+  # no actual file or lines and did not hold up.
   describe '#validate_event_date_with_purchase' do
     it 'is invalid without an event date' do
       event = build(:condition_update_event)

@@ -51,10 +51,17 @@ end
 
 # A separate top-level describe, deliberately outside the block above: that
 # block's `before { skip(...) }` would otherwise skip this too.
-# Mirrors spec/jobs/asset_location_update_job_spec.rb:10-17 (skipped '.run') -
-# the legacy job asserted on parent_id/location_comments, fields specific to
-# the old Asset model; the new LocationUpdateEvent#update_asset instead sets
-# location_id directly, so the assertion is authored against that.
+# No legacy counterpart - reclassified 2026-09-02, previously mislabeled
+# "Mirrors spec/jobs/asset_location_update_job_spec.rb:10-17".
+# That legacy job spec exists but has never run: its whole describe opens
+# `before { skip('LocationUpdateEvent assumes transam_asset. Not yet
+# testable.') }`, and that skip predates TTPLAT-3072. A skipped example
+# protects no behavior, so this is new ground, not restored parity.
+#
+# On the assertion: the legacy job would have asserted on parent_id and
+# location_comments, fields specific to the old Asset model. The surviving
+# LocationUpdateEvent#update_asset sets location_id directly, so the
+# assertion is authored against that instead.
 RSpec.describe LocationUpdateEvent, :type => :model do
   describe '#update_asset' do
     it "sets the transam_asset's location_id to the event's parent" do

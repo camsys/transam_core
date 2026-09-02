@@ -35,9 +35,15 @@ RSpec.describe DispositionUpdateEvent, :type => :model do
     expect(create(:buslike_asset).disposition_updates.new.asset_event_type).to eq(AssetEventType.find_by(:class_name => 'DispositionUpdateEvent'))
   end
 
-  # Mirrors spec/jobs/asset_disposition_update_job_spec.rb:8-18 (skipped '.run') -
-  # disposition_type_id 5 ("Disposed") is used deliberately to isolate the
-  # disposition_date mutation; disposition_type_id 2 ("Transferred") would also
+  # No legacy counterpart - reclassified 2026-09-02, previously mislabeled
+  # "Mirrors spec/jobs/asset_disposition_update_job_spec.rb:8-18".
+  # That legacy job spec exists but has never run: its '.run' example skips on
+  # its first line ('DispositionUpdateEvent assumes transam_asset. Not yet
+  # testable.'), and that skip predates TTPLAT-3072. A skipped example protects
+  # no behavior, so this is new ground, not restored parity.
+  #
+  # On the fixture choice: disposition_type_id 5 ("Disposed") is used
+  # deliberately to isolate the disposition_date mutation; disposition_type_id 2 ("Transferred") would also
   # exercise TransamAssetRecord#transfer, which is a separate, currently-untested
   # method (M3) and out of scope here.
   describe '#update_asset' do
