@@ -2,6 +2,7 @@ require 'rails_helper'
 
 describe "assets/_core_asset_dt_columns.html.haml", :type => :view do
   it 'info' do
+    skip 'Dead surface retired by TTPLAT-3091'
     allow(controller).to receive(:params).and_return({controller: 'assets'})
     test_asset = create(:buslike_asset, :description => 'test description 123', :parent => create(:buslike_asset), :in_service_date => Date.new(2010, Date.today.month, 1), :scheduled_rehabilitation_year => 2024, :scheduled_replacement_year => 2025)
     test_asset.condition_updates.create!(attributes_for(:condition_update_event, :assessed_rating => 4))

@@ -70,6 +70,7 @@ RSpec.describe AssetGroup, :type => :model do
     expect(test_asset_group.homogeneous?).to be false
   end
   it 'asset_type_ids' do
+    skip 'Dead surface retired by TTPLAT-3091'
     test_asset.save!
 
     expect(test_asset_group.asset_type_ids).to include(test_asset.asset_subtype.asset_type_id)

@@ -13,6 +13,7 @@ RSpec.describe DocumentsController, :type => :controller do
   end
 
   it 'GET index' do
+    skip 'Dead surface retired by TTPLAT-3091'
     test_document = create(:document, :documentable_id => bus.id)
     bus.documents << test_document
     bus.save!

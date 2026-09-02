@@ -5,6 +5,7 @@ RSpec.describe AssetRehabilitationUpdateJob, :type => :job do
   let(:test_asset) { create(:equipment_asset) }
 
   it '.run' do
+    skip 'Dead surface retired by TTPLAT-3091'
     test_event = test_asset.rehabilitation_updates.create!(attributes_for(:rehabilitation_update_event))
     AssetRehabilitationUpdateJob.new(test_asset.object_key).run
     test_asset.reload

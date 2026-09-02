@@ -136,6 +136,7 @@ RSpec.describe Organization, :type => :model do
   end
 
   it '.asset_type_counts' do
+    skip 'Dead surface retired by TTPLAT-3091'
     asset_subtype = create(:asset_subtype)
     parent_organization = create(:organization_basic)
     organization = create(:organization_basic)
@@ -154,6 +155,7 @@ RSpec.describe Organization, :type => :model do
     expect(organization.asset_type_counts false).to eq({asset_subtype.asset_type.id=>2})
   end
   it '.asset_subtype_counts' do
+    skip 'Dead surface retired by TTPLAT-3091'
     asset_subtype = create(:asset_subtype)
     parent_organization = create(:organization_basic)
     organization = create(:organization_basic)

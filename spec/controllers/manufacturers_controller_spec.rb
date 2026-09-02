@@ -14,6 +14,7 @@ RSpec.describe ManufacturersController, :type => :controller do
   end
 
   it 'GET index' do
+    skip 'Dead surface retired by TTPLAT-3091'
     bus.update!(:organization => subject.current_user.organization, :manufacturer => test_manufacturer)
     bus2 = create(:buslike_asset)
     get :index

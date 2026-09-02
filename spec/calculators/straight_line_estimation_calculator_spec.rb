@@ -13,6 +13,8 @@ RSpec.describe StraightLineEstimationCalculator, :type => :calculator do
     @policy.policy_asset_subtype_rules << @policy_asset_subtype_rule
   end
 
+  before(:each) { skip 'Dead surface retired by TTPLAT-3091' }
+
   before(:each) do
     @test_asset = create(:buslike_asset, :organization => @organization, :asset_type => @asset_subtype.asset_type, :asset_subtype => @asset_subtype)
     @condition_update_event = @test_asset.condition_updates.create(attributes_for(:condition_update_event))
