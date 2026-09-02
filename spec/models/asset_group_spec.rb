@@ -72,7 +72,7 @@ RSpec.describe AssetGroup, :type => :model do
   it 'asset_type_ids' do
     test_asset.save!
 
-    expect(test_asset_group.asset_type_ids).to include(test_asset.asset_type_id)
+    expect(test_asset_group.asset_type_ids).to include(test_asset.asset_subtype.asset_type_id)
   end
   it '.to_s' do
     expect(test_asset_group.to_s).to eq(test_asset_group.name)

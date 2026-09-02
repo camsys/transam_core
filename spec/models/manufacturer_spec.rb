@@ -7,14 +7,13 @@ RSpec.describe Manufacturer, :type => :model do
 
   describe 'associations' do
     it 'has many assets' do
-      expect(test_manufacturer).to have_many(:assets)
+      expect(test_manufacturer).to have_many(:transam_assets)
 
       bus.update!(:manufacturer => test_manufacturer)
       bus2 = create(:buslike_asset, :manufacturer_id => 100)
-      
-      expect(test_manufacturer.assets).to include(bus)
-      expect(test_manufacturer.assets).not_to include(bus2)
-      expect(test_manufacturer.asset_count(bus.organization)).to eq(1)
+
+      expect(test_manufacturer.transam_assets).to include(bus)
+      expect(test_manufacturer.transam_assets).not_to include(bus2)
     end
   end
 

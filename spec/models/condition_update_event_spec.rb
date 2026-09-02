@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe ConditionUpdateEvent, :type => :model do
 
-  let(:test_event) { create(:buslike_asset, :purchase_date => Date.today).condition_updates.create!(attributes_for(:condition_update_event)) }
+  let(:test_event) { create(:buslike_asset, :purchase_date => Date.today, :in_service_date => Date.today).condition_updates.create!(attributes_for(:condition_update_event)) }
 
   describe 'associations' do
     it 'has a type' do
@@ -41,7 +41,7 @@ RSpec.describe ConditionUpdateEvent, :type => :model do
       expect(create(:buslike_asset, :reported_condition_rating => 2.0).condition_updates.new.assessed_rating).to eq(2.0)
     end
     it 'default to max condition type' do
-      expect(create(:buslike_asset, :reported_condition_rating => nil).condition_updates.new.assessed_rating).to eq(5.0)
+      expect(create(:buslike_asset).condition_updates.new.assessed_rating).to eq(5.0)
     end
     it 'asset event type' do
       expect(create(:buslike_asset).condition_updates.new.asset_event_type).to eq(AssetEventType.find_by(:class_name => 'ConditionUpdateEvent'))

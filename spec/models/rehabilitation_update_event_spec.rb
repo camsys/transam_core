@@ -79,5 +79,12 @@ RSpec.describe RehabilitationUpdateEvent, :type => :model do
     expect(create(:buslike_asset).rehabilitation_updates.new.extended_useful_life_months).to eq(0)
   end
 
+  # No legacy counterpart - added from the TTPLAT-3072 coverage screen
+  it '.api_json' do
+    result = test_event.api_json
+    expect(result[:total_cost]).to eq(test_event.cost)
+    expect(result[:extended_useful_life_months]).to eq(test_event.extended_useful_life_months)
+    expect(result[:extended_useful_life_miles]).to eq(test_event.extended_useful_life_miles)
+  end
 
 end

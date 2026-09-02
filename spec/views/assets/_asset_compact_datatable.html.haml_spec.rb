@@ -14,7 +14,7 @@ describe "assets/_asset_compact_datatable.html.haml", :type => :view do
     expect(rendered).to have_content(test_asset.external_id)
     expect(rendered).to have_content(test_asset.organization.short_name)
     expect(rendered).to have_content(test_asset.manufacture_year)
-    expect(rendered).to have_content(test_asset.asset_type.to_s)
+    expect(rendered).to have_content(test_asset.asset_subtype.asset_type.to_s)
     expect(rendered).to have_content(test_asset.asset_subtype.to_s)
     expect(rendered).to have_content(test_asset.purchase_cost)
     expect(rendered).to have_content("2.0")

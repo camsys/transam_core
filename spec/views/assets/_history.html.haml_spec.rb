@@ -5,7 +5,7 @@ describe "assets/_history.html.haml", :type => :view do
   it 'info' do
     allow(controller).to receive(:current_user).and_return(create(:admin))
     test_asset = create(:buslike_asset)
-    test_asset.asset_events.create!(attributes_for(:condition_update_event, :comments => 'test comment 123'))
+    test_asset.asset_events.create!(attributes_for(:condition_update_event, :transam_asset => test_asset, :comments => 'test comment 123'))
     assign(:asset, test_asset)
     render
 

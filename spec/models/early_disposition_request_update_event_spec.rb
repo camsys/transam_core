@@ -36,6 +36,31 @@ RSpec.describe EarlyDispositionRequestUpdateEvent, :type => :model do
     expect(test_event.get_update).to eq("Early disposition request was made")
   end
 
+  # No legacy counterpart - added from the TTPLAT-3072 coverage screen
+  it '.api_json' do
+    result = test_event.api_json
+    expect(result[:comments]).to eq(test_event.comments)
+    expect(result[:document]).to eq(test_event.document)
+  end
+
+  # No legacy counterpart - added from the TTPLAT-3072 coverage screen.
+  # transam_workflow_transitions defaults to [] for this class (no override
+  # here, unlike Car in the test harness), so custom_icon is always nil and
+  # every case below falls through to the elsif chain - confirmed by calling
+  # the method directly before writing these, not inferred from the body.
+  describe '#get_workflow_event_icon' do
+    it 'maps known event names to their icon' do
+      expect(test_event.get_workflow_event_icon('approve')).to eq('fa-plus-square')
+      expect(test_event.get_workflow_event_icon('reject')).to eq('fa-chevron-circle-left')
+      expect(test_event.get_workflow_event_icon('approve_via_transfer')).to eq('fa-chevron-circle-right')
+      expect(test_event.get_workflow_event_icon('cancel')).to eq('fa-stop')
+    end
+
+    it 'returns an empty string for an unrecognized event name' do
+      expect(test_event.get_workflow_event_icon('bogus_event')).to eq('')
+    end
+  end
+
   it '.get_latest_update' do
     test_event.state = 'new'
     expect(test_event.get_latest_update).to eq("Early disposition request was made")

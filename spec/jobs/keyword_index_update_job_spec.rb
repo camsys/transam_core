@@ -2,11 +2,11 @@ require 'rails_helper'
 
 RSpec.describe KeywordIndexUpdateJob, :type => :job do
 
-  let(:test_asset) { create(:equipment_asset) }
+  let(:test_asset) { create(:buslike_asset) }
 
   describe '.run' do
     it 'update keyword index' do
-      KeywordIndexUpdateJob.new('Equipment', test_asset.object_key).run
+      KeywordIndexUpdateJob.new('TransamAsset', test_asset.object_key).run
 
       expect(KeywordSearchIndex.find_by(:object_key => test_asset.object_key)).not_to be nil
     end
@@ -14,8 +14,8 @@ RSpec.describe KeywordIndexUpdateJob, :type => :job do
       expect{KeywordIndexUpdateJob.new('nonexistent', test_asset.object_key).run}.to raise_error(RuntimeError, "Can't instantiate class nonexistent")
     end
     it 'wrong object key' do
-      expect(Rails.logger).to receive(:info).with("Can't find Equipment with object_key abcdefgh")
-      KeywordIndexUpdateJob.new('Equipment', 'abcdefgh').run
+      expect(Rails.logger).to receive(:info).with("Can't find TransamAsset with object_key abcdefgh")
+      KeywordIndexUpdateJob.new('TransamAsset', 'abcdefgh').run
     end
   end
 
@@ -24,7 +24,7 @@ RSpec.describe KeywordIndexUpdateJob, :type => :job do
     allow(Time).to receive(:now).and_return(Time.utc(2000,"jan",1,20,15,1))
 
     expect(Rails.logger).to receive(:info).with("Executing KeywordIndexUpdateJob at #{Time.now.to_s} for Keyword Index #{test_asset.object_key}")
-    KeywordIndexUpdateJob.new('Equipment',test_asset.object_key).prepare
+    KeywordIndexUpdateJob.new('TransamAsset',test_asset.object_key).prepare
   end
 
   describe '.check' do

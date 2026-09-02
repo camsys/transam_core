@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe AssetEvent, :type => :model do
 
-  let(:test_asset_event) { create(:asset_event) }
+  let(:test_asset_event) { AssetEvent.find_by_object_key(create(:condition_update_event).object_key) }
 
   # instantiate asset_event_type class for test_asset_event
   class MileageUpdateEvent < AssetEvent; end
@@ -20,7 +20,7 @@ RSpec.describe AssetEvent, :type => :model do
 
     it "types an already typed event" do
       test_asset = create(:buslike_asset)
-      test_asset.condition_updates.create!(attributes_for(:condition_update_event, :asset => test_asset))
+      test_asset.condition_updates.create!(attributes_for(:condition_update_event))
       expect(AssetEvent.as_typed_event(test_asset.condition_updates.last).class).to eq(ConditionUpdateEvent)
     end
 
@@ -37,7 +37,7 @@ RSpec.describe AssetEvent, :type => :model do
 
   describe "#is_typed?" do
     it 'returns true for strongly typed assets' do
-      expect(ConditionUpdateEvent.new(:asset => build_stubbed(:buslike_asset)).is_typed?).to be(true)
+      expect(ConditionUpdateEvent.new(:transam_asset => build_stubbed(:buslike_asset)).is_typed?).to be(true)
     end
 
     it 'returns false for Asset' do
@@ -61,7 +61,7 @@ RSpec.describe AssetEvent, :type => :model do
 
   describe '#asset' do
     it 'exists' do
-      expect(test_asset_event.asset.nil?).to be false
+      expect(test_asset_event.transam_asset.nil?).to be false
     end
 
     it 'associations hold on asset destroy' do
@@ -158,6 +158,29 @@ RSpec.describe AssetEvent, :type => :model do
     next_event = test_asset_event.next_event_of_type
 
     expect(next_event).to be_nil
+  end
+
+  # Mirrors legacy spec: AssetEvent#validate_event_date_with_purchase
+  describe '#validate_event_date_with_purchase' do
+    it 'is invalid without an event date' do
+      event = build(:condition_update_event)
+      event.event_date = nil
+      event.valid?
+      expect(event.errors[:event_date]).to include('must exist')
+    end
+
+    it 'is invalid when the asset was purchased new and the event date is before the purchase date' do
+      new_bus = create(:buslike_asset, :purchased_new => true, :purchase_date => Date.today - 1.year)
+      event = build(:condition_update_event, :base_transam_asset => new_bus, :transam_asset => new_bus, :event_date => new_bus.purchase_date - 1.day)
+      event.valid?
+      expect(event.errors[:event_date]).to include('must be on or after purchase date if new purchase')
+    end
+
+    it 'is valid when the event date is on or after the purchase date' do
+      new_bus = create(:buslike_asset, :purchased_new => true, :purchase_date => Date.today - 1.year)
+      event = build(:condition_update_event, :base_transam_asset => new_bus, :transam_asset => new_bus, :event_date => new_bus.purchase_date)
+      expect(event.valid?).to be true
+    end
   end
 
 end

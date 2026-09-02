@@ -2,7 +2,15 @@ require 'rails_helper'
 
 RSpec.describe Api::V1::DocumentsController, type: :request do
   let(:test_user) { create(:normal_user) }
-  let(:test_asset) { create(:buslike_asset_basic_org) }
+  let(:test_organization) { create(:organization_basic) }
+  let(:test_asset_subtype) { create(:asset_subtype) }
+  let(:test_policy) do
+    policy = create(:policy, :organization => test_organization)
+    create(:policy_asset_type_rule, :policy => policy, :asset_type => test_asset_subtype.asset_type)
+    create(:policy_asset_subtype_rule, :policy => policy, :asset_subtype => test_asset_subtype)
+    policy
+  end
+  let(:test_asset) { test_policy; create(:buslike_asset_basic_org, :organization => test_organization, :asset_subtype => test_asset_subtype) }
   let(:test_file) { Rack::Test::UploadedFile.new('spec/files/sample.png', 'application/png', true) }
 
   let(:valid_headers) { {"X-User-Email" => test_user.email, "X-User-Token" => test_user.authentication_token} }

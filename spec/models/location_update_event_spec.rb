@@ -48,3 +48,38 @@ RSpec.describe LocationUpdateEvent, :type => :model do
     end
   end
 end
+
+# A separate top-level describe, deliberately outside the block above: that
+# block's `before { skip(...) }` would otherwise skip this too.
+# Mirrors spec/jobs/asset_location_update_job_spec.rb:10-17 (skipped '.run') -
+# the legacy job asserted on parent_id/location_comments, fields specific to
+# the old Asset model; the new LocationUpdateEvent#update_asset instead sets
+# location_id directly, so the assertion is authored against that.
+RSpec.describe LocationUpdateEvent, :type => :model do
+  describe '#update_asset' do
+    it "sets the transam_asset's location_id to the event's parent" do
+      new_location = create(:buslike_asset)
+      test_asset = create(:buslike_asset)
+      expect(test_asset.location_id).to be_nil
+
+      test_asset.location_updates.create!(:parent => new_location)
+      test_asset.reload
+
+      expect(test_asset.location_id).to eq(new_location.id)
+    end
+  end
+
+  # No legacy counterpart - added from the TTPLAT-3072 coverage screen
+  describe '#api_json' do
+    it 'includes parent_key and parent_name' do
+      new_location = create(:buslike_asset)
+      test_asset = create(:buslike_asset)
+      event = test_asset.location_updates.create!(:parent => new_location)
+
+      result = event.api_json
+
+      expect(result[:parent_key]).to eq(new_location.object_key)
+      expect(result[:parent_name]).to eq(new_location.asset_tag)
+    end
+  end
+end

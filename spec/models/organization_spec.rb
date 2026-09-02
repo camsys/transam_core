@@ -147,8 +147,8 @@ RSpec.describe Organization, :type => :model do
     policy = create(:policy, :organization => organization, :parent => parent_policy)
     policy.policy_asset_subtype_rules << policy_asset_subtype_rule
 
-    create(:buslike_asset_basic_org, :organization => organization, :asset_type => asset_subtype.asset_type, :asset_subtype => asset_subtype)
-    create(:buslike_asset_basic_org, :organization => organization, :asset_type => asset_subtype.asset_type, :asset_subtype => asset_subtype, :disposition_date => Date.today)
+    create(:buslike_asset_basic_org, :organization => organization, :asset_subtype => asset_subtype)
+    create(:buslike_asset_basic_org, :organization => organization, :asset_subtype => asset_subtype, :disposition_date => Date.today)
 
     expect(organization.asset_type_counts).to eq({asset_subtype.asset_type.id=>1})
     expect(organization.asset_type_counts false).to eq({asset_subtype.asset_type.id=>2})
@@ -165,8 +165,8 @@ RSpec.describe Organization, :type => :model do
     policy = create(:policy, :organization => organization, :parent => parent_policy)
     policy.policy_asset_subtype_rules << policy_asset_subtype_rule
 
-    create(:buslike_asset_basic_org, :organization => organization, :asset_type => asset_subtype.asset_type, :asset_subtype => asset_subtype)
-    create(:buslike_asset_basic_org, :organization => organization, :asset_type => asset_subtype.asset_type, :asset_subtype => asset_subtype, :disposition_date => Date.today)
+    create(:buslike_asset_basic_org, :organization => organization, :asset_subtype => asset_subtype)
+    create(:buslike_asset_basic_org, :organization => organization, :asset_subtype => asset_subtype, :disposition_date => Date.today)
 
     expect(organization.asset_subtype_counts(asset_subtype.asset_type.id)).to eq({asset_subtype.id=>1})
     expect(organization.asset_subtype_counts(asset_subtype.asset_type.id, false)).to eq({asset_subtype.id=>2})
