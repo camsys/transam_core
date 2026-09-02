@@ -1,5 +1,5 @@
 :ruby
-  notices = Notice.active_for_organizations(@organization_list).order(:display_datetime)
+  notices = Notice.active_for_organizations(@organization_list).order(display_datetime: :desc)
 
 .panel.panel-default.dashboard-panel
   .panel-heading

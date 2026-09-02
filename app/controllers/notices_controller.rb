@@ -14,9 +14,9 @@ class NoticesController < OrganizationAwareController
   def index
 
     if current_user.has_role? :admin
-      @notices = Notice.all.order(:display_datetime)
+      @notices = Notice.all.order(display_datetime: :desc)
     else
-      @notices = Notice.visible.order(:display_datetime)
+      @notices = Notice.visible.order(display_datetime: :desc)
     end
     # cache the set of notices ids in case we need them later
     cache_list(@notices, INDEX_KEY_LIST_VAR)
