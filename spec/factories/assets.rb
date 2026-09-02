@@ -15,13 +15,27 @@ FactoryBot.define do
     created_by_id { 1 }
   end
 
-  factory :buslike_asset, :class => :asset do # An untyped asset which looks like a bus
-    basic_asset_attributes
-    association :asset_type
+  # TTPLAT-3072: re-pointed at the surviving hierarchy. Dropped attributes that
+  # have no column on transam_assets: asset_type, expected_useful_life,
+  # created_by_id, and reported_condition_rating (a derived reader on
+  # TransamAsset, computed from condition_updates - readable, not settable).
+  # purchase_date and in_service_date moved forward to match the pre-existing
+  # :transam_asset factory: TransamAsset validates in_service_date >=
+  # purchase_date, which the legacy 2001 pairing violated.
+  trait :basic_transam_asset_attributes do
+    association :organization, :factory => :organization
+    asset_tag
+    purchase_date { 1.year.ago }
+    manufacture_year { "2000" }
+    in_service_date { 1.year.ago }
+    purchased_new { false }
+    policy_replacement_year { 2000 }
+  end
+
+  factory :buslike_asset, :class => :transam_asset do # An untyped asset which looks like a bus
+    basic_transam_asset_attributes
     association :asset_subtype
     purchase_cost { 2000.0 }
-    expected_useful_life { 120 }
-    reported_condition_rating { 2.0 }
   end
 
   factory :transam_asset do
@@ -35,13 +49,10 @@ FactoryBot.define do
     association :organization, :factory => :organization
   end
 
-  factory :buslike_asset_basic_org, :class => :asset do # An untyped asset which looks like a bus
-    basic_asset_attributes
-    association :asset_type
+  factory :buslike_asset_basic_org, :class => :transam_asset do # An untyped asset which looks like a bus
+    basic_transam_asset_attributes
     association :asset_subtype
     purchase_cost { 2000.0 }
-    expected_useful_life { 120 }
-    reported_condition_rating { 2.0 }
     association :organization, :factory => :organization_basic
   end
 
