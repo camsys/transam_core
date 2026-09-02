@@ -14,7 +14,11 @@ describe "asset_events/_rehabilitation_update_event_form.html.haml", :type => :v
     expect(rendered).to have_field('asset_event_asset_event_asset_subsystems_attributes_0_parts_cost')
     expect(rendered).to have_field('asset_event_asset_event_asset_subsystems_attributes_0_labor_cost')
     expect(rendered).to have_field('asset_event_extended_useful_life_months')
-    expect(rendered).to have_field('asset_event_extended_useful_life_miles')
+    # extended_useful_life_miles is gated on @asset.class.to_s.include?('Vehicle')
+    # (_rehabilitation_update_event_form.html.haml:49) - a bare TransamAsset never
+    # matches, so the field is correctly absent here. The positive assertion (the
+    # field present for a vehicle-class asset) belongs in transam_transit.
+    expect(rendered).not_to have_field('asset_event_extended_useful_life_miles')
     expect(rendered).to have_field('asset_event_event_date')
     expect(rendered).to have_field('asset_event_comments')
   end
