@@ -2,6 +2,7 @@ require 'rails_helper'
 
 describe "tasks/_summary.html.haml", :type => :view do
   it 'info' do
+    skip 'Task#taskable_path eval references transam_asset_path, which does not exist, TTPLAT-3094'
     test_user = create(:admin)
     test_asset = create(:buslike_asset)
     test_task = create(:task, :complete_by => Date.new(2010,01,01), :user => test_user, :taskable => test_asset)

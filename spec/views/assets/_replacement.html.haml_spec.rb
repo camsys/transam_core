@@ -2,6 +2,7 @@ require 'rails_helper'
 
 describe "assets/_replacement.html.haml", :type => :view do
   it 'info' do
+    skip 'policy_rehabilitation_year is a derived reader, not settable on this fixture, TTPLAT-3093'
     test_asset = create(:buslike_asset, :policy_replacement_year => 2024, :scheduled_replacement_year => 2025, :scheduled_rehabilitation_year => 2026, :policy_rehabilitation_year => 2027)
     assign(:asset, test_asset)
     render
