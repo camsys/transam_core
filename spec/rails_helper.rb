@@ -57,7 +57,7 @@ module TransamMapMarkers; end
 
 # declare concrete Organization class for tests
 class TestOrg < Organization
-  has_many :assets,   :foreign_key => 'organization_id'
+  has_many :assets, :class_name => Rails.application.config.asset_base_class_name, :foreign_key => 'organization_id'
 
   def get_policy
     return Policy.where("`organization_id` = ?",self.id).order('created_at').last
@@ -66,7 +66,7 @@ end
 
 #declaring a concrete organization for tests that doesn't ever pull from the database
 class StubOrg < Organization
-  has_many :assets,   :foreign_key => 'organization_id'
+  has_many :assets, :class_name => Rails.application.config.asset_base_class_name, :foreign_key => 'organization_id'
 
   def get_policy
     return StubPolicy.new(organization: self)
