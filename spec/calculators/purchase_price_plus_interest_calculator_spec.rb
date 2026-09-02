@@ -13,9 +13,9 @@ RSpec.describe PurchasePricePlusInterestCalculator, :type => :calculator do
   end
 
   before(:each) do
-    @test_asset = create(:buslike_asset_basic_org, :organization => @organization, :asset_type => @asset_subtype.asset_type, :asset_subtype => @asset_subtype)
-    create(:policy_asset_type_rule, :policy => @policy, :asset_type => @test_asset.asset_type)
-    create(:policy_asset_subtype_rule, :policy => @policy, :asset_subtype => @test_asset.asset_subtype)
+    create(:policy_asset_type_rule, :policy => @policy, :asset_type => @asset_subtype.asset_type)
+    create(:policy_asset_subtype_rule, :policy => @policy, :asset_subtype => @asset_subtype)
+    @test_asset = create(:buslike_asset_basic_org, :organization => @organization, :asset_subtype => @asset_subtype)
   end
 
   let(:test_calculator) { PurchasePricePlusInterestCalculator.new }

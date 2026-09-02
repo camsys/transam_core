@@ -11,6 +11,7 @@ RSpec.describe CostCalculator, :type => :calculator do
       expect(test_calculator.send(:replacement_year, test_asset)).to eq(test_asset.policy_replacement_year)
     end
     it 'asset replacement year' do
+      test_asset.scheduled_replacement_year = test_asset.policy_replacement_year + 5
       expect(test_calculator.send(:replacement_year, test_asset)).to eq(test_asset.scheduled_replacement_year)
     end
   end

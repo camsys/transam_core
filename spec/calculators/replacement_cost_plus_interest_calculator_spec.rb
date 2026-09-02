@@ -12,11 +12,12 @@ RSpec.describe ReplacementCostPlusInterestCalculator, :type => :calculator do
     @policy = create(:policy, :organization => @organization, :parent => @parent_policy)
     @policy.policy_asset_subtype_rules << @policy_asset_subtype_rule
 
-    @test_asset = create(:buslike_asset_basic_org, :organization => @organization, :asset_type => @asset_subtype.asset_type, :asset_subtype => @asset_subtype)
+    create(:policy_asset_type_rule, :policy => @policy, :asset_type => @asset_subtype.asset_type)
+    create(:policy_asset_subtype_rule, :policy => @policy, :asset_subtype => @asset_subtype)
 
-    @condition_update_event = ConditionUpdateEvent.create(:asset => @test_asset)
-    create(:policy_asset_type_rule, :policy => @policy, :asset_type => @test_asset.asset_type)
-    create(:policy_asset_subtype_rule, :policy => @policy, :asset_subtype => @test_asset.asset_subtype)
+    @test_asset = create(:buslike_asset_basic_org, :organization => @organization, :asset_subtype => @asset_subtype)
+
+    @condition_update_event = ConditionUpdateEvent.create(:transam_asset => @test_asset)
   end
 
   let(:test_calculator) { ReplacementCostPlusInterestCalculator.new }
