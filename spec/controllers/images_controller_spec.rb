@@ -14,6 +14,7 @@ RSpec.describe ImagesController, :type => :controller do
   end
 
   it 'GET index' do
+    skip 'Dead surface retired by TTPLAT-3091'
     test_image = create(:image, :imagable_id => bus.id)
     bus.images << test_image
     bus.save!

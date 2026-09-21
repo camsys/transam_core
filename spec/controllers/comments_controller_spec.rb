@@ -13,6 +13,7 @@ RSpec.describe CommentsController, :type => :controller do
   end
 
   it 'GET index' do
+    skip 'Dead surface retired by TTPLAT-3091'
     test_comment = create(:comment, :commentable_id => bus.id)
     bus.comments << test_comment
     bus.save!

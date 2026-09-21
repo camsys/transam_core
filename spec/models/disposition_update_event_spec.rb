@@ -34,4 +34,32 @@ RSpec.describe DispositionUpdateEvent, :type => :model do
     skip 'DispositionUpdateEvent assumes transam_asset. Not yet testable.'
     expect(create(:buslike_asset).disposition_updates.new.asset_event_type).to eq(AssetEventType.find_by(:class_name => 'DispositionUpdateEvent'))
   end
+
+  # No legacy counterpart - reclassified 2026-09-02, previously mislabeled
+  # "Mirrors spec/jobs/asset_disposition_update_job_spec.rb:8-18".
+  # That legacy job spec exists but has never run: its '.run' example skips on
+  # its first line ('DispositionUpdateEvent assumes transam_asset. Not yet
+  # testable.'), and that skip predates TTPLAT-3072. A skipped example protects
+  # no behavior, so this is new ground, not restored parity.
+  #
+  # On the fixture choice: disposition_type_id 5 ("Disposed") is used
+  # deliberately to isolate the disposition_date mutation; disposition_type_id 2 ("Transferred") would also
+  # exercise TransamAssetRecord#transfer, which is a separate, currently-untested
+  # method (M3) and out of scope here.
+  describe '#update_asset' do
+    it 'sets the disposition_date on the transam_asset to the event date' do
+      test_asset = create(:buslike_asset)
+      expect(test_asset.disposition_date).to be_nil
+
+      event = test_asset.disposition_updates.create!(attributes_for(:disposition_update_event, :disposition_type_id => 5, :event_date => Date.today))
+      test_asset.reload
+
+      expect(test_asset.disposition_date).to eq(event.event_date)
+    end
+  end
+
+  # DispositionUpdateEvent#api_json (M16) is not written here: mileage_at_disposition
+  # is supplied by transam_transit (alias_attribute onto current_mileage, reopening
+  # this class), not a core bug. See ttplat-3072-mirror-brief.md §3a. Moved to the
+  # transit brief.
 end

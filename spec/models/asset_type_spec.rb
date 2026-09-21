@@ -14,4 +14,15 @@ RSpec.describe AssetType, :type => :model do
   it 'responds to api_json' do
     expect(test_type).to respond_to(:api_json)
   end
+
+  # No legacy counterpart - added from the TTPLAT-3072 coverage screen. The
+  # example above only checked that api_json exists, never that it returned
+  # anything, which is why the coverage screen still found it uncovered.
+  it 'api_json returns id, name, and description' do
+    expect(test_type.api_json).to eq({
+      id: test_type.id,
+      name: test_type.name,
+      description: test_type.description
+    })
+  end
 end

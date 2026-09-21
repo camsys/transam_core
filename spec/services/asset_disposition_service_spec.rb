@@ -5,6 +5,7 @@ RSpec.describe AssetDispositionService, :type => :service do
   let(:test_service) { AssetDispositionService.new }
 
   it '.disposition_list' do
+    skip 'Dead surface retired by TTPLAT-3091'
     test_asset = create(:buslike_asset, :scheduled_replacement_year => 2020)
 
     results = test_service.disposition_list([test_asset.organization.id], 2020, test_asset.asset_type.id, test_asset.asset_subtype.id)

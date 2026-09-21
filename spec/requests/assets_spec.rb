@@ -16,6 +16,16 @@ RSpec.describe Api::V1::AssetsController, type: :request do
     test_asset.save!
   end
 
+  # Skipped: pass-6 investigation (TTPLAT-3072) found two independent failures here.
+  # 1) `render_template(:show)` does not apply - Api::ApiController < ActionController::API
+  #    renders JSON only, so no template is ever recorded as rendered (harness artifact,
+  #    would be a one-line fix). 2) the "not found" example asserts on
+  #    json['data']['id'], but the controller's fail branch (assets_controller.rb:9,
+  #    json_response(:fail, message: "...")) returns a top-level `message` string and no
+  #    `data` key at all - a genuine mismatch between the spec's assumed response shape
+  #    and the controller's actual JsonResponseHelper format, not a harness issue. Fixing
+  #    the second requires a judgment call about the intended response shape, which is
+  #    out of this pass's bounded scope. Left skipped; see ttplat-3072-cc-pass6-report.md.
   describe 'GET /api/v1/assets/{id}', :skip do
 
     before { get "/api/v1/assets/#{asset_id}.json", headers: valid_headers }

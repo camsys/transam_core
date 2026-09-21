@@ -1,0 +1,93 @@
+# Pinned by TTPLAT-3072 P8. The gate is covered lines only — see §0 of the P8 brief.
+# Percentage is NOT a gate: the denominator shrinks when a previously-unloaded
+# file is touched for the first time, so a percentage floor rises on events
+# that are not improvements. `floor.covered` is the only enforced number;
+# everything under `informational` is printed, never enforced.
+#
+# Known false-failure modes for whoever sees this check go red — check these
+# BEFORE assuming the suite regressed:
+#   1. transam_transit's CI runs `bundle update transam_core` before its suite,
+#      so a change on this repo's develop can move transam_transit's covered
+#      count with no commit to transam_transit at all. (This file only gates
+#      transam_core's own suite, but the same core commit is the first place
+#      to look if transam_transit goes red with no transit-side cause.)
+#   2. A previously-untouched file got touched for the first time. Covered
+#      rises, relevant falls, the printed percentage jumps — that jump is
+#      harmless to the gate by design, but someone will ask about it.
+#   3. Order-dependent seeded lookups (ConditionType.first, VehicleUsageCode
+#      .first, and similar, flagged in TTPLAT-3072 P1 and P6). A seed-data
+#      change can move which records these resolve to, and therefore what
+#      code paths run.
+#   4. A run without `app:transam_core:prepare_rspec` first. Warm-database
+#      residue from a prior run changes what passes, and therefore what is
+#      covered.
+#
+# TTPLAT-3072 P8a — partial-run guard (§2b). check_coverage_baseline also
+# compares this file's per-file `covered: 0` entries (the "synthetic" set --
+# P7 established with zero exceptions across 262 files that covered==0 means
+# a file the run never loaded) against the CURRENT run's synthetic set:
+#   - a file synthetic now that was NOT synthetic here -> abort, naming it.
+#     More than roughly a quarter of the manifest going synthetic at once
+#     reads as a partial run; one or two reads as those files no longer
+#     being exercised.
+#   - a file synthetic here that is NOT synthetic now -> informational note
+#     only (first-time coverage); re-pin to clear the note.
+# This is deliberately NOT redundant with the covered-lines floor above: a
+# single file quietly losing ALL its coverage in an otherwise-full run still
+# drags total covered lines below the floor and is caught there. The
+# synthetic-set check exists for the case the floor alone reads ambiguously
+# -- a partial run (most files never loaded) collapses the total the same
+# way a real regression would, but names exactly which files went dark
+# instead of handing over a bare shortfall number. (This repo's manifest
+# currently has zero files pinned synthetic, so demonstrating the abort
+# means running a single spec file and observing files newly go to zero.)
+#
+# Pinned from two consecutive live full-suite runs (TTPLAT-3072 P8, 2026-09-18)
+# that agreed EXACTLY, run to run, on every one of the 15 files below — see
+# ttplat-3072-p8-report.md §1/§3. Also matches the P7 ticket-record pair
+# (603/938 → 718/938) exactly, including concerns/policy_aware.rb, which the
+# prose list in ttplat-3072-ticket-drafts.md omits (without it the total is
+# 550/870, not 603/938).
+pinned_at: 2026-09-18
+pinned_from: "live run, two consecutive, agreeing (app:transam_core:prepare_rspec + bundle exec rspec, run twice)"
+floor:
+  covered: 718
+informational:               # printed, never enforced
+  relevant: 938
+  percent: 76.55
+  synthetic_relevant: 0      # all 15 files are loaded by the suite; none synthetic
+  per_file:
+    app/models/transam_asset.rb:                                  { covered: 156, relevant: 245 }
+    app/models/transam_asset_record.rb:                           { covered: 23,  relevant: 70 }
+    app/models/asset_event.rb:                                    { covered: 50,  relevant: 56 }
+    app/models/asset_event_type.rb:                               { covered: 6,   relevant: 6 }
+    app/models/asset_group.rb:                                    { covered: 22,  relevant: 22 }
+    app/models/asset_subtype.rb:                                  { covered: 11,  relevant: 13 }
+    app/models/asset_type.rb:                                     { covered: 14,  relevant: 16 }
+    app/models/condition_update_event.rb:                         { covered: 34,  relevant: 36 }
+    app/models/location_update_event.rb:                         { covered: 31,  relevant: 34 }
+    app/models/early_disposition_request_update_event.rb:        { covered: 75,  relevant: 78 }
+    app/models/concerns/policy_aware.rb:                          { covered: 60,  relevant: 68 }
+    app/models/concerns/replaceable_asset.rb:                     { covered: 55,  relevant: 82 }
+    app/models/concerns/transam_keyword_searchable.rb:            { covered: 79,  relevant: 87 }
+    app/models/concerns/transam_object_key.rb:                    { covered: 18,  relevant: 21 }
+    app/models/concerns/transam_workflow.rb:                      { covered: 84,  relevant: 104 }
+groups:
+  asset core:
+    - app/models/transam_asset.rb
+    - app/models/transam_asset_record.rb
+    - app/models/asset_event.rb
+    - app/models/asset_event_type.rb
+    - app/models/asset_group.rb
+    - app/models/asset_subtype.rb
+    - app/models/asset_type.rb
+  update events:
+    - app/models/condition_update_event.rb
+    - app/models/location_update_event.rb
+    - app/models/early_disposition_request_update_event.rb
+  concerns:
+    - app/models/concerns/policy_aware.rb
+    - app/models/concerns/replaceable_asset.rb
+    - app/models/concerns/transam_keyword_searchable.rb
+    - app/models/concerns/transam_object_key.rb
+    - app/models/concerns/transam_workflow.rb

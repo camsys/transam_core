@@ -18,6 +18,8 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
 
+  # Version dependencies
+  s.add_dependency 'json', '< 3.0'
   s.add_dependency 'active_record-acts_as'
 
   s.add_dependency 'rails', '~> 5.2.0'
