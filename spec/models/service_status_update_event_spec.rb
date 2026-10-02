@@ -29,4 +29,9 @@ RSpec.describe ServiceStatusUpdateEvent, :type => :model do
   it '.set_defaults' do
     expect(create(:buslike_asset).service_status_updates.asset_event_type).to eq(AssetEventType.find_by(:class_name => 'ServiceStatusUpdateEvent'))
   end
+
+  # No legacy counterpart - added from the TTPLAT-3072 coverage screen
+  it '.api_json' do
+    expect(test_event.api_json[:service_status_type]).to eq(test_event.service_status_type.api_json)
+  end
 end

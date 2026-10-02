@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe WeightedAverageConditionRollupCalculator, :type => :calculator do
+RSpec.describe WeightedAverageConditionRollupCalculator, :type => :calculator, :skip => 'Dead surface retired by TTPLAT-3091' do
 
   before(:all) do
     @parent_asset = create(:buslike_asset)

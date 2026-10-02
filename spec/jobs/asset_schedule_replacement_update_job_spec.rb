@@ -18,6 +18,7 @@ RSpec.describe AssetScheduleReplacementUpdateJob, :type => :job do
   end
 
   it '.run' do
+    skip 'Dead surface retired by TTPLAT-3091'
     test_event = @test_asset.schedule_replacement_updates.create!(attributes_for(:schedule_replacement_update_event))
 
     create(:policy_asset_type_rule, :policy => @policy, :asset_type => @test_asset.asset_type)

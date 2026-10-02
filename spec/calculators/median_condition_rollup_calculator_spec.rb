@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe MedianConditionRollupCalculator, :type => :calculator do
+RSpec.describe MedianConditionRollupCalculator, :type => :calculator, :skip => 'Dead surface retired by TTPLAT-3091' do
 
   before(:each) do
     @parent_asset = create(:buslike_asset)

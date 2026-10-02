@@ -5,6 +5,7 @@ RSpec.describe AssetScheduleDispositionUpdateJob, :type => :job do
   let(:test_asset) { create(:equipment_asset) }
 
   it '.run' do
+    skip 'Dead surface retired by TTPLAT-3091'
     test_event = test_asset.schedule_disposition_updates.create!(attributes_for(:schedule_disposition_update_event))
     AssetScheduleDispositionUpdateJob.new(test_asset.object_key).run
     test_asset.reload

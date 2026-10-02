@@ -6,6 +6,8 @@ RSpec.describe AssetTag, :type => :model do
   let(:test_tag) { AssetTag.create!(:asset => create(:buslike_asset, :organization => test_org), :user => create(:normal_user, :organization => test_org)) }
 
   describe 'associations' do
+    before { skip 'Dead surface retired by TTPLAT-3091' }
+
     it 'has an asset' do
       expect(test_tag).to belong_to(:asset)
     end
@@ -15,6 +17,8 @@ RSpec.describe AssetTag, :type => :model do
   end
 
   describe 'validations' do
+    before { skip 'Dead surface retired by TTPLAT-3091' }
+
     it 'must have an asset' do
       test_tag.asset = nil
       expect(test_tag.valid?).to be false

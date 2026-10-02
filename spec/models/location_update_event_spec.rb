@@ -48,3 +48,45 @@ RSpec.describe LocationUpdateEvent, :type => :model do
     end
   end
 end
+
+# A separate top-level describe, deliberately outside the block above: that
+# block's `before { skip(...) }` would otherwise skip this too.
+# No legacy counterpart - reclassified 2026-09-02, previously mislabeled
+# "Mirrors spec/jobs/asset_location_update_job_spec.rb:10-17".
+# That legacy job spec exists but has never run: its whole describe opens
+# `before { skip('LocationUpdateEvent assumes transam_asset. Not yet
+# testable.') }`, and that skip predates TTPLAT-3072. A skipped example
+# protects no behavior, so this is new ground, not restored parity.
+#
+# On the assertion: the legacy job would have asserted on parent_id and
+# location_comments, fields specific to the old Asset model. The surviving
+# LocationUpdateEvent#update_asset sets location_id directly, so the
+# assertion is authored against that instead.
+RSpec.describe LocationUpdateEvent, :type => :model do
+  describe '#update_asset' do
+    it "sets the transam_asset's location_id to the event's parent" do
+      new_location = create(:buslike_asset)
+      test_asset = create(:buslike_asset)
+      expect(test_asset.location_id).to be_nil
+
+      test_asset.location_updates.create!(:parent => new_location)
+      test_asset.reload
+
+      expect(test_asset.location_id).to eq(new_location.id)
+    end
+  end
+
+  # No legacy counterpart - added from the TTPLAT-3072 coverage screen
+  describe '#api_json' do
+    it 'includes parent_key and parent_name' do
+      new_location = create(:buslike_asset)
+      test_asset = create(:buslike_asset)
+      event = test_asset.location_updates.create!(:parent => new_location)
+
+      result = event.api_json
+
+      expect(result[:parent_key]).to eq(new_location.object_key)
+      expect(result[:parent_name]).to eq(new_location.asset_tag)
+    end
+  end
+end

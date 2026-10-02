@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_01_31_164035) do
+ActiveRecord::Schema.define(version: 2026_08_11_121700) do
 
   create_table "activities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC", force: :cascade do |t|
     t.string "object_key", limit: 12
@@ -659,7 +659,7 @@ ActiveRecord::Schema.define(version: 2024_01_31_164035) do
   create_table "notices", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC", force: :cascade do |t|
     t.string "object_key", limit: 12, null: false
     t.string "subject", limit: 64, null: false
-    t.string "summary", limit: 128, null: false
+    t.string "summary", limit: 254, null: false
     t.text "details"
     t.integer "notice_type_id"
     t.integer "organization_id"
@@ -801,6 +801,7 @@ ActiveRecord::Schema.define(version: 2024_01_31_164035) do
     t.boolean "default_rule"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer "procurement_lead_time", default: 0
     t.index ["asset_subtype_id"], name: "policy_asset_subtype_rules_idx2"
     t.index ["policy_id"], name: "policy_asset_subtype_rules_idx1"
   end
@@ -1130,6 +1131,7 @@ ActiveRecord::Schema.define(version: 2024_01_31_164035) do
     t.integer "scheduled_disposition_year"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "location_address"
     t.index ["asset_subtype_id"], name: "index_transam_assets_on_asset_subtype_id"
     t.index ["manufacturer_id"], name: "index_transam_assets_on_manufacturer_id"
     t.index ["manufacturer_model_id"], name: "index_transam_assets_on_manufacturer_model_id"

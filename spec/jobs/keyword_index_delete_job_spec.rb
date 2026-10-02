@@ -2,11 +2,11 @@ require 'rails_helper'
 
 RSpec.describe KeywordIndexDeleteJob, :type => :job do
 
-  let(:test_asset) { create(:equipment_asset) }
+  let(:test_asset) { create(:buslike_asset) }
 
   describe '.run' do
     it 'update keyword index' do
-      KeywordIndexDeleteJob.new('Equipment', test_asset.object_key).run
+      KeywordIndexDeleteJob.new('TransamAsset', test_asset.object_key).run
 
       expect(KeywordSearchIndex.find_by(:object_key => test_asset.object_key)).to be nil
     end
@@ -15,8 +15,8 @@ RSpec.describe KeywordIndexDeleteJob, :type => :job do
 
     end
     it 'wrong object key' do
-      expect(Rails.logger).to receive(:info).with("Can't find Equipment with object_key abcdefgh")
-      KeywordIndexDeleteJob.new('Equipment', 'abcdefgh').run
+      expect(Rails.logger).to receive(:info).with("Can't find TransamAsset with object_key abcdefgh")
+      KeywordIndexDeleteJob.new('TransamAsset', 'abcdefgh').run
     end
   end
 
@@ -25,7 +25,7 @@ RSpec.describe KeywordIndexDeleteJob, :type => :job do
     allow(Time).to receive(:now).and_return(Time.utc(2000,"jan",1,20,15,1))
 
     expect(Rails.logger).to receive(:info).with("Executing KeywordIndexDeleteJob at #{Time.now.to_s} for Keyword Index #{test_asset.object_key}")
-    KeywordIndexDeleteJob.new('Equipment',test_asset.object_key).prepare
+    KeywordIndexDeleteJob.new('TransamAsset',test_asset.object_key).prepare
   end
 
   describe '.check' do

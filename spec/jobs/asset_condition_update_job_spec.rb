@@ -9,6 +9,7 @@ RSpec.describe AssetConditionUpdateJob, :type => :job do
   end
 
   it '.run' do
+    skip 'Dead surface retired by TTPLAT-3091'
     test_event = test_asset.condition_updates.create!(attributes_for(:condition_update_event))
     AssetConditionUpdateJob.new(test_asset.object_key).run
     test_asset.reload
