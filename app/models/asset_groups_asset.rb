@@ -13,8 +13,7 @@ class AssetGroupsAsset < ActiveRecord::Base
   #-----------------------------------------------------------------------------
   # Associations
   #-----------------------------------------------------------------------------
-
-  belongs_to  :asset
+  
   belongs_to  :transam_asset
 
   belongs_to  :asset_group
