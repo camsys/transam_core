@@ -13,16 +13,19 @@ RSpec.describe ImagesController, :type => :controller do
     sign_in test_user
   end
 
-  it 'GET index' do
-    skip 'Dead surface retired by TTPLAT-3091'
-    test_image = create(:image, :imagable_id => bus.id)
-    bus.images << test_image
-    bus.save!
-    get :index, params: {:asset_id => bus.object_key}
-    bus.reload
+  # The asset Photos tab reads its rows from this branch (shared/_images.html.haml)
+  it 'GET index as JSON for a global_base_imagable returns only that imagable\'s images' do
+    other_bus = create(:buslike_asset)
+    bus_image = create(:image, :base_imagable => bus, :imagable => bus)
+    create(:image, :base_imagable => other_bus, :imagable => other_bus)
 
+    get :index, params: {:global_base_imagable => bus.to_global_id.to_s}, format: :json
+    body = JSON.parse(response.body)
+
+    expect(response).to have_http_status(:ok)
     expect(assigns(:imagable)).to eq(bus)
-    expect(assigns(:images)).to include(test_image)
+    expect(body['total']).to eq(1)
+    expect(body['rows'].map { |row| row['object_key'] }).to eq([bus_image.object_key])
   end
 
   it 'GET new' do

@@ -51,6 +51,20 @@ RSpec.describe CommentsController, :type => :controller do
     expect(bus.comments.count).to eq(1)
   end
 
+  # The task comment form (tasks/_comments.html.haml) posts to task_comments_path
+  it 'POST create on a task' do
+    request.env["HTTP_REFERER"] = root_path
+    test_task = create(:task)
+    Comment.destroy_all
+
+    expect {
+      post :create, params: {:task_id => test_task.object_key, :comment => attributes_for(:comment)}
+    }.to change { test_task.comments.count }.by(1)
+
+    expect(assigns(:commentable)).to eq(test_task)
+    expect(test_task.comments.first.creator).to eq(test_user)
+  end
+
   it 'POST update' do
     test_comment = create(:comment, :commentable_id => bus.id)
     bus.comments << test_comment
