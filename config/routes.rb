@@ -79,8 +79,6 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :manufacturers, :only => [:index]
-
   resources :activities
 
   # Forms are a top-level namespace. All concrete forms must be nested within this
