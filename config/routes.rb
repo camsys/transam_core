@@ -161,9 +161,9 @@ Rails.application.routes.draw do
   # commentable, documentable, and imagable controllers
   resources :assets, :path => :inventory do
     resources :tasks
-    resources :comments
-    resources :documents
-    resources :images
+    resources :comments,    :only => [:create, :update, :edit, :new, :destroy]
+    resources :documents,   :only => [:create, :update, :edit, :new, :destroy]
+    resources :images,      :only => [:create, :update, :edit, :new, :destroy]
   end
 
   resources :organizations, :path => "org" do
@@ -173,7 +173,7 @@ Rails.application.routes.draw do
   end
 
   resources :tasks,       :only => [:index, :show, :create, :update, :edit, :new, :destroy] do
-    resources :comments
+    resources :comments,  :only => [:create, :update, :edit, :new, :destroy]
     member do
       get 'fire_workflow_event'
       get 'change_owner'

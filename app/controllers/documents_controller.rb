@@ -5,15 +5,6 @@ class DocumentsController < NestedResourceController
   # Lock down the controller
   authorize_resource only: [:index, :new, :create, :edit, :update, :destroy]
 
-  # GET /documents
-  # GET /documents.json
-  def index
-
-    @documentable = find_resource
-    @documents = @documentable.documents
-
-  end
-
   # GET /documents/new
   def new
     @document = Document.new
