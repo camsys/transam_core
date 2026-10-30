@@ -4,15 +4,6 @@ class CommentsController < NestedResourceController
   # Lock down the controller
   authorize_resource except: [:show]
 
-  # GET /comments
-  # GET /comments.json
-  def index
-
-    @commentable = find_resource
-    @comments = @commentable.comments
-
-  end
-
   # GET /comments/1
   # GET /comments/1.json
   def show

@@ -12,18 +12,6 @@ RSpec.describe CommentsController, :type => :controller do
     sign_in test_user
   end
 
-  it 'GET index' do
-    skip 'Dead surface retired by TTPLAT-3091'
-    test_comment = create(:comment, :commentable_id => bus.id)
-    bus.comments << test_comment
-    bus.save!
-    get :index, params: {asset_id: bus.object_key}
-    bus.reload
-
-    expect(assigns(:commentable)).to eq(bus)
-    expect(assigns(:comments)).to include(test_comment)
-  end
-
   it 'GET new' do
     get :new, params: {inventory_id: bus.object_key}
 

@@ -13,9 +13,6 @@ class ImagesController < NestedResourceController
     elsif params[:global_any_imagable] # parameter to return images of self as parent and children
       @imagable = GlobalID::Locator.locate(GlobalID.parse(params[:global_any_imagable]))
       @images = Image.where(base_imagable: @imagable).or(Image.where(imagable: @imagable))
-    else
-      @imagable = find_resource
-      @images = @imagable.images
     end
 
     if @imagable

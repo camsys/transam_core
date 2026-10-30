@@ -12,18 +12,6 @@ RSpec.describe DocumentsController, :type => :controller do
     sign_in test_user
   end
 
-  it 'GET index' do
-    skip 'Dead surface retired by TTPLAT-3091'
-    test_document = create(:document, :documentable_id => bus.id)
-    bus.documents << test_document
-    bus.save!
-    get :index, params: {:asset_id => bus.object_key}
-    bus.reload
-
-    expect(assigns(:documentable)).to eq(bus)
-    expect(assigns(:documents)).to include(test_document)
-  end
-
   it 'GET new' do
     get :new, params: {:inventory_id => bus.object_key}
 
