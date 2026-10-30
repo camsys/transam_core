@@ -318,8 +318,6 @@ Rails.application.routes.draw do
       get     'check_subtype_rule_exists'
       get     'get_subtype_minimum_value'
       get     'show_edit_form'
-      get     'runner'
-      post    'update_assets'
       post    'copy'
       get     'make_current'
       patch   'update_policy_rule'

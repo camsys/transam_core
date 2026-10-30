@@ -349,37 +349,6 @@ class PoliciesController < OrganizationAwareController
     end
   end
 
-  def runner
-    add_breadcrumb "Asset Replacement/Rehabilitation Policy", policies_path
-    add_breadcrumb @policy.name, policy_path(@policy)
-    add_breadcrumb "Policy Runner", runner_policy_path(@policy)
-
-    @builder_proxy = AssetUpdaterProxy.new(:policy => @policy)
-    @asset_types = AssetType.active.where(id: @policy.organization.asset_type_counts.keys)
-    @message = "Applying policy to selected assets. This may take a while..."
-  end
-
-  def update_assets
-
-    @builder_proxy = AssetUpdaterProxy.new(params[:asset_updater_proxy])
-    if @builder_proxy.valid?
-
-      Delayed::Job.enqueue AssetUpdateAllJob.new(@policy.organization, @builder_proxy.asset_types, current_user), :priority => 0
-
-      # Let the user know the results
-      msg = "Assets are being updated using policy #{@policy}. You will be notified when the process is complete."
-      notify_user(:notice, msg)
-
-      redirect_to policy_path @policy
-      return
-    else
-      respond_to do |format|
-        format.html { render :action => "updater" }
-      end
-    end
-
-  end
-
   def inherit
     add_breadcrumb "Asset Replacement/Rehabilitation Policy", policies_path
     add_breadcrumb @policy.name, policy_path(@policy)

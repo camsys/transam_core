@@ -135,45 +135,6 @@ RSpec.describe Organization, :type => :model do
     end
   end
 
-  it '.asset_type_counts' do
-    skip 'Dead surface retired by TTPLAT-3091'
-    asset_subtype = create(:asset_subtype)
-    parent_organization = create(:organization_basic)
-    organization = create(:organization_basic)
-
-    expect(organization.asset_type_counts).to eq({})
-
-    parent_policy = create(:policy, :organization => parent_organization, :parent => nil)
-    policy_asset_subtype_rule = create(:policy_asset_subtype_rule, :asset_subtype => asset_subtype, :policy => parent_policy)
-    policy = create(:policy, :organization => organization, :parent => parent_policy)
-    policy.policy_asset_subtype_rules << policy_asset_subtype_rule
-
-    create(:buslike_asset_basic_org, :organization => organization, :asset_subtype => asset_subtype)
-    create(:buslike_asset_basic_org, :organization => organization, :asset_subtype => asset_subtype, :disposition_date => Date.today)
-
-    expect(organization.asset_type_counts).to eq({asset_subtype.asset_type.id=>1})
-    expect(organization.asset_type_counts false).to eq({asset_subtype.asset_type.id=>2})
-  end
-  it '.asset_subtype_counts' do
-    skip 'Dead surface retired by TTPLAT-3091'
-    asset_subtype = create(:asset_subtype)
-    parent_organization = create(:organization_basic)
-    organization = create(:organization_basic)
-
-    expect(organization.asset_type_counts).to eq({})
-
-    parent_policy = create(:policy, :organization => parent_organization, :parent => nil)
-    policy_asset_subtype_rule = create(:policy_asset_subtype_rule, :asset_subtype => asset_subtype, :policy => parent_policy)
-    policy = create(:policy, :organization => organization, :parent => parent_policy)
-    policy.policy_asset_subtype_rules << policy_asset_subtype_rule
-
-    create(:buslike_asset_basic_org, :organization => organization, :asset_subtype => asset_subtype)
-    create(:buslike_asset_basic_org, :organization => organization, :asset_subtype => asset_subtype, :disposition_date => Date.today)
-
-    expect(organization.asset_subtype_counts(asset_subtype.asset_type.id)).to eq({asset_subtype.id=>1})
-    expect(organization.asset_subtype_counts(asset_subtype.asset_type.id, false)).to eq({asset_subtype.id=>2})
-  end
-
   it '.coded_name' do
     expect(test_org.coded_name).to eq("#{test_org.short_name}-#{test_org.name}")
   end
