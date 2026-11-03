@@ -79,41 +79,6 @@ class AssetEventsController < AssetAwareController
 
   end
 
-  def index
-
-    add_asset_breadcrumbs
-    add_breadcrumb "History"
-
-    # Check to see if we got a filter to sub select on
-    if params[:filter_type]
-      # see if it was blank
-      if params[:filter_type].blank?
-        @filter_type = 0
-      else
-        @filter_type = params[:filter_type].to_i
-      end
-    else
-      # See if there is one in the session
-      @filter_type = session[:filter_type].nil? ? 0 : session[:filter_type]
-    end
-    # store it in the session
-    session[:filter_type] = @filter_type
-
-    if @filter_type == 0
-      @events = @asset.asset_events
-    else
-      @events = @asset.asset_events.where('asset_event_type_id = ?', @filter_type)
-    end
-
-    @page_title = "#{@asset.name}: History"
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render :json => @events }
-    end
-
-  end
-
   def new
 
     # get the asset event type

@@ -46,4 +46,9 @@ RSpec.describe "Removed routes", type: :routing do
   it 'no longer routes GET /tasks/:task_id/comments/:id' do
     expect(:get => '/tasks/abc/comments/def').not_to be_routable
   end
+
+  # TTPLAT-3091 instance 4: the asset events index. new/create/show/edit/update/destroy stay.
+  it 'no longer routes GET /inventory/:inventory_id/asset_events' do
+    expect(:get => '/inventory/abc/asset_events').not_to be_routable
+  end
 end

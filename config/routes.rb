@@ -111,7 +111,7 @@ Rails.application.routes.draw do
         get 'get_dependent_subform'
       end
 
-    resources :asset_events do 
+    resources :asset_events, :only => [:new, :create, :show, :edit, :update, :destroy] do
       member do
         get 'fire_workflow_event'
       end
