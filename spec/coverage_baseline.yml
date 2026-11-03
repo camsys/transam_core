@@ -48,20 +48,20 @@
 # (603/938 → 718/938) exactly, including concerns/policy_aware.rb, which the
 # prose list in ttplat-3072-ticket-drafts.md omits (without it the total is
 # 550/870, not 603/938).
-pinned_at: 2026-09-18
-pinned_from: "live run, two consecutive, agreeing (app:transam_core:prepare_rspec + bundle exec rspec, run twice)"
+pinned_at: 2026-11-03
+pinned_from: "pin_coverage_baseline, 2026-11-03 17:09:44 -0500 (after app:transam_core:prepare_rspec + full bundle exec rspec; hand-merged into the existing layout)"
 floor:
-  covered: 718
+  covered: 714
 informational:               # printed, never enforced
-  relevant: 938
-  percent: 76.55
+  relevant: 934
+  percent: 76.45
   synthetic_relevant: 0      # all 15 files are loaded by the suite; none synthetic
   per_file:
     app/models/transam_asset.rb:                                  { covered: 156, relevant: 245 }
     app/models/transam_asset_record.rb:                           { covered: 23,  relevant: 70 }
     app/models/asset_event.rb:                                    { covered: 50,  relevant: 56 }
     app/models/asset_event_type.rb:                               { covered: 6,   relevant: 6 }
-    app/models/asset_group.rb:                                    { covered: 22,  relevant: 22 }
+    app/models/asset_group.rb:                                    { covered: 18,  relevant: 18 }
     app/models/asset_subtype.rb:                                  { covered: 11,  relevant: 13 }
     app/models/asset_type.rb:                                     { covered: 14,  relevant: 16 }
     app/models/condition_update_event.rb:                         { covered: 34,  relevant: 36 }
