@@ -1,8 +1,6 @@
 class AssetsController < AssetAwareController
 
 
-  before_action :set_paper_trail_whodunnit, only: [:create, :update], if: :paper_trail_enabled?
-
   add_breadcrumb "Home", :root_path
 
   # Set the view variabless form the params @asset_type, @asset_subtype, @search_text, @spatial_filter, @view
@@ -807,10 +805,6 @@ class AssetsController < AssetAwareController
   #
   #------------------------------------------------------------------------------
   private
-
-  def paper_trail_enabled?
-    SystemConfigExtension.find_by(extension_name: 'PaperTrailAssetAware', active: true).present?
-  end
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def form_params
