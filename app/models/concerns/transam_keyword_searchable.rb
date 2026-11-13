@@ -21,8 +21,14 @@ module TransamKeywordSearchable
     # Run a check before saving to see if any of the search properties are changed
     before_save     :check_for_changes
 
-    # Always re-index the object after a save event
-    after_save      :update_index
+    # Assets: a save of only subclass fields (e.g. license_plate on a revenue vehicle) never
+    # saves TransamAsset, but acts_as touches it. Check here too so that change still
+    # gets indexed (TTPLAT-3100).
+    after_touch     :check_for_changes, if: -> { respond_to?(:all_changes) }
+
+    after_commit    :update_index, on: [:create, :update]      # was after_save; runs once per object per transaction
+
+    after_rollback  { self.is_dirty = false }
 
     # Always remove the object from the index before it is destroyed
     before_destroy  :remove_index
@@ -160,12 +166,17 @@ module TransamKeywordSearchable
   # changes are detected
   def check_for_changes
     Rails.logger.debug "checking for changes"
-    self.is_dirty = false
+    # No reset to false here: is_dirty stays true until update_index (after_commit) or
+    # after_rollback clears it, so a later save in the same transaction can't undo it.
+
+    # Assets: changes from every level of the acts_as chain (TTPLAT-3100). Others: their own changes.
+    changed = self.respond_to?(:all_changes) ? self.all_changes : self.changes
     searchable_fields.each do |searchable_field|
       Rails.logger.debug "Testing property #{searchable_field}"
-
-      if (self.changes.include? searchable_field.to_s) || self.is_a?(Rails.application.config.asset_base_class_name.constantize)
-        Rails.logger.debug "#{searchable_field.to_s} has changed"
+      field = searchable_field.to_s
+      # Association fields (manufacturer_model, fta_type) show up as their foreign key columns
+      if changed.key?(field) || changed.key?("#{field}_id") || changed.key?("#{field}_type")
+        Rails.logger.debug "#{field} has changed"
         self.is_dirty = true
         return
       end
@@ -195,9 +206,14 @@ module TransamKeywordSearchable
   # current transaction does not get blocked. Default priority is 10
   def update_index
     if self.is_dirty
-      job = KeywordIndexUpdateJob.new(self.class.name, object_key)
-      Delayed::Job.enqueue job, :priority => 10
-      self.is_dirty = false
+      begin
+        job = KeywordIndexUpdateJob.new(self.class.name, object_key)
+        Delayed::Job.enqueue job, :priority => 10
+      rescue => e
+        Rails.logger.error "KeywordSearcher enqueue failed. Class = #{self.class.name}, Object Key = #{object_key}, Error = #{e.message}"
+      ensure
+        self.is_dirty = false
+      end
     end
   end
 

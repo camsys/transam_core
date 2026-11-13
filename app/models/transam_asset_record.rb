@@ -2,6 +2,12 @@
 # but there are some methods that are across all classes but acting as themselves (rev vehicle, facility, etc)
 # so they inherit from TransamAssetRecord
 class TransamAssetRecord < ActiveRecord::Base
+  # Collect each level's pending changes before acts_as's autosaves run. Those autosaves
+  # can save a record again with nothing to write, which empties saved_changes (TTPLAT-3100).
+  before_save :record_changes_for_index
+  after_commit :clear_changes_for_index
+  after_rollback :clear_changes_for_index
+
   self.abstract_class = true
 
   class << self
@@ -136,6 +142,29 @@ class TransamAssetRecord < ActiveRecord::Base
     false # all assets can be locked into place to prevent sched replacement year changes but by default none are locked
   end
 
+  def changes_for_index
+    @changes_for_index || {}
+  end
+
+  # Changes recorded during the current transaction for this record and every record below it in the acts_as chain.
+  def all_changes
+    specific_instance = self.try(:specific)
+    if specific_instance.nil? || specific_instance == self
+      changes_for_index
+    else
+      changes_for_index.merge(specific_instance.all_changes)
+    end
+  end
+
+  def clear_changes_for_index
+    @changes_for_index = nil
+  end
+
   protected
+
+  def record_changes_for_index
+    # merge!, not assign: a second save has empty changes and must not erase the first
+    (@changes_for_index ||= {}).merge!(changes)
+  end
 
 end
