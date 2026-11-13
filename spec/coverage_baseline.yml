@@ -48,18 +48,18 @@
 # (603/938 → 718/938) exactly, including concerns/policy_aware.rb, which the
 # prose list in ttplat-3072-ticket-drafts.md omits (without it the total is
 # 550/870, not 603/938).
-pinned_at: 2026-11-04
-pinned_from: "pin_coverage_baseline, 2026-11-04 20:37:13 -0500 (after app:transam_core:prepare_rspec + full bundle exec rspec; hand-merged into the existing layout)"
+pinned_at: 2026-11-12
+pinned_from: "pin_coverage_baseline, 2026-11-12 17:23:29 -0500 (after app:transam_core:prepare_rspec + full bundle exec rspec; TTPLAT-3112 removed the covered `belongs_to :asset` line from asset_event.rb; hand-merged into the existing layout)"
 floor:
-  covered: 713
+  covered: 712
 informational:               # printed, never enforced
-  relevant: 896
-  percent: 79.58
+  relevant: 895
+  percent: 79.55
   synthetic_relevant: 0      # all 15 files are loaded by the suite; none synthetic
   per_file:
     app/models/transam_asset.rb:                                  { covered: 155, relevant: 207 }
     app/models/transam_asset_record.rb:                           { covered: 23,  relevant: 70 }
-    app/models/asset_event.rb:                                    { covered: 50,  relevant: 56 }
+    app/models/asset_event.rb:                                    { covered: 49,  relevant: 55 }
     app/models/asset_event_type.rb:                               { covered: 6,   relevant: 6 }
     app/models/asset_group.rb:                                    { covered: 18,  relevant: 18 }
     app/models/asset_subtype.rb:                                  { covered: 11,  relevant: 13 }

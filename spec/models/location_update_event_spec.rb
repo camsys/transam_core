@@ -44,7 +44,7 @@ RSpec.describe LocationUpdateEvent, :type => :model do
       expect(test_event.asset_event_type).to eq(AssetEventType.find_by(:class_name => 'LocationUpdateEvent'))
     end
     it 'parent' do
-      expect(test_event.parent).to eq(test_event.asset.parent)
+      expect(test_event.parent).to eq(test_event.transam_asset.parent)
     end
   end
 end
