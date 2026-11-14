@@ -62,19 +62,6 @@ RSpec.describe AssetGroup, :type => :model do
     ])
   end
 
-  it '.homogeneous?' do
-    test_asset.save!
-    expect(test_asset_group.homogeneous?).to be true
-
-    create(:buslike_asset, :asset_groups => [test_asset_group])
-    expect(test_asset_group.homogeneous?).to be false
-  end
-  it 'asset_type_ids' do
-    skip 'Dead surface retired by TTPLAT-3091'
-    test_asset.save!
-
-    expect(test_asset_group.asset_type_ids).to include(test_asset.asset_subtype.asset_type_id)
-  end
   it '.to_s' do
     expect(test_asset_group.to_s).to eq(test_asset_group.name)
   end

@@ -145,28 +145,6 @@ class Organization < ActiveRecord::Base
   end
 
   #-----------------------------------------------------------------------------
-  # Returns a hash of asset_type_ids and the counts per non-zero type
-  #-----------------------------------------------------------------------------
-  def asset_type_counts(active_only=true)
-    if active_only
-      Asset.operational.where(:organization => self).group(:asset_type_id).count
-    else
-      Asset.where(:organization => self).group(:asset_type_id).count
-    end
-  end
-
-  #-----------------------------------------------------------------------------
-  # Returns a hash of asset subtype ids and the counts per non-zero type
-  #-----------------------------------------------------------------------------
-  def asset_subtype_counts(asset_type_id, active_only=true)
-    if active_only
-      Asset.operational.where(:organization => self, :asset_type_id => asset_type_id).group(:asset_subtype_id).count
-    else
-      Asset.where(:organization => self, :asset_type_id => asset_type_id).group(:asset_subtype_id).count
-    end
-  end
-
-  #-----------------------------------------------------------------------------
   # Returns true if the organization is of the specified class or has the specified class as
   # and ancestor (superclass).
   #

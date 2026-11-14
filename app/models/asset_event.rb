@@ -22,8 +22,6 @@ class AssetEvent < ActiveRecord::Base
 
   # Associations
 
-  # Every event belongs to an asset
-  belongs_to  :asset
   belongs_to  :transam_asset, polymorphic: true
   belongs_to  :base_transam_asset, class_name: 'TransamAsset'
   # Every event is of a type

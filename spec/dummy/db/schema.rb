@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_08_11_121700) do
+ActiveRecord::Schema.define(version: 2026_09_29_195625) do
 
   create_table "activities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC", force: :cascade do |t|
     t.string "object_key", limit: 12
@@ -137,10 +137,9 @@ ActiveRecord::Schema.define(version: 2026_08_11_121700) do
   end
 
   create_table "asset_groups_assets", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC", force: :cascade do |t|
-    t.integer "asset_id"
     t.integer "transam_asset_id"
     t.integer "asset_group_id", null: false
-    t.index ["asset_id", "asset_group_id"], name: "asset_groups_assets_idx1"
+    t.index ["asset_group_id"], name: "asset_groups_assets_idx1"
   end
 
   create_table "asset_subsystems", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC", force: :cascade do |t|

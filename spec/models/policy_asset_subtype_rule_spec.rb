@@ -87,6 +87,28 @@ RSpec.describe PolicyAssetSubtypeRule, :type => :model do
     ])
   end
 
+  describe 'apply_distributed_policy' do
+    let(:asset_subtype) { create(:asset_subtype) }
+
+    it 'enqueues the distributer job when the rule is on a policy with no parent' do
+      policy = create(:policy)
+      expect(policy.parent_id).to be nil
+
+      expect(Delayed::Job).to receive(:enqueue).once.with(instance_of(PolicyAssetSubtypeRuleDistributerJob), :priority => 0)
+
+      create(:policy_asset_subtype_rule, :policy => policy, :asset_subtype => asset_subtype)
+    end
+
+    it 'enqueues nothing when the rule is on a child policy' do
+      policy = create(:policy, :parent => create(:policy))
+      expect(policy.parent_id).not_to be nil
+
+      expect(Delayed::Job).not_to receive(:enqueue)
+
+      create(:policy_asset_subtype_rule, :policy => policy, :asset_subtype => asset_subtype)
+    end
+  end
+
   it '.to_s' do
     expect(test_rule.to_s).to eq("#{test_rule.asset_subtype.asset_type}: #{test_rule.asset_subtype}")
   end

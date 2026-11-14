@@ -13,33 +13,6 @@ RSpec.describe AssetEventsController, :type => :controller do
     sign_in test_user
   end
 
-  describe 'GET index' do
-    before { skip 'Dead surface retired by TTPLAT-3091' }
-
-    it 'all events of an asset' do
-      bus.asset_events << test_event
-      bus.save!
-      params = {inventory_id: bus.object_key}
-      get :index, params: params
-
-      expect(assigns(:filter_type)).to eq(0)
-      expect(assigns(:page_title)).to eq("#{bus.name}: History")
-      expect(assigns(:events)).to include(test_event)
-    end
-    it 'events of one type' do
-      bus.asset_events << test_event
-      test_event2 = create(:asset_event, :asset_event_type_id => 2)
-      bus.asset_events << test_event2
-      bus.save!
-      params = {inventory_id: bus.object_key, filter_type: test_event.asset_event_type.id}
-      get :index, params: params
-
-      expect(assigns(:filter_type)).to eq(test_event.asset_event_type.id)
-      expect(assigns(:page_title)).to eq("#{bus.name}: History")
-      expect(assigns(:events)).to include(test_event)
-      expect(assigns(:events)).not_to include(test_event2)
-    end
-  end
   it 'GET new' do
     params = {inventory_id: bus.object_key, event_type: 1}
     get :new, params: params

@@ -79,8 +79,6 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :manufacturers, :only => [:index]
-
   resources :activities
 
   # Forms are a top-level namespace. All concrete forms must be nested within this
@@ -113,7 +111,7 @@ Rails.application.routes.draw do
         get 'get_dependent_subform'
       end
 
-    resources :asset_events do 
+    resources :asset_events, :only => [:new, :create, :show, :edit, :update, :destroy] do
       member do
         get 'fire_workflow_event'
       end
@@ -163,9 +161,9 @@ Rails.application.routes.draw do
   # commentable, documentable, and imagable controllers
   resources :assets, :path => :inventory do
     resources :tasks
-    resources :comments
-    resources :documents
-    resources :images
+    resources :comments,    :only => [:create, :update, :edit, :new, :destroy]
+    resources :documents,   :only => [:create, :update, :edit, :new, :destroy]
+    resources :images,      :only => [:create, :update, :edit, :new, :destroy]
   end
 
   resources :organizations, :path => "org" do
@@ -175,7 +173,7 @@ Rails.application.routes.draw do
   end
 
   resources :tasks,       :only => [:index, :show, :create, :update, :edit, :new, :destroy] do
-    resources :comments
+    resources :comments,  :only => [:create, :update, :edit, :new, :destroy]
     member do
       get 'fire_workflow_event'
       get 'change_owner'
@@ -320,8 +318,6 @@ Rails.application.routes.draw do
       get     'check_subtype_rule_exists'
       get     'get_subtype_minimum_value'
       get     'show_edit_form'
-      get     'runner'
-      post    'update_assets'
       post    'copy'
       get     'make_current'
       patch   'update_policy_rule'
@@ -329,8 +325,6 @@ Rails.application.routes.draw do
       get     'new_policy_rule'
       post    'add_policy_rule'
       delete  'remove_policy_rule'
-      get     'inherit'
-      post     'distribute'
     end
   end
 

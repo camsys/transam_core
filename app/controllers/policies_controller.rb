@@ -349,62 +349,6 @@ class PoliciesController < OrganizationAwareController
     end
   end
 
-  def runner
-    add_breadcrumb "Asset Replacement/Rehabilitation Policy", policies_path
-    add_breadcrumb @policy.name, policy_path(@policy)
-    add_breadcrumb "Policy Runner", runner_policy_path(@policy)
-
-    @builder_proxy = AssetUpdaterProxy.new(:policy => @policy)
-    @asset_types = AssetType.active.where(id: @policy.organization.asset_type_counts.keys)
-    @message = "Applying policy to selected assets. This may take a while..."
-  end
-
-  def update_assets
-
-    @builder_proxy = AssetUpdaterProxy.new(params[:asset_updater_proxy])
-    if @builder_proxy.valid?
-
-      Delayed::Job.enqueue AssetUpdateAllJob.new(@policy.organization, @builder_proxy.asset_types, current_user), :priority => 0
-
-      # Let the user know the results
-      msg = "Assets are being updated using policy #{@policy}. You will be notified when the process is complete."
-      notify_user(:notice, msg)
-
-      redirect_to policy_path @policy
-      return
-    else
-      respond_to do |format|
-        format.html { render :action => "updater" }
-      end
-    end
-
-  end
-
-  def inherit
-    add_breadcrumb "Asset Replacement/Rehabilitation Policy", policies_path
-    add_breadcrumb @policy.name, policy_path(@policy)
-    add_breadcrumb "Distribute Policy", inherit_policy_path(@policy)
-
-    @distributer_proxy = PolicyDistributerProxy.new(:policy => @policy)
-    @message = "Distributing and applying policies. This may take a while..."
-  end
-
-  def distribute
-    @distributer_proxy = PolicyDistributerProxy.new(params[:policy_distributer_proxy])
-    @distributer_proxy.policy = @policy
-
-    policies = Policy.where(parent_id: @distributer_proxy.policy.id)
-    if policies.empty?
-      notify_user(:alert, 'No children policies to distribute policy rules too.')
-    else
-      Delayed::Job.enqueue PolicyDistributerJob.new(@distributer_proxy, current_user), :priority => 0
-
-      notify_user(:notice, 'Parent policy distributed. Values updated to at least the minimum allowed by the parent policy.')
-    end
-
-    redirect_to policy_path(@policy)
-  end
-
   private
 
   # Never trust parameters from the scary internet, only allow the white list through.

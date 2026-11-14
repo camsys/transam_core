@@ -11,7 +11,7 @@ describe "assets/_history.html.haml", :type => :view do
 
     expect(rendered).to have_content(AssetEventType.find_by(:class_name => 'ConditionUpdateEvent').description)
     expect(rendered).to have_content(Date.today.strftime('%Y-%m-%d'))
-    expect(rendered).to have_content(ConditionUpdateEvent.find_by(:asset => test_asset).get_update)
+    expect(rendered).to have_content(ConditionUpdateEvent.find_by(:transam_asset => test_asset).get_update)
     expect(rendered).to have_content('test comment 123')
   end
 end

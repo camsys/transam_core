@@ -50,5 +50,5 @@
           %ul.dropdown-menu
             - @user_guide_videos.each do |k,v|
               %li.text-left
-                = link_to k, v, download: '', target: '_blank'
+                = link_to k, v, download: '', target: '_blank', title: "#{k.include?('*') ? 'Updates are in progress' : ''}"
 

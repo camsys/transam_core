@@ -319,7 +319,7 @@ RSpec.describe Asset, :type => :model do
 
   ### Associations with asset_events
   describe '#asset_events' do
-    let(:test_asset_event) { create(:asset_event, :asset => persisted_buslike_asset) }
+    let(:test_asset_event) { create(:asset_event, :transam_asset => persisted_buslike_asset) }
 
     it 'can have none' do
       expect(buslike_asset.asset_events.count).to eq(0)
@@ -328,7 +328,7 @@ RSpec.describe Asset, :type => :model do
     it 'associations hold on asset_event create' do
       skip 'Dead surface retired by TTPLAT-3091'
       expect(persisted_buslike_asset.asset_events.include? test_asset_event).to be true
-      expect(test_asset_event.asset == persisted_buslike_asset).to be true
+      expect(test_asset_event.transam_asset == persisted_buslike_asset).to be true
     end
 
     it 'associations hold on asset_event delete' do

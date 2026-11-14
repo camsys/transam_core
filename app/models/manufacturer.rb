@@ -33,10 +33,6 @@ class Manufacturer < ActiveRecord::Base
   end
 
 
-  def asset_count(org)
-    Asset.where(:organization_id => org.id, :manufacturer_id => id).count
-  end
-
   def full_name
     name
   end

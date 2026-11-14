@@ -1,7 +1,0 @@
-= render :layout => "search_panel" do |f|
-  .panel-group#search-fields
-
-    - SystemConfig.transam_module_names.each do |mod|
-      - view_component = "#{mod}_asset_search_form_fields"
-      - if lookup_context.template_exists?(view_component, 'searches', true)
-        = render :partial => "searches/#{view_component}", :locals => {:f => f}
